@@ -79,9 +79,10 @@ public class RxProviderData {
         	surname = p.getLastName();
         	firstName = p.getFirstName();
         	practitionerNo = p.getPractitionerNo();
+        	/*
         	if(firstName.indexOf("Dr.")<0) {
                 firstName = "Dr. " + firstName;
-            }
+            }*/
         	
         	if(p.getWorkPhone() != null && p.getWorkPhone().length()>0) {
         		clinicPhone = p.getWorkPhone();

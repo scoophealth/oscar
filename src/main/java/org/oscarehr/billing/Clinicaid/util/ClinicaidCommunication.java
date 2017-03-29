@@ -41,6 +41,7 @@ import java.util.regex.Matcher;
 
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.util.LoggedInInfo;
 
 import oscar.util.UtilMisc;
@@ -215,9 +216,9 @@ public class ClinicaidCommunication {
 			String encoded_last_name =
 				this.urlEncode(UtilMisc.toUpperLowerCase(demo.getLastName()));
 			String encoded_province =
-				this.urlEncode(demo.getProvince().toUpperCase());
+				this.urlEncode(StringUtils.upperCase(demo.getProvince()));
 			String encoded_hc_province =
-				this.urlEncode(demo.getHcType().toUpperCase());
+				this.urlEncode(StringUtils.upperCase(demo.getHcType()));
 			String encoded_city = this.urlEncode(demo.getCity());
 			String encoded_address = this.urlEncode(demo.getAddress());
 			String encoded_postal_code = this.urlEncode(demo.getPostal());

@@ -95,6 +95,7 @@ public class GenericIntakeSearchAction extends DispatchAction {
 		
 		// Session Attributes
 		protected static final String CLIENT = "client";
+		protected static final String CLIENT_EXTRA = "clientExtra";
 		
 	static {
 		LookupCodeValue lv1 = new LookupCodeValue();

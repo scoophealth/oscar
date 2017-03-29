@@ -28,7 +28,7 @@
 	<bean id="oAuthFilter" class="org.apache.cxf.rs.security.oauth.filters.OAuthRequestFilter">
          <property name="dataProvider" ref="oauthProvider"/>
          <property name="useUserSubject" value="true"/>
-         <property name="supportUnknownParameters" value="true"/>
+	 <property name="supportUnknownParameters" value="true"/>
      </bean>
 
 	<bean id="authorizationService" class="org.apache.cxf.rs.security.oauth.services.AuthorizationRequestService">
@@ -43,7 +43,6 @@
 	  <property name="dataProvider" ref="oauthProvider"/>
 	</bean>
 	
-	
 	<bean id="jacksonObjectMapper" class="org.codehaus.jackson.map.ObjectMapper">
 		<property name="serializationInclusion" value="NON_NULL"/>
 	</bean>
@@ -51,8 +50,9 @@
 	<bean id="jsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider">
     	<!-- <property name="mapper" ref="jacksonObjectMapper"/> -->
 	</bean>
-	
-	
+
+
+
     <jaxrs:server id="oauthService" address="/oauth" >
 
         <jaxrs:serviceBeans>
@@ -80,35 +80,38 @@
 
         <jaxrs:serviceBeans>
 			<bean class="org.oscarehr.ws.oauth.OAuthStatusService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.PharmacyService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.DemographicService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.ScheduleService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.DemographicMergeService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.MessagingService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.InboxService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.TicklerWebService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.ProviderService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.PatientDetailStatusService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.RSSFeedService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.PersonaService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.FormsService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.OscarJobService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.NotesService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.ProductDispensingService"  autowire="byName"/>
-			<bean class="org.oscarehr.ws.rest.RecordUxService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.ReportingService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.BillingService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.StatusService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.ProgramService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.ConsultationWebService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.AppService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.AllergyService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.PreventionService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.ReportByTemplateService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.ResourceService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.DiseaseRegistryService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.LabService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.MeasurementService" autowire="byName" />
+	            <bean class="org.oscarehr.ws.rest.PharmacyService"  autowire="byName"/>
+	            <bean class="org.oscarehr.ws.rest.DemographicService"  autowire="byName"/>
+	            <bean class="org.oscarehr.ws.rest.ScheduleService"  autowire="byName"/>
+	            <bean class="org.oscarehr.ws.rest.DemographicMergeService"  autowire="byName"/>
+	            <bean class="org.oscarehr.ws.rest.MessagingService"  autowire="byName"/>
+	            <bean class="org.oscarehr.ws.rest.InboxService"  autowire="byName"/>
+	            <bean class="org.oscarehr.ws.rest.TicklerWebService"  autowire="byName"/>
+				<bean class="org.oscarehr.ws.rest.RxWebService"  autowire="byName"/>
+				<bean class="org.oscarehr.ws.rest.RxLookupService"  autowire="byName"/>
+	            <bean class="org.oscarehr.ws.rest.ProviderService"  autowire="byName"/>
+	            <bean class="org.oscarehr.ws.rest.PatientDetailStatusService"  autowire="byName"/>
+	            <bean class="org.oscarehr.ws.rest.RSSFeedService"  autowire="byName"/>
+	            <bean class="org.oscarehr.ws.rest.PersonaService"  autowire="byName"/>
+	            <bean class="org.oscarehr.ws.rest.FormsService"  autowire="byName"/>
+	            <bean class="org.oscarehr.ws.rest.OscarJobService"  autowire="byName"/>
+	            <bean class="org.oscarehr.ws.rest.NotesService" autowire="byName" />
+	            <bean class="org.oscarehr.ws.rest.ProductDispensingService"  autowire="byName"/>
+	            <bean class="org.oscarehr.ws.rest.RecordUxService" autowire="byName" />
+	            <bean class="org.oscarehr.ws.rest.ReportingService" autowire="byName" />
+	            <bean class="org.oscarehr.ws.rest.BillingService" autowire="byName" />
+	            <bean class="org.oscarehr.ws.rest.StatusService" autowire="byName" />
+	            <bean class="org.oscarehr.ws.rest.ProgramService" autowire="byName" />
+	            <bean class="org.oscarehr.ws.rest.ConsultationWebService" autowire="byName" />
+	            <bean class="org.oscarehr.ws.rest.AppService" autowire="byName" />
+	            <bean class="org.oscarehr.ws.rest.AllergyService" autowire="byName" />
+	            <bean class="org.oscarehr.ws.rest.PreventionService" autowire="byName" />
+	            <bean class="org.oscarehr.ws.rest.ReportByTemplateService" autowire="byName" />
+	            <bean class="org.oscarehr.ws.rest.ResourceService" autowire="byName" />
+	            <bean class="org.oscarehr.ws.rest.SystemInfoService" autowire="byName" />
+	            <bean class="org.oscarehr.ws.rest.DiseaseRegistryService" autowire="byName" />
+	            <bean class="org.oscarehr.ws.rest.E2ECDAService" autowire="byName" />
+	            <bean class="org.oscarehr.ws.rest.LabService" autowire="byName" />
         </jaxrs:serviceBeans>
              
         <jaxrs:providers>
@@ -116,7 +119,6 @@
            <ref bean="jaxb"/>
            <ref bean="jsonProvider"/>
         </jaxrs:providers>
-      
       
         <jaxrs:extensionMappings>
             <entry key="xml" value="application/xml" />

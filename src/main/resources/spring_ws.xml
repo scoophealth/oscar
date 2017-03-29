@@ -164,6 +164,8 @@
 			<bean class="org.oscarehr.ws.rest.MessagingService"  autowire="byName"/>
 			<bean class="org.oscarehr.ws.rest.InboxService"  autowire="byName"/>
 			<bean class="org.oscarehr.ws.rest.TicklerWebService"  autowire="byName"/>
+            <bean class="org.oscarehr.ws.rest.RxWebService"  autowire="byName"/>
+            <bean class="org.oscarehr.ws.rest.RxLookupService"  autowire="byName"/>
 			<bean class="org.oscarehr.ws.rest.ProviderService"  autowire="byName"/>
 			<bean class="org.oscarehr.ws.rest.PatientDetailStatusService"  autowire="byName"/>
 			<bean class="org.oscarehr.ws.rest.RSSFeedService"  autowire="byName"/>
@@ -183,10 +185,10 @@
 			<bean class="org.oscarehr.ws.rest.PreventionService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.ReportByTemplateService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.ResourceService" autowire="byName" />
+			<bean class="org.oscarehr.ws.rest.SystemInfoService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.DiseaseRegistryService" autowire="byName" />
-<!--			<bean class="org.oscarehr.ws.rest.SystemInfoService" autowire="byName" /> -->
+			<bean class="org.oscarehr.ws.rest.E2ECDAService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.LabService" autowire="byName" />
-			<bean class="org.oscarehr.ws.rest.MeasurementService" autowire="byName" />
 		</jaxrs:serviceBeans>
 
 		<jaxrs:extensionMappings>

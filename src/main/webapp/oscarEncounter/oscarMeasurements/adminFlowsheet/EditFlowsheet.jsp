@@ -56,7 +56,6 @@ if(!authed2) {
 
 <%
     long startTimeToGetP = System.currentTimeMillis();
-    
     String module="";
     String htQueryString = "";
     if(request.getParameter("htracker")!=null){

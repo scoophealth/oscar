@@ -1,0 +1,7 @@
+MSH|^~\&|OCF|GBHS-OS|XENOS|GBHS-OS|20120325112627||ORU^R01|Q68569439|T|2.3
+PID|1||320965^^^GBHS-OS||RADNET^EDS||19351010|Male|||567 SHOCK LANE^^TACHYVILLE^Ontario^X0X0X0^Canada^^^Grey, Blue Mountains, T,|Grey, Blue Mountains, T,|(000)000-0519^Home||English|||3347637^^^GBHS-OS^FIN NBR 
+PV1|1|Outpt.|E.C.G.-OS^^^GBHS-OS^^Ambulatory(s)^GBHS-OS||||00154^Harada^Glenn^K||00154^Harada^Glenn|||||||||Outpt.|2012090166247^^^^Visit Id|OHIP|||||||||||||||||||GBHS-OS||Active|||20120325082611||||||2012090166247 
+ORC|RE OBR|1|83205093^HNAM_ORDERID||ECG^ECG|||20120325090125|20120325090127|||||||Rad Type&Rad Type|00154^Harada^Glenn^K||||00000EG20120002432^HNA_ACCN~1177642^HNA_PACSID|ECG 1|20120325090129||EDS|Auth (Verified)||1^^^^^Routine|||Walk|^Reason not specified by Physician 
+OBX|1|FT|Read^Read||testing||||||Auth (Verified)|||20120325112626 
+NTE|1|Signature Line|    Dictated By:  Test, Radiologist Phase I\.br\ Transcribed By:  SMM   03/25/09 11:22:49\.br\  Signed Out By:  Mcneill, Sheila M\.br\    Signed Date:  03/25/09 11:26:26  
+

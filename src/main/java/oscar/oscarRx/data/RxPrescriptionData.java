@@ -24,6 +24,7 @@
 
 package oscar.oscarRx.data;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -96,6 +97,7 @@ public class RxPrescriptionData {
 		prescription.setDuration(dur);
 		prescription.setDurationUnit(drug.getDurUnit());
 		prescription.setQuantity(drug.getQuantity());
+		prescription.setDispensingUnits(drug.getDispensingUnits());
 		prescription.setRepeat(drug.getRepeat());
 		prescription.setLastRefillDate(drug.getLastRefillDate());
 		prescription.setNosubs(drug.isNoSubs());
@@ -160,6 +162,7 @@ public class RxPrescriptionData {
 		prescription.setFrequencyCode(favorite.getFrequencyCode());
 		prescription.setDuration(favorite.getDuration());
 		prescription.setDurationUnit(favorite.getDurationUnit());
+		prescription.setDispensingUnits(favorite.getDispensingUnits());
 		prescription.setQuantity(favorite.getQuantity());
 		prescription.setRepeat(favorite.getRepeat());
 		prescription.setNosubs(favorite.getNosubs());
@@ -194,6 +197,7 @@ public class RxPrescriptionData {
 		prescription.setFrequencyCode(rePrescribe.getFrequencyCode());
 		prescription.setDuration(rePrescribe.getDuration());
 		prescription.setDurationUnit(rePrescribe.getDurationUnit());
+		prescription.setDispensingUnits(rePrescribe.getDispensingUnits());
 		prescription.setQuantity(rePrescribe.getQuantity());
 		prescription.setRepeat(rePrescribe.getRepeat());
 		prescription.setLastRefillDate(rePrescribe.getLastRefillDate());
@@ -259,6 +263,7 @@ public class RxPrescriptionData {
 		p.setDuration(drug.getDuration());
 		p.setDurationUnit(drug.getDuration());
 		p.setQuantity(drug.getQuantity());
+		p.setDispensingUnits(drug.getDispensingUnits());
 		p.setRepeat(drug.getRepeat());
 		p.setLastRefillDate(drug.getLastRefillDate());
 		p.setNosubs(drug.isNoSubs());
@@ -469,7 +474,7 @@ public class RxPrescriptionData {
 	}
 
 	private Favorite toFavorite(org.oscarehr.common.model.Favorite f) {
-		Favorite result = new Favorite(f.getId(), f.getProviderNo(), f.getName(), f.getBn(), (int) f.getGcnSeqno(), f.getCustomName(), f.getTakeMin(), f.getTakeMax(), f.getFrequencyCode(), f.getDuration(), f.getDurationUnit(), f.getQuantity(), f.getRepeat(), f.isNosubs(), f.isPrn(), f.getSpecial(), f.getGn(), f.getAtc(), f.getRegionalIdentifier(), f.getUnit(), f.getUnitName(), f.getMethod(), f.getRoute(), f.getDrugForm(), f.isCustomInstructions(), f.getDosage());
+		Favorite result = new Favorite(f.getId(), f.getProviderNo(), f.getName(), f.getBn(), (int) f.getGcnSeqno(), f.getCustomName(), f.getTakeMin(), f.getTakeMax(), f.getFrequencyCode(), f.getDuration(), f.getDurationUnit(), f.getQuantity(), f.getDispensingUnits(), f.getRepeat(), f.isNosubs(), f.isPrn(), f.getSpecial(), f.getGn(), f.getAtc(), f.getRegionalIdentifier(), f.getUnit(), f.getUnitName(), f.getMethod(), f.getRoute(), f.getDrugForm(), f.isCustomInstructions(), f.getDosage());
 		return result;
 	}
 
@@ -599,6 +604,7 @@ public class RxPrescriptionData {
 		String duration = null;
 		String durationUnit = null;
 		String quantity = null;
+		String dispensingUnits = null;
 		int repeat = 0;
 		java.util.Date lastRefillDate = null;
 		boolean nosubs = false;
@@ -981,8 +987,33 @@ public class RxPrescriptionData {
 
 			return b;
 		}
-
+		
+		private boolean isMethadoneOrSuboxone() {
+        	if (customName != null && (customName.toLowerCase().contains("methadone")
+        			||customName.toLowerCase().contains("suboxone")
+        			||customName.toLowerCase().contains("buprenorphine"))) {
+        		return true;
+        	}
+        	
+        	if (BN != null && (BN.toLowerCase().contains("methadone")
+        			|| BN.toLowerCase().contains("suboxone")
+        			|| BN.toLowerCase().contains("buprenorphine"))) {
+        		return true;
+        	}
+        	
+        	return false;
+        }
+		
 		public void calcEndDate() {
+			
+			if (oscar.OscarProperties.getInstance().isPropertyActive("enable_rx_custom_methodone_suboxone")
+        			&& (isMethadoneOrSuboxone())) {
+        		if (this.endDate == null) {
+        			this.endDate = this.rxDate;
+        		}
+        		return;
+        	}
+			
 			try {
 				GregorianCalendar cal = new GregorianCalendar(Locale.CANADA);
 				int days = 0;
@@ -1134,6 +1165,17 @@ public class RxPrescriptionData {
 			} else {
 				this.quantity = RHS;
 			}
+		}
+
+		public String getDispensingUnits() {
+			if (this.dispensingUnits == null) {
+				this.dispensingUnits = "";
+			}
+			return this.dispensingUnits;
+		}
+
+		public void setDispensingUnits(String RHS) {
+			this.dispensingUnits = RHS;
 		}
 
 		public int getRepeat() {
@@ -1358,12 +1400,70 @@ public class RxPrescriptionData {
 		}
 
 		public String getFullOutLine() {
-			return (RxPrescriptionData.getFullOutLine(getSpecial()));
+			String fullOutLine = (RxPrescriptionData.getFullOutLine(getSpecial()));
+        	if (oscar.OscarProperties.getInstance().isPropertyActive("enable_rx_custom_methodone_suboxone")) {
+        		// parse out comment
+        		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        		String custName = getCustomName();
+        		String brandName = getBrandName();
+        		StringBuilder sb = new StringBuilder();
+        		int flag = 1;
+        		if ((custName != null && custName.toLowerCase().contains("methadone")) ||
+       				 (brandName != null && brandName.toLowerCase().contains("methadone"))) {
+        			flag = 2;
+        		} else if ((custName != null && (custName.toLowerCase().contains("suboxone") || custName.toLowerCase().contains("buprenorphine"))) ||
+	       				 (brandName != null && (brandName.toLowerCase().contains("suboxone")  || brandName.toLowerCase().contains("buprenorphine")))){
+        			flag = 3;
+        		}
+        		
+        		if (flag != 1) {
+        			sb.append(";;Start Date:" + sdf.format(getRxDate()));
+        			sb.append("    ");
+        			sb.append("End Date:" + sdf.format(getEndDate()==null?RxUtil.Today():getEndDate()));
+        			sb.append(";");
+        			
+        			String cmt = getComment();
+        			if (cmt == null) {
+        				cmt = "";
+        			}
+        			String cmtArr[] = cmt.split(";");
+        			if (flag == 2) {
+        				sb.append("Drink observed in the pharmacy on days:;");
+        			} else {
+        				sb.append("Dose observed in the pharmacy on days:;");
+        			}
+        			if (cmtArr.length > 0 && cmtArr[0] != null) {
+        				sb.append(cmtArr[0]);
+        			}
+        			sb.append(";");
+        			sb.append("The following days are to be dispensed as take home doses:;");
+        			if (cmtArr.length > 1 && cmtArr[1] != null) {
+        				sb.append(cmtArr[1]);
+        			}
+        			sb.append(";");
+        			sb.append("Hold prescription if 3 consecutive doses missed or ");
+        			/*
+        			String dose = getDosage();
+        			if (dose == null) {
+        				dose = "";
+        			}
+        			sb.append("if dosage change exceeds " + dose + " from previous prescription.;");
+        			*/
+        			if(flag == 2) {
+        				sb.append("if dosage change exceeds 15mg from previous prescription.;");
+        			} else {
+        				sb.append("if dosage change exceeds 4mg from previous prescription.;");
+        			}
+        			sb.append("Notify physician if dose is missed.");
+        			fullOutLine += sb.toString();
+        		}
+        	}
+       		return fullOutLine;
 		}
 
 		public String getDosageDisplay() {
 			String ret = "";
-			if (this.getTakeMin() != this.getTakeMax()) {
+			if(!(Math.abs(this.getTakeMin() - this.getTakeMax()) <  0.00000001 )) {
 				ret += this.getTakeMinString() + "-" + this.getTakeMaxString();
 			} else {
 				ret += this.getTakeMinString();
@@ -1398,7 +1498,7 @@ public class RxPrescriptionData {
 					// + gcn.getRoute() + " ";
 				}
 
-				if (this.getTakeMin() != this.getTakeMax()) {
+				if(!(Math.abs(this.getTakeMin() - this.getTakeMax()) <  0.00000001 )) {
 					ret += this.getTakeMinString() + "-" + this.getTakeMaxString();
 				} else {
 					ret += this.getTakeMinString();
@@ -1433,6 +1533,7 @@ public class RxPrescriptionData {
 				}
 				ret += "  ";
 				ret += this.getQuantity();
+				ret += " " + this.getDispensingUnits();
 				ret += " Qty  Repeats: ";
 				ret += String.valueOf(this.getRepeat());
 
@@ -1463,7 +1564,7 @@ public class RxPrescriptionData {
 
 		public String getFullFrequency() {
 			String ret = "";
-			if (this.getTakeMin() != this.getTakeMax()) {
+			if(!(Math.abs(this.getTakeMin() - this.getTakeMax()) <  0.00000001 )) {
 				ret += this.getTakeMinString() + "-" + this.getTakeMaxString();
 			} else {
 				ret += this.getTakeMinString();
@@ -1606,6 +1707,7 @@ public class RxPrescriptionData {
 			drug.setDuration(getDuration());
 			drug.setDurUnit(getDurationUnit());
 			drug.setQuantity(getQuantity());
+			drug.setDispensingUnits(getDispensingUnits());
 			drug.setRepeat(getRepeat());
 			drug.setLastRefillDate(getLastRefillDate());
 			drug.setNoSubs(getNosubs());
@@ -1646,7 +1748,7 @@ public class RxPrescriptionData {
 		}
 
 		public boolean AddToFavorites(String providerNo, String favoriteName) {
-			Favorite fav = new Favorite(0, providerNo, favoriteName, this.getBrandName(), this.getGCN_SEQNO(), this.getCustomName(), this.getTakeMin(), this.getTakeMax(), this.getFrequencyCode(), this.getDuration(), this.getDurationUnit(), this.getQuantity(), this.getRepeat(), this.getNosubsInt(), this.getPrnInt(), this.getSpecial(), this.getGenericName(), this.getAtcCode(), this.getRegionalIdentifier(), this.getUnit(), this.getUnitName(), this.getMethod(), this.getRoute(), this.getDrugForm(),
+			Favorite fav = new Favorite(0, providerNo, favoriteName, this.getBrandName(), this.getGCN_SEQNO(), this.getCustomName(), this.getTakeMin(), this.getTakeMax(), this.getFrequencyCode(), this.getDuration(), this.getDurationUnit(), this.getQuantity(), this.getDispensingUnits(), this.getRepeat(), this.getNosubsInt(), this.getPrnInt(), this.getSpecial(), this.getGenericName(), this.getAtcCode(), this.getRegionalIdentifier(), this.getUnit(), this.getUnitName(), this.getMethod(), this.getRoute(), this.getDrugForm(),
 			        this.getCustomInstr(), this.getDosage());
 			fav.setDispenseInternal(this.getDispenseInternal());
 
@@ -1868,6 +1970,7 @@ public class RxPrescriptionData {
 		String duration;
 		String durationUnit;
 		String quantity;
+		String dispensingUnits;
 		int repeat;
 		boolean nosubs;
 		boolean prn;
@@ -1884,7 +1987,7 @@ public class RxPrescriptionData {
 		String dosage;
 		Boolean dispenseInternal;
 
-		public Favorite(int favoriteId, String providerNo, String favoriteName, String BN, int GCN_SEQNO, String customName, float takeMin, float takeMax, String frequencyCode, String duration, String durationUnit, String quantity, int repeat, int nosubs, int prn, String special, String GN, String atc, String regionalIdentifier, String unit, String unitName, String method, String route, String drugForm, boolean customInstr, String dosage) {
+		public Favorite(int favoriteId, String providerNo, String favoriteName, String BN, int GCN_SEQNO, String customName, float takeMin, float takeMax, String frequencyCode, String duration, String durationUnit, String quantity, String dispensingUnits, int repeat, int nosubs, int prn, String special, String GN, String atc, String regionalIdentifier, String unit, String unitName, String method, String route, String drugForm, boolean customInstr, String dosage) {
 			this.favoriteId = favoriteId;
 			this.providerNo = providerNo;
 			this.favoriteName = favoriteName;
@@ -1897,6 +2000,7 @@ public class RxPrescriptionData {
 			this.duration = duration;
 			this.durationUnit = durationUnit;
 			this.quantity = quantity;
+			this.dispensingUnits = dispensingUnits;
 			this.repeat = repeat;
 			this.nosubs = RxUtil.IntToBool(nosubs);
 			this.prn = RxUtil.IntToBool(prn);
@@ -1913,7 +2017,7 @@ public class RxPrescriptionData {
 			this.dosage = dosage;
 		}
 
-		public Favorite(int favoriteId, String providerNo, String favoriteName, String BN, int GCN_SEQNO, String customName, float takeMin, float takeMax, String frequencyCode, String duration, String durationUnit, String quantity, int repeat, boolean nosubs, boolean prn, String special, String GN, String atc, String regionalIdentifier, String unit, String unitName, String method, String route, String drugForm, boolean customInstr, String dosage) {
+		public Favorite(int favoriteId, String providerNo, String favoriteName, String BN, int GCN_SEQNO, String customName, float takeMin, float takeMax, String frequencyCode, String duration, String durationUnit, String quantity, String dispensingUnits, int repeat, boolean nosubs, boolean prn, String special, String GN, String atc, String regionalIdentifier, String unit, String unitName, String method, String route, String drugForm, boolean customInstr, String dosage) {
 			this.favoriteId = favoriteId;
 			this.providerNo = providerNo;
 			this.favoriteName = favoriteName;
@@ -1926,6 +2030,7 @@ public class RxPrescriptionData {
 			this.duration = duration;
 			this.durationUnit = durationUnit;
 			this.quantity = quantity;
+			this.dispensingUnits = dispensingUnits;
 			this.repeat = repeat;
 			this.nosubs = nosubs;
 			this.prn = prn;
@@ -2044,6 +2149,14 @@ public class RxPrescriptionData {
 
 		public void setQuantity(String RHS) {
 			this.quantity = RHS;
+		}
+
+		public String getDispensingUnits() {
+			return this.dispensingUnits;
+		}
+
+		public void setDispensingUnits(String RHS) {
+			this.dispensingUnits = RHS;
 		}
 
 		public int getRepeat() {
@@ -2322,7 +2435,7 @@ public class RxPrescriptionData {
 	}
 
 	public static boolean addToFavorites(String providerNo, String favoriteName, Drug drug) {
-		Favorite fav = new Favorite(0, providerNo, favoriteName, drug.getBrandName(), drug.getGcnSeqNo(), drug.getCustomName(), drug.getTakeMin(), drug.getTakeMax(), drug.getFreqCode(), drug.getDuration(), drug.getDurUnit(), drug.getQuantity(), drug.getRepeat(), drug.isNoSubs(), drug.isPrn(), drug.getSpecial(), drug.getGenericName(), drug.getAtc(), drug.getRegionalIdentifier(), drug.getUnit(), drug.getUnitName(), drug.getMethod(), drug.getRoute(), drug.getDrugForm(), drug.isCustomInstructions(),
+		Favorite fav = new Favorite(0, providerNo, favoriteName, drug.getBrandName(), drug.getGcnSeqNo(), drug.getCustomName(), drug.getTakeMin(), drug.getTakeMax(), drug.getFreqCode(), drug.getDuration(), drug.getDurUnit(), drug.getQuantity(), drug.getDispensingUnits(), drug.getRepeat(), drug.isNoSubs(), drug.isPrn(), drug.getSpecial(), drug.getGenericName(), drug.getAtc(), drug.getRegionalIdentifier(), drug.getUnit(), drug.getUnitName(), drug.getMethod(), drug.getRoute(), drug.getDrugForm(), drug.isCustomInstructions(),
 		        drug.getDosage());
 		fav.setDispenseInternal(drug.getDispenseInternal());
 		return fav.Save();

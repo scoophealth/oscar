@@ -87,6 +87,12 @@ public class EForm extends AbstractModel<Integer> implements Serializable {
 
 	private String roleType;
 
+	//for restricting by program
+	private Integer programNo;
+	
+	private boolean restrictToProgram = false;
+	
+	
 	@Override
 	public Integer getId() {
 		return (id);
@@ -178,6 +184,22 @@ public class EForm extends AbstractModel<Integer> implements Serializable {
 
 	public void setRoleType(String roleType) {
 		this.roleType = roleType;
+	}
+
+	public Integer getProgramNo() {
+		return programNo;
+	}
+
+	public void setProgramNo(Integer programNo) {
+		this.programNo = programNo;
+	}
+
+	public boolean isRestrictToProgram() {
+		return restrictToProgram;
+	}
+
+	public void setRestrictToProgram(boolean restrictToProgram) {
+		this.restrictToProgram = restrictToProgram;
 	}
 
 	@PreRemove

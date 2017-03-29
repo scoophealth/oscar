@@ -52,9 +52,16 @@ public class DelImageAction extends Action {
 		}
     	
         String imgname = request.getParameter("filename");
+        
+        if(imgname.startsWith(File.separator)) {
+	    	throw new IllegalArgumentException("Cannot request file with absolute path!");
+	    }
+        
         String imgpath = OscarProperties.getInstance().getProperty("eform_image");
-        File image = new File(imgpath + "/" + imgname);
+        File image = new File(imgpath,imgname);
+        
         image.delete();
+        
         return mapping.findForward("success");
     }
     

@@ -31,27 +31,33 @@
 <%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%@ page import="org.oscarehr.common.model.DemographicContact" %>
 <%@ page import="org.oscarehr.common.model.Demographic" %>
-<%@ page import="org.oscarehr.common.dao.DemographicDao" %>
 <%@ page import="org.oscarehr.common.dao.ContactSpecialtyDao" %>
 <%@ page import="org.oscarehr.common.model.ContactSpecialty" %>
+<%@ page import="org.oscarehr.managers.DemographicManager" %>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
 <security:oscarSec roleName="${ sessionScope.userrole }" objectName="_demographic" rights="r" reverse="${ false }">
 
 <% 
 	List<DemographicContact> demographicContacts = null;
-	DemographicDao demographicDao = null;
 	Demographic demographic = null;
 	ContactSpecialtyDao specialtyDao = null;
 	List<ContactSpecialty> specialty = null;
 	String demographicNoString = request.getParameter("demographicNo");
+	DemographicManager demographicManager = null;
 	
 	if ( ! StringUtils.isBlank( demographicNoString ) ) {		
-		demographicDao = SpringUtils.getBean(DemographicDao.class);
+/* 		demographicDao = SpringUtils.getBean(DemographicDao.class);
 		demographic = demographicDao.getClientByDemographicNo( Integer.parseInt(demographicNoString) );
-		demographicContacts = ContactAction.getDemographicContacts(demographic);
+		demographicContacts = ContactAction.getDemographicContacts(demographic,"professional"); */
 		specialtyDao = SpringUtils.getBean(ContactSpecialtyDao.class);
-		specialty = specialtyDao.findAll();
+		specialty = specialtyDao.findAll();		
+		demographicManager = SpringUtils.getBean(DemographicManager.class);
+		demographicContacts = demographicManager.getHealthCareTeam(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.parseInt(demographicNoString));
+		demographic = demographicManager.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNoString);
 	}
 	
 	pageContext.setAttribute("demographic", demographic);
@@ -61,9 +67,6 @@
 
 <%-- DETACHED VIEW ENABLED  --%>
 <c:if test="${ param.view eq 'detached' }">
-
-	<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-	<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 	
 	<!DOCTYPE html>
 	<html>

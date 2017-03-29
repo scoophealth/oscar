@@ -29,7 +29,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -70,6 +72,7 @@ import org.oscarehr.integration.hl7.generators.HL7A04Generator;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.to.model.DemographicSearchRequest;
 import org.oscarehr.ws.rest.to.model.DemographicSearchRequest.SEARCHMODE;
 import org.oscarehr.ws.rest.to.model.DemographicSearchRequest.SORTMODE;
@@ -88,11 +91,14 @@ import oscar.util.SqlUtils;
 public class DemographicDao extends HibernateDaoSupport implements ApplicationEventPublisherAware {
 
 	private static final int MAX_SELECT_SIZE = 500;
-	
+
 	static Logger log = MiscUtils.getLogger();
 	
 	private ApplicationEventPublisher publisher;
-    
+	
+	public static enum SearchType { SEARCH_PHONE, SEARCH_DOB, 
+		SEARCH_ADDRESS, SEARCH_HIN, SEARCH_CHART_NO, SEARCH_DEMOGRAPHIC_NO, 
+		SEARCH_PROGRAM_NO, SEARCH_NAME, SEARCH_BAND_NUMBER}
 
 	/**
 	 * Finds merged demographic IDs for the specified demographic.
@@ -223,6 +229,40 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		return clients;
 	}
 
+    /*
+     * get demographics according to their program, ordered by lastname and first name
+     */
+    public List getActiveDemographicByProgramId(int programId) {
+        // get duplicated clients from this sql
+        String q = "Select d From Demographic d, Admission a " + "Where (d.PatientStatus=? or d.PatientStatus='' or d.PatientStatus=null) and d.DemographicNo=a.clientId and a.programId=? and "
+                + "( a.dischargeDate is null)" + " order by d.LastName,d.FirstName";
+
+        String status = "AC"; // only show active clients
+        List clients = new ArrayList<Demographic>();
+	try{
+        List rs = getHibernateTemplate().find(q, new Object[] { status, new Integer(programId) });
+
+	if(rs!=null) {
+        Integer clientNo = 0;
+        Iterator it = rs.iterator();
+        while (it.hasNext()) {
+            Demographic demographic = (Demographic) it.next();
+
+            // no dumplicated clients.
+            if (demographic==null || demographic.getDemographicNo() == clientNo) continue;
+
+            clientNo = demographic.getDemographicNo();
+
+            clients.add(demographic);
+        }
+	}
+	} catch(Exception e) {
+                        logger.error("error",e);
+                        throw e;
+        }
+
+        return clients;
+    }
 	public List<Demographic> getActiveDemosByHealthCardNo(String hcn, String hcnType) {
 
 		Session s = getSession();
@@ -383,24 +423,179 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 	       }
 	}
 	
-	private static final String PROGRAM_DOMAIN_RESTRICTION = "select distinct a.clientId from ProgramProvider pp,Admission a WHERE pp.ProgramId=a.programId AND pp.ProviderNo=:providerNo";
+	public static final String PROGRAM_DOMAIN_RESTRICTION = "select distinct a.clientId from ProgramProvider pp,Admission a WHERE pp.ProgramId=a.programId AND pp.ProviderNo=:providerNo";
 
+	
+	public List<Demographic> doMultiSearch(List<String> searchTypes, List<String> searchStrs, int limit, int offset, String providerNo, boolean outOfDomain, boolean active, boolean inactive) {
+		List<Demographic> results = new ArrayList<Demographic>();
+
+		//add program?
+		boolean leadingWildcard=false;
+        if("true".equals(OscarProperties.getInstance().getProperty("search.searchName.addLeadingWildcard", "false"))) {
+        	leadingWildcard=true;
+	  	}
+        
+        String pstatus = OscarProperties.getInstance().getProperty("inactive_statuses", "IN, DE, IC, ID, MO, FI");
+    	pstatus = pstatus.replaceAll("'","").replaceAll("\\s", "");
+    	List<String> inactiveStati = Arrays.asList(pstatus.split(","));
+
+		Map<String,Object> paramMap = new HashMap<String,Object>();
+		Map<String,Collection> paramListMap = new HashMap<String,Collection>();
+		
+		String sql = "SELECT d FROM Demographic d WHERE ";
+		
+		
+		for(int x=0;x<searchTypes.size();x++) {
+			
+			String searchType = searchTypes.get(x);
+			searchType = searchType.trim().toUpperCase();
+			String searchStr = searchStrs.get(x);
+	
+			if(x != 0) {
+				sql += " AND ";
+			}
+			
+			switch( SearchType.valueOf( searchType ) ) {
+			
+			case SEARCH_PHONE :
+				sql += " (d.Phone like :phone"+x+" or d.Phone2 like :phone"+x+") ";
+				paramMap.put("phone"+x, searchStr.trim() + "%");
+				break;
+			case SEARCH_DOB:
+				sql += " (d.YearOfBirth like :yearOfBirth"+x+" AND d.MonthOfBirth like :monthOfBirth"+x+" AND d.DateOfBirth like :dateOfBirth"+x+") ";
+				String[] params = searchStr.split("-");
+				if (params.length != 3) {
+					//make some kind of warning message
+					return null;
+				}
+				paramMap.put("yearOfBirth"+x, params[0].trim() + "%");
+				paramMap.put("monthOfBirth"+x, params[1].trim() + "%");
+				paramMap.put("dateOfBirth"+x, params[2].trim() + "%");
+				break;
+			case SEARCH_ADDRESS:
+				sql += " (d.Address like :address"+x+") ";
+				paramMap.put("address"+x, searchStr.trim() + "%");
+				break;
+			case SEARCH_HIN:
+				sql += " (d.Hin like :hin"+x+") ";
+				paramMap.put("hin"+x, searchStr.trim() + "%");
+				break;
+			case SEARCH_CHART_NO:
+				sql += " (d.ChartNo like :chartNo"+x+") ";
+				paramMap.put("chartNo"+x, searchStr.trim() + "%");
+				break;
+			case SEARCH_DEMOGRAPHIC_NO:
+				sql += " (d.DemographicNo like :demographicNo"+x+") ";
+				Integer demoNo = null;
+				try {
+					demoNo = Integer.parseInt(searchStr.trim());
+				} catch(NumberFormatException e) {
+					//warning
+					return null;
+				}
+				paramMap.put("demographicNo"+x, demoNo);
+				break;
+			case SEARCH_PROGRAM_NO:
+				sql += "(d.DemographicNo IN (select a.clientId from Admission a WHERE a.program.id = :programId and a.admissionStatus = :aStatus))";
+				Integer programNo = null;
+				try {
+					programNo = Integer.parseInt(searchStr.trim());
+				} catch(NumberFormatException e) {
+					//warning
+					return null;
+				}
+				paramMap.put("programId", programNo);
+				paramMap.put("aStatus", Admission.STATUS_CURRENT);
+				break;
+			case SEARCH_NAME:
+			default:	
+				sql += " (";
+				sql += " d.LastName like :lastName"+x+" ";
+				paramMap.put("lastName"+x, (leadingWildcard?"%":"") + searchStr.split(",")[0].trim() + "%");
+				if(searchStr.split(",").length == 2) {
+					sql += " AND d.FirstName like :firstName"+x+" ";
+					paramMap.put("firstName"+x, (leadingWildcard?"%":"") + searchStr.split(",")[1].trim() + "%");
+				}
+				sql += ") ";
+			}
+		
+		}
+			
+		if(active && !inactive) {
+			sql += " and d.PatientStatus " + "not in (:statuses)";
+			paramListMap.put("statuses", inactiveStati);
+		} else if(!active && inactive) {
+			sql += " and d.PatientStatus " + "in (:statuses)";
+			paramListMap.put("statuses", inactiveStati);
+		}
+		
+		 
+		
+		if(providerNo != null && !outOfDomain) {
+			sql += " AND d.id IN ("+ PROGRAM_DOMAIN_RESTRICTION+") ";
+			paramMap.put("providerNo", providerNo);
+		}
+		
+		
+		Session session = this.getSession();
+		try {
+			Query q = session.createQuery(sql);
+			q.setFirstResult(offset);
+			q.setMaxResults(limit);
+
+			for(String key:paramMap.keySet()) {
+				Object val = paramMap.get(key);
+				q.setParameter(key, val);
+			}
+			for(String key:paramListMap.keySet()) {
+				Collection val = paramListMap.get(key);
+				q.setParameterList(key, val);
+			}
+			
+			
+			results.addAll(q.list());
+		} 
+		catch(Exception e) {
+			logger.error("error",e);
+			throw e;
+		}
+		finally {
+			this.releaseSession(session);
+		}
+			
+		
+		
+		return results;
+	}
+	
 	public List<Demographic> searchDemographicByName(String searchStr, int limit, int offset, String providerNo, boolean outOfDomain) {
-		return searchDemographicByNameAndStatus(searchStr,null,limit,offset,providerNo,outOfDomain,false);
+		return searchDemographicByNameAndStatus(searchStr,null,limit,offset,providerNo,outOfDomain,false,false);
 	}
 
 	public List<Demographic> searchDemographicByNameAndNotStatus(String searchStr, List<String> statuses, int limit, int offset, String providerNo, boolean outOfDomain) {
-		return searchDemographicByNameAndStatus(searchStr,statuses,limit,offset,providerNo,outOfDomain,true);
+		return searchDemographicByNameAndStatus(searchStr,statuses,limit,offset,providerNo,outOfDomain,true,false);
 	}
+	public List<Demographic> searchDemographicByNameAndNotStatus(String searchStr, List<String> statuses, int limit, int offset, String providerNo, boolean outOfDomain, boolean merged) {
+		return searchDemographicByNameAndStatus(searchStr,statuses,limit,offset,providerNo,outOfDomain,true,merged);
+	}
+	
 	public List<Demographic> searchDemographicByNameAndStatus(String searchStr, List<String> statuses, int limit, int offset, String providerNo, boolean outOfDomain) {
-		return searchDemographicByNameAndStatus(searchStr,statuses,limit,offset,providerNo,outOfDomain,false);
+		return searchDemographicByNameAndStatus(searchStr,statuses,limit,offset,providerNo,outOfDomain,false,false);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Demographic> searchDemographicByNameAndStatus(String searchStr, List<String> statuses, int limit, int offset, String providerNo, boolean outOfDomain,boolean ignoreStatuses) {
+	public List<Demographic> searchDemographicByNameAndStatus(String searchStr, List<String> statuses, int limit, int offset, String providerNo, boolean outOfDomain,boolean ignoreStatuses, boolean merged) {
 		List<Demographic> list = new ArrayList<Demographic>();
 		String queryString = "From Demographic d where d.LastName like :lastName ";
 
+		
+		boolean leadingWildcard=false;
+        if("true".equals(OscarProperties.getInstance().getProperty("search.searchName.addLeadingWildcard", "false"))) {
+        	leadingWildcard=true;
+	  	}
+	  	
+        
+		
 		String[] name = searchStr.split(",");
 		if (name.length == 2) {
 			queryString += " and first_name like :firstName ";
@@ -414,16 +609,19 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		if(providerNo != null && !outOfDomain) {
 			queryString += " AND d.id IN ("+ PROGRAM_DOMAIN_RESTRICTION+") ";
 		}
-		
+
+		if(merged) {
+			queryString += " AND d.HeadRecord is not null";
+		}
 		Session session = this.getSession();
 		try {
 			Query q = session.createQuery(queryString);
 			q.setFirstResult(offset);
 			q.setMaxResults(limit);
 
-			q.setParameter("lastName", name[0].trim() + "%");
+			q.setParameter("lastName", (leadingWildcard?"%":"") + name[0].trim() + "%");
 			if (name.length == 2) {
-				q.setParameter("firstName", name[1].trim() + "%");
+				q.setParameter("firstName", (leadingWildcard?"%":"") + name[1].trim() + "%");
 			}
 
 			if(statuses != null) {
@@ -570,7 +768,7 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 	@SuppressWarnings("unchecked")
 	public List<Demographic> searchDemographicByPhoneAndStatus(String phoneStr, List<String> statuses, int limit, int offset, String providerNo, boolean outOfDomain,boolean ignoreStatuses) {
 		List<Demographic> list = new ArrayList<Demographic>();
-		String queryString = "From Demographic d where d.Phone like :phone ";
+		String queryString = "From Demographic d where d.Phone like :phone or d.Phone2 like :phone ";
 
 		if(statuses != null) {
 			queryString += " and d.PatientStatus " + ((ignoreStatuses)?"not":"") + "  in (:statuses)";
@@ -601,9 +799,53 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		} finally {
 			this.releaseSession(session);
 		}
+		
+		//list.addAll(searchDemographicByCellPhoneAndStatus(phoneStr,statuses,limit,offset,providerNo,outOfDomain,ignoreStatuses));
+		
+		DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+		list.addAll(demographicExtDao.searchDemographicByPhoneAndStatus(phoneStr, statuses, limit, offset, providerNo, outOfDomain, ignoreStatuses));
+		
 		return list;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Demographic> searchDemographicByCellPhoneAndStatus(String phoneStr, List<String> statuses, int limit, int offset, String providerNo, boolean outOfDomain,boolean ignoreStatuses) {
+		List<Demographic> list = new ArrayList<Demographic>();
+		String queryString = "SELECT d From Demographic d,DemographicExt e where d.DemographicNo = e.demographicNo AND  e.key = :key and e.value like :value";
 
+		if(statuses != null) {
+			queryString += " and d.PatientStatus " + ((ignoreStatuses)?"not":"") + "  in (:statuses)";
+		}
+		
+		if(providerNo != null && !outOfDomain) {
+			queryString += " AND d.id IN ("+ PROGRAM_DOMAIN_RESTRICTION+") ";
+		}
+		
+		Session session = this.getSession();
+		try {
+			Query q = session.createQuery(queryString);
+			q.setFirstResult(offset);
+			q.setMaxResults(limit);
+
+			q.setParameter("key", "demo_cell");
+			q.setParameter("value", phoneStr.trim() + "%");
+			
+			if(statuses != null) {
+				q.setParameterList("statuses", statuses);
+			}
+
+			if(providerNo != null && !outOfDomain) {
+				q.setParameter("providerNo", providerNo);
+			}
+			
+			list = q.list();
+		} finally {
+			this.releaseSession(session);
+		}
+		return list;
+		
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Demographic> searchMergedDemographicByPhone(String phoneStr, int limit, int offset, String providerNo, boolean outOfDomain) {
 		List<Demographic> list = new ArrayList<Demographic>();

@@ -34,9 +34,11 @@
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="org.oscarehr.util.LocaleUtils"%>
 <%@page import="org.oscarehr.util.WebUtils"%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
+<%@page import="org.oscarehr.managers.ProgramManager2" %>
 <%@page import="org.oscarehr.util.MiscUtils" %>
 <%@page import="org.oscarehr.managers.PreventionManager" %>
-
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
@@ -57,7 +59,7 @@ if(!authed) {
 %>
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-   		 
+    ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
   //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
   String demographic_no = request.getParameter("demographic_no");
   DemographicData demoData = new DemographicData();
@@ -67,10 +69,11 @@ if(!authed) {
   String mrp = demo.getProviderNo();
   PreventionManager preventionManager = SpringUtils.getBean(PreventionManager.class);
 
-  PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
-  ArrayList<HashMap<String,String>> prevList = pdc.getPreventions();
-
-  ArrayList<Map<String,Object>> configSets = pdc.getConfigurationSets();
+  PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance(loggedInInfo);
+  ArrayList<HashMap<String,String>> prevList = pdc.getPreventions(loggedInInfo);
+  
+  
+  ArrayList<Map<String,Object>> configSets = pdc.getConfigurationSets(loggedInInfo);
 
 
 
@@ -461,19 +464,49 @@ text-align:left;
 		<h3>&nbsp;Preventions</h3>
 		<div style="background-color: #EEEEFF;">
 		<ul>
-			<%for (int i = 0 ; i < prevList.size(); i++){
+			<%
+			Map<String,Boolean> shown = new HashMap<String,Boolean>();
+			List<ProgramProvider> programProviders = programManager2.getProgramDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+			
+			for (int i = 0 ; i < prevList.size(); i++){
 				HashMap<String,String> h = prevList.get(i);
                 String prevName = h.get("name");
-                           
-	            if(!preventionManager.hideItem(prevName)){%>
-					<li style="margin-top: 2px;"><a
-						href="javascript: function myFunction() {return false; }"
-						onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
-					<%=prevName%> </a></li>
-				<%
-				}
-			}
-			%>
+                
+            	if(!StringUtils.isEmpty(h.get("private"))) {
+                	String key = h.get("private");
+					if(key != null) {
+					
+						String programs = OscarProperties.getInstance().getProperty(key);
+						if(programs != null) {
+							String[] programNos = programs.split(",");
+							
+							for(ProgramProvider programProvider:programProviders) {
+								
+								if(contains(programNos,String.valueOf(programProvider.getProgramId()))) {
+									continue;
+								}
+							}
+						} else {
+							MiscUtils.getLogger().warn("property " + programs + " should have a comma separated list of programNos");
+						}
+					} else {
+						MiscUtils.getLogger().warn("prevention " + h.get("name") + " has an invalid private attribute. It should map to a property name");
+					}
+            	}
+            %>
+            <%
+            if(!preventionManager.hideItem(prevName) && shown.get(prevName) == null){
+            %>
+			<li style="margin-top: 2px;"><a
+				href="javascript: function myFunction() {return false; }"
+				onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
+			<%=prevName%> </a></li>
+			
+			<%
+			shown.put(prevName,true);
+            }
+            }
+            %>
 		</ul>
 		</div>
 		</div>
@@ -586,10 +619,36 @@ text-align:left;
                 <input type="hidden" name="module" value="prevention">
 		<%
                  if (!oscar.OscarProperties.getInstance().getBooleanProperty("PREVENTION_CLASSIC_VIEW","yes")){
+                	 shown.clear();
                    ArrayList<Map<String,Object>> hiddenlist = new ArrayList<Map<String,Object>>();
                   for (int i = 0 ; i < prevList.size(); i++){
                   		HashMap<String,String> h = prevList.get(i);
                         String prevName = h.get("name");
+                        
+                        //TODO:
+                        if(!StringUtils.isEmpty(h.get("private"))) {
+                        	String key = h.get("private");
+        					if(key != null) {
+        					
+        						String programs = OscarProperties.getInstance().getProperty(key);
+        						if(programs != null) {
+        							String[] programNos = programs.split(",");
+        							
+        							for(ProgramProvider programProvider:programProviders) {
+        								
+        								if(contains(programNos,String.valueOf(programProvider.getProgramId()))) {
+        									continue;
+        								}
+        							}
+        						} else {
+        							MiscUtils.getLogger().warn("property " + programs + " should have a comma separated list of programNos");
+        						}
+        					} else {
+        						MiscUtils.getLogger().warn("prevention " + h.get("name") + " has an invalid private attribute. It should map to a property name");
+        					}
+        					
+                    	}
+                        
                         ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(loggedInInfo, prevName, Integer.valueOf(demographic_no));
                         PreventionData.addRemotePreventions(loggedInInfo, alist, demographicId,prevName,demographicDateOfBirth);
                         boolean show = pdc.display(loggedInInfo, h, demographic_no,alist.size());
@@ -598,7 +657,12 @@ text-align:left;
                             h2.put("prev",h);
                             h2.put("list",alist);
                             hiddenlist.add(h2);
+                            
                         }else{
+                        	if(shown.get(prevName) != null) {
+                        		continue;
+                        	}
+                        	shown.put(prevName, true);
                %>
 
 		<div class="preventionSection">
@@ -718,7 +782,7 @@ text-align:left;
 		<div class="preventionSet"
 			<%=pdc.getDisplay(loggedInInfo, setHash,demographic_no)%>;"  id="<%="prev"+setNum%>">
 		<%for (int i = 0; i < prevs.length ; i++) {
-			HashMap<String,String> h = pdc.getPrevention(prevs[i]); %>
+			HashMap<String,String> h = pdc.getPrevention(loggedInInfo, prevs[i]); 
 			if(h == null) { //this happens with private entries
 				continue;
 			}
@@ -845,4 +909,13 @@ String r(Object re, String result){
         }
         return ret;
     }
+
+private boolean contains(String[] arr, String val) {
+	for(String a:arr) {
+		if(val.equals(a)) {
+			return true;
+		}
+	}
+	return false;
+}
 %>

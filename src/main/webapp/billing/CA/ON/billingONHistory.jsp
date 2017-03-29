@@ -17,19 +17,37 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
-<%@page import="java.math.BigDecimal"%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-  if(session.getAttribute("user") == null)
-    response.sendRedirect("../logout.htm");
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
+<%@page import="java.math.BigDecimal"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%
+
   String curProvider_no;
   curProvider_no = (String) session.getAttribute("user");
-  String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user"); 
   //display the main provider page
   //includeing the provider name and a month calendar
   String strLimit1="0";
   String strLimit2="10";
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
+  
+  LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+
 %>
 <%@ page
 	import="java.util.*, java.sql.*, java.net.*, oscar.*, oscar.oscarDB.*"
@@ -48,7 +66,6 @@
 	BillingONCHeader1Dao bCh1Dao = SpringUtils.getBean(BillingONCHeader1Dao.class);	
 %>
 
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <jsp:useBean id="providerBean" class="java.util.Properties"
@@ -107,7 +124,7 @@ function popUpClosed() {
 JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
 BillingONExtDao billingOnExtDao = (BillingONExtDao)SpringUtils.getBean(BillingONExtDao.class);
 String limit = " limit " + strLimit1 + "," + strLimit2;
-List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), Integer.parseInt(strLimit2), Integer.parseInt(strLimit1), null);
+List aL = dbObj.getBillingHist(loggedInInfo, request.getParameter("demographic_no"), Integer.parseInt(strLimit2), Integer.parseInt(strLimit1), null);
 int nItems=0;
 for(int i=0; i<aL.size(); i=i+2) {
 	nItems++;
@@ -116,11 +133,11 @@ for(int i=0; i<aL.size(); i=i+2) {
 	String strBillType = obj.getPay_program();
 	if(strBillType != null) {
 		if(strBillType.matches(BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)) {
-			if(BillingDataHlp.propBillingType.getProperty(obj.getStatus(),"").equals("Settled")) {
+			if(BillingDataHlp.getPropBillingType().getProperty(obj.getStatus(),"").equals("Settled")) {
 				strBillType += " Settled";
 			}
 		} else {
-			strBillType = BillingDataHlp.propBillingType.getProperty(obj.getStatus(),"");
+			strBillType = BillingDataHlp.getPropBillingType().getProperty(obj.getStatus(),"");
 		}
 	} else {
 		strBillType = "";

@@ -23,28 +23,28 @@ package com.quatro.model.security;
 
 import java.util.Calendar;
 
-
 public class Secrole implements java.io.Serializable {
 
 	// Fields
-
 	private Long id;
 	private String roleName;
 	private String description;
-	private boolean active;   
+	private boolean active;
 	private String lastUpdateUser;
 	private Calendar lastUpdateDate;
-	
-    private int orderByIndex;
+
+	private int orderByIndex;
 
 	// Constructors
 
-    public void setId(Long id) {
-    	this.id = id;
-    }
-    public Long getId() {
-    	return id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
 	public boolean isActive() {
 		return active;
 	}
@@ -77,19 +77,13 @@ public class Secrole implements java.io.Serializable {
 		this.orderByIndex = orderByIndex;
 	}
 
-	/** default constructor */
 	public Secrole() {
 	}
-
-	/** full constructor */
+	
 	public Secrole(String roleName, String description) {
 		this.roleName = roleName;
 		this.description = description;
 	}
-
-	// Property accessors
-
-	
 
 	public String getRoleName() {
 		return this.roleName;
@@ -110,19 +104,49 @@ public class Secrole implements java.io.Serializable {
 	public String getName() {
 		return roleName;
 	}
-	
+
 	public void setName(String name) {
 		this.roleName = name;
 	}
 
-	public boolean equals(Object obj) {
-		if (obj == null) return false;
-		if (!(obj instanceof Secrole)) return false;
-
-		Secrole r = (Secrole) obj;
-		if (r.getId() == null || this.getId() == null) return false;
-		if (this.getId().longValue() == r.getId().longValue()) return true;
-
-		return false;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (active ? 1231 : 1237);
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((lastUpdateDate == null) ? 0 : lastUpdateDate.hashCode());
+		result = prime * result + ((lastUpdateUser == null) ? 0 : lastUpdateUser.hashCode());
+		result = prime * result + orderByIndex;
+		result = prime * result + ((roleName == null) ? 0 : roleName.hashCode());
+		return result;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Secrole other = (Secrole) obj;
+		if (active != other.active) return false;
+		if (description == null) {
+			if (other.description != null) return false;
+		} else if (!description.equals(other.description)) return false;
+		if (id == null) {
+			if (other.id != null) return false;
+		} else if (!id.equals(other.id)) return false;
+		if (lastUpdateDate == null) {
+			if (other.lastUpdateDate != null) return false;
+		} else if (!lastUpdateDate.equals(other.lastUpdateDate)) return false;
+		if (lastUpdateUser == null) {
+			if (other.lastUpdateUser != null) return false;
+		} else if (!lastUpdateUser.equals(other.lastUpdateUser)) return false;
+		if (orderByIndex != other.orderByIndex) return false;
+		if (roleName == null) {
+			if (other.roleName != null) return false;
+		} else if (!roleName.equals(other.roleName)) return false;
+		return true;
+	}
+
 }

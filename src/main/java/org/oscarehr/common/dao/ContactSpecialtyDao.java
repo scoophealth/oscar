@@ -41,5 +41,17 @@ public class ContactSpecialtyDao extends AbstractDao<ContactSpecialty> {
 		List<ContactSpecialty> contactSpecialtyList = findAll.getResultList();		
 		return contactSpecialtyList;
 	}
+	
+	/**
+	 * Find Professional Contact Specialty by Specialty Type
+	 * @param String
+	 * @return ContactSpecialty Entity or null if no result
+	 */
+	public ContactSpecialty findBySpecialty( String specialtyName ) {
+		Query query = entityManager.createQuery("SELECT s FROM ContactSpecialty s WHERE s.specialty LIKE :SPECIALTY");
+		query.setParameter("SPECIALTY", specialtyName);
+		ContactSpecialty contactSpecialty = getSingleResultOrNull( query );
+		return contactSpecialty;
+	}
 
 }

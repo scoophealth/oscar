@@ -79,6 +79,7 @@ import org.oscarehr.casemgmt.service.CaseManagementPrint;
 import org.oscarehr.casemgmt.web.CaseManagementViewAction.IssueDisplay;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
 import org.oscarehr.common.dao.BillingServiceDao;
+import org.oscarehr.common.dao.CaseManagementTmpSaveDao;
 import org.oscarehr.common.dao.CasemgmtNoteLockDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
@@ -102,6 +103,7 @@ import org.oscarehr.eyeform.model.Macro;
 import org.oscarehr.eyeform.web.FollowUpAction;
 import org.oscarehr.eyeform.web.ProcedureBookAction;
 import org.oscarehr.eyeform.web.TestBookAction;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.EncounterUtil;
 import org.oscarehr.util.LoggedInInfo;
@@ -2972,7 +2974,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				f.setDemographicNo(Integer.parseInt(cform.getDemographicNo()));
 				f.setProvider(loggedInInfo.getLoggedInProvider());
 				f.setTimeframe(followUpUnit);
-				f.setTimespan(followUpNo);
+				f.setTimespan(String.valueOf(followUpNo));
 				f.setType("followup");
 				f.setUrgency("routine");
 				f.setFollowupProvider(followUpDr);
@@ -3033,7 +3035,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 				BigDecimal btotal = new BigDecimal(0);
 				// must use 100.0 otherwise result will be an int
-				BigDecimal gstFactor = new BigDecimal(1 + gstControlDao.find(1).getGstPercent().intValue() / 100.0);
+				BigDecimal gstFactor = BigDecimal.valueOf(1 + gstControlDao.find(1).getGstPercent().intValue() / 100.0);
 				ArrayList<String[]> percentUnits = new ArrayList<String[]>();
 				for (int i = 0; i < bcodes.length; i++) {
 					if (StringUtils.isBlank(bcodes[i])) continue;
@@ -3112,7 +3114,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 				mockReq.getSession().setAttribute("user", loggedInInfo.getLoggedInProviderNo());
 
 				BillingSavePrep bObj = new BillingSavePrep();
-				boolean ret = bObj.addABillingRecord(bObj.getBillingClaimObj(mockReq));
+				boolean ret = bObj.addABillingRecord(loggedInInfo, bObj.getBillingClaimObj(mockReq));
 				/*
 				 * not applicable in macro context if (mockReq.getParameter("xml_billtype").substring(0, 3).matches( BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)) { mockReq.addParameter("billto", macro.getBillingBillto()); mockReq.addParameter("remitto",
 				 * macro.getBillingRemitto()); mockReq.addParameter("gstBilledTotal", macro .getBillingGstBilledTotal()); mockReq.addParameter("payment", macro.getBillingPayment()); mockReq.addParameter("refund", macro.getBillingRefund());
@@ -3534,4 +3536,37 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		}
 		return programSet;
 	}
+	
+	public ActionForward clearTempNotes(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
+
+		String demoNo = getDemographicNo(request);
+		SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+		JSONObject obj = new JSONObject();
+		
+		
+		if(securityInfoManager.hasPrivilege(loggedInInfo, "_casemgmt.notes", "w", null)) {
+			logger.debug("clearTempNotes CALLED");
+			
+			CaseManagementTmpSaveDao dao = SpringUtils.getBean(CaseManagementTmpSaveDao.class);
+			
+			for(CaseManagementTmpSave item: dao.find(providerNo, Integer.parseInt(demoNo))) {
+				dao.remove(item.getId());
+			}
+			
+			obj.put("success", true);
+			
+			
+		} else {
+			obj.put("success", false);
+			obj.put("error", "Access Denied");
+		}
+		
+		obj.write(response.getWriter());
+		
+		
+		return null;
+	}
+	
 }

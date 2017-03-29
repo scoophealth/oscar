@@ -23,7 +23,7 @@
     Ontario, Canada
 
 */
-oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,demographicService,demo,$state,formService, user, securityService) {
+oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,demographicService,demo,$state,formService, user,securityService) {
 	console.log("form ctrl ",$stateParams,$state);
 	
 	$scope.demographicNo = $stateParams.demographicNo;
@@ -33,7 +33,7 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 	$scope.page.currentFormList = [];
 	$scope.page.currentForm = {};
 	$scope.page.currentlistId = 0;
-	
+		
 	console.log("What is the state "+$state.params.type+" : "+angular.isUndefined($state.params.type)+" id "+$state.params.id,$state); // Use this to load the current form if the page is refreshed
 	
 	securityService.hasRights({items:[{objectName:'_admin',privilege:'w'},{objectName:'_admin.eform',privilege:'w'}]}).then(function(result){
@@ -48,7 +48,7 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 		    }
 		},function(reason){
 	    	alert(reason);
-	 });
+	 });	
 	
 
 	$scope.page.formlists = [{id:0,label:'Completed'},{id:1,label:'Library'}];  //Need to get this from the server.
@@ -64,6 +64,7 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 
 	$scope.page.encounterFormlist = [];
 	$scope.page.formGroups = [];
+	
 	$scope.getFormGroups = function(){
 		formService.getFormGroups().then(function(data){
 			if(data instanceof Array){
@@ -140,7 +141,6 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 	}
 	
 	$scope.viewFormState = function(item, view){
-		
 		while(document.getElementById('formInViewFrame').hasChildNodes()){
 			document.getElementById('formInViewFrame').removeChild( document.getElementById('formInViewFrame').firstChild );
 		}
@@ -218,7 +218,7 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 		});
 
 	}
-
+	
 	$scope.isEmpty = function (obj) {
 		for (var i in obj) if (obj.hasOwnProperty(i)) return false;
 		return true;

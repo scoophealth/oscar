@@ -25,12 +25,15 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.ConsultDocs;
 import org.springframework.stereotype.Repository;
+
+import oscar.util.ConversionUtils;
 
 @Repository
 @SuppressWarnings("unchecked")
@@ -59,6 +62,35 @@ public class ConsultDocsDao extends AbstractDao<ConsultDocs>{
         List<ConsultDocs> results = query.getResultList();
         return results;
 	}
+	
+	public List<ConsultDocs> findByRequestIdAndDocType(Integer requestId, String docType) {
+	  	String sql = "select x from ConsultDocs x where x.requestId=? and x.docType=? and x.deleted is NULL";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter(1,requestId);
+    	query.setParameter(2, docType);
+
+        List<ConsultDocs> results = query.getResultList();
+        return results;
+	}
+
+	public void detachDocConsult(String docNo, String consultId, String docType) {
+		List<ConsultDocs> consultDocs = findByRequestIdDocNoDocType(ConversionUtils.fromIntString(consultId), ConversionUtils.fromIntString(docNo), docType);
+		for (ConsultDocs consultDoc : consultDocs) {
+			consultDoc.setDeleted("Y");
+			merge(consultDoc);
+		}
+	}
+	
+	public void attachDocConsult(String providerNo, String docNo, String consultId, String docType) {
+		ConsultDocs consultDoc = new ConsultDocs();
+		consultDoc.setRequestId(ConversionUtils.fromIntString(consultId));
+		consultDoc.setDocumentNo(ConversionUtils.fromIntString(docNo));
+		consultDoc.setDocType(docType);
+		consultDoc.setAttachDate(new Date());
+		consultDoc.setProviderNo(providerNo);
+		persist(consultDoc);
+	}
+	
 
 	public List<Object[]> findLabs(Integer consultationId) {
 		String sql = "FROM ConsultDocs cd, PatientLabRouting plr " +

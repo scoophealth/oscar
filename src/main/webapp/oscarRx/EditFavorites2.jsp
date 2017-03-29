@@ -78,6 +78,7 @@ int i, j;
 	<html:hidden property="duration" />
 	<html:hidden property="durationUnit" />
 	<html:hidden property="quantity" />
+	<html:hidden property="dispensingUnits" />
 	<html:hidden property="repeat" />
 	<html:hidden property="nosubs" />
 	<html:hidden property="prn" />
@@ -103,6 +104,7 @@ int i, j;
         var duration         = eval('get.fldDuration' + rowId).value;
         var durationUnit     = eval('get.fldDurationUnit' + rowId).value;
         var quantity         = eval('get.fldQuantity' + rowId).value;
+		var dispensingUnits  = eval('get.fldDispensingUnits' + rowId).value;
         var repeat           = eval('get.fldRepeat' + rowId).value;
         var nosubs           = eval('get.fldNosubs' + rowId).checked;
         var prn              = eval('get.fldPrn' + rowId).checked;
@@ -110,7 +112,7 @@ int i, j;
         var special          = eval('get.fldSpecial' + rowId).value;
         var dispenseInternal = eval('get.dispenseInternal'+rowId).value;
         customName			= encodeURI(customName);
-        special				= encodeURI(special);
+        special				= encodeURI(special); 
         
         if(favoriteName==null || favoriteName.length < 1) {
             alert('Please enter a favorite name.');
@@ -139,7 +141,7 @@ int i, j;
 
         if(err == false) {
             var data="favoriteId="+favoriteId+"&favoriteName="+favoriteName+"&customName="+customName+"&takeMin="+takeMin+"&takeMax="+takeMax+"&frequencyCode="+frequencyCode+
-                "&duration="+duration+"&durationUnit="+durationUnit+"&quantity="+quantity+"&repeat="+repeat+"&nosubs="+nosubs+"&prn="+prn+"&customInstr="+customInstr+"&special="+special+"&dispenseInternal="+dispenseInternal;
+                "&duration="+duration+"&durationUnit="+durationUnit+"&quantity="+quantity+"&dispensingUnits="+dispensingUnits+"&repeat="+repeat+"&nosubs="+nosubs+"&prn="+prn+"&customInstr="+customInstr+"&special="+special+"&dispenseInternal="+dispenseInternal;
             var url="<c:out value="${ctx}"/>" + "/oscarRx/updateFavorite2.do?method=ajaxEditFavorite";
             new Ajax.Request(url,{method:'post',postBody:data,onSuccess:function(transport){
                     $("saveSuccess_"+rowId).show();
@@ -304,6 +306,10 @@ int i, j;
 							name="fldQuantity<%= i%>" class=tblRow size=5
 							value="<%= f.getQuantity() %>" /></td>
 						<td></td>
+						<td nowrap><b>Units:</b> <input type=text
+														name="fldDispensingUnits<%= i%>" class=tblRow size=5
+														value="<%= f.getDispensingUnits() %>" />
+						</td>
 						<td><b>Repeats:</b><input type=text name="fldRepeat<%= i%>"
 							class=tblRow size=3 value="<%= f.getRepeat() %>" /></td>
 

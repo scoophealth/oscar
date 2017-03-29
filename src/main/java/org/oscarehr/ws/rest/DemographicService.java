@@ -24,6 +24,7 @@
 package org.oscarehr.ws.rest;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,6 +64,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.WaitingList;
 import org.oscarehr.common.model.WaitingListName;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.ProviderManager2;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.web.DemographicSearchHelper;
@@ -72,7 +74,9 @@ import org.oscarehr.ws.rest.conversion.ProfessionalSpecialistConverter;
 import org.oscarehr.ws.rest.conversion.ProviderConverter;
 import org.oscarehr.ws.rest.conversion.WaitingListNameConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
+import org.oscarehr.ws.rest.to.DemographicArchiveResponse;
 import org.oscarehr.ws.rest.to.OscarSearchResponse;
+import org.oscarehr.ws.rest.to.model.DemographicArchiveMeta;
 import org.oscarehr.ws.rest.to.model.DemographicContactFewTo1;
 import org.oscarehr.ws.rest.to.model.DemographicSearchRequest;
 import org.oscarehr.ws.rest.to.model.DemographicSearchRequest.SEARCHMODE;
@@ -120,6 +124,9 @@ public class DemographicService extends AbstractServiceImpl {
 	
 	@Autowired
 	private SecurityInfoManager securityInfoManager;
+	
+	@Autowired
+	private ProviderManager2 providerManager;
 	
 	
 	private DemographicConverter demoConverter = new DemographicConverter();
@@ -469,10 +476,23 @@ public class DemographicService extends AbstractServiceImpl {
 		
 		if(json.getString("term").length() >= 1) {
 				
-			int count = demographicManager.searchPatientsCount(getLoggedInInfo(), req);
-
+			int count = 0;
+			
+			// this version of JPA cannot build join queries. This pre-query will not work with Demographic Extended data.
+			if( DemographicSearchRequest.SEARCHMODE.BandNumber.equals( req.getMode() ) ) {
+				count = 1;
+			} else {
+				count = demographicManager.searchPatientsCount(getLoggedInInfo(), req);
+			}
+			
 			if(count>0) {
+				
 				results = demographicManager.searchPatients(getLoggedInInfo(), req, startIndex, itemsToReturn);
+				
+				if( DemographicSearchRequest.SEARCHMODE.BandNumber.equals( req.getMode() ) ) {
+					count = results.size();
+				}
+				
 				response.setContent(results);
 				response.setTotal(count);
 			}
@@ -589,5 +609,42 @@ public class DemographicService extends AbstractServiceImpl {
 
 	    return false;
 	    
+	}
+	
+	@POST
+	@Path("/historyList")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public DemographicArchiveResponse getHistoryList(JSONObject json) {
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_demographic", "r", null)) {
+			throw new SecurityException("Access Denied");
+		}
+		
+		Integer demographicNo = null;
+		if(json.containsKey("demographicNo")) {
+			demographicNo = json.getInt("demographicNo");
+		}
+		
+		if(demographicNo == null) {
+			throw new RuntimeException("demographicNo must be present in json");
+		}
+		
+		List<Object[]> archiveMeta = demographicManager.getArchiveMeta(getLoggedInInfo(), demographicNo);
+		
+		DemographicArchiveResponse response = new DemographicArchiveResponse();
+		for(Object[] meta: archiveMeta) {
+			DemographicArchiveMeta m = new DemographicArchiveMeta();
+			m.setId((Long)meta[0]);
+			m.setDemographicNo((Integer)meta[1]);
+			m.setLastUpdateUser((String)meta[2]);
+			m.setLastUpdateDate((Date)meta[3]);
+			Provider p = providerManager.getProvider(getLoggedInInfo(), (String)meta[2]);
+			if(p != null) {
+				m.setLastUpdateUserName(p.getFormattedName());
+			}
+			response.getMetadata().add(m);
+		}
+		
+		return response;
 	}
 }

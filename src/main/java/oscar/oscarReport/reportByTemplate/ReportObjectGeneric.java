@@ -45,6 +45,8 @@ public class ReportObjectGeneric implements ReportObject {
     private String description = "";
     private String type = "";
     private int active;
+    private String category;
+    
     private ArrayList parameters = new ArrayList(0);
     
     private boolean sequence;
@@ -64,6 +66,12 @@ public class ReportObjectGeneric implements ReportObject {
         this.setDescription(description);
     }
     
+    public ReportObjectGeneric(String templateId, String title, String description, String category) {
+        this(templateId,title,description);
+        this.category = category;
+    }
+    
+    
     public ReportObjectGeneric(String templateId, String title, String description, String type, ArrayList parameters) {
         this.setTemplateId(templateId);
         this.setTitle(title);
@@ -71,7 +79,12 @@ public class ReportObjectGeneric implements ReportObject {
         this.setType(type);
         this.setParameters(parameters);
     }
-
+    
+    public ReportObjectGeneric(String templateId, String title, String description, String type, ArrayList parameters, String category) {
+       this(templateId,title,description,type,parameters);
+       this.category = category;
+    }
+    
     public String getTemplateId() {
         return templateId;
     }
@@ -203,4 +216,14 @@ public class ReportObjectGeneric implements ReportObject {
 		this.sequence = sequence;
 	}
 
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	
 }
+

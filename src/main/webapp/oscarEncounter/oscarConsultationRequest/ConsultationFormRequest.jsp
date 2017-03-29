@@ -56,6 +56,7 @@ if(!authed) {
 <%@page import="org.oscarehr.casemgmt.service.CaseManagementManager,org.oscarehr.casemgmt.model.CaseManagementNote,org.oscarehr.casemgmt.model.Issue,org.oscarehr.common.model.UserProperty,org.oscarehr.common.dao.UserPropertyDAO,org.springframework.web.context.support.*,org.springframework.web.context.*"%>
 
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.oscarehr.common.model.Site"%>
 <%@page import="org.oscarehr.util.WebUtils, oscar.SxmlMisc"%>
@@ -91,19 +92,60 @@ if(!authed) {
 	appNo = (appNo==null ? "" : appNo);
 
 	String defaultSiteName = "";
+	int defaultSiteIdx = 0;
 	Integer defaultSiteId = 0;
 	Vector<String> vecAddressName = new Vector<String>() ;
 	Vector<String> bgColor = new Vector<String>() ;
 	Vector<Integer> siteIds = new Vector<Integer>();
+	String siteIdJS = null;
+	String siteNameJS = null;
+	String siteAddressJS = null;
+	String sitePhoneJS = null;
+	String siteFaxJS = null;
+	String siteProviderNoJS = null;
+	String siteProviderNameJS = null;
 	if (bMultisites) {
 		SiteDao siteDao = (SiteDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("siteDao");
-
+		ProviderDao providerDao = (ProviderDao)WebApplicationContextUtils.getWebApplicationContext(application).getBean("providerDao");
+		
 		List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
+		List<org.oscarehr.common.model.Provider> siteProviders = null;
 		if (sites != null) {
+			siteIdJS = "var siteIdList = new Array();";
+			siteNameJS = "var siteNameList = new Array();";
+			siteAddressJS = "var siteAddressList = new Array();";
+			sitePhoneJS = "var sitePhoneList = new Array();";
+			siteFaxJS = "var siteFaxList = new Array();";
+		    siteProviderNoJS = "var siteProviderNoList = new Array();";
+		    siteProviderNameJS = "var siteProviderNameList = new Array();";
+			int i = 0;
 			for (Site s:sites) {
 				   siteIds.add(s.getSiteId());
 		           vecAddressName.add(s.getName());
 		           bgColor.add(s.getBgColor());
+		           
+		           siteIdJS += "siteIdList["+i+"]='"+s.getId() + "';";
+		           siteNameJS += "siteNameList["+i+"]='"+s.getName().replaceAll("'", "\\\\'")+"';";
+		           siteAddressJS += "siteAddressList["+i+"]='"+s.getAddress().replaceAll("'", "\\\\'")+", "+s.getCity().replaceAll("'", "\\\\'")+", "+s.getProvince().replaceAll("'", "\\\\'")+ " " +s.getPostal().replaceAll("'", "\\\\'") +"';";
+		           sitePhoneJS += "sitePhoneList["+i+"]='"+s.getPhone().replaceAll("'", "\\\\'")+"';";
+		           siteFaxJS += "siteFaxList["+i+"]='"+s.getFax().replaceAll("'", "\\\\'")+"';";
+		           if(s.getId().toString().equals(defaultSiteId) || sites.size()==1) {
+		               defaultSiteIdx = i;
+		               defaultSiteId = s.getId();
+		           }
+	               siteProviders = providerDao.getProvidersBySiteLocation(s.getId().toString());
+		           int j = 0;
+		           siteProviderNoJS += "var sno"+i+"=new Array();";
+		           siteProviderNameJS += "var sname"+i+"=new Array();";
+		           Collections.sort(siteProviders, new org.oscarehr.common.model.Provider().ComparatorName());
+		           for(org.oscarehr.common.model.Provider siteProvider : siteProviders) {
+		               siteProviderNoJS += "sno"+i+"["+j+"]='"+siteProvider.getProviderNo()+"';";
+		               siteProviderNameJS += "sname"+i+"["+j+"]='"+siteProvider.getFirstName().replaceAll("'", "\\\\'")+" "+siteProvider.getLastName().replaceAll("'", "\\\\'")+"';";
+			       j++;
+		           }
+		           siteProviderNoJS += "siteProviderNoList["+i+"]=sno"+i+";";
+		           siteProviderNameJS += "siteProviderNameList["+i+"]=sname"+i+";";
+		           i++;
 		 	}
 		}
 
@@ -111,7 +153,7 @@ if(!authed) {
 			defaultSiteName = siteDao.getSiteNameByAppointmentNo(appNo);
 		}
 	}
-
+	String demo_mrp = null;
 	String demo = request.getParameter("de");
 		String requestId = request.getParameter("requestId");
 		// segmentId is != null when viewing a remote consultation request from an hl7 source
@@ -157,6 +199,7 @@ if(!authed) {
 		{
 			MiscUtils.getLogger().debug("Missing both requestId and segmentId.");
 		}
+		demo_mrp = demographic.getProviderNo();
 
 		if (demo != null) consultUtil.estPatient(loggedInInfo, demo);
 		consultUtil.estActiveTeams();
@@ -190,6 +233,15 @@ if(!authed) {
 	var demographicNo = '<%=demo%>';
 	var demoNo = '<%=demo%>';
 	var appointmentNo = '<%=appNo%>';
+	<%=(siteIdJS!=null ? siteIdJS : "")%>;
+	<%=(siteNameJS!=null ? siteNameJS : "")%>;
+	<%=(siteAddressJS!=null ? siteAddressJS : "")%>;
+	<%=(sitePhoneJS!=null ? sitePhoneJS : "")%>;
+	<%=(siteFaxJS!=null ? siteFaxJS : "")%>;
+	<%=(siteProviderNoJS!=null ? siteProviderNoJS : "")%>;
+	<%=(siteProviderNameJS!=null ? siteProviderNameJS : "")%>;
+	var user = <%= loggedInInfo.getLoggedInProviderNo() %>;
+	var mrp = <%=demo_mrp%>;
 </script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
@@ -242,6 +294,11 @@ input.btn{
 .lab {
     color: #CC0099;
 }
+
+.hrm {
+    color: green;
+}
+
 td.tite {
 
 background-color: #bbbbFF;
@@ -1057,27 +1114,57 @@ if (OscarProperties.getInstance().getBooleanProperty("consultation_program_lette
 
 
 function switchProvider(value) {
-	if (value==-1) {
-		document.getElementById("letterheadName").value = value;
-		document.getElementById("letterheadAddress").value = "<%=(clinic.getClinicAddress() + "  " + clinic.getClinicCity() + "   " + clinic.getClinicProvince() + "  " + clinic.getClinicPostal()).trim() %>";
-		document.getElementById("letterheadAddressSpan").innerHTML = "<%=(clinic.getClinicAddress() + "  " + clinic.getClinicCity() + "   " + clinic.getClinicProvince() + "  " + clinic.getClinicPostal()).trim() %>";
-		document.getElementById("letterheadPhone").value = "<%=clinic.getClinicPhone().trim() %>";
-		document.getElementById("letterheadPhoneSpan").innerHTML = "<%=clinic.getClinicPhone().trim() %>";
-		document.getElementById("letterheadFax").value = "<%=clinic.getClinicFax().trim() %>";
-		// document.getElementById("letterheadFaxSpan").innerHTML = "<%=clinic.getClinicFax().trim() %>";
-	} else {
-		if (typeof providerData["prov_" + value] != "undefined")
-			value = "prov_" + value;
+	if (!<%=bMultisites%>) {
+		if (value==-1) {
+			document.getElementById("letterheadName").value = value;
+			document.getElementById("letterheadAddress").value = "<%=(clinic.getClinicAddress() + "  " + clinic.getClinicCity() + "   " + clinic.getClinicProvince() + "  " + clinic.getClinicPostal()).trim() %>";
+			document.getElementById("letterheadAddressSpan").innerHTML = "<%=(clinic.getClinicAddress() + "  " + clinic.getClinicCity() + "   " + clinic.getClinicProvince() + "  " + clinic.getClinicPostal()).trim() %>";
+			document.getElementById("letterheadPhone").value = "<%=clinic.getClinicPhone().trim() %>";
+			document.getElementById("letterheadPhoneSpan").innerHTML = "<%=clinic.getClinicPhone().trim() %>";
+			document.getElementById("letterheadFax").value = "<%=clinic.getClinicFax().trim() %>";
+			// document.getElementById("letterheadFaxSpan").innerHTML = "<%=clinic.getClinicFax().trim() %>";
+		} else {
+			if (typeof providerData["prov_" + value] != "undefined")
+				value = "prov_" + value;
 
-		document.getElementById("letterheadName").value = value;
-		document.getElementById("letterheadAddress").value = providerData[value]['address'];
-		document.getElementById("letterheadAddressSpan").innerHTML = providerData[value]['address'].replace(" ", "&nbsp;");
-		document.getElementById("letterheadPhone").value = providerData[value]['phone'];
-		document.getElementById("letterheadPhoneSpan").innerHTML = providerData[value]['phone'];
-		document.getElementById("letterheadFax").value = providerData[value]['fax'];
-		//document.getElementById("letterheadFaxSpan").innerHTML = providerData[value]['fax'];
+			document.getElementById("letterheadName").value = value;
+			document.getElementById("letterheadAddress").value = providerData[value]['address'];
+			document.getElementById("letterheadAddressSpan").innerHTML = providerData[value]['address'].replace(" ", "&nbsp;");
+			document.getElementById("letterheadPhone").value = providerData[value]['phone'];
+			document.getElementById("letterheadPhoneSpan").innerHTML = providerData[value]['phone'];
+			document.getElementById("letterheadFax").value = providerData[value]['fax'];
+			//document.getElementById("letterheadFaxSpan").innerHTML = providerData[value]['fax'];
+		}
 	}
 }
+
+function switchSite(value) {
+	document.getElementById("letterheadAddress").value = siteAddressList[value];
+	document.getElementById("letterheadAddressSpan").innerHTML = siteAddressList[value].replace(" ", "&nbsp;");
+	document.getElementById("letterheadPhone").value = sitePhoneList[value];
+	document.getElementById("letterheadPhoneSpan").innerHTML = sitePhoneList[value];
+	document.getElementById("letterheadFax").value = siteFaxList[value];
+	document.getElementById("letterheadFaxSpan").innerHTML = siteFaxList[value];
+	
+	var hasProvider = false;
+	var providerSelect = document.getElementById("letterheadName");
+	providerSelect.options.length=siteProviderNoList[value].length;
+	for(i=0;i<siteProviderNoList[value].length;i++) {
+	    var isSelected = false;		   
+	    providerSelect.options[i]=new Option(siteProviderNameList[value][i],siteProviderNoList[value][i],isSelected,false);		
+	    if('<%= consultUtil.letterheadName %>' == providerSelect.options[i].value) {
+	    	providerSelect.options[i].selected = true;
+	    	hasProvider = true;
+	    }
+	}
+	if(!hasProvider) {
+	    if(providerSelect.options[i].value == mrp)  
+	    	providerSelect.options[i].selected = true;
+	    else if(providerSelect.options[i].value == user) 
+	    	providerSelect.options[i].selected = true;
+	}    
+}
+
 </script>
 <script type="text/javascript">
 <%
@@ -1426,7 +1513,9 @@ function updateFaxButton() {
 							<span class="doc"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendDocs" /></span><br />
 							<span class="lab"><bean:message
-								key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendLabs" /></span>
+								key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendLabs" /></span><br/>
+							<span class="hrm legend"><bean:message
+							key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendHrm" /></span>
 							</td>
 						</tr>
 					</table>
@@ -1442,7 +1531,7 @@ function updateFaxButton() {
 				<!----Start new rows here-->
 				<tr>
 					<td class="tite4" colspan=2>
-					<% boolean faxEnabled = props.getBooleanProperty("faxEnable", "yes"); %>
+					<% boolean faxEnabled = props.isConsultationFaxEnabled(); %>
 					<% if (request.getAttribute("id") != null) { %>
 						<input name="update" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
 						<input name="updateAndPrint" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
@@ -1883,7 +1972,7 @@ function updateFaxButton() {
 								<% }
 								}%>
 								</select>
-								<%if ( props.getBooleanProperty("consultation_fax_enabled", "true") ) {%>
+								<%if ( props.isConsultationFaxEnabled() ) {%>
 									<div style="font-size:12px"><input type="checkbox" name="ext_letterheadTitle" value="Dr" <%=(consultUtil.letterheadTitle != null && consultUtil.letterheadTitle.equals("Dr") ? "checked"  : "") %>>Include Dr. with name</div>
 								<%}%>
 							</td>

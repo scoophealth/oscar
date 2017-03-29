@@ -101,7 +101,6 @@ public class BillingHistoryDao extends AbstractDao<BillingHistory> {
 		if (d == null) {
 			return 0.0;
 		}
-
 		return Double.valueOf(d);
     }
 }

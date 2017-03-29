@@ -17,16 +17,29 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.billing,_admin" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_admin&type=_admin.billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <html>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ page import="org.oscarehr.util.DateRange"%>
 <%! boolean bMultisites = org.oscarehr.common.IsPropertiesOn.isMultisitesEnable(); %>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ page import="java.math.*, java.util.*, oscar.util.*"%>
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     boolean isTeamBillingOnly=false;
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false; 
@@ -60,11 +73,11 @@ int curMonth = (now.get(Calendar.MONTH)+1);
 int curDay = now.get(Calendar.DAY_OF_MONTH);
 
 String nowDate = UtilDateUtilities.DateToString(new java.util.Date()); //"yyyy-MM-dd HH:mm"
-String monthCode = BillingDataHlp.propMonthCode.getProperty("" + curMonth);
+String monthCode = BillingDataHlp.getPropMonthCode().getProperty("" + curMonth);
 
 OscarProperties props = OscarProperties.getInstance();
 String billCenter = props.getProperty("billcenter", "").trim();
-String healthOffice = BillingDataHlp.propBillingCenter.getProperty(billCenter);
+String healthOffice = BillingDataHlp.getPropBillingCenter().getProperty(billCenter);
 
 boolean summaryView = "on".equals(request.getParameter("summaryView"));
 

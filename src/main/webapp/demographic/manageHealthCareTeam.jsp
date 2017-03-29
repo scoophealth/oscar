@@ -95,7 +95,7 @@ function popUpData( data ){
 	if( data != null ) {
 
 		jQuery('#searchHealthCareTeamInput').attr('value', null);
-		var path = "<c:out value="${ oscar_context_path }" />/demographic/Contact.do";
+		var path = "${ oscar_context_path }/demographic/Contact.do";
 		var target = '#listHealthCareTeam';
 		var json = JSON.parse(data);
 		
@@ -271,6 +271,15 @@ window.onunload = function() {
 //--> Document Ready Methods 
 jQuery(document).ready( function($) {
 
+	//--> Change MRP Status
+	jQuery("input[id*='mostResponsibleProviderCheckbox']").bind("change", function(){
+		var contactId = jQuery("#" + this.id).val();
+		var path = "${ oscar_context_path }/demographic/Contact.do"; 
+		var param = "method=setMRP&contactId=" + contactId;
+		var target = '#listHealthCareTeam';
+		sendData(path, param, target);
+	})
+
 	//--> Add internal provider
 	jQuery('#addHealthCareTeamButton').bind("click", function(){
 		// get the selected value
@@ -279,6 +288,7 @@ jQuery(document).ready( function($) {
 		var roledata = ( (selectedtext.split("(")[1]).trim() ).split(")")[0].trim()
 		var contactId = selected.val();
 		var contactName = (selectedtext.split("(")[0]).trim();
+		var mrp = jQuery('#mostResponsibleProviderCheckbox').is(":checked");
 
 		var param = '{"contactId":"' + contactId + 
 			'","contactName":"' + contactName + 
@@ -418,6 +428,15 @@ jQuery(document).ready( function($) {
 						<input type="button" 
 							id="edit<c:out value="${ demographicContact.type }" />_<c:out value="${ demographicContact.id }" />" 
 							class="actionlink" value="edit" />
+					</c:if>
+					<c:if test="${ demographicContact.type eq 0 }" >					  
+					 	<input type="radio" name="mostResponsibleProviderCheckbox"
+					 		value="${ demographicContact.id }" 
+					 		id="mostResponsibleProviderCheckbox_${ demographicContact.id }" 
+					 		${ demographicContact.mrp ? 'checked' : '' } />
+					 		
+					 	<label for="mostResponsibleProviderCheckbox_${ demographicContact.id }" 
+					 		title="Most Responsible Provider" >MRP</label>
 					</c:if>
 				</td>
             </tr>	

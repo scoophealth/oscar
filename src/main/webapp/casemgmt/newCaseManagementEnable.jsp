@@ -24,7 +24,12 @@
 --%>
 <%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.common.model.Security"%>
-<%@page import="org.oscarehr.common.dao.SecurityDao"%>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
+<%@ page import="org.oscarehr.managers.SecurityManager" %>
+<%
+	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+	org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
+%>
 <%@page
 	import="java.util.Collections, java.util.Arrays, java.util.ArrayList"%>
 
@@ -81,8 +86,7 @@
 
 <form method="post" action="newCaseManagementEnable.jsp" id="sbForm">
 <%            
-				SecurityDao dao = SpringUtils.getBean(SecurityDao.class);
-				for(Object[] o : dao.findProviders()) {
+				for(Object[] o : securityManager.findProviders(loggedInInfo)) {
 					Security s = (Security) o[0];
 					Provider p = (Provider) o[1];
                     String provNo = p.getProviderNo();
@@ -110,8 +114,7 @@
                 
                 if( newDocArr.contains("all") ) {
                     newDocArr.clear();
-                    SecurityDao dao = SpringUtils.getBean(SecurityDao.class);
-    				for(Object[] o : dao.findProviders()) {
+                    for(Object[] o : securityManager.findProviders(loggedInInfo)) {
     					Security s = (Security) o[0];
     					Provider p = (Provider) o[1];
                     

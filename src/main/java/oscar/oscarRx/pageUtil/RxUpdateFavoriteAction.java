@@ -72,6 +72,7 @@ public final class RxUpdateFavoriteAction extends DispatchAction {
             fav.setDuration(frm.getDuration());
             fav.setDurationUnit(frm.getDurationUnit());
             fav.setQuantity(frm.getQuantity());
+            fav.setDispensingUnits(frm.getDispensingUnits());
             fav.setRepeat(Integer.parseInt(frm.getRepeat()));
             fav.setNosubs(frm.getNosubs());
             fav.setPrn(frm.getPrn());
@@ -104,6 +105,7 @@ public final class RxUpdateFavoriteAction extends DispatchAction {
             String duration=request.getParameter("duration");
             String durationUnit=request.getParameter("durationUnit");
             String quantity=request.getParameter("quantity");
+            String dispensingUnits=request.getParameter("dispensingUnits");
             String repeat=request.getParameter("repeat");
             String noSubs=request.getParameter("nosubs");
             String prn=request.getParameter("prn");
@@ -117,6 +119,7 @@ public final class RxUpdateFavoriteAction extends DispatchAction {
             fav.setDuration(duration);
             fav.setDurationUnit(durationUnit);
             fav.setQuantity(quantity);
+            fav.setDispensingUnits(dispensingUnits);
             fav.setRepeat(Integer.parseInt(repeat));
             if(noSubs.equalsIgnoreCase("true"))
                 fav.setNosubs(true);

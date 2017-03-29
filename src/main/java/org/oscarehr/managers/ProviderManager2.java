@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.model.ProviderExt;
 import org.oscarehr.common.dao.PropertyDao;
@@ -63,6 +64,9 @@ public class ProviderManager2 {
 
 	@Autowired
 	private ProviderExtDao providerExtDao;
+		
+	@Autowired
+	private ProgramProviderDAO programProviderDao;
 	
 	public List<Provider> getProviders(LoggedInInfo loggedInInfo, Boolean active) {
 		List<Provider> results = null;
@@ -104,7 +108,7 @@ public class ProviderManager2 {
 		
 		return(results);
 	}
-	
+		
 	/*
 	 * Format is LastName[,FirstName]
 	 */
@@ -371,7 +375,11 @@ public class ProviderManager2 {
 			}else{
 				settings.setSummaryItemDisplayAssessments(true);
 			}
-						
+			if(map.get(PreferenceManager.DISEASES_POS) != null) {
+				settings.setSummaryItemDisplayMeds("on".equals(map.get(PreferenceManager.DISEASES_POS).getValue())?true:false);
+			}else {
+				settings.setSummaryItemDisplayMeds(true);
+			}
 			if(map.get(PreferenceManager.INCOMING_POS) != null) {
 				settings.setSummaryItemDisplayIncoming("on".equals(map.get(PreferenceManager.INCOMING_POS).getValue())?true:false);
 			}else{
@@ -448,6 +456,10 @@ public class ProviderManager2 {
 			settings.setFavoriteFormGroup("");
 		}
 		*/
+		
+		if(map.get("tickler_email_provider") != null) {
+			settings.setEnableTicklerEmailProvider("Y".equals(map.get("tickler_email_provider").getValue()));
+		}
 		
 		settings.setNewTicklerWarningWindow(pp.getNewTicklerWarningWindow());
 		
@@ -735,6 +747,11 @@ public class ProviderManager2 {
 			settings.setRxInteractionWarningLevel(map.get("rxInteractionWarningLevel").getValue());
 		}
 		
+		p = getMappedOrNewProperty(map, "tickler_email_provider", providerNo);
+		p.setValue(String.valueOf(settings.isEnableTicklerEmailProvider()));
+		
+		
+		
 		for(String key:map.keySet()) {
 			Property prop = map.get(key);
 			if(prop.getValue() != null) {
@@ -756,4 +773,12 @@ public class ProviderManager2 {
 		LogAction.addLogSynchronous(loggedInInfo, "ProviderManager.updateProvider, providerNo=" + provider.getProviderNo(), null);
 
 	}
+	
+	public List<Provider> getActiveProvidersInMyDomain(LoggedInInfo loggedInInfo, List<Integer> programDomain) {
+		
+		List<Provider> providers = programProviderDao.getProvidersByPrograms(programDomain);
+		
+		return providers;
+	}
+
 }

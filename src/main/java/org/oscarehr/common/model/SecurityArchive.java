@@ -50,6 +50,7 @@ public class SecurityArchive extends AbstractModel<Integer> {
 		setBLocallockset(s.getBLocallockset());
 		setBRemotelockset(s.getBRemotelockset());
 		setForcePasswordReset(s.isForcePasswordReset());
+		setStorageVersion(s.getStorageVersion());
 		setPasswordUpdateDate(s.getPasswordUpdateDate());
 		setPinUpdateDate(s.getPinUpdateDate());
 		setLastUpdateUser(s.getLastUpdateUser());
@@ -91,6 +92,8 @@ public class SecurityArchive extends AbstractModel<Integer> {
 	@Column(name="forcePasswordReset")
 	private Boolean forcePasswordReset;
 
+	private int storageVersion = 2;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date passwordUpdateDate;
 	
@@ -209,6 +212,14 @@ public class SecurityArchive extends AbstractModel<Integer> {
 
 	public void setForcePasswordReset(Boolean forcePasswordReset) {
 		this.forcePasswordReset = forcePasswordReset;
+	}
+
+	public int getStorageVersion() {
+		return storageVersion;
+	}
+
+	public void setStorageVersion(int storageVersion) {
+		this.storageVersion = storageVersion;
 	}
 
 	public Date getPasswordUpdateDate() {

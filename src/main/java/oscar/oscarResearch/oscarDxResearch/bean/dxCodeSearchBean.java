@@ -71,14 +71,30 @@ public class dxCodeSearchBean implements java.io.Serializable{
        public void setExactMatch(String exactMatch){
            this.exactMatch = exactMatch;
        }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((dxSearchCode == null) ? 0 : dxSearchCode.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		dxCodeSearchBean other = (dxCodeSearchBean) obj;
+		if (dxSearchCode == null) {
+			if (other.dxSearchCode != null) return false;
+		} else if (!dxSearchCode.equals(other.dxSearchCode)) return false;
+		if (type == null) {
+			if (other.type != null) return false;
+		} else if (!type.equals(other.type)) return false;
+		return true;
+	}
        
-       public boolean equals( Object o ) {
-           if( o instanceof dxResearchBean ) {
-                dxResearchBean bean = (dxResearchBean)o;           
-                return (dxSearchCode.equals(bean.getDxSearchCode()) && type.equals(bean.getType()));
-           }
-           else 
-               return super.equals(o);
-       }
-       
+      
 }

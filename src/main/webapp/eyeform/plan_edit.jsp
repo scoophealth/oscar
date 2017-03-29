@@ -71,7 +71,7 @@
 		            </select>
 	            </td>
 				<td width="30%">				           
-		             <input type="text" name="followup<%=followUp.getId()%>.timespan" size="4"  style="width: 25px;" class="special" value="<c:out value="${f.timespan}"/>"/>		             
+		             <input type="text" name="followup<%=followUp.getId()%>.timespan" size="4" maxlength="6" style="width: 25px;" class="special" value="<c:out value="${f.timespan}"/>"/>		             
 		             <select name="followup<%=followUp.getId()%>.timeframe">
 		             	<%=PlanAction.printFollowUpTimeFrameOptions(followUp)%>
 		            </select>*

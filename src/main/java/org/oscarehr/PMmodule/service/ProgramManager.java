@@ -25,11 +25,11 @@ package org.oscarehr.PMmodule.service;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.struts.util.LabelValueBean;
-import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.DefaultRoleAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramClientStatusDAO;
@@ -40,7 +40,6 @@ import org.oscarehr.PMmodule.dao.ProgramSignatureDao;
 import org.oscarehr.PMmodule.dao.ProgramTeamDAO;
 import org.oscarehr.PMmodule.dao.VacancyTemplateDao;
 import org.oscarehr.PMmodule.model.AccessType;
-import org.oscarehr.common.model.Admission;
 import org.oscarehr.PMmodule.model.DefaultRoleAccess;
 import org.oscarehr.PMmodule.model.FunctionalUserType;
 import org.oscarehr.PMmodule.model.Program;
@@ -51,6 +50,13 @@ import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramSignature;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.model.VacancyTemplate;
+import org.oscarehr.common.dao.AdmissionDao;
+import org.oscarehr.common.dao.EncounterTypeDao;
+import org.oscarehr.common.dao.ProgramEncounterTypeDao;
+import org.oscarehr.common.model.Admission;
+import org.oscarehr.common.model.EncounterType;
+import org.oscarehr.common.model.ProgramEncounterType;
+import org.oscarehr.common.model.ProgramEncounterTypePK;
 import org.oscarehr.util.LoggedInInfo;
 
 import oscar.OscarProperties;
@@ -66,6 +72,8 @@ public class ProgramManager {
     private ProgramClientStatusDAO clientStatusDAO;
     private ProgramSignatureDao programSignatureDao;
     private VacancyTemplateDao vacancyTemplateDao;
+    private ProgramEncounterTypeDao programEncounterTypeDao; 
+    private EncounterTypeDao encounterTypeDao;
     
     private boolean enabled;
 
@@ -116,8 +124,18 @@ public class ProgramManager {
     public void setProgramClientStatusDAO(ProgramClientStatusDAO dao) {
         this.clientStatusDAO = dao;
     }
+    
+    
 
-    public Program getProgram(String programId) {
+    public void setProgramEncounterTypeDao(ProgramEncounterTypeDao programEncounterTypeDao) {
+		this.programEncounterTypeDao = programEncounterTypeDao;
+	}
+
+	public void setEncounterTypeDao(EncounterTypeDao encounterTypeDao) {
+		this.encounterTypeDao = encounterTypeDao;
+	}
+
+	public Program getProgram(String programId) {
         return programDao.getProgram(Integer.valueOf(programId));
     }
 
@@ -237,7 +255,9 @@ public class ProgramManager {
         return programProviderDAO.getProgramProvider(providerNo, Long.valueOf(programId));
     }
 
-    public void saveProgramProvider(ProgramProvider pp) {
+    public void saveProgramProvider(LoggedInInfo loggedInInfo, ProgramProvider pp) {
+    	pp.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
+    	pp.setLastUpdateDate(new Date());
         programProviderDAO.saveProgramProvider(pp);
     }
 
@@ -502,4 +522,31 @@ public class ProgramManager {
     	}
     	return results;
     }
+    
+
+    public List<ProgramEncounterType> getCustomEncounterTypes(LoggedInInfo loggedInInfo, Integer programId) {
+    	List<ProgramEncounterType> types =  programEncounterTypeDao.findByProgramId(programId);
+    	for(ProgramEncounterType type:types) {
+    		type.setEncounterType(encounterTypeDao.find(type.getId().getEncounterTypeId()));
+    	}
+    	return types;
+    }
+    
+    public void deleteCustomEncounterType(ProgramEncounterTypePK id) {
+    	programEncounterTypeDao.remove(id);
+    }
+    
+    public void saveCustomEncounterType(ProgramEncounterType encounterType) {
+    	programEncounterTypeDao.persist(encounterType);
+    }
+    
+    public ProgramEncounterType findCustomEncounterType(ProgramEncounterTypePK id) {
+    	return programEncounterTypeDao.find(id);
+    }
+    
+    public List<EncounterType> getNonGlobalEncounterTypes(LoggedInInfo loggedInInfo) {
+    	List<EncounterType> types = encounterTypeDao.findNonGlobal();
+    	return types;
+    }
+    
 }

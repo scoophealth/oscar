@@ -28,9 +28,15 @@
 <%@page import="java.util.List" %>
 <%@page import="org.oscarehr.eyeform.web.MacroAction" %>
 <%@page import="org.apache.struts.util.LabelValueBean" %>
+<%@page import="org.oscarehr.common.dao.ClinicLocationDao" %>
+<%@page import="org.oscarehr.common.model.ClinicLocation" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
 <%
 	List<LabelValueBean> sliCodes = MacroAction.sliCodeList;
 	request.setAttribute("sliCodes", sliCodes);
+    ClinicLocationDao clinicLocationDao = SpringUtils.getBean(ClinicLocationDao.class);
+    List<ClinicLocation> locations = clinicLocationDao.findByClinicNo(1); //default clinic no. is 1.
+    
 %>
 
 <html lang="en">
@@ -191,6 +197,16 @@ function fixCheckboxes(form) {
 
 	<tbody>
 	<tr>
+		<td>Billing Physician
+		</td>
+		<td>
+			<html:select property="macro.billingBillto">
+				<html:option value=""> -- </html:option>
+				<html:options collection="providers" property="providerNo" labelProperty="formattedName" />
+			</html:select>
+		</td>	
+	</tr>
+	<tr>
 		<td>
 		SLI Code<br/>(Required for some billing codes)
 		</td>
@@ -214,8 +230,7 @@ function fixCheckboxes(form) {
 	</tr>
 	<tr><td width="150">Visit Type</td>
 	<td>
-					<html:select property="macro.billingVisitType" styleId="xml_visittype">
-
+					<html:select property="macro.billingVisitType" styleId="xml_visittype">						
 					    <html:option value="00| Clinic Visit">00 | Clinic Visit</html:option>
 					    <html:option value="01| Outpatient Visit">01 | Outpatient Visit</html:option>
 					    <html:option value="02| Hospital Visit">02 | Hospital Visit</html:option>
@@ -229,17 +244,13 @@ function fixCheckboxes(form) {
 	<tr><td>Visit Location</td>
 	<td>
 			<html:select property="macro.billingVisitLocation">
-				<html:option value="0000|Not Applicable">Not Applicable</html:option>
-				<html:option value="1972|Chedoke Hospital">Chedoke Hospital</html:option>
-				<html:option value="1983|Henderson General">Henderson General</html:option>
-				<html:option value="1985|Hamilton General">Hamilton General</html:option>
-				<html:option value="1994|McMaster University Medical Center">McMaster University Medical Center</html:option>
-				<html:option value="2003|St. Joseph&quot;s Hospital">St. Joseph"s Hospital</html:option>
-				<html:option value="3226|Stonechurch Family Health PCN">Stonechurch Family Health PCN</html:option>
-				<html:option value="3642|The Wellington Lodge">The Wellington Lodge</html:option>
-				<html:option value="3831|Maternity Centre of Hamilton">Maternity Centre of Hamilton</html:option>
-				<html:option value="3866|Stonechurch Family Health Center">Stonechurch Family Health Center</html:option>
-				<html:option value="9999|Home Visit">Home Visit</html:option>
+			<%
+				for(ClinicLocation fl : locations) {					
+					String visitLocation = fl.getClinicLocationNo() + "|" + fl.getClinicLocationName();
+			%>
+			<html:option value="<%=visitLocation%>" ><%=fl.getClinicLocationName()%></html:option>
+			<%} %>
+			
 			</html:select>
 
 	</td></tr>

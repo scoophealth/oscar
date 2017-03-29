@@ -26,10 +26,13 @@
 
 <%@ include file="/taglibs.jsp"%>
 <%@page import="org.oscarehr.eyeform.web.EyeformAction"%>
+<%@ page import="oscar.OscarProperties"%>
 <%
 	request.setAttribute("sections",EyeformAction.getMeasurementSections());
 	request.setAttribute("headers",EyeformAction.getMeasurementHeaders());
 	request.setAttribute("providers",EyeformAction.getActiveProviders());
+	oscar.OscarProperties props1 = oscar.OscarProperties.getInstance();
+	String eyeform = props1.getProperty("cme_js");
 %>
 <tr>	
             <td colspan=2 class="tite4">
@@ -66,34 +69,72 @@
                 <table>
                 	<tr>
                 		<td>
+						<%if(("eyeform3".equals(eyeform)) || ("eyeform3.1".equals(eyeform)) || ("eyeform3.2".equals(eyeform))){%>
+							<select name="fromlist1" multiple="multiple" size="9" ondblclick="addSection1(document.EctConsultationFormRequestForm.elements['fromlist1'],document.EctConsultationFormRequestForm.elements['fromlist2']);">   
+						<%}else{%>
                 			<select name="fromlist1" multiple="multiple" size="9" ondblclick="addSection(document.EctConsultationFormRequestForm.elements['fromlist1'],document.EctConsultationFormRequestForm.elements['fromlist2']);">                				
-                				<c:forEach var="item" items="${sections}">
+                		<%}%>
+								<c:forEach var="item" items="${sections}">
                 					<option value="<c:out value="${item.value}"/>"><c:out value="${item.label}"/></option>
                 				</c:forEach>
                 			</select>
                 		</td>
                 		<td valign="middle">
+						<%if(("eyeform3".equals(eyeform)) || ("eyeform3.1".equals(eyeform)) || ("eyeform3.2".equals(eyeform))){%>	
+							<input type="button" value=">>" onclick="addSection1(document.EctConsultationFormRequestForm.elements['fromlist1'],document.EctConsultationFormRequestForm.elements['fromlist2']);"/>
+						<%}else{%>
                 			<input type="button" value=">>" onclick="addSection(document.EctConsultationFormRequestForm.elements['fromlist1'],document.EctConsultationFormRequestForm.elements['fromlist2']);"/>
-                		</td>
+                		<%}%>
+						</td>
                 		<td>
-                			<select id="fromlist2" name="fromlist2" multiple="multiple" size="9" ondblclick="addExam(ctx,'fromlist2',document.EctConsultationFormRequestForm.elements['ext_specialProblem'],appointmentNo);">
-                				<c:forEach var="item" items="${headers}">
+							<%if(("eyeform3".equals(eyeform)) || ("eyeform3.1".equals(eyeform)) || ("eyeform3.2".equals(eyeform))){%>
+							<select id="fromlist2" name="fromlist2" multiple="multiple" size="9" ondblclick="addExam(ctx,'fromlist2',document.getElementById('ext_specialProblem'),appointmentNo);">
+                			<%}else{%>
+							<select id="fromlist2" name="fromlist2" multiple="multiple" size="9" ondblclick="addExam(ctx,'fromlist2',document.EctConsultationFormRequestForm.elements['ext_specialProblem'],appointmentNo);">
+							<%}%>
+							<c:forEach var="item" items="${headers}">
                 					<option value="<c:out value="${item.value}"/>"><c:out value="${item.label}"/></option>
                 				</c:forEach>
-                			</select>                			
+                			</select> 
+							<%if(("eyeform3".equals(eyeform)) || ("eyeform3.1".equals(eyeform)) || ("eyeform3.2".equals(eyeform))){%>
+							<input style="vertical-align: middle;" type="button" value="add" onclick="addExam(ctx,'fromlist2',document.getElementById('ext_specialProblem'),appointmentNo);">
+							<%}else{%>
 							<input style="vertical-align: middle;" type="button" value="add" onclick="addExam(ctx,'fromlist2',document.EctConsultationFormRequestForm.elements['ext_specialProblem'],appointmentNo);">
+							<%}%>
 						</td>                		
                 	</tr>
                 </table>
             </td>
        </tr>
-       
+
        <tr>
             <td colspan="2">
                 <table>
                 	<tr>                		
                			 <td>
+							<%if(("eyeform3".equals(eyeform)) || ("eyeform3.1".equals(eyeform)) || ("eyeform3.2".equals(eyeform))){%>
+							<div contentEditable="true" name="ext_specialProblem" id="ext_specialProblem" onKeyUp="change_specialProblem()" style="display:block;border:1px solid gray;overflow:scroll;height:150px;width:750px;overflow-x:hidden;word-wrap:break-word;font-size:12px;"></div>
+							<input type="hidden" name="specialProblem" id="specialProblem" value=""/>
+<script type="text/javascript">
+
+function change_specialProblem(){
+	var str = jQuery("#ext_specialProblem").html();
+	str = str.replace(new RegExp("<b>", 'g'),"");
+	str = str.replace(new RegExp("</b>", 'g'),"");
+	str = str.replace(new RegExp("<br>", 'g'),"");
+	if(str.length == 0){
+		str = "";
+		jQuery("#ext_specialProblem").empty();
+		//jQuery("#ext_specialProblem").html("");
+		jQuery("#specialProblem").val("");
+	}else{
+		jQuery("#specialProblem").val(jQuery("#ext_specialProblem").html());
+	}
+}
+</script>
+							<%}else{%>
                 			<textarea cols="90" rows="8" id="ext_specialProblem" name="ext_specialProblem"></textarea>
+							<%}%>
                 		</td>
                 	</tr>
                 </table>

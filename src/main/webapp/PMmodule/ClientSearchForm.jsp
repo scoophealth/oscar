@@ -23,6 +23,19 @@
 
 --%>
 <%@ include file="/taglibs.jsp"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_search" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_search");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 <%@ include file="/common/messages.jsp"%>
 <%@page import="oscar.OscarProperties"%>
 <%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
@@ -31,11 +44,7 @@
 <%@page import="org.oscarehr.PMmodule.model.Program"%>
 
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
-<%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-%>
+
 
 <script>
 	function resetClientFields() {

@@ -144,6 +144,9 @@ public final class EmailUtilsOld
                         email.setTLS(true);                        
                     } else if (connectionSecurity.equals(CONNECTION_SECURITY_SSL)) {
                         email.setSSL(true);
+                    } else {
+                    	Properties p = email.getMailSession().getProperties();
+                		p.put("mail.smtp.auth", "false");
                     }
                 }
                 
@@ -171,7 +174,7 @@ public final class EmailUtilsOld
 		String smtpSslPort = OscarProperties.getInstance().getProperty(CATEGORY+SMTP_SSL_PORT_KEY);
 		String smtpUser = OscarProperties.getInstance().getProperty(CATEGORY+SMTP_USER_KEY);
 		String smtpPassword = OscarProperties.getInstance().getProperty(CATEGORY+SMTP_PASSWORD_KEY);
-                String smtpConnectionSecurity = OscarProperties.getInstance().getProperty(CATEGORY+SMTP_CONNECTION_SECURITY);
+        String smtpConnectionSecurity = OscarProperties.getInstance().getProperty(CATEGORY+SMTP_CONNECTION_SECURITY);
 
 		return(getHtmlEmail(smtpHost, smtpSslPort, smtpUser, smtpPassword, smtpConnectionSecurity));
 	}        
@@ -191,6 +194,7 @@ public final class EmailUtilsOld
 		if (textContents != null) htmlEmail.setTextMsg(textContents);
 		if (htmlContents != null) htmlEmail.setHtmlMsg(htmlContents);
 
+		//htmlEmail.getMailSession().setDebug(true);
 		htmlEmail.send();
 	}
 

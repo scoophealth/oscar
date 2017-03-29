@@ -236,7 +236,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
 									}
 									nbGeneral++;
 								}
-								if (nbGeneral != 0) {
+								if ((int)nbGeneral != 0) {
 									MiscUtils.getLogger().debug("the total number of patients seen: " 
 											+ nbGeneral + " nb of them pass the test: " + nbMetGL);
 									metGLPercentage = Math.round(nbMetGL / nbGeneral * 100);
@@ -260,7 +260,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
 									nbGeneral++;
 								}
 
-								if (nbGeneral != 0) {
+								if ((int)nbGeneral != 0) {
 									metGLPercentage = Math.round(nbMetGL / nbGeneral * 100);
 								}
 								
@@ -281,7 +281,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
 									}
 									nbGeneral++;
 								}
-								if (nbGeneral != 0) {
+								if ((int)nbGeneral != 0) {
 									metGLPercentage = Math.round(nbMetGL / nbGeneral * 100);
 								}
 								String[] param = { startDate, endDate, measurementType, mInstrc, upper, "(" + nbMetGL + "/" + nbGeneral + ")" + Double.toString(metGLPercentage) };
@@ -312,7 +312,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
 							}
 							nbGeneral++;
 						}
-						if (nbGeneral != 0) {
+						if ((int)nbGeneral != 0) {
 							MiscUtils.getLogger().debug("the total number of patients seen: " + nbGeneral + " nb of them pass the test: " + nbMetGL);
 							metGLPercentage = Math.round(nbMetGL / nbGeneral * 100);
 						}
@@ -331,7 +331,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
 							nbGeneral++;
 						}
 
-						if (nbGeneral != 0) {
+						if ((int)nbGeneral != 0) {
 							metGLPercentage = Math.round(nbMetGL / nbGeneral * 100);
 						}
 						String[] param = { startDate, endDate, measurementType, "", lower, upper, "(" + nbMetGL + "/" + nbGeneral + ")" + Double.toString(metGLPercentage) };
@@ -350,7 +350,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
 							}
 							nbGeneral++;
 						}
-						if (nbGeneral != 0) {
+						if ((int)nbGeneral != 0) {
 							metGLPercentage = Math.round(nbMetGL / nbGeneral * 100);
 						}
 						String[] param = { startDate, endDate, measurementType, "", upper, "(" + nbMetGL + "/" + nbGeneral + ")" + Double.toString(metGLPercentage) };

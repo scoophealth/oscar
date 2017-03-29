@@ -119,10 +119,13 @@ public class ProcessSurveyFile{
                   out.close();
                } catch (IOException e) {
                   MiscUtils.getLogger().error("Error", e);
-               }             
+               } 
+               if(rs != null){
+            	   rs.close();
+               }
             }
          }
-         rs.close();
+         
          
       }catch(Exception e){
          MiscUtils.getLogger().error("Error", e);

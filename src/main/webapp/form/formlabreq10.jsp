@@ -68,6 +68,13 @@
 <script src="../share/javascript/prototype.js" type="text/javascript"></script>
 <script src="<%=request.getContextPath()%>/js/jquery-1.7.1.min.js"></script>
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+
+<style type="text/css" media="print">
+.donotprint{
+    display:none;
+}
+</style>
+
 </head>
 
 <%
@@ -516,7 +523,7 @@ if (OscarProperties.getInstance().getBooleanProperty("consultation_program_lette
 					<td class="borderGrayTopBottom" style="border-top: 0px;"><font
 						class="subHeading">Additional Clinical Information <i
 						style="font-size: -1;">(e.g. diagnosis)</i></font><br>
-					<textarea name="aci" style="width: 100%; height: 59px;"
+					<textarea name="aci" id="aci" style="width: 100%; height: 59px;"
 						tabindex="1">
 					<%
                     if (props.getProperty("aci") == null) {
@@ -564,6 +571,38 @@ if (OscarProperties.getInstance().getBooleanProperty("consultation_program_lette
 					<td class="labArea" style="vertical-align: top; height: 154px;"
 						colspan="3"><b><i><font class="subHeading">Laboratory
 					Use Only:</font></i></b></br>
+					<% if(oscarProps.getProperty("labreq_CKD").equals("true")){ %>
+						
+					
+	                    <table width="100%" border="0" class="donotprint">
+	                        <tr>
+	                            <td style="color:red;" width="33%">Primary Care Work Up</td>
+	                            <td style="color:red;" width="33%">&nbsp;</td>
+	                            <td style="color:red;" width="33%">Referral Work Up</td>
+	                        </tr>
+	                        <tr>
+	                            <td>
+	                                <input type="button" name="btnCKDInitial" id="btnCKDInitial" value="CKD Initial Testing" style="margin-bottom:5px;width:160px;" onclick="document.getElementById('b_creatinine').checked=true;document.getElementById('b_albumin').checked=true;"/><br/>
+	                                <input type="button" name="btnConfirmDX" id="btnConfirmDX" value="Confirm Dx" style="margin-bottom:5px;width:160px;" onclick="document.getElementById('b_creatinine').checked=true;document.getElementById('b_albumin').checked=true;document.getElementById('aci').value='Complete in 3 months';"/><br/>
+	                                <input type="button" name="btnClinicalConern" id="btnClinicalConcern" value="Clinical Concern" style="margin-bottom:5px;width:160px;" onclick="document.getElementById('b_creatinine').checked=true;document.getElementById('b_albumin').checked=true;document.getElementById('aci').value='Complete in 2 weeks';"/><br/>
+	                                <input type="button" name="btnFollowUpTesting" id="btnFollowUpTesting" value="Follow Up Testing" style="margin-bottom:5px;width:160px;" onclick="document.getElementById('b_sodium').checked=true;document.getElementById('b_potassium').checked=true;"/>
+	                            </td>
+	                            <td>
+	                                <br/><br/>
+	                                <input type="button" name="btnMonCKD6Mos" id="btnMonCKD6Mos" value="Monitor CKD 6 mos" style="margin-bottom:5px;width:160px;" onclick="document.getElementById('b_creatinine').checked=true;document.getElementById('b_albumin').checked=true;document.getElementById('aci').value='Please complete in 6 months';"/><br/>
+	                                <input type="button" name="btnMonCKD1yr" id="btnMonCKD1yr" value="Monitor CKD 1 yr" style="margin-bottom:5px;width:160px;" onclick="document.getElementById('b_creatinine').checked=true;document.getElementById('b_albumin').checked=true;document.getElementById('aci').value='Please complete in 1 year';"/><br/>
+	                                <input type="button" name="btnMonCKDConcern" id="btnMonCKDConcern" value="Monitor CKD concern" style="margin-bottom:5px;width:160px;" onclick="document.getElementById('b_creatinine').checked=true;document.getElementById('b_albumin').checked=true;document.getElementById('aci').value='Complete in 2 weeks';"/>
+	                            </td>
+	                            <td>
+	                                <input type="button" name="btnLowEGFR" id="btnLowEGFR" value="Low eGFR" style="margin-bottom:5px;width:160px;" onclick="document.getElementById('b_sodium').checked=true;document.getElementById('b_albumin').checked=true;document.getElementById('b_potassium').checked=true;"/><br/>
+	                                <input type="button" name="btnAlbuminuria" id="btnAlbuminuria" value="Albuminuria" style="margin-bottom:5px;width:160px;" onclick="document.getElementById('b_sodium').checked=true;document.getElementById('b_potassium').checked=true;"/><br/><br/><br/>
+	                                <input type="button" name="btnClear" id="btnClear" value="Clear" style="margin-bottom:5px;width:160px;" onclick="document.getElementById('b_potassium').checked=false;document.getElementById('b_sodium').checked=false;document.getElementById('b_creatinine').checked=false;document.getElementById('b_albumin').checked=false;document.getElementById('aci').value='';"/>
+	
+	                            </td>
+	                        </tr>
+	
+	                    </table>					
+						<% } %>
 					</td>
 				</tr>
 				<tr>
@@ -717,7 +756,7 @@ if (OscarProperties.getInstance().getBooleanProperty("consultation_program_lette
 						</tr>
 						<tr>
 							<td class="checkboxTd"><input type="checkbox"
-								name="b_creatinine" <%=props.getProperty("b_creatinine", "")%>></td>
+								name="b_creatinine" id="b_creatinine" <%=props.getProperty("b_creatinine", "")%>></td>
 							<td class="checkboxLabelTd" colspan="2">Creatinine (eGFR)</td>
 						</tr>
 						<tr>
@@ -727,12 +766,12 @@ if (OscarProperties.getInstance().getBooleanProperty("consultation_program_lette
 						</tr>
 						<tr>
 							<td class="checkboxTd"><input type="checkbox"
-								name="b_sodium" <%=props.getProperty("b_sodium", "")%>></td>
+								name="b_sodium" id="b_sodium" <%=props.getProperty("b_sodium", "")%>></td>
 							<td class="checkboxLabelTd" colspan="2">Sodium</td>
 						</tr>
 						<tr>
 							<td class="checkboxTd"><input type="checkbox"
-								name="b_potassium" <%=props.getProperty("b_potassium", "")%>></td>
+								name="b_potassium" id="b_potassium" <%=props.getProperty("b_potassium", "")%>></td>
 							<td class="checkboxLabelTd" colspan="2">Potassium</td>
 						</tr>
 						<tr>
@@ -763,7 +802,7 @@ if (OscarProperties.getInstance().getBooleanProperty("consultation_program_lette
 						</tr>
 						<tr>
 							<td class="checkboxTd"><input type="checkbox"
-								name="b_albumin" <%=props.getProperty("b_albumin", "")%>></td>
+								name="b_albumin" id="b_albumin" <%=props.getProperty("b_albumin", "")%>></td>
 							<td class="checkboxLabelTd" colspan="2">Albumin</td>
 						</tr>
 						<tr>

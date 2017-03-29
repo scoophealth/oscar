@@ -107,11 +107,17 @@ oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$
 		var url = "../oscarPrevention/index.jsp?demographic_no=" + demoNo;
 		window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");   
 		return false;
-   	}   	
+   	}
 
-      	
-   
-   	$scope.isCurrentStatus = function(stat){
+	$scope.openDx = function(demoNo){
+		win = "Dx"+demoNo;
+		var url = "../oscarResearch/oscarDxResearch/setupDxResearch.do?quickList=&demographicNo=" + demoNo;
+		window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");
+	}
+
+
+
+	$scope.isCurrentStatus = function(stat){
 	   //console.log("stat",stat);
 	   if(stat == $scope.page.currentFilter){
 		   return "active";
@@ -420,7 +426,7 @@ $scope.gotoState = function(item,mod,itemId){
 		
 		editGroupedNotes('lg',mod,itemId);
 		
-	}else if(item.type == 'lab' || item.type == 'document'  || item.type == 'rx'|| item.type == 'allergy' || item.type == 'prevention' || item.type == 'dsguideline'  ){
+	}else if(item.type == 'lab' || item.type == 'document'  || item.type == 'rx'|| item.type == 'allergy' || item.type == 'prevention' || item.type == 'dsguideline' || item.type =='diseases' ){
 
 		if(item.type == 'rx'){
 			win = "Rx" + $stateParams.demographicNo;
@@ -428,6 +434,8 @@ $scope.gotoState = function(item,mod,itemId){
 			win = "Allergy" + $stateParams.demographicNo;
 		}else if(item.type == 'prevention'){
 			win = "prevention" + $stateParams.demographicNo;
+		}else if(item.type == 'diseases'){
+			win = "diseases" + $stateParams.demographicNo;
 		}else{
 			//item.type == 'lab' || item.type == 'document'
 			//var rnd = Math.round(Math.random() * 1000);

@@ -23,7 +23,8 @@
     Ontario, Canada
 
 --%>
-
+<%@page import="oscar.OscarProperties"%>
+<%java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 function currentProAdd(val,ob) {
 	var str='';
 	switch(val) {
@@ -58,10 +59,10 @@ function currentProAdd(val,ob) {
 			str='<%=(String)request.getAttribute("testbooking") %>';
 			break;
 		case 'mHis':
-			str='<%=(String)request.getAttribute("medicalHistory") %>';
+			str='<%=(String)request.getAttribute("medHistory") %>';
 			break;
 		case 'fHis':
-			str='<%=(String)request.getAttribute("familyHistory") %>';
+			str='<%=(String)request.getAttribute("famHistory") %>';
 			break;
 		case 'otherMeds':
 			str='<%=(String)request.getAttribute("otherMeds") %>';
@@ -90,17 +91,28 @@ jQuery(document).ready(function(){
 
 
 	jQuery("#clinicalInfoButtonBar").html("");
+<%  if (oscarVariables.getProperty("cme_js", "").equals("eyeform_DrJinapriya")) { %>
+	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Subjective\" onclick=\"currentProAdd('cHis','clinicalInformation');\"/>&nbsp;");
+	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Past Ocular History\" onclick=\"currentProAdd('pHis','clinicalInformation');\"/>&nbsp;");
+	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Medical History\" onclick=\"currentProAdd('mHis','clinicalInformation');\"/>&nbsp;");
+	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Ocular Diagnoses\" onclick=\"currentProAdd('fHis','clinicalInformation');\"/>&nbsp;");
+	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Specs History\" onclick=\"currentProAdd('specs','clinicalInformation');\"/>&nbsp;");
+	jQuery("#clinicalInfoButtonBar").append("<br/>");
+	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Objective\" onclick=\"currentProAdd('dTest','clinicalInformation');\"/>&nbsp;");
+	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Ocular Procedures\" onclick=\"currentProAdd('oProc','clinicalInformation');\"/>&nbsp;");
+	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Impression/Plan\" onclick=\"currentProAdd('impress','clinicalInformation');\"/>&nbsp;");
 
+<% } else { %>
 	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Current History\" onclick=\"currentProAdd('cHis','clinicalInformation');\"/>&nbsp;");
 	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Past Ocular History\" onclick=\"currentProAdd('pHis','clinicalInformation');\"/>&nbsp;");
-	jQuery("#clinicalInfoButtonBar").append("<input class=\"btn\" value=\"Medical History\" onclick=\"currentProAdd('mHis','clinicalInformation');\" type=\"button\">&nbsp");
-	jQuery("#clinicalInfoButtonBar").append("<input class=\"btn\" value=\"Family History\" onclick=\"currentProAdd('fHis','clinicalInformation');\" type=\"button\">&nbsp");
+	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Medical History\" onclick=\"currentProAdd('mHis','clinicalInformation');\" />&nbsp;");
+	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Family History\" onclick=\"currentProAdd('fHis','clinicalInformation');\"/>&nbsp;");
 	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Specs History\" onclick=\"currentProAdd('specs','clinicalInformation');\"/>&nbsp;");
 	jQuery("#clinicalInfoButtonBar").append("<br/>");
 	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Diagnostic Notes\" onclick=\"currentProAdd('dTest','clinicalInformation');\"/>&nbsp;");
 	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Ocular Procedures\" onclick=\"currentProAdd('oProc','clinicalInformation');\"/>&nbsp;");
 	jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Impression/Plan\" onclick=\"currentProAdd('impress','clinicalInformation');\"/>&nbsp;");
-
+<% } %>
 <%
 	for(String customCppIssue:customCppIssues) {
 		%>jQuery("#clinicalInfoButtonBar").append("<input type=\"button\" class=\"btn\" value=\"<%=customCppIssue %>\" onclick=\"currentProAdd('<%=customCppIssue %>','clinicalInformation');\"/>&nbsp;");<%
@@ -109,9 +121,16 @@ jQuery(document).ready(function(){
 
 
 	jQuery("#concurrentProblemsButtonBar").html("");
+<%  if (oscarVariables.getProperty("cme_js", "").equals("eyeform_DrJinapriya")) { %>
+	jQuery("#concurrentProblemsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Ocular Diagnoses\" onclick=\"currentProAdd('fHis','concurrentProblems');\" />&nbsp;");
+	jQuery("#concurrentProblemsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Medical History\" onclick=\"currentProAdd('mHis','concurrentProblems');\" />&nbsp;");
+	jQuery("#concurrentProblemsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Systemic Meds\" onclick=\"currentProAdd('otherMeds','concurrentProblems');\" />&nbsp;");
+	
+<% } else { %>
 	jQuery("#concurrentProblemsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Family History\" onclick=\"currentProAdd('fHis','concurrentProblems');\" />&nbsp;");
 	jQuery("#concurrentProblemsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Medical History\" onclick=\"currentProAdd('mHis','concurrentProblems');\" />&nbsp;");
 	jQuery("#concurrentProblemsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Other Meds\" onclick=\"currentProAdd('otherMeds','concurrentProblems');\" />&nbsp;");
+<% } %>
 
 <%
 	for(String customCppIssue:customCppIssues) {
@@ -120,10 +139,22 @@ jQuery(document).ready(function(){
 %>
 
 	jQuery("#medsButtonBar").html("");
+<%  if (oscarVariables.getProperty("cme_js", "").equals("eyeform_DrJinapriya")) { %>
+	jQuery("#medsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Drops Administered This Visit\" onclick=\"currentProAdd('oMeds','currentMedications');\"/>&nbsp;");
+	jQuery("#medsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Systemic Meds\" onclick=\"currentProAdd('otherMeds','currentMedications');\"/>&nbsp;");
+	
+<% } else { %>
 	jQuery("#medsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Ocular Meds\" onclick=\"currentProAdd('oMeds','currentMedications');\"/>&nbsp;");
 	jQuery("#medsButtonBar").append("<input type=\"button\" class=\"btn\" value=\"Other Meds\" onclick=\"currentProAdd('otherMeds','currentMedications');\"/>&nbsp;");
-
+<% } %>
+	<%
+	String eyeform = oscarVariables.getProperty("cme_js");
+	if(("eyeform3".equals(eyeform)) || ("eyeform3.1".equals(eyeform)) || ("eyeform3.2".equals(eyeform))){
+	%>
+	document.getElementById("ext_specialProblem").innerHTML = "<%= request.getAttribute("specialProblem")%>";
+	<%}else{ %>
 	jQuery("#ext_specialProblem").val('<%=request.getAttribute("specialProblem") %>');
+	<%} %>
 	if(jQuery("[name='ext_appNo']").val() == 'null') {
 		jQuery("[name='ext_appNo']").val('<%=request.getAttribute("appNo") %>');
 	}

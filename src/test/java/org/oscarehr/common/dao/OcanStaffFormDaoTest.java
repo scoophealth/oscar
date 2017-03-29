@@ -729,7 +729,7 @@ public class OcanStaffFormDaoTest extends DaoTestFixtures {
 		dao.persist(ocanStaffForm4);
 		
 		List<OcanStaffForm> expectedResult = new ArrayList<OcanStaffForm>(Arrays.asList(ocanStaffForm3, ocanStaffForm1));
-		List<OcanStaffForm> result = dao.findUnsubmittedOcanFormsByOcanType(facilityId1, ocanType1, assessmentIds);
+		List<OcanStaffForm> result = dao.findUnsubmittedOcanFormsByOcanType(facilityId1, ocanType1);
 
 		Logger logger = MiscUtils.getLogger();
 		

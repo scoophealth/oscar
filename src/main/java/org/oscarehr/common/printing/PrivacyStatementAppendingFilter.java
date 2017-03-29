@@ -75,7 +75,7 @@ public class PrivacyStatementAppendingFilter implements Filter {
 
 	private Set<String> exclusions = Collections.synchronizedSet(new HashSet<String>());
 	
-	private String getPrivacyStatement() {
+	private String getPrivacyStatement() { 
 		if (OscarProperties.getConfidentialityStatement() == null || OscarProperties.getConfidentialityStatement().trim().isEmpty()) {
 			return "";
 		}

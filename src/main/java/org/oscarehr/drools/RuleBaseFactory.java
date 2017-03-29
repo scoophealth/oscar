@@ -23,9 +23,18 @@
  */
 package org.oscarehr.drools;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.drools.RuleBase;
+import org.drools.io.RuleBaseLoader;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.QueueCache;
+
+import oscar.OscarProperties;
 
 public final class RuleBaseFactory {
 
@@ -45,5 +54,54 @@ public final class RuleBaseFactory {
 
 	public static synchronized void flushAllCached() {
 		ruleBaseInstances = new QueueCache<String, RuleBase>(4, 2048, DateUtils.MILLIS_PER_DAY, null);
+	}
+
+	/**
+	 * This should be genericisable, this is NOT FINISHED YET.
+	 * The concept is that you check 
+	 * 1) oscar property path for the file as a "file"
+	 * 2) check some hard coded path as a url/classpath resource
+	 * 
+	 * This is here because I think I've seen this code copy/pasted quite a few times.
+	 * I haven't gotten around to finding them all and making this method geneic and refactoring those 
+	 * calls yet.
+	 */
+	public static RuleBase notFinishedGetRuleBase(String fileName, String oscarPropertyToCheck, String classPathToCheck) {
+		try {
+			String filePath = OscarProperties.getInstance().getProperty(oscarPropertyToCheck);
+
+			if (filePath != null) {
+				File file = new File(filePath + fileName);
+
+				RuleBase ruleBase = getRuleBase(file.getCanonicalPath());
+				if (ruleBase!=null) return(ruleBase);
+
+				if (file.isFile() || file.canRead()) {
+					MiscUtils.getLogger().debug("Loading from file " + file.getName());
+					FileInputStream fis = new FileInputStream(file);
+
+					try {
+						ruleBase = RuleBaseLoader.loadFromInputStream(fis);
+					} finally {
+						IOUtils.closeQuietly(fis);
+					}
+
+					putRuleBase(file.getCanonicalPath(), ruleBase);
+					return(ruleBase);
+				}
+			}
+
+			String urlString = classPathToCheck + fileName;
+			RuleBase ruleBase = RuleBaseFactory.getRuleBase(urlString);
+			if (ruleBase != null) return(ruleBase);
+			
+			URL url = RuleBaseFactory.class.getResource(urlString);
+			MiscUtils.getLogger().debug("loading from URL " + url.getFile());
+			ruleBase = RuleBaseLoader.loadFromUrl(url);
+			RuleBaseFactory.putRuleBase(urlString, ruleBase);
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Error", e);
+		}
+		return null;
 	}
 }

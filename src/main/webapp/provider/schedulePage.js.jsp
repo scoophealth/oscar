@@ -28,19 +28,9 @@
 String newticklerwarningwindow=null;
 String ocanWarningWindow=null;
 String cbiReminderWindow=null;
-
-if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
-	newticklerwarningwindow = (String) session.getAttribute("newticklerwarningwindow");
-}
-if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.propertiesOn("OCAN_warning_window") ) {
-    ocanWarningWindow = (String)session.getAttribute("ocanWarningWindow");
-}
-
-if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.propertiesOn("CBI_REMINDER_WINDOW") ) {
-    cbiReminderWindow = (String)session.getAttribute("cbiReminderWindow");
-}
-
+    		
 %>
+
 function storeApptNo(apptNo) {
 	var url = "storeApptInSession.jsp?appointment_no="+apptNo;
 	new Ajax.Request(url, {method:'get'});

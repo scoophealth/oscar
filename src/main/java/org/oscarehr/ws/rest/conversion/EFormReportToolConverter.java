@@ -67,6 +67,24 @@ public class EFormReportToolConverter extends AbstractConverter<EFormReportTool,
 				MiscUtils.getLogger().error("Error",e);
 			}
 		}
+		
+		if(t.getStartDateString() != null && t.getStartDateString().length()>0) {
+			try {
+				d.setStartDate(dateFormatter.parse(t.getStartDateString()));
+			}catch(ParseException e) {
+				MiscUtils.getLogger().error("Error",e);
+			}
+		}
+		
+		if(t.getEndDateString() != null && t.getEndDateString().length()>0) {
+			try {
+				d.setEndDate(dateFormatter.parse(t.getEndDateString()));
+			}catch(ParseException e) {
+				MiscUtils.getLogger().error("Error",e);
+			}
+		}
+		
+		
 	    return d;
     }
 

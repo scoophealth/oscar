@@ -78,9 +78,9 @@ List<AffinityDomainDataObject> affinityDomains = affDao.getAllAffinityDomains();
 <%
     boolean authed=true;
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_edoc,_admin,_admin.edocdelete" rights="r" reverse="<%=true%>">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_edoc" rights="r" reverse="<%=true%>">
 	<%authed=false; %>
-	<%response.sendRedirect("../securityError.jsp?type=_edoc&type=_admin&type=_admin.edocdelete");%>
+	<%response.sendRedirect("../securityError.jsp?type=_edoc");%>
 </security:oscarSec>
 <%
 	if(!authed) {

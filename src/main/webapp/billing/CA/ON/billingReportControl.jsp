@@ -17,6 +17,21 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed2=true;
+%>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_report,_admin.reporting,_admin" rights="r" reverse="<%=true%>">
+	<%authed2=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_report&type=_admin.reporting&type=_admin");%>
+</security:oscarSec>
+<%
+if(!authed2) {
+	return;
+}
+%>
+
 <%      
 
 String user_no = (String) session.getAttribute("user");
@@ -66,24 +81,7 @@ String xml_appointment_date = request.getParameter("xml_appointment_date")==null
 <title>Billing Report</title>
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-<script language="JavaScript">
-<!--
 
-function selectprovider(s) {
-  if(self.location.href.lastIndexOf("&providerview=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&providerview="));
-  else a = self.location.href;
-	self.location.href = a + "&providerview=" +s.options[s.selectedIndex].value ;
-}
-function openBrWindow(theURL,winName,features) { //v2.0
-  window.open(theURL,winName,features);
-}
-
-function refresh() {
-      history.go(0);
-  
-}
-//-->
-</script>
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0"

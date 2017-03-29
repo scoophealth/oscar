@@ -31,6 +31,8 @@
 
 <%
 String curProvider_no = (String)session.getAttribute("user");
+String menuToShow=request.getParameter("show");
+String pageToShow=request.getParameter("load");
 %>
 
 
@@ -52,12 +54,12 @@ String curProvider_no = (String)session.getAttribute("user");
 	objectName="_admin,_admin.userAdmin,_admin.provider"
 	rights="r" reverse="<%=false%>">			
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseOne">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#userAdminMenu">
 				<bean:message key="admin.admin.UserManagement" />
 				<i class="icon-chevron-right"></i> 
 				</a>
 				</div>
-				<div id="collapseOne" class="accordion-body collapse">
+				<div id="userAdminMenu" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<ul>					
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/provideraddarecordhtm.jsp"><bean:message key="admin.admin.btnAddProvider" /></a></li>
@@ -90,12 +92,12 @@ String curProvider_no = (String)session.getAttribute("user");
 <!-- #BILLING -->
 <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.invoices,_admin,_admin.billing" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseTwo">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#billingMenu">
 				<bean:message key="admin.admin.billing" />
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
-				<div id="collapseTwo" class="accordion-body collapse">
+				<div id="billingMenu" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<ul>
 		            <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.billing" rights="r" reverse="<%=false%>">
@@ -154,7 +156,7 @@ String curProvider_no = (String)session.getAttribute("user");
 					</oscar:oscarPropertiesCheck>
 			
 					<oscar:oscarPropertiesCheck property="billregion" value="ON">
-					<li><a href='javascript:void(0);'
+					<li><a href='javascript:void(0);' id="uploadScheduleOfBenefits"
 						class="xlink" rel="${ctx}/billing/CA/ON/ScheduleOfBenefitsUpload.jsp"><bean:message key="admin.admin.scheduleOfBenefits"/></a></li>
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/billing/CA/ON/addEditServiceCode.jsp"><bean:message key="admin.admin.manageBillingServiceCode"/></a></li>
@@ -234,6 +236,9 @@ String curProvider_no = (String)session.getAttribute("user");
 		                <oscar:oscarPropertiesCheck property="billregion" value="ON">             	
 		                        <li><a href='javascript:void(0);' class="xlink" rel='${ctx}/billing/CA/ON/billingONPayment.jsp'><bean:message key="admin.admin.paymentReceived"/></a></li>
 		                        <li><a href='javascript:void(0);' class="xlink" rel='${ctx}/billing/CA/ON/managePaymentType.do'><bean:message key="admin.admin.managePaymentType"/></a></li>
+		                        <% if (org.oscarehr.common.IsPropertiesOn.propertiesOn("ENABLE_PREVENTION_BILLING")) {%>
+		                        <li><a href='javascript:void(0);' class="xlink" rel='${ctx}/billing/CA/ON/preventionBillingSetting.jsp'><bean:message key="admin.admin.preventionBilling"/></a></li>
+		                        <%} %>
 		                </oscar:oscarPropertiesCheck>
 				</ul>
 				</div>
@@ -244,13 +249,13 @@ String curProvider_no = (String)session.getAttribute("user");
 <!-- #LABS/INBOX -->
 <security:oscarSec roleName="<%=roleName$%>" objectName="_admin," rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseThree">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#labsInboxMenu">
 				<bean:message key="admin.admin.LabsInbox" />
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
 				
-				<div id="collapseThree" class="accordion-body collapse">
+				<div id="labsInboxMenu" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<ul>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/lab/CA/ALL/testUploader.jsp" ><bean:message key="admin.admin.hl7LabUpload" /></a></li>
@@ -269,12 +274,12 @@ String curProvider_no = (String)session.getAttribute("user");
 <!--  #FORMS/EFORMS -->	
 <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseForms">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#formsMenu">
 				<bean:message key="admin.admin.FormsEforms" />
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
-				<div id="collapseForms" class="accordion-body collapse">
+				<div id="formsMenu" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<ul>
 					<li><a href="${ctx}/form/setupSelect.do" class="contentLink"><bean:message key="admin.admin.btnSelectForm" /></a></li>
@@ -315,13 +320,13 @@ String curProvider_no = (String)session.getAttribute("user");
 <!-- #REPORTS-->
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.reporting" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseFive">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#reportMenu">
 				<bean:message key="admin.admin.oscarReport" />
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
 				
-				<div id="collapseFive" class="accordion-body collapse">
+				<div id="reportMenu" class="accordion-body collapse">
 				<div class="accordion-inner">
 			
 				<ul>
@@ -458,18 +463,22 @@ String curProvider_no = (String)session.getAttribute("user");
 <!-- #ECHART -->
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.encounter" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseSix">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#echartMenu">
 				<bean:message key="admin.admin.eChart" />
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
-				<div id="collapseSix" class="accordion-body collapse">
+				<div id="echartMenu" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<ul>
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/providertemplate.jsp"><bean:message
 						key="admin.admin.btnInsertTemplate" /></a></li>
+						
+					<li><a  href='javascript:void(0);' class="xlink" rel="${ctx}/admin/encounterType.jsp"><bean:message key="admin.admin.encounterType" /></a></li>
+					
 				</ul>
+				
 				</div>
 				</div>
 	</security:oscarSec>
@@ -478,13 +487,13 @@ String curProvider_no = (String)session.getAttribute("user");
 <!-- #Schedule Management -->
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.schedule" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseSeven">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#scheduleMenu">
 				<bean:message key="admin.admin.ScheduleManagement" />
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
 				
-				<div id="collapseSeven" class="accordion-body collapse">
+				<div id="scheduleMenu" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<ul>
 					<li><a href="javascript:void(0);"
@@ -524,12 +533,12 @@ String curProvider_no = (String)session.getAttribute("user");
 <caisi:isModuleLoad moduleName="caisi">
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi" 	rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseCAISI">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#caisiMenu">
 				<bean:message key="admin.admin.caisi" />
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
-				<div id="collapseCAISI" class="accordion-body collapse">
+				<div id="caisiMenu" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<ul>
 					<li><a href="javascript:void(0);"
@@ -557,12 +566,12 @@ String curProvider_no = (String)session.getAttribute("user");
 
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.caisi" rights="r" reverse="<%=true%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseCAISI2">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#caisi2Menu">
 				<bean:message key="admin.admin.caisi" />
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
-				<div id="collapseCAISI2" class="accordion-body collapse">
+				<div id="caisi2Menu" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<ul>
 					<security:oscarSec roleName="<%=roleName$%>"
@@ -606,12 +615,12 @@ String curProvider_no = (String)session.getAttribute("user");
 <!-- #SYSTEM Management-->
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.measurements,_admin.document" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseEight">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#systemManagementMenu">
 				<bean:message key="admin.admin.SystemManagement" />
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
-				<div id="collapseEight" class="accordion-body collapse">
+				<div id="systemManagementMenu" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<ul>
 				<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=false%>">
@@ -621,7 +630,10 @@ String curProvider_no = (String)session.getAttribute("user");
 				</security:oscarSec>
 
 				<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.document" rights="r" reverse="<%=false%>">			
-								
+				<li><a href='javascript:void(0);'
+					class="xlink" rel="${ctx}/admin/providerPrivilege.jsp">
+				<bean:message key="admin.admin.assignRightsObject"/></a></li>
+				
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/displayDocumentCategories.jsp"><bean:message key="admin.admin.DocumentCategories"/></a></li>
                                                 
@@ -657,19 +669,16 @@ String curProvider_no = (String)session.getAttribute("user");
 						key="oscarEncounter.Index.btnCustomize" /> <bean:message
 						key="oscar.admin.diseaseRegistryQuickList" /></a></li>
 					</security:oscarSec>
-					
 					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.measurements" rights="r" reverse="<%=false%>">	
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/oscarEncounter/oscarMeasurements/Customization.jsp"><bean:message
 						key="oscarEncounter.Index.btnCustomize" /> <bean:message
 						key="admin.admin.oscarMeasurements" /></a></li>
 					</security:oscarSec>
-
 					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">	
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/oscarPrevention/PreventionListManager.jsp">
 						<bean:message key="oscarprevention.preventionlistmanager.title" /></a></li>
 					</security:oscarSec>
-										
 					<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">	
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/resourcebaseurl.jsp"
@@ -697,6 +706,9 @@ String curProvider_no = (String)session.getAttribute("user");
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/jobs.jsp"><bean:message key="admin.jobs.title"/></a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/jobTypes.jsp"><bean:message key="admin.jobtypes.title"/></a></li>
 					
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/contactTypeManager.jsp"><bean:message key="admin.contactTypeManager.title"/></a></li>
+					
+
 					<li>
 						<a href="javascript:void(0);" class="xlink" rel="${ctx}/lookupListManagerAction.do?method=manage" >
 							<bean:message key="admin.admin.lookUpLists"/>
@@ -749,13 +761,13 @@ String curProvider_no = (String)session.getAttribute("user");
 <!-- #Fax Management -->
 <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.fax" rights="r" reverse="<%=false%>">
 	<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseFifteen">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#faxMenu">
 				Faxes
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
 				
-				<div id="collapseFifteen" class="accordion-body collapse">
+				<div id="faxMenu" class="accordion-body collapse">
 					<div class="accordion-inner">
 						<ul>
 							<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
@@ -770,13 +782,13 @@ String curProvider_no = (String)session.getAttribute("user");
 <!-- #SYSTEM REPORTS-->
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseNine">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#systemReportsMenu">
 				<bean:message key="admin.admin.SystemReports" />
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
 				
-				<div id="collapseNine" class="accordion-body collapse">
+				<div id="systemReportsMenu" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<ul>
 				
@@ -797,10 +809,9 @@ String curProvider_no = (String)session.getAttribute("user");
 					<% if (OscarProperties.getInstance().isFaxEnabled()) { %>
 		            <li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/faxStatus.do"><bean:message key="admin.faxStatus.faxStatus" /></a></li>
 		            <% } %>
-					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/oscarStatus.do"><bean:message key="admin.oscarStatus.oscarStatus" /></a></li>
+                    <li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/oscarStatus.do"><bean:message key="admin.oscarStatus.oscarStatus" /></a></li>
 				</security:oscarSec>
-	
-							
+                    <li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/oscarAudit.do">OSCAR Audit</a></li>
 				</ul>	
 				</div>
 				</div>
@@ -810,12 +821,12 @@ String curProvider_no = (String)session.getAttribute("user");
 <!-- #INTEGRATION-->
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseTen">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#apiMenu">
 				<bean:message key="admin.admin.Integration" />
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
-				<div id="collapseTen" class="accordion-body collapse">
+				<div id="apiMenu" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<ul>
 					<li>API/Connections
@@ -909,12 +920,12 @@ String curProvider_no = (String)session.getAttribute("user");
 <!-- #Data Management -->
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.backup" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseTwelve">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#dataManagementMenu">
 				<bean:message key="admin.admin.DataManagement" />
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
-				<div id="collapseTwelve" class="accordion-body collapse">
+				<div id="dataManagementMenu" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<ul>
 					<li><a href='javascript:void(0);'
@@ -949,12 +960,12 @@ String curProvider_no = (String)session.getAttribute("user");
 <oscar:oscarPropertiesCheck property="admin.hph" value="true">
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseThirteen">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#publicHealthMenu">
 				Hamilton Public Health
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
-				<div id="collapseThirteen" class="accordion-body collapse">
+				<div id="publicHealthMenu" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<ul>
 					<li><a href='javascript:void(0);'
@@ -972,19 +983,19 @@ String curProvider_no = (String)session.getAttribute("user");
 <oscar:oscarPropertiesCheck property="sharingcenter.enabled" value="true">
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.sharingcenter" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseThirteen">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#sharingCenterMenu">
 				<bean:message key="sharingcenter.title" />
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
 				
-				<div id="collapseThirteen" class="accordion-body collapse">
+				<div id="sharingCenterMenu" class="accordion-body collapse">
 				<div class="accordion-inner">
 			
 				<ul>
-					<li><a href="${ctx}/sharingcenter/affinitydomain/manage.jsp" class="contentLink"><bean:message key="sharingcenter.affinitydomain.manage" /></a></li>
-					<li><a href="${ctx}/sharingcenter/affinitydomain/clinic.jsp" class="contentLink"><bean:message key="sharingcenter.clinicinfo" /></a></li>								
-					<li><a href="${ctx}/sharingcenter/security/infrastructure.jsp" class="contentLink"><bean:message key="sharingcenter.security" /></a></li>
+					<li><a href="${ctx}/sharingcenter/affinitydomain/manage.jsp" class="contentLink" id="scManageAffinityDomainLink" ><bean:message key="sharingcenter.affinitydomain.manage" /></a></li>
+					<li><a href="${ctx}/sharingcenter/affinitydomain/clinic.jsp" class="contentLink" id="scManageClinicLink"><bean:message key="sharingcenter.clinicinfo" /></a></li>								
+					<li><a href="${ctx}/sharingcenter/security/infrastructure.jsp" class="contentLink" id="scManageInfrastructureLink"><bean:message key="sharingcenter.security" /></a></li>
 				</ul>
 				</div>
 				</div>
@@ -995,12 +1006,12 @@ String curProvider_no = (String)session.getAttribute("user");
 <oscar:oscarPropertiesCheck property="OSCAR_LEARNING" value="yes">
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseFourteen">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#learningMenu">
 				<bean:message key="admin.admin.learning" />
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
-				<div id="collapseFourteen" class="accordion-body collapse">
+				<div id="learningMenu" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/oscarLearning/CourseManager.jsp"><bean:message key="admin.admin.learning.manageCourses"/></a></li>
@@ -1017,12 +1028,12 @@ String curProvider_no = (String)session.getAttribute("user");
 
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseSixteen">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#updateMenu">
 				<bean:message key="admin.admin.updates" />
 				<i class="icon-chevron-right"></i>
 				</a>
 				</div>
-				<div id="collapseSixteen" class="accordion-body collapse">
+				<div id="updateMenu" class="accordion-body collapse">
 				<div class="accordion-inner">
 				<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/pregnancy/migrateToSplitOnArEnhancedForm.jsp"><bean:message key="admin.admin.updates.migrate_onarenhanced"/></a></li>

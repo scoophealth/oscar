@@ -48,7 +48,7 @@ public class ExportTemplateAction extends Action {
 	
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response) {
-		MiscUtils.getLogger().debug("Entered manage template action");
+		MiscUtils.getLogger().info("Entered manage template action");
 		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
 		if(!com.quatro.service.security.SecurityManager.hasPrivilege("_admin", roleName$)  && !com.quatro.service.security.SecurityManager.hasPrivilege("_report", roleName$)) {
 			throw new SecurityException("Insufficient Privileges");
@@ -60,7 +60,7 @@ public class ExportTemplateAction extends Action {
         
         request.setAttribute("templateid", templateId);
         
-        MiscUtils.getLogger().debug("Entered export template action with : " + name + ", id: " + templateId);
+        MiscUtils.getLogger().info("Entered export template action with : " + name + ", id: " + templateId);
    	 	try {
 			AppDefinition k2aApp = appDefinitionDao.findByName("K2A");
 			if(k2aApp != null) {

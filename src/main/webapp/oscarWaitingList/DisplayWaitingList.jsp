@@ -24,12 +24,25 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_demographic" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_demographic");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%
-    if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
-
-	String styleClass = "data2";
+   	String styleClass = "data2";
 %>
 <%@ page
 	import="java.util.*,oscar.util.*, oscar.oscarWaitingList.bean.*"%>
@@ -47,6 +60,7 @@
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.js"></script>
 <title>Waiting List</title>
 
 <!-- calendar stylesheet -->
@@ -269,11 +283,14 @@ function removePatient(demographicNo, waitingList){
 								<td class="<%=styleClass%>"><html:text
 									name="waitingListBean" property="onListSince" indexed="true"
 									styleClass="data3" onblur="setParameters(this);"
-									onchange="setParameters(this);" /> <img
+									onchange="setParameters(this);" styleId="waitingListBean[${ctr}].onListSince" /> <img
 									src="../images/cal.gif" id="referral_date_cal_<%=ctr%>">
 								</td>
 								<script type="text/javascript">
-Calendar.setup({ inputField : "waitingListBean[<%=ctr%>].onListSince", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal_<%=ctr%>", singleClick : true, step : 1 });
+								$(document).ready(function(){
+									Calendar.setup({ inputField : "waitingListBean[<%=ctr%>].onListSince", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal_<%=ctr%>", singleClick : true, step : 1 });
+
+								});
 </script>
 								<td class="<%=styleClass%>"><html:select
 									property="selectedProvider" styleClass="data3">

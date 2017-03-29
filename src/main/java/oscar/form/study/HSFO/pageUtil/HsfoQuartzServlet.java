@@ -51,7 +51,7 @@ public class HsfoQuartzServlet implements Servlet
 {
 	public static final String RESUBMIT_JOB = "hsfoResubmitJob";
 
-	protected static Logger logger = Logger.getLogger(HsfoQuartzServlet.class);
+	private static Logger logger = Logger.getLogger(HsfoQuartzServlet.class);
 
 	public static final String RESUBMIT_TRIGGER = "hsfoResubmitTrigger";
 

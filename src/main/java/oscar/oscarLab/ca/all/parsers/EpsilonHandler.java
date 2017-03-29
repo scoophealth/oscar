@@ -30,7 +30,6 @@ import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.util.UtilDateUtilities;
-
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v23.message.ORU_R01;
 import ca.uhn.hl7v2.model.v23.segment.OBX;
@@ -158,10 +157,8 @@ public class EpsilonHandler  extends CMLHandler implements MessageHandler {
 	@Override
 	public String getTimeStamp(int i, int j) {
 		try {
-			return (formatDateTime(getString(msg.getRESPONSE()
-					.getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX()
-					.getDateTimeOfTheObservation().getTimeOfAnEvent()
-					.getValue())));
+			return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().
+					getSpecimenReceivedDateTime().getTimeOfAnEvent().getValue())));
 		} catch (Exception e) {
 			return ("");
 		}

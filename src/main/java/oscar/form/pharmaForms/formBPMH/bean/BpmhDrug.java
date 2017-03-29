@@ -37,7 +37,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * 	HOW I TAKE IT : Once per day with food / bid, pid etc...
  * 	WHY I TAKE IT : ICD9 code / special reasons
  *  SPECIAL INSTRUCTIONS : additional instructions
- *
  */
 public class BpmhDrug {
 	

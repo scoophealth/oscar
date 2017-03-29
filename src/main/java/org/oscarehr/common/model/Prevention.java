@@ -74,6 +74,9 @@ public class Prevention extends AbstractModel<Integer> implements Serializable {
 	private String creatorProviderNo = null;
 	
 	private Date lastUpdateDate = null;
+	
+	private Boolean restrictToProgram = false;
+	private Integer programNo;
 
 	public Integer getDemographicId() {
 		return demographicId;
@@ -182,4 +185,22 @@ public class Prevention extends AbstractModel<Integer> implements Serializable {
 	public String getDeletedRawValue() {
 		return String.valueOf(deleted);
 	}
+
+	public Boolean getRestrictToProgram() {
+		return restrictToProgram;
+	}
+
+	public void setRestrictToProgram(Boolean restrictToProgram) {
+		this.restrictToProgram = restrictToProgram;
+	}
+
+	public Integer getProgramNo() {
+		return programNo;
+	}
+
+	public void setProgramNo(Integer programNo) {
+		this.programNo = programNo;
+	}
+	
+	
 }

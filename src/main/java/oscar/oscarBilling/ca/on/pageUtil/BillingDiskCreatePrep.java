@@ -284,7 +284,7 @@ public class BillingDiskCreatePrep {
 		String[] ret = new String[2];
 		GregorianCalendar now = new GregorianCalendar();
 		int curMonth = (now.get(Calendar.MONTH) + 1);
-		String curMonthCode = BillingDataHlp.propMonthCode.getProperty("" + curMonth);
+		String curMonthCode = BillingDataHlp.getPropMonthCode().getProperty("" + curMonth);
 		String[] last = dbObj.getLatestSoloMonthCodeBatchNum(ohipNo);
 
 		if (last != null && curMonthCode.equals(last[0])) {
@@ -303,7 +303,7 @@ public class BillingDiskCreatePrep {
 		// int curYear = now.get(Calendar.YEAR); int curDay =
 		// now.get(Calendar.DAY_OF_MONTH);
 		int curMonth = (now.get(Calendar.MONTH) + 1);
-		String curMonthCode = BillingDataHlp.propMonthCode.getProperty("" + curMonth);
+		String curMonthCode = BillingDataHlp.getPropMonthCode().getProperty("" + curMonth);
 		String[] last = dbObj.getLatestGrpMonthCodeBatchNum(groupNo);
 
 		if (last != null && curMonthCode.equals(last[0])) {

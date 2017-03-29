@@ -60,7 +60,7 @@ import oscar.form.study.HSFO.RecommitSchedule;
 
 public class RecommitHSFOAction extends DispatchActionSupport {
 
-    protected static Logger logger = Logger.getLogger(RecommitHSFOAction.class);
+    private static Logger logger = Logger.getLogger(RecommitHSFOAction.class);
 
     public ActionForward showSchedule(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         LazyValidatorForm sform = (LazyValidatorForm)form;

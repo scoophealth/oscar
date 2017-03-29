@@ -55,6 +55,9 @@ public class EFormReportTool extends AbstractModel<Integer> {
 	
 	private boolean latestMarked;
 	
+	private Date startDate;
+	
+	private Date endDate;
 
 	public Integer getId() {
 		return id;
@@ -126,6 +129,23 @@ public class EFormReportTool extends AbstractModel<Integer> {
 
 	public void setLatestMarked(boolean latestMarked) {
 		this.latestMarked = latestMarked;
+	}
+	
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 
 	@PrePersist

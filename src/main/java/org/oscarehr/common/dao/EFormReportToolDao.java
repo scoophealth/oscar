@@ -32,14 +32,18 @@ import javax.persistence.Query;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.log4j.Logger;
 import org.oscarehr.common.model.EForm;
 import org.oscarehr.common.model.EFormReportTool;
 import org.oscarehr.common.model.EFormValue;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class EFormReportToolDao extends AbstractDao<EFormReportTool> {
 
+	Logger logger = MiscUtils.getLogger();
+	
 	public EFormReportToolDao() {
 		super(EFormReportTool.class);
 	}
@@ -65,15 +69,18 @@ public class EFormReportToolDao extends AbstractDao<EFormReportTool> {
 		}
 	}
 
-	public void addNew(EFormReportTool eformReportTool, EForm eform, List<String> fields, String providerNo) {
+	public void addNew(EFormReportTool eformReportTool, EForm eform, List<String> fields, String providerNo, boolean useNameAsTableName) {
 		//generate the create table statement
-		String tableName = "ERT_" + eformReportTool.getName() + (new BigInteger(130, new SecureRandom()).toString(8).substring(0, 8));
+		String tableName = "ERT_"+ eformReportTool.getName();
+		if(!useNameAsTableName) {
+			tableName += (new BigInteger(130, new SecureRandom()).toString(8).substring(0, 8));
+		}
 		StringBuilder sql = new StringBuilder("CREATE TABLE " + tableName + " (");
 		sql.append("id int (10) NOT NULL auto_increment primary key,");
 		sql.append("fdid int (10) NOT NULL, ");
 		sql.append("demographicNo int (10) NOT NULL, ");
 		sql.append("dateFormCreated datetime NOT NULL, ");
-		sql.append("providerNo varchar(6) NOT NULL, ");
+		sql.append("eft_providerNo varchar(6) NOT NULL, ");
 		sql.append("eft_latest tinyint(1) NOT NULL, ");
 		sql.append("dateCreated timestamp NOT NULL ");
 		for (String field : fields) {
@@ -81,7 +88,7 @@ public class EFormReportToolDao extends AbstractDao<EFormReportTool> {
 		}
 		sql.append(")");
 
-		//logger.debug("sql=" + sql);
+		logger.debug("sql=" + sql);
 
 		//commit the table
 		Query q = entityManager.createNativeQuery(sql.toString());
@@ -106,7 +113,7 @@ public class EFormReportToolDao extends AbstractDao<EFormReportTool> {
 		sb.append("fdid,");
 		sb.append("demographicNo,");
 		sb.append("dateFormCreated,");
-		sb.append("providerNo,");
+		sb.append("eft_providerNo,");
 		sb.append("eft_latest,");
 		sb.append("dateCreated,");
 		for (EFormValue v : values) {
@@ -124,15 +131,15 @@ public class EFormReportToolDao extends AbstractDao<EFormReportTool> {
 		sb.append("0,");
 		sb.append("now(),");
 		for (EFormValue v : values) {
-			sb.append("\'" + StringEscapeUtils.escapeSql(v.getVarValue()) + "\'");
+			sb.append("\'" + StringEscapeUtils.escapeSql(v.getVarValue()) + " \'");
 			sb.append(",");
 		}
 		sb.deleteCharAt(sb.length() - 1);
 
 		sb.append(")");
 
-		//logger.debug("sql=" + sb.toString());
-
+		logger.debug("sql=" + sb.toString());
+		
 		Query q = entityManager.createNativeQuery(sb.toString());
 		q.executeUpdate();
 	}

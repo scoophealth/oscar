@@ -78,10 +78,17 @@
 	  changedStatus = request.getParameter("status");
   }
   
-  if (request.getParameter("buttoncancel")!=null && (request.getParameter("buttoncancel").equals("Cancel Appt") || request.getParameter("buttoncancel").equals("No Show"))) {
+  if (request.getParameter("buttoncancel")!=null && (request.getParameter("buttoncancel").equals("Cancel Appt") || request.getParameter("buttoncancel").equals("No Show") || request.getParameter("buttoncancel").equals("Here") )) {
 	  changedStatus = request.getParameter("buttoncancel").equals("Cancel Appt")?"C":"N"; 
 	  if(appt != null) {
-      	appt.setStatus(request.getParameter("buttoncancel").equals("Cancel Appt")?"C":"N");
+		  
+		if(request.getParameter("buttoncancel").equals("Here")){
+			appt.setStatus("H");
+		}
+		else{
+			appt.setStatus(request.getParameter("buttoncancel").equals("Cancel Appt")?"C":"N");
+		}
+      	
       	appt.setLastUpdateUser(updateuser);
       	appointmentDao.merge(appt);
       	rowsAffected=1;

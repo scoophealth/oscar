@@ -80,6 +80,10 @@ public class LogConst {
     public static final String CON_SECURITY = "securityRecord";
     public static final String CON_ANNOTATION = "annotation";
     public static final String CON_PHR  = "phr";
+    public static final String CON_CAISI_INTAKE = "caisi intake";
+    public static final String CON_CAISI_CLIENT_REFERRAL = "caisi client referral";
+    public static final String CON_CAISI_CLIENT_ADMIT = "caisi client admission";
+    public static final String CON_CAISI_CLIENT_DISCHARGE = "caisi client discharge";
     public static final String CON_DOCUMENTDESCRIPTIONTEMPLATE = "documentDescriptionTemplate";
     public static final String CON_DOCUMENTDESCRIPTIONTEMPLATEPREFERENCE = "documentDescriptionTemplatePreference";
     public static final String CON_FAX  = "fax";

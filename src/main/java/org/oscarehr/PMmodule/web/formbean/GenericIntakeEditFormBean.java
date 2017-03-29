@@ -48,12 +48,16 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	
 	private String method;
 
+	private DemographicExtra clientExtra;
 	private Demographic client;
 	private List genders;
 	private LabelValueBean[] months;
 	private LabelValueBean[] days;
 	private LabelValueBean[] provinces;
-
+	private LabelValueBean[] maritalStatus;
+	private LabelValueBean[] recipientLocation;
+	private LabelValueBean[] lhinConsumerResides;
+			
 	private List<LabelValueBean> bedPrograms;
 	private String bedProgramId;
 	private String bedProgramLabel;
@@ -83,6 +87,9 @@ public class GenericIntakeEditFormBean extends ActionForm {
 		months = GenericIntakeConstants.MONTHS;
 		days = GenericIntakeConstants.DAYS;
 		provinces = GenericIntakeConstants.PROVINCES;
+		maritalStatus = GenericIntakeConstants.MARITAL_STATUS;
+		recipientLocation = GenericIntakeConstants.RECIPIENT_LOCATION;
+		lhinConsumerResides = GenericIntakeConstants.LHIN_CONSUMER_RESIDES;
 	}
 
 	public String getMethod() {
@@ -92,6 +99,14 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	public void setMethod(String method) {
 		this.method = method;
 	}
+	
+	public DemographicExtra getClientExtra() {
+    	return clientExtra;
+    }
+
+	public void setClientExtra(DemographicExtra clientExtra) {
+    	this.clientExtra = clientExtra;
+    }
 
 	public Demographic getClient() {
 		return client;
@@ -125,6 +140,30 @@ public class GenericIntakeEditFormBean extends ActionForm {
 		this.provinces = provinces;
 	}
 
+	public LabelValueBean[] getMaritalStatus() {
+    	return maritalStatus;
+    }
+
+	public void setMaritalStatus(LabelValueBean[] maritalStatus) {
+    	this.maritalStatus = maritalStatus;
+    }
+	
+	public LabelValueBean[] getRecipientLocation() {
+    	return recipientLocation;
+    }
+
+	public void setRecipientLocation(LabelValueBean[] recipientLocation) {
+    	this.recipientLocation = recipientLocation;
+    }
+
+	public LabelValueBean[] getLhinConsumerResides() {
+    	return lhinConsumerResides;
+    }
+
+	public void setLhinConsumerResides(LabelValueBean[] lhinConsumerResides) {
+    	this.lhinConsumerResides = lhinConsumerResides;
+    }
+	
 //	 programs in provider's domain --------------------
 
 	public List<LabelValueBean> getProgramsInDomain() {

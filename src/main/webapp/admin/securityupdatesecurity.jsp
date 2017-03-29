@@ -25,6 +25,7 @@
 --%>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     boolean authed=true;
@@ -46,7 +47,7 @@
 
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Security" %>
-<%@ page import="org.oscarehr.common.dao.SecurityDao" %>
+<%@ page import="org.oscarehr.managers.SecurityManager" %>
 
 
 <%!
@@ -143,9 +144,9 @@
 <table cellspacing="0" cellpadding="2" width="100%" border="0">
 	<form method="post" action="securityupdate.jsp" name="updatearecord" onsubmit="return onsub()">
 <%
-	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+	org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
 	Integer securityId = Integer.valueOf(request.getParameter("keyword"));
-	Security security = securityDao.find(securityId);
+	Security security = securityManager.find(LoggedInInfo.getLoggedInInfoFromSession(request), securityId);
 	
 	if(security == null) {
 %>

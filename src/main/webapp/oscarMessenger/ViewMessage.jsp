@@ -134,6 +134,8 @@ function popup(demographicNo, msgId, providerNo, action) { //open a new popup wi
   var vheight = 700;
   var vwidth = 980;  
   
+  
+  
   if (demographicNo!=null &&  demographicNo!="" ){
       //alert("demographicNo is not null!");
       windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";    

@@ -27,7 +27,7 @@
 
 <div class="page-header" style="margin-top: 0px; margin-bottom: 0px;">
 		<h1 class="patientHeaderName" style="margin-top: 0px;" ng-cloak>
-			<b>{{demographic.lastName}}, {{demographic.firstName}}</b>  <span ng-show="demographic.alias">({{demographic.alias}})</span> 
+			<b>{{demographic.lastName}}, {{demographic.firstName}}</b>  <span ng-show="demographic.title">({{demographic.title}})</span> 
 			
 			<small class="patientHeaderExt pull-right"> 
 				<i><bean:message key="demographic.patient.context.born"/>: </i>
@@ -58,8 +58,10 @@
 			<ul class="nav navbar-nav" id="myTabs">
 				<li ng-repeat="tab in recordtabs2" ng-class="isTabActive(tab)">
 					<a href="javascript:void(0)" ng-if="!tab.dropdown" ng-click="changeTab(tab)" >{{tab.label}} 
+					<strong class="text-danger" ng-show="tab.extra=='outstanding'" title="<bean:message key="oscarEncounter.Index.ConsultOutstanding"/>">!</strong>
+					
 					<span ng-if="tab.label=='Tickler' && overdueTicklersCount>0" class="badge badge-danger" title="{{overdueTicklersCount+' overdue ticklers'}}">{{overdueTicklersCount}}</span>
-					<strong class="text-danger" ng-show="tab.extra=='outstanding'" title="<bean:message key="oscarEncounter.Index.ConsultOutstanding"/>">!</strong></a>
+					</a>
 					<a href="javascript:void(0)" ng-if="tab.dropdown"  class="dropdown-toggle" data-toggle="dropdown">{{tab.label}} <strong class="text-danger" ng-show="tab.extra=='outstanding'" title="<bean:message key="oscarEncounter.Index.ConsultOutstanding"/>">!</strong><span class="caret"></span></a>
 						<ul ng-if="tab.dropdown" class="dropdown-menu" role="menu">
 							<li ng-repeat="dropdownItem in tab.dropdownItems" >
@@ -105,7 +107,7 @@
 			</div>
     		
     		
-    		<textarea class="form-control input-lg col-lg-4" rows="6" ng-model="page.encounterNote.note" ng-disabled="page.cannotChange" id="noteEditor{{demographicNo}}" ng-change="setEditingNoteFlag()"></textarea>
+    		<textarea id="noteEditor{{demographicNo}}" class="form-control input-lg col-lg-4" rows="6" ng-model="page.encounterNote.note" ng-disabled="page.cannotChange"></textarea>
     		
     		<div style="font-size:8pt" ng-if="page.assignedCMIssues != null  && page.assignedCMIssues.length > 0">
 			    <label>Assigned Issues:</label>

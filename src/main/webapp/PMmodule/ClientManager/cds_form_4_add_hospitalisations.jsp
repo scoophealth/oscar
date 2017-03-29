@@ -22,6 +22,21 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_form" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_form");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@page import="org.oscarehr.util.WebUtils"%><%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="oscar.util.DateUtils"%>
@@ -31,10 +46,14 @@
 	Integer clientId=Integer.parseInt(request.getParameter("clientId"));
 	String admissionString=StringUtils.trimToNull(request.getParameter("hospitalAdmission"));
 	String dischargeString=StringUtils.trimToNull(request.getParameter("hospitalDischarge"));
+	if(admissionString == null && dischargeString==null) {
+		response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+	}
+	else {
+		Calendar admissionDate=DateUtils.toGregorianCalendarDate(admissionString);
+		Calendar dischargeDate=DateUtils.toGregorianCalendarDate(dischargeString);
+		CdsForm4.addHospitalisationDay(clientId, admissionDate, dischargeDate);
 	
-	Calendar admissionDate=DateUtils.toGregorianCalendarDate(admissionString);
-	Calendar dischargeDate=DateUtils.toGregorianCalendarDate(dischargeString);
-	CdsForm4.addHospitalisationDay(clientId, admissionDate, dischargeDate);
-	
-	response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+		response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+	}
 %>

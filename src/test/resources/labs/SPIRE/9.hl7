@@ -1,0 +1,11 @@
+MSH|^~\&|OCF|GBHS-OS|XENOS|GBHS-OS|20120324143847||MDM^R01|Q68569233|T|2.3
+PID|1||320937^^^GBHS-OS||TESTING^ESMJORGE||19610324|Male|||456 LATINO LANE^^OWEN SOUND^Ontario^X9X9X9^Canada^^^Grey, Owen Sound, C,|Grey, Owen Sound, C,|(519)123-4567^Home||English|||3347602^^^GBHS-OS^FIN NBR 
+PV1|1|Outpt.|Nuclear Med-OS^^^GBHS-OS^^Ambulatory(s)^GBHS-OS||||00164^Ward^David^M|||||||||||Outpt.|2012090166212^^^^Visit Id|OHIP|||||||||||||||||||GBHS-OS||Active|||20120320122000||||||2012090166212 
+ORC|RE||147300677^HNAM_CEREF~147300677^HNAM_EVENTID||||||20120324143847 
+OBR|1||147300677^HNAM_CEREF~147300677^HNAM_EVENTID|Dis Sum/Transfer Note^Dis Sum/Transfer Note^^^Dis Sum/Transfer Note|||20120324143522|20120320143500||||||||||||||20120324143847||MDOC|Transcribed 
+ZDS|Perform|170^Gazzola^Steve^^^^^^GBHS-OS^^^^DOCNBR|20120324143522|Completed 
+ZDS|Transcribe|170^Gazzola^Steve^^^^^^GBHS-OS^^^^DOCNBR|20120324143847|Completed 
+ZDS|Sign|170^Gazzola^Steve^^^^^^GBHS-OS^^^^DOCNBR|20120324143847|Requested 
+OBX|1|FT|Dis Sum/Transfer Note^Dis Sum/Transfer Note||||||||Transcribed|||20120324143847 
+
+

@@ -2305,9 +2305,13 @@ var assignObservationDateError;
 var assignIssueError;
 var savingNoteError;
 var encTimeError;
+var transportationTimeError;
 var encMinError;
 var encTimeMandatoryMsg;
 var encTimeMandatory;
+var transportationTimeMandatoryMsg;
+var transportationTimeMandatory;
+
 function ajaxSaveNote(div,noteId,noteTxt) {
 
     if( $("observationDate") != null && $("observationDate").value.length > 0 && !validDate() ) {
@@ -2341,9 +2345,11 @@ function ajaxSaveNote(div,noteId,noteTxt) {
 			parseInt(document.getElementById("minuteOfEncTransportationTime").value) > 59) {
 				alert(encMinError);
 				return false;
-			}
-		}
-		if(document.getElementById("hourOfEncounterTime") != null) {
+			}			
+					
+		} 
+		
+		if(document.getElementById("hourOfEncounterTime") != null) { 
 			if(isNaN(document.getElementById("hourOfEncounterTime").value) ||
 			isNaN(document.getElementById("minuteOfEncounterTime").value) ) {
 				alert(encTimeError);
@@ -2354,19 +2360,25 @@ function ajaxSaveNote(div,noteId,noteTxt) {
 				alert(encMinError);
 				return false;
 			}
+		 
 		
-		
-			if( parseInt(document.getElementById("minuteOfEncTransportationTime").value) ==0 &&
-				parseInt(document.getElementById("hourOfEncTransportationTime").value) ==0 &&
-				parseInt(document.getElementById("minuteOfEncounterTime").value) == 0 &&
-				parseInt(document.getElementById("hourOfEncounterTime").value) == 0 ) {
+			if( parseInt(document.getElementById("minuteOfEncounterTime").value) == 0 &&
+				parseInt(document.getElementById("hourOfEncounterTime").value) == 0 )  {
 		   
 		   		if(encTimeMandatory) {
-		    			alert(encTimeMandatoryMsg);
-		    			return false;
-				}
-		   	}
-		
+		    		alert(encTimeMandatoryMsg);
+		    		return false;
+		   		}
+			}
+		} 
+		if (document.getElementById("hourOfEncounterTime") == null || 
+			document.getElementById("minuteOfEncounterTime") == null ||
+			document.getElementById("hourOfEncounterTime").value == "" ||
+			document.getElementById("minuteOfEncounterTime").value == "") {
+				if(encTimeMandatory) {
+			    	alert(encTimeMandatoryMsg);
+			    	return false;
+			   	}
 		}
     }
 
@@ -2449,8 +2461,10 @@ function saveNoteAjax(method, chain) {
 			parseInt(document.getElementById("minuteOfEncTransportationTime").value) > 59) {
 				alert(encMinError);
 				return false;
-			}
-		}
+			}	
+			
+		} 
+		
 		if(document.getElementById("hourOfEncounterTime") != null) {
 			if(isNaN(document.getElementById("hourOfEncounterTime").value) ||
 			isNaN(document.getElementById("minuteOfEncounterTime").value) ) {
@@ -2464,16 +2478,22 @@ function saveNoteAjax(method, chain) {
 			}
 		 
 		
-			if( parseInt(document.getElementById("minuteOfEncTransportationTime").value) ==0 &&
-			parseInt(document.getElementById("hourOfEncTransportationTime").value) ==0 &&
-			parseInt(document.getElementById("minuteOfEncounterTime").value) == 0 &&
-			parseInt(document.getElementById("hourOfEncounterTime").value) == 0 ) {
-		   
+			if( parseInt(document.getElementById("minuteOfEncounterTime").value) == 0 &&
+				parseInt(document.getElementById("hourOfEncounterTime").value) == 0 )  {		   
 		   		if(encTimeMandatory) {
-		    			alert(encTimeMandatoryMsg);
-		    			return false;
+		    		alert(encTimeMandatoryMsg);
+		    		return false;
 		   		}
 			}
+		}
+		if (document.getElementById("hourOfEncounterTime") == null || 
+			document.getElementById("minuteOfEncounterTime") == null ||
+			document.getElementById("EncounterTime").value == "" ||
+			document.getElementById("minuteOfEncounterTime").value == "") {
+				if(encTimeMandatory) {
+			    	alert(encTimeMandatoryMsg);
+			    	return false;
+			   	}
 		}
     }
     document.forms["caseManagementEntryForm"].method.value = method;
@@ -2617,6 +2637,7 @@ function savePage(method, chain) {
 		}
 	}
 
+
 	var noteStr;
 	noteStr = $F(caseNote);
     /*
@@ -2646,27 +2667,53 @@ function savePage(method, chain) {
         	alert(assignEncTypeError);
         	return false;
         }
- 	if(document.getElementById("hourOfEncTransportationTime") != null) {
+        
+        if(document.getElementById("hourOfEncTransportationTime") != null) {
 	        if(isNaN(document.getElementById("hourOfEncTransportationTime").value) ||
-	         isNaN(document.getElementById("minuteOfEncTransportationTime").value) ||
-	         isNaN(document.getElementById("hourOfEncounterTime").value) ||
-	         isNaN(document.getElementById("minuteOfEncounterTime").value) ) {
-	        	alert(encTimeError);
-	        	return false;
-	        }
-		   if( parseInt(document.getElementById("minuteOfEncTransportationTime").value) ==0 &&
-			parseInt(document.getElementById("hourOfEncTransportationTime").value) ==0 &&
-			parseInt(document.getElementById("minuteOfEncounterTime").value) == 0 &&
-			parseInt(document.getElementById("hourOfEncounterTime").value) == 0 ) {
+	        isNaN(document.getElementById("minuteOfEncTransportationTime").value) ) {
+				alert(encTimeError);
+				return false;
+			}
+			if(!isNaN(document.getElementById("minuteOfEncTransportationTime").value) &&
+			parseInt(document.getElementById("minuteOfEncTransportationTime").value) > 59) {
+				alert(encMinError);
+				return false;
+			}	
+						
+		} 
+		
+		if(document.getElementById("hourOfEncounterTime") != null) {
+			if(isNaN(document.getElementById("hourOfEncounterTime").value) ||
+			isNaN(document.getElementById("minuteOfEncounterTime").value) ) {
+				alert(encTimeError);
+				return false;
+			}
+			if(!isNaN(document.getElementById("minuteOfEncounterTime").value) &&
+			parseInt(document.getElementById("minuteOfEncounterTime").value) > 59) {
+				alert(encMinError);
+				return false;
+			}
+		 
+		
+			if( parseInt(document.getElementById("minuteOfEncounterTime").value) == 0 &&
+				parseInt(document.getElementById("hourOfEncounterTime").value) == 0 )  {
 		   
 		   		if(encTimeMandatory) {
 		    		alert(encTimeMandatoryMsg);
 		    		return false;
-		   		}	
-		   	}	
-		}
-
-
+		   		}
+			}
+		}  
+		if (document.getElementById("hourOfEncounterTime") == null || 
+			document.getElementById("minuteOfEncounterTime") == null ||
+			document.getElementById("hourOfEncounterTime").value == "" ||
+			document.getElementById("minuteOfEncounterTime").value == "") {
+				if(encTimeMandatory) {
+			    	alert(encTimeMandatoryMsg);
+			    	return false;
+			   	}
+		}     
+ 		
     }
 
     
@@ -3103,6 +3150,10 @@ function backup() {
 var autoSaveTimer;
 function setTimer() {
     autoSaveTimer = setTimeout("backup()", 5000);
+}
+
+function clearAutoSaveTimer() {
+    clearTimeout(autoSaveTimer);
 }
 
 function clearAutoSaveTimer() {
@@ -3830,29 +3881,40 @@ function assignNoteAjax(method, chain,programId,demographicNo) {
         	alert(assignEncTypeError);
         	return false;
         }
- 		if(document.getElementById("hourOfEncTransportationTime") != null) {
-	        if(isNaN(document.getElementById("hourOfEncTransportationTime").value) ||
-	        isNaN(document.getElementById("minuteOfEncTransportationTime").value) ) {
-				alert(encTimeError);
-				return false;
-			}
-			if(!isNaN(document.getElementById("minuteOfEncTransportationTime").value) &&
-			parseInt(document.getElementById("minuteOfEncTransportationTime").value) > 59) {
-				alert(encMinError);
-				return false;
-			}
+ 		if(document.getElementById("hourOfEncounterTime") != null) {
+	        if(
+	         isNaN(document.getElementById("hourOfEncounterTime").value) ||
+	         isNaN(document.getElementById("minuteOfEncounterTime").value) ) {
+	        	alert(encTimeError);
+	        	return false;
+	        }
+		   if(
+			parseInt(document.getElementById("minuteOfEncounterTime").value) == 0 &&
+			parseInt(document.getElementById("hourOfEncounterTime").value) == 0 ) {
+		   
+		   		if(encTimeMandatory) {
+		    		alert(encTimeMandatoryMsg);
+		    		return false;
+		   		}	
+		   	}	
 		}
-		if(document.getElementById("hourOfEncounterTime") != null) {
-			if(isNaN(document.getElementById("hourOfEncounterTime").value) ||
-			isNaN(document.getElementById("minuteOfEncounterTime").value) ) {
-				alert(encTimeError);
-				return false;
-			}
-			if(!isNaN(document.getElementById("minuteOfEncounterTime").value) &&
-			parseInt(document.getElementById("minuteOfEncounterTime").value) > 59) {
-				alert(encMinError);
-				return false;
-			}
+		
+		if(document.getElementById("hourOfEncTransportationTime") != null) {
+	        if(
+	         isNaN(document.getElementById("hourOfEncTransportationTime").value) ||
+	         isNaN(document.getElementById("minuteOfEncTransportationTime").value) ) {
+	        	alert(transportationTimeError);
+	        	return false;
+	        }
+		   if(
+			parseInt(document.getElementById("minuteOfEncTransportationTime").value) == 0 &&
+			parseInt(document.getElementById("hourOfEncTransportationTime").value) == 0 ) {
+		   
+		   		if(transportationTimeMandatory) {
+		    		alert(transportationTimeMandatoryMsg);
+		    		return false;
+		   		}	
+		   	}	
 		}
     }
     document.forms["caseManagementEntryForm"].method.value = method;
@@ -3918,6 +3980,16 @@ function assignNoteAjax(method, chain,programId,demographicNo) {
 	}
 
 	
+	function clearTempNotes(demographicNo) {
+		jQuery.getJSON(ctx+"/CaseManagementEntry.do?method=clearTempNotes&demographicNo="+demographicNo,
+              function(data,textStatus){
+              if(data != null && data.success == true) {
+              	location.reload();
+              }  else {
+              	alert(data.error);
+              }
+ 		});
+	}
 	
 window.addEventListener("message", receiveMessage, false);
 	

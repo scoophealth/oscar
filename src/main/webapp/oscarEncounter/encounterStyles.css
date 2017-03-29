@@ -748,4 +748,18 @@ p.passwdErr { color: red; }
 
 #notesLoading img {
 	margin-right: 5px;
+
+}
+
+#ethnicityDisplay {
+	border:none;
+	background-color: transparent;
+	color: black;
+	font-size: x-small;
+	font-weight: bold;
+	-moz-appearance:window;
+   background-image: url('images/select_arrow.gif');
+   background-repeat: no-repeat;
+   background-position: right center;
+   padding-right: 20px;
 }

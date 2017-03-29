@@ -113,6 +113,8 @@ public interface NoteDisplay {
 	public boolean isRxAnnotation();
 
 	public boolean isEformData();
+	
+	public boolean isFreeDraw();
 
 	public boolean isEncounterForm();
 

@@ -277,7 +277,9 @@ function checkDateTypeIn(obj) {
           return false;
     } 
 }
-
+function isEmpty(str) {
+    return (!str || 0 === str.length);
+}
 function calculateEndTime() {
   var stime = document.ADDAPPT.start_time.value;
   var vlen = stime.indexOf(':')==-1?1:2;
@@ -285,7 +287,7 @@ function calculateEndTime() {
   var smin = stime.substring(stime.length-vlen) ;
   var duration = document.ADDAPPT.duration.value ;
   
-  if(isNaN(duration)) {
+  if(isNaN(duration) || isEmpty(duration)) {
 	  alert("<bean:message key="Appointment.msgFillTimeField"/>");
 	  return false;
   }
@@ -360,9 +362,11 @@ function pasteAppt(multipleSameDayGroupAppt) {
         //document.forms[0].chart_no.value = "<%=apptObj.getChart_no()%>";
         document.forms[0].keyword.value = "<%=apptObj.getName()%>";
         document.forms[0].demographic_no.value = "<%=apptObj.getDemographic_no()%>";
+        document.forms[0].reasonCode.value = "<%=apptObj.getReasonCode()%>";
         document.forms[0].reason.value = "<%= StringEscapeUtils.escapeJavaScript(apptObj.getReason()) %>";
         document.forms[0].notes.value = "<%= StringEscapeUtils.escapeJavaScript(apptObj.getNotes()) %>";
-        //document.forms[0].location.value = "<%=apptObj.getLocation()%>";
+        document.forms[0].location.value = "<%=apptObj.getLocation()%>";
+        document.forms[0].program_id.value = "<%=apptObj.getProgram()%>";
         document.forms[0].resources.value = "<%=apptObj.getResources()%>";
         document.forms[0].type.value = "<%=apptObj.getType()%>";
         if('<%=apptObj.getUrgency()%>' == 'critical') {
@@ -861,7 +865,7 @@ function pasteAppt(multipleSameDayGroupAppt) {
 					<div class="input" style="text-align: right;"> <INPUT TYPE="button" NAME="typeButton" VALUE="<bean:message key="Appointment.formType"/>" onClick="openTypePopup()"> </div>
 
             <div class="input">
-                <INPUT TYPE="TEXT" NAME="type"
+                <INPUT TYPE="TEXT" name="type"
                     VALUE='<%=bFirstDisp?"":request.getParameter("type").equals("")?"":request.getParameter("type")%>'
                     WIDTH="25" HEIGHT="20" border="0" hspace="2">
             </div>
@@ -977,27 +981,9 @@ function pasteAppt(multipleSameDayGroupAppt) {
 	        </select>
 		<% } else {
 			// multisites end ==================
-			if (locationEnabled) {
-		%>
-			<select name="location" >
-                <%
-                String sessionLocation = "";
-                ProgramProvider programProvider = programManager2.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
-                if(programProvider!=null && programProvider.getProgram() != null) {
-                	sessionLocation = programProvider.getProgram().getId().toString();
-                }
-                if (programs != null && !programs.isEmpty()) {
-			       	for (Program program : programs) {
-			       	    String description = StringUtils.isBlank(program.getLocation()) ? program.getName() : program.getLocation();
-			   	%>
-			        <option value="<%=program.getId()%>" <%=program.getId().toString().equals(sessionLocation) ? "selected='selected'" : ""%>><%=StringEscapeUtils.escapeHtml(description)%></option>
-			    <%	}
-                }
-			  	%>
-            </select>
-        	<% } else { %>
+%>
         	<input type="TEXT" name="location" tabindex="4" value="<%=loc%>" width="25" height="20" border="0" hspace="2">	
-        	<% } %>
+        	
 		<% } %>
             </div>
             <div class="space">&nbsp;</div>
@@ -1049,6 +1035,51 @@ function pasteAppt(multipleSameDayGroupAppt) {
             	<input type="checkbox" name="urgency" value="critical"/>
             </div>
         </li>
+        <li class="row weak">
+           
+            <div class="label"><bean:message key="global.program"/>:</div>
+            <div class="input">
+            	<select name="program_id">
+            	<%
+            		//our program domain
+	            	List<Program> programs1 = programManager.getActiveProgramByFacility(providerNo, facility.getId());
+
+            		//the user you are making an appt for
+            		List<Program> programs2 = programManager.getActiveProgramByFacility(curProvider_no, facility.getId());
+            	
+            		List<Program> programsToShow = new ArrayList<Program>();
+            				
+            		//find the intersection
+            		for(Program pr:programs1) {
+            			if(programs2.contains(pr)) {
+            				programsToShow.add(pr);
+            			}
+            		}
+            				
+	                String sessionLocation1 = "";
+	                ProgramProvider programProvider1 = programManager2.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+	                if(programProvider1!=null && programProvider1.getProgram() != null) {
+	                	sessionLocation1 = programProvider1.getProgram().getId().toString();
+	                }
+	                if (programsToShow != null && !programsToShow.isEmpty()) {
+				       	for (Program program1 : programsToShow) {
+				       	    String description = StringUtils.isBlank(program1.getLocation()) ? program1.getName() : program1.getLocation();
+				   	%>
+				        <option value="<%=program1.getId()%>" <%=program1.getId().toString().equals(sessionLocation1) ? "selected='selected'" : ""%>><%=StringEscapeUtils.escapeHtml(description)%></option>
+				    <%	}
+	                }
+			  	%>
+            	</select>
+            </div>
+
+            <div class="space">&nbsp;</div>
+            
+            <div class="label"></div>
+            <div class="input">
+            	
+            </div>
+        </li>
+        
     </ul>
 </div>
 <%String demoNo = request.getParameter("demographic_no");%>

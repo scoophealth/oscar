@@ -19,8 +19,6 @@
 --%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%      
-  if(session.getValue("user") == null)
-      response.sendRedirect("../logout.jsp");
   String user_no; 
   user_no = (String) session.getAttribute("user");
   String asstProvider_no = "";
@@ -35,27 +33,7 @@ String service_form="", service_name="";
 <link rel="stylesheet" href="billing.css">
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-<script language="JavaScript">
-<!--
 
-function selectprovider(s) {
-  if(self.location.href.lastIndexOf("&providerview=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&providerview="));
-  else a = self.location.href;
-	self.location.href = a + "&providerview=" +s.options[s.selectedIndex].value ;
-}
-
-function refresh() {
-  var u = self.location.href;
-  if(u.lastIndexOf("view=1") > 0) {
-    self.location.href = u.substring(0,u.lastIndexOf("view=1")) + "view=0" + u.substring(eval(u.lastIndexOf("view=1")+6));
-  } else {
-    history.go(0);
-  }
-}
-
-
-//-->
-</script>
 </head>
 
 <body leftmargin="0" topmargin="5" rightmargin="0">

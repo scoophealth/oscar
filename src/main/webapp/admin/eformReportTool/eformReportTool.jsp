@@ -135,8 +135,8 @@ if(!authed) {
 								.dialog(
 										{
 											autoOpen : false,
-											height : 450,
-											width : 800,
+											height : 525,
+											width : 825,
 											modal : true,
 											buttons : {
 												"Add" : {
@@ -163,6 +163,18 @@ if(!authed) {
 																	"#eformExpiryDate")
 																	.val();
 														}
+														
+														if ($("#eformStartDate").val() != null	&& $("#eformStartDate").val().length > 0) {
+															e.startDateString = $("#eformStartDate").val();
+														}
+														if ($("#eformEndDate").val() != null	&& $("#eformEndDate").val().length > 0) {
+															e.endDateString = $("#eformEndDate").val();
+														}
+														
+														if ($("#eformReportToolUseAsTableName").attr('checked') == 'checked') {	
+															e.useNameAsTableName = true;
+														}
+														
 														//alert(JSON.stringify(e));
 
 														$
@@ -222,6 +234,8 @@ if(!authed) {
 	}
 
 	function populate(eftId) {
+		$("#loader_"+eftId).show();
+		
 		var e = {
 			id : eftId
 		};
@@ -235,12 +249,14 @@ if(!authed) {
 				listReports();
 			},
 			error : function(data) {
+				$("#loader_"+eftId).hide();
 				alert('error:' + data);
 			}
 		});
 	}
 
 	function markLatest(eftId) {
+		$("#loader_"+eftId).show();
 		var e = {
 			id : eftId
 		};
@@ -254,6 +270,7 @@ if(!authed) {
 				listReports();
 			},
 			error : function(data) {
+				$("#loader_"+eftId).hide();
 				alert('error:' + data);
 			}
 		});
@@ -264,6 +281,7 @@ if(!authed) {
 			var e = {
 				id : eftId
 			};
+			$("#loader_"+eftId).show();
 			$.ajax({
 				url : '../../ws/rs/reporting/eformReportTool/remove',
 				type : 'POST',
@@ -275,6 +293,7 @@ if(!authed) {
 
 				},
 				error : function(data) {
+					$("#loader_"+eftId).hide();
 					alert('error:' + data);
 				}
 			});
@@ -307,7 +326,7 @@ if(!authed) {
 								}
 								$("#listTable tbody")
 										.append(
-												"<tr> <td><a onClick=\"removeItem('"
+												"<tr> <td><span id='loader_" + e.id + "' style='display:none'><img src='../../images/DMSLoader.gif'></span></td><td><a onClick=\"removeItem('"
 														+ e.id
 														+ "')\">(Remove)</a>&nbsp;<a onClick=\"populate('"
 														+ e.id
@@ -358,6 +377,7 @@ if(!authed) {
 	<table id="listTable" class="table" width="100%">
 		<thead>
 			<th></th>
+			<th></th>
 			<th>Name</th>
 			<th>Table Name</th>
 			<th>Eform Name</th>
@@ -382,7 +402,7 @@ if(!authed) {
 
 			<div>
 				<div class="controls controls-row">
-					<div class="control-group span8" id="group1">
+					<div class="control-group span4" id="group1">
 						<label class="control-label" for="eformReportToolEformId">Choose
 							EForm:</label>
 						<div class="controls">
@@ -393,17 +413,18 @@ if(!authed) {
 						</div>
 					</div>
 				</div>
+				
 				<div class="controls controls-row">
-					<div class="control-group span8" id="group2">
+					<div class="control-group span4" id="group2">
 						<label class="control-label" for="eformReportToolName">Name:</label>
 						<div class="controls">
 							<input type="text" name="eformReportTool.name"
 								id="eformReportToolName" />
+								
+							<input type="checkbox" name="eformReportTool.useAsTableName" id="eformReportToolUseAsTableName"/>Use as table name
 
 						</div>
 					</div>
-
-
 				</div>
 				<div class="controls controls-row">
 
@@ -420,6 +441,25 @@ if(!authed) {
 				</div>
 
 			</div>
+			
+			<div class="controls controls-row">
+				<div class="control-group span8" id="group5">
+					<label class="control-label" for="eformReportToolStartDate">Start Date (opt):</label>
+						<div class="controls">
+							<input type="text" name="eformReportTool.startDate"
+								id="eformStartDate" value="" />
+						</div>
+						
+						<label class="control-label" for="eformReportToolStartDate">End Date (opt):</label>
+						<div class="controls">
+							<input type="text" name="eformReportTool.endDate"
+								id="eformEndDate" value="" />
+						</div>
+					
+						
+				</div>
+					
+			</div>
 
 		</form>
 	</div>
@@ -427,6 +467,18 @@ if(!authed) {
 
 	<script type="text/javascript">
 		$('#eformExpiryDate').datepicker({
+			format : "yyyy-mm-dd",
+			todayBtn : "linked",
+			autoclose : true,
+			todayHighlight : true
+		});
+		$('#eformStartDate').datepicker({
+			format : "yyyy-mm-dd",
+			todayBtn : "linked",
+			autoclose : true,
+			todayHighlight : true
+		});
+		$('#eformEndDate').datepicker({
 			format : "yyyy-mm-dd",
 			todayBtn : "linked",
 			autoclose : true,

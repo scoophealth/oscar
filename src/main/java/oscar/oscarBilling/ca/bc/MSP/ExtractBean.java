@@ -160,7 +160,7 @@ public class ExtractBean extends Object implements Serializable {
                                  }
 
                                  dFee = bm.getBillAmountAsDouble();
-                                 bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+                                 bdFee = BigDecimal.valueOf(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
                                  BigTotal = BigTotal.add(bdFee);
 
                                  if (isMSPInsurer(bm)){

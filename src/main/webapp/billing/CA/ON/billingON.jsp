@@ -18,6 +18,21 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -58,11 +73,11 @@
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
 <%
-			if (session.getAttribute("user") == null) {
-				response.sendRedirect("../../../logout.jsp");
-			}
-                        oscar.OscarProperties oscarVariables = oscar.OscarProperties.getInstance();
-
+            oscar.OscarProperties oscarVariables = oscar.OscarProperties.getInstance();
+			String prevId = "";
+            if (request.getParameter("prevId") != null) {
+            	prevId = request.getParameter("prevId");
+            }
 			String user_no = (String) session.getAttribute("user");
 			String providerview = request.getParameter("providerview") == null ? "" : request.getParameter("providerview");
 			String asstProvider_no = "", color = "", premiumFlag = "", service_form = "";
@@ -282,7 +297,7 @@
 			// get patient's billing history
 			boolean bFirst = true;
 			JdbcBillingReviewImpl hdbObj = new JdbcBillingReviewImpl();
-			List aL = hdbObj.getBillingHist(demo_no, 5,0, null);
+			List aL = hdbObj.getBillingHist(loggedInInfo, demo_no, 5,0, null);
 
 			Vector vecHistD = new Vector();
 			if (aL.size()>0) {
@@ -1218,6 +1233,7 @@ if(checkFlag == null) checkFlag = "0";
 %>
 		<input type="hidden" name="checkFlag" id="checkFlag"
 			value="<%=checkFlag %>" />
+		<input type="hidden" name="prevId" id="prevId" value="<%=prevId %>" />
 		<input type="hidden" name="addToPatientDx" />
 		<input type="hidden" name="codeMatchToPatientDx" />
 

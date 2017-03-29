@@ -161,6 +161,15 @@ public class Startup implements ServletContextListener {
 			logger.error("Unexpected error.", e);
 			throw (new RuntimeException(e));
 		}
+		
+		String javaVersion = System.getProperty("java.version");
+		if(javaVersion != null) {
+			 if(javaVersion.startsWith("1.6") || javaVersion.startsWith("1.5")) {
+				 logger.warn("OSCAR is designed to work with JAVA 7. Please check your runtime environment");
+			 }
+		} else {
+			logger.info("Unable to determine what version of JAVA your are running. Please ensure your are using a JAVA 7 JVM");
+		}
 	}
 
 	// Checks for default property with name propName. If the property does not exist,

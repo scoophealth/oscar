@@ -9,6 +9,21 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_form" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_form");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@ page import="java.util.*, java.sql.*, oscar.*, oscar.oscarRx.util.*, oscar.util.*" errorPage="errorpage.jsp"%>
 <%@ page import="org.oscarehr.common.dao.MeasurementDao" %>
 <%@ page import="org.oscarehr.common.model.Measurement" %>
@@ -43,6 +58,8 @@ String project = request.getContextPath();
 String curUser_no = (String) session.getAttribute("user");
 String demographic_no = ""+Integer.parseInt(request.getParameter("demographic_no"));
 boolean selfSubmit = (request.getParameter("selfsubmit") != null) ? request.getParameter("selfsubmit").equals("1") : false;
+
+SuperSiteUtil.getInstance().checkSuperSiteAccess(request, response, "demographic_no");
 
 // on submit
 if (selfSubmit) {
@@ -413,6 +430,73 @@ if (selfSubmit) {
 		m.setType("SmkF");
 		dao.persist(m);
 	}
+
+	if (request.getParameter("pregnancy_test_value")!=null) {
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("pregnancy_test_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("pregnancy_test_comment") != null) ? request.getParameter("pregnancy_test_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("PRGT");
+		dao.persist(m);
+	}
+	
+	if (request.getParameter("urine_dip_test_value")!=null) {
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("urine_dip_test_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("urine_dip_test_comment") != null) ? request.getParameter("urine_dip_test_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("UDIP");
+		dao.persist(m);
+	}
+	
+	if (request.getParameter("glucose_monitor_test_value")!=null) {
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("glucose_monitor_test_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("glucose_monitor_test_comment") != null) ? request.getParameter("glucose_monitor_test_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("GLMT");
+		dao.persist(m);
+	}
+	
+	if (request.getParameter("eye_check_up_l_value")!=null) {
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("eye_check_up_l_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("eye_check_up_l_comment") != null) ? request.getParameter("eye_check_up_l_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("LECM");
+		dao.persist(m);
+	}
+	
+
+	if (request.getParameter("eye_check_up_r_value")!=null) {
+		Measurement m = new Measurement();
+		m.setDemographicId(Integer.parseInt(demographic_no));
+		m.setProviderNo(curUser_no);
+		m.setAppointmentNo(0);
+		m.setDataField(request.getParameter("eye_check_up_r_value"));
+		m.setMeasuringInstruction("");
+		m.setComments((request.getParameter("eye_check_up_r_comment") != null) ? request.getParameter("eye_check_up_r_comment") : "");
+		m.setDateObserved(new java.util.Date());
+		m.setType("RECM");
+		dao.persist(m);
+	}
+	
 }
 
 // no submit
@@ -461,6 +545,7 @@ if (!medicationsResult.isEmpty()) {
 		} else if (Integer.parseInt(medicationsResult.get(i).get("GCN_SEQNO").toString())==0) {
 			medicationsList += "Unknown";	
 		} else {
+			if(medicationsResult.get(i).get("BN")!=null)
 			medicationsList += medicationsResult.get(i).get("BN").toString();
 		}
 		
@@ -754,6 +839,35 @@ String msmtValueSmkF = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataFiel
 String msmtDateSmkF = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
 String msmtCommentSmkF = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
 
+msmtParam[0] = "PRGT";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValuePRGT = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString() : "";
+String msmtDatePRGT = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentPRGT = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "UDIP";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueUDIP = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString() : "";
+String msmtDateUDIP = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentUDIP = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "GLMT";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueGLMT = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString() : "";
+String msmtDateGLMT = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentGLMT = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "LECM";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueLECM = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString() : "";
+String msmtDateLECM = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentLECM = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
+
+msmtParam[0] = "RECM";
+msmtResult = oscarSuperManager.find("providerDao", msmtQuery, msmtParam);
+String msmtValueRECM = (!msmtResult.isEmpty() && msmtResult.get(0).get("dataField")!=null) ? msmtResult.get(0).get("dataField").toString() : "";
+String msmtDateRECM = (!msmtResult.isEmpty() && msmtResult.get(0).get("dateObserved")!=null) ? msmtResult.get(0).get("dateObserved").toString().split(" ")[0] : "";
+String msmtCommentRECM = (!msmtResult.isEmpty() && msmtResult.get(0).get("comments")!=null) ? msmtResult.get(0).get("comments").toString() : "";
 %>
 <html>
 <head>
@@ -1174,6 +1288,50 @@ function calcPYHX() {
 	<td><p><%=msmtCommentSmkF%></p></td>
 </tr>
 
+<tr>
+	<td class="rowheader2">Pregnancy Test:</td>
+	<td colspan="3"><input type="radio" name="pregnancy_test_value" value="Yes">Yes</input><input type="radio" name="pregnancy_test_value" value="No">No</input></td>
+	<td><input type="text" name="pregnancy_test_comment" /></td>
+	<td><%=msmtValuePRGT%></td>
+	<td><%=msmtDatePRGT%></td>
+	<td><p><%=msmtCommentPRGT%></p></td>
+</tr>
+
+<tr>
+	<td class="rowheader2">Urine Dip Test:</td>
+	<td colspan="3"><input type="text" name="urine_dip_test_value" value=""></td>
+	<td><input type="text" name="urine_dip_test_comment" /></td>
+	<td><%=msmtValueUDIP%></td>
+	<td><%=msmtDateUDIP%></td>
+	<td><p><%=msmtCommentUDIP%></p></td>
+</tr>
+
+<tr>
+	<td class="rowheader2">Glucose Monitor Test:</td>
+	<td colspan="3"><input type="text" name="glucose_monitor_test_value" size="5" value=""></td>
+	<td><input type="text" name="glucose_monitor_test_comment" /></td>
+	<td><%=msmtValueGLMT%></td>
+	<td><%=msmtDateGLMT%></td>
+	<td><p><%=msmtCommentGLMT%></p></td>
+</tr>
+
+<tr>
+	<td class="rowheader2">Left Eye Check up Measurement:</td>
+	<td colspan="3">L&nbsp;<input type="text" name="eye_check_up_l_value" size="5" value="">&nbsp;20</td>
+	<td><input type="text" name="eye_check_up_l_comment" /></td>
+	<td><%=msmtValueLECM%></td>
+	<td><%=msmtDateLECM%></td>
+	<td><p><%=msmtCommentLECM%></p></td>
+</tr>
+
+<tr>
+	<td class="rowheader2">Right Eye Check up Measurement:</td>
+	<td colspan="3">R&nbsp;<input type="text" name="eye_check_up_r_value" size="5" value="">&nbsp;20</td>
+	<td><input type="text" name="eye_check_up_r_comment" /></td>
+	<td><%=msmtValueRECM%></td>
+	<td><%=msmtDateRECM%></td>
+	<td><p><%=msmtCommentRECM%></p></td>
+</tr>
 
 </table>
 <br />

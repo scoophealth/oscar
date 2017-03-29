@@ -24,6 +24,11 @@
 
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
+<security:oscarSec roleName='${ sessionScope[userrole] }, ${ sessionScope[user] }' rights="x" objectName="_admin,_admin.userAdmin">
+	<c:redirect url="../../securityError.jsp?type=_admintype=_admin.userAdmin" />
+</security:oscarSec>
 
 <div class="lookupListItemsWrapper" >
 
@@ -35,8 +40,6 @@
 			<span class="lookupListDescription" >
 				<c:out value="${ lookuplist.description }" />
 			</span>	
-<%-- 			<a class="showHideEdit" id="edit_${ lookuplist.id }" href="javascript:void(0);" >edit</a> --%>
-<%-- 			<a class="showHideEdit" id="cancel_${ lookuplist.id }" style="display: none;" href="javascript:void(0);" >cancel</a>			 --%>
 		</div>
 	</div>
 	

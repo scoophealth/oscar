@@ -27,6 +27,8 @@ if(!authed) {
 %>
 
 <%@ page import="org.oscarehr.common.dao.DemographicDao, org.oscarehr.common.model.Demographic, org.oscarehr.PMmodule.dao.ProviderDao, org.oscarehr.util.LoggedInInfo, org.oscarehr.util.SpringUtils, oscar.OscarProperties, org.oscarehr.common.dao.OscarAppointmentDao, org.oscarehr.common.model.Appointment, org.oscarehr.util.MiscUtils, oscar.SxmlMisc, org.oscarehr.common.dao.ProfessionalSpecialistDao"  %>
+<%@ page import="org.oscarehr.PMmodule.model.Program" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProgramDao" %>
 
 <%
 LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
@@ -35,7 +37,13 @@ OscarProperties properties = OscarProperties.getInstance();
 
 // This is here because the "case_program_id" session attribute is only set during the echart open routine.
 // It's required for CaseManagementManager.filterNotes.  Since all of our Eyeform customers use 10016, this works (for now).
-request.getSession().setAttribute("case_program_id", "10016");
+// Should get program id from program when name equals 'OSCAR'.
+ProgramDao programDao = SpringUtils.getBean(ProgramDao.class);
+Program p = programDao.getProgramByName("OSCAR");
+if(p != null) 	 
+	request.getSession().setAttribute("case_program_id", String.valueOf(p.getId()));
+else
+	request.getSession().setAttribute("case_program_id", "0");  //not sure if it should be 0..
 
 String appointmentNo = "";
 String appointmentReason = "";

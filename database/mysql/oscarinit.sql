@@ -1,3 +1,4 @@
+
 CREATE TABLE `surveyData` (
   surveyDataId int(10) NOT NULL auto_increment,
   surveyId varchar(5) default NULL,
@@ -319,14 +320,15 @@ CREATE TABLE consultationRequests (
   followUpDate date default NULL,
   site_name varchar(255),
   signature_img VARCHAR(20),
-  letterheadName VARCHAR(20),
+  letterheadName VARCHAR(255),
   letterheadAddress TEXT,
   letterheadPhone VARCHAR(50),
   letterheadFax VARCHAR(50),
   `lastUpdateDate` datetime not null,
   fdid int(10),
   source varchar(50),
-  PRIMARY KEY  (requestId)
+  PRIMARY KEY  (`requestId`),
+  KEY demographicNoIndex (`demographicNo`)
 ) ;
 
 --
@@ -536,9 +538,10 @@ CREATE TABLE demographic (
   lastUpdateUser varchar(6),
   lastUpdateDate datetime not null,
   PRIMARY KEY  (demographic_no),
-  KEY hin (hin),
-  KEY name (last_name,first_name),
-  KEY `country_of_origin` (`country_of_origin`)
+  KEY `hin` (`hin`),
+  KEY `name` (last_name,first_name),
+  KEY `country_of_origin` (`country_of_origin`),
+  KEY `demo_last_first_hin_sex_Index` (demographic_no, last_name, first_name, hin, sex)
 );
 
 --
@@ -681,7 +684,8 @@ CREATE TABLE document (
   reviewdatetime datetime default NULL,
   number_of_pages int(6),
   appointment_no int(11) default NULL,
-  restrictToProgram tinyint(1) NOT NULL,
+  restrictToProgram tinyint(1),
+  fileSignature varchar(255),
   PRIMARY KEY  (document_no)
 ) ;
 
@@ -698,6 +702,7 @@ CREATE TABLE reportTemplates (
   `type` varchar(32) default null,
   uuid varchar(60),
   sequence tinyint(1),
+  category varchar(255),
   PRIMARY KEY (templateid)
 );
 
@@ -722,6 +727,7 @@ CREATE TABLE drugs (
   duration varchar(4) default NULL,
   durunit char(1) default NULL,
   quantity varchar(20) default NULL,
+  dispensingUnits varchar(20),
   `repeat` tinyint(4) default NULL,
   last_refill_date date,
   nosubs tinyint(1) NOT NULL default '0',
@@ -763,7 +769,9 @@ CREATE TABLE drugs (
   start_date_unknown boolean,
   lastUpdateDate datetime not null,
   dispenseInternal tinyint(1) not null,
-  PRIMARY KEY  (drugid)
+  PRIMARY KEY  (drugid),
+  KEY `special_instructionIndex` (special_instruction(5)),
+  KEY `demo_script_pos_rxdate_Index` (demographic_no, script_no, position, rx_date, drugid)
 ) ;
 
 
@@ -781,7 +789,8 @@ CREATE TABLE dxresearch (
   coding_system varchar(20),
   association tinyint(1) not null default 0,
   providerNo varchar(6),
-  PRIMARY KEY  (dxresearch_no)
+  PRIMARY KEY  (dxresearch_no),
+  KEY `demographic_noIndex` (demographic_no)
 ) ;
 
 CREATE TABLE `dx_associations` (
@@ -810,7 +819,7 @@ CREATE TABLE eChart (
   reminders text,
   encounter text,
   PRIMARY KEY  (eChartId),
-  KEY demographicno (demographicNo)
+  KEY `demographicNoIdIndex` (demographicNo,eChartId)
 )  MAX_ROWS=200000000 AVG_ROW_LENGTH=9000;
 
 --
@@ -830,6 +839,8 @@ CREATE TABLE eform (
   showLatestFormOnly boolean NOT NULL,
   patient_independent boolean NOT NULL,
   roleType varchar(50) default NULL,
+  programNo int(10),
+  restrictToProgram tinyint(1) NOT NULL,
   PRIMARY KEY  (fid),
   UNIQUE KEY id (fid)
 ) ;
@@ -854,12 +865,13 @@ CREATE TABLE eform_data (
   roleType varchar(50) default NULL,
   PRIMARY KEY  (fdid),
   UNIQUE KEY id (fdid),
-  KEY `idx_eform_data_demographic_no` (`demographic_no`),
+  KEY `dem_inde_stat_date_time_Index` (`demographic_no`, `patient_independent`, `status`, `form_date`, `form_time`),
   KEY `idx_eform_data_status` (`status`),
   KEY `idx_eform_data_from_date` (`form_date`),
   KEY `idx_eform_data_form_name` (`form_name`),
   KEY `idx_eform_data_subject` (`subject`),
   KEY `idx_eform_data_fid` (`fid`),
+  KEY `patient_independentIndex` (`patient_independent`),
   KEY `idx_eform_data_form_provider` (`form_provider`)
 ) ;
 
@@ -876,7 +888,8 @@ CREATE TABLE `eform_values` (
   `var_name` varchar(30) NOT NULL default '',
   `var_value` text,
   PRIMARY KEY  (`id`),
-  KEY `eform_values_varname_varvalue` (`var_name`,`var_value`(30))
+  KEY `eform_values_varname_varvalue` (`var_name`,`var_value`(30)),
+  KEY `fdidIndex` (`fdid`)
 );
 
 --
@@ -961,6 +974,7 @@ CREATE TABLE favorites (
   duration varchar(4) default NULL,
   durunit char(1) default NULL,
   quantity varchar(20) default NULL,
+  dispensingUnits varchar(20),
   `repeat` tinyint(4) default NULL,
   nosubs tinyint(1) NOT NULL default '0',
   prn tinyint(1) NOT NULL default '0',
@@ -6997,7 +7011,8 @@ CREATE TABLE messagetbl (
   actionstatus char(2) default NULL,
   `type` int(10),
   type_link varchar(2048),
-  PRIMARY KEY  (messageid)
+  PRIMARY KEY  (messageid),
+  KEY `id_by_subject_Index` (messageid, sentby, thesubject)
 ) ;
 
 
@@ -7158,7 +7173,9 @@ CREATE TABLE professionalSpecialists (
   value varchar(255) default NULL,
   id int(10) NOT NULL auto_increment,
   provider_no varchar(6) default '',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `provider_noIndex` (`provider_no`),
+  KEY `nameIndex` (name(20))
 )  ;
 
 --
@@ -7490,11 +7507,16 @@ CREATE TABLE scheduletemplatecode (
 
 CREATE TABLE security (
   security_no int(6) NOT NULL auto_increment,
-  user_name varchar(30) NOT NULL default '',
-  password varchar(255) NOT NULL default '',
+  user_name varchar(30) NOT NULL,
+  password varchar(255) NOT NULL,
   provider_no varchar(6) default NULL,
-  pin varchar(255) default NULL,
+  pin varchar(255),
+  b_ExpireSet int(1) default 1,
+  date_ExpireDate date default '2100-01-01',
+  b_LocalLockSet int(1) default 1,
+  b_RemoteLockSet int(1) default 1,
   forcePasswordReset tinyint(1),
+  storageVersion int NOT NULL,
   passwordUpdateDate datetime,
   pinUpdateDate datetime,
   lastUpdateUser varchar(20),
@@ -7502,30 +7524,6 @@ CREATE TABLE security (
   PRIMARY KEY  (security_no),
   UNIQUE user_name (user_name)
 ) ;
-
-alter table `security` add b_RemoteLockSet int(1) default 1 after pin;
-alter table `security` add b_LocalLockSet int(1) default 1 after pin;
-alter table `security` add date_ExpireDate date default '2100-01-01' after pin;
-alter table `security` add b_ExpireSet int(1) default 1 after pin;
-
-CREATE TABLE `SecurityArchive` (
- `id` int(11) NOT NULL auto_increment,
-  security_no int(6) NOT NULL,
-  user_name varchar(30) NOT NULL,
-  password varchar(255) NOT NULL,
-  provider_no varchar(6) default NULL,
-  pin varchar(255),
-  b_ExpireSet int(1),
-  date_ExpireDate date,
-  b_LocalLockSet int(1),
-  b_RemoteLockSet int(1),
-  forcePasswordReset tinyint(1),
-  passwordUpdateDate datetime,
-  pinUpdateDate datetime,
-  lastUpdateUser varchar(20),
-  lastUpdateDate timestamp,
- PRIMARY KEY  (`id`)
-);
 
 
 --
@@ -7750,6 +7748,8 @@ CREATE TABLE preventions (
   never char(1) default '0',
   creator int(10) default NULL,
   lastUpdateDate datetime NOT NULL,
+  restrictToProgram tinyint(1),
+  programNo int,
   INDEX `preventions_demographic_no` (`demographic_no`),
   INDEX `preventions_provider_no` (provider_no(6)),
   INDEX `preventions_prevention_type` (prevention_type(10)),
@@ -8662,7 +8662,7 @@ create table favoritesprivilege
 
 CREATE TABLE `appointment_status` (
   `id` int(11) NOT NULL auto_increment,
-  `status` char(2) NOT NULL,
+  `status` char(2) BINARY NOT NULL,
   `description` char(30) NOT NULL default 'no description',
   `color` char(7) NOT NULL default '#cccccc',
   `icon` char(30) NOT NULL default '''''',
@@ -8696,7 +8696,8 @@ CREATE TABLE `casemgmt_note_link` (
   `table_id` int(10) NOT NULL,
   `note_id` int(10) NOT NULL,
   `other_id` varchar(25),
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY note_idIndex (`note_id`)
 );
 
 
@@ -8706,7 +8707,8 @@ CREATE TABLE `casemgmt_note_ext` (
   `key_val` varchar(64) NOT NULL,
   `value` text,
   `date_value` date,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY  (`id`),
+  KEY note_idIndex (`note_id`)
 );
 
 
@@ -8802,7 +8804,7 @@ CREATE TABLE `site` (
   `status` tinyint(4) NOT NULL default '0',
   `providerId_from` int null,
   `providerId_to` int null,
-  `siteLogoId` int,
+  `siteLogoId` int ,
   `siteUrl` varchar(50),
   PRIMARY KEY  (`site_id`),
   UNIQUE KEY `unique_name` (`name`),
@@ -8978,7 +8980,7 @@ CREATE TABLE `EyeformFollowUp` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `appointment_no` int(11)  ,
   `demographic_no` int(11) ,
-  `timespan` int(11) ,
+  `timespan` varchar(6),
   `timeframe` varchar(25) ,
   `followup_provider` varchar(100) ,
   `date` timestamp ,
@@ -9077,6 +9079,7 @@ CREATE TABLE `EyeformSpecsHistory` (
   `updateTime` datetime ,
   `status` varchar(2) ,
   `appointmentNo` int(11) ,
+   `note` varchar(254),
   PRIMARY KEY (`id`)
 );
 
@@ -9146,6 +9149,10 @@ create table EyeformConsultationReport (
  plan text,
  urgency varchar(100),
  patientWillBook integer,
+ contactId varchar(100),
+ contact_type int(10),
+ otherReferralId int(11),
+ siteId int(11),
  primary key(id)
 );
 
@@ -9176,6 +9183,8 @@ create table DemographicContact (
 	note varchar(200),
 	consentToContact tinyint(1),
 	active tinyint(1),
+	mrp tinyint(1),
+	programNo int(10),
 	KEY (`demographicNo`)
 );
 
@@ -10611,8 +10620,12 @@ create table DrugProduct(
         amount int not null,
         expiryDate date,
         location int,
+	dateCreated TIMESTAMP,
+	lastUpdateDate TIMESTAMP,
+	lastUpdateUser varchar(10),
         primary key (id)
 );
+
 
 create table DrugDispensing (
         id int(9) not null auto_increment,
@@ -10702,6 +10715,7 @@ CREATE TABLE `fax_config` (
   `queue` varchar(255),
   `active` tinyint(1),
   `faxNumber` varchar(10),
+  `senderEmail` varchar(255),
   PRIMARY KEY (`id`)
 );
 
@@ -11093,7 +11107,8 @@ CREATE TABLE formONAREnhancedRecord (
   c_planManage19 varchar(100) default NULL,
   c_riskFactors20 varchar(50) default NULL,
   c_planManage20 varchar(100) default NULL,
-  PRIMARY KEY (ID)
+  PRIMARY KEY (`ID`),
+  KEY `demographic_noIndex` (`demographic_no`)
 );
 
 
@@ -11503,7 +11518,8 @@ CREATE TABLE formONAREnhancedRecordExt1 (
   `pg2_urinePr40` char(3),
   `pg2_urineGl40` char(3),
   `pg2_BP40` varchar(8),
-  `pg2_comments40` varchar(80)
+  `pg2_comments40` varchar(80),
+  KEY `idIndex` (`ID`)
 );
 
 CREATE TABLE formONAREnhancedRecordExt2 (
@@ -11892,7 +11908,8 @@ CREATE TABLE formONAREnhancedRecordExt2 (
   pg1_geneticA_riskLevel varchar(25),
   pg1_geneticB_riskLevel varchar(25),
   pg1_geneticC_riskLevel varchar(25),
-  pg1_labCustom3Result_riskLevel varchar(25)
+  pg1_labCustom3Result_riskLevel varchar(25),
+  KEY `idIndex` (`ID`)
 );
 
 
@@ -11989,6 +12006,8 @@ create table EFormReportTool (
   `name` varchar(255),
   `dateLastPopulated` timestamp null,
   `latestMarked` tinyint(1) not null,
+  `startDate` datetime,
+  `endDate` datetime,
   PRIMARY KEY  (`id`)
 );
 
@@ -12053,6 +12072,36 @@ CREATE TABLE `billing_on_transaction` (
   KEY `pay_program`(`pay_program`)
 );
 
+
+CREATE TABLE `SecurityArchive` (
+ `id` int(11) NOT NULL auto_increment,
+  security_no int(6) NOT NULL,
+  user_name varchar(30) NOT NULL,
+  password varchar(255) NOT NULL,
+  provider_no varchar(6) default NULL,
+  pin varchar(255),
+  b_ExpireSet int(1),
+  date_ExpireDate date,
+  b_LocalLockSet int(1),
+  b_RemoteLockSet int(1),
+  forcePasswordReset tinyint(1),
+  storageVersion int NOT NULL,
+  passwordUpdateDate datetime,
+  pinUpdateDate datetime,
+  lastUpdateUser varchar(20),
+  lastUpdateDate timestamp,
+ PRIMARY KEY  (`id`)
+);
+
+
+create table MyGroupProgram (
+        id int(9) NOT NULL auto_increment,
+	myGroupNo varchar(10) not null,
+	programNo int(10) not null,
+        primary key (id)
+);
+
+
 CREATE TABLE `ResourceStorage` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `resourceType` varchar(100),
@@ -12106,24 +12155,18 @@ CREATE TABLE billingperclimit (
   PRIMARY KEY  (id)
 ) ;
 
-CREATE TABLE resident_oscarMsg (
-    id int(11) auto_increment,
-    supervisor_no varchar(6),
-    resident_no varchar(6),
-    demographic_no int(11),
-    appointment_no int(11),    
-    note_id int(10),
-    complete int(1),
-    create_time timestamp,
-    complete_time timestamp,
-    PRIMARY KEY(id),
-    index note_id_idx (note_id)
+CREATE TABLE `EncounterType` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `value` varchar(255),
+  `global` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
 );
 
-CREATE TABLE oscar_msg_type (
-    type int(10),
-    description varchar(255),
-    PRIMARY KEY(type)
+
+CREATE TABLE `ProgramEncounterType` (
+  `programId` int(10) NOT NULL,
+  `encounterTypeId` int(10) NOT NULL,
+  PRIMARY KEY (`programId`,`encounterTypeId`)
 );
 
 CREATE TABLE `dashboard` (
@@ -12154,12 +12197,59 @@ CREATE TABLE `indicatorTemplate` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `demographicSite` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `siteId` int(11) NOT NULL,
+  `demographicId` int(10) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE  `site_role_mpg` (
+  `id` int not null auto_increment,
+  `site_id` int(10) unsigned NOT NULL,
+  `access_role_id` int(10) unsigned ,
+  `crt_dt` timestamp NOT NULL ,
+  `admit_discharge_role_id` int(10) unsigned,
+  primary key (`id`)
+);
+
 CREATE TABLE `tickler_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `category` varchar(55),
   `description` varchar(255),
   `active` bit(1),
   PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `preventionsBilling` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `preventionType` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `billingServiceCodeAndUnit` varchar(50) NOT NULL,
+  `billingType` varchar(50) NOT NULL,
+  `visitType` varchar(50) NOT NULL,
+  `billingDxCode` varchar(50) NOT NULL,
+  `visitLocation` varchar(50) NOT NULL,
+  `sliCode` varchar(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `pbtype` (`preventionType`)
+);
+
+CREATE TABLE `ContactType` (
+  id int(10) NOT NULL auto_increment,
+  name varchar(255),
+  male tinyint(1),
+  female tinyint(1),
+  inverseRelationship tinyint(1),
+  active tinyint(1),
+  PRIMARY KEY  (`id`)
+) ;
+
+
+CREATE TABLE `ProgramContactType` (
+ `programId` int(11) NOT NULL,
+ `contactTypeId` int(11) NOT NULL,
+ `category` varchar(255) not null,
+ PRIMARY KEY  (`programId`,`contactTypeId`,`category`)
 );
 
 CREATE TABLE `onCallClinicDates` (
@@ -12170,5 +12260,25 @@ CREATE TABLE `onCallClinicDates` (
    `location` varchar(256),
    `color` varchar(7),
   PRIMARY KEY (`id`)
+);
+
+CREATE TABLE resident_oscarMsg (
+    id int(11) auto_increment,
+    supervisor_no varchar(6),
+    resident_no varchar(6),
+    demographic_no int(11),
+    appointment_no int(11),    
+    note_id int(10),
+    complete int(1),
+    create_time timestamp,
+    complete_time timestamp,
+    PRIMARY KEY(id),
+    index note_id_idx (note_id)
+);
+
+CREATE TABLE oscar_msg_type (
+    type int(10),
+    description varchar(255),
+    PRIMARY KEY(type)
 );
 

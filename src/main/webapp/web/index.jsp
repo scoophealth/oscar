@@ -58,10 +58,11 @@ session.setAttribute("useIframeResizing", "true");  //Temporary Hack
 <link href="css/navbar-fixed-top.css" rel="stylesheet">
 <link href="css/navbar-demo-search.css" rel="stylesheet">
 <link href="css/patient-list.css" rel="stylesheet">
+<link href="css/rx.css" rel="stylesheet">
 
 <link href="../library/ng-table/ng-table.css" rel="stylesheet">
 
-<link href="../library/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet">
+<link href="../library/bootstrap2-datepicker/datepicker3.css" rel="stylesheet">
 
 <link href="../css/bootstrap-timepicker.min.css" rel="stylesheet">
 
@@ -111,6 +112,16 @@ text-decoration:none;
 
 .absolute-left{
 left:0px;
+}
+
+.absolute-right{
+right:0px;
+} 
+
+#noteInput ul.dropdown-menu{
+max-height:220px;
+overflow-y:auto;
+overflow-x:none;
 }
 
 .absolute-right{
@@ -499,12 +510,14 @@ font-size:20px
 	<script src="common/providerServices.js"></script>
 	<script src="common/patientDetailStatusServices.js"></script>
 	<script src="common/uxServices.js"></script>
+	<script src="common/rxServices.js"></script>
 	<script src="common/messageServices.js"></script>
 	<script src="common/inboxServices.js"></script>
 	<script src="common/k2aServices.js"></script>
 	<script src="common/personaServices.js"></script>
 	<script src="common/consultServices.js"></script>
 	<script src="common/appServices.js"></script>
+	<script src="common/systemInfoServices.js"></script>
 	<script src="common/diseaseRegistryServices.js"></script>
 	<script src="filters.js"></script>
 	<script src="app.js"></script>
@@ -517,7 +530,9 @@ font-size:20px
 	<script src="record/summary/summaryController.js"></script>
 	<script src="record/forms/formsController.js"></script>
 	<script src="record/details/detailsController.js"></script>
+	<script src="record/details/detailsHistoryListController.js"></script>
 	<script src="record/phr/phrController.js"></script>
+	<script src="record/rx/rxController.js"></script>
 	<script src="record/tracker/trackerController.js"></script>
 	
 	<script src="tickler/ticklerController.js"></script>

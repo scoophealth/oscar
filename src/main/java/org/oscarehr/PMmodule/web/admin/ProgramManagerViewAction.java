@@ -47,6 +47,7 @@ import org.oscarehr.PMmodule.dao.ClientReferralDAO;
 import org.oscarehr.PMmodule.dao.VacancyDao;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.BedReservedException;
+import org.oscarehr.PMmodule.exception.FunctionalCentreDischargeException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
 import org.oscarehr.PMmodule.model.ClientReferral;
@@ -76,6 +77,7 @@ import org.oscarehr.common.model.Tickler;
 import org.oscarehr.managers.BedDemographicManager;
 import org.oscarehr.managers.BedManager;
 import org.oscarehr.managers.RoomDemographicManager;
+import org.oscarehr.managers.ScheduleManager;
 import org.oscarehr.managers.TicklerManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -100,6 +102,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 	private ProgramQueueManager programQueueManager;	
 	private DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 	private TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+	private ScheduleManager scheduleManager = SpringUtils.getBean(ScheduleManager.class);
 	
 	public void setFacilityDao(FacilityDao facilityDao) {
 		this.facilityDao = facilityDao;
@@ -174,7 +177,7 @@ public class ProgramManagerViewAction extends DispatchAction {
                 {
                     genderConflict.add(programQueue.getClientId());
                 }
-                if ("Transgendered".equals(program.getManOrWoman()) && !"T".equals(demographic.getSex()))
+                if ("Transgender".equals(program.getManOrWoman()) && !"T".equals(demographic.getSex()))
                 {
                     genderConflict.add(programQueue.getClientId());
                 }
@@ -282,6 +285,10 @@ public class ProgramManagerViewAction extends DispatchAction {
         if (formBean.getTab().equals("Access")) {
             request.setAttribute("accesses", programManager.getProgramAccesses(programId));
         }
+        
+        if (formBean.getTab().equals("Encounter Types")) {
+        	request.setAttribute("encounterTypes", programManager.getCustomEncounterTypes(loggedInInfo, Integer.parseInt(programId)));
+        }
 
         if (formBean.getTab().equals("Bed Check")) {
         	
@@ -317,6 +324,10 @@ public class ProgramManagerViewAction extends DispatchAction {
             request.setAttribute("client_statuses", programManager.getProgramClientStatuses(new Integer(programId)));
         }
 
+        if (formBean.getTab().equals("Schedule")) {
+        	request.setAttribute("myGroups", scheduleManager.getMyGroupsByProgramNo(Integer.parseInt(programId)));
+        }
+        
         LogAction.log("view", "program", programId, request);
 
         request.setAttribute("id", programId);
@@ -359,7 +370,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 		return mapping.findForward("viewBedCheckReport");
 	}
 
-	public ActionForward admit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward admit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, FunctionalCentreDischargeException {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		String programId = request.getParameter("id");
 		String clientId = request.getParameter("clientId");
@@ -374,7 +385,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 		List<Integer> dependents = clientManager.getDependentsList(new Integer(clientId));
 
 		try {
-			admissionManager.processAdmission(Integer.valueOf(clientId), loggedInInfo.getLoggedInProviderNo(), fullProgram, dischargeNotes, admissionNotes, queue.isTemporaryAdmission(), dependents, admissionDate);
+			admissionManager.processAdmission(loggedInInfo, Integer.valueOf(clientId), loggedInInfo.getLoggedInProviderNo(), fullProgram, dischargeNotes, admissionNotes, queue.isTemporaryAdmission(), dependents, admissionDate);
 			
 			//change vacancy status to filled after one patient is admitted to associated program in that vacancy.
 	    	Vacancy vacancy = VacancyTemplateManager.getVacancyByName(queue.getVacancyName());
@@ -422,7 +433,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 		return view(mapping, form, request, response);
 	}
 
-	public ActionForward override_restriction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward override_restriction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, FunctionalCentreDischargeException {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		
 		String programId = (String) request.getSession().getAttribute("programId");
@@ -442,7 +453,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 		Program fullProgram = programManager.getProgram(String.valueOf(programId));
 
 		try {
-			admissionManager.processAdmission(Integer.valueOf(clientId), loggedInInfo.getLoggedInProviderNo(), fullProgram, dischargeNotes, admissionNotes, queue.isTemporaryAdmission(), true);
+			admissionManager.processAdmission(loggedInInfo, Integer.valueOf(clientId), loggedInInfo.getLoggedInProviderNo(), fullProgram, dischargeNotes, admissionNotes, queue.isTemporaryAdmission(), true);
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.success"));
 			saveMessages(request, messages);
@@ -683,7 +694,9 @@ public class ProgramManagerViewAction extends DispatchAction {
 			}
 		}
 		request.setAttribute("do_admit", Boolean.TRUE);
-
+		Date referralDate = queue.getReferralDate();
+		String referralDateString = oscar.util.DateUtils.getDate(referralDate,"yyyy-MM-dd");		
+		request.setAttribute("referralDate",referralDateString);
 		return view(mapping, form, request, response);
 	}
 
@@ -693,7 +706,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 		return view(mapping, form, request, response);
 	}
 
-	public ActionForward saveReservedBeds(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward saveReservedBeds(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws FunctionalCentreDischargeException {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		ProgramManagerViewFormBean programManagerViewFormBean = (ProgramManagerViewFormBean) form;
 
@@ -754,7 +767,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 								if (communityProgramId > 0) {
 									try {
 										// discharge to community program
-										admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), loggedInInfo.getLoggedInProviderNo(), "bed reservation ended - manually discharged", "0", null);
+										admissionManager.processDischargeToCommunity(loggedInInfo, communityProgramId, bedDemographic.getId().getDemographicNo(), loggedInInfo.getLoggedInProviderNo(), "bed reservation ended - manually discharged", "0", null, false);
 									} catch (AdmissionException e) {
 
 										messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
@@ -774,7 +787,7 @@ public class ProgramManagerViewAction extends DispatchAction {
 							if (communityProgramId > 0) {
 								try {
 									// discharge to community program
-									admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), loggedInInfo.getLoggedInProviderNo(), "bed reservation ended - manually discharged", "0", null);
+									admissionManager.processDischargeToCommunity(loggedInInfo, communityProgramId, bedDemographic.getId().getDemographicNo(), loggedInInfo.getLoggedInProviderNo(), "bed reservation ended - manually discharged", "0", null, false);
 								} catch (AdmissionException e) {
 
 									messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));

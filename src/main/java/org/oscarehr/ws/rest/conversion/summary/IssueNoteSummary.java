@@ -36,7 +36,6 @@ import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.managers.PreferenceManager;
 import org.oscarehr.util.LoggedInInfo;
-
 import org.oscarehr.ws.rest.to.model.SummaryItemTo1;
 import org.oscarehr.ws.rest.to.model.SummaryTo1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +91,6 @@ public class IssueNoteSummary implements Summary {
 		List<SummaryItemTo1> list = summary.getSummaryItem();
 
 	    getSummaryListForIssuedNotes( loggedInInfo,demographicNo, list,issueIds );
-
 
 		return summary;
 	}

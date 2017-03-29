@@ -1,0 +1,114 @@
+#rx-wrapper{
+    margin-left:25px;
+}
+
+.rx-chevron-wrapper{
+    border:1px solid #e5e5e5;
+    border-radius: 4px;
+    background-color:#ffffff;
+    min-height:30px;
+    width:50px;
+    margin-left:35%;
+    margin-top:12%;
+    text-align:center;
+}
+
+.rx-chevron-wrapper:hover{
+    background-color:#e5e5e5;
+}
+
+.rx-chevron{
+    margin-top:2px;
+    color:black;
+}
+
+.rx-toggle-row{
+    line-height: 0.75;
+    min-height: 25px;
+}
+
+.rx-collapse-toggle{
+    margin-top:4px;
+}
+
+#add-medication-wrapper{
+
+}
+
+.reduced-pagination{
+    margin:0;
+}
+
+.rx-med-inactive{
+
+    color:grey;
+
+}
+
+.rx-med-inactive-label{
+
+}
+
+.rx-search-footer-text{
+
+    margin-left:20px;
+    margin-top:20px;
+
+}
+.rx-search-footer{
+    background-color:#FFFFFF;
+    width:100%;
+    height:100%;
+}
+
+.rx-med-selected,
+.rx-med-selected:hover{
+    background-color:#428bca !important;
+    color:white !important;
+}
+
+.borderless td, .borderless th {
+    border: none !important;
+}
+
+#medication-details-panel-body{
+    padding:10px;
+}
+
+#medication-details-table{
+    margin-bottom:0px;
+}
+
+.demo-quick-name{
+    font-weight: normal;
+}
+
+.field-notice-warning{
+    background-color:rgba(255, 165, 0, 0.12);
+    border-color:orange;
+}
+
+.well-text{
+    font-style:italic;
+    font-weight:bold;
+    color:#636363;
+}
+
+.field-has-error{
+    background-color: rgba(255, 209, 213, 0.49);
+    border-color:red;
+}
+
+.panel-heading{
+    padding-top: 0;
+    padding-bottom : 0;
+}
+
+.date-expired{
+    color:red;
+    font-weight: bold;
+}
+
+.date-expiring{
+    color:orange;
+}

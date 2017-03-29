@@ -38,6 +38,7 @@ import org.oscarehr.common.NativeSql;
 import org.oscarehr.common.model.Measurement;
 import org.springframework.stereotype.Repository;
 
+
 @Repository
 public class MeasurementDao extends AbstractDao<Measurement> {
 
@@ -349,7 +350,15 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 			map.put(m.getType(), m);
 		}
 		return map;
+	}	
+	
+	public List<Measurement> getMeasurementsByAppointment2(int appointmentNo) {
+		String queryStr = "From Measurement m WHERE m.appointmentNo = ? ORDER BY m.type, m.dateObserved ASC";
+		Query query = entityManager.createQuery(queryStr);
+		query.setParameter(1, appointmentNo);
+		return query.getResultList();
 	}
+	
 
 	public Set<Integer> getAppointmentNosByDemographicNoAndType(int demographicNo, String type, Date startDate, Date endDate) {
 		Map<Integer, Boolean> results = new HashMap<Integer, Boolean>();
@@ -732,4 +741,23 @@ public class MeasurementDao extends AbstractDao<Measurement> {
 		return query.getResultList();
 	}
 
+	public Measurement getLatestMeasurementByAppointment(int appointmentNo, String type) {
+		String sqlCommand = "From Measurement m WHERE m.appointmentNo = " + appointmentNo + " and m.type=?1 ORDER BY m.dateObserved DESC";
+
+		@SuppressWarnings("unchecked")
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, type);
+		
+		return getSingleResultOrNull(query);
+		
+	}
+	
+	public Measurement getLatestMeasurementByDemographicNoAndType(int demographicNo, String type) {
+		String sqlCommand = "From Measurement m WHERE m.demographicId = " + demographicNo + " and m.type=? ORDER BY m.dateObserved DESC";
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, type);
+		
+		return getSingleResultOrNull(query);		
+		
+	}
 }

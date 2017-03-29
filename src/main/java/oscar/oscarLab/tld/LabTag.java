@@ -29,6 +29,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.oscarehr.common.dao.ProviderLabRoutingDao;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentToProviderDao;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -40,18 +41,22 @@ public class LabTag extends TagSupport {
 
 	private String providerNo;
 	private int numNewLabs;
+	private int numNewHrmLabs;
 	
 	public LabTag() {
 		numNewLabs = 0;
+		numNewHrmLabs = 0;
 	}
 
 	public int doStartTag() throws JspException {
 		ProviderLabRoutingDao dao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+		HRMDocumentToProviderDao hrmDocumentToProviderDao = SpringUtils.getBean(HRMDocumentToProviderDao.class);
 
 		numNewLabs = dao.findByProviderNo(providerNo, "N").size();
+		numNewHrmLabs = hrmDocumentToProviderDao.findNonViewedByProviderNo(providerNo).size();
 		try {
 			JspWriter out = super.pageContext.getOut();
-			if (numNewLabs > 0) {
+			if (numNewLabs > 0 || numNewHrmLabs > 0) {
 				out.print("<span class='tabalert'>  ");
 			}
 			else out.print("<span>  ");
@@ -73,8 +78,8 @@ public class LabTag extends TagSupport {
 		try {
 			JspWriter out = super.pageContext.getOut();
 			//ronnie 2007-5-4
-			if (numNewLabs > 0) {
-				out.print("<sup>" + numNewLabs + "</sup></span>");
+			if (numNewLabs > 0 || numNewHrmLabs > 0) {
+				out.print("<sup>" + new Integer(numNewLabs+numNewHrmLabs) + "</sup></span>");
 			}
 			else out.print("</span>");
 		} catch (Exception p) {

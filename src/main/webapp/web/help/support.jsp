@@ -31,19 +31,21 @@
 }
 
 </style>
-<h2>OSCAR Support&nbsp;<small class="experimental">In Development</small></h2>
+<h2>OSCAR Support</h2>
 
+<!-- 
 <h4>Version: <small>{{buildInfo.versionDisplayName}}  ({{buildInfo.version}})</small></h4>
+-->
 
 <p></p>
 
 <address>
-  <strong>{{ospInfo.name}}</strong><br>
-  <abbr title="Phone">P:</abbr> {{ospInfo.phone}}
+  <strong>{{ospInfo.ospName}}</strong><br>
+  <abbr title="Phone">P:</abbr> {{ospInfo.ospPhone}}
 </address>
 
 <address>
-  <strong>{{ospInfo.contact}}</strong><br>
-  <a href="mailto:{{ospInfo.email}}">{{ospInfo.email}}</a><br/>
-   <a href={{ospInfo.url}}">{{ospInfo.url}}</a>
+  <strong>{{ospInfo.ospContactName}}</strong><br>
+  <a href="mailto:{{ospInfo.email}}">{{ospInfo.ospContactEmail}}</a><br/>
+   <a href={{ospInfo.url}}">{{ospInfo.ospUrl}}</a>
 </address>

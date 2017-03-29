@@ -394,7 +394,7 @@ public class RxUtil {
 					double nPerDay = findNPerDay(rx.getFrequencyCode());
 					double nDays = findNDays(rx.getDurationUnit());
 					p("qtyD--takeMax--nPerDay--nDays--" + qtyD + " " + takeMax + " " + nPerDay + " " + nDays);
-					if (takeMax != 0d) {
+					if ((int)takeMax != 0) {
 						double durD = qtyD / (takeMax) * nPerDay * nDays;
 						int durInt = (int) durD;
 						p("durInt", Integer.toString(durInt));
@@ -1038,6 +1038,12 @@ public class RxUtil {
 			regex5 = regex5.trim();
 			special = special.replace(regex5, "");
 		}
+
+		//remove dispensing units
+		special=special.replace("Units:", "");
+		if(rx.getDispensingUnits()!=null)
+			special=special.replace(rx.getDispensingUnits(), "");
+
 		MiscUtils.getLogger().debug("before trimming mitte=" + special);
 		String regex6 = "Mitte:\\s*[0-9]+\\s*\\w+";
 		p = Pattern.compile(regex6);

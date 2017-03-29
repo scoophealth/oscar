@@ -17,6 +17,22 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -27,16 +43,17 @@
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*,org.oscarehr.common.model.*,org.oscarehr.common.dao.*"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="oscar.oscarPrevention.PreventionData" %>
+
 <%
 	WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
     UserPropertyDAO userPropertyDAO = (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
     BillingONCHeader1Dao cheader1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
     BillingONExtDao extDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");
-    		
-    		
-	if (session.getAttribute("user") == null) {
-		response.sendRedirect("../../../logout.jsp");
-	}
+    LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+
+  
 
 	//String user_no = (String) session.getAttribute("user");
 	String apptNo = request.getParameter("appointment_no");
@@ -55,7 +72,7 @@
 			    || "Save & Add Another Bill".equals(request.getParameter("submit")))) {
 		BillingSavePrep bObj = new BillingSavePrep();
 		Vector vecObj = bObj.getBillingClaimObj(request);
-		ret = bObj.addABillingRecord(vecObj);
+		ret = bObj.addABillingRecord(loggedInInfo, vecObj);
 		if(request.getParameter("xml_billtype").substring(0,3).matches(BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)) {
 			bObj.addPrivateBillExtRecord(request, vecObj);
 		} else {
@@ -86,6 +103,23 @@
         	extDao.persist(ext);
         	
         }
+        
+     	// for prevention billing (after adding prevention, it will pop-up a billing page automatically if ENABLE_PREVENTION_BILLING was set to true)
+  		if (org.oscarehr.common.IsPropertiesOn.propertiesOn("ENABLE_PREVENTION_BILLING")) {
+  			int prevId = 0;
+  			try {
+  				prevId = Integer.valueOf(request.getParameter("prevId"));
+  			} catch (Exception e) {}
+  			if (prevId != 0) {
+  				// add billed property to prevetions table
+  				String billed = PreventionData.getExtValue(Integer.toString(prevId), "billed");
+  				if (billed != null && !billed.isEmpty()) {
+  					PreventionData.updatetExtValue(prevId, "billed", "1");
+  				} else {
+  					PreventionData.addPreventionKeyValue(Integer.toString(prevId), "billed", "1");
+  				}
+  			}
+  		}
         
 		// update appt and close the page
 		if (ret) {

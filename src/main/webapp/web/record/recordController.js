@@ -24,7 +24,7 @@
 
 */
 
-oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,user,$state,noteService,$timeout,$interval,uxService,securityService,scheduleService,billingService,ticklerService) {
+oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$stateParams,demographicService,demo,user,$state,noteService,$timeout,uxService,securityService,scheduleService,billingService,rxService,ticklerService) {
 	
 	
 	console.log("in patient Ctrl ",demo);
@@ -48,7 +48,7 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 	$scope.getOverdueTicklerCount();
 	
 	$scope.hideNote = false;
-	
+			
 	//this doesn't actually work, hideNote is note showing up in the $stateParams
 	if($stateParams.hideNote != null) {
 		$scope.hideNote = $stateParams.hideNote;
@@ -208,6 +208,32 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
 		}
 	}
 	
+	
+	//////Timer
+        var d = new Date();  //the start
+
+        var totalSeconds = 0;
+        var myVar = setInterval(setTime, 1000);
+
+	$scope.getCurrentTimerToggle = function(){
+ 	     if(angular.isDefined(myVar)){
+ 	        return "glyphicon-pause"
+ 	     }
+      		return "glyphicon-play";
+    	}
+
+	$scope.toggleTimer = function(){
+ 	    if ($("#aToggle").hasClass("glyphicon-pause")) {
+			$("#aToggle").removeClass("glyphicon-pause");
+			$("#aToggle").addClass("glyphicon-play");
+			clearInterval(myVar);
+		} else {
+			$("#aToggle").removeClass("glyphicon-play");
+			$("#aToggle").addClass("glyphicon-pause");
+			myVar = setInterval(setTime, 1000);
+		}
+	}
+	
 	$scope.pasteTimer = function(){    
  	    var ed = new Date();
  	    $scope.page.encounterNote.note +="\n"+document.getElementById("startTag").value+": "+d.getHours()+":"+pad(d.getMinutes())+"\n"+document.getElementById("endTag").value+": "+ed.getHours()+":"+pad(ed.getMinutes())+"\n"+pad(parseInt(totalSeconds/3600))+":"+pad(parseInt((totalSeconds/60)%60))+":"+ pad(totalSeconds%60);
@@ -230,7 +256,8 @@ oscarApp.controller('RecordCtrl', function ($rootScope,$scope,$http,$location,$s
             }
         }
 $scope.$on('$destroy', function () { clearInterval(myVar); });
- 	//////		
+ 	//////	
+		
 	
 		
 	// Note Input Logic
@@ -397,57 +424,6 @@ $scope.$on('$destroy', function () { clearInterval(myVar); });
 		}
 	} 
 	 
-	 /*
-	  * handle concurrent note edit - EditingNoteFlag
-	  */
-	 var itvSet = null;
-	 var itvCheck = null;
-	 var editingNoteId = null;
-	 
-	 $rootScope.$on("$stateChangeStart", function(){
-		 $scope.removeEditingNoteFlag();
-	 });
-	 
-	 $scope.doSetEditingNoteFlag = function(){
-		 noteService.setEditingNoteFlag(editingNoteId, user.providerNo).then(function(resp){
-			 if (!resp.success) {
-				 if (resp.message=="Parameter error") alert("Parameter Error: noteUUID["+editingNoteId+"] userId["+user.providerNo+"]");
-				 else alert("Warning! Another user is editing this note now.");
-			 }
-		 });
-	 }
-	 
-	 $scope.setEditingNoteFlag = function(){
-		 if ($scope.page.encounterNote.uuid==null) return;
-		 
-		 editingNoteId = $scope.page.encounterNote.uuid;
-		 if (itvSet==null) {
-			 itvSet = $interval($scope.doSetEditingNoteFlag(), 30000); //set flag every 5 min until canceled
-		 }
-		 if (itvCheck==null) { //warn once only when the 1st time another user tries to edit this note
-			 itvCheck = $interval(function(){
-				 noteService.checkEditNoteNew(editingNoteId, user.providerNo).then(function(resp){
-					 if (!resp.success) { //someone else wants to edit this note
-						 alert("Warning! Another user tries to edit this note. Your update may be replaced by later revision(s).");
-						 $interval.cancel(itvCheck);
-						 itvCheck = null;
-					 }
-				 });
-			 }, 10000); //check for new edit every 10 seconds
-		 }
-	 }
-	 
-	 $scope.removeEditingNoteFlag = function(){
-		 if (editingNoteId!=null) {
-			 noteService.removeEditingNoteFlag(editingNoteId, user.providerNo);
-			 $interval.cancel(itvSet);
-			 $interval.cancel(itvCheck);
-			 itvSet = null;
-			 itvCheck = null;
-			 editingNoteId = null;
-		 }
-	 }
-
 	 
 	 $scope.searchTemplates  = function(term) {
 	    	var search = {name:term};
@@ -509,9 +485,9 @@ $scope.$on('$destroy', function () { clearInterval(myVar); });
 				}
 			}
 			$scope.page.assignedCMIssues = newList;
-		}
+		}	
 		
-
+		
 });
 
 function toArray(obj){ //convert single object to array

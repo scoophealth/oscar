@@ -34,10 +34,20 @@
 <%@page import="java.util.GregorianCalendar"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicParameters"%>
+<%@ page errorPage="errorpage.jsp" import="oscar.OscarProperties"%>
+<%@page import="oscar.service.SiteRoleManager" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean"
+	scope="session" />
+<%@page import="oscar.util.SuperSiteUtil" %>
+<%@page import="org.oscarehr.common.model.Site" %>
 
-
-<%@ page import="oscar.OscarProperties"%>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%
+String displayMode_ = request.getParameter("displaymode");
+if(displayMode_!=null && (displayMode_.equalsIgnoreCase("Update Record") || displayMode_.equalsIgnoreCase("edit")))
+{
+	SuperSiteUtil.getInstance().checkSuperSiteAccess(request, response, "demographic_no");	
+}
+%>
 
 <%
   LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
@@ -46,7 +56,7 @@
 
   //operation available to the client -- dboperation
   //construct SQL expression
-  String orderby="", limit="", limit1="", limit2="";
+  String orderby="", limit="", limit1="", limit2="", alias="";
   if(request.getParameter("orderby")!=null) orderby="order by "+request.getParameter("orderby");
   if(request.getParameter("limit1")!=null) limit1=request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) {
@@ -64,6 +74,9 @@
 	MiscUtils.getLogger().debug("Search parameters, searchMode="+searchMode+", keyword="+keyword);
 
   if(searchMode!=null) {
+	  if(searchMode.equals("")) {
+		  searchMode = "search_name";
+	  }
 	  if(keyword.indexOf("*")!=-1 || keyword.indexOf("%")!=-1) regularexp="like";
 
     if(searchMode.equals("search_address")) fieldname="address";
@@ -91,8 +104,22 @@
     		matchingDemographicParameters=null;
     	}
     }
-    if(searchMode.equals("search_chart_no")) fieldname="chart_no";
-    if(searchMode.equals("search_name")) {
+    
+    if( "search_demographic_no".equals( searchMode )) {
+    	  fieldname = "demographic_no";
+    }
+      
+    if( "search_band_number".equals( searchMode )) {
+    	  fieldname = "de.key_val LIKE '%statusNum%' AND de.value";
+    	  alias = "d.";
+    }
+    
+    if( "search_chart_no".equals( searchMode ) ) {
+    	fieldname="chart_no";
+    }
+    
+    if( "search_name".equals( searchMode ) ) {
+    	
 	  	matchingDemographicParameters=new MatchingDemographicParameters();
 	  	String[] lastfirst = keyword.split(",");
 
@@ -102,33 +129,58 @@
         }else{
             matchingDemographicParameters.setLastName(lastfirst[0].trim());
         }
+        
 
-    	if(keyword.indexOf(",")==-1)  fieldname="lower(last_name)";
-      else if(keyword.trim().indexOf(",")==(keyword.trim().length()-1)) fieldname="lower(last_name)";
-      else fieldname="lower(last_name) "+regularexp+" ?"+" and lower(first_name) ";
+    	if(keyword.indexOf(",")==-1) {  
+    		fieldname="lower(last_name)";
+    	} else if(keyword.trim().indexOf(",")==(keyword.trim().length()-1)) {
+    		fieldname="lower(last_name)";
+    	} else {
+    		fieldname="lower(last_name) "+regularexp+" ?"+" and lower(first_name) ";
+    	}
     }
   }
 
   String ptstatusexp="";
   if(request.getParameter("ptstatus")!=null) {
 	if(request.getParameter("ptstatus").equals("active")) {
-		ptstatusexp=" and patient_status not in ("+props.getProperty("inactive_statuses", "'IN','DE','IC', 'ID', 'MO', 'FI'")+") ";
+		ptstatusexp=" and " + alias + "patient_status not in ("+props.getProperty("inactive_statuses", "'IN','DE','IC', 'ID', 'MO', 'FI'")+") ";
 	}
 	if(request.getParameter("ptstatus").equals("inactive"))  {
-		ptstatusexp=" and patient_status in ("+props.getProperty("inactive_statuses", "'IN','DE','IC', 'ID', 'MO', 'FI'")+") ";
+		ptstatusexp=" and " + alias + "patient_status in ("+props.getProperty("inactive_statuses", "'IN','DE','IC', 'ID', 'MO', 'FI'")+") ";
 	}
   }
-  else
-      ptstatusexp=" and patient_status not in ("+props.getProperty("inactive_statuses", "'IN','DE','IC', 'ID', 'MO', 'FI'")+") ";
-
+  else {
+      ptstatusexp=" and " + alias + "patient_status not in ("+props.getProperty("inactive_statuses", "'IN','DE','IC', 'ID', 'MO', 'FI'")+") ";
+  }
+  
   String domainRestriction="";
+  String curProvider_no = (String) session.getAttribute("user");
   if(request.getParameter("outofdomain")!=null && !request.getParameter("outofdomain").equals("true")) {
-  	String curProvider_no = (String) session.getAttribute("user");
-  	domainRestriction = "and demographic_no in (select client_id from admission where admission_status='current' and program_id in (select program_id from program_provider where provider_no='"+curProvider_no+"')) ";
+  	domainRestriction = "and " + alias + "demographic_no in (select client_id from admission where admission_status='current' and program_id in (select program_id from program_provider where provider_no='"+curProvider_no+"')) ";
+  }
+  
+//multiple site starts
+  String multipleSitesAccessExp = "";
+  if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
+	  SiteRoleManager siteRoleMgr = new SiteRoleManager();
+	  List<Site> accessSitesList = siteRoleMgr.getSitesWhichUserCanOnlyAccess(curProvider_no);
+	  if(accessSitesList!=null && accessSitesList.size()>0) {
+		  multipleSitesAccessExp = " and " + alias + "demographic_no in (select demographicId from demographicSite where siteId in (";
+		  int count = 0;
+		  for(Site s : accessSitesList) {
+			  count ++;		  
+			  multipleSitesAccessExp = multipleSitesAccessExp.concat(String.valueOf(s.getSiteId()));
+			  if(count != accessSitesList.size())
+				  multipleSitesAccessExp = multipleSitesAccessExp.concat(",");
+		  }
+		  multipleSitesAccessExp = multipleSitesAccessExp.concat("))");
+	  }
   }
 
   String [][] dbQueries=new String[][] {
     {"search_titlename", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+domainRestriction+orderby},
+    {"search_status_id_mysql", "select d.*  from demographic d left join demographicExt de on (d.demographic_no = de.demographic_no) where "+ fieldname +" "+regularexp+" ? "+ ptstatusexp + domainRestriction + orderby + " " + limit},
     {"search_titlename_mysql", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+domainRestriction+orderby + " " + limit},
     {"search_demorecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+domainRestriction+orderby},
     {"search_detail", "select * from demographic where demographic_no=?"},
@@ -136,7 +188,7 @@
 
     {"search_provider", "select * from provider status='1' order by last_name"},
     {"search_provider_doc", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
-    {"search*", "select * from demographic "+ ptstatusexp+domainRestriction+orderby + " "+limit },
+    {"search*", "select * from demographic "+ ptstatusexp+domainRestriction+multipleSitesAccessExp+orderby + " "+limit },
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
     {"appt_history", "select appointment_no, appointment_date, start_time, appointment.type, remarks, CONCAT(appointment_date,start_time) AS appttime, end_time, reason, appointment.status, provider.last_name, provider.first_name, appointment.location from appointment LEFT JOIN provider ON appointment.provider_no=provider.provider_no where appointment.demographic_no=? "+ orderby + " desc "},
     {"appt_history_w_deleted","select appointment_no, appointment_date, start_time, appointment.type, remarks, CONCAT(appointment_date,start_time) AS appttime, end_time, reason, appointment.status, provider.last_name, provider.first_name, appointment.location,'' as archive from appointment LEFT JOIN provider ON appointment.provider_no=provider.provider_no where appointment.demographic_no=? union select appointment_no, appointment_date, start_time, appointment.type, remarks, CONCAT(appointment_date,start_time) AS appttime, end_time, reason, appointment.status, provider.last_name, provider.first_name, appointment.location, 'archive' as archive from appointmentArchive appointment LEFT JOIN provider ON appointment.provider_no=provider.provider_no where appointment.demographic_no=? and appointment_no not in (select appointment_no from appointment) order by appttime desc, appointment_no desc"},

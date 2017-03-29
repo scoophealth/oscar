@@ -19,6 +19,7 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,10 +29,17 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.hospitalReportManager.HrmPDFCreator;
+import org.oscarehr.hospitalReportManager.model.HRMDocument;
+import org.oscarehr.managers.HRMManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+
+import com.lowagie.text.DocumentException;
+import com.sun.xml.messaging.saaj.util.ByteInputStream;
+import com.sun.xml.messaging.saaj.util.ByteOutputStream;
 
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
@@ -42,10 +50,6 @@ import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.ConcatPDF;
 import oscar.util.UtilDateUtilities;
 
-import com.lowagie.text.DocumentException;
-import com.sun.xml.messaging.saaj.util.ByteInputStream;
-import com.sun.xml.messaging.saaj.util.ByteOutputStream;
-
 /**
  *
  * Convert submitted preventions into pdf and return file
@@ -54,6 +58,7 @@ public class EctConsultationFormRequestPrintAction2 extends Action {
     
     private static final Logger logger = MiscUtils.getLogger();
     private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+    private HRMManager hrmManager = SpringUtils.getBean(HRMManager.class);
     
     public EctConsultationFormRequestPrintAction2() {
     }
@@ -80,6 +85,9 @@ public class EctConsultationFormRequestPrintAction2 extends Action {
 		ArrayList<InputStream> streams = new ArrayList<InputStream>();
 
 		ArrayList<LabResultData> labs = consultLabs.populateLabResultsData(loggedInInfo, demoNo, reqId, CommonLabResultData.ATTACHED);
+		
+		List<HRMDocument> hrmDocuments = hrmManager.findAttached(loggedInInfo, Integer.parseInt(demoNo), Integer.parseInt(reqId));
+		
 		String error = "";
 		Exception exception = null;
 		try {
@@ -136,6 +144,18 @@ public class EctConsultationFormRequestPrintAction2 extends Action {
 				streams.add(bis);
 				alist.add(bis);
 
+			}
+			
+			// Iterating over requested HRM documents
+			for(HRMDocument hrmDocument: hrmDocuments) {
+				bos = new ByteOutputStream();
+				HrmPDFCreator lpdfc = new HrmPDFCreator(loggedInInfo, bos, hrmDocument, loggedInInfo.getLoggedInProviderNo());
+				lpdfc.printPdf();
+				buffer = bos.getBytes();
+				bis = new ByteInputStream(buffer, bos.getCount());
+				bos.close();
+				streams.add(bis);
+				alist.add(bis);
 			}
 			
 			if (alist.size() > 0) {

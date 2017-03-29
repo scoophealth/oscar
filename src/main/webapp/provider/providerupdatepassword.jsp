@@ -24,9 +24,10 @@
 
 --%>
 
+<%@page import="oscar.login.PasswordHash"%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%
-	if(session.getValue("user") == null)
-    response.sendRedirect("../logout.jsp");
+	
   String curUser_no = (String) session.getAttribute("user");
   MessageDigest md = MessageDigest.getInstance("SHA");
 %>
@@ -36,22 +37,18 @@
 	errorPage="errorpage.jsp"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Security" %>
-<%@ page import="org.oscarehr.common.dao.SecurityDao" %>
 <%@ page import="org.oscarehr.util.LoggedInInfo" %>
 <%@ page import="org.oscarehr.managers.SecurityManager" %>
 <%
 	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 	org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
-
 %>
 <%@ page import="oscar.log.LogAction" %>
 <%@ page import="oscar.log.LogConst" %>
 
 <%
-	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
-	List<Security> ss = securityDao.findByProviderNo(curUser_no);
-	for(Security s:ss) {
-
+	Security s = securityManager.findByProviderNo(loggedInInfo, curUser_no);
+	
 	     boolean pinUpdateRequired = false;
 	     String errorMsg = "";
 	     //check if the user will change the  PIN
@@ -63,7 +60,8 @@
 	    	 String newPin =  request.getParameter("newpin");
 	         String confPin = request.getParameter("confirmpin");  
 	    	 
-	    	 if (!pin.equals(s.getPin())) {
+	        
+	    	 if (!PasswordHash.validatePassword(pin, s.getPin())) {
 	    		 errorMsg = "PIN Update Error: PIN doesn't match the exisitng one in the system. ";
 	    	 } else if (!newPin.equals(confPin)) {
 	    		 errorMsg = "PIN Update Error: New PIN doesn't match the Confirm PIN. ";
@@ -71,8 +69,8 @@
 	    		 errorMsg = "PIN Update Error: New PIN must be different from the existing PIN. ";
 	    	 } else { 	    	 
 		    	 pinUpdateRequired = true;
-		    	 s.setPin(newPin);
-		    	 s.setPinUpdateDate(new java.util.Date());
+		    	 s.setPin(PasswordHash.createHash(newPin));
+		    	 s.setPinUpdateDate(new Date());
 	    	 }
 	     }
 		
@@ -83,40 +81,31 @@
 	         request.getParameter("confirmpassword") != null && request.getParameter("confirmpassword").length() > 0) {
 				
 			 StringBuffer sbTemp = new StringBuffer();
-		     byte[] btOldPasswd= md.digest(request.getParameter("oldpassword").getBytes());
-		     for(int i=0; i<btOldPasswd.length; i++) sbTemp = sbTemp.append(btOldPasswd[i]);
+		     
+		     
+		     String oldPassword = request.getParameter("oldpassword");
 	
-		     String stroldpasswd = sbTemp.toString();
-	
-		     String strDBpasswd = s.getPassword();
-		     if (strDBpasswd.length()<20) {
-		         sbTemp = new StringBuffer();
-		         byte[] btDBPasswd= md.digest(strDBpasswd.getBytes());
-		         for(int i=0; i<btDBPasswd.length; i++) sbTemp = sbTemp.append(btDBPasswd[i]);
-		         strDBpasswd = sbTemp.toString();
-		     }
-	
-		     if( stroldpasswd.equals(strDBpasswd ) && request.getParameter("mypassword").equals(request.getParameter("confirmpassword")) ) {
-		       sbTemp = new StringBuffer();
-		       byte[] btNewPasswd= md.digest(request.getParameter("mypassword").getBytes());
-		       for(int i=0; i<btNewPasswd.length; i++) sbTemp = sbTemp.append(btNewPasswd[i]);
-	
-		       if (s.getPassword().equals(sbTemp.toString())) {
-		    	   errorMsg = errorMsg + " Password Update Error: New Password must be different from the existing Password. ";   
-		       } else {
-		         s.setPassword(sbTemp.toString());
-		         s.setPasswordUpdateDate(new java.util.Date());
-		         passwordUpdateRequired = true;
-		       }  
-		     } else {
-		       errorMsg = errorMsg + " Password Update Error: Password doesn't match the exisitng one in the system. "; 
+		     if(!StringUtils.isEmpty(oldPassword)) {
+			     if(PasswordHash.validatePassword(oldPassword, s.getPassword()) && request.getParameter("mypassword").equals(request.getParameter("confirmpassword")) ) {
+			      
+			       String newPassword = request.getParameter("mypassword");
+			       
+			       if (PasswordHash.validatePassword(newPassword, s.getPassword())) {
+			    	   errorMsg = errorMsg + " Password Update Error: New Password must be different from the existing Password. ";   
+			       } else {
+			         s.setPassword(PasswordHash.createHash(newPassword));
+			         s.setPasswordUpdateDate(new Date());
+			         passwordUpdateRequired = true;
+			       }  
+			     } else {
+			       errorMsg = errorMsg + " Password Update Error: Password doesn't match the exisitng one in the system. "; 
+			     }
 		     }
 	     }
 	     
 	     //Persist it if one of them has gone thru.
          if (passwordUpdateRequired || pinUpdateRequired) {
-        	 
-           	 if(securityManager.checkPasswordAgainstPrevious(request.getParameter("mypassword"), s.getProviderNo())) {
+        	 if(securityManager.checkPasswordAgainstPrevious(request.getParameter("mypassword"), s.getProviderNo())) {
         		 errorMsg = errorMsg + " Password Update Error: Password cannot be one of your previous records"; 
         	 } else {
 	        	 securityManager.updateSecurityRecord(loggedInInfo, s);
@@ -130,19 +119,17 @@
 	     //In case of the error for any reason go back.
 	     if (!errorMsg.isEmpty()) {
 	    	 if (passwordUpdateRequired) {
-	    		 errorMsg = "Password Update Sucsessful However, " + errorMsg; 
+	    		 errorMsg = "Password Update Successful However, " + errorMsg; 
 	    	 }
 	    	 if (pinUpdateRequired) {
-	    		 errorMsg = "PIN Update Sucsessfull However, " + errorMsg; 
+	    		 errorMsg = "PIN Update Successful However, " + errorMsg; 
 	    	 }	    	 
 	    	 response.sendRedirect("providerchangepassword.jsp?errormsg="+errorMsg);
+	    	 return;
 	     }
 	     
 	     out.println("<script language='javascript'>self.close();</script>");
-	     
-	}
 %>
-
 <html>
 <head>
 	<title>Password/PIN Changed</title>

@@ -23,6 +23,20 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@ include file="/taglibs.jsp"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.pmm" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_admin.pmm");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 <%@page import="org.oscarehr.PMmodule.model.Vacancy"%>
 <%@page import="org.oscarehr.PMmodule.model.VacancyTemplate"%>
@@ -40,7 +54,7 @@
 <%@page import="java.util.ResourceBundle"%>
 <%@page import="java.text.SimpleDateFormat"%>
 
-<%@ include file="/taglibs.jsp"%>
+
 
 <%
 	CriteriaDao criteriaDAO = SpringUtils.getBean(CriteriaDao.class);

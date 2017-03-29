@@ -23,6 +23,8 @@
  */
 package org.oscarehr.common.model;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 /*
@@ -33,13 +35,15 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="Icd9Synonym")
-public class Icd9Synonym extends AbstractModel<Integer> {
+public class Icd9Synonym extends AbstractCodeSystemModel<Integer> {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String dxCode;
 	private String patientFriendly;
 	
-	@Id
+
 	@Override
     public Integer getId() {
 	   return id;
@@ -64,5 +68,30 @@ public class Icd9Synonym extends AbstractModel<Integer> {
 	public void setPatientFriendly(String patientFriendly) {
 		this.patientFriendly = patientFriendly;
 	}
+
+	@Override
+    public String getCode() {
+	    return this.getDxCode();
+    }
+
+	@Override
+    public String getDescription() {
+	   return this.getPatientFriendly();
+    }
+
+	@Override
+    public String getCodingSystem() {
+		return "icd9Synonym";
+    }
+
+	@Override
+    public void setCode(String code) {
+	    this.setDxCode(code);
+    }
+
+	@Override
+    public void setDescription(String description) {
+	    this.setPatientFriendly(description);	    
+    }
 
 }

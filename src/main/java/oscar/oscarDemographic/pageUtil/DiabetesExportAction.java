@@ -567,7 +567,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
     void setImmunizations(LoggedInInfo loggedInInfo, PatientRecord patientRecord, Integer demoNo) {
         ArrayList<String> inject = new ArrayList<String>();
-        ArrayList<? extends Map<String,? extends Object>> preventionList = PreventionDisplayConfig.getInstance().getPreventions();
+        ArrayList<? extends Map<String,? extends Object>> preventionList = PreventionDisplayConfig.getInstance(loggedInInfo).getPreventions(loggedInInfo);
         for (int i=0; i<preventionList.size(); i++){
             HashMap<String,Object> h = new HashMap<String,Object>();
             h.putAll(preventionList.get(i));

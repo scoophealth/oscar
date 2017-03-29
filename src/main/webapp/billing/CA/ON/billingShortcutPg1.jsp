@@ -17,11 +17,28 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@page import="org.oscarehr.common.model.DiagnosticCode"%>
 <%@page import="org.oscarehr.common.dao.DiagnosticCodeDao"%>
 <%@page import="org.oscarehr.common.dao.CtlBillingServiceDao"%>
 <%@page import="org.oscarehr.common.model.CtlBillingServicePremium"%>
 <%@page import="org.oscarehr.common.dao.CtlBillingServicePremiumDao"%>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao"%>
+<%@page import="org.oscarehr.common.model.Appointment"%>
 <%@page import="java.util.Date"%>
 <%@page import="org.oscarehr.common.model.BillingService"%>
 <%@page import="org.oscarehr.common.model.CtlBillingService"%>
@@ -35,6 +52,8 @@
 <%@page import="org.oscarehr.common.dao.BillingDao"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%
   if (session.getAttribute("user") == null) {
     response.sendRedirect("../../../logout.jsp");
@@ -61,16 +80,18 @@
 <%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.common.dao.ClinicNbrDao"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 
 <% java.util.Properties oscarVariables = OscarProperties.getInstance(); %>
 <jsp:useBean id="providerBean" class="java.util.Properties"
 	scope="session" />
 <%@page import="org.oscarehr.util.SpringUtils" %>
-<%@page import="org.oscarehr.common.model.ProfessionalSpecialist" %>
-<%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
+<%@page import="org.oscarehr.common.model.*" %>
+<%@page import="org.oscarehr.common.dao.*" %>
 <%@page import="org.apache.commons.lang.StringUtils" %>
 <%
 	ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
+	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 <%
   boolean bHospitalBilling = true;
@@ -219,7 +240,7 @@
   }
   } else {
 		JdbcBillingReviewImpl hdbObj = new JdbcBillingReviewImpl();
-		aL = hdbObj.getBillingHist(demo_no, 5,0, null);
+		aL = hdbObj.getBillingHist(loggedInInfo, demo_no, 5,0, null);
 		if (aL.size()>0) {
 			BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(0);
 			BillingItemData iobj = (BillingItemData) aL.get(1);
@@ -820,7 +841,60 @@ ctlCount = 0;
 					<tr>
 						<td nowrap width="30%" align="center"><b><bean:message key="billing.hospitalBilling.frmBillPhysician"/>
 						</b></td>
-						<td width="20%"><select name="xml_provider">
+						<td width="20%">
+						<% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable())
+{ // multisite start ==========================================
+        	SiteDao siteDao = (SiteDao)SpringUtils.getBean("siteDao");
+          	List<Site> sites = siteDao.getActiveSitesByProviderNo((String) session.getAttribute("user"));
+
+      %>
+      <script>
+var _providers = [];
+<%	for (int i=0; i<sites.size(); i++) { %>
+	_providers["<%= sites.get(i).getId().toString() %>"]="<% Iterator<Provider> iter = sites.get(i).getProviders().iterator();
+	while (iter.hasNext()) {
+		Provider p=iter.next();
+		if ("1".equals(p.getStatus()) && StringUtils.isNotBlank(p.getOhipNo())) {
+	%><option value='<%= p.getProviderNo() %>|<%= p.getOhipNo() %>' ><%= p.getLastName() %>, <%= p.getFirstName() %></option><% }} %>";
+<% } %>
+function changeSite(sel) {
+	sel.form.xml_provider.innerHTML=sel.value=="none"?"":_providers[sel.value];
+	sel.style.backgroundColor=sel.options[sel.selectedIndex].style.backgroundColor;
+}
+      </script>
+      	<select id="site" name="site" onchange="changeSite(this)" style="width:140px">
+      		<option value="none" style="background-color:white">---select clinic---</option>
+      	<%
+      	String selectedSite = request.getParameter("site");
+      	String xmlp = null;
+      	if (selectedSite==null) {
+      		OscarAppointmentDao apptDao = SpringUtils.getBean(OscarAppointmentDao.class);
+          	Appointment apptModel = apptDao.find(Integer.valueOf(appt_no));
+          	if (apptModel != null) {
+          		selectedSite = apptModel.getLocation();
+          		Provider prov0 = providerDao.getProvider(apptModel.getProviderNo());
+          		if (prov0 != null) {
+          			xmlp = apptModel.getProviderNo()+"|"+prov0.getOhipNo();
+          		}
+          	}
+      	}
+      	for (int i=0; i<sites.size(); i++) {
+      	%>
+      		<option value="<%= sites.get(i).getId().toString() %>" style="background-color:<%= sites.get(i).getBgColor() %>"
+      			 <%=sites.get(i).getId().toString().equals(selectedSite)?"selected":"" %>><%= sites.get(i).getName() %></option>
+      	<% } %>
+      	</select>
+      	<select id="xml_provider" name="xml_provider" style="width:140px"></select>
+      	<script>
+     	changeSite(document.getElementById("site"));
+      	document.getElementById("xml_provider").value='<%=request.getParameter("xml_provider")==null?xmlp:request.getParameter("xml_provider")%>';
+      	</script>
+<% // multisite end ==========================================
+} else {
+%>
+						
+						
+						<select name="xml_provider">
 							<%
 				if(vecProvider.size()==1) {
 					propT = (Properties) vecProvider.get(0);
@@ -842,7 +916,9 @@ ctlCount = 0;
 							<%	}
 				}
 				%>
-						</select></td>
+						</select>
+<% } %>			
+						</td>
 						<td nowrap width="30%" align="center"><b><bean:message key="billing.hospitalBilling.frmAssgnPhysician"/></b></td>
 						<td width="20%"><%=providerBean.getProperty(assgProvider_no, "")%>
 						</td>

@@ -18,6 +18,21 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_report,_admin.reporting,_admin" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_report&type=_admin.reporting&type=_admin");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="oscar.OscarProperties" %>
 <%@page import="java.text.NumberFormat" %>
@@ -37,11 +52,9 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%> 
 --%>
 
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+
 <%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-    boolean isTeamBillingOnly=false;
+     boolean isTeamBillingOnly=false;
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false; 
     OscarProperties props = OscarProperties.getInstance();
@@ -726,6 +739,7 @@ if(statusType.equals("_")) { %>
              <th><a href="javascript:void();" onClick="updateSort('ServiceDate');return false;">SERVICE DATE</a></th>
              <th> <a href="javascript:void();" onClick="updateSort('DemographicNo');return false;">PATIENT</a></th>
              <th class="<%=hideName?"hidden-print":""%>">PATIENT NAME</th>
+             <th>GENDER</th>
              <th> <a href="javascript:void();" onClick="updateSort('VisitLocation');return false;">LOCATION</a></th>
              <th title="Status">STAT</th>
              <th>SETTLED</th>
@@ -855,13 +869,21 @@ if(statusType.equals("_")) { %>
 			   totalCash += ch1Obj.getCashTotal();
 			   totalDebit += ch1Obj.getDebitTotal();
 			   
-			
+				String gender = "";
+				if(ch1Obj.getSex() != null && "1".equals(ch1Obj.getSex())) {
+					gender = "M";
+				}
+				if(ch1Obj.getSex() != null && "2".equals(ch1Obj.getSex())) {
+					gender = "F";
+				}
+				
 				
        %>       
           <tr <%=color %>> 
              <td align="center"><%= ch1Obj.getBilling_date()%>  <%--=ch1Obj.getBilling_time()--%></td>  <!--SERVICE DATE-->
              <td align="center"><%=ch1Obj.getDemographic_no()%></td> <!--PATIENT-->
              <td align="center" class="<%=hideName?"hidden-print":""%>"><a href=# onclick="popupPage(800,740,'../../../demographic/demographiccontrol.jsp?demographic_no=<%=ch1Obj.getDemographic_no()%>&displaymode=edit&dboperation=search_detail');return false;"><%= ch1Obj.getDemographic_name()%></a></td> 
+             <td align="center"><%= gender%></td> 
              <td align="center"><%=ch1Obj.getFacilty_num()!=null?ch1Obj.getFacilty_num():"" %></td>
              <td align="center"><%=ch1Obj.getStatus()%></td> <!--STAT-->
              <td align="center"><%=settleDate%></td> <!--SETTLE DATE-->
@@ -898,6 +920,7 @@ if(statusType.equals("_")) { %>
              <td>&nbsp;</td> <!--LOCATION-->
              <td>&nbsp;</td> <!--STAT-->
              <td>&nbsp;</td>
+             <td>&nbsp;</td>
              <td>Total:</td><!--CODE-->
              <td align="right"><%=total.toString()%></td><!--BILLED-->
              <td align="right"><%=paidTotal.toString()%></td><!--PAID-->
@@ -931,7 +954,6 @@ if(statusType.equals("_")) { %>
     </form>
     </div>
 </div>
-
 <script language='javascript'>
     var startDate = $("#xml_vdate").datepicker({format : "yyyy-mm-dd"});
 	var endDate = $("#xml_appointment_date").datepicker({format : "yyyy-mm-dd"});

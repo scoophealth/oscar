@@ -106,7 +106,7 @@ public class EntityDataGenerator {
 	 	    }else if(f[i].getType() == Provider.class || f[i].getType() == DemographicExt[].class) {
 	 	    	//ignore
 	 	    }else if(f[i].getType() == char.class || f[i].getType() == BigDecimal.class) {
-	 	    	BigDecimal bd = new BigDecimal(Math.random()*5000);
+	 	    	BigDecimal bd = BigDecimal.valueOf(Math.random()*5000);
 	 	        f[i].set(model,bd);
 	        } else {
 	        	MiscUtils.getLogger().warn("Can't generate test data for class type:" + f[i].getType());

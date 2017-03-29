@@ -46,8 +46,7 @@ if (programId_str == null || programId_str.length() == 0) {
 
 %>
 
-<h3 style="color: red">Access Denied</h3>
-<p>You cannot access this client's Encounters because he/she has never admitted in the <%=programName %>.
-</p>
+<h3 style="color: red"><bean:message key="casemgmt.accessdenied" /></h3>
+<p><bean:message key="casemgmt.clientNeverInProgram.error" /> <%=programName %>.</p>
 
 <input type="button" value="Close Window" onclick="self.close()" />

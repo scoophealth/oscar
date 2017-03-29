@@ -162,7 +162,7 @@ public class SiteDao extends AbstractDao<Site> {
 						" inner join provider p on p.provider_no = g.provider_no and p.status = 1 " +
 						" inner join providersite ps on ps.provider_no = g.provider_no " +
 						" inner join site s on s.site_id = ps.site_id " +
-						" where  s.name = :sitename ");
+						" where  s.name like :sitename ");
 		query.setParameter("sitename",location);
 
 		@SuppressWarnings("unchecked")
@@ -177,9 +177,9 @@ public class SiteDao extends AbstractDao<Site> {
 		Query query = entityManager.createNativeQuery(
 					"select distinct p.provider_no	" +
 					" from provider p " +
-					" inner join providersite ps on ps.provider_no = p.provider_no " +
+					" inner join providersite ps on ps.provider_no = p.provider_no and p.status = 1" +
 					" inner join site s on s.site_id = ps.site_id " +
-					" where  s.name = :sitename ") ;
+					" where  s.name like :sitename ") ;
 
 		query.setParameter("sitename", location);
 
@@ -275,5 +275,19 @@ public class SiteDao extends AbstractDao<Site> {
 			return (Site) query.getSingleResult();
 		} catch (Exception e) {}
 		return null;
+	}
+	
+	public List<Site> findBySiteIds(List<Integer> siteIds, boolean exclude) {
+		if (siteIds == null || siteIds.size() == 0) {
+			return new ArrayList<Site>();
+		}
+		String sql = "select site from Site site where site.siteId in (:siteIds)";
+		if (exclude) {
+			sql = "select site from Site site where site.siteId not in (:siteIds)";
+		}
+		Query q = entityManager.createQuery(sql);
+		q.setParameter("siteIds", siteIds);
+		
+		return q.getResultList();
 	}
 }

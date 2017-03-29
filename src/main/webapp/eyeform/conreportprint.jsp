@@ -45,6 +45,10 @@ if(!authed) {
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="org.oscarehr.eyeform.model.EyeformConsultationReport"%>
 <%@page import="oscar.OscarProperties"%>
+<%@page import="org.oscarehr.common.dao.SiteDao" %>
+<%@page import="org.oscarehr.common.model.Site" %>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.model.Clinic" %>
 <html:html>
 
     <head>
@@ -63,22 +67,24 @@ if(!authed) {
 
 
     </style>
-
     <style type="text/css">
         .Header{
         background-color:#BBBBBB;
         padding-top:5px;
         padding-bottom:5px;
-        width: 495pt;
-        font-size:10pt;
+        width: 595pt;
+        font-size:16pt;
+		font-weight:bold;
         }
 
         .Header INPUT{
         width: 100px;
+		font-weight:bold;
         }
 
         .Header A{
-        font-size: 10pt;
+        font-size: 12pt;
+		font-weight:bold;
         }
 
         table.patientInfo{
@@ -90,51 +96,69 @@ if(!authed) {
         }
 
         table.printTable{
-        width: 495pt;
+        width: 595pt;
         border: 1pt solid #888888;
-        font-size: 10pt;
-        font-family: courier,Courier New,arial, verdana, tahoma, helvetica, sans serif;
+        font-size: 12pt;
+		
+        font-family: courier;
         }
 
         td.subTitles{
-        font-size:10pt;
-        font-family: courier,Courier New,arial, verdana, tahoma, helvetica, sans serif;
+        font-size:12pt;
+		font-weight:bold;
+        font-family: courier;
         }
 
         td.fillLine{
         border-bottom: 1pt solid #444444;
         font-size:10pt;
-        font-family: courier,Courier New,arial, verdana, tahoma, helvetica, sans serif;
+		
+        font-family: courier;
         }
         td.subTitlesh{
-        font-size:10pt;
-        font-family: courier,Courier New,arial, verdana, tahoma, helvetica, sans serif;
+        font-size:12pt;
+		font-weight:bold;
+        font-family: courier;
         }
 
+		td {
+			font-size:10pt;
+			font-family:courier;
+		}
+		
         td.fillLineh{
         border-bottom: 1pt solid #444444;
         font-size:10pt;
-        font-family: courier,Courier New,arial, verdana, tahoma, helvetica, sans serif;
+		
+        font-family: courier;
         }
 
         pre.text{
-        font-size:10pt;
-        font-family: courier,Courier New,arial, verdana, tahoma, helvetica, sans serif;
+        font-size:12pt;
+		font-weight:bold;
+        font-family: courier;
         }
 
         td.title4{
-        font-size:10pt;
-        font-family: courier,Courier New,arial, verdana, tahoma, helvetica, sans serif;
+        font-size:14pt;
+		font-weight:bold;
+        font-family: courier;
         }
 
         td.address{
         font-size:10pt;
-        font-family:courier, Courier New,arial, verdana, tahoma, helvetica, sans serif;
+		
+        font-family:courier;
         }
+		
+		td.title{
+        font-size:12pt;
+		font-weight:bold;
+		}
 
 		td.letterContent{
 		font-size:10pt;
-        font-family: courier,Courier New,arial, verdana, tahoma, helvetica, sans serif;
+        font-family: courier;
 		}
     </style>
 
@@ -171,7 +195,7 @@ if(!authed) {
 
     }
     function changeAddress(){
-    	var cid=document.inputForm.elements['sateliteId'].value;
+    	var cid=document.inputForm.elements['satelliteId'].value;
     	document.getElementById("sclinicName").innerHTML=clinicName[cid];
     	document.getElementById("sclinicAddress").innerHTML=clinicAddress[cid];
     	document.getElementById("sclinicCity").innerHTML=clinicCity[cid];
@@ -238,7 +262,7 @@ if(!authed) {
         </table>
 
 
-        <table class="printTable" name="headerTable">
+        <table class="printTable" name="headerTable" style="table-layout:fixed" width="595">
             <!--header-->
             <tr>
                 <td>
@@ -259,9 +283,14 @@ if(!authed) {
 
                             <td colspan="2" class="title4" id="clinicName">
 
-                                <b><c:out value="${mdstring}"/>
-                                <c:out value="${internalDrName}"/>
-                                <c:out value="${specialty}"/></b>
+                            <b>
+                           		<c:out value="${mdstring}"/>
+                         <!--       <c:out value="${internalDrName}"/>
+                                <c:out value="${specialty}"/>                     
+                           -->   	
+                           		<c:out value="${appointmentDoctor}"/>
+                                <c:out value="${specialty_apptDoc}"/> 
+                            </b>
                                 <br>
                                 <b><span id="sclinicName"><c:out value="${clinic.clinicName}"/></span></b>
                             </td>
@@ -282,19 +311,31 @@ if(!authed) {
 
                             <td class="address" id="clinicFax">
                                 Fax: <span id="sclinicFax"><c:out value="${clinic.clinicFax}"/></span>
-                                <% if(props.getProperty("clinicurl", "").length() > 1) {%>
-
-                            	URL: <%= props.getProperty("clinicurl", "")%>
-
-                            <%} %>
+                                <% 
+                                boolean isMultiSites = props.getBooleanProperty("multisites", "on");
+                                if (!isMultiSites) {
+                                	out.print("URL: " + props.getProperty("clinicurl", ""));
+                                } else {
+                                	Clinic tmpCli = (Clinic)request.getAttribute("clinic");
+                                	if (tmpCli != null){
+                                		SiteDao siteDao = (SiteDao)SpringUtils.getBean(SiteDao.class);
+                                        Site site = siteDao.findByName(tmpCli.getClinicName());
+                                        out.print("URL: " + site.getSiteUrl()==null?"":site.getSiteUrl());
+                                	} else {
+                                		out.print("URL: " + props.getProperty("clinicurl", ""));
+                                	}
+                                }
+                                %>
                             </td>
                         </tr>
                     </table>
                 </td>
             </tr>
+            <tr><td>&nbsp;
+            	</td>
+            </tr>
             <tr>
-                <td align="center">
-
+                <td align="center" class="title">					
                     <b>Consultation Report</b>
                     <br>
 
@@ -302,10 +343,10 @@ if(!authed) {
             </tr>
             <tr>
 
-                <td>
+                <td >
                     <table border=0 align="center" width="100%" cellspacing="0" class="patientInfo">
                         <tr>
-                            <td valign="top" align="left">
+                            <td valign="top" align="left" width="50%">
                                 <table border=0  >
 
                                     <tr>
@@ -335,11 +376,7 @@ if(!authed) {
                                             Address:
                                         </td>
                                         <td class="fillLineh">
-                                	<c:out value="${refer.address1}"/>,
-                                	<br>
-                                	<c:out value="${refer.city}"/>,
-                                	<c:out value="${refer.province}"/>,
-                                	<c:out value="${refer.postal}"/>
+                                	<p><c:out value="${refer.streetAddress}"/></p>
                                         </td>
                                     </tr>
                                     <tr>
@@ -348,7 +385,7 @@ if(!authed) {
                                             Phone:
                                         </td>
                                         <td class="fillLineh">
-                                	<c:out value="${refer.phone}"/>
+                                	<c:out value="${refer.phoneNumber}"/>
                                         </td>
                                     </tr>
                                     <tr>
@@ -357,7 +394,7 @@ if(!authed) {
                                         </td>
 
                                         <td class="fillLineh">
-                                			<c:out value="${refer.fax}"/>
+                                			<c:out value="${refer.faxNumber}"/>
                                         </td>
                                     </tr>
 
@@ -370,14 +407,7 @@ if(!authed) {
                                         </td>
 
                                     </tr>
-                                    <tr>
-                                        <td class="subTitlesh" >
-                                            Re:
-                                        </td>
-                                        <td class="fillLineh" >
-                                <c:out value="${cp.reason}"/>
-                                        </td>
-                                    </tr>
+                                    
                                 </table>
 
                             </td>
@@ -415,7 +445,7 @@ if(!authed) {
                                     </tr>
                                     <tr>
                                         <td class="subTitlesh">
-                                            Birthdate:
+                                            DOB:
                                         </td>
 
                                         <td class="fillLineh">
@@ -424,33 +454,14 @@ if(!authed) {
                                     </tr>
                                     <tr>
                                         <td class="subTitlesh">
-                                            Health Card No.
+                                            OHIP #:
                                         </td>
                                         <td class="fillLineh">
                              <c:out value="${demographic.hin}"/>&nbsp;<c:out value="${demographic.ver}"/>&nbsp;
 
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td class="subTitlesh">
-                                            &nbsp;
-                                        </td>
-                                        <td class="fillLineh">
-
-
-                                        </td>
-
-                                    </tr>
-                                    <tr>
-                                        <td class="subTitlesh">
-                                            &nbsp;
-                                        </td>
-                                        <td class="fillLineh">
-
-
-
-                                        </td>
-                                    </tr>
+                                    
                                     <tr>
 
                                         <td class="subTitlesh">
@@ -466,6 +477,9 @@ if(!authed) {
 
                     </table>
                 </td>
+            </tr>
+            <tr><td>&nbsp;
+            	</td>
             </tr>
             <tr>
                 <td class="subTitles">
@@ -490,7 +504,7 @@ if(!authed) {
             <c:if test="${not empty cp.clinicalInfo}">
             <tr>
                 <td class="subTitles">
-                    <b>Current Clinical Information:</b>
+                    <b>Clinical Information:</b>
                 </td>
             </tr>
 
@@ -525,8 +539,8 @@ if(!authed) {
                 </td>
             </tr>
             <tr>
-                <td class="fillLine">
-                    <pre style="font-size: 10pt;font-family:courier,courier new;arial, verdana, tahoma, helvetica, sans serif;"><%=cp.getExamination()%></pre>
+                <td class="fillLine" style="table-layout:fixed;word-break:break-word;">
+                    <%=cp.getExamination()%>
 
                 </td>
 

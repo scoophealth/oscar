@@ -18,6 +18,21 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@page import="org.oscarehr.common.dao.BillingOnItemPaymentDao"%>
 <%@page import="org.oscarehr.managers.SecurityInfoManager"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
@@ -46,39 +61,31 @@
 <%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
 <%@page import="org.oscarehr.common.service.BillingONService"%> 
 <%@page import="java.text.NumberFormat" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProgramProviderDAO" %>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
+<%@page import="org.oscarehr.common.dao.BillingONPaymentDao" %>
+<%@page import="org.oscarehr.common.model.BillingONPayment" %>
 
-<%@taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
-<%			if (session.getAttribute("user") == null)
-				response.sendRedirect("../../../logout.htm");
-			String userfirstname, userlastname;
-			
+<%	
+
+	String userfirstname, userlastname;		
 
     String userProviderNo = (String) session.getAttribute("user");
     ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
     BillingONExtDao bExtDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");
-    
     BillingONPaymentDao billingOnPaymentDao = SpringUtils.getBean(BillingONPaymentDao.class);
     Provider userProvider = providerDao.getProvider(userProviderNo);
-
-    
-    if (userProvider == null)
-        response.sendRedirect("../logout.jsp");
-    
-    if(session.getAttribute("userrole") == null )  
-        response.sendRedirect("../logout.jsp");
-    
-    String roleName$ = (String)session.getAttribute("userrole") + "," + userProviderNo;
-
+       
+  
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false;
     
     SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
     LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
-    
     
 %>
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
@@ -397,6 +404,7 @@ function validateAmountNumberic(idx) {
     RaDetailDao raDetailDao = (RaDetailDao) SpringUtils.getBean("raDetailDao");
     BillingONCHeader1Dao bCh1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
     BillingServiceDao bServiceDao = (BillingServiceDao) SpringUtils.getBean("billingServiceDao");
+    ProgramProviderDAO programProviderDAO = SpringUtils.getBean(ProgramProviderDAO.class);
     
     // bFlag - fill in data?
     boolean bFlag = false;
@@ -432,6 +440,23 @@ function validateAmountNumberic(idx) {
         billingNo = Integer.parseInt(billNo);
 		bCh1 = bCh1Dao.find(billingNo);
 
+		
+		//do a program check here.
+		if(bCh1 != null && bCh1.getProgramNo() != null) {
+			List<ProgramProvider> ppList = programProviderDAO.getProgramDomain(loggedInInfo.getLoggedInProviderNo());
+			boolean found=false;
+			for(ProgramProvider pp:ppList) {
+				if(pp.getProgramId().intValue() == bCh1.getProgramNo().intValue()) {
+					found=true;
+					break;
+				}
+			}
+			
+			if(!found) {
+				throw new RuntimeException("You do not have access to this invoice! It's from another program.");
+			}
+		}
+		
         if (bCh1 != null) {	
 
 	    clinicSite = bCh1.getClinic();
@@ -506,7 +531,7 @@ function validateAmountNumberic(idx) {
 					r_doctor = professionalSpecialists.get(0).getLastName()+", "+professionalSpecialists.get(0).getFirstName();
 				else
 					r_doctor = "";
-				r_doctor_ohip_s = "";
+                r_doctor_ohip_s = "";
                 r_doctor_s = "";
                 m_review = bCh1.getManReview();
                 specialty = "";
@@ -878,11 +903,11 @@ OHIP Claim No  <br>
 Pay Program:<br>
 <input type="hidden" name="xml_payProgram" value="<%=BillDate%>" />
 <select style="font-size: 80%;" id="payProgram" name="payProgram" onchange="checkPayProgram(this.options[this.selectedIndex].value)">
-<%for (int i = 0; i < BillingDataHlp.vecPaymentType.size(); i = i + 2) {
+<%for (int i = 0; i < BillingDataHlp.getVecPaymentType().size(); i = i + 2) {
 
 	%>
-<option value="<%=BillingDataHlp.vecPaymentType.get(i) %>"
-<%=payProgram.equals(BillingDataHlp.vecPaymentType.get(i))? "selected":"" %>><%=BillingDataHlp.vecPaymentType.get(i + 1)%></option>
+<option value="<%=BillingDataHlp.getVecPaymentType().get(i) %>"
+<%=payProgram.equals(BillingDataHlp.getVecPaymentType().get(i))? "selected":"" %>><%=BillingDataHlp.getVecPaymentType().get(i + 1)%></option>
 <%}
 
 %>

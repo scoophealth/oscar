@@ -69,6 +69,8 @@
 <%@ page import="org.oscarehr.common.model.ProviderData"%>
 <%@ page import="org.oscarehr.common.dao.ProviderDataDao"%>
 
+<%@page import="org.oscarehr.PMmodule.service.ProgramManager" %>
+<%@page import="org.oscarehr.PMmodule.model.Program" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -90,6 +92,7 @@ LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
 ProviderDataDao providerDao = SpringUtils.getBean(ProviderDataDao.class);
 AppointmentStatusDao appointmentStatusDao = SpringUtils.getBean(AppointmentStatusDao.class);
+ProgramManager programManager = SpringUtils.getBean(ProgramManager.class);
 
 
 
@@ -166,6 +169,25 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 			}
 		}		
 		location.href=ctx+"/eyeform/Eyeform.do?method=print&apptNos="+ids+"&cpp="+cpp;                
+	}
+	
+	function printVisit_eyeform2()
+	{
+		var cpp = '';
+		var sels = document.getElementsByName('sel');
+		var ids = "";	
+		for(var x=0;x<sels.length;x++) {
+			if(sels[x].checked) {
+				if(ids.length>0)
+					ids+= ",";
+				ids += sels[x].value;
+			}
+		}	
+		if(ids=="") {
+			alert("Please select the appointments.");
+			return false;
+		}
+		location.href=ctx+"/eyeform/Eyeform.do?method=print&from_cme_js=true&apptNos="+ids+"&cpp="+cpp;
 	}
 	
 	function selectAllCheckboxes() {
@@ -277,6 +299,36 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
   } else {
 	appointmentList = appointmentManager.getAppointmentHistoryWithDeleted(loggedInInfo, new Integer(demographic_no), iRSOffSet, iPageSize);
   }
+  
+  //filter (CAISI)
+  //we need to get our program domain, and go through the appts. If the programId is in our domain, we can show
+  List<Object> filteredAppointmentList = new java.util.ArrayList<Object>();
+  List<Program> programs = programManager.getActiveProgramByFacility(loggedInInfo.getLoggedInProviderNo(), loggedInInfo.getCurrentFacility().getId());
+  for(Object o:appointmentList) {
+	  int programId  = 0;
+	  if(o instanceof Appointment) {
+  			Appointment a  = (Appointment)o;
+  			programId = a.getProgramId();
+  		}
+  		if(o instanceof AppointmentArchive) {
+  			AppointmentArchive a  = (AppointmentArchive)o;
+  			programId = a.getProgramId();
+  		}
+  		if(programId > 0) {
+  			Program p = new Program();
+  			p.setId(programId);
+  			if(programs.contains(p)) {
+  				//add
+  				filteredAppointmentList.add(o);
+  			}
+  		} else {
+  			//add
+  			filteredAppointmentList.add(o);
+  		}
+  }
+  
+  appointmentList = filteredAppointmentList;
+  
   boolean bodd=false;
   int nItems=0;
   

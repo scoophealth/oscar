@@ -99,6 +99,12 @@ public final class Factory {
 
 		try {
 
+			String enabled = OscarProperties.getInstance().getProperty("lab.handler."+type+".enabled", "false");
+			if(!"true".equals(enabled)) {
+				logger.info("Handler " + type + " is not enabled. add lab.handler."+type+".enabled=true in your properties file");
+				return null;
+			}
+			
 			// return default handler if the type is not specified
 			if (type == null) {
 				MessageHandler handler = new DefaultGenericHandler();
@@ -113,7 +119,7 @@ public final class Factory {
 			if (OscarProperties.getInstance().getProperty("LAB_TYPES") != null) {
 				String filename = OscarProperties.getInstance().getProperty("LAB_TYPES");
 				is = new FileInputStream(filename);
-			} 
+			}
 			
 			SAXBuilder parser = new SAXBuilder();
 			doc = parser.build(is);
@@ -124,7 +130,6 @@ public final class Factory {
 			// e is commonly used in exception handlers.
 			// changed 'e' to 'element'
 			for (int i = 0; i < items.size(); i++) {
-
 				Element element = (Element) items.get(i);
 				msgType = element.getAttributeValue("name");
 				

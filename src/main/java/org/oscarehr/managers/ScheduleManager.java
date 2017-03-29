@@ -24,6 +24,7 @@
 
 package org.oscarehr.managers;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -35,6 +36,8 @@ import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.AppointmentArchiveDao;
 import org.oscarehr.common.dao.AppointmentStatusDao;
 import org.oscarehr.common.dao.AppointmentTypeDao;
+import org.oscarehr.common.dao.MyGroupDao;
+import org.oscarehr.common.dao.MyGroupProgramDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.ScheduleDateDao;
 import org.oscarehr.common.dao.ScheduleHolidayDao;
@@ -44,6 +47,7 @@ import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.AppointmentArchive;
 import org.oscarehr.common.model.AppointmentStatus;
 import org.oscarehr.common.model.AppointmentType;
+import org.oscarehr.common.model.MyGroupProgram;
 import org.oscarehr.common.model.ScheduleDate;
 import org.oscarehr.common.model.ScheduleHoliday;
 import org.oscarehr.common.model.ScheduleTemplate;
@@ -85,6 +89,13 @@ public class ScheduleManager {
 
 	@Autowired
 	private AppointmentStatusDao appointmentStatusDao;
+	
+	@Autowired
+	private MyGroupDao myGroupDao;
+	
+	@Autowired
+	private MyGroupProgramDao myGroupProgramDao;
+	
 
 	/*Right now the date object passed is converted to a local time.  
 	*
@@ -279,5 +290,41 @@ public class ScheduleManager {
 		LogAction.addLogSynchronous(loggedInInfo, "ScheduleManager.getAllDemographicIdByProgramProvider", "programId=" + programId+", providerNo="+providerNo);
 
 		return (results);
+	}
+	
+	public List<String> getMyGroups() {
+		return myGroupDao.getGroups();
+	}
+	
+	public List<String> getMyGroupsByProgramNo(Integer programNo) {
+		List<MyGroupProgram> gpList =  myGroupProgramDao.findByProgramNo(programNo);
+		List<String> groups = new ArrayList<String>();
+		
+		for(MyGroupProgram gp:gpList) {
+			groups.add(gp.getMyGroupNo());
+		}
+		
+		return groups;
+	}
+	
+	public void replaceMyGroupProgram(Integer programNo, String[] groups) {
+		myGroupProgramDao.removeByProgramNo(programNo);
+		
+		if(groups != null) {
+			for(String g:groups) {
+				MyGroupProgram e = new MyGroupProgram();
+				e.setMyGroupNo(g);
+				e.setProgramNo(programNo);
+				myGroupProgramDao.persist(e);
+			}
+		}
+	}
+	
+	public List<String> getMyGroups(LoggedInInfo loggedInInfo, List<Integer> programDomain) {
+		
+		List<String> groups =  myGroupProgramDao.findByProgramNos(programDomain);
+		
+		
+		return groups;
 	}
 }

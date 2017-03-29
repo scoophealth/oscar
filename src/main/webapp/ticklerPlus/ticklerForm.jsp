@@ -28,7 +28,8 @@
     String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     boolean authed=true;
 %>
-<security:oscarSec roleName="<%=roleName2$%>" objectName="_tickler" rights="r" reverse="<%=true%>">
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_tickler"
+	rights="r" reverse="<%=true%>">
 	<%authed=false; %>
 	<%response.sendRedirect("../securityError.jsp?type=_tickler");%>
 </security:oscarSec>
@@ -41,12 +42,16 @@
 <%-- Updated by Eugene Petruhin on 18 dec 2008 while fixing #2422864 & #2317933 & #2379840 --%>
 <%-- Updated by Eugene Petruhin on 20 feb 2009 while fixing check_date() error --%>
 
-	<%@include file="/ticklerPlus/header.jsp"%>
-	
-	<%@page import="java.util.GregorianCalendar"%>
-	<%@page import="java.util.Calendar"%>
+<%@include file="/ticklerPlus/header.jsp"%>
 
-	<%
+<%@page import="java.util.GregorianCalendar"%>
+<%@page import="java.util.Calendar"%>
+<%@page import="java.util.List"%>
+<%@page import="org.oscarehr.PMmodule.model.Program"%>
+<%@page import="org.oscarehr.common.model.Tickler"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.PMmodule.service.AdmissionManager"%>
+<%
 		GregorianCalendar now = new GregorianCalendar();
 	
 		int curYear = now.get(Calendar.YEAR);
@@ -57,8 +62,14 @@
 		
 		boolean curAm = (now.get(Calendar.HOUR_OF_DAY) <= 12) ? true : false;
 	%>
-	<script type="text/javascript" src="../js/checkDate.js"></script>
-	<script type="text/javascript">
+<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+
+<script type="text/javascript" src="../js/checkDate.js"></script>
+<script type="text/javascript">
+		$(document).ready(function(){
+		  changeProgram();
+		});
+
 		function check_tickler_service_date() {
 			return check_date('tickler.serviceDateWeb');
 		}
@@ -97,8 +108,33 @@
 				return false;
 			}
 			
+			
+			
 			return check_tickler_service_date();
 		}
+		
+		
+	
+		function changeProgram() {
+			//reset the assigned_to list
+			var programNo = $("#program_no").val();
+			
+			$.ajax({url:'../Tickler.do?method=getProvidersByProgram&programNo='+programNo,async:true,dataType:'json', success:function(data) {
+
+			$('#taskAssignedTo')
+				    .find('option')
+				    .remove()
+				    .end()
+				    .append(' <option value="none">- select -</option>');				
+
+            for(var x=0;x<data.length;x++) {
+            	$('#taskAssignedTo').find('option').end().append('<option value="'+data[x].providerNo+'">'+data[x].name+'</option>');
+	        }
+          },error:function() {
+          	alert('Failed to load providers for program ' + programNo);
+          }});
+		}
+		
 	</script>
 
 	<tr>
@@ -132,7 +168,23 @@
 		</tr>
 		<tr>
 			<td class="fieldTitle">Program:</td>
-			<td class="fieldValue"><c:out value="${requestScope.program_name}"/></td>
+			<td class="fieldValue">
+				<select name="tickler.program_no" id="program_no" onChange="changeProgram()">
+				<%
+					String demographicNo = request.getParameter("tickler.demographicNo");
+					
+					List<Program> programs = (List<Program>)request.getAttribute("programDomain");
+					
+					String currentProgramId = (String)request.getAttribute("currentProgramId");
+					
+					for(Program p:programs) {
+						String selected = (p.getId().toString().equals(currentProgramId))?" selected=\"selected\" ":"";
+				%>
+					<option value="<%=p.getId()%>" <%=selected%>><%=p.getName() %></option>
+					
+				<% } %>
+				</select>
+			</td>
 		</tr>
 		<tr>
 			<td class="fieldTitle">Service Date:</td>
@@ -221,7 +273,7 @@
 			</td>
 			<td class="fieldValue">
 				<html:hidden property="tickler.taskAssignedToName" />
-	            <html:select property="tickler.taskAssignedTo" value="none">
+	            <html:select property="tickler.taskAssignedTo" styleId="taskAssignedTo" value="none">
         		    <option value="none">- select -</option>
         		    <html:options collection="providers" property="providerNo" labelProperty="formattedName"/>
             	</html:select>

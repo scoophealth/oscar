@@ -110,6 +110,9 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 	@Column(name = "timestamp1", insertable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
         private Date timestamp;
+	
+	private Integer programNo;
+	
 	private String clinic = null;
         @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
         @JoinColumn(name="ch1_id", referencedColumnName="id")
@@ -126,7 +129,7 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 			Date billingDate, Date billingTime, Integer total, Integer paid,
 			String status, String comment, String visitType,
 			String providerOhipNo, String providerRmaNo, String apptProviderNo,
-			String asstProviderNo, String creator, Date timestamp, String clinic) {
+			String asstProviderNo, String creator, Date timestamp, String clinic, Integer programNo) {
 		super();
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		this.headerId = headerId;
@@ -163,6 +166,7 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 		this.creator = creator;
 		this.timestamp = timestamp;
 		this.clinic = clinic;
+		this.programNo = programNo;
 	}
 
 	public BillingONCHeader1(Integer headerId, String transcId, String recId,
@@ -175,7 +179,7 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 			String status, String comment, String visitType,
 			String providerOhipNo, String providerRmaNo, String apptProviderNo,
 			String asstProviderNo, String creator, Date timestamp, String clinic,
-                        List<BillingONItem> billingItems) {
+                        List<BillingONItem> billingItems, Integer programNo) {
 		super();
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		this.headerId = headerId;
@@ -212,7 +216,8 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 		this.creator = creator;
 		this.timestamp = timestamp;
 		this.clinic = clinic;
-                this.billingItems = billingItems;
+        this.billingItems = billingItems;
+        this.programNo = programNo;
 	}
 
         @Override
@@ -499,7 +504,16 @@ public class BillingONCHeader1 extends AbstractModel<Integer> implements Seriali
 		this.clinic = clinic;
 	}
         
-        public List<BillingONItem> getBillingItems() {
+	
+    public Integer getProgramNo() {
+		return programNo;
+	}
+
+	public void setProgramNo(Integer programNo) {
+		this.programNo = programNo;
+	}
+
+	public List<BillingONItem> getBillingItems() {
             return billingItems;
         }
 

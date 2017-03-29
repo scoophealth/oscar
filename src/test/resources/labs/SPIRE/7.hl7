@@ -1,0 +1,16 @@
+MSH|^~\&|OCF|HDH|XENOS|GBHS-OS|20120326104324||ORU^R01|Q68569595|T|2.3
+PID|1||60648^^^HDH||DWARF^PAM||19610920|Female|||579 DISNEY DR^^CERNERVILLE^Ontario^H1H1H1^Canada^^^Grey, Hanover, T,|Grey, Hanover, T,|||English|Married||4232701^^^HDH^FIN NBR PV1|1|Inpt.|Unit One HDH^104^3^HDH^^Bed(s)^HDH|Elective|||00389^Dworkin^Rochelle^L|||Medicine|Unit One HDH^^^^^Nurse Unit(s)|||Home|||00389^Dworkin^Rochelle^L|Inpt.Ac.|2012090037798^^^HDH^Visit Id|OHIP|||||||||||||||||||HDH||Active|||20120128122057||||||2012090037798 
+OBR|1|83205170^HNAM_ORDERID||Culture-Blood^Culture-Blood|||20120325091900|||||||20120325092004|Blood&Blood^^^^^Venous Draw|00442^Stretch^Neal^C||||000002012084000004^HNA_ACCN~2354898^HNA_ACCNID||20120326104323||Micro|F||1^^^20120325091900^^Routine~^^^^^Routine|||||||||20120325091900 
+OBX|1|DOC|GS^GS||GRAM NEGATIVE BACILLI||||||Auth (Verified)|||20120325091900 
+OBX|2|DOC|Final^Final||ESCHERICHIA COLI\.br\*\.br\Testing Site: Stratford General Hospital, 46 General Hospital Drive, Stratford, Ontario N5A 2Y6||||||Auth (Verified)|||20120325091900 
+OBX|3|CE|ORGANISM|11|EC^EC|||||||||20120326104323 
+OBR|2|83205170^HNAM_ORDERID||MIC^MIC|||20120325091900||||||||Blood&Blood^^^^^Venous Draw|00442^Stretch^Neal^C||||000002012084000004^HNA_ACCN~2354898^HNA_ACCNID||20120326104323||Micro|Auth (Verified)|^11^EC&EC|1^^^^^Routine~^^^^^Routine 
+OBX|1|CE|ORGANISM|11|EC^EC|||||||||20120326104323 
+OBX|2|NM|Amp^Amp|11||||R|||Verified|||20120326104300 
+OBX|3|NM|Ceftri^Ceftri|11||||R|||Verified|||20120326104300 
+OBX|4|NM|Cefox^Cefox|11||||R|||Verified|||20120326104300 
+OBX|5|NM|Cefaz^Cefaz|11||||R|||Verified|||20120326104300 
+OBX|6|NM|Cipro^Cipro|11||||S|||Verified|||20120326104300 
+OBX|7|NM|Gent^Gent|11||||S|||Verified|||20120326104300 
+OBX|8|NM|Imi^Imi|11||||S|||Verified|||20120326104300 
+OBX|9|NM|SXT^SXT|11||||S|||Verified|||20120326104300 

@@ -43,23 +43,13 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
-
-import oscar.OscarProperties;
-import oscar.dms.EDoc;
-import oscar.dms.EDocUtil;
-import oscar.oscarClinic.ClinicData;
-import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
-import oscar.oscarLab.ca.all.parsers.Factory;
-import oscar.oscarLab.ca.all.parsers.MessageHandler;
-import oscar.util.ConcatPDF;
-import oscar.util.ConversionUtils;
-import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -73,6 +63,19 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
+
+import oscar.OscarProperties;
+import oscar.dms.EDoc;
+import oscar.dms.EDocUtil;
+import oscar.oscarClinic.ClinicData;
+import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
+import oscar.oscarLab.ca.all.parsers.Factory;
+import oscar.oscarLab.ca.all.parsers.MessageHandler;
+import oscar.oscarRx.data.RxProviderData;
+import oscar.oscarRx.data.RxProviderData.Provider;
+import oscar.util.ConcatPDF;
+import oscar.util.ConversionUtils;
+import oscar.util.UtilDateUtilities;
 /**
  *
  * @author wrighd
@@ -187,7 +190,7 @@ public class EctConsultationFormRequestPrintPdf {
 
     private void setAppointmentInfo(EctConsultationFormRequestUtil reqForm) throws DocumentException{
 
-        printClinicData();
+        printClinicData(reqForm);
         Font font = new Font(bf, FONTSIZE, Font.NORMAL);
 
         // Set consultant info
@@ -228,14 +231,27 @@ public class EctConsultationFormRequestPrintPdf {
         document.newPage();
         cb.addTemplate(page2, 1, 0, 0, 1, 0, 0);
 
-        printClinicData();
+        printClinicData(reqForm);
         cb.beginText();
         cb.setFontAndSize(bf, FONTSIZE);
         cb.showTextAligned(PdfContentByte.ALIGN_LEFT, reqForm.patientName, 110, height - 82, 0);
         cb.endText();
     }
 
-    private void printClinicData(){
+    private void printClinicData(EctConsultationFormRequestUtil reqForm){
+        cb.beginText();
+        if(IsPropertiesOn.isMultisitesEnable()) {
+			Provider letterheadNameProvider = (reqForm.letterheadName != null ? new RxProviderData().getProvider(reqForm.letterheadName) : null);
+			String letterheadNameParam = (letterheadNameProvider == null ? reqForm.letterheadName : letterheadNameProvider.getFirstName()+" "+letterheadNameProvider.getSurname());
+
+	        cb.setFontAndSize(bf, 16);
+	        cb.showTextAligned(PdfContentByte.ALIGN_LEFT, letterheadNameParam, 90, height - 70, 0);
+
+	        cb.setFontAndSize(bf, FONTSIZE);
+	        cb.showTextAligned(PdfContentByte.ALIGN_RIGHT, reqForm.letterheadAddress, 533, height - 70, 0);
+	        cb.showTextAligned(PdfContentByte.ALIGN_LEFT, reqForm.letterheadPhone, 360, height - 82, 0);
+	        cb.showTextAligned(PdfContentByte.ALIGN_LEFT, reqForm.letterheadFax, 471, height - 82, 0);			
+		} else {
         ClinicData clinic = new ClinicData();
         clinic.refreshClinicData();
 
@@ -248,6 +264,8 @@ public class EctConsultationFormRequestPrintPdf {
         cb.showTextAligned(PdfContentByte.ALIGN_RIGHT, clinic.getClinicAddress()+", "+clinic.getClinicCity()+", "+clinic.getClinicProvince()+", "+clinic.getClinicPostal(), 533, height - 70, 0);
         cb.showTextAligned(PdfContentByte.ALIGN_LEFT, clinic.getClinicPhone(), 360, height - 82, 0);
         cb.showTextAligned(PdfContentByte.ALIGN_LEFT, clinic.getClinicFax(), 471, height - 82, 0);
+
+		}
 
         cb.endText();
     }

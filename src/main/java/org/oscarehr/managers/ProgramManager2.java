@@ -108,6 +108,13 @@ public class ProgramManager2 {
     	   }
         }
         
+        if(result == null) {
+        	List<ProgramProvider> ppList = programProviderDAO.getProgramProviderByProviderNo(providerNo);
+        	if(!ppList.isEmpty()) {
+        		result = ppList.get(0);
+        	}
+        }
+        
         if(result !=null) {
         	LogAction.addLogSynchronous(loggedInInfo, "ProgramManager2.getCurrentProgramInDomain", "id returned=" + result.getId());
         }

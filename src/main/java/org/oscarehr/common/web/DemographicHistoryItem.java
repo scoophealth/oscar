@@ -35,23 +35,23 @@ public  class DemographicHistoryItem  implements Serializable {
 	private String name;
 	private String dateSeen;
 	private String type;
+	private String provider;
 	
 	public DemographicHistoryItem() {
 		
 	}
 	
-	public DemographicHistoryItem(String name, String type) {
+	public DemographicHistoryItem(String name, String type, String provider) {
 		this.name=name;
 		this.type = type;
+		this.provider = provider;
 	}
-	public DemographicHistoryItem(String name, String type, String dateSeen) {
-		this.name = name;
-		this.type = type;
+	public DemographicHistoryItem(String name, String type, String dateSeen, String provider) {
+		this(name,type,provider);
 		this.dateSeen = dateSeen;
 	}
-	public DemographicHistoryItem(String name, String type, Date dateSeen) {
-		this.name = name;
-		this.type = type;
+	public DemographicHistoryItem(String name, String type, Date dateSeen, String provider) {
+		this(name,type,provider);
 		
 		if( dateSeen == null ) {
 			this.dateSeen = null;
@@ -60,6 +60,7 @@ public  class DemographicHistoryItem  implements Serializable {
 			this.dateSeen = DateFormatUtils.ISO_DATE_FORMAT.format(dateSeen);
 		}
 	}
+	
 	public String getName() {
 		return name;
 	}
@@ -79,6 +80,14 @@ public  class DemographicHistoryItem  implements Serializable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getProvider() {
+		return provider;
+	}
+
+	public void setProvider(String provider) {
+		this.provider = provider;
 	}
 	
 	

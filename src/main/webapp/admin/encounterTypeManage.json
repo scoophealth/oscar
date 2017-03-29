@@ -1,0 +1,81 @@
+<%@page import="net.sf.json.JSONObject"%>
+<%@page import="net.sf.json.JSONArray"%>
+<%@page import="net.sf.json.JSONSerializer"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.dao.EncounterTypeDao"%>
+<%@page import="org.oscarehr.common.model.EncounterType"%>
+
+<%@page import="java.util.List"%>
+
+<%
+
+	EncounterTypeDao encounterTypeDao = SpringUtils.getBean(EncounterTypeDao.class);
+%>
+<%
+	boolean success = false;
+    String error = "";
+	String method = request.getParameter("method");	
+	
+	JSONObject json = new JSONObject();
+	json.put("method", method);
+
+	if ("add".equals(method)) {
+		String name = request.getParameter("name");
+		
+		if ("".equals(name)) {
+			success = false;
+			error = "Add Failure: Cannot add Encounter Type with empty value.";
+		} else {
+			EncounterType bpm = encounterTypeDao.findByName(name);
+			if(bpm != null) {
+				success = false;
+				error = "Add Failure: Could not add entry to database.Encounter Type already present.";
+			} else {
+				bpm = new EncounterType();
+				bpm.setValue(name);
+				encounterTypeDao.persist(bpm);
+				
+				int j = bpm.getId();
+				if (j==0) {		
+					success = false;
+					error = "Add Failure: Could not add entry to database.";
+				} else {
+					success = true;		
+				}
+			}
+		} 
+	}
+	else if ("delete".equals(method)) {
+		String id = request.getParameter("id");
+		
+		json.put("id", id);
+		
+		if (id.equals("")) {
+			success = false;
+			error = "Add Failure: Cannot remove Mapping with empty id.";
+		} else {
+			encounterTypeDao.remove(Integer.parseInt(id));
+			success=true;
+		}
+	}
+	else if("list".equals(method)) {
+		List<EncounterType> mappings = encounterTypeDao.findAll();
+		JSONArray x = JSONArray.fromObject(mappings);
+		response.setContentType("text/x-json");    
+        response.getWriter().print(x.toString());
+	}
+	
+	else {
+		success = false;
+		error = "Invalid method supplied.";
+	}
+	if(!"list".equals(method) ) {
+	    response.setContentType("text/x-json");    
+		
+		json.put("success", success);
+		json.put("error", error);
+		
+	    json.write(out);    	
+	}
+%>
+

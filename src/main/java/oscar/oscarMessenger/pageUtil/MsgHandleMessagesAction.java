@@ -75,7 +75,7 @@ public class MsgHandleMessagesAction extends Action {
 		replyMessageData = new oscar.oscarMessenger.data.MsgReplyMessageData();
 		replyMessageData.estLists();
 
-		HttpSession session = request.getSession(true);
+		HttpSession session = request.getSession();
 		java.util.Enumeration ty = session.getAttributeNames();
 
 		/*

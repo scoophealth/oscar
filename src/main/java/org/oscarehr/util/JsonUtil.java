@@ -36,9 +36,11 @@ import net.sf.json.JsonConfig;
  * Date: November 2014
  * For: UBC Pharmacy Clinic and McMaster Department of Family Medicine
  */
+
 public class JsonUtil {
 
 	private static final JSONArray jsonArray = new JSONArray();
+	// set default methods to be ignored here.
 	private static final JsonConfig jsonConfig = new JsonConfig();
 
 	public static final String pojoCollectionToJson(final List<?> pojoList ) {

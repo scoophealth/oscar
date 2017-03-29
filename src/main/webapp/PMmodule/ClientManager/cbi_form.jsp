@@ -22,6 +22,21 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed2=true;
+%>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_form" rights="r" reverse="<%=true%>">
+	<%authed2=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_form");%>
+</security:oscarSec>
+<%
+	if(!authed2) {
+		return;
+	}
+%>
+
 <%@page import="org.oscarehr.common.model.OcanStaffFormData"%>
 <%@page import="org.oscarehr.common.model.OcanStaffForm"%>
 <%@page import="org.oscarehr.common.model.Admission"%>
@@ -37,6 +52,12 @@
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils" %>
+<%@page import="org.oscarehr.common.model.FunctionalCentreAdmission" %>
+<%@page import="org.oscarehr.common.dao.FunctionalCentreAdmissionDao" %>
+<%@page import="org.oscarehr.common.model.FunctionalCentre" %>
+<%@page import="org.oscarehr.common.dao.FunctionalCentreDao" %>
+<%@page import="org.oscarehr.PMmodule.web.formbean.DemographicExtra"%>
+
 <%@include file="/layouts/caisi_html_top-jquery.jspf"%>
 
 
@@ -55,7 +76,7 @@
 		ocanStaffFormId = Integer.parseInt(request.getParameter("ocanStaffFormId"));
 	}
 	OcanStaffForm ocanStaffForm = null;
-	
+	DemographicExtra demoExtra = null;	
 	if(ocanStaffFormId != 0 ) {
 		if(view!=null && "history".equals(view)) { //view from form history page, not populate from demographic, directly pull data from ocanStaffForm table.
 			ocanStaffForm = OcanForm.getOcanStaffForm(Integer.valueOf(request.getParameter("ocanStaffFormId")));
@@ -84,18 +105,49 @@
 	}
 	
 	DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-	String hc_type = demographicDao.getDemographicById(currentDemographicId).getHcType();
-	String admissionDate = "0001-01-01";
-	AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");	
-	List<Admission> admissions = admissionDao.getAdmissionsASC(currentDemographicId);
-	for(Admission ad : admissions) {
-		if(!"community".equalsIgnoreCase(ad.getProgramType())) {
-			admissionDate = DateFormatUtils.ISO_DATE_FORMAT.format(ad.getAdmissionDate());
-			break;			
-		}
+	String hc_type = demographicDao.getDemographicById(currentDemographicId).getHcType();	
+	
+	String middleName="";
+	String preferredName="";
+	String lastNameAtBirth="";
+	String maritalStatus="";
+	String recipientLocation="";
+	String lhinConsumerResides="";
+	String address2="";
+	
+	DemographicExt de_middleName = demographicExtDao.getLatestDemographicExt(currentDemographicId, "middleName");	
+	if(de_middleName != null) {
+		middleName = de_middleName.getValue();
 	}
-	String admission_year = admissionDate.substring(0,4);
-	String admission_month = admissionDate.substring(5,7);
+	
+	DemographicExt de_preferredName = demographicExtDao.getLatestDemographicExt(currentDemographicId, "preferredName");	
+	if(de_preferredName != null) {
+		preferredName = de_preferredName.getValue();
+	}
+	
+	DemographicExt de_lastNameAtBirth = demographicExtDao.getLatestDemographicExt(currentDemographicId, "lastNameAtBirth");	
+	if(de_lastNameAtBirth != null) {
+		lastNameAtBirth = de_lastNameAtBirth.getValue();
+	}
+	
+	DemographicExt de_maritalStatus = demographicExtDao.getLatestDemographicExt(currentDemographicId, "maritalStatus");	
+	if(de_maritalStatus != null) {
+		maritalStatus = de_maritalStatus.getValue();
+	}
+	
+	DemographicExt de_recipientLocation = demographicExtDao.getLatestDemographicExt(currentDemographicId, "recipientLocation");	
+	if(de_recipientLocation != null) {
+		recipientLocation = de_recipientLocation.getValue();
+	}
+	
+	DemographicExt de_lhinConsumerResides = demographicExtDao.getLatestDemographicExt(currentDemographicId, "lhinConsumerResides");	
+	if(de_lhinConsumerResides != null) {
+		lhinConsumerResides = de_lhinConsumerResides.getValue();
+	}
+	DemographicExt de_address2 = demographicExtDao.getLatestDemographicExt(currentDemographicId, "address2");	
+	if(de_address2 != null) {
+		address2 = de_address2.getValue();
+	}
 	
 %>
 
@@ -141,7 +193,8 @@ function checkDates() {
 	var admissionDate = document.getElementById("admissionDate").value;	
 	var dischargeDate = document.getElementById("dischargeDate").value;	
 	if(!serviceInitDate || typeof serviceInitDate == 'undefined') {
-		serviceInitDate = "";
+		alert("Please give the service initiation date on history page.");
+		return false;		
 	}
 	if(!dischargeDate || typeof dischargeDate == 'undefined') {
 		dischargeDate = "";
@@ -259,13 +312,14 @@ $('document').ready(function() {
 
 <script>
 
-function changeProgram(selectBox) {
+function changeFunctionalCentre(selectBox) {
 	
 	var selectBoxId = selectBox.id;	
 	var selectBoxValue = selectBox.options[selectBox.selectedIndex].value;
 	
 	var demographicId='<%=currentDemographicId%>';	
 	var ocanStaffFormId = '<%=ocanStaffFormId%>';
+	var view = '<%=view%>';
 	
 	if(document.getElementById("admissionDate") == null) {	
 			$.get('cbi_get_dates.jsp?view='+view+'&ocanStaffFormId='+ocanStaffFormId+'&demographicId='+demographicId+'&programId=0&admissionId='+selectBoxValue, function(data) {
@@ -280,6 +334,7 @@ function changeProgram(selectBox) {
 	}
 		
 }
+
 </script>
 
 
@@ -441,36 +496,36 @@ function changeProgram(selectBox) {
 			<td class="genericTableData">			
 					
 					<%	
+					FunctionalCentreAdmissionDao admissionDao = (FunctionalCentreAdmissionDao) SpringUtils.getBean("functionalCentreAdmissionDao");	
+					FunctionalCentreDao functionalCentreDao = (FunctionalCentreDao) SpringUtils.getBean("functionalCentreDao");	
 					String selected="";
 					if(ocanStaffFormId==0)	{	//new form: list all programs IDs not used in cbi form.
 					%>
-						<select name="admissionId" id="admissionId" onchange="changeProgram(this);" class="{validate: {required:true}}" >
+						<select name="admissionId" id="admissionId" onchange="changeFunctionalCentre(this);" class="{validate: {required:true}}" >
 						<option value=""> </option>
 					<%
-						for (Admission admission : OcanForm.getServiceAndBedProgramAdmissions(loggedInInfo.getCurrentFacility().getId(),Integer.valueOf(currentDemographicId)) )
+						for (FunctionalCentreAdmission admission : admissionDao.getDistinctAdmissionsByDemographicNo(Integer.valueOf(currentDemographicId)) )
 						{	
-							OcanStaffForm existingCbiForm = OcanForm.findLatestCbiFormsByFacilityAdmissionId(loggedInInfo.getCurrentFacility().getId(),admission.getId(), null);
-							if(existingCbiForm!=null)
-								continue;						
-								 
-							if (ocanStaffForm.getAdmissionId()!=null && ocanStaffForm.getAdmissionId().intValue()==admission.getId().intValue()) 
-								selected="selected=\"selected\"";
-							else 
-								selected="";
+							FunctionalCentre functionalCentre = functionalCentreDao.find(admission.getFunctionalCentreId());
+							OcanStaffForm existingCbiForm = OcanForm.findLatestCbiFormsByFacilityAdmissionId(loggedInInfo.getCurrentFacility().getId(), Integer.valueOf(admission.getId()), null);
+							if(existingCbiForm!=null) 
+								continue;                                       
+									                                                   
 							%>
-								<option <%=selected%> value="<%=admission.getId()%>"><%=CdsForm4.getEscapedAdmissionSelectionDisplay(admission)%></option>
+								<option <%=selected%> value="<%=admission.getId()%>"><%=functionalCentre.getDescription() %> - <%=DateFormatUtils.ISO_DATE_FORMAT.format(admission.getAdmissionDate()) %></option>
 							<%						
 						}
 					  } else { //open existing form 
 						  selected="selected";
-					  	  Admission ad = admissionDao.getAdmission(ocanStaffForm.getAdmissionId());
+						  FunctionalCentreAdmission ad = admissionDao.find(ocanStaffForm.getAdmissionId());
+						  FunctionalCentre functionalCentre = functionalCentreDao.find(ad.getFunctionalCentreId());
 					 %>
 					 	<input type="hidden" name="admissionId" id="admissionId" value="<%=ocanStaffForm.getAdmissionId()%>" />
 					 
 					 	  <select name="admissionId_tmp" disabled>
 						  <option value=""> </option>
 					
-						  <option <%=selected%> value="<%=ocanStaffForm.getAdmissionId()%>"><%=CdsForm4.getEscapedAdmissionSelectionDisplay(ad)%></option>
+						  <option <%=selected%> value="<%=ocanStaffForm.getAdmissionId()%>"><%=functionalCentre.getDescription() %> - <%=DateFormatUtils.ISO_DATE_FORMAT.format(ad.getAdmissionDate()) %></option>
 					 <%
 					  }
 					
@@ -489,7 +544,7 @@ function changeProgram(selectBox) {
 		<tr>
 			<td class="genericTableHeader">Last Name at Birth</td>
 			<td class="genericTableData">
-				<input type="text" class="userInputedData" name="lastNameAtBirth" id="lastNameAtBirth" value="<%=ocanStaffForm.getLastNameAtBirth()%>" size="32" maxlength="32"/>
+				<%=OcanForm.renderAsTextFieldReadOnly(ocanStaffForm.getId(), "lastNameAtBirth", 32,  prepopulationLevel, true, lastNameAtBirth ) %>
 			</td>			
 		</tr>
 		<tr>
@@ -500,8 +555,8 @@ function changeProgram(selectBox) {
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Middle Name</td>
-			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"middle",32, prepopulationLevel, "userInputedData")%>
+			<td class="genericTableData">					
+				<%=OcanForm.renderAsTextFieldReadOnly(ocanStaffForm.getId(), "middle", 32,  prepopulationLevel, true, middleName ) %>
 			</td>			
 		</tr>
 		<tr>
@@ -512,8 +567,8 @@ function changeProgram(selectBox) {
 		</tr>	
 		<tr>
 			<td class="genericTableHeader">Preferred Name</td>
-			<td class="genericTableData">
-				<%=OcanForm.renderAsTextField(ocanStaffForm.getId(),"preferred",32, prepopulationLevel, "userInputedData")%>
+			<td class="genericTableData">				
+				<%=OcanForm.renderAsTextFieldReadOnly(ocanStaffForm.getId(), "preferred", 32,  prepopulationLevel, true, preferredName ) %>
 			</td>
 		</tr>			
 		<tr>
@@ -524,8 +579,8 @@ function changeProgram(selectBox) {
 		</tr>
 		<tr>
 			<td class="genericTableHeader">Address Line 2</td>
-			<td class="genericTableData">
-				<input type="text" name="addressLine2" class="userInputedData" id="addressLine2" value="<%=ocanStaffForm.getAddressLine2()%>" size="64" maxlength="64"/>
+			<td class="genericTableData">				
+				<input type="text" name="addressLine2" id="addressLine2" readonly="readonly" value="<%=ocanStaffForm.getAddressLine2()%>" size="64" maxlength="64"/>
 			</td>
 		</tr>						
 		<tr>
@@ -599,20 +654,19 @@ function changeProgram(selectBox) {
 		<tr>
 			<td class="genericTableHeader">Service Recipient Location</td>
 			<td class="genericTableData">
-				<select name="service_recipient_location" class="userInputedData mandatoryData {validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "service_recipient_location", OcanForm.getOcanFormOptions("Recipient Location"),prepopulationLevel)%>
+				<select name="service_recipient_location">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "service_recipient_location", OcanForm.getOcanFormOptions("Recipient Location"), recipientLocation, prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>		
 		<tr>
 			<td class="genericTableHeader">LHIN Consumer Resides in</td>
 			<td class="genericTableData">
-				<select name="service_recipient_lhin" class="userInputedData mandatoryData {validate: {required:true}}">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "service_recipient_lhin", OcanForm.getOcanFormOptions("LHIN code"),prepopulationLevel)%>
+				<select name="service_recipient_lhin">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "service_recipient_lhin", OcanForm.getOcanFormOptions("LHIN code"), lhinConsumerResides, prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>
-		
 		
 		<tr>
 			<td class="genericTableHeader">Gender</td>
@@ -624,8 +678,8 @@ function changeProgram(selectBox) {
 		<tr>
 			<td class="genericTableHeader">Marital Status</td>
 			<td class="genericTableData">
-				<select name="marital_status" class="userInputedData">
-					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "marital_status", OcanForm.getOcanFormOptions("Marital Status"),prepopulationLevel)%>
+				<select name="marital_status">
+					<%=OcanForm.renderAsSelectOptions(ocanStaffForm.getId(), "marital_status", OcanForm.getOcanFormOptions("Marital Status"), maritalStatus, prepopulationLevel)%>
 				</select>					
 			</td>
 		</tr>

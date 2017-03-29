@@ -44,7 +44,7 @@ public class LdapSecurity extends Security {
 	}
 
 	public LdapSecurity(String userName, String password, String providerNo, String pin, Integer BRemotelockset, Integer BLocallockset, Date dateExpiredate, Integer BExpireset, Boolean forcePasswordReset) {
-		super(userName, password, providerNo, pin, BRemotelockset, BLocallockset, dateExpiredate, BExpireset, forcePasswordReset);
+		super(userName, password, providerNo, pin, BRemotelockset, BLocallockset, dateExpiredate, BExpireset, forcePasswordReset,1);
 	}
 
 	public LdapSecurity(Security security) {

@@ -76,6 +76,7 @@ angular.module("providerServices", [])
                 url: this.apiPath+'/settings/get',
                 method: "GET"
              }).success(function (data, status, headers, config) {
+            	 console.log("got settings" + JSON.stringify(data));
             	 deferred.resolve(data.content[0]);
              }).error(function (data, status, headers, config) {
             	 deferred.reject("An error occured while fetching provider settings");
@@ -92,6 +93,7 @@ angular.module("providerServices", [])
                 data: JSON.stringify(settings),
                 headers: {'Content-Type': 'application/json'}
              }).success(function (data, status, headers, config) {
+            	 console.log("saved settings" + JSON.stringify(data));
             	 deferred.resolve(data);
              }).error(function (data, status, headers, config) {
             	 deferred.reject("An error occured while saving settings");

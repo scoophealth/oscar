@@ -3,7 +3,7 @@ var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResourc
 														  'ticklerServices','scheduleServices','billingServices','securityServices','staticDataServices',
 														  'patientDetailStatusServices','formServices','providerServices','noteServices','infinite-scroll',
 														  'uxServices','ngTable','oscarFilters','messageServices','inboxServices','k2aServices', 'personaServices'
-														  ,'consultServices','appServices','diseaseRegistryServices','angular-loading-bar']);
+														  ,'consultServices','appServices','systemInfoServices','diseaseRegistryServices','angular-loading-bar','rxServices']);
 
 
 oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {
@@ -179,6 +179,11 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 			url: '/tracker', 
 			templateUrl: 'record/tracker/tracker.jsp',
 			controller: 'TrackerCtrl'
+		})
+		.state('record.rx', {
+			url: '/rx',
+			templateUrl: 'record/rx/rx.jsp',
+			controller: 'RxCtrl'
 		})
 		.state('record.phr', {
 			url: '/phr', 

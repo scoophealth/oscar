@@ -1,0 +1,9 @@
+Hello ${provider.firstName} ${provider.lastName},
+
+You've received a tickler by ${tickler.provider.lastName},${tickler.provider.firstName} on the OSCAR System.
+
+${clinic.clinicName}
+${clinic.clinicPhone}
+
+
+

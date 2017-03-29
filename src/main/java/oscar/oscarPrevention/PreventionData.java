@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.caisi_integrator.RemotePreventionHelper;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.common.dao.PreventionDao;
@@ -46,6 +47,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -59,12 +61,17 @@ public class PreventionData {
 	private static Logger log = MiscUtils.getLogger();
 	private static PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
 	private static PreventionExtDao preventionExtDao = (PreventionExtDao) SpringUtils.getBean("preventionExtDao");
-
+	private static ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+	
 	private PreventionData() {
 		// prevent instantiation
 	}
 
-	public static Integer insertPreventionData(String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list) {
+	public static Integer insertPreventionData(LoggedInInfo loggedInInfo, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list) {
+		return insertPreventionData(loggedInInfo,creator,demoNo,date,providerNo,providerName,preventionType,refused,nextDate,neverWarn,list,null);
+	}
+	
+	public static Integer insertPreventionData(LoggedInInfo loggedInInfo, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list, Integer programNo) {
 		Integer insertId = -1;
 		try {
 			Prevention prevention = new Prevention();
@@ -77,7 +84,16 @@ public class PreventionData {
 			prevention.setNever(neverWarn.trim().equals("1"));
 			if (refused.trim().equals("1")) prevention.setRefused(true);
 			else if (refused.trim().equals("2")) prevention.setIneligible(true);
-
+			
+			if(programNo == null) {
+				ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+				if(pp != null && pp.getProgramId() != null) {
+					prevention.setProgramNo(pp.getProgramId().intValue());
+				}
+			} else {
+				prevention.setProgramNo(programNo);
+			}
+			
 			preventionDao.persist(prevention);
 			if (prevention.getId() == null) return insertId;
 
@@ -107,6 +123,10 @@ public class PreventionData {
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
+	}
+	
+	public static int updatetExtValue(int preventionId, String keyval, String val) {
+		return preventionExtDao.updateKeyValue(preventionId, keyval, val);
 	}
 
 	public static Map<String, String> getPreventionKeyValues(String preventionId) {
@@ -158,11 +178,19 @@ public class PreventionData {
 		return name;
 	}
 
-	public static void updatetPreventionData(String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list) {
+	public static Integer updatetPreventionData(LoggedInInfo loggedInInfo, String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list) {
+		Map<String,Object> pd = getPreventionById(id);
+		String programNo = (String)pd.get("programNo");
+		Integer pNo = null;
+		try {
+			pNo = Integer.parseInt(programNo);
+		} catch(NumberFormatException e) {
+			//empty
+		}
 		deletePreventionData(id);
-		insertPreventionData(creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list);
+		return insertPreventionData(loggedInInfo, creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list, pNo);
 	}
-
+	
 	public static ArrayList<Map<String, Object>> getPreventionDataFromExt(String extKey, String extVal) {
 		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
@@ -341,8 +369,20 @@ public class PreventionData {
 
 		PreventionDao dao = SpringUtils.getBean(PreventionDao.class);
 		for (Prevention pp : dao.findActiveByDemoId(demoNo)) {
-			PreventionItem pi = new PreventionItem(pp);
-			p.addPreventionItem(pi);
+			
+			if(pp.getRestrictToProgram() != null && pp.getRestrictToProgram().booleanValue() && pp.getProgramNo() != null) {
+				List<ProgramProvider> programProviders = programManager2.getProgramDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+				for(ProgramProvider programProvider:programProviders) {
+					if(programProvider.getProgramId().intValue() == pp.getProgramNo().intValue()) {
+						PreventionItem pi = new PreventionItem(pp);
+						p.addPreventionItem(pi);
+						break;
+					}
+				}
+			} else {
+				PreventionItem pi = new PreventionItem(pp);
+				p.addPreventionItem(pi);
+			}
 		}
 		return p;
 	}
@@ -474,6 +514,7 @@ public class PreventionData {
 				addToHashIfNotNull(h, "next_date", UtilDateUtilities.DateToString(prevention.getNextDate(), "yyyy-MM-dd"));
 				addToHashIfNotNull(h, "never", prevention.isNever() ? "1" : "0");
 				addToHashIfNotNull(h, "creator", prevention.getCreatorProviderNo());
+				addToHashIfNotNull(h, "programNo", prevention.getProgramNo().toString());
 
 				String summary = "Prevention " + prevention.getPreventionType() + " provided by " + providerName + " on " + preventionDate;
 				summary = summary + " entered by " + creatorName + " on " + lastUpdateDate;

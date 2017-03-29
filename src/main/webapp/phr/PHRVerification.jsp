@@ -23,6 +23,22 @@
     Ontario, Canada
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_phr" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_phr");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.common.dao.PHRVerificationDao,org.oscarehr.common.model.PHRVerification,org.oscarehr.util.SpringUtils,java.util.*" %>
 
@@ -40,15 +56,6 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request" />
-<%
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-%>
-<%-- security:oscarSec roleName="<%=roleName$%>"
-	objectName="_admin,_admin.misc" rights="r" reverse="<%=true%>">
-	<%response.sendRedirect("../logout.jsp");%>
-</security:oscarSec --%>
-
 
 
 

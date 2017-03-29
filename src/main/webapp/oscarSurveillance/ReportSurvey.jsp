@@ -24,6 +24,21 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_report" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_report");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@page import="oscar.oscarSurveillance.*,java.util.*"%>
 
 <%@ include file="/taglibs.jsp"%>
@@ -43,7 +58,12 @@
 	ArrayList fileList = surveyInfo.getFileNames(surveyId);
 	int total = 0;
 %>
-
+<head>
+<link href="/oscar/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="/oscar/css/datepicker.css" rel="stylesheet" type="text/css">
+<link href="/oscar/css/DT_bootstrap.css" rel="stylesheet" type="text/css">
+<link href="/oscar/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+</head>
 <div class="page-header">
 	<h4>
 		<bean:message key="oscarSurveillance.Surveillance.msgSurveillance" />

@@ -23,17 +23,23 @@
     Ontario, Canada
 
 --%>
-<%@page import="com.indivica.olis.parameters.*,com.indivica.olis.*,com.indivica.olis.queries.*,org.apache.commons.lang.time.DateUtils"%><%@page 
-import="oscar.OscarProperties,java.net.InetAddress,java.io.*,java.util.List,java.util.*,javax.net.ssl.*,java.security.*,java.security.cert.*"%><%@page
-import="org.oscarehr.util.DbConnectionFilter,java.sql.*,org.oscarehr.util.SpringUtils" %><%@ taglib uri="/WEB-INF/security.tld" prefix="security"%><%
-if(session.getAttribute("userrole") == null ){
-	
-	response.sendRedirect("../logout.jsp");
-}
-String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-%><security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=true%>"><%
-	response.sendRedirect("../logout.jsp");
-%></security:oscarSec>
+<%@page import="com.indivica.olis.parameters.*,com.indivica.olis.*,com.indivica.olis.queries.*,org.apache.commons.lang.time.DateUtils"%>
+<%@page import="oscar.OscarProperties,java.net.InetAddress,java.io.*,java.util.List,java.util.*,javax.net.ssl.*,java.security.*,java.security.cert.*"%>
+<%@page import="org.oscarehr.util.DbConnectionFilter,java.sql.*,org.oscarehr.util.SpringUtils" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_admin");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 <%
 
 OscarProperties oscarProperties = OscarProperties.getInstance();

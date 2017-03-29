@@ -22,6 +22,20 @@
 <%@ page import="java.util.Locale" %>
 
 <%
+    String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed2=true;
+%>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_demographic" rights="r" reverse="<%=true%>">
+	<%authed2=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_demographic");%>
+</security:oscarSec>
+<%
+	if(!authed2) {
+		return;
+	}
+%>
+
+<%
 
 	String caseloadProv = (request.getParameter("clProv") != null) ? URLEncoder.encode(request.getParameter("clProv"), "UTF-8") : "";
 	String caseloadDx = (request.getParameter("clDx") != null) ? request.getParameter("clDx") : "";

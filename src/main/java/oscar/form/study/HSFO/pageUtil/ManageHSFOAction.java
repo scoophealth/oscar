@@ -179,7 +179,7 @@ public class ManageHSFOAction extends Action{
                                 b++;
                             }
 
-                            if (visitdata.getWeight() != 0) {
+                            if ((int)visitdata.getWeight() != 0) {
                                 double weight = visitdata.getWeight();
                                 String weightunit = visitdata.getWeight_unit();
                                 double heightr = 0;
@@ -212,7 +212,7 @@ public class ManageHSFOAction extends Action{
                             }
                             //modified by victor for waist_unit null bug,2007
                             //if (visitdata.getWaist() != 0{
-                            if (visitdata.getWaist() != 0 && visitdata.getWaist_unit()!=null) {
+                            if ((int)visitdata.getWaist() != 0 && visitdata.getWaist_unit()!=null) {
                                 double waistv = visitdata.getWaist();
                                 String waistunit = visitdata.getWaist_unit();
                                 double waist=0.0;
@@ -245,7 +245,7 @@ public class ManageHSFOAction extends Action{
                         }
 
                         if (visitdata.getTC_HDL_LabresultsDate() != null ) {
-                            if (visitdata.getTC_HDL() !=0 ) {
+                            if ((int)visitdata.getTC_HDL() !=0 ) {
                                 TCHDLHash[g] = new Hashtable();
                                 TCHDLHash[g].put("data",visitdata.getTC_HDL());
                                 TCHDLHash[g].put("date",visitdata.getTC_HDL_LabresultsDate());
@@ -254,7 +254,7 @@ public class ManageHSFOAction extends Action{
                         }
 
                         if (visitdata.getLDL_LabresultsDate()!= null ) {
-                            if (visitdata.getLDL() !=0 ) {
+                            if ((int)visitdata.getLDL() !=0 ) {
                                 LDLHash[h] = new Hashtable();
                                 LDLHash[h].put("data",visitdata.getLDL());
                                 LDLHash[h].put("date",visitdata.getLDL_LabresultsDate());

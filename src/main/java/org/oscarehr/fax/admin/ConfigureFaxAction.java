@@ -47,6 +47,7 @@ import org.oscarehr.util.SpringUtils;
 public class ConfigureFaxAction extends DispatchAction {
 
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	private static final String PASSWORD_BLANKET = "**********";
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return configure(mapping, form, request, response);
@@ -74,6 +75,7 @@ public class ConfigureFaxAction extends DispatchAction {
 			String[] inboxQueues = request.getParameterValues("inboxQueue");
 			String[] activeState = request.getParameterValues("activeState");
 			String[] faxNumbers = request.getParameterValues("faxNumber");
+			String[] senderEmails = request.getParameterValues("senderEmail");
 		
 			Integer id;
 			int savedidx;
@@ -99,14 +101,19 @@ public class ConfigureFaxAction extends DispatchAction {
 						savedFaxConfig = savedFaxConfigList.get(savedidx);
 						savedFaxConfig.setUrl(faxUrl);
 						savedFaxConfig.setSiteUser(siteUser);
-						if(!"**********".equals(sitePasswd)) {
+						
+						if( ! PASSWORD_BLANKET.equals(sitePasswd) ) {
 							savedFaxConfig.setPasswd(sitePasswd);
 						}
+						
 						savedFaxConfig.setFaxUser(faxUsers[idx]);
-						if(!"**********".equals(faxPasswds[idx])) {
+						
+						if( ! PASSWORD_BLANKET.equals(faxPasswds[idx]) ) {
 							savedFaxConfig.setFaxPasswd(faxPasswds[idx]);
 						}
+						
 						savedFaxConfig.setFaxNumber(faxNumbers[idx]);
+						savedFaxConfig.setSenderEmail(senderEmails[idx]);
 						savedFaxConfig.setQueue(Integer.parseInt(inboxQueues[idx]));
 						savedFaxConfig.setActive(Boolean.parseBoolean(activeState[idx]));
 						faxConfigList.add(savedFaxConfig);
@@ -114,11 +121,20 @@ public class ConfigureFaxAction extends DispatchAction {
 					else {
 						faxConfig.setId(null);
 						faxConfig.setSiteUser(siteUser);
-						faxConfig.setPasswd(sitePasswd);
+						
+						if( ! PASSWORD_BLANKET.equals(sitePasswd) ) {
+							faxConfig.setPasswd(sitePasswd);
+						}
+						
 						faxConfig.setUrl(faxUrl);
 						faxConfig.setFaxUser(faxUsers[idx]);
-						faxConfig.setFaxPasswd(faxPasswds[idx]);
+						
+						if( ! PASSWORD_BLANKET.equals(faxPasswds[idx]) ) {
+							faxConfig.setFaxPasswd(faxPasswds[idx]);
+						}
+						
 						faxConfig.setFaxNumber(faxNumbers[idx]);
+						faxConfig.setSenderEmail(senderEmails[idx]);
 						faxConfig.setQueue(Integer.parseInt(inboxQueues[idx]));
 						faxConfig.setActive( Boolean.parseBoolean(activeState[idx]));
 						faxConfigList.add(faxConfig);

@@ -55,9 +55,11 @@ import org.oscarehr.common.dao.DocumentStorageDao;
 import org.oscarehr.common.dao.ProviderInboxRoutingDao;
 import org.oscarehr.common.dao.QueueDocumentLinkDao;
 import org.oscarehr.common.dao.SecRoleDao;
+import org.oscarehr.common.dao.SiteDao;
 import org.oscarehr.common.model.DocumentStorage;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
+import org.oscarehr.common.model.Site;
 import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
@@ -67,6 +69,8 @@ import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.lowagie.text.pdf.PdfReader;
+
 import oscar.MyDateFormat;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
@@ -75,8 +79,6 @@ import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarEncounter.data.EctProgram;
 import oscar.util.UtilDateUtilities;
-
-import com.lowagie.text.pdf.PdfReader;
 
 public class AddEditDocumentAction extends DispatchAction {
 	
@@ -240,27 +242,59 @@ public class AddEditDocumentAction extends DispatchAction {
 			return mapping.findForward("failEdit");
 		} else if (fm.getMode().equals("add")) {
 			// if add/edit success then send redirect, if failed send a forward (need the formdata and errors hashtables while trying to avoid POSTDATA messages)
-			if (addDocument(fm, mapping, request) == true) { // if success
-				ActionRedirect redirect = new ActionRedirect(mapping.findForward("successAdd"));
-				redirect.addParameter("docerrors", "docerrors"); // Allows the JSP to check if the document was just submitted
-				redirect.addParameter("function", request.getParameter("function"));
-				redirect.addParameter("functionid", request.getParameter("functionid"));
-				redirect.addParameter("curUser", request.getParameter("curUser"));
-				redirect.addParameter("appointmentNo",request.getParameter("appointmentNo"));
-				String parentAjaxId = request.getParameter("parentAjaxId");
-				// if we're called with parent ajax id inform jsp that parent needs to be updated
-				if (!parentAjaxId.equals("")) {
-					redirect.addParameter("parentAjaxId", parentAjaxId);
-					redirect.addParameter("updateParent", "true");
+			Integer documentNo = addDocument(fm, mapping, request);
+			String siteId = request.getParameter("siteId");
+			if (documentNo!=null && documentNo.intValue()>0) { // if success
+				//if it's for site logo, need to update siteLogoId in site table.				
+				if(siteId!=null && !"null".equalsIgnoreCase(siteId)) {
+					SiteDao siteDao = (SiteDao) SpringUtils.getBean("siteDao");
+					Site site = siteDao.getById(Integer.valueOf(siteId));
+					site.setSiteLogoId(documentNo);
+					siteDao.merge(site);	
+					ActionRedirect redirect = new ActionRedirect(mapping.findForward("successAddLogo"));
+					return redirect;
+				} else {
+					ActionRedirect redirect = new ActionRedirect(mapping.findForward("successAdd"));
+					redirect.addParameter("docerrors", "docerrors"); // Allows the JSP to check if the document was just submitted
+					redirect.addParameter("function", request.getParameter("function"));
+					redirect.addParameter("functionid", request.getParameter("functionid"));
+					redirect.addParameter("curUser", request.getParameter("curUser"));
+					redirect.addParameter("appointmentNo",request.getParameter("appointmentNo"));
+					String parentAjaxId = request.getParameter("parentAjaxId");
+					// if we're called with parent ajax id inform jsp that parent needs to be updated
+					if (!parentAjaxId.equals("")) {
+						redirect.addParameter("parentAjaxId", parentAjaxId);
+						redirect.addParameter("updateParent", "true");
+					}
+					return redirect;
 				}
-				return redirect;
 			} else {
-				request.setAttribute("function", request.getParameter("function"));
-				request.setAttribute("functionid", request.getParameter("functionid"));
-				request.setAttribute("parentAjaxId", request.getParameter("parentAjaxId"));
-				request.setAttribute("curUser", request.getParameter("curUser"));
-				request.setAttribute("appointmentNo",request.getParameter("appointmentNo"));
-				return mapping.findForward("failAdd");
+				if(siteId!=null && !"null".equalsIgnoreCase(siteId)) {
+					ActionRedirect redirect = new ActionRedirect(mapping.findForward("failAddLogo"));
+					redirect.addParameter("method","update");
+					redirect.addParameter("function",request.getParameter("function"));
+					redirect.addParameter("functinoId",request.getParameter("functionId"));
+					redirect.addParameter("siteId",siteId);		
+					if ((fm.getDocDesc().length() == 0) || (fm.getDocDesc().equals("Enter Title"))) {
+						redirect.addParameter("logoErrors","Description missing");						
+					}
+					if (fm.getDocType().length() == 0) {
+						redirect.addParameter("logoErrors","Document type missing");								
+					}
+					FormFile docFile = fm.getDocFile();
+					if (docFile.getFileSize() == 0) {
+						redirect.addParameter("logoErrors","Document failed to upload");				
+					}
+					
+					return redirect;
+				} else {
+					request.setAttribute("function", request.getParameter("function"));
+					request.setAttribute("functionid", request.getParameter("functionid"));
+					request.setAttribute("parentAjaxId", request.getParameter("parentAjaxId"));
+					request.setAttribute("curUser", request.getParameter("curUser"));
+					request.setAttribute("appointmentNo",request.getParameter("appointmentNo"));
+					return mapping.findForward("failAdd");
+				}
 			}
 		} else {
 			ActionForward forward = editDocument(fm, mapping, request);
@@ -269,8 +303,8 @@ public class AddEditDocumentAction extends DispatchAction {
 	}
 
 	// returns true if successful
-	private boolean addDocument(AddEditDocumentForm fm, ActionMapping mapping, HttpServletRequest request) {
-
+	private Integer addDocument(AddEditDocumentForm fm, ActionMapping mapping, HttpServletRequest request) {
+		Integer documentNo = -1;
 		Hashtable errors = new Hashtable();
 		try {
 			if ((fm.getDocDesc().length() == 0) || (fm.getDocDesc().equals("Enter Title"))) {
@@ -328,9 +362,9 @@ public class AddEditDocumentAction extends DispatchAction {
 		 		EDocUtil.addDocTypeSQL(fm.getDocType(),fm.getFunction());
 		 	} 
 		 	
-			
 			// ---
 			String doc_no = EDocUtil.addDocumentSQL(newDoc);
+			documentNo = Integer.valueOf(doc_no);
 			if(ConformanceTestHelper.enableConformanceOnlyTestFeatures){
 				storeDocumentInDatabase(file, Integer.parseInt(doc_no));
 			}
@@ -397,10 +431,10 @@ public class AddEditDocumentAction extends DispatchAction {
 			// ActionRedirect redirect = new ActionRedirect(mapping.findForward("failAdd"));
 			request.setAttribute("docerrors", errors);
 			request.setAttribute("completedForm", fm);
-			return false;
+			return documentNo;
 		}
 
-		return true;
+		return documentNo;
 	}
 
 	private ActionForward editDocument(AddEditDocumentForm fm, ActionMapping mapping, HttpServletRequest request) {

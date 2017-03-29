@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Vector;
 
 import org.oscarehr.common.dao.MsgDemoMapDao;
 import org.oscarehr.common.model.Demographic;

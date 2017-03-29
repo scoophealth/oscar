@@ -57,7 +57,7 @@ public class BillingInvoiceAction extends DispatchAction {
 	   
 	
     public ActionForward getPrintPDF(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  throws IOException {
-        String invoiceNo = request.getParameter("invoiceNo");                
+        Integer invoiceNo = Integer.parseInt(request.getParameter("invoiceNo"));                
         String actionResult = "failure";
         
         if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_billing", "r", null)) {
@@ -68,7 +68,7 @@ public class BillingInvoiceAction extends DispatchAction {
         if (invoiceNo != null) {
             response.setContentType("application/pdf"); // octet-stream
             response.setHeader("Content-Disposition", "attachment; filename=\"BillingInvoice" + invoiceNo + "_" + UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss") + ".pdf\"");
-            boolean bResult = processPrintPDF(Integer.parseInt(invoiceNo),request.getLocale(), response.getOutputStream());
+            boolean bResult = processPrintPDF(invoiceNo,request.getLocale(), response.getOutputStream());
             if (bResult) {
                 actionResult = "success";
             }

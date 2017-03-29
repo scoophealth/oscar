@@ -60,8 +60,8 @@ public class LabResultData implements Comparable<LabResultData> {
 	public static final String ALPHAHL7 = "ALPHA";
 	public static final String TRUENORTH = "TRUENORTH";
 	
-	//HL7TEXT handles all messages types recieved as a hl7 formatted string
-	public static String HL7TEXT = "HL7";
+	//HL7TEXT handles all messages types received as a hl7 formatted string
+	public static final String HL7TEXT = "HL7";
 
 	public String segmentID;
 	public String labPatientId;

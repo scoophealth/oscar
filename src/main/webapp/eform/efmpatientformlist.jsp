@@ -24,6 +24,21 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_eform" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_eform");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@page import="org.oscarehr.sharingcenter.SharingCenterUtil"%>
 <%@page import="org.oscarehr.sharingcenter.dao.AffinityDomainDao"%>
 <%@page import="org.oscarehr.sharingcenter.model.AffinityDomainDataObject"%>
@@ -32,13 +47,10 @@
 
 <%@page import="java.util.*,oscar.eform.*"%>
 <%@page import="org.oscarehr.web.eform.EfmPatientFormList"%>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
 	String demographic_no = request.getParameter("demographic_no");
 	String deepColor = "#CCCCFF", weakColor = "#EEEEFF";
 
-	if (session.getAttribute("userrole") == null) response.sendRedirect("../logout.jsp");
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String)session.getAttribute("user");
 	String country = request.getLocale().getCountry();
 	String orderByRequest = request.getParameter("orderby");
 	String orderBy = "";
@@ -88,7 +100,7 @@
 	ArrayList<HashMap<String,? extends Object>> eForms;
 	if (groupView.equals(""))
 	{
-		eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no, roleName$, pageSize*(pageNo-1), pageSize);
+		eForms = EFormUtil.listPatientEForms(LoggedInInfo.getLoggedInInfoFromSession(request), orderBy, EFormUtil.CURRENT, demographic_no, roleName$, pageSize*(pageNo-1), pageSize,true);
 	}
 	else
 	{
@@ -317,7 +329,7 @@ function updateAjax() {
 							TITLE="<bean:message key="eform.showmyform.msgViewFrm"/>"
 							onmouseover="window.status='<bean:message key="eform.showmyform.msgViewFrm"/>'; return true"><%=curform.get("formName")%></a></td>
 						<td><%=curform.get("formSubject")%></td>
-						<td align='center'><%=curform.get("formDate")%></td>
+						<td align='center'><%=curform.get("formDate")%> | <%=curform.get("formTime")%></td>
 						<td align='center'><a
 							href="../eform/removeEForm.do?fdid=<%=curform.get("fdid")%>&group_view=<%=groupView%>&demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>" onClick="javascript: return confirm('Are you sure you want to delete this eform?');"><bean:message
 							key="eform.uploadimages.btnDelete" /></a></td>

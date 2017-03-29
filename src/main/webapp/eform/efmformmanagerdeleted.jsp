@@ -23,7 +23,24 @@
     Ontario, Canada
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.eform" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_admin.eform");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@ page import="oscar.eform.data.*, oscar.eform.*, java.util.*"%>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%
@@ -79,7 +96,7 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
 		<th><bean:message key="eform.uploadhtml.msgAction" /></th>
 	</tr>
 	<%
-	ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms(orderBy, EFormUtil.DELETED);
+	ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms(LoggedInInfo.getLoggedInInfoFromSession(request),orderBy, EFormUtil.DELETED);
   for (int i=0; i<eForms.size(); i++) {
 	  HashMap<String, ? extends Object> curForm =  eForms.get(i);
 %>

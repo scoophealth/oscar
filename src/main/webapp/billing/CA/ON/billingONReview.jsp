@@ -17,6 +17,23 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
+
 <%@page import="org.oscarehr.common.dao.BillingServiceDao"%>
 <%@page import="org.oscarehr.common.dao.DemographicDao"%>
 <%@page import="org.oscarehr.common.dao.DxresearchDAO" %>
@@ -56,9 +73,7 @@
         BillingONCHeader1Dao billingONCHeader1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");
 %>
 <%//
-	if (session.getAttribute("user") == null) {
-		response.sendRedirect("../../../logout.jsp");
-	}
+	
 
 			String user_no = (String) session.getAttribute("user");
 			String providerview = request.getParameter("providerview") == null ? "" : request
@@ -67,6 +82,10 @@
 			String color = "";
 			String premiumFlag = "";
 			String service_form = "";
+			String prevId = "";
+            if (request.getParameter("prevId") != null) {
+            	prevId = request.getParameter("prevId");
+            }
 %>
 
 <%
@@ -571,6 +590,7 @@ window.onload=function(){
 	<input type="hidden" name="billStatus_old" id="billStatus_old" value="<%=request.getParameter("billStatus_old")%>" />
 	<input type="hidden" name="billForm" id="billForm" value="<%=request.getParameter("billForm")%>" />
     <input type="hidden" name="payeename" id="payeename" value="" />
+    <input type="hidden" name="prevId" id="prevId" value="<%=prevId %>"/>
 <table border="0" cellpadding="0" cellspacing="2" width="100%" class="myIvory">
 	<tr>
 		<td>
@@ -1133,6 +1153,11 @@ Properties prop = oscar.OscarProperties.getInstance();
 			</table>
 
 			<td class="myGreen">
+			Payment Date:<br/>
+			<input type="text" name="payment_date" id="payment_date" value="<%=DateFormatUtils.format(new java.util.Date(), "yyyy-MM-dd")%>" size="10"/>
+			<br/>
+			<br/>
+			
 			Payment Method:<br/>
 			<% for(int i=0; i<al.size(); i=i+2) { %>
 			<input type="radio" name="payMethod" value="<%=al.get(i) %>" id="payMethod_<%=i %>"/><%=al.get(i+1) %><br/>

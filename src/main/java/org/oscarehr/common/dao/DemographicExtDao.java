@@ -34,6 +34,7 @@ import java.util.Map;
 
 import javax.persistence.Query;
 
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
 import org.springframework.stereotype.Repository;
 
@@ -86,6 +87,25 @@ public class DemographicExtDao extends AbstractDao<DemographicExt>{
  		return result;
  	}
 
+ 	@SuppressWarnings("unchecked")
+	public List<DemographicExt> searchDemographicExtByKeyAndValue( String key, String value ) { 
+
+ 		List<DemographicExt> results = null;		
+ 		Query query;
+ 		
+ 		if( key != null && ! key.isEmpty() ) {
+ 			
+ 			key = key.trim();
+ 			value = value.trim() + "%"; 
+ 			query = entityManager.createQuery("SELECT d from DemographicExt d where d.key = ? and d.value LIKE ?");
+ 	 		query.setParameter(1, key);
+ 	 		query.setParameter(2, value);
+
+ 	 		results = query.getResultList();
+ 		}
+
+ 	    return results;
+ 	}
  	
  	public List<DemographicExt> getDemographicExtByKeyAndValue(String key,String value) {
 
@@ -273,5 +293,38 @@ public class DemographicExtDao extends AbstractDao<DemographicExt>{
 
 	 		return results;
 	 	 }
-	 	 
+	 
+	 
+		@SuppressWarnings("unchecked")
+		public List<Demographic> searchDemographicByPhoneAndStatus(String phoneStr, List<String> statuses, int limit, int offset, String providerNo, boolean outOfDomain,boolean ignoreStatuses) {
+			String queryString = "SELECT d from DemographicExt e,Demographic d where d.DemographicNo = e.demographicNo and e.key = ? and e.value like ?";
+
+			if(statuses != null) {
+				queryString += " and d.PatientStatus " + ((ignoreStatuses)?"not":"") + "  in (:statuses)";
+			}
+			 
+			
+			if(providerNo != null && !outOfDomain) {
+				queryString += " AND d.id IN ("+ DemographicDao.PROGRAM_DOMAIN_RESTRICTION+") ";
+			}
+			
+			Query query = entityManager.createQuery(queryString);
+	 		query.setParameter(1, "demo_cell");
+	 		query.setParameter(2, phoneStr + "%");
+
+	 		query.setFirstResult(offset);
+	 		query.setMaxResults(limit);
+	 		
+	 		if(statuses != null) {
+				query.setParameter("statuses", statuses);
+			}
+
+			if(providerNo != null && !outOfDomain) {
+				query.setParameter("providerNo", providerNo);
+			}
+			
+	 	    List<Demographic> results = query.getResultList();
+	 	    
+			return results;
+		}
 }

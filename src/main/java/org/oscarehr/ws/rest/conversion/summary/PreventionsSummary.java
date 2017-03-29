@@ -82,8 +82,8 @@ public class PreventionsSummary implements Summary {
         }
         
         //create list of preventions
-        PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
-        ArrayList<HashMap<String,String>> prevList = pdc.getPreventions(); 
+        PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance(loggedInInfo);
+        ArrayList<HashMap<String,String>> prevList = pdc.getPreventions(loggedInInfo); 
         
         //get warnings from list of preventions for demographicNo
 		@SuppressWarnings("rawtypes")

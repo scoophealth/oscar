@@ -1377,10 +1377,10 @@ CREATE TABLE billing_on_cheader1 (
   creator varchar(6) default NULL,
   timestamp1 timestamp,
   clinic varchar(30) default NULL,
-
+  programNo int(10),
   PRIMARY KEY  (id),
   KEY appointment_no (appointment_no,demographic_no),
-  KEY demographic_no (demographic_no),
+  KEY dem_stat_date_Index (demographic_no, status, billing_date),
   KEY billing_date (billing_date),
   KEY provider_no (provider_no),
   KEY provider_ohip_no (provider_ohip_no),
@@ -2987,7 +2987,8 @@ CREATE TABLE `formLabReq10` (
   `female` tinyint(1),
   `patientChartNo` varchar(20),
   `letterhead` varchar(25),
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  KEY `demographic_noIndex` (`demographic_no`)
 );
 
 CREATE TABLE `batch_billing` (

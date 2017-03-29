@@ -98,7 +98,7 @@
         function searchOutOfDomain() {
             document.titlesearch.outofdomain.value="true";
             if (checkTypeIn()) document.titlesearch.submit();
-        }
+        }       
          
         </script>
 <% if (isMobileOptimized) { %>

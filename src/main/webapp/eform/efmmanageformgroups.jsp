@@ -23,8 +23,25 @@
     Ontario, Canada
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.eform" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_admin.eform");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@page import="java.net.URLEncoder"%>
 <%@ page import="oscar.eform.data.*, oscar.eform.*, java.util.*"%>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%
@@ -33,7 +50,7 @@
     String roleName = (String)session.getAttribute("userrole") + "," + user;
     
   ArrayList groups = EFormUtil.getEFormGroups();
-  ArrayList<HashMap<String, ? extends Object>> forms = EFormUtil.listEForms(EFormUtil.NAME, EFormUtil.CURRENT);
+  ArrayList<HashMap<String, ? extends Object>> forms = EFormUtil.listEForms(LoggedInInfo.getLoggedInInfoFromSession(request), EFormUtil.NAME, EFormUtil.CURRENT);
   String groupView = request.getParameter("group_view");
   if (groupView == null) {
       groupView = (String) request.getAttribute("group_view");
@@ -162,7 +179,7 @@ if(groupName.equals(groupView)){
 <tbody>
 	<%
   if (!groupView.equals("")) {
-      ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT, groupView, roleName);
+      ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listEForms(LoggedInInfo.getLoggedInInfoFromSession(request), orderBy, EFormUtil.CURRENT, groupView, roleName);
       if (eForms.size() > 0) {
         for (int i=0; i<eForms.size(); i++) {
         	HashMap<String, ? extends Object> curForm = eForms.get(i);

@@ -39,24 +39,30 @@ import org.apache.log4j.Logger;
 import org.oscarehr.util.EncryptionUtils;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.login.PasswordHash;
+
 
 @Entity
 @Table(name = "security")
 public class Security extends AbstractModel<Integer> {
 	private static Logger logger = MiscUtils.getLogger();
+	
+	public static final int STORAGE_VERSION_1 = 1;
+	public static final int STORAGE_VERSION_2 = 2;
+	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "security_no")
 	private Integer id;
 	
-	@Column(name = "user_name")
+	@Column(name = "user_name",nullable=false)
 	private String userName;
 	
-	@Column(name = "password")
+	@Column(name = "password",nullable=false)
 	private String password;
 	
-	@Column(name = "provider_no")
+	@Column(name = "provider_no",nullable=false)
 	private String providerNo;
 
 	@Column(name = "pin")
@@ -78,6 +84,8 @@ public class Security extends AbstractModel<Integer> {
 
 	@Column(name="forcePasswordReset")
 	private Boolean forcePasswordReset = true;
+	
+	private int storageVersion = 2;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date passwordUpdateDate;
@@ -85,12 +93,12 @@ public class Security extends AbstractModel<Integer> {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date pinUpdateDate;
 	
+	private String lastUpdateUser;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastUpdateDate;
 	
-	private String lastUpdateUser;
-	
-	
+
 	/** default constructor */
 	public Security() {
 	}
@@ -114,7 +122,7 @@ public class Security extends AbstractModel<Integer> {
 	}
 
 	/** full constructor */
-	public Security(String userName, String password, String providerNo, String pin, Integer BRemotelockset, Integer BLocallockset, Date dateExpiredate, Integer BExpireset, Boolean forcePasswordReset) {
+	public Security(String userName, String password, String providerNo, String pin, Integer BRemotelockset, Integer BLocallockset, Date dateExpiredate, Integer BExpireset, Boolean forcePasswordReset, int storageVersion) {
 		this.userName = userName;
 		this.password = password;
 		this.providerNo = providerNo;
@@ -124,6 +132,7 @@ public class Security extends AbstractModel<Integer> {
 		this.dateExpiredate = dateExpiredate;
 		this.BExpireset = BExpireset;
 		this.forcePasswordReset = forcePasswordReset;
+		this.storageVersion = storageVersion;
 	}
 
 
@@ -215,19 +224,30 @@ public class Security extends AbstractModel<Integer> {
 	 */
 	public boolean checkPassword(String inputedPassword) {
 		if (password == null) return (false);
-
-		byte[] sha1Bytes = EncryptionUtils.getSha1(inputedPassword);
-		StringBuilder sb = new StringBuilder();
-		for (byte b : sha1Bytes) {
-			sb.append(b);
+		logger.debug("storage version "+storageVersion);
+		if(storageVersion == Security.STORAGE_VERSION_1) {
+				
+			byte[] sha1Bytes = EncryptionUtils.getSha1(inputedPassword);
+			StringBuilder sb = new StringBuilder();
+			for (byte b : sha1Bytes) {
+				sb.append(b);
+			}
+		
+			if (password.equals(sb.toString())) {
+				return (true);
+			}
+		}else if(storageVersion == Security.STORAGE_VERSION_2) {
+			
+			try{
+				if(PasswordHash.validatePassword(inputedPassword,this.password)) {
+					return true;
+				}
+			}catch(Exception e){
+				logger.error("error validating password",e);
+			}
 		}
-
-		if (password.equals(sb.toString())) {
-			return (true);
-		} else {
-			throttleOnFailedLogin();
-			return (false);
-		}
+		throttleOnFailedLogin();
+		return false;
 	}
 
 	protected void throttleOnFailedLogin() {
@@ -247,6 +267,14 @@ public class Security extends AbstractModel<Integer> {
 		this.forcePasswordReset = forcePasswordReset;
 	}
 
+	public int getStorageVersion() {
+		return storageVersion;
+	}
+
+	public void setStorageVersion(int storageVersion) {
+		this.storageVersion = storageVersion;
+	}
+
 	public Date getPasswordUpdateDate() {
 		return passwordUpdateDate;
 	}
@@ -263,6 +291,14 @@ public class Security extends AbstractModel<Integer> {
 		this.pinUpdateDate = pinUpdateDate;
 	}
 
+	public String getLastUpdateUser() {
+		return lastUpdateUser;
+	}
+
+	public void setLastUpdateUser(String lastUpdateUser) {
+		this.lastUpdateUser = lastUpdateUser;
+	}
+
 	public Date getLastUpdateDate() {
 		return lastUpdateDate;
 	}
@@ -271,12 +307,8 @@ public class Security extends AbstractModel<Integer> {
 		this.lastUpdateDate = lastUpdateDate;
 	}
 
-	public String getLastUpdateUser() {
-		return lastUpdateUser;
-	}
-
-	public void setLastUpdateUser(String lastUpdateUser) {
-		this.lastUpdateUser = lastUpdateUser;
+	public Boolean getForcePasswordReset() {
+		return forcePasswordReset;
 	} 
 	
 	

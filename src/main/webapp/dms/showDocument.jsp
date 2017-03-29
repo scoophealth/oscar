@@ -54,14 +54,24 @@
 <%@ page import="oscar.util.ConversionUtils" %>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
-<%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*,org.oscarehr.util.SpringUtils"%><%
+<%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*,org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.managers.ProgramManager2" %>
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
+
+<%
 
             WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
             ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");
             UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
             OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
             ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
-               
+            
+        	ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+            LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+
+            List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+            
             String providerNo = request.getParameter("providerNo");
             UserProperty uProp = userPropertyDAO.getProp(providerNo, UserProperty.LAB_ACK_COMMENT);                        
             boolean skipComment = false;
@@ -316,12 +326,12 @@
                                                         
                                                         %>
                                                         <input type="button" id="msgBtn_<%=docId%>" value="Msg" onclick="popupPatient(700,960,'<%= request.getContextPath() %>/oscarMessenger/SendDemoMessage.do?demographic_no=','msg', '<%=docId%>')" <%=btnDisabled %>/>
-                                                                                                                                                                        <!--input type="button" id="ticklerBtn_<%=docId%>" value="Tickler" onclick="handleDocSave('<%=docId%>','addTickler')"/-->
-                                                        <input type="button" id="mainTickler_<%=docId%>" value="Tickler" onClick="popupPatientTickler(710, 1024,'<%= request.getContextPath() %>/Tickler.do?', 'Tickler','<%=docId%>')" <%=btnDisabled %>>
+                                                        <!--input type="button" id="ticklerBtn_<%=docId%>" value="Tickler" onclick="handleDocSave('<%=docId%>','addTickler')"/-->
+ 														<input type="button" id="mainTickler_<%=docId%>" value="Tickler" onClick="popupPatientTickler(710, 1024,'<%= request.getContextPath() %>/Tickler.do?', 'Tickler','<%=docId%>')" <%=btnDisabled %>>
                                                         <input type="button" id="mainEchart_<%=docId%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupPatient(710, 1024,'<%= request.getContextPath() %>/oscarEncounter/IncomingEncounter.do?reason=<bean:message key="oscarMDS.segmentDisplay.labResults"/>&curDate=<%=currentDate%>>&appointmentNo=&appointmentDate=&startTime=&status=&demographicNo=', 'encounter', '<%=docId%>')" <%=btnDisabled %>>
                                                         <input type="button" id="mainMaster_<%=docId%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnMaster"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=','master','<%=docId%>')" <%=btnDisabled %>>
                                                         <input type="button" id="mainApptHistory_<%=docId%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnApptHist"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25&demographic_no=','ApptHist','<%=docId%>')" <%=btnDisabled %>>
-
+                                                        
                                                         <input type="button" id="refileDoc_<%=docId%>" value="<bean:message key="oscarEncounter.noteBrowser.msgRefile"/>" onclick="refileDoc('<%=docId%>');" >
                                                         <select  id="queueList_<%=docId%>" name="queueList"> 
                                                             <%
@@ -331,7 +341,7 @@
                                                             %>
                                                             <option value="<%=id%>" <%=((id == queueId) ? " selected" : "")%>><%= qName%> </option>
                                                             <%}%>
-                                                        </select>                                                                                                             
+                                                        </select>                                                                                                         
                             </form>        	            
             <table class="docTable">
                 <tr>
@@ -424,6 +434,27 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td><bean:message key="inboxmanager.document.RestrictProgramNo" /></td>
+                                        <td>
+                                            <input id="restrictProgramNo<%=docId%>" name="restrictProgramNo" type="checkbox" <%=curdoc.isRestrictToProgram()?"checked=\"checked\"":"" %> >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><bean:message key="inboxmanager.document.ProgramNo" /></td>
+                                        <td>
+                                        	<select id="programNo<%=docId%>" name="programNo">
+                                        			<option value=""></option>
+                                     			   	<%
+                                     			   	for(ProgramProvider pp:ppList) {
+                                     			   		String programName = programManager2.getProgram(loggedInInfo, pp.getProgramId().intValue()).getName();
+                                     			   	%>
+                                     			   		<option value="<%=pp.getProgramId()%>" <%=(curdoc.getProgramId() != null && pp.getProgramId().intValue() == curdoc.getProgramId().intValue())?" selected=\"selected\"  ":"" %> ><%=programName%></option>
+                                     			   	<%} %>
+                                        	</select>
+                                     
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td><bean:message key="inboxmanager.document.DemographicMsg" /></td>
                                         <td style="width:400px;"><%
                                         if(!demographicID.equals("-1")){%>
@@ -437,8 +468,9 @@
                                                                                    
                                             <input type="checkbox" id="activeOnly<%=docId%>" name="activeOnly" checked="checked" value="true" onclick="setupDemoAutoCompletion()">Active Only<br>  
                                             <input type="text" style="width:400px;" id="autocompletedemo<%=docId%>" onchange="checkSave('<%=docId%>');" name="demographicKeyword" />
-                                            <div id="autocomplete_choices<%=docId%>" class="autocomplete"></div>
-                                            
+                                            <span id="autocomplete_choices<%=docId%>" class="autocomplete"></span>&nbsp;
+                                            <span id="duplicate<%=docId%>" style="color:red"></span>
+                                            <br>
                                             <%}%>
 											<input type="button" id="createNewDemo" value="Create New Demographic"  onclick="popup(700,960,'<%= request.getContextPath() %>/demographic/demographicaddarecordhtm.jsp','demographic')"/>
 
@@ -651,6 +683,24 @@
 	            		  addDocToList(ui.item.providerNo, ui.item.provider + " (MRP)", "<%=docId%>");
 	            	  }
 	            	  
+	            	  //trigger the duplicate check. Is this document already in the patient's chart
+						jQuery.ajax({
+			    			type: "GET",
+			    			url:  "<%= request.getContextPath()%>/dms/ManageDocument.do?method=documentExistsInChartAjax&demo_no="
+			    						+ ui.item.value + "&documentId=<%=docId%>",
+			    			dataType:'json',
+			    			success: function (data) {    				
+			    				//var obj = JSON.stringify(data);
+			    				if(data != null && data.duplicate === true) {
+			    					
+			    					jQuery("#duplicate<%=docId%>").html('Duplicate');
+			    				}
+			    			},
+			    			error: function(jqXHR, err, exception) {
+			    				alert("Error " + jqXHR.status + " " + err);
+			    			}
+    					});	            	  
+	            	  
 	            	  //enable Save button whenever a selection is made
 	                  jQuery('#save<%=docId%>').removeAttr('disabled');
 	                  jQuery('#saveNext<%=docId%>').removeAttr('disabled');
@@ -665,7 +715,6 @@
 	            });
         	}
           }
-        
         
         jQuery(setupDemoAutoCompletion());
         

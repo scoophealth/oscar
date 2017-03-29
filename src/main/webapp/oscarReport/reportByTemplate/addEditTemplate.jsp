@@ -153,7 +153,7 @@ $(function() {
 			<input type="hidden" name="opentext" value="<%=openText%>">
 			<input type="hidden" name="templateid" value="<%=templateid%>">
 			<br />
-			<input type="button" onclick="document.forms[1].submit()" value="<%if (action.equals("edit")){out.print("Save");}else{ out.print(StringUtils.capitalize(action));}%>">
+			<input type="button" onclick="this.form.submit()" value="<%if (action.equals("edit")){out.print("Save");}else{ out.print(StringUtils.capitalize(action));}%>">
 			
 			<%if (action.equals("edit")) {%> 
 			<input type="button" name="done" value="Done" onclick="document.location='reportConfiguration.jsp?templateid=<%=templateid%>'">

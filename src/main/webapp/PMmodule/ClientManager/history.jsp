@@ -27,6 +27,20 @@
 
 
 <%@ include file="/taglibs.jsp"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_pmm" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_pmm");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@ page import="java.util.*"%>
 <%@ page import="org.oscarehr.PMmodule.model.*"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
@@ -38,11 +52,9 @@
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 
 <%@page import="org.oscarehr.PMmodule.web.AdmissionForDisplay"%>
+<%@page import="org.oscarehr.PMmodule.web.FunctionalCentreAdmissionDisplay"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="org.oscarehr.PMmodule.web.ReferralHistoryDisplay" %>
-<%
-String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-%>
 
 <script type="text/javascript">
     function popupAdmissionInfo(admissionId) {
@@ -54,7 +66,12 @@ String roleName$ = (String)session.getAttribute("userrole") + "," + (String) ses
         url = '<html:rewrite page="/PMmodule/ClientManager.do?method=view_referral&referralId="/>';
         window.open(url + referralId, 'referral', 'width=500,height=600');
     }
-    
+
+    function popupFcAdmissionInfo(fcId) {
+        url = '<html:rewrite page="/PMmodule/ClientManager.do?method=view_fcAdmission&fcAdmissionId="/>';
+        window.open(url + fcId, 'fcAdmission', 'width=650,height=400');
+    }
+
     function changeDate(admissionId) {
     	var newDate = prompt('Please enter a new Admission Date (yyyy-MM-dd HH:mm)');
     	if(newDate != null && newDate.length>0) {
@@ -192,26 +209,9 @@ String roleName$ = (String)session.getAttribute("userrole") + "," + (String) ses
     
     
 	<display:column property="programType" sortable="true" title="Program Type" />
-	<display:column sortable="true" title="Admission Date">
-		<security:oscarSec objectName="_pmm.editDates" roleName="<%=roleName$%>" rights="r" reverse="false">
-			<a href="javascript:void(0)" onclick="changeDate('<%=admissionForDisplay.getAdmissionId()%>');return false;"><%=admissionForDisplay.getAdmissionDate() %></a>
-		</security:oscarSec>
-		<security:oscarSec objectName="_pmm.editDates" roleName="<%=roleName$%>" rights="r" reverse="true">
-			<%=admissionForDisplay.getAdmissionDate() %>
-		</security:oscarSec>
-	</display:column>
+	<display:column property="admissionDate" sortable="true" title="Admission Date" />
 	<display:column property="facilityAdmission" title="Facility<br />Admission" />
-	<display:column sortable="true" title="Discharge Date">
-		<%if(admissionForDisplay.getDischargeDate() != null) { %>
-		<security:oscarSec objectName="_pmm.editDates" roleName="<%=roleName$%>" rights="r" reverse="false">
-			<a href="javascript:void(0)" onclick="changeDischargeDate('<%=admissionForDisplay.getAdmissionId()%>');return false;"><%=admissionForDisplay.getDischargeDate() %></a>
-		</security:oscarSec>
-		<security:oscarSec objectName="_pmm.editDates" roleName="<%=roleName$%>" rights="r" reverse="true">
-			<%=admissionForDisplay.getDischargeDate() %>
-		</security:oscarSec>
-		<% } %>
-	</display:column>
-	
+	<display:column property="dischargeDate" sortable="true" title="Discharge Date" />
 	<display:column property="facilityDischarge" title="Facility<br />Discharge" />
 	<display:column property="daysInProgram" sortable="true" title="Days in Program" />
 	<caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">
@@ -240,29 +240,39 @@ String roleName$ = (String)session.getAttribute("userrole") + "," + (String) ses
 	<display:column property="destinationProgramName" sortable="true" title="Program Name" />
 	<display:column property="destinationProgramType" sortable="true" title="Program Type" />
 	<display:column property="referralDate" sortable="true" title="Referral Date" />
-	<display:column sortable="true" title="Referral Date">
-		<security:oscarSec objectName="_pmm.editDates" roleName="<%=roleName$%>" rights="r" reverse="false">
-			<a href="javascript:void(0)" onclick="changeReferralDate('<%=((ReferralHistoryDisplay)referral).getId()%>');return false;"><%=((ReferralHistoryDisplay)referral).getReferralDate() %></a>
-		</security:oscarSec>
-		<security:oscarSec objectName="_pmm.editDates" roleName="<%=roleName$%>" rights="r" reverse="true">
-			<%=((ReferralHistoryDisplay)referral).getReferralDate() %>
-		</security:oscarSec>
-	</display:column>
-	
-	<display:column sortable="true" title="Completion Date">
-	<%if(((ReferralHistoryDisplay)referral).getCompletionDate() != null) { %>
-		<security:oscarSec objectName="_pmm.editDates" roleName="<%=roleName$%>" rights="r" reverse="false">
-			<a href="javascript:void(0)" onclick="changeCompletionDate('<%=((ReferralHistoryDisplay)referral).getId()%>');return false;"><%=((ReferralHistoryDisplay)referral).getCompletionDate() %></a>
-		</security:oscarSec>
-		<security:oscarSec objectName="_pmm.editDates" roleName="<%=roleName$%>" rights="r" reverse="true">
-			<%=((ReferralHistoryDisplay)referral).getCompletionDate() %>
-		</security:oscarSec>
-		<% } %>
-	</display:column>
-	
-	
+	<display:column property="completionDate" sortable="true" title="Completion Date" />
 	<display:column property="sourceProgramName" sortable="false" title="Referring program/agency" />
 	<display:column property="external" sortable="false" title="External" />
+</display:table>
+<br />
+<br />
+<div class="tabs">
+	<table cellpadding="3" cellspacing="0" border="0">
+		<tr>
+			<th title="Programs">Functional Centre Admission History</th>
+		</tr>
+	</table>
+</div>
+<display:table class="simple" cellspacing="2" cellpadding="3" id="fcAdmission" name="fcAdmissionsHistory" requestURI="/PMmodule/ClientManager.do">
+	<display:setProperty name="paging.banner.placement" value="bottom" />
+     <display:column sortable="false">
+    <%  FunctionalCentreAdmissionDisplay temp = (FunctionalCentreAdmissionDisplay) pageContext.getAttribute("fcAdmission");
+        //if(temp.getDischargeDate().equals(""))
+    	//{
+    		%>
+		        <a href="javascript:void(0)" onclick="popupFcAdmissionInfo('<%=temp.getId()%>')">
+		            <img alt="View details" src="<c:out value="${ctx}" />/images/details.gif" border="0"/>
+		        </a>
+    		<%
+    	//}
+    %>
+    </display:column>
+    <display:column property="functionalCentre" sortable="true" title="Functional Centre" />
+	<display:column property="referralDate" sortable="true" title="Referral Date" />
+	<display:column property="admissionDate" sortable="true" title="Admission Date" />
+	<display:column property="serviceInitiationDate" sortable="true" title="Service Initiation Date" />
+	<display:column property="dischargeDate" sortable="false" title="Discharge Date" />
+	
 </display:table>
 <%
 	}

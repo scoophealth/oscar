@@ -53,14 +53,14 @@ public class RxDrugRef {
 
 	
 	// DRUG CATEGORIES FOR THE DRUG REF SEARCH TABLE.
-	public static int CAT_BRAND = 13;
-	public static int CAT_COMPOSITE_GENERIC = 12;
-	public static int CAT_GENERIC = 11;
-	public static int CAT_ATC = 8;
-	public static int CAT_AHFS = 10;
-	public static int CAT_ACTIVE_INGREDIENT = 14;
-	public static int CAT_AI_COMPOSITE_GENERIC = 19;
-	public static int CAT_AI_GENERIC = 18;
+	public static final int CAT_BRAND = 13;
+	public static final int CAT_COMPOSITE_GENERIC = 12;
+	public static final int CAT_GENERIC = 11;
+	public static final int CAT_ATC = 8;
+	public static final int CAT_AHFS = 10;
+	public static final int CAT_ACTIVE_INGREDIENT = 14;
+	public static final int CAT_AI_COMPOSITE_GENERIC = 19;
+	public static final int CAT_AI_GENERIC = 18;
 
     private static Logger logger=MiscUtils.getLogger(); 
 
