@@ -27,7 +27,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
+import java.net.SocketException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -183,8 +183,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private static final String INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY = "INTEGRATOR_UPDATE_PERIOD";
 	private static final String INTEGRATOR_THROTTLE_DELAY_PROPERTIES_KEY = "INTEGRATOR_THROTTLE_DELAY";
 	private static final long INTEGRATOR_THROTTLE_DELAY = Long.parseLong((String) OscarProperties.getInstance().get(INTEGRATOR_THROTTLE_DELAY_PROPERTIES_KEY));
-	private static final String INTEGRATOR_SLEEP_ON_ERROR_KEY = "INTEGRATOR_SLEEP_ON_ERROR";
-	private static final long SLEEP_ON_ERROR = Long.parseLong((String) OscarProperties.getInstance().get(INTEGRATOR_SLEEP_ON_ERROR_KEY));
+	private static final long SLEEP_ON_ERROR = 300000;
 	private static final double SLEEP_ON_ERROR_STEP = 1.5;
 
 	private static boolean ISACTIVE_PATIENT_CONSENT_MODULE = Boolean.FALSE; 
@@ -742,14 +741,13 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			} catch (Exception e) {
 				
 				Throwable cause = e.getCause();
-				if( cause instanceof SocketTimeoutException ) {
-										
+				if( cause instanceof SocketException ) {
+					
+					currentSleepOnErrorTime = Math.round(currentSleepOnErrorTime * SLEEP_ON_ERROR_STEP);
 					try {
 	                    Thread.sleep(currentSleepOnErrorTime);
                     } catch (InterruptedException e1) {	                 
                     }
-					
-					currentSleepOnErrorTime = Math.round(currentSleepOnErrorTime * SLEEP_ON_ERROR_STEP);
 				}
 				
 				

@@ -24,6 +24,22 @@
 
 --%>
 
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_phr" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_phr");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
+
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="java.net.URLEncoder"%>

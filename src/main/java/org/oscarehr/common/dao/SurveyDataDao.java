@@ -31,13 +31,16 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.common.model.SurveyData;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @SuppressWarnings("unchecked")
 public class SurveyDataDao extends AbstractDao<SurveyData>{
-
+	private static Logger logger = MiscUtils.getLogger();
+		
 	public SurveyDataDao() {
 		super(SurveyData.class);
 	}
@@ -57,6 +60,9 @@ public class SurveyDataDao extends AbstractDao<SurveyData>{
 				"WHERE s.surveyId = :sid " +
 				"AND s.processed IS NULL " +
 				"AND s.status = 'A'";
+		
+		logger.debug("survey Id "+surveyId+" -- "+sql);
+		
 		Query query = entityManager.createQuery(sql);
 		query.setParameter("sid", surveyId);
 		Object result = query.getSingleResult();

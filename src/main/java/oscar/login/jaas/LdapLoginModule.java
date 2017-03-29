@@ -34,12 +34,14 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.security.auth.login.LoginException;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Security;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 
@@ -56,6 +58,8 @@ public final class LdapLoginModule extends BaseLoginModule {
 	private static final String AUTH_METHOD_SIMPLE = "simple";
 	private static final String AUTH_METHOD_DIGEST = "DIGEST-MD5";
 
+	private Logger logger = MiscUtils.getLogger();
+	
 	private ProviderDao providerDao;
 	private SecurityDao securityDao;
 	private SecUserRoleDao secUserRoleDao;

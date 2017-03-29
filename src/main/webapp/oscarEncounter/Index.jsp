@@ -104,7 +104,7 @@ You have no rights to access the data!
 <%
 session.setAttribute("encounter_oscar_bean", bean);
 session.setAttribute("encounter_bean_flag", "true");
-String encounterurl=request.getContextPath()+"/mod/specialencounterComp/forward.jsp?method=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
+String encounterurl=request.getContextPath()+"/mod/specialencounterComp/forward.jsp?method=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+URLEncoder.encode(bean.userName);
 session.setAttribute("encounter_oscar_baseurl",request.getContextPath());
 if (request.getParameter("specalEncounter")==null)
 {
@@ -120,7 +120,7 @@ if (request.getParameter("specalEncounter")==null)
 session.setAttribute("casemgmt_oscar_baseurl",request.getContextPath());
 session.setAttribute("casemgmt_oscar_bean", bean);
 session.setAttribute("casemgmt_bean_flag", "true");
-String hrefurl=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
+String hrefurl=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+URLEncoder.encode(bean.userName);
 if (request.getParameter("casetoEncounter")==null)
 {
 	response.sendRedirect(hrefurl);
@@ -852,7 +852,7 @@ function removeSaveFeedback()  {
 			style="font-size: 80%; border-top: 2px solid #A9A9A9; border-right: 2px solid #A9A9A9; vertical-align: top">
 		<table class="LeftTable">
 			<caisi:isModuleLoad moduleName="caisi">
-				<%String hrefurl2=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
+				<%String hrefurl2=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+URLEncoder.encode(bean.userName);
 %>
 				<tr>
 					<td><a href="<%=hrefurl2%>">Case Management Encounter</a></td>

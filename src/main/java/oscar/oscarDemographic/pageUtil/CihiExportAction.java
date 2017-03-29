@@ -73,6 +73,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -261,7 +262,7 @@ public class CihiExportAction extends DispatchAction {
 		List<String> patientList = demoSets.getDemographicSet(frm.getString("patientSet"));
 
 		//make all xml files, zip them and save to document directory
-		String filename = this.make(frm, patientList, tmpDir);
+		String filename = this.make(LoggedInInfo.getLoggedInInfoFromSession(request), frm, patientList, tmpDir);
 
 		//we got this far so save entry to db
 		DataExport dataExport = new DataExport();
@@ -282,7 +283,7 @@ public class CihiExportAction extends DispatchAction {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-    private String make(DynaValidatorForm frm, List patientList, String tmpDir) throws Exception {
+    private String make(LoggedInInfo loggedInInfo, DynaValidatorForm frm, List patientList, String tmpDir) throws Exception {
 		 HashMap<String,CiHiCdsDocument> xmlMap = new HashMap<String,CiHiCdsDocument>();
 		 HashMap<String,String> fileNamesMap = new HashMap<String,String>();
 		 String demoNo;
@@ -331,7 +332,7 @@ public class CihiExportAction extends DispatchAction {
 			 this.buildProcedure(demo, patientRecord);
 			 this.buildLaboratoryResults(demo, patientRecord);
 			 this.buildMedications(demo, patientRecord);
-			 this.buildImmunizations(demo, patientRecord);
+			 this.buildImmunizations(loggedInInfo, demo, patientRecord);
 		 }
 
 
@@ -986,10 +987,12 @@ public class CihiExportAction extends DispatchAction {
 
 	}
 
-    private void buildImmunizations(Demographic demo, PatientRecord patientRecord) {
+    private void buildImmunizations(LoggedInInfo loggedInInfo, Demographic demo, PatientRecord patientRecord) {
     	HashMap<String,String> preventionMap;
     	List<Prevention> preventionsList = getPreventionDao().findNotDeletedByDemographicId(demo.getDemographicNo());
 
+    	Map<String,Object> prevTypes = Util.getPreventionTypes(loggedInInfo);
+    	
          for( Prevention prevention: preventionsList ) {
              preventionMap = getPreventionExtDao().getPreventionExt(prevention.getId());
 
@@ -998,7 +1001,7 @@ public class CihiExportAction extends DispatchAction {
         	 if (StringUtils.filled(preventionMap.get("name"))) {
         		immunizations.setImmunizationName(preventionMap.get("name"));
         	 }else{
-        		String preventionType = Util.getImmunizationType(prevention.getPreventionType());
+        		String preventionType = Util.getImmunizationType(loggedInInfo, prevention.getPreventionType(),prevTypes);
         		if (cdsDt.ImmunizationType.Enum.forString(preventionType)!=null) {
         			immunizations.setImmunizationName(preventionType);
         		} else {

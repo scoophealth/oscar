@@ -23,12 +23,21 @@
  */
 package org.oscarehr.e2e.director;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.e2e.constant.Constants;
 
 public class E2ECreatorTest {
+	@BeforeClass
+	public static void beforeClass() throws Exception {
+		SchemaUtils.restoreTable(Constants.Runtime.TABLES);
+		assertEquals(0, SchemaUtils.loadFileIntoMySQL(Constants.Runtime.E2E_SETUP));
+	}
+
 	@SuppressWarnings("unused")
 	@Test(expected=UnsupportedOperationException.class)
 	public void instantiationTest() {

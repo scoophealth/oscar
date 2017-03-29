@@ -64,6 +64,15 @@ public class EyeformSpecsHistory extends AbstractModel<Integer>{
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updateTime;
 	private int appointmentNo;
+	private String note;
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
 
 	public EyeformSpecsHistory() {
 		status="A";
@@ -195,7 +204,13 @@ public class EyeformSpecsHistory extends AbstractModel<Integer>{
 	public void setDateStr(String d) {
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 		try {
-			setDate(sdf.parse(d));
+				if(d == null){
+					setDate(null);
+				}else if(d == ""){
+					setDate(null);
+				}else{
+					setDate(sdf.parse(d));
+				}
 		}catch(ParseException e) {
 			MiscUtils.getLogger().error("Error",e);
 		}

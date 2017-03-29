@@ -61,11 +61,13 @@ import org.oscarehr.PMmodule.model.OcanSubmissionLog;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.FacilityDao;
+import org.oscarehr.common.dao.FunctionalCentreAdmissionDao;
 import org.oscarehr.common.dao.OcanStaffFormDao;
 import org.oscarehr.common.dao.OcanStaffFormDataDao;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.common.model.FunctionalCentreAdmission;
 import org.oscarehr.common.model.OcanStaffForm;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.LoggedInInfo;
@@ -174,13 +176,12 @@ public class CBIUtil
 		//cbiDataItem.setFcAdmissionId(ocanStaffForm.getAdmissionId() + "");		
 		cbiDataItem.setProgramEnrollmentId(ocanStaffForm.getAdmissionId() + "");
 		
-		AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
-		Admission admission = admissionDao.getAdmission(ocanStaffForm.getAdmissionId());
+		FunctionalCentreAdmissionDao fc_admissionDao = (FunctionalCentreAdmissionDao) SpringUtils.getBean("functionalCentreAdmissionDao");
+		FunctionalCentreAdmission fc_admission = fc_admissionDao.find(ocanStaffForm.getAdmissionId());
 		//set functional center id
-		if(admission.getProgram()!=null && admission.getProgram().getFunctionalCentreId()!=null && 
-				admission.getProgram().getFunctionalCentreId().trim().length()>0)
-			cbiDataItem.setFcId(Integer.parseInt(admission.getProgram().getFunctionalCentreId().replaceAll("[\\t ]+", "")));
-
+		if(fc_admission.getFunctionalCentreId()!=null && fc_admission.getFunctionalCentreId().trim().length()>0)
+			cbiDataItem.setFcId(Integer.parseInt(fc_admission.getFunctionalCentreId().replaceAll("[\\t ]+", "")));
+				
 		cbiDataItem.setClientId(ocanStaffForm.getClientId() + "");						
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		if(ocanStaffForm.getAdmissionDate()!=null)
@@ -492,10 +493,14 @@ public class CBIUtil
 		OcanStaffFormDao ocanStaffFormDao = (OcanStaffFormDao) SpringUtils.getBean("ocanStaffFormDao");
 		List<OcanSubmissionLog> failedSubmissionList = ocanSubmissionLogDao.findFailedSubmissionsByType("CBI");
 		if(failedSubmissionList!=null && !failedSubmissionList.isEmpty()) {
-			messages.append("Failed to upload CBI forms: ");			
+			boolean appendFailureMessage = true;						
 			for(OcanSubmissionLog submissionLog : failedSubmissionList) {
 				OcanStaffForm cbiForm = ocanStaffFormDao.findByProviderAndSubmissionId(providerNo, submissionLog.getId(),"CBI");
-				if(cbiForm!=null) {
+				if(cbiForm!=null) {					
+					if(appendFailureMessage) {
+						messages.append("Failed to upload CBI forms: ");
+						appendFailureMessage = false;
+					}
 					messages.append("form id:" +cbiForm.getId() +", client id:"+cbiForm.getClientId() + " ,client name:" + cbiForm.getFirstName() + " " + cbiForm.getLastName() + " ; " );
 				}
 			}

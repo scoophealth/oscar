@@ -943,6 +943,11 @@
 
 			</exclusions>
 		</dependency>
+		<dependency>
+		    <groupId>org.codehaus.woodstox</groupId>
+		    <artifactId>woodstox-core-asl</artifactId>
+		    <version>4.4.1</version>
+		</dependency>
 <dependency>
     <groupId>org.apache.cxf</groupId>
     <artifactId>cxf-rt-frontend-jaxws</artifactId>
@@ -1207,6 +1212,7 @@
                         <validHeader>utils/headers/ubc.txt</validHeader>
                         <validHeader>utils/headers/uvic.txt</validHeader>
                         <validHeader>utils/headers/kai.txt</validHeader>
+                        <validHeader>utils/headers/leverage.txt</validHeader>
                 </validHeaders>
                 <includes>
                     <include>src/main/java/**/*.java</include>
@@ -1337,6 +1343,7 @@
             <exclude>src/main/java/org/apache/xml/security/encryption/DocumentSerializer.java</exclude>
 			<exclude>src/main/webapp/library/bootstrap2-datepicker/**</exclude>
 			<exclude>src/main/webapp/library/ng-table/**</exclude>
+			<exclude>src/main/java/oscar/login/PasswordHash.java</exclude>
                 </excludes>
 		<strictCheck>true</strictCheck>
             </configuration>
@@ -1394,7 +1401,7 @@
 							<goal>run</goal>
 						</goals>
 						<configuration>
-							<tasks>
+							<target>
 								<tstamp>
 									<format property="build.dateTime.value" pattern="yyyy-MM-dd hh:mm aa" />
 								</tstamp>
@@ -1407,7 +1414,7 @@
 								<echo message="JOB_NAME - BUILD_NUMBER : ${env.JOB_NAME} - ${env.BUILD_NUMBER}" />
 								<replace file="target/classes/oscar_mcmaster.properties" token="${build.JOB_NAME}" value="${env.JOB_NAME}" />
 								<replace file="target/classes/oscar_mcmaster.properties" token="${build.BUILD_NUMBER}" value="${env.BUILD_NUMBER}" />
-							</tasks>
+							</target>
 						</configuration>
 					</execution>
 
@@ -1419,11 +1426,11 @@
 							<goal>run</goal>
 						</goals>
 						<configuration>
-							<tasks>
+							<target>
 								<property name="build.compiler" value="extJavac" />
 								<property name='jspc_target' value="${project.name}-${project.version}" />
 								<ant antfile="jspc.xml" target="jspc" />
-							</tasks>
+							</target>
 						</configuration>
 					</execution>
 					
@@ -1434,24 +1441,24 @@
 							<goal>run</goal>
 						</goals>
 						<configuration>
-							<tasks>
+							<target>
 								<copy todir="catalina_base/webapps/oscar">
 									<fileset dir="target/${project.name}-${project.version}" />
 								</copy>
-							</tasks>
+							</target>
 						</configuration>
 					</execution>
 					<execution>
 						<id>clean_local_catalina_base</id>
 						<phase>clean</phase>
 						<configuration>
-							<tasks>
+							<target>
 								<delete dir="catalina_base/webapps/oscar" />
 								<delete includeemptydirs="true" quiet="true">
 									<fileset dir="catalina_base/logs" excludes=".gitignore" />
 									<fileset dir="catalina_base/work" excludes=".gitignore" />
 								</delete>
-							</tasks>
+							</target>
 						</configuration>
 						<goals>
 							<goal>run</goal>
@@ -1523,6 +1530,7 @@
 		            <exclude>**/AR2005*.java</exclude>
 		            <exclude>**/OntarioMDSpec4DataTest.java</exclude>
 		            <exclude>**/ONAREnhancedBornConnectorTest.java</exclude>
+			    <exclude>org/oscarehr/e2e/**/*.java</exclude>
 		          </excludes>
 			  <systemPropertyVariables>
 		             <oscar.dbinit.skip>${oscar.dbinit.skip}</oscar.dbinit.skip>
@@ -1700,10 +1708,24 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
+				<plugin>
+				       <groupId>org.codehaus.mojo</groupId>
+				        <artifactId>sonar-maven-plugin</artifactId>
+				        <version>2.3</version>
+			      </plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
 
+	<reporting>
+	 <plugins>
+     <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>3.0.3-SNAPSHOT</version>
+      </plugin>
+	 </plugins>
+	</reporting>
 	<profiles>
 		<profile>
 			<id>jdk6</id>

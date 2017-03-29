@@ -136,6 +136,44 @@ private Logger log=MiscUtils.getLogger();
         return admission;
     }
 
+    public Admission getLatestDischarge(Integer programId, Integer demographicNo) {
+       
+        if (programId == null || programId <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        if (demographicNo == null || demographicNo <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        String queryStr = "FROM Admission a WHERE a.ProgramId=? AND a.ClientId=? AND a.AdmissionStatus='discharged' ORDER BY a.DischargeDate DESC";
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter(1, programId);
+        query.setParameter(2, demographicNo);
+        
+        return getSingleResultOrNull(query);
+        
+    }
+    
+    public Admission getOldestAdmissionToOneFunctionalCentre(String functioanlCentreId, Integer demographicNo) {
+        Admission admission = null;
+
+        if (functioanlCentreId == null ) {
+            throw new IllegalArgumentException();
+        }
+
+        if (demographicNo == null || demographicNo <= 0) {
+            throw new IllegalArgumentException();
+        }
+        
+        String queryStr = "FROM Admission a , Program p WHERE a.ProgramId=p.id AND a.ClientId=? ORDER BY a.AdmissionDate ASC";
+        Query query = entityManager.createQuery(queryStr);
+        query.setParameter(1, demographicNo);
+        
+        return getSingleResultOrNull(query);
+        
+    }
+
     public List<Admission> getAdmissions() {
         String queryStr = "select a FROM Admission a ORDER BY a.admissionDate DESC";
         
@@ -761,7 +799,7 @@ private Logger log=MiscUtils.getLogger();
 		//	y-         S------>E
 		//	y-   S------------>E
 
-		String q = "select a FROM Admission a WHERE a.programId=? and a.admissionDate<=? and (a.dischargeDate>=? or a.dischargeDate is null)";
+		String q = "select a FROM Admission a WHERE a.programId=? and a.admissionDate<=? and (a.dischargeDate>=? or a.dischargeDate is null) order by a.clientId DESC";
 		Query query = entityManager.createQuery(q);
 		query.setParameter(1, programId);
 		query.setParameter(2, endDate);

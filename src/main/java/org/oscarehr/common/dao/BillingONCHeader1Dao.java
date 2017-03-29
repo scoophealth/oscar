@@ -50,6 +50,7 @@ import org.oscarehr.common.model.BillingService;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.DateRange;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -106,7 +107,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         }
     }
     
-    public String createBill(String provider, Integer demographic, String code, String clinicRefCode, Date serviceDate, String curUser) {
+    public String createBill(LoggedInInfo loggedInInfo, String provider, Integer demographic, String code, String clinicRefCode, Date serviceDate, String curUser) {
         BillingONCHeader1 header1 = null;
         Provider prov = providerDao.getProvider(provider);
         OscarProperties properties = OscarProperties.getInstance();
@@ -125,7 +126,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         return total;
     }
     
-    public String createBill(String provider, Integer demographic, String code, String dxCode, String clinicRefCode, Date serviceDate, String curUser) {
+    public String createBill(LoggedInInfo loggedInInfo, String provider, Integer demographic, String code, String dxCode, String clinicRefCode, Date serviceDate, String curUser) {
         BillingONCHeader1 header1 = null;
         Provider prov = providerDao.getProvider(provider);
         OscarProperties properties = OscarProperties.getInstance();
@@ -147,7 +148,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     }
     
 
-    public String createBills(String provider, List<String>demographic_nos, List<String>codes, List<String>dxcodes, String clinicRefCode, Date serviceDate, String curUser) {
+    public String createBills(LoggedInInfo loggedInInfo, String provider, List<String>demographic_nos, List<String>codes, List<String>dxcodes, String clinicRefCode, Date serviceDate, String curUser) {
         BillingONCHeader1 header1 = null;
         Provider prov = providerDao.getProvider(provider);
         OscarProperties properties = OscarProperties.getInstance();
@@ -253,8 +254,8 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         GstControl gstControl = gstControlDao.find(new Integer(1));
         BigDecimal gst;
         BigDecimal gstTotal;
-        BigDecimal total = new BigDecimal(0.0);
-        BigDecimal percent = new BigDecimal(0.0);
+        BigDecimal total = new BigDecimal("0");
+        BigDecimal percent = new BigDecimal("0");
         BillingPercLimit billingPerc;
         ArrayList<BillingService> aPercentCodes = new ArrayList<BillingService>();
         BillingService billingservice = null;
@@ -269,8 +270,8 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
             else {
                 if( billingservice != null && billingservice.getGstFlag() ) {
                     gst = gstControl.getGstPercent();
-                    gst = gst.divide(new BigDecimal(100.0));
-                    gstTotal = gst.multiply(new BigDecimal(Double.parseDouble(billingservice.getValue())));
+                    gst = gst.divide(BigDecimal.valueOf(100.0));
+                    gstTotal = gst.multiply(new BigDecimal(billingservice.getValue()));
                     total = total.add(gstTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
                 }
 
@@ -282,12 +283,12 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
         BigDecimal percBase = total;
         BigDecimal percentCalc;
         for( BillingService percentcode : aPercentCodes ) {
-            percent = new BigDecimal(Double.parseDouble(percentcode.getPercentage())).setScale(2, BigDecimal.ROUND_HALF_UP);
+            percent = new BigDecimal(percentcode.getPercentage()).setScale(2, BigDecimal.ROUND_HALF_UP);
             percentCalc = percBase.multiply(percent).setScale(2, BigDecimal.ROUND_HALF_UP);
             billingPerc = percentcode.getBillingPercLimit();
             if( billingPerc != null ) {
-                percentCalc = percentCalc.min(new BigDecimal(Double.parseDouble(billingPerc.getMax())));
-                percentCalc = percentCalc.max(new BigDecimal(Double.parseDouble(billingPerc.getMin())));
+                percentCalc = percentCalc.min(new BigDecimal(billingPerc.getMax()));
+                percentCalc = percentCalc.max(new BigDecimal(billingPerc.getMin()));
             }
 
             total = total.add(percentCalc);
@@ -380,7 +381,7 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
     
     
     public List<Map<String,Object>> getInvoicesMeta(Integer demographicNo) {
-    	String sql = "select new map(h1.id as id, h1.billingDate as billingDate, h1.billingTime as billing_time, h1.providerNo as provider_no) from BillingONCHeader1 h1 where " +
+    	String sql = "select new map(h1.id as id, h1.billingDate as billingDate, h1.billingTime as billing_time, h1.providerNo as provider_no, h1.programNo as programNo) from BillingONCHeader1 h1 where " +
                 " h1.demographicNo = :demo and h1.status != 'D' order by h1.billingDate desc";
         Query q = entityManager.createQuery(sql);
         
@@ -660,7 +661,10 @@ public class BillingONCHeader1Dao extends AbstractDao<BillingONCHeader1>{
 		if(paymentStartDate != null || paymentEndDate != null) {
 			app.and("ch1.id = bp.billingNo");
 		}
-		app.and("bi.status != 'D'");
+		
+		if(!"D".equals(statusType)) {
+			app.and("bi.status != 'D'");
+		}
 		
 		app.and("ch1.payProgram in (:payPrograms)", "payPrograms", payPrograms);
 		app.and("ch1.status = :status", "status", statusType);

@@ -1,0 +1,108 @@
+<%@page import="oscar.OscarProperties" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+
+<oscar:oscarPropertiesCheck property="lab.handler.ALPHA.enabled" value="true">
+	<option value="AlphaHL7">ALPHA</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.BIOTEST.enabled" value="true">
+<option value="BIOTEST">BioTest</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.CLS.enabled" value="true">
+	<option value="CLS">Calgary Lab Services (CLS)</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.CDL.enabled" value="true">
+	<option value="CDL">CDL</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.CML.enabled" value="true">
+<option value="CML">CML</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.EPISILON.enabled" value="true">
+<option value="EPSILON">EPSILON/MHL</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.PATHL7.enabled" value="true">
+<option value="PATHL7"
+<oscar:oscarPropertiesCheck property="PATHNET_LABS" value="yes">Selected</oscar:oscarPropertiesCheck>>EXCELLERIS</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.GDML.enabled" value="true">
+<option value="GDML">GDML</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.HHSEMR.enabled" value="true">
+<option value="HHSEMR">HHSEMR</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.HRMXML.enabled" value="true">
+<option value="HRMXML">HRM XML</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.ICL.enabled" value="true">
+<option value="ICL">ICL</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.IHA.enabled" value="true">
+<option value="IHA">IHA</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.MDS.enabled" value="true">
+<option value="MDS">MDS/Lifelabs</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.MEDVUE.enabled" value="true">
+<option value="MEDVUE">MEDVUE</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.OLIS_HL7.enabled" value="true">
+<option value="OLIS_HL7">OLIS HL7</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.OSCAR_TO_OSCAR_HL7_V2.enabled" value="true">
+<option value="OSCAR_TO_OSCAR_HL7_V2">OSCAR_TO_OSCAR_HL7_V2</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.PDFDOC.enabled" value="true">
+<option value="PDFDOC">PDFDOC</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.PFHT.enabled" value="true">
+	<option value="PFHT">PFHT</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.SIOUX.enabled" value="true">
+	<option value="SIOUX">SIOUX</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.TDIS.enabled" value="true">
+	<option value="TDIS">TDIS</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.Spire.enabled" value="true">
+<option value="Spire">Spire</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.OUL_R21.enabled" value="true">
+<option value="OUL_R21">OUL_R21</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.ORU_R01.enabled" value="true">
+<option value="ORU_R01">ORU_R01</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.TRUENORTH.enabled" value="true">
+<option value="TRUENORTH">TRUENORTH</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.MEDITECH.enabled" value="true">
+<option value="MEDITECH" >MEDITECH</option>
+</oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="lab.handler.OTHER.enabled" value="true">
+<option value="OTHER">Other</option>
+</oscar:oscarPropertiesCheck>
+					

@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.common.IsPropertiesOn"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -49,8 +50,10 @@
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager"%>
 <%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
+
 <%@page import="oscar.util.DateUtils"%>
 <%@page import="org.oscarehr.common.dao.OscarLogDao"%>
+<%@page import="org.oscarehr.managers.DemographicManager"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.DemographicTransfer"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore"%>
 <%@page import="org.oscarehr.casemgmt.service.CaseManagementManager"%>
@@ -251,6 +254,13 @@
                     href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=last_name&limit1=0&limit2=<%=strLimit%>"><bean:message
                     key="demographic.demographicsearchresults.btnDemoName"/></a>
                 </td>
+                
+        <oscar:oscarPropertiesCheck property="searchresults.showAddress" value="true" defaultVal="false">
+	        <td class="address">
+	        	<bean:message key="oscarEncounter.search.demographicSearch.formAddr"/>
+	        </td>
+        </oscar:oscarPropertiesCheck>
+                
 		<td class="chartNo"><a
 			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=chart_no&limit1=0&limit2=<%=strLimit%>"><bean:message
 			key="demographic.demographicsearchresults.btnChart" /></a>
@@ -304,21 +314,60 @@
 	
 	
 	List<Demographic> demoList = null;
-	
-        if(request.getParameter("keyword")!=null && request.getParameter("keyword").length()==0) {
+      if(request.getParameter("keyword")!=null && request.getParameter("keyword").length()==0) {
             int mostRecentPatientListSize=Integer.parseInt(OscarProperties.getInstance().getProperty("MOST_RECENT_PATIENT_LIST_SIZE","3"));
             List<Integer> results = oscarLogDao.getRecentDemographicsAccessedByProvider(providerNo,  0, mostRecentPatientListSize);
             demoList = new ArrayList<Demographic>();
-            for(Integer r:results) {
+            for(Integer r : results) {
                 demoList.add(demographicDao.getDemographicById(r));
             }
-            
         } else {
-            demoList = doSearch(demographicDao,searchMode,ptstatus,keyword,limit,offset,orderBy,providerNo,outOfDomain);	
+
+        	//there's a list of searchMode/keyword doubles
+        	List<String> searchModes = new ArrayList<String>();
+        	List<String> keywords = new ArrayList<String>();
+        	searchModes.add(searchMode);
+			keywords.add(keyword);
+			
+			String strMax = request.getParameter("max_search_clause");
+			int max = 1;
+			try {
+				max = Integer.parseInt(strMax);
+			}catch(NumberFormatException e) {
+				
+			}
+			
+			
+        	for(int x=2;x<=max;x++) {
+        		String isActive = request.getParameter("search_" + x);
+            	if(isActive != null && "true".equals(isActive)) {
+            		String searchModeX = request.getParameter("search_mode_" + x);
+    				String keywordX = request.getParameter("keyword_"+x);
+    				String programKeywordX = request.getParameter("programKeyword_"+x);
+    				
+    				if("search_program_no".equals(searchModeX)) {
+    					if(programKeywordX != null && !programKeywordX.equals("")) {
+        					searchModes.add(searchModeX);
+        					keywords.add(programKeywordX);
+        				}
+    				} else {
+	    				if(keywordX != null && !keywordX.equals("")) {
+	    					searchModes.add(searchModeX);
+	    					keywords.add(keywordX);
+	    				}
+    				}
+            	}
+        	}
+            demoList = doSearch(loggedInInfo, demographicDao,searchModes,ptstatus,keywords,limit,offset,orderBy,providerNo,outOfDomain);	
         }	
 	
+        
+       
+
+        
 	boolean toggleLine = false;
 	boolean firstPageShowIntegratedResults = request.getParameter("firstPageShowIntegratedResults") != null && "true".equals(request.getParameter("firstPageShowIntegratedResults"));
+
 	int nItems=0;
 
 	if(demoList==null) {
@@ -353,8 +402,7 @@
 		else if(orderBy.equals("phone")) {
 			Collections.sort(demoList, Demographic.PhoneComparator);
 		}
-		
-		
+
 		@SuppressWarnings("unchecked")
 		  List<MatchingDemographicTransferScore> integratorSearchResults=(List<MatchingDemographicTransferScore>)request.getAttribute("integratorSearchResults");
 		  
@@ -373,6 +421,9 @@
 				   	<a title="Import" href="#"  onclick="popup(700,1027,'../appointment/copyRemoteDemographic.jsp?remoteFacilityId=<%=demographicTransfer.getIntegratorFacilityId()%>&demographic_no=<%=String.valueOf(demographicTransfer.getCaisiDemographicId())%>&originalPage=../demographic/demographiceditdemographic.jsp&provider_no=<%=curProvider_no%>')" >Import</a></td>
 				   <td class="links">Remote</td>
 				   <td class="name"><%=Misc.toUpperLowerCase(demographicTransfer.getLastName())%>, <%=Misc.toUpperLowerCase(demographicTransfer.getFirstName())%></td>
+				   <oscar:oscarPropertiesCheck property="searchresults.showAddress" value="true" defaultVal="false">				   
+				   	<td class="address"></td>
+				   </oscar:oscarPropertiesCheck>
 				   <td class="chartNo"></td>
 				   <td class="sex"><%=demographicTransfer.getGender()%></td>
 				   <td class="dob"><%=demographicTransfer.getBirthDate() != null ?  DateFormatUtils.ISO_DATE_FORMAT.format(demographicTransfer.getBirthDate()) : ""%></td>
@@ -452,7 +503,9 @@
 			<a title="Eyeform" href="#" onclick="popup(800, 1280, '../eyeform/eyeform.jsp?demographic_no=<%=dem_no %>&reason=')">EF</a>
 		</security:oscarSec>
 	<% 
-		} 
+		}
+		
+		String address = demo.getAddress() + "<br/>" + demo.getCity() + "," + demo.getProvince() + "<br/>" + demo.getPostal();
 	%>
 		<caisi:isModuleLoad moduleName="caisi">
 		<td class="name"><a href="#" onclick="location.href='<%= request.getContextPath() %>/PMmodule/ClientManager.do?id=<%=dem_no%>'"><%=Misc.toUpperLowerCase(demo.getLastName())%>, <%=Misc.toUpperLowerCase(demo.getFirstName())%></a></td>
@@ -460,6 +513,9 @@
 		<caisi:isModuleLoad moduleName="caisi" reverse="true">
 		<td class="name"><%=Misc.toUpperLowerCase(demo.getLastName())%>, <%=Misc.toUpperLowerCase(demo.getFirstName())%></td>
 		</caisi:isModuleLoad>
+		<oscar:oscarPropertiesCheck property="searchresults.showAddress" value="true" defaultVal="false">
+			<td class="address"><%=address%></td>
+		</oscar:oscarPropertiesCheck>
 		<td class="chartNo"><%=demo.getChartNo()==null||demo.getChartNo().equals("")?"&nbsp;":demo.getChartNo()%></td>
 		<td class="sex"><%=demo.getSex()%></td>
 		<td class="dob"><%=demo.getFormattedDob()%></td>
@@ -528,87 +584,17 @@ Boolean isLocal(MatchingDemographicTransferScore matchingDemographicTransferScor
     
 }
 
-List<Demographic> doSearch(DemographicDao demographicDao,String searchMode, String ptstatus, String keyword, int limit, int offset, String orderBy, String providerNo, boolean outOfDomain) {
+List<Demographic> doSearch(LoggedInInfo loggedInInfo, DemographicDao demographicDao,List<String> searchModes, String ptstatus, List<String> keywords, int limit, int offset, String orderBy, String providerNo, boolean outOfDomain) {
+	
+	DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+	
 	List<Demographic> demoList = null;  
-	OscarProperties props = OscarProperties.getInstance();
-	
-	String pstatus = props.getProperty("inactive_statuses", "IN, DE, IC, ID, MO, FI");
-	pstatus = pstatus.replaceAll("'","").replaceAll("\\s", "");
-	List<String>stati = Arrays.asList(pstatus.split(","));
-	
-	
 
-	if( "".equals(ptstatus) ) {
-		if(searchMode.equals("search_name")) {
-			demoList = demographicDao.searchDemographicByName(keyword, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_phone")) {
-			demoList = demographicDao.searchDemographicByPhone(keyword, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_dob")) {
-			demoList = demographicDao.searchDemographicByDOB(keyword, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_address")) {
-			demoList = demographicDao.searchDemographicByAddress(keyword, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_hin")) {
-			demoList = demographicDao.searchDemographicByHIN(keyword, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_chart_no")) {
-			demoList = demographicDao.findDemographicByChartNo(keyword, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_demographic_no")) {
-			demoList = demographicDao.findDemographicByDemographicNo(keyword, limit, offset,providerNo,outOfDomain);
-		}
-	}
-	else if( "active".equals(ptstatus) ) {
-	    if(searchMode.equals("search_name")) {
-			demoList = demographicDao.searchDemographicByNameAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-	    else if(searchMode.equals("search_phone")) {
-			demoList = demographicDao.searchDemographicByPhoneAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_dob")) {
-			demoList = demographicDao.searchDemographicByDOBAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_address")) {
-			demoList = demographicDao.searchDemographicByAddressAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_hin")) {
-			demoList = demographicDao.searchDemographicByHINAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_chart_no")) {
-			demoList = demographicDao.findDemographicByChartNoAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_demographic_no")) {
-			demoList = demographicDao.findDemographicByDemographicNoAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-	}
-	else if( "inactive".equals(ptstatus) ) {
-	    if(searchMode.equals("search_name")) {
-			demoList = demographicDao.searchDemographicByNameAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-	    else if(searchMode.equals("search_phone")) {
-			demoList = demographicDao.searchDemographicByPhoneAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_dob")) {
-			demoList = demographicDao.searchDemographicByDOBAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_address")) {
-			demoList = demographicDao.searchDemographicByAddressAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_hin")) {
-			demoList = demographicDao.searchDemographicByHINAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_chart_no")) {
-			demoList = demographicDao.findDemographicByChartNoAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-		else if(searchMode.equals("search_demographic_no")) {
-			demoList = demographicDao.findDemographicByDemographicNoAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
-		}
-	}
+	boolean active = ("".equals(ptstatus)) || ( "active".equals(ptstatus) );
+	boolean inactive = ("".equals(ptstatus)) || ( "inactive".equals(ptstatus) );
 
-	
+	demoList = demographicManager.doMultiSearch(loggedInInfo, searchModes, keywords, limit, offset, providerNo, outOfDomain, active, inactive);
+
 	return demoList;
 }
 %>

@@ -247,7 +247,6 @@
 		<form-bean name="customFilterForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="filter" type="org.oscarehr.common.model.CustomFilter" />
 		</form-bean>
-		<form-bean name="unreadTicklerForm" type="org.apache.struts.validator.LazyValidatorForm" />
 		<form-bean name="editProviderFaxForm" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="faxNumber" type="java.lang.String" />
 		</form-bean>
@@ -298,10 +297,11 @@
 			<form-property name="labAckCommentProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="cobaltProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="hideOldEchartLinkInApptProperty" type="org.oscarehr.common.model.UserProperty" />
-			<form-property name="bornPromptsProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="appointmentCardName" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="appointmentCardPhone" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="appointmentCardFax" type="org.oscarehr.common.model.UserProperty" />
+			<form-property name="bornPromptsProperty" type="org.oscarehr.common.model.UserProperty" />
+			<form-property name="ticklerEmailProviderProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="dashboardShareProperty" type="org.oscarehr.common.model.UserProperty" />
 		</form-bean>
 		<form-bean name="setMyOscarIdForm" type="org.apache.struts.action.DynaActionForm">
@@ -339,7 +339,9 @@
 			<form-property name="searchStatus" type="java.lang.String"></form-property>
 			<form-property name="searchType" type="java.lang.String"></form-property>
 			<form-property name="searchFacilityId" type="java.lang.String"></form-property>	
-			<form-property name="vacancyOrTemplateId" type="java.lang.String"></form-property>				
+			<form-property name="vacancyOrTemplateId" type="java.lang.String"></form-property>			
+			<form-property name="encounterType" type="org.oscarehr.common.model.ProgramEncounterType" />
+				
 		</form-bean>
 		<form-bean name="vacancyClientMatchForm" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="clientList" type="java.util.List" />
@@ -360,6 +362,7 @@
 		</form-bean>
 		<form-bean name="bedManagerForm" type="org.oscarehr.PMmodule.web.admin.BedManagerForm" />
 		<form-bean name="facilityManagerForm" type="org.oscarehr.PMmodule.web.admin.FacilityManagerForm" />
+		<form-bean name="functionalCentreManagerForm" type="org.oscarehr.PMmodule.web.admin.FunctionalCentreManagerForm" />
 		<form-bean name="oscarFacilityManagerForm" type="oscar.facility.FacilityManagerForm" />
 		<form-bean name="clientSearchForm2" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="criteria" type="org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean" />
@@ -380,6 +383,7 @@
 			<form-property name="programWithIntakeId" type="java.lang.String" />
 			<form-property name="serviceRestriction" type="org.oscarehr.PMmodule.model.ProgramClientRestriction" />
 			<form-property name="serviceRestrictionLength" type="java.lang.Integer" />
+			<form-property name="fcAdmission" type="org.oscarehr.PMmodule.web.FunctionalCentreAdmissionDisplay" />			
 		</form-bean>
 		<form-bean name="staffManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="provider" type="org.oscarehr.common.model.Provider" />
@@ -516,6 +520,7 @@
 		<form-bean name="eyeForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="followup" type="org.oscarehr.eyeform.model.EyeformFollowUp" />
 			<form-property name="cp" type="org.oscarehr.eyeform.model.EyeformConsultationReport" />
+			<form-property name="isRefOnline" type="java.lang.String" />
 		</form-bean>
                 <form-bean name="PatientEndYearStatementForm" type="oscar.oscarBilling.ca.on.pageUtil.PatientEndYearStatementForm" />
 
@@ -578,13 +583,13 @@
 		
 		<form-bean name="mcedtUpdateForm" type="org.oscarehr.integration.mcedt.UpdateForm" />
 		
-		<form-bean name="mcedtDownloadForm" type="org.oscarehr.integration.mcedt.mailbox.DownloadForm" />
+		<form-bean name="mcedtDownloadForm" type="org.oscarehr.integration.mcedt.web.DownloadForm" />		
 		
-		<form-bean name="kaiedtUploadForm" type="org.oscarehr.integration.mcedt.mailbox.UploadForm" />
+		<form-bean name="kaiedtUploadForm" type="org.oscarehr.integration.mcedt.web.UploadForm" />
 		
-		<form-bean name="kaiedtAutoUploadForm" type="org.oscarehr.integration.mcedt.mailbox.UploadForm" />
-		
-		<form-bean name="mcedtDownloadForm" type="org.oscarehr.integration.mcedt.mailbox.DownloadForm" />
+		<form-bean name="kaiedtAutoUploadForm" type="org.oscarehr.integration.mcedt.web.UploadForm" />
+				
+		<form-bean name="mcedtDownloadForm" type="org.oscarehr.integration.mcedt.web.DownloadForm" />
 
         <form-bean name="ValidateSwipeCard" type="org.oscarehr.integration.mchcv.ValidateSwipeCard" />
         <form-bean name="bpmh" type="oscar.form.pharmaForms.formBPMH.bean.BpmhFormBean" />
@@ -1651,9 +1656,11 @@
             <forward name="genDisplayDocumentAs"			path="/provider/setDisplayDocumentAs.jsp"/>
             <forward name="genCobalt"						path="/provider/setCobalt.jsp"/>
             <forward name="genHideOldEchartLinkInAppt"		path="/provider/setHideOldEchartLinkInAppt.jsp"/>
+            <forward name="genAppointmentCardPrefs"     path="/provider/setAppointmentCardPrefs.jsp"/>
             <forward name="genBornPrefs"     path="/provider/setBornPrefs.jsp"/>
-             <forward name="genAppointmentCardPrefs"     path="/provider/setAppointmentCardPrefs.jsp"/>
-             <forward name="genDashboardPrefs"     path="/provider/setDashboardPrefs.jsp"/>
+	    <forward name="genTicklerEmailProviderPrefs"     path="/provider/setTicklerEmailProviderPrefs.jsp"/>
+            <forward name="genAppointmentCardPrefs"     path="/provider/setAppointmentCardPrefs.jsp"/>
+            <forward name="genDashboardPrefs"     path="/provider/setDashboardPrefs.jsp"/>
         </action>
 		<action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
 			<forward name="success" path="/provider/providerIndivoIdSetter.jsp" />
@@ -2014,6 +2021,8 @@
 			<forward name="failEdit" path="/dms/editDocument.jsp"></forward>
 			<forward name="successEdit" path="/dms/closeWindow.html"></forward>
 			<forward name="fastUploadSuccess" path="/dms/uploadMultiDocument.jsp"></forward>
+			<forward name="successAddLogo" path="/admin/ManageSites.do" redirect="true" />	
+			<forward name="failAddLogo" path="/admin/ManageSites.do" redirect="true" />
 		</action>
 		<action input="/dms/documentReport.jsp" name="FrmForm" path="/dms/combinePDFs" type="oscar.dms.actions.CombinePDFAction" scope="request" validate="false">
 			<forward name="success" path="/dms/documentReport.jsp"></forward>
@@ -2098,11 +2107,6 @@
 			<forward name="customFilterList" path="/ticklerPlus/customFilterList.jsp" />
 			<forward name="customFilterForm" path="/ticklerPlus/customFilterForm.jsp" />
 		</action>
-		<action path="/UnreadTickler" type="org.caisi.tickler.web.UnreadTicklerAction" parameter="method" scope="request" name="unreadTicklerForm" input="/ticklerPlus/loginUnreadTickler.jsp" validate="false">
-			<forward name="error" path="/loginfailed.jsp" />
-			<forward name="view" path="/ticklerPlus/viewUnreadTicklers.jsp" />
-			<forward name="login" path="/ticklerPlus/loginUnreadTicklers.jsp" />
-		</action>
 		<action path="/PMmodule/StreetHealthIntakeReportAction" type="org.oscarehr.PMmodule.streethealth.StreetHealthIntakeReportAction" name="StreetHealthIntakeReportForm" scope="request" input="/PMmodule/StreetHealthIntakeReport.jsp">
 			<forward name="success" path="/PMmodule/StreetHealthIntakeReport.jsp" />
 			<forward name="download" path="/PMmodule/StreetHealthIntakeReportDownload.jsp" />
@@ -2144,7 +2148,11 @@
 			<forward name="list" path="/admin/facility/ListFacilities.jsp" />
 			<forward name="edit" path="/admin/facility/EditFacility.jsp" />
 		</action>
-		<action path="/PMmodule/ProviderSearch" type="org.springframework.web.struts.DelegatingActionProxy">
+		<action path="/PMmodule/FunctionalCentreManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="functionalCentreManagerForm" scope="session">
+			<forward name="list" path="page.pmm.admin.functionalCentre.list" />
+			<forward name="edit" path="page.pmm.admin.functionalCentre.edit"/>			
+		</action>
+		<action path="/PMmodule/ProviderSearch" type="org.springframework.web.struts.DelegatingActionProxy"  parameter="method">
 			<forward name="results" path="/PMmodule/ProviderSearch.jsp" />
 		</action>
 		<action path="/PMmodule/ClientSearch2" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="clientSearchForm2" scope="request">
@@ -2165,6 +2173,7 @@
 			<forward name="links" path="/PMmodule/ClientManager/links.jsp" />
 			<forward name="view_referral" path="/PMmodule/ClientManager/view_referral.jsp" />
 			<forward name="view_admission" path="/PMmodule/ClientManager/view_admission.jsp" />
+			<forward name="view_fcAdmission" path="/PMmodule/ClientManager/view_fcAdmission.jsp" />
 			<forward name="service_restriction_error" path="page.pmm.client.service_restriction_error" />
 			<forward name="generalFormsReport" path="/PMmodule/GeneralFormsReport.jsp" />
 			<forward name="intake-search" path="/PMmodule/GenericIntake/Search" redirect="true" />
@@ -2342,6 +2351,12 @@
 		<action path="/eyeform/SpecsHistory" type="org.oscarehr.eyeform.web.SpecsHistoryAction" parameter="method" scope="request" validate="false" input="/eyeform/specs_history.jsp" name="specsHistoryForm">
 			<forward name="form" path="/eyeform/specs_history.jsp" />
 			<forward name="list" path="/eyeform/specs_history_list.jsp" />
+			<forward name="success" path="/eyeform/hxsuccess.jsp" />
+		</action>
+		
+		
+		<action path="/eyeform/hxHistory" type="org.oscarehr.eyeform.web.SpecsNoteAction" parameter="method" scope="request" validate="false" input="/eyeform/specs_history.jsp" name="specsHistoryForm">
+			
 			<forward name="success" path="/eyeform/success.jsp" />
 		</action>
 
@@ -2383,6 +2398,7 @@
 			<forward name="conReport" path="/eyeform/conreplyGen.jsp" />
 			<forward name="printReport" path="/eyeform/conreportprint.jsp"/>
 			<forward name="success" path="/eyeform/success.jsp" />
+			<forward name="faxWS" path="/oscarEncounter/oscarConsultationRequest/ConsultationFaxComfirmation.jsp" />
 		</action>
 
 		<action path="/eyeform/ConsultationReportList" type="org.oscarehr.eyeform.web.ConReportListAction" parameter="method" scope="request" validate="false" input="/eyeform/conreportlist.jsp" name="consultationReportForm">
@@ -2499,7 +2515,7 @@
 		<action path="/dms/ManageDocument" name="FrmForm" type="org.oscarehr.document.web.ManageDocumentAction" parameter="method" scope="request">
 			<forward name="success" path="/dms/undocument.jsp" />
 			<forward name="displaySingleDoc" path="/dms/MultiPageDocDisplay.jsp" />
-                        <forward name="nextIncomingDoc" path="/dms/incomingDocs.jsp" />
+            <forward name="nextIncomingDoc" path="/dms/incomingDocs.jsp" />
 		</action>
 		
                 <action path="/DocumentDescriptionTemplate" name="FrmForm" type="org.oscarehr.provider.web.DocumentDescriptionTemplateAction" parameter="method" scope="request">
@@ -2587,7 +2603,13 @@
 		
 		<action path="/admin/oscarStatus" scope="request" parameter="method" validate="false" type="oscar.util.OscarStatusAction">
 			<forward name="success" path="/admin/oscarStatus.jsp" />
-		</action>
+        </action>
+
+        <action path="/admin/oscarAudit" scope="request" parameter="method" validate="false" type="oscar.util.AuditAction">
+            <forward name="success" path="/admin/oscarAudit.jsp" />
+            <forward name="failure" path="/failure.jsp" />
+            <forward name="unauthorized" path="/securityError.jsp" />
+        </action>
 
 		<action path="/OcanIarSubmit" type="org.oscarehr.web.OcanIarSubmitAction" parameter="method" scope="request">
         </action>
@@ -2801,58 +2823,58 @@
 			<forward name="info" path="/mcedt/info.jsp" />
 		</action>
 		
-		<action path="/mcedt/kaimcedt" type="org.oscarehr.integration.mcedt.mailbox.ResourceAction" name="mcedtResourceForm" parameter="method">			
-			<forward name="success" path="/mcedt/mailbox/index.jsp" />
-			<!-- <forward name="download" path="/mcedt/mailbox/download.jsp" /> -->
-			<forward name="successUserDownload" path="/mcedt/mailbox/index.jsp?tab=download" />
-			<forward name="failUserDownload" path="/mcedt/mailbox/index.jsp?tab=download" />	
-			<forward name="successUserSent" path="/mcedt/mailbox/index.jsp?tab=sent" />		
+		<action path="/mcedt/kaimcedt" type="org.oscarehr.integration.mcedt.web.ResourceAction" name="mcedtResourceForm" parameter="method">			
+			<forward name="success" path="/mcedt/web/index.jsp" />
+			<!-- <forward name="download" path="/mcedt/web/download.jsp" /> -->
+			<forward name="successUserDownload" path="/mcedt/web/index.jsp?tab=download&amp;tabChange=true" />
+			<forward name="failUserDownload" path="/mcedt/web/index.jsp?tab=download" />	
+			<forward name="successUserSent" path="/mcedt/web/index.jsp?tab=sent&amp;tabChange=true" />		
 		</action>
-		<action path="/mcedt/openAutoUpload" type="org.oscarehr.integration.mcedt.mailbox.ResourceAction" name="kaiedtHomeForm" parameter="method">			
-			<forward name="success" path="/mcedt/mailbox/autoUpload.jsp" />
+		<action path="/mcedt/openAutoUpload" type="org.oscarehr.integration.mcedt.web.ResourceAction" name="kaiedtHomeForm" parameter="method">			
+			<forward name="success" path="/mcedt/web/autoUpload.jsp" />
 		</action>
-		<action path="/mcedt/autoUpload" input="/mcedt/mailbox/autoUpload.jsp" type="org.oscarehr.integration.mcedt.mailbox.UploadAction" name="kaiedtAutoUploadForm" parameter="method" validate="false" >			
-			<forward name="success" path="/mcedt/mailbox/autoUpload.jsp" />
-			<forward name="failure" path="/mcedt/mailbox/autoUpload.jsp?connection=failed" />
+		<action path="/mcedt/autoUpload" input="/mcedt/web/autoUpload.jsp" type="org.oscarehr.integration.mcedt.web.UploadAction" name="kaiedtAutoUploadForm" parameter="method" validate="false" >			
+			<forward name="success" path="/mcedt/web/autoUpload.jsp" />
+			<forward name="failure" path="/mcedt/web/autoUpload.jsp?connection=failed" />
 			<forward name="cancel" path="/mcedt/kaimcedt.do" redirect="true" />
 		</action>
 		
-		<action path="/mcedt/upload" input="/mcedt/mailbox/upload.jsp" type="org.oscarehr.integration.mcedt.mailbox.UploadAction" name="kaiedtAutoUploadForm" parameter="method" validate="false" >			
-			<forward name="success" path="/mcedt/mailbox/index.jsp?tab=upload" />
+		<action path="/mcedt/upload" input="/mcedt/web/upload.jsp" type="org.oscarehr.integration.mcedt.web.UploadAction" name="kaiedtAutoUploadForm" parameter="method" validate="false" >			
+			<forward name="success" path="/mcedt/web/index.jsp?tab=upload" />
 			<forward name="cancel" path="/mcedt/kaimcedt.do" redirect="true" />
 		</action>
 		
-		<action path="/mcedt/addUpload" input="/mcedt/mailbox/addUpload.jsp" type="org.oscarehr.integration.mcedt.mailbox.UploadAction" name="kaiedtAutoUploadForm" parameter="method" validate="false" >			
-			<forward name="success" path="/mcedt/mailbox/index.jsp?tab=upload" />
-			<forward name="failure" path="/mcedt/mailbox/addUpload.jsp" />
+		<action path="/mcedt/addUpload" input="/mcedt/web/addUpload.jsp" type="org.oscarehr.integration.mcedt.web.UploadAction" name="kaiedtAutoUploadForm" parameter="method" validate="false" >			
+			<forward name="success" path="/mcedt/web/index.jsp?tab=upload" />
+			<forward name="failure" path="/mcedt/web/addUpload.jsp" />
 			<forward name="cancel" path="/mcedt/kaimcedt.do" redirect="true" />
 		</action>
 		
-		<action path="/mcedt/kaichpass" type="org.oscarehr.integration.mcedt.mailbox.UserAction" name="loginForm" parameter="method">			
-			<forward name="success" path="/mcedt/mailbox/changepass.jsp" />
+		<action path="/mcedt/kaichpass" type="org.oscarehr.integration.mcedt.web.UserAction" name="loginForm" parameter="method">			
+			<forward name="success" path="/mcedt/web/changepass.jsp" />
 			<forward name="cancel" path="/mcedt/kaimcedt.do" redirect="true" />
 		</action>
 		
-		<action path="/mcedt/kaiautodl" type="org.oscarehr.integration.mcedt.mailbox.DownloadAction" name="mcedtDownloadForm" parameter="method">			
-			<forward name="success" path="/mcedt/mailbox/autoDownload.jsp" />
+		<action path="/mcedt/kaiautodl" type="org.oscarehr.integration.mcedt.web.DownloadAction" name="mcedtDownloadForm" parameter="method">			
+			<forward name="success" path="/mcedt/web/autoDownload.jsp" />
 			<forward name="cancel" path="/mcedt/kaimcedt.do" redirect="true" />			
-			<!-- <forward name="successUserDownload" path="/mcedt/mailbox/index.jsp?tab=download" />
-			<forward name="failUserDownload" path="/mcedt/mailbox/index.jsp?tab=download" /> -->
+			<!-- <forward name="successUserDownload" path="/mcedt/kai/index.jsp?tab=download" />
+			<forward name="failUserDownload" path="/mcedt/kai/index.jsp?tab=download" /> -->
 		</action>
 		
-		<action path="/mcedt/download" type="org.oscarehr.integration.mcedt.mailbox.DownloadAction" name="mcedtDownloadForm" parameter="method">							
-			<forward name="success" path="/mcedt/mailbox/index.jsp?tab=download" />
-			<forward name="error" path="/mcedt/mailbox/index.jsp?tab=download" />
+		<action path="/mcedt/download" type="org.oscarehr.integration.mcedt.web.DownloadAction" name="mcedtDownloadForm" parameter="method">							
+			<forward name="success" path="/mcedt/web/index.jsp?tab=download" />
+			<forward name="error" path="/mcedt/web/index.jsp?tab=download" />
 		</action>
 		
-		<action path="/mcedt/resourceInfo" type="org.oscarehr.integration.mcedt.mailbox.InfoAction" name="mcedtResourceForm" parameter="method">
+		<action path="/mcedt/resourceInfo" type="org.oscarehr.integration.mcedt.web.InfoAction" name="mcedtResourceForm" parameter="method">
 			<!-- <forward name="info" path="/mcedt/info.jsp" /> -->
-			<forward name="success" path="/mcedt/mailbox/index.jsp?tab=sent" />
+			<forward name="success" path="/mcedt/web/index.jsp?tab=sent" />
 		</action>				
 		
-		<action path="/mcedt/reSubmit" type="org.oscarehr.integration.mcedt.mailbox.ReSubmitAction" name="mcedtResourceForm" parameter="method">
+		<action path="/mcedt/reSubmit" type="org.oscarehr.integration.mcedt.web.ReSubmitAction" name="mcedtResourceForm" parameter="method">
 			<!-- <forward name="info" path="/mcedt/info.jsp" /> -->
-			<forward name="success" path="/mcedt/mailbox/index.jsp?tab=sent" />
+			<forward name="success" path="/mcedt/web/index.jsp?tab=sent" />
 		</action>
 		
 		<action path="/mcedt/uploads" type="org.oscarehr.integration.mcedt.UploadAction" name="mcedtUploadForm" parameter="method">
@@ -2892,7 +2914,7 @@
 			<forward name="showInbox" path="/billing/CA/ON/viewMOHFiles.jsp" />
 		</action>
 		<action input="/billing/CA/ON/billingON3rdInv.jsp" name="FrmForm" path="/billing/ca/on/DisplayInvoiceLogo" scope="request" type="org.oscarehr.billing.CA.ON.util.DisplayInvoiceLogo"></action>
-
+		<action path="/billing/CA/ON/preventionBilling" type="oscar.oscarBilling.ca.on.administration.PreventionsBillingAction" parameter="method" scope="request"></action>
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="100M" />
 	<message-resources parameter="oscarResources" null="false" />

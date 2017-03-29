@@ -232,6 +232,16 @@ if (rx_enhance!=null && rx_enhance.equals("true")) {
         <link rel="stylesheet" href="<c:out value="${ctx}/share/lightwindow/css/lightwindow.css"/>" type="text/css" media="screen" />
         <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
         <!--link rel="stylesheet" type="text/css" href="modaldbox.css"  /-->
+        
+        <!-- calendar stylesheet -->
+		<link rel="stylesheet" type="text/css" media="all" href="${ctx}/share/calendar/calendar.css" title="win2k-cold-1" />
+		<!-- main calendar program -->
+		<script type="text/javascript" src="${ctx}/share/calendar/calendar.js"></script>
+		<!-- language for the calendar -->
+		<script type="text/javascript" src="${ctx}/share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+		<!-- the following script defines the Calendar.setup helper function, which makes
+		       adding a calendar a matter of 1 or 2 lines of code. -->
+		<script type="text/javascript" src="${ctx}/share/calendar/calendar-setup.js"></script>
 
         <script type="text/javascript" src="${ctx}/js/global.js"></script>
         <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/prototype.js"/>"></script>
@@ -890,10 +900,11 @@ THEME 2*/
                                                 <%}%>
                                                 <br>
                                                 <security:oscarSec roleName="<%=roleName2$%>" objectName="_rx" rights="x">
-                                                <input id="saveButton" type="button"  class="ControlPushButton" onclick="updateSaveAllDrugsPrint();" value="<bean:message key="SearchDrug.msgSaveAndPrint"/>" title="<bean:message key="SearchDrug.help.SaveAndPrint"/>" />
+                                                <input id="saveButton" type="button"  class="ControlPushButton" onclick="updateSaveAllDrugsContinuePrintContinue();" value="<bean:message key="SearchDrug.msgSaveAndPrint"/>" title="<bean:message key="SearchDrug.help.SaveAndPrint"/>" />
                                                 </security:oscarSec>
 
-                                                <input id="saveOnlyButton" type="button"  class="ControlPushButton" onclick="updateSaveAllDrugs();" value="<bean:message key="SearchDrug.msgSaveOnly"/>" title="<bean:message key="SearchDrug.help.Save"/>"/>
+                                                <input id="saveOnlyButton" type="button"  class="ControlPushButton" onclick="updateSaveAllDrugsContinue();" value="<bean:message key="SearchDrug.msgSaveOnly"/>" title="<bean:message key="SearchDrug.help.Save"/>"/>
+                                                <input id="printOnlyButton" type="button"  class="ControlPushButton" onclick="printAllDrugs();" value="<bean:message key="SearchDrug.msgPrintOnly"/>" />
 												<%
                                                     	if(OscarProperties.getInstance().getProperty("oscarrx.medrec","false").equals("true")) {
                                                 %>
@@ -1461,7 +1472,7 @@ function changeLt(drugId){
             var url="<c:out value="${ctx}"/>"+ "/oscarRx/WriteScript.do?parameterValue=normalDrugSetCustom";
             var customDrugName=$("drugName_"+randomId).getValue();
             var data="randomId="+randomId+"&customDrugName="+customDrugName;
-            new Ajax.Updater('rxText',url,{method:'get',parameters:data,asynchronous:true,insertion: Insertion.Bottom,onSuccess:function(transport){
+            new Ajax.Updater('rxText',url,{method:'get',parameters:data,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom,onSuccess:function(transport){
                     $('set_'+randomId).remove();
 
                 }});
@@ -1694,7 +1705,7 @@ function changeLt(drugId){
        var demoNo='<%=patient.getDemographicNo()%>';
         var data="demoNo="+demoNo+"&showall=<%=showall%>&rand=" +  Math.floor(Math.random()*10001);
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/rePrescribe2.do?method=repcbAllLongTerm";
-        new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:true,insertion: Insertion.Bottom,onSuccess:function(transport){
+        new Ajax.Updater('rxText',url, {method:'get',parameters:data,asynchronous:true,evalScripts:true,insertion: Insertion.Bottom,onSuccess:function(transport){
                             updateCurrentInteractions();
             }});
         return false;
@@ -2229,6 +2240,25 @@ function updateQty(element){
           	return rx;
      }
 
+      function validateLastRefillDate() {
+        	var rx=true;
+        	jQuery('input[name^="lastRefillDate_"]').each(function(){
+        		var strRx  = jQuery(this).val();
+        		
+        		if(isEmpty(strRx)) {
+        			return true; //empty last refill date is perfectly
+        		}
+
+        		if(!checkAndValidateDate(strRx,null)) {
+        			jQuery(this).focus();
+        			rx=false;
+        			return false;
+        		}
+
+        	});
+        	return rx;
+   }
+      
     function validateWrittenDate() {
     	var x = true;
         jQuery('input[name^="writtenDate_"]').each(function(){
@@ -2291,8 +2321,57 @@ function updateQty(element){
 		out.write(myMeds.printInitcode());			
 	%>
 
+	function printAllDrugs() {
+    	if(!validateWrittenDate()) {
+    		return false;
+    	}
+		if(!validateRxDate()) {
+    		return false;
+    	}
+		if(!validateLastRefillDate()){
+			return false;
+		} 
+		
+		<%if (OscarProperties.getInstance().isPropertyActive("rx_strict_med_term")) {%>
+		if(!checkMedTerm()){
+			return false;
+		}
+		<%}%>
+		
+		/* Temporarily comment out the validation.
+		if(!validateNumeric("quantity_")) {
+			alert("Quantity field is not numeric");
+			return false;
+		}
+		if(!validateNumeric("repeats_")) {
+			alert("Repeats field is not numeric");
+			return false;
+		}
+		if(!validateNumeric("duration_")) {
+			alert("Duration field is not numeric");
+			return false;
+		}
+		if(!validateNumeric("refillQuantity_")) {
+			alert("Refill Quantity field is not numeric");
+			return false;
+		}
+		
+		if(!validateNumeric("dispenseInterval_")) {
+			alert("Dispense Interval field is not numeric");
+			return false;
+		} */
+		var data=Form.serialize($('drugForm'));
+        var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?onlyPrint=true&parameterValue=updateSaveAllDrugs&rand="+ Math.floor(Math.random()*10001);
+        new Ajax.Request(url,
+        {method: 'post',postBody:data,asynchronous:false,
+            onSuccess:function(transport){
+                popForm2(null);
+                resetReRxDrugList();
+            }});
+        return false;
+    }
 
-    function updateSaveAllDrugsPrintContinue(){
+    function updateSaveAllDrugsContinuePrintContinue(){
     	if(!validateWrittenDate()) {
     		return false;
     	}
@@ -2312,7 +2391,11 @@ function updateQty(element){
         {method: 'post',postBody:data,asynchronous:false,
             onSuccess:function(transport){
             	
-                callReplacementWebService("ListDrugs.jsp",'drugProfile');
+            	<%if (OscarProperties.getInstance().isPropertyActive("enable_rx_custom_methodone_suboxone")) {%>
+            	callReplacementWebService("ListDrugs.jsp?rxName=" + jQuery("input[id^='drugName']:eq(0)").val(),'drugProfile');
+            	<%} else {%>
+            	callReplacementWebService("ListDrugs.jsp",'drugProfile');
+            	<%}%>
                 popForm2(null);
                 resetReRxDrugList();
             }});
@@ -2338,7 +2421,11 @@ function updateQty(element){
         new Ajax.Request(url,
         {method: 'post',postBody:data,asynchronous:false,
             onSuccess:function(transport){
-                callReplacementWebService("ListDrugs.jsp",'drugProfile');
+            	<%if (OscarProperties.getInstance().isPropertyActive("enable_rx_custom_methodone_suboxone")) {%>
+            	callReplacementWebService("ListDrugs.jsp?rxName=" + jQuery("input[id^='drugName']:eq(0)").val(),'drugProfile');
+            	<%} else {%>
+            	callReplacementWebService("ListDrugs.jsp",'drugProfile');
+            	<%}%>
                 resetReRxDrugList();
                 resetStash();
             }});
@@ -2389,6 +2476,18 @@ function isMedTermChecked(rnd){
 
 <%} //end rx_strict_med_term check %>
 
+function medTermCheckOne(rnd, el){
+	var longTerm = jQuery("#longTerm_" + rnd);
+	var shortTerm = jQuery("#shortTerm_" + rnd);
+
+	if(el.prop( "checked" )){
+		if(el.attr("id")=="longTerm_" + rnd){
+			shortTerm.attr("checked",false);
+		}else{
+			longTerm.attr("checked",false);
+		}
+	}	
+}
 
 function medTermCheckOne(rnd, el){
 	var longTerm = jQuery("#longTerm_" + rnd);
@@ -2416,6 +2515,8 @@ jQuery( document ).ready(function() {
 	    medTermCheckOne(randId, el);
     });
 });
+
+$("searchString").focus();
 </script>
 
 <script language="javascript" src="../commons/scripts/sort_table/css.js"></script>

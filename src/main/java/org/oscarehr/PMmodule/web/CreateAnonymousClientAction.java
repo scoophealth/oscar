@@ -31,6 +31,7 @@ import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -51,6 +52,7 @@ public class CreateAnonymousClientAction {
 	
 	public static Demographic generateAnonymousClient(String creatorProviderNo, int programId) {
 		logger.info("Create Anonymous Client!");
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoAsCurrentClassAndMethod();
 		ClientManager clientManager = (ClientManager)SpringUtils.getBean("clientManager");
 		AdmissionManager admissionManager = (AdmissionManager)SpringUtils.getBean("admissionManager");
 		ProgramManager programManager = (ProgramManager)SpringUtils.getBean("programManager");
@@ -61,7 +63,7 @@ public class CreateAnonymousClientAction {
 		//admit client to program
 		Program externalProgram = programManager.getProgram(programId);
 		try {
-			admissionManager.processAdmission(d.getDemographicNo(), creatorProviderNo, externalProgram, "anonymous discharge", "anonymous admission");
+			admissionManager.processAdmission(loggedInInfo, d.getDemographicNo(), creatorProviderNo, externalProgram, "anonymous discharge", "anonymous admission");
 		}catch(Exception e) {
 			logger.error("Error", e);
 			return d;
@@ -72,6 +74,7 @@ public class CreateAnonymousClientAction {
 
     public static Demographic generatePEClient(String creatorProviderNo, int programId){
         logger.info("Create PE temporary Client!");
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoAsCurrentClassAndMethod();
         ClientManager clientManager = (ClientManager)SpringUtils.getBean("clientManager");
         AdmissionManager admissionManager = (AdmissionManager)SpringUtils.getBean("admissionManager");
         ProgramManager programManager = (ProgramManager)SpringUtils.getBean("programManager");
@@ -84,7 +87,7 @@ public class CreateAnonymousClientAction {
         //admit client to program
         Program externalProgram = programManager.getProgram(programId);
         try {
-            admissionManager.processAdmission(d.getDemographicNo(), creatorProviderNo, externalProgram, "anonymous discharge", "anonymous admission");
+            admissionManager.processAdmission(loggedInInfo, d.getDemographicNo(), creatorProviderNo, externalProgram, "anonymous discharge", "anonymous admission");
         }catch(Exception e) {
             logger.error("Error", e);
             return d;

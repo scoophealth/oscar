@@ -27,18 +27,17 @@
 <div class="col-sm-3">		
 	<ul class="nav nav-tabs nav-justified">
 		<li ng-repeat="list in page.formlists" ng-class="getListClass(list.id)" class="hand-hover"><a ng-click="changeTo(list.id)">{{list.label}}</a></li>
-		
 		<li class="dropdown">
 		    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
 		      <span class="glyphicon glyphicon-tasks"> </span>
 		    </a>
-		    <ul class="dropdown-menu">		
-			  <li ng-show="hasAdminAccess"><a class="hand-hover" onclick="popup(600, 1200, '../administration/?show=Forms', 'manageeforms')" >Manage eForms</a></li>
+		    <ul class="dropdown-menu">
+		      <li ng-show="hasAdminAccess"><a class="hand-hover" onclick="popup(600, 1200, '../administration/?show=Forms', 'manageeforms')" >Manage eForms</a></li>
 		      <li ng-show="hasAdminAccess"><a class="hand-hover" onclick="popup(600, 1200, '../administration/?show=Forms&load=Groups', 'editGroups')" >Edit Groups</a></li>
 		      <li ng-show="hasAdminAccess" class="divider"></li>
 		      <li ng-repeat="opt in page.formOptions"><a ng-click="formOption(opt)">{{opt.label}}</a></li>
 		    </ul>
-		</li>
+		</li>		
 	</ul> 	
 	<%--
 	<fieldset >

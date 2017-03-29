@@ -42,7 +42,6 @@ public class CdsClientFormDao extends AbstractDao<CdsClientForm> {
 		String sqlCommand = "select * from CdsClientForm where facilityId=?1 and clientId=?2 order by created desc";
 
 		Query query = entityManager.createNativeQuery(sqlCommand, modelClass);
-		query.setMaxResults(1);
 		query.setParameter(1, facilityId);
 		query.setParameter(2, clientId);
 		query.setMaxResults(1);
@@ -84,18 +83,50 @@ public class CdsClientFormDao extends AbstractDao<CdsClientForm> {
 
     public List<CdsClientForm> findSignedCdsForms(Integer facilityId, String formVersion, Date startDate, Date endDate) {
 		
-		String sqlCommand="select x from CdsClientForm x where x.facilityId=?1 and x.signed=?2 and x.cdsFormVersion=?3 and x.created>=?4 and x.created<?5";
-
+		//String sqlCommand="select x from CdsClientForm x where x.facilityId=?1 and x.signed=?2 and x.cdsFormVersion=?3 and x.created>=?4 and x.created<?5";
+    	//do not need to use date range here as it will be considered in admissionMap in Cds4ReportUIBean.java
+		String sqlCommand="select x from CdsClientForm x where x.facilityId=?1 and x.signed=?2 and x.cdsFormVersion=?3 ";
+		
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, facilityId);
 		query.setParameter(2, true);
 		query.setParameter(3, formVersion);
-		query.setParameter(4, startDate);
-		query.setParameter(5, endDate);
+		//query.setParameter(4, startDate);
+		//query.setParameter(5, endDate);
 		
 		@SuppressWarnings("unchecked")
 		List<CdsClientForm> results=query.getResultList();
 		
 		return(results);
     }
+    
+    public CdsClientForm findLatestByClientIdAndAdmisionId(Integer clientId, Integer admissionId) {
+
+  		String sqlCommand = "select x from CdsClientForm x where x.clientId=?1 and x.admissionId=?2 order by x.created desc";
+
+  		Query query = entityManager.createQuery(sqlCommand);
+  		query.setParameter(1, clientId);
+  		query.setParameter(2, admissionId);
+  		
+  		@SuppressWarnings("unchecked")
+  		List<CdsClientForm> results=query.getResultList();
+  		
+  		if(results.size()>0)
+  			return (results.get(0));
+  		else 
+  			return null;
+  	}
+    
+ 
+    public CdsClientForm findCdsFormsByAdmissionId(Integer clientId, Integer admissionId) {
+		
+		String sqlCommand="select x from CdsClientForm x where x.admissionId=?1 and x.clientId=?2 order by x.id desc";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, admissionId);
+		query.setParameter(2, clientId);
+		query.setMaxResults(1);
+		return getSingleResultOrNull(query);				
+    }
+    
 }

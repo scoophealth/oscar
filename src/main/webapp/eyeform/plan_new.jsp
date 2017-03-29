@@ -122,7 +122,7 @@ jQuery(document).ready(function() {
 				setInput(num,'followup','timespan','<%=fu.getTimespan()%>');
 				setSelect(num,'followup','timeframe','<%=fu.getTimeframe()%>');
 				setSelect(num,'followup','urgency','<%=fu.getUrgency()%>');
-				setInput(num,'followup','comment','<%=fu.getComment()%>');
+				setInput(num,'followup','comment','<%=fu.getComment()==null?"":fu.getComment().replaceAll("'", "\\\\'")%>');
 			<%}
 	}
 
@@ -136,8 +136,8 @@ jQuery(document).ready(function() {
 				setSelect(num,'procedure','urgency','<%=proc.getUrgency()%>');
 				setSelect(num,'procedure','eye','<%=proc.getEye()%>');
 				setInput(num,'procedure','procedureName','<%=proc.getProcedureName()%>');
-				setInput(num,'procedure','location','<%=proc.getLocation()%>');
-				setInput(num,'procedure','comment','<%=proc.getComment()%>');
+				setInput(num,'procedure','location','<%=proc.getLocation()==null?"":proc.getLocation().replaceAll("'", "\\\\'")%>');
+				setInput(num,'procedure','comment','<%=proc.getComment()==null?"":proc.getComment().replaceAll("'", "\\\\'")%>');
 			<%}
 	}
 
@@ -151,7 +151,7 @@ jQuery(document).ready(function() {
 				setSelect(num,'test','eye','<%=test.getEye()%>');
 				setInput(num,'test','testname','<%=test.getTestname()%>');
 				setSelect(num,'test','urgency','<%=test.getUrgency()%>');
-				setInput(num,'test','comment','<%=test.getComment()%>');
+				setInput(num,'test','comment','<%=test.getComment()==null?"":test.getComment().replaceAll("'", "\\\\'")%>');
 			<%
 		}
 	}

@@ -41,8 +41,8 @@ import java.util.Date;
 @Entity
 @Table(name = "billing_on_payment")
 public class BillingONPayment extends AbstractModel<Integer> implements Serializable {
-	public static String PAYMENT = "P";
-	public static String REFUND = "R";
+	public static final String PAYMENT = "P";
+	public static final String REFUND = "R";
 	
 	
 	@Id

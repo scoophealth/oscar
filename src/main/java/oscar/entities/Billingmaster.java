@@ -1335,9 +1335,9 @@ public class Billingmaster {
         BigDecimal bdFee = null;
         try {
             double dFee = Double.parseDouble(getBillAmount());
-            bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+            bdFee = new BigDecimal(getBillAmount()).setScale(2, BigDecimal.ROUND_HALF_UP);
         } catch (Exception e) {
-            bdFee = new BigDecimal(0.00).setScale(2, BigDecimal.ROUND_HALF_UP);
+            bdFee = new BigDecimal("0").setScale(2, BigDecimal.ROUND_HALF_UP);
         }
         return bdFee;
     }

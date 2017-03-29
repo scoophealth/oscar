@@ -54,6 +54,15 @@ public class DrugProduct extends AbstractModel<Integer> {
 	//# of doses or tablets so that we can patch to a prescription
 	private int amount;
 	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dateCreated;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastUpdateDate;
+	
+	
+	private String lastUpdateUser;
+	
 
 	public String getLotNumber() {
 		return lotNumber;
@@ -128,6 +137,30 @@ public class DrugProduct extends AbstractModel<Integer> {
 
 	public void setLocation(Integer location) {
 		this.location = location;
+	}
+
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public String getLastUpdateUser() {
+		return lastUpdateUser;
+	}
+
+	public void setLastUpdateUser(String lastUpdateUser) {
+		this.lastUpdateUser = lastUpdateUser;
+	}
+
+	public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
 	}
 	
 	

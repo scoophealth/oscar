@@ -17,9 +17,24 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%// start
-			if (session.getAttribute("user") == null)
-				response.sendRedirect("../../../logout.htm");
+			
 			String curUser_no, userfirstname, userlastname;
 			curUser_no = (String) session.getAttribute("user");
 
@@ -419,11 +434,11 @@ if(bFlag) {
 		<td width="46%"><b> Pay Program:</b> <input type="hidden"
 			name="xml_payProgram" value="<%=BillDate%>" /><select
 			style="font-size: 80%;" name="payProgram">
-			<%for (int i = 0; i < BillingDataHlp.vecPaymentType.size(); i = i + 2) {
+			<%for (int i = 0; i < BillingDataHlp.getVecPaymentType().size(); i = i + 2) {
 
 					%>
-			<option value="<%=BillingDataHlp.vecPaymentType.get(i) %>"
-				<%=payProgram.equals((String)BillingDataHlp.vecPaymentType.get(i))? "selected":"" %>><%=BillingDataHlp.vecPaymentType.get(i + 1)%></option>
+			<option value="<%=BillingDataHlp.getVecPaymentType().get(i) %>"
+				<%=payProgram.equals((String)BillingDataHlp.getVecPaymentType().get(i))? "selected":"" %>><%=BillingDataHlp.getVecPaymentType().get(i + 1)%></option>
 			<%}
 
 				%>

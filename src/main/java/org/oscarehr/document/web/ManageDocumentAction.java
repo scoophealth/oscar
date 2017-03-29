@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Date;
@@ -51,9 +52,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -81,8 +81,8 @@ import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
-import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.managers.ProgramManager2;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.sharingcenter.SharingCenterUtil;
 import org.oscarehr.sharingcenter.model.DemographicExport;
 import org.oscarehr.util.LoggedInInfo;
@@ -91,6 +91,12 @@ import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.lowagie.text.pdf.PdfReader;
+import com.sun.pdfview.PDFFile;
+import com.sun.pdfview.PDFPage;
+
+import net.sf.json.JSONObject;
+import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.dms.IncomingDocUtil;
@@ -100,10 +106,6 @@ import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarEncounter.data.EctProgram;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.UtilDateUtilities;
-
-import com.lowagie.text.pdf.PdfReader;
-import com.sun.pdfview.PDFFile;
-import com.sun.pdfview.PDFPage;
 
 /**
  * @author jaygallagher
@@ -130,7 +132,10 @@ public class ManageDocumentAction extends DispatchAction {
 		String documentDescription = request.getParameter("documentDescription");// :test2<
 		String documentId = request.getParameter("documentId");// :29<
 		String docType = request.getParameter("docType");// :consult<
+		String programNo = request.getParameter("programNo");
+		String restrictToProgram = request.getParameter("restrictProgramNo");
 
+		
 		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "w", null)) {
         	throw new SecurityException("missing required security object (_edoc)");
         }
@@ -180,7 +185,23 @@ public class ManageDocumentAction extends DispatchAction {
 			if (obDate != null) {
 				d.setObservationdate(obDate);
 			}
+			
+			if(programNo != null && programNo.length()>0) {
+				try {
+					d.setProgramId(Integer.parseInt(programNo));
+				}catch(NumberFormatException e) {
+					d.setProgramId(null);
+				}
+			} else {
+				d.setProgramId(null);
+			}
 	
+			if(restrictToProgram != null && "on".equals(restrictToProgram) && d.getProgramId() != null) {
+				d.setRestrictToProgram(true);
+			} else {
+				d.setRestrictToProgram(false);
+			}
+			
 			documentDao.merge(d);
 		}
 
@@ -246,6 +267,56 @@ public class ManageDocumentAction extends DispatchAction {
 		return null;
 	}
 
+	public ActionForward documentExistsInChartAjax(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		String demoId = request.getParameter("demo_no");
+		String documentId = request.getParameter("documentId");
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "r", demoId)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+		
+		//get the sha-1 of the document being processed and compare against the documents in patients echart
+		
+		List<Document> existingDocuments = documentDao.findByDemographicId(demoId);
+		
+		Document currentDoc = documentDao.find(Integer.parseInt(documentId));
+		String parentDir = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+		
+		String signature = null;
+		try {
+			signature = EDocUtil.calculateFileSignature(new File(parentDir,currentDoc.getDocfilename()));
+		}catch(Exception e) {
+			MiscUtils.getLogger().warn("unable to calculate file signature on " +  currentDoc.getDocfilename());
+		}
+		
+		
+		boolean duplicate=false;
+		for(Document d:existingDocuments) {
+			if(signature.equals(d.getFileSignature())) {
+				duplicate=true;
+				break;
+			}
+		}
+		
+		HashMap hm = new HashMap();
+		if(signature != null) {
+			hm.put("demographicNo", demoId);
+			hm.put("documentId", documentId);
+			hm.put("duplicate", duplicate);
+		} else {
+			hm.put("error", "Unable to calcular file signature");
+		}
+		JSONObject jsonObject = JSONObject.fromObject(hm);
+		try {
+			response.getOutputStream().write(jsonObject.toString().getBytes());
+		} catch (IOException e) {
+			MiscUtils.getLogger().error("Error", e);
+		}
+
+		return null;
+	}
+
+	
 	public ActionForward removeLinkFromDocument(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
 		String docType = request.getParameter("docType");
@@ -672,60 +743,68 @@ public class ManageDocumentAction extends DispatchAction {
         }
 		
 		log.debug("in viewDocPage");
+		ServletOutputStream outs = null;
+		BufferedInputStream bfis = null;
 		try {
 			String doc_no = request.getParameter("doc_no");
 			String pageNum = request.getParameter("curPage");
 			if (pageNum == null) {
 				pageNum = "0";
 			}
-			Integer pn = Integer.parseInt(pageNum);
 			log.debug("Document No :" + doc_no);
 			LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_DOCUMENT, doc_no, request.getRemoteAddr());
 
 			Document d = documentDao.getDocument(doc_no);
 			log.debug("Document Name :" + d.getDocfilename());
-			String name = d.getDocfilename() + "_" + pn + ".png";
-			log.debug("name " + name);
 
 			File outfile = null;
+			outs = response.getOutputStream();
 
-			outfile = hasCacheVersion2(d, pn);
-			if (outfile != null) {
-				log.debug("got doc from local cache   ");
-			} else {
-				outfile = createCacheVersion2(d, pn);
+			if(d.getContenttype().contains("pdf")) {
+				Integer pn = Integer.parseInt(pageNum);
+				String name = d.getDocfilename() + "_" + pn + ".png";
+				log.debug("name " + name);
+				outfile = hasCacheVersion2(d, pn);
 				if (outfile != null) {
-					log.debug("create new doc  ");
+					log.debug("got cached doc "+d.getDocfilename()+" from local cache");
+				} else {
+					outfile = createCacheVersion2(d, pn);
+					if (outfile != null) {
+						log.debug("cache doc "+d.getDocfilename());
+					}
 				}
+				response.setContentType("image/png");				
+				bfis = new BufferedInputStream(new FileInputStream(outfile));
+				int count = -1;
+				byte[] buf = new byte[1024];
+				while ((count = bfis.read(buf)) != -1) {
+					outs.write(buf, 0, count);
+					// outs.flush();
+				}
+			} else if (d.getContenttype().contains("image")) {
+				outfile = new File(EDocUtil.getDocumentPath(d.getDocfilename()));
+				response.setContentType(d.getContenttype());
+			    response.setContentLength((int)outfile.length());
+			    response.setHeader("Content-Disposition", "inline; filename=" + d.getDocfilename());
+
+			    bfis = new BufferedInputStream(new FileInputStream(outfile));
+
+			    byte[] buffer = new byte[1024];
+			    int bytesRead = 0;
+			    while ((bytesRead = bfis.read(buffer)) != -1) {
+			        outs.write(buffer, 0, bytesRead);
+			    }					
 			}
-			response.setContentType("image/png");
-			ServletOutputStream outs = response.getOutputStream();
 			response.setHeader("Content-Disposition", "attachment;filename=" + d.getDocfilename());
 
-			BufferedInputStream bfis = null;
-			try {
-				if (outfile != null) {
-					bfis = new BufferedInputStream(new FileInputStream(outfile));
-					int data;
-					while ((data = bfis.read()) != -1) {
-						outs.write(data);
-						// outs.flush();
-					}
-				} else {
-					log.info("Unable to retrieve content for " + d + ". This may indicate previous upload or save errors...");
-				}
-			} finally {
-				if (bfis!=null) {
-					bfis.close();
-				}
-			}
-
 			outs.flush();
-			outs.close();
 		} catch (java.net.SocketException se) {
 			MiscUtils.getLogger().error("Error", se);
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error", e);
+		} finally {
+			if(bfis != null) try { bfis.close(); } catch(IOException e) {}
+			if(outs != null) try { outs.close(); } catch(IOException e) {}		
 		}
 		return null;
 	}
@@ -1154,7 +1233,7 @@ public class ManageDocumentAction extends DispatchAction {
         Integer pn = Integer.parseInt(pageNum);
 
         response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "inline; filename=\"" + pdfName + UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss") + ".pdf\"");
+        response.setHeader("Content-Disposition", "inline; filename=\"" + URLEncoder.encode(pdfName,"UTF-8") + UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss") + ".pdf\"");
         
         com.itextpdf.text.pdf.PdfCopy extractCopy = null;
         com.itextpdf.text.Document document = null;
@@ -1171,7 +1250,7 @@ public class ManageDocumentAction extends DispatchAction {
 
         } catch (Exception ex) {
             response.setContentType("text/html");
-            response.getWriter().print(props.getString("dms.incomingDocs.errorInOpening") + pdfName);
+            response.getWriter().print(props.getString("dms.incomingDocs.errorInOpening") + StringEscapeUtils.escapeJavaScript(pdfName));
             response.getWriter().print("<br>"+props.getString("dms.incomingDocs.PDFCouldBeCorrupted"));
 
             MiscUtils.getLogger().error("Error", ex);
@@ -1231,7 +1310,7 @@ public class ManageDocumentAction extends DispatchAction {
 
         response.setContentType(contentType);
         response.setContentLength((int) file.length());
-        response.setHeader("Content-Disposition", "inline; filename=" + pdfName);
+        response.setHeader("Content-Disposition", "inline; filename=" + URLEncoder.encode(pdfName,"UTF-8"));
 
         BufferedInputStream bfis = null;
         ServletOutputStream outs = response.getOutputStream();
@@ -1283,7 +1362,7 @@ public class ManageDocumentAction extends DispatchAction {
 
 
                 response.setContentType("image/png");
-                response.setHeader("Content-Disposition", "inline;filename=" + pdfName);
+                response.setHeader("Content-Disposition", "inline;filename=" + URLEncoder.encode(pdfName,"UTF-8"));
                 org.apache.commons.io.IOUtils.copy(bfis,outs);
                 outs.flush();
                 

@@ -23,13 +23,17 @@
 
 package org.oscarehr.PMmodule.dao;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.model.Facility;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.QueueCache;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -308,4 +312,28 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
 	public void updateProviderRoles(Long providerId, Long roleId) {
 		getHibernateTemplate().bulkUpdate("UPDATE ProgramProvider pp SET pp.RoleId = ? WHERE pp.Id = ?", new Object[] { roleId, providerId });
 	}
+	
+	@SuppressWarnings("unchecked")
+    public List<Provider> getProvidersByPrograms(List<Integer> programNos) {
+	
+		List<Long> lProgramNos = new ArrayList<Long>();
+		for(Integer i:programNos) {
+			lProgramNos.add(i.longValue());
+		}
+		List<Provider> results = new ArrayList<Provider>();
+		String queryString = "select distinct p from ProgramProvider pp, Provider p WHERE pp.ProgramId IN (:domain) and pp.ProviderNo = p.ProviderNo order by p.LastName, p.FirstName";
+		Session session = this.getSession();
+		try {
+			Query q = session.createQuery(queryString);
+			q.setParameterList("domain", lProgramNos);
+			
+			results = q.list();
+		}  finally {
+			this.releaseSession(session);
+		}
+       
+        return results;
+    }
+
+	
 }

@@ -276,6 +276,7 @@ jQuery(document).ready(function() {
 					setSelectExisting(num,'contact','type','<%=dc.getType()%>');
 					setSelect(num,'contact','consentToContact','<%=dc.isConsentToContact()?"1":"0"%>');
 					setSelect(num,'contact','active','<%=dc.isActive()?"1":"0"%>');
+					setSelect(num,'contact','programId','<%=dc.getProgramNo()!=null?dc.getProgramNo():"0"%>');
 					setInput(num,'contact','contactId','<%=dc.getContactId()%>');
 					setInput(num,'contact','contactName','<%=dc.getContactName()%>');
 					setTextarea(num,'contact','note','<%=dc.getNote()!=null?dc.getNote():""%>');
@@ -295,6 +296,7 @@ jQuery(document).ready(function() {
 					setInput(num,'procontact','id','<%=dc.getId()%>');
 					setSelect(num,'procontact','role','<%=dc.getRole()%>');
 					setSelect(num,'procontact','consentToContact','<%=dc.isConsentToContact()?"1":"0"%>');
+					setSelect(num,'procontact','programId','<%=dc.getProgramNo()!=null?dc.getProgramNo():"0"%>');
 					setSelect(num,'procontact','active','<%=dc.isActive()?"1":"0"%>');
 					setSelectExisting(num,'procontact','type','<%=dc.getType()%>');
 					setInput(num,'procontact','contactId','<%=dc.getContactId()%>');

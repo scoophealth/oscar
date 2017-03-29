@@ -44,9 +44,9 @@ public class LookupListManager {
 	private LookupListItemDao lookupListItemDao;
 	@Autowired
 	SecurityInfoManager securityInfoManager;
-
+	
 	public List<LookupList> findAllActiveLookupLists(LoggedInInfo loggedInInfo) {
-
+		
 		List<LookupList> results = lookupListDao.findAllActive();
 
 		//--- log action ---
@@ -59,7 +59,6 @@ public class LookupListManager {
 	}
 
 	public LookupList findLookupListById(LoggedInInfo loggedInInfo, int id) {
-
 		LookupList result = lookupListDao.find(id);
 
 		//--- log action ---
@@ -72,7 +71,6 @@ public class LookupListManager {
 	}
 
 	public LookupList findLookupListByName(LoggedInInfo loggedInInfo, String name) {
-
 		LookupList result = lookupListDao.findByName(name);
 
 		//--- log action ---
@@ -85,39 +83,39 @@ public class LookupListManager {
 	}
 
 	public LookupList addLookupList(LoggedInInfo loggedInInfo, LookupList lookupList) {
-
+		
 		if( ! securityInfoManager.hasPrivilege( loggedInInfo, "_admin", SecurityInfoManager.WRITE, null ) ) {
 			throw new RuntimeException("Access Denied");
 		}
-
+		
 		lookupListDao.persist(lookupList);
 		LogAction.addLogSynchronous(loggedInInfo, "LookupListManager.addLookupList", "id=" + lookupList.getId());
 
-		return (lookupList);
+		return (lookupList);		
 	}
-
-
+	
 	/**
 	 * Add a new lookupListItem
 	 * Ensure that the lookupListItem is associated to a list entry of the LookupList table.
 	 */
 	public LookupListItem addLookupListItem(LoggedInInfo loggedInInfo, LookupListItem lookupListItem) {
-
+		
 		if( ! securityInfoManager.hasPrivilege( loggedInInfo, "_admin", SecurityInfoManager.WRITE, null ) ) {
 			throw new RuntimeException("Access Denied");
 		}
-
+		
 		lookupListItemDao.persist(lookupListItem);
 		LogAction.addLogSynchronous(loggedInInfo, "LookupListManager.addLookupListItem", "id=" + lookupListItem.getId());
-
+		
 		return (lookupListItem);		
 	}
-
+	
 	/**
 	 * Retrieve all the active select list option items by the lookUpList.id
 	 */
 	public List<LookupListItem> findLookupListItemsByLookupListId(LoggedInInfo loggedInInfo, int lookupListId ) {
 
+		
 		List<LookupListItem> lookupListItems = lookupListItemDao.findActiveByLookupListId( lookupListId );
 
 		if ( lookupListItems != null ) {
@@ -132,6 +130,8 @@ public class LookupListManager {
 	 */
 	public List<LookupListItem> findLookupListItemsByLookupListName(LoggedInInfo loggedInInfo, String lookupListName ) {
 
+		
+		
 		LookupList lookupList = findLookupListByName(loggedInInfo,lookupListName);
 		List<LookupListItem> lookupListItems = null;
 
@@ -148,7 +148,9 @@ public class LookupListManager {
 	 * Find a specific lookupListItem by it's id
 	 */
 	public LookupListItem findLookupListItemById(LoggedInInfo loggedInInfo, int lookupListItemId ) {
-
+		
+		
+		
 		LookupListItem lookupListItem = null;
 		if( lookupListItemId > 0 ) {		
 			lookupListItem = lookupListItemDao.find( lookupListItemId );
@@ -163,7 +165,7 @@ public class LookupListManager {
 	 * Update a lookupListItem that has been edited.
 	 */
 	public Integer updateLookupListItem(LoggedInInfo loggedInInfo, LookupListItem lookupListItem ) {
-
+		
 		if( ! securityInfoManager.hasPrivilege( loggedInInfo, "_admin", SecurityInfoManager.UPDATE, null ) ) {
 			throw new RuntimeException("Access Denied");
 		}
@@ -179,7 +181,7 @@ public class LookupListManager {
 	 * Remove a lookupListItem by it's id.
 	 */
 	public boolean removeLookupListItem(LoggedInInfo loggedInInfo, int lookupListItemId ) {
-
+		
 		if( ! securityInfoManager.hasPrivilege( loggedInInfo, "_admin", SecurityInfoManager.DELETE, null ) ) {
 			throw new RuntimeException("Access Denied");
 		}
@@ -206,7 +208,6 @@ public class LookupListManager {
 		if( ! securityInfoManager.hasPrivilege( loggedInInfo, "_admin", SecurityInfoManager.UPDATE, null ) ) {
 			throw new RuntimeException("Access Denied");
 		}
-
 		LookupListItem lookupListItem = findLookupListItemById( loggedInInfo, lookupListItemId );
 		Integer id = null;
 

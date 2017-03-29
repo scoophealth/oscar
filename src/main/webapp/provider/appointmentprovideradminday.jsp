@@ -23,6 +23,9 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.managers.ProgramManager2"%>
+<%@page import="org.oscarehr.managers.ProviderManager2"%>
+<%@page import="org.oscarehr.managers.ScheduleManager"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@ page import="org.oscarehr.phr.util.MyOscarUtils"%>
 <%@ page import="org.oscarehr.common.model.Appointment.BookingSource"%>
@@ -98,6 +101,8 @@
 	ProviderSiteDao providerSiteDao = SpringUtils.getBean(ProviderSiteDao.class);
 	OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
 	DemographicCustDao demographicCustDao = SpringUtils.getBean(DemographicCustDao.class);
+	ScheduleManager scheduleManager = SpringUtils.getBean(ScheduleManager.class);
+	ProviderManager2 providerManager = SpringUtils.getBean(ProviderManager2.class);
 	ProgramManager2 programManager = SpringUtils.getBean(ProgramManager2.class);
 	AppManager appManager = SpringUtils.getBean(AppManager.class);
 	
@@ -191,14 +196,8 @@ private HashMap<String,String> CurrentSiteMap = new HashMap<String,String>();%>
 
 <%
 	long loadPage = System.currentTimeMillis();
-    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-    //String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment" rights="r" reverse="<%=true%>" >
-<%
-	response.sendRedirect("../logout.jsp");
-%>
-</security:oscarSec>
+
 
 <!-- caisi infirmary view extension add -->
 <caisi:isModuleLoad moduleName="caisi">
@@ -495,13 +494,19 @@ if (isMobileOptimized) {
 
 <%
 	if (!caseload) {
+        boolean caisiEnabled = (OscarProperties.getInstance().getProperty("ModuleNames", "").indexOf("Caisi") != -1);
+
+        if(caisiEnabled && notOscarView) {
+                //don't refresh for CM view when CAISI enabled
+        } else {
+
 %>
 <c:if test="${empty sessionScope.archiveView or sessionScope.archiveView != true}">
 <%!String refresh = oscar.OscarProperties.getInstance().getProperty("refresh.appointmentprovideradminday.jsp", "-1");%>
 <%="-1".equals(refresh)?"":"<meta http-equiv=\"refresh\" content=\""+refresh+";\">"%>
 </c:if>
 <%
-	}
+	} }
 %>
 
 <script type="text/javascript" src="../share/javascript/Oscar.js" ></script>
@@ -516,63 +521,58 @@ if (isMobileOptimized) {
 <oscar:customInterface section="main"/>
 
 <script type="text/javascript" src="schedulePage.js.jsp"></script>
-
-
-<script type="text/javascript">
-
+<script>
 function changeGroup(s) {
-var newGroupNo = s.options[s.selectedIndex].value;
-if(newGroupNo.indexOf("_grp_") != -1) {
-  newGroupNo = s.options[s.selectedIndex].value.substring(5);
-}else{
-  newGroupNo = s.options[s.selectedIndex].value;
-}
-<%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){%>
-	//Disable schedule view associated with the program
-	//Made the default program id "0";
-	//var programId = document.getElementById("bedprogram_no").value;
-	var programId = 0;
-	var programId_forCME = document.getElementById("bedprogram_no").value;
+	var newGroupNo = s.options[s.selectedIndex].value;
+	if(newGroupNo.indexOf("_grp_") != -1) {
+	  newGroupNo = s.options[s.selectedIndex].value.substring(5);
+	}else{
+	  newGroupNo = s.options[s.selectedIndex].value;
+	}
+	<%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){%>
+		//Disable schedule view associated with the program
+		//Made the default program id "0";
+		//var programId = document.getElementById("bedprogram_no").value;
+		var programId = 0;
+		var programId_forCME = document.getElementById("bedprogram_no").value;
 
-	popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&caisiBillingPreferenceNotDelete=<%=caisiBillingPreferenceNotDelete%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&prescriptionQrCodes=<%=prescriptionQrCodes%>&erx_enable=<%=erx_enable%>&erx_training_mode=<%=erx_training_mode%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId+"&case_program_id="+programId_forCME + "<%=eformIds.toString()%><%=ectFormNames.toString()%>");
-<%}else {%>
-  var programId=0;
-  popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&prescriptionQrCodes=<%=prescriptionQrCodes%>&erx_enable=<%=erx_enable%>&erx_training_mode=<%=erx_training_mode%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId + "<%=eformIds.toString()%><%=ectFormNames.toString()%>");
-<%}%>
-}
-
-function ts1(s) {
-popupPage(360,780,('../appointment/addappointment.jsp?'+s));
-}
-function tsr(s) {
-popupPage(360,780,('../appointment/appointmentcontrol.jsp?displaymode=edit&dboperation=search&'+s));
-}
-function goFilpView(s) {
-self.location.href = "../schedule/scheduleflipview.jsp?originalpage=../provider/providercontrol.jsp&startDate=<%=year+"-"+month+"-"+day%>" + "&provider_no="+s ;
-}
-function goWeekView(s) {
-self.location.href = "providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1&provider_no="+s;
-}
-function goZoomView(s, n) {
-self.location.href = "providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider="+s+"&curProviderName="+encodeURIComponent(n)+"&displaymode=day&dboperation=searchappointmentday" ;
-}
-function findProvider(p,m,d) {
-popupPage(300,400, "receptionistfindprovider.jsp?pyear=" +p+ "&pmonth=" +m+ "&pday=" +d+ "&providername="+ document.findprovider.providername.value );
-}
-function goSearchView(s) {
-	popupPage(600,650,"../appointment/appointmentsearch.jsp?provider_no="+s);
-}
-
-function review(key) {
-	  if(self.location.href.lastIndexOf("?") > 0) {
-	    if(self.location.href.lastIndexOf("&viewall=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&viewall="));
-	    else a = self.location.href;
-	  } else {
-	    a="providercontrol.jsp?year="+document.jumptodate.year.value+"&month="+document.jumptodate.month.value+"&day="+document.jumptodate.day.value+"&view=0&displaymode=day&dboperation=searchappointmentday&site=" + "<%=(selectedSite==null? "none" : selectedSite)%>";
-	  }
-	  self.location.href = a + "&viewall="+key ;
+		popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&caisiBillingPreferenceNotDelete=<%=caisiBillingPreferenceNotDelete%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&default_pmm=<%=default_pmm%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&prescriptionQrCodes=<%=prescriptionQrCodes%>&erx_enable=<%=erx_enable%>&erx_training_mode=<%=erx_training_mode%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId+"&case_program_id="+programId_forCME + "<%=eformIds.toString()%><%=ectFormNames.toString()%>");
+	<%}else {%>
+	  var programId=0;
+	  popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&default_servicetype=<%=defaultServiceType%>&prescriptionQrCodes=<%=prescriptionQrCodes%>&erx_enable=<%=erx_enable%>&erx_training_mode=<%=erx_training_mode%>&mygroup_no="+newGroupNo+"&programId_oscarView="+programId + "<%=eformIds.toString()%><%=ectFormNames.toString()%>");
+	<%}%>
 	}
 
+	function ts1(s) {
+	popupPage(360,780,('../appointment/addappointment.jsp?'+s));
+	}
+	function tsr(s) {
+	popupPage(360,780,('../appointment/appointmentcontrol.jsp?displaymode=edit&dboperation=search&'+s));
+	}
+	function goFilpView(s) {
+	self.location.href = "../schedule/scheduleflipview.jsp?originalpage=../provider/providercontrol.jsp&startDate=<%=year+"-"+month+"-"+day%>" + "&provider_no="+s ;
+	}
+	function goWeekView(s) {
+	self.location.href = "providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>&view=0&displaymode=day&dboperation=searchappointmentday&viewall=1&provider_no="+s;
+	}
+	function goZoomView(s, n) {
+	self.location.href = "providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider="+s+"&curProviderName="+encodeURIComponent(n)+"&displaymode=day&dboperation=searchappointmentday" ;
+	}
+	function findProvider(p,m,d) {
+	popupPage(300,400, "receptionistfindprovider.jsp?pyear=" +p+ "&pmonth=" +m+ "&pday=" +d+ "&providername="+ encodeURIComponent(document.findprovider.providername.value));
+	}
+	function goSearchView(s) {
+		popupPage(600,650,"../appointment/appointmentsearch.jsp?provider_no="+s);
+	}
+	function review(key) {
+		  if(self.location.href.lastIndexOf("?") > 0) {
+		    if(self.location.href.lastIndexOf("&viewall=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&viewall="));
+		    else a = self.location.href;
+		  } else {
+		    a="providercontrol.jsp?year="+document.jumptodate.year.value+"&month="+document.jumptodate.month.value+"&day="+document.jumptodate.day.value+"&view=0&displaymode=day&dboperation=searchappointmentday&site=" + "<%=(selectedSite==null? "none" : selectedSite)%>";
+		  }
+		  self.location.href = a + "&viewall="+key ;
+		}
 
 </script>
 
@@ -1282,6 +1282,10 @@ if (curProvider_no[provIndex].equals(provNum)) {
   <option value=".<bean:message key="global.default"/>">.<bean:message key="global.default"/></option>
 
 
+<%
+if(!"true".equals(oscarVariables.getProperty("schedule.groupsFromPrograms","false"))) {
+%>
+
 <security:oscarSec roleName="<%=roleName$%>" objectName="_team_schedule_only" rights="r" reverse="false">
 <%
 	String provider_no = curUser_no;
@@ -1323,6 +1327,34 @@ if (curProvider_no[provIndex].equals(provNum)) {
 	}
 %>
 </security:oscarSec>
+
+<% } else { //schedule.groupsFromPrograms 
+	
+	List<ProgramProvider> ppList = programManager.getProgramDomain(loggedInInfo1,loggedInInfo1.getLoggedInProviderNo());
+	List<Integer> programDomain = new ArrayList<Integer>();
+	for(ProgramProvider pp:ppList) {
+		programDomain.add(pp.getProgramId().intValue());
+	}
+	List<String> mGroups = scheduleManager.getMyGroups(loggedInInfo1,programDomain);
+	List<Provider> mProviders = providerManager.getActiveProvidersInMyDomain(loggedInInfo1,programDomain);
+
+	for(String mGroup:mGroups) {
+		
+%>
+
+<option value="<%="_grp_"+mGroup%>"
+		<%=mygroupno.equals(mGroup)?"selected":""%>><%=mGroup%></option>
+		
+<% }
+	
+	for(Provider mProvider:mProviders) {
+		boolean skip = checkRestriction(restrictions,mProvider.getProviderNo());
+		if(!skip) {
+%>
+<option value="<%=mProvider.getProviderNo()%>" <%=mygroupno.equals(mProvider.getProviderNo())?"selected":""%>>
+		<%=mProvider.getFormattedName()%></option>
+		
+<% } } }%>
 </select>
 
 </logic:notEqual>
@@ -1569,6 +1601,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
         param0[0]=curProvider_no[nProvider];
         param0[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
 		param0[2]=programId_oscarView;
+		/*
 		if (locationEnabled) {
 			
 			
@@ -1579,9 +1612,15 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
             }
 		    param0[3]=request.getParameter("programIdForLocation");
 		    strsearchappointmentday = "searchappointmentdaywithlocation";
+		}*/
+		//load program domain for CAISI, or else just 0
+		List<Integer> programIds = new ArrayList<Integer>();
+		programIds.add(0);
+		for(ProgramProvider pp: programManager.getProgramDomain(loggedInInfo1, loggedInInfo1.getLoggedInProviderNo())) {
+			programIds.add(pp.getProgramId().intValue());
 		}
 		
-		List<Appointment> appointments = appointmentDao.searchappointmentday(curProvider_no[nProvider], ConversionUtils.fromDateString(year+"-"+month+"-"+day),ConversionUtils.fromIntString(programId_oscarView));
+		List<Appointment> appointments = appointmentDao.searchappointmentday(curProvider_no[nProvider], ConversionUtils.fromDateString(year+"-"+month+"-"+day),programIds);
                	Iterator<Appointment> it = appointments.iterator();
 		
                 Appointment appointment = null;
@@ -1956,11 +1995,11 @@ start_time += iSm + ":00";
 	+"&curProviderNo="
 	+curProvider_no[nProvider]
 	+"&reason="
-	+URLEncoder.encode(reason)
+	+URLEncoder.encode(reason, "UTF-8")
 	+"&encType="
 	+URLEncoder.encode("face to face encounter with client","UTF-8")
 	+"&userName="
-	+URLEncoder.encode( userfirstname+" "+userlastname)
+	+URLEncoder.encode( userfirstname+" "+userlastname, "UTF-8")
 	+"&curDate="+curYear+"-"+curMonth+"-"
 	+curDay+"&appointmentDate="+year+"-"
 	+month+"-"+day+"&startTime=" 
@@ -2050,7 +2089,7 @@ start_time += iSm + ":00";
 	  <%}}%>
       <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON" value="yes" defaultVal="true">
      		<span class="reason_<%=curProvider_no[nProvider]%> ${ hideReason ? "hideReason" : "" }">
-     			<strong>&#124;<%=reasonCodeName==null?"":"&nbsp;" + reasonCodeName + " -"%><%=reason==null?"":"&nbsp;" + reason%></strong>
+     			<strong>&#124;<%=reasonCodeName==null?"":"&nbsp;" + reasonCodeName + " -"%><%=reason==null?"":"&nbsp;" + UtilMisc.htmlEscape(reason)%></strong>
      		</span>
       </oscar:oscarPropertiesCheck>
       

@@ -25,7 +25,7 @@
 --%>
 
 
-
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%@page import="oscar.eform.EFormUtil"%>
 <%@ page import="java.util.*"%>
 <%@ page import="org.oscarehr.PMmodule.model.ProgramQueue"%>
@@ -36,11 +36,21 @@
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProgramProviderDAO"%>
 <%@page import="org.oscarehr.PMmodule.model.Program"%>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
 <%@ include file="/taglibs.jsp"%>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
-
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.pmm" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_admin.pmm");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 <script>
     function do_admission() {
     	var admissionDate = document.getElementById('admissionDate').value;
@@ -203,7 +213,6 @@
 <%
 	ProgramProviderDAO ppd =(ProgramProviderDAO)SpringUtils.getBean("programProviderDAO");
 	boolean bShowEncounterLink = false; 
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r">
 <% bShowEncounterLink = true; %>
@@ -289,7 +298,7 @@ String reason ="";
 				else if (orderByRequest.equals("form_subject")) orderBy = EFormUtil.SUBJECT;
 				else if (orderByRequest.equals("form_name")) orderBy = EFormUtil.NAME;
 				Map<String,? extends Object> curform = Collections.EMPTY_MAP;
-				ArrayList<HashMap<String,? extends Object>> eForms = EFormUtil.listPatientEForms(orderBy, EFormUtil.CURRENT, demographic_no.toString(), roleName$);
+				ArrayList<HashMap<String,? extends Object>> eForms = EFormUtil.listPatientEForms(LoggedInInfo.getLoggedInInfoFromSession(request), orderBy, EFormUtil.CURRENT, demographic_no.toString(), roleName$);
 				if(eForms != null ){
 					int eformsSize = eForms.size();
 					curform = eformsSize > 0 ? eForms.get(eformsSize-1):Collections.EMPTY_MAP;

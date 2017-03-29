@@ -864,6 +864,7 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setDuration(rx.getDuration());
     thisForm.setDurationUnit(rx.getDurationUnit());
     thisForm.setQuantity(rx.getQuantity());
+    thisForm.setDispensingUnits(rx.getDispensingUnits());
 
     thisForm.setDosage(rx.getDosage());
     thisForm.setRepeat(rx.getRepeat());
@@ -912,6 +913,7 @@ FrequencyCode:   <%= thisForm.getFrequencyCode() %><br>
 Duration:        <%= thisForm.getDuration() %><br>
 DurationUnit:    <%= thisForm.getDurationUnit() %><br>
 Quantity:        <%= thisForm.getQuantity() %><br>
+DispensingUnits: <%= thisForm.getDispensingUnits() %><br>
 Repeat:          <%= thisForm.getRepeat() %><br>
 Nosubs:          <%= String.valueOf(thisForm.getNosubs()) %><br>
 Prn:             <%= String.valueOf(thisForm.getPrn()) %><br>

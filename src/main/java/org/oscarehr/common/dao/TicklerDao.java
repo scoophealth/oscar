@@ -36,6 +36,8 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
 import org.springframework.stereotype.Repository;
 
+import oscar.util.SuperSiteUtil;
+
 @Repository
 public class TicklerDao extends AbstractDao<Tickler>{
 
@@ -177,6 +179,47 @@ public class TicklerDao extends AbstractDao<Tickler>{
 		return results;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<Tickler> getTicklers(CustomFilter filter, String providerNo) {
+        ArrayList<Object> paramList = new ArrayList<Object>();
+        String sql = getTicklerQueryString("",  paramList,  filter);
+        
+        Query query = entityManager.createQuery(sql);
+		for(int x=0;x<paramList.size();x++) {
+			query.setParameter(x+1, paramList.get(x));
+		}
+		
+        List<Tickler> ticklerList = query.getResultList();
+        
+        ticklerList = filterTicklers(ticklerList, providerNo);
+        
+        return ticklerList;
+    }
+	
+	private List<Tickler> filterTicklers(List<Tickler> ticklerList, String providerNo) {
+    	List<Tickler> resultList = new ArrayList<Tickler>();
+    	
+    	if(!org.oscarehr.common.IsPropertiesOn.isMultisitesEnable())
+    		return ticklerList;
+    	
+    	if(ticklerList!=null && ticklerList.size()>0)
+    	{
+    		String demographicNo = "";
+    		SuperSiteUtil superSiteUtil = SuperSiteUtil.getInstance(providerNo);
+    		for (Tickler tickler : ticklerList)
+			{
+				demographicNo = tickler.getDemographicNo().toString();
+				if(!superSiteUtil.isUserAllowedToOpenPatientDtl(demographicNo))
+	            	continue;
+				else
+				{
+					resultList.add(tickler);
+				}
+			}
+    	}
+    	
+    	return resultList;
+    }
 	
 	/**
 	 * @Deprecated
@@ -344,7 +387,7 @@ public class TicklerDao extends AbstractDao<Tickler>{
         	paramList.add(filter.getMessage());
         }
 		 
-		query = query + " order by t.serviceDate " + tickler_date_order;
+		query = query + " order by t.serviceDate " + tickler_date_order +", t.updateDate DESC";
 		 
 		return query;
 	}

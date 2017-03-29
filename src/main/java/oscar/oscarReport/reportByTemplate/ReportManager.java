@@ -65,7 +65,7 @@ public class ReportManager {
 		ReportTemplatesDao dao = SpringUtils.getBean(ReportTemplatesDao.class);
 		ArrayList<ReportObjectGeneric> reports = new ArrayList<ReportObjectGeneric>();
 		for (ReportTemplates r : dao.findActive()) {
-			ReportObjectGeneric curReport = new ReportObjectGeneric(r.getId().toString(), r.getTemplateTitle(), r.getTemplateDescription());
+			ReportObjectGeneric curReport = new ReportObjectGeneric(r.getId().toString(), r.getTemplateTitle(), r.getTemplateDescription(),r.getCategory());
 			reports.add(curReport);
 		}
 		return reports;
@@ -87,6 +87,7 @@ public class ReportManager {
 		curReport.setTitle(templatetitle);
 		curReport.setDescription(templatedescription);
 		curReport.setSequence(rt.isSequence());
+		curReport.setCategory(rt.getCategory());
 
 		return curReport;
 	}
@@ -106,6 +107,7 @@ public class ReportManager {
 			String paramXML = rt.getTemplateXml();
 			ArrayList<Parameter> params = new ArrayList<Parameter>();
 			boolean sequence = rt.isSequence();
+			String category = rt.getCategory();
 			
 			if (!paramXML.equals("")) {
 				paramXML = UtilXML.escapeXML(paramXML); //escapes anomalies such as "date >= {mydate}" the '>' character
@@ -233,6 +235,8 @@ public class ReportManager {
 				String templateDescription = StringEscapeUtils.escapeSql(report.getAttributeValue("description"));
 				if (templateDescription == null) return "Error: Attribute 'description' missing in <report> tag";
 
+				String category  = StringEscapeUtils.escapeSql(report.getAttributeValue("category"));
+				
 				String querysql = StringEscapeUtils.escapeSql(report.getChildText("query"));
 				if (querysql == null || querysql.length() == 0) return "Error: The sql query is missing in <report> tag";
 				XMLOutputter reportout = new XMLOutputter();
@@ -253,6 +257,7 @@ public class ReportManager {
 				r.setTemplateSql(querysql);
 				r.setTemplateXml(reportXML);
 				r.setActive(activeint);
+				r.setCategory(category);
 				r.setType("");
 				dao.persist(r);
 
@@ -313,6 +318,8 @@ public class ReportManager {
 					sequence=false;
 				}
 				
+				String templateCategory = report.getAttributeValue("category");
+				
 				int activeint;
 				try {
 					activeint = Integer.parseInt(active);
@@ -341,6 +348,7 @@ public class ReportManager {
 					r.setActive(activeint);
 					r.setType(type);
 					r.setSequence(sequence);
+					r.setCategory(templateCategory);
 					if(uuid != null) {
 						r.setUuid(uuid);
 					} else {
@@ -356,6 +364,7 @@ public class ReportManager {
 					r.setActive(activeint);
 					r.setType(type);
 					r.setSequence(sequence);
+					r.setCategory(templateCategory);
 					dao.merge(r);
 					LogAction.addLogSynchronous(loggedInInfo, "ReportManager.addUpdateTemplate", "id=" + r.getId());
 				}

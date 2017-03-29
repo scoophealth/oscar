@@ -77,6 +77,7 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 	private int numberOfPages = 0;
 	private Integer appointmentNo = -1;
 	private boolean restrictToProgram=false;
+	private String fileSignature;
 	
 
 	/** Creates a new instance of EDoc */
@@ -154,12 +155,25 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 		return ret;
 	}
 
-	public boolean equals(Object o) {
-		if (o == null || !(o instanceof EDoc)) {
-			return false;
-		}
+	
+	@Override
+		public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((docId == null) ? 0 : docId.hashCode());
+		return result;
+	}
 
-		return (compareTo((EDoc) o) == 0);
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		EDoc other = (EDoc) obj;
+		if (docId == null) {
+			if (other.docId != null) return false;
+		} else if (!docId.equals(other.docId)) return false;
+		return true;
 	}
 
 	private void preliminaryProcessing() {
@@ -507,8 +521,14 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 	public void setNumberOfPages(int n) {
 		this.numberOfPages = n;
 	}
-	
-	
+
+	public String getFileSignature() {
+		return fileSignature;
+	}
+
+	public void setFileSignature(String fileSignature) {
+		this.fileSignature = fileSignature;
+	}
 
 	public boolean isRestrictToProgram() {
 		return restrictToProgram;

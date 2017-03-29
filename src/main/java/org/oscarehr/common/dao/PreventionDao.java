@@ -40,8 +40,9 @@ public class PreventionDao extends AbstractDao<Prevention> {
 		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where demographicId=?1");
 		query.setParameter(1, demographicId);
 
+		@SuppressWarnings("unchecked")
 		List<Prevention> results = query.getResultList();
-
+		
 		return (results);
 	}
     

@@ -49,7 +49,7 @@ public class EyeFormDao extends AbstractDao<EyeForm> {
 	}
 	
 	public EyeForm getByAppointmentNo(int appointmentNo) {
-		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where x.appointmentNo=?1");
+		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where x.appointmentNo=?1 order by x.date desc");
 		query.setParameter(1, appointmentNo);
 		
 		EyeForm eyeform = null;

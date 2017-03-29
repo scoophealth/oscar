@@ -848,7 +848,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 			// add eforms to notes list as single line items
 			String roleName = (String) request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
-			ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listPatientEForms(EFormUtil.DATE, EFormUtil.CURRENT, demoNo, roleName);
+			ArrayList<HashMap<String, ? extends Object>> eForms = EFormUtil.listPatientEForms(loggedInInfo, EFormUtil.DATE, EFormUtil.CURRENT, demoNo, roleName);
 
 			// add forms to notes list as single line items
 			ArrayList<PatientForm> allPatientForms = EctFormData.getGroupedPatientFormsFromAllTables(demographicId);
@@ -864,7 +864,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			}
 
 			if (oscar.OscarProperties.getInstance().getProperty("billregion", "").equalsIgnoreCase("ON")) {
-				fetchInvoices(notesToDisplay, demoNo);
+				fetchInvoices(loggedInInfo, notesToDisplay, demoNo);
 			}
 		}
 
@@ -913,7 +913,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 
 	}
 
-	private void fetchInvoices(ArrayList<NoteDisplay> notes, String demographicNo) {
+	private void fetchInvoices(LoggedInInfo loggedInInfo, ArrayList<NoteDisplay> notes, String demographicNo) {
 		List<BillingONCHeader1> bills = billingONCHeader1Dao.getInvoices(Integer.parseInt(demographicNo), MAX_INVOICES);
 
 		for (BillingONCHeader1 h1 : bills) {
@@ -1555,36 +1555,39 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	public ActionForward run_macro_script(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		MacroDao macroDao = (MacroDao) SpringUtils.getBean("MacroDAO");
 		Macro macro = macroDao.find(Integer.parseInt(request.getParameter("id")));
-		logger.info("loaded macro " + macro.getLabel());
-		StringBuilder sb = new StringBuilder();
-
-		//impression text
-		sb.append("var noteTa = document.getElementById('caseNote_note" + request.getParameter("noteId") + "');");
-		sb.append("var noteTaVal = noteTa.value;");
-		sb.append("noteTaVal = noteTaVal + '" + macro.getImpression() + "';");
-		sb.append("noteTa.value = noteTaVal;");
-
-		//checkboxes
-		if (macro.getDischargeFlag().equals("dischargeFlag")) {
-			sb.append("jQuery(\"#ack1\").attr(\"checked\",true);");
+		if(macro != null) {
+			logger.info("loaded macro " + macro.getLabel());
+			StringBuilder sb = new StringBuilder();
+			Integer noteId = Integer.parseInt(request.getParameter("noteId"));
+			
+			//impression text
+			sb.append("var noteTa = document.getElementById('caseNote_note" + noteId + "');");
+			sb.append("var noteTaVal = noteTa.value;");
+			sb.append("noteTaVal = noteTaVal + '" + macro.getImpression() + "';");
+			sb.append("noteTa.value = noteTaVal;");
+	
+			//checkboxes
+			if (macro.getDischargeFlag().equals("dischargeFlag")) {
+				sb.append("jQuery(\"#ack1\").attr(\"checked\",true);");
+			}
+			if (macro.getStatFlag().equals("statFlag")) {
+				sb.append("jQuery(\"#ack2\").attr(\"checked\",true);");
+			}
+			if (macro.getOptFlag().equals("optFlag")) {
+				sb.append("jQuery(\"#ack3\").attr(\"checked\",true);");
+			}
+	
+			//send tickler
+			if (macro.getTicklerRecipient().length() > 0) {
+				sb.append("saveNoteAndSendTickler();");
+			} else {
+				sb.append("saveEyeformNote();");
+			}
+	
+			//billing
+	
+			response.getWriter().println(sb.toString());
 		}
-		if (macro.getStatFlag().equals("statFlag")) {
-			sb.append("jQuery(\"#ack2\").attr(\"checked\",true);");
-		}
-		if (macro.getOptFlag().equals("optFlag")) {
-			sb.append("jQuery(\"#ack3\").attr(\"checked\",true);");
-		}
-
-		//send tickler
-		if (macro.getTicklerRecipient().length() > 0) {
-			sb.append("saveNoteAndSendTickler();");
-		} else {
-			sb.append("saveEyeformNote();");
-		}
-
-		//billing
-
-		response.getWriter().println(sb.toString());
 
 		return null;
 	}
@@ -1607,7 +1610,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			f.setDemographicNo(Integer.parseInt(request.getParameter("demographicNo")));
 			f.setProvider(loggedInInfo.getLoggedInProvider());
 			f.setTimeframe(followUpUnit);
-			f.setTimespan(followUpNo);
+			f.setTimespan(String.valueOf(followUpNo));
 			f.setType("followup");
 			f.setUrgency("routine");
 			f.setFollowupProvider(followUpDr);

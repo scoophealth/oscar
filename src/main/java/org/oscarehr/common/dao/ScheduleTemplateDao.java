@@ -117,7 +117,10 @@ public class ScheduleTemplateDao extends AbstractDao<ScheduleTemplate> {
 		Query query = entityManager.createNativeQuery(sql);
 		query.setParameter("date", date);
 		query.setParameter("providerNo", providerNo);
-		return query.getResultList();
+		List<Object> result = query.getResultList();
+		if(result.size()>0)
+			return query.getResultList();
+		else return null;
 	}
 	
 }

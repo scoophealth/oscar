@@ -8,14 +8,24 @@
     and "gnu.org/licenses/gpl-2.0.html".
 
 --%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ page import="java.util.*,oscar.oscarReport.reportByTemplate.*,org.oscarehr.olis.*,org.oscarehr.olis.model.*, org.oscarehr.olis.dao.*, org.oscarehr.util.SpringUtils, org.joda.time.DateTime, org.joda.time.format.DateTimeFormat, org.joda.time.format.DateTimeFormatter"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
-if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
 %>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_lab" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_lab");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="java.util.*,oscar.oscarReport.reportByTemplate.*,org.oscarehr.olis.*,org.oscarehr.olis.model.*, org.oscarehr.olis.dao.*, org.oscarehr.util.SpringUtils, org.joda.time.DateTime, org.joda.time.format.DateTimeFormat, org.joda.time.format.DateTimeFormatter"%>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

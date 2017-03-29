@@ -65,6 +65,15 @@ boolean authed=true;
   Properties prop = null;
   String   providerName   = "";
   String sql = "";
+  String demographicNo = request.getParameter("demographic_no");
+  if("".equals(demographicNo)) {
+	  demographicNo = null;
+  }
+  String demoName = request.getParameter("autocompletedemo");
+  if("".equals(demoName)) {
+	  demoName = null;
+  }
+  
 //provider name list, date, action, create button
 %>
 
@@ -95,6 +104,11 @@ boolean authed=true;
 
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.min.js"></script>
+
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
+
+
+
 <script src="<%=request.getContextPath() %>/js/bootstrap.min.js"></script>
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
@@ -131,6 +145,41 @@ function onSub() {
 label{margin-top:6px;margin-bottom:0px;}
 </style>
 
+<link rel="stylesheet" href="<%=request.getContextPath() %>/js/jquery_css/smoothness/jquery-ui-1.10.2.custom.min.css" type="text/css">
+
+<script>
+$(document).ready(function(){
+	
+	var url = "<%= request.getContextPath() %>/demographic/SearchDemographic.do?jqueryJSON=true&activeOnly=true";
+	
+	$("#autocompletedemo").autocomplete( {
+		source: url,
+		minLength: 2,
+		
+		focus: function( event, ui ) {
+			$("#autocompletedemo").val( ui.item.label );
+			return false;
+		},
+		select: function( event, ui ) {
+			$("#autocompletedemo").val( ui.item.label );
+			$("#demographic_no").val( ui.item.value );
+			return false;
+		}
+	});
+	
+	
+});
+
+function resetForm() {
+	$("#providerNo").val("*");
+	$("#content").val("admin");
+	$("#startDate1").val("");
+	$("#endDate1").val("");
+	$("#autocompletedemo").val("");
+	$("#demographic_no").val("");
+}
+
+</script>
 </head>
 <body>
 <form name="myform" class="well form-horizontal" action="logReport.jsp" method="POST" onSubmit="return(onSub());">
@@ -140,7 +189,7 @@ label{margin-top:6px;margin-bottom:0px;}
 			<div class="span4">
 			<label>Provider: </label>
 			
-				<select name="providerNo">
+				<select name="providerNo" id="providerNo">
 					<option value="*">All</option>
 					<%
 		                for (int i = 0; i < vecProvider.size(); i++) {
@@ -159,7 +208,7 @@ label{margin-top:6px;margin-bottom:0px;}
 
 			<div class="span4">
 			<label>Content Type:</label>
-			<select name="content" >
+			<select name="content" id="content">
 				<option value="admin">Admin</option>
 				<option value="login">Log in</option>
 			</select>
@@ -180,11 +229,22 @@ label{margin-top:6px;margin-bottom:0px;}
 				<span class="add-on"><i class="icon-calendar"></i></span>
 			</div>
 			</div>
-
+			
+			
+			
+			<div class="span4">
+			  <label>Demographic: </label>
+			<div class="input-append">
+				 <input id="autocompletedemo"  name="autocompletedemo" type="text" size="30" maxlength="60"  value="<%=(demoName != null)?demoName:""%>"/>
+                 <input type="hidden" id="demographic_no" name="demographic_no" value="<%=(demographicNo != null)?demographicNo:""%>"/>
+				
+			</div>
+			</div>
 
 		
 			<div class="span8" style="padding-top:10px;">
 			<input class="btn btn-primary" type="submit" name="submit" value="Run Report">
+			<input class="btn btn-default" type="button" name="reset" value="Reset" onClick="resetForm();">
 			</div>
 
 	</fieldset>
@@ -202,33 +262,34 @@ label{margin-top:6px;margin-bottom:0px;}
 	  String content = request.getParameter("content");
 	  if(content.equals("login")) content = "login";
 	  if(content.equals("admin")) content = "%";
-	  
+	 
 	  String sDate = request.getParameter("startDate");
 	  String eDate = request.getParameter("endDate");
 	  String strDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
 	  if("".equals(sDate) || sDate==null)  sDate = "1900-01-01";
 	  if("".equals(eDate) || eDate==null)  eDate = "2999-01-01";
-
+	 
 	  DBPreparedHandlerParam[] params = new DBPreparedHandlerParam[2];
 	  params[0]= new DBPreparedHandlerParam(MyDateFormat.getSysDateEX(eDate, 1));
 	  params[1]= new DBPreparedHandlerParam(MyDateFormat.getSysDate(sDate));
 
       sql = "select * from log force index (datetime) where provider_no='" + providerNo + "' and dateTime <= ?";
-      sql += " and dateTime >= ? and content like '" + content + "' order by dateTime desc ";
+      sql += " and dateTime >= ? and content like '" + content + "'" +  ((demographicNo != null)?"and demographic_no like '"+demographicNo+"'":"")  + " order by dateTime desc ";
 
       if("*".equals(providerNo)) {
 		  bAll = true;
 		   if (isSiteAccessPrivacy)   { 
 			      sql = "select * from log force index (datetime) where dateTime <= ?";
-			      sql += " and dateTime >= ? and content like '" + content + "' ";
-			      sql += "and provider_no IN (SELECT provider_no FROM providersite WHERE site_id IN (SELECT site_id from providersite where provider_no= " + curUser_no +") )";
+			      sql += " and dateTime >= ? and content like '" + content + "'" +  ((demographicNo != null)?"and demographic_no like '"+demographicNo+"'":"");
+			      sql += " and provider_no IN (SELECT provider_no FROM providersite WHERE site_id IN (SELECT site_id from providersite where provider_no= " + curUser_no +") )";
 			      sql += " order by dateTime desc ";
 		   }
 		   else {
 		      sql = "select * from log force index (datetime) where dateTime <= ?";
-		      sql += " and dateTime >= ? and content like '" + content + "' order by dateTime desc ";
+		      sql += " and dateTime >= ? and content like '" + content + "'" +  ((demographicNo != null)?"and demographic_no like '"+demographicNo+"'":"")  +  " order by dateTime desc ";
 		   }
       }
+      
       rs = dbObj.queryResults(sql, params);
       while (rs.next()) {
         prop = new Properties();

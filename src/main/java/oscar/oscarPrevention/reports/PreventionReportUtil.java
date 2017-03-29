@@ -40,8 +40,8 @@ import org.oscarehr.util.SpringUtils;
 public final class PreventionReportUtil {
 	private static Logger logger = MiscUtils.getLogger();
 
-	public static DemographicManager demographicManager =  SpringUtils.getBean(DemographicManager.class);
-	public static DemographicArchiveDao demographicArchiveDao = (DemographicArchiveDao) SpringUtils.getBean("demographicArchiveDao");
+	private static DemographicManager demographicManager =  SpringUtils.getBean(DemographicManager.class);
+	private static DemographicArchiveDao demographicArchiveDao = (DemographicArchiveDao) SpringUtils.getBean("demographicArchiveDao");
 
 	public static boolean wasRostered(LoggedInInfo loggedInInfo, Integer demographicId, Date onThisDate) {
 		logger.debug("Checking rosterd:" + demographicId);

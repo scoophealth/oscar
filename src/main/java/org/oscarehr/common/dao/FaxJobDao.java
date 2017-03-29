@@ -52,7 +52,7 @@ public class FaxJobDao extends AbstractDao<FaxJob> {
     	
     	if( demographic_no != null ) {
     		firstclause = true;
-    		sql.append(" job.demographic_no = :demo");
+    		sql.append(" job.demographicNo = :demo");
     	}
     	
     	if( status != null) {

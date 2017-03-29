@@ -41,9 +41,24 @@
  * Yi Li
  */
 -->
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@page import="java.awt.ItemSelectable"%>
 <%@page import="org.oscarehr.common.model.BillingONItem"%>
-<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
@@ -76,9 +91,6 @@ List<String> errors = new ArrayList<String>();
 	if(session.getAttribute("user") == null ) response.sendRedirect("../logout.jsp");
 	String providerNo = (String) session.getAttribute("user");
 	
-	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
-
 	boolean isTeamBillingOnly=false;
 	boolean isSiteAccessPrivacy=false;
 	boolean isTeamAccessPrivacy=false;

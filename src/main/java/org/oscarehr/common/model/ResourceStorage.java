@@ -28,6 +28,8 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+import org.oscarehr.drools.RuleBaseFactory;
+
 @Entity
 public class ResourceStorage extends AbstractModel<Integer> {
 	public static final String PREVENTION_RULES = "PREVENTION_RULES";
@@ -111,5 +113,9 @@ public class ResourceStorage extends AbstractModel<Integer> {
 	}
 	
 	
-
+	@PostUpdate
+	public void removeFromCache()
+	{
+		RuleBaseFactory.removeRuleBase("ResourceStorage:"+getId());
+	}
 }

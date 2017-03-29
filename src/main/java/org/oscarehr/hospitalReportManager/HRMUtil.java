@@ -9,6 +9,7 @@
 
 package org.oscarehr.hospitalReportManager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
@@ -30,7 +32,9 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
 import oscar.oscarLab.ca.on.HRMResultsData;
+import oscar.util.StringUtils;
 
 public class HRMUtil {
 
@@ -205,4 +209,53 @@ public class HRMUtil {
 			return hrmdocslist;
 			
 		}
+	public static void storeAttachment(String hash) {
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoAsCurrentClassAndMethod();
+		if(StringUtils.isNullOrEmpty(hash)) {
+			MiscUtils.getLogger().info("no hash parameter passed");
+			return;
+    	}
+    	
+    	List<Integer> ids  = hrmDocumentDao.findByHash(hash);
+    	
+    	if (ids == null || ids.size() == 0) {
+    		MiscUtils.getLogger().info("no documents found for hash - " + hash);
+    		return;
+    	}
+    	
+    	if (ids.size() > 1) {
+    		MiscUtils.getLogger().info("too many documents found for hash - " + hash);
+    		return;
+    	}
+    	
+    	HRMDocument hd = hrmDocumentDao.find(ids.get(0));
+    	
+    	if(hd == null) {
+    		MiscUtils.getLogger().info("HRMDocument not found - " + ids.get(0));
+    		return;
+    	}
+    	
+    	HRMReport report = HRMReportParser.parseReport(loggedInInfo,hd.getReportFile());
+        
+    	if(report == null) {
+    		MiscUtils.getLogger().info("Failed to parse HRMDocument with id " + hd.getId());
+    		return;
+    	}
+    	
+    	if(!report.isBinary()) {
+    		MiscUtils.getLogger().info("no binary document found");
+    		return;
+    	}
+    	byte[] data = report.getBinaryContent();
+    	String fileName = (report.getLegalLastName() + "-" + report.getLegalFirstName()  + "-" + report.getFirstReportClass() + report.getFileExtension()).replaceAll("\\s", "_");
+    	String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + File.separator + "HRM";
+    	File file = new File(path, hash+"-"+fileName);
+    	if (!file.exists()) {
+    		try {
+    			FileUtils.writeByteArrayToFile(file, data);
+    		} catch (Exception e) {
+    			MiscUtils.getLogger().info(e.toString());
+    		}
+    	}
+	}
 }

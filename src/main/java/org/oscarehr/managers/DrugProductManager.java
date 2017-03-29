@@ -24,6 +24,7 @@
 package org.oscarehr.managers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.oscarehr.common.dao.DrugProductDao;
@@ -52,6 +53,9 @@ public class DrugProductManager {
 	
 	
 	public void saveDrugProduct(LoggedInInfo loggedInInfo, DrugProduct drugProduct) {
+		drugProduct.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
+		drugProduct.setDateCreated(new Date());
+		drugProduct.setLastUpdateDate(drugProduct.getDateCreated());
 		drugProductDao.persist(drugProduct);
 		
 		//--- log action ---
@@ -60,6 +64,9 @@ public class DrugProductManager {
 	}
 	
 	public void updateDrugProduct(LoggedInInfo loggedInInfo, DrugProduct drugProduct) {
+		drugProduct.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
+		drugProduct.setLastUpdateDate(new Date());
+		
 		drugProductDao.merge(drugProduct);
 		
 		//--- log action ---

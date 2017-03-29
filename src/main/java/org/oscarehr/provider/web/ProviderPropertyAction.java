@@ -2501,6 +2501,74 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 		return actionmapping.findForward("genBornPrefs");
 	}
     
+    
+    public ActionForward viewTicklerProviderEmailPrefs(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request, HttpServletResponse response) {
+    	DynaActionForm frm = (DynaActionForm)actionform;
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+		UserProperty prop = this.userPropertyDAO.getProp(providerNo, UserProperty.TICKLER_EMAIL_PROVIDER);
+
+		String propValue="";
+		if (prop == null){
+			prop = new UserProperty();
+		}else{
+			propValue=prop.getValue();
+		}
+
+		boolean checked;
+		if(propValue.equals("Y"))
+			checked=true;
+		else
+			checked=false;
+
+		prop.setChecked(checked);
+		request.setAttribute("ticklerEmailProviderProperty", prop);
+		request.setAttribute("providertitle","provider.ticklerEmailProviderPrefs.title"); 
+		request.setAttribute("providermsgPrefs","provider.ticklerEmailProviderPrefs.msgPrefs"); //=Preferences
+		request.setAttribute("providerbtnSubmit","provider.ticklerEmailProviderPrefs.btnSubmit"); //=Save
+		request.setAttribute("providerbtnCancel","provider.ticklerEmailProviderPrefs.btnCancel"); //=Cancel
+		request.setAttribute("method","saveTicklerEmailProviderPrefs");
+
+		frm.set("ticklerEmailProviderProperty", prop);
+
+		return actionmapping.findForward("genTicklerEmailProviderPrefs");
+    }
+
+    public ActionForward saveTicklerEmailProviderPrefs(ActionMapping actionmapping,ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+    	DynaActionForm frm=(DynaActionForm)actionform;
+    	UserProperty Uprop=(UserProperty)frm.get("ticklerEmailProviderProperty");
+
+		boolean checked=false;
+		if(Uprop!=null)
+			checked = Uprop.isChecked();
+		UserProperty prop=this.userPropertyDAO.getProp(providerNo, UserProperty.TICKLER_EMAIL_PROVIDER);
+		if(prop==null){
+			prop=new UserProperty();
+			prop.setName(UserProperty.TICKLER_EMAIL_PROVIDER);
+			prop.setProviderNo(providerNo);
+		}
+		String propValue="N";
+		if(checked) propValue="Y";
+
+		prop.setValue(propValue);
+		this.userPropertyDAO.saveProp(prop);
+
+		request.setAttribute("status", "success");
+		request.setAttribute("ticklerEmailProviderProperty",prop);
+		request.setAttribute("providertitle","provider.ticklerEmailProviderPrefs.title"); 
+		request.setAttribute("providermsgPrefs","provider.ticklerEmailProviderPrefs.msgPrefs"); //=Preferences
+		request.setAttribute("providerbtnClose","provider.ticklerEmailProviderPrefs.btnClose"); //=Close
+		if(checked)
+			request.setAttribute("providermsgSuccess","provider.ticklerEmailProviderPrefs.msgSuccess_selected"); 
+		else
+			request.setAttribute("providermsgSuccess","provider.ticklerEmailProviderPrefs.msgSuccess_unselected"); 
+		request.setAttribute("method","saveTicklerEmailProviderPrefs");
+
+		return actionmapping.findForward("genTicklerEmailProviderPrefs");
+	}
+    
     /**
      * Creates a new instance of ProviderPropertyAction
      */

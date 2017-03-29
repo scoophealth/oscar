@@ -24,7 +24,9 @@
 package org.oscarehr.common.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Query;
 
@@ -235,4 +237,24 @@ public class EFormDao extends AbstractDao<EForm> {
         List<EForm> results = query.getResultList();
         return (results);
     }
+    
+    /**
+     * result is a map where key is FID and value is ProgamNo eform is restricted to
+     * @return
+     */
+    public Map<Integer,Integer> findRestrictedEforms() {
+    	 String queryString = "select e.id,e.programNo from EForm e where e.restrictToProgram = true and e.programNo is not null and e.programNo > 0";
+         Query query = entityManager.createQuery(queryString);
+         @SuppressWarnings("unchecked")
+         List<Object[]> results = query.getResultList();
+         
+         Map<Integer,Integer> output = new HashMap<Integer,Integer>();
+         
+         for(Object[] result:results) {
+        	 output.put((Integer)result[0], (Integer)result[1]);
+         }
+    		
+         return output;
+    }
+    
 }

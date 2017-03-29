@@ -24,6 +24,19 @@
 --%>
 <%@ page import="org.oscarehr.PMmodule.model.DischargeReason"%>
 <%@ include file="/taglibs.jsp"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_pmm" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_pmm");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
 
 <script>
 	function select_program(id,admissionId) {
@@ -43,6 +56,16 @@
 	
 	function do_discharge() {
 		var dischargeDate = document.getElementById('dischargeDate').value; 
+		var dischargedFromFunctionalCentreRadioBox = document.clientManagerForm.elements['dischargedFromFunctionalCentre'];
+		var fcDischarged = false;
+		for(var i = 0; i < dischargedFromFunctionalCentreRadioBox.length; i++)
+		   {
+		      if(dischargedFromFunctionalCentreRadioBox[i].checked)
+		      {
+		         fcDischarged = true;
+		      }
+		   }
+				
 	      <%
 	      	String admissionDateString=(String)request.getAttribute("admissionDate");
 	      %>
@@ -52,7 +75,10 @@
 	    		alert("Please choose discharge date");
 	    		return false;
 	    	}    	
-	    	
+	    	if(!fcDischarged) {
+	    		alert("Please choose being discharged from functional centre or not.");
+	    		return false;
+	    	}
 	    	var today = new Date();
 	 	    var dischargeDateString = dischargeDate.split('-') ;
 	 	    var dischargeDateYear = dischargeDateString[0];
@@ -154,7 +180,24 @@
 		}
 		return true;
 	}
-
+	function radioEvent(form) 
+	{
+		var radioValue ;
+	 	for (var i = 0; i < form.dischargedFromFunctionalCentre.length; i++) 
+		{
+	    	if (form.dischargedFromFunctionalCentre[i].checked) 
+	    	{   
+	    		radioValue = form.dischargedFromFunctionalCentre[i].value;
+	    	}
+		}
+	 	if(radioValue == "true")
+	 	{
+	        alert("Please complete CDS and CBI.");
+	    } else {
+	    	alert("Please complete CDS and CBI if client address or other CBI data has changed.");
+	    }
+	
+	 }
 	
 </script>
 
@@ -312,10 +355,17 @@ Community Program:&nbsp;
 			<td><input id="dischargeDate" name="dischargeDate" onfocus="this.blur()" readonly="readonly" type="text" value='<c:out value="${admission.formattedDischargeDate}"/>'> <img title="Calendar" id="cal_dischargeDate" src="<%=request.getContextPath()%>/images/cal.gif" alt="Calendar" border="0"><script type="text/javascript">Calendar.setup({inputField:'dischargeDate',ifFormat :'%Y-%m-%d',button :'cal_dischargeDate',align :'cr',singleClick :true,firstDay :1});</script>
 			</td>
 		</tr>
-
+		
+		<tr>
+			<td width="20%">Discharge From Functional Centre</td>
+			<td><input type="radio" id="dischargedFromFunctionalCentre1" name="dischargedFromFunctionalCentre"  value="true" onclick="radioEvent(this.form);"/>Yes	
+				<input type="radio" id="dischargedFromFunctionalCentre2" name="dischargedFromFunctionalCentre"  value="false" onclick="radioEvent(this.form);"/>	No	
+			</td>			
+		</tr>
+		
 		<tr class="b">
 			<td colspan="2"><input type="button" value="Process Discharge"
-				onclick="do_discharge();" /> <input type="button" value="Cancel"
+				onclick="return do_discharge();" /> <input type="button" value="Cancel"
 				onclick="document.clientManagerForm.submit()" /></td>
 		</tr>
 	</table>

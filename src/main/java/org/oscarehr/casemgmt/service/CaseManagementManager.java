@@ -81,6 +81,7 @@ import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.dao.AppointmentArchiveDao;
 import org.oscarehr.common.dao.CaseManagementTmpSaveDao;
 import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DocumentDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DxDao;
 import org.oscarehr.common.dao.DxresearchDAO;
@@ -98,6 +99,7 @@ import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.CaseManagementTmpSave;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.DxAssociation;
 import org.oscarehr.common.model.Dxresearch;
@@ -107,12 +109,16 @@ import org.oscarehr.common.model.MessageTbl;
 import org.oscarehr.common.model.MsgDemoMap;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.quatro.model.security.Secrole;
+import com.quatro.service.security.RolesManager;
 
 import oscar.OscarProperties;
 import oscar.dms.EDocUtil;
@@ -121,9 +127,6 @@ import oscar.log.LogConst;
 //import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.util.ConversionUtils;
 import oscar.util.DateUtils;
-
-import com.quatro.model.security.Secrole;
-import com.quatro.service.security.RolesManager;
 
 @Transactional
 public class CaseManagementManager {
@@ -151,10 +154,10 @@ public class CaseManagementManager {
 	private ProgramAccessDAO programAccessDAO;
 	private SecRoleDao secRoleDao;
 	private ProgramQueueDao programQueueDao;
-	
+	private DocumentDao documentDao;
 	private AppointmentArchiveDao appointmentArchiveDao;
 	private DxDao dxDao;
-
+	private ProgramManager2 programManager2;
 	@Autowired
 	private SecurityInfoManager securityInfoManager;
 
@@ -174,6 +177,9 @@ public class CaseManagementManager {
 		this.dxDao = dxDao;
 	}
 	
+	public void setDocumentDao(DocumentDao documentDao) {
+		this.documentDao = documentDao;
+	}
 	
 	
 	public CaseManagementIssue getIssueByIssueCode(String demo, String issue_code) {
@@ -569,6 +575,38 @@ public class CaseManagementManager {
 		}
 
 		return (results);
+	}
+	
+	/**
+	 * Only be used to get methadone or suboxone for custom rx modules 
+	 * @param demographciId
+	 * @param rxName
+	 * @return
+	 */
+	public List<Drug> getCustomPrescriptions(int demographciId, String rxName) {
+		if (rxName == null || (!rxName.toLowerCase().contains("methadone") && !rxName.toLowerCase().contains("suboxone") 
+				&& !rxName.toLowerCase().contains("buprenorphine"))) {
+			return null;
+		}
+		DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
+		return drugDao.findCustomByDemographicIdOrderByPosition(demographciId, rxName);
+	}
+	
+	public Drug getLastRxForCustomRx(int demoNo, String rxName) {
+		if (rxName == null) {
+			return null;
+		}
+		DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
+		return drugDao.getLastRxForCustomRx(demoNo, rxName);
+	}
+	
+	public Date getLastEndDateForCustomRx(int demoNo, String rxName) {
+		if (rxName == null) {
+			return null;
+		}
+		DrugDao drugDao = (DrugDao) SpringUtils.getBean("drugDao");
+		Drug drug = drugDao.getLastRxForCustomRx(demoNo, rxName);
+		return (drug != null)?drug.getEndDate():null;
 	}
 
 	private void addIntegratorDrugs(LoggedInInfo loggedInInfo,List<Drug> prescriptions, boolean viewAll, int demographicId) {
@@ -1287,6 +1325,56 @@ public class CaseManagementManager {
 
 		return filteredNotes;
 	}
+	
+	//filters notes linked to private documents
+	public List<EChartNoteEntry> filterNotes2(LoggedInInfo loggedInInfo, Collection<EChartNoteEntry> notes) {
+
+		List<EChartNoteEntry> filteredNotes = new ArrayList<EChartNoteEntry>();
+		
+		if (notes.isEmpty()) {
+			return filteredNotes;
+		}
+		
+		for(EChartNoteEntry cmNote:notes) {
+			if(!cmNote.getType().equals("local_note") && !cmNote.getType().equals("remote_note")) {
+				filteredNotes.add(cmNote);
+				continue;
+			}
+			
+			List<CaseManagementNoteLink> links = caseManagementNoteLinkDAO.getLinkByNote(((Long)cmNote.getId()));
+			if(links.isEmpty()) {
+				filteredNotes.add(cmNote);
+				continue;
+			}
+			
+			List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+			
+			boolean addIt = true;
+			for(CaseManagementNoteLink link:links) {
+				if(CaseManagementNoteLink.DOCUMENT == link.getTableName().intValue()) {
+					Document d = documentDao.find(link.getTableId().intValue());
+					if(d != null) {
+						if(d.isRestrictToProgram() != null && d.isRestrictToProgram() && d.getProgramId().intValue()>0) {
+							addIt=false;
+							for(ProgramProvider pp:ppList) {
+								if(pp.getProgramId().intValue() == d.getProgramId().intValue()) {
+									addIt=true;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			if(addIt) {
+				filteredNotes.add(cmNote);
+			}
+		}
+		
+		return filteredNotes;
+	}
+	
 
 	public boolean hasRole(String providerNo, CachedDemographicNote cachedDemographicNote, String programId) {
 
@@ -1371,7 +1459,7 @@ public class CaseManagementManager {
 	
 	public Integer searchIssuesCount(String providerNo, String programId, String search) {
 		// Get Role - if no ProgramProvider record found, show no issues.
-		List<ProgramProvider> ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, new Long(programId));
+		List<ProgramProvider> ppList = programProviderDao.getProgramProviderByProviderProgramId(providerNo, (programId!=null)?new Long(programId):null);
 		if (ppList == null || ppList.isEmpty()) {
 			return 0;
 		}
@@ -1767,6 +1855,10 @@ public class CaseManagementManager {
 
 	public void setCaseManagementTmpSaveDao(CaseManagementTmpSaveDao dao) {
 		this.caseManagementTmpSaveDao = dao;
+	}
+	
+	public void setProgramManager2(ProgramManager2 programManager2) {
+		this.programManager2 = programManager2;
 	}
 
 	protected String removeFirstSpace(String withSpaces) {

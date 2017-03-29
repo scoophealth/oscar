@@ -242,6 +242,14 @@ public class NoteDisplayIntegrator implements NoteDisplay {
 	    // TODO Auto-generated method stub
 	    return null;
     }
+
+
+	@Override
+	public boolean isFreeDraw() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	
 	public boolean isTicklerNote() {
 		return false;

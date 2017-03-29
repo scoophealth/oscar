@@ -47,6 +47,7 @@ import org.drools.WorkingMemory;
 import org.drools.io.RuleBaseLoader;
 import org.jdom.Element;
 import org.oscarehr.common.dao.DxDao;
+import org.oscarehr.drools.RuleBaseFactory;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -380,18 +381,32 @@ public class MeasurementFlowSheet {
             if (measurementDirPath != null) {
                 //if (measurementDirPath.charAt(measurementDirPath.length()) != /)
                 File file = new File(OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY") + string);
-                if (file.isFile() || file.canRead()) {
+                
+                ruleBase=RuleBaseFactory.getRuleBase(file.getCanonicalPath());
+                
+                if (ruleBase==null && (file.isFile() || file.canRead())) {
                     log.debug("Loading from file " + file.getName());
                     FileInputStream fis = new FileInputStream(file);
-                    ruleBase = RuleBaseLoader.loadFromInputStream(fis);
-                    fileFound = true;
+                    try {
+	                    ruleBase = RuleBaseLoader.loadFromInputStream(fis);
+	                    fileFound = true;
+	                    RuleBaseFactory.putRuleBase(file.getCanonicalPath(), ruleBase);
+                    }
+                    finally {
+                    	IOUtils.closeQuietly(fis);
+                    }
                 }
             }
 
             if (!fileFound) {
-                URL url = MeasurementFlowSheet.class.getResource("/oscar/oscarEncounter/oscarMeasurements/flowsheets/" + string);  //TODO: change this so it is configurable;
-                log.debug("loading from URL " + url.getFile());
-                ruleBase = RuleBaseLoader.loadFromUrl(url);
+                String urlString = "/oscar/oscarEncounter/oscarMeasurements/flowsheets/" + string;
+                ruleBase=RuleBaseFactory.getRuleBase(urlString);
+                if (ruleBase==null) {
+	                URL url = MeasurementFlowSheet.class.getResource(urlString);  //TODO: change this so it is configurable;
+	                log.debug("loading from URL " + url.getFile());
+	                ruleBase = RuleBaseLoader.loadFromUrl(url);
+	                RuleBaseFactory.putRuleBase(urlString, ruleBase);
+                }
             }
         } catch (Exception e) {
             MiscUtils.getLogger().error("Error", e);
@@ -442,18 +457,32 @@ public class MeasurementFlowSheet {
             if (measurementDirPath != null) {
                 //if (measurementDirPath.charAt(measurementDirPath.length()) != /)
                 File file = new File(OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY") + string);
-                if (file.isFile() || file.canRead()) {
+                ruleBase=RuleBaseFactory.getRuleBase(file.getCanonicalPath());
+                
+                if (ruleBase==null && (file.isFile() || file.canRead())) {
                     log.debug("Loading from file " + file.getName());
                     FileInputStream fis = new FileInputStream(file);
-                    ruleBase = RuleBaseLoader.loadFromInputStream(fis);
-                    fileFound = true;
+                    try {
+	                    ruleBase = RuleBaseLoader.loadFromInputStream(fis);
+	                    fileFound = true;
+	                    RuleBaseFactory.putRuleBase(file.getCanonicalPath(), ruleBase);
+                    }
+                    finally {
+                    	IOUtils.closeQuietly(fis);
+                    }
                 }
             }
 
             if (!fileFound) {
-                URL url = MeasurementFlowSheet.class.getResource("/oscar/oscarEncounter/oscarMeasurements/flowsheets/decisionSupport/" + string);  //TODO: change this so it is configurable;
-                log.debug("loading from URL " + url.getFile());
-                measurementRuleBase = RuleBaseLoader.loadFromUrl(url);
+            	String urlString="/oscar/oscarEncounter/oscarMeasurements/flowsheets/decisionSupport/" + string;
+                measurementRuleBase=RuleBaseFactory.getRuleBase(urlString);
+                
+                if (measurementRuleBase==null) {
+	                URL url = MeasurementFlowSheet.class.getResource(urlString);  //TODO: change this so it is configurable;
+	                log.debug("loading from URL " + url.getFile());
+	                measurementRuleBase = RuleBaseLoader.loadFromUrl(url);
+	                RuleBaseFactory.putRuleBase(urlString, measurementRuleBase);
+                }
             }
         } catch (Exception e) {
             MiscUtils.getLogger().error("Error", e);

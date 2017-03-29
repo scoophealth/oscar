@@ -72,3 +72,4 @@ public class SecurityArchiveDao extends AbstractDao<SecurityArchive> {
 	}
 
 }
+

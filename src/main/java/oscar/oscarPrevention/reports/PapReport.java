@@ -211,7 +211,7 @@ public class PapReport implements PreventionReport {
           String percentWithGraceStr = "0";
           double eligible = list.size() - inList;
           log.debug("eligible "+eligible+" done "+done+" doneWithGrace "+doneWithGrace);
-          if (eligible != 0){
+          if ((int)eligible != 0){
              double percentage = ( done / eligible ) * 100;
              double percentageWithGrace =  (done+doneWithGrace) / eligible  * 100 ;
              log.debug("in percentage  "+percentage   +" "+( done / eligible));

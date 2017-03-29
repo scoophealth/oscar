@@ -23,16 +23,28 @@
 
 package org.oscarehr.PMmodule.web;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.ProviderManager2;
+import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
-public class ProviderSearchAction extends Action {
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+public class ProviderSearchAction extends DispatchAction {
 	
 	private ProviderManager providerManager;
 	
@@ -40,7 +52,7 @@ public class ProviderSearchAction extends Action {
 		this.providerManager = mgr;
 	}
 	
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String name = request.getParameter("q");
 		if(name == null) {
 			name = "";
@@ -48,4 +60,38 @@ public class ProviderSearchAction extends Action {
 		request.setAttribute("providers",providerManager.search(name));
 		return mapping.findForward("results");
 	}
+	
+	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String programId = request.getParameter("programNo");
+		if(programId == null || "".equals(programId) ) {
+			programId = null;
+		}
+		
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		
+		List<Provider> providers = new ArrayList<Provider>();
+		
+		if(programId != null) {
+			List<Integer> ids = new ArrayList<Integer>();
+			ids.add(Integer.parseInt(programId));
+			ProgramProviderDAO programProviderDao = SpringUtils.getBean(ProgramProviderDAO.class);
+			providers = programProviderDao.getProvidersByPrograms(ids);
+		} else {
+			ProviderManager2 providerManager = SpringUtils.getBean(ProviderManager2.class);
+			providers = providerManager.getProviders(loggedInInfo, true);
+		}
+		
+		JSONArray arr = new JSONArray();
+		for(Provider p:providers) {
+			JSONObject o = new JSONObject();
+			o.put("id", p.getProviderNo());
+			o.put("name", p.getFormattedName());
+			arr.add(o);
+		}
+		
+		response.getWriter().print(arr);
+		
+		return null;
+	}
+	
 }

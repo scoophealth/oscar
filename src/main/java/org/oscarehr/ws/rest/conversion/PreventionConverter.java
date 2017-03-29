@@ -44,6 +44,8 @@ public class PreventionConverter extends AbstractConverter<Prevention, Preventio
 	   t.setPreventionType(d.getPreventionType());
 	   t.setNextDate(d.getNextDate());
 	   t.setCreatorProviderNo(d.getCreatorProviderNo());
+	   t.setRestrictToProgram(d.getRestrictToProgram());
+	   t.setProgramNo(d.getProgramNo());
 	   
 	   return t;
     }

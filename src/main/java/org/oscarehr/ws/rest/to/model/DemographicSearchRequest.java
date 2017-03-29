@@ -23,10 +23,12 @@
  */
 package org.oscarehr.ws.rest.to.model;
 
+import org.oscarehr.common.model.DemographicExt;
+
 public class DemographicSearchRequest {
 	
 	public static enum SEARCHMODE {
-        Name, Phone, HIN, Address, DOB, ChartNo, DemographicNo
+        Name, Phone, HIN, Address, DOB, ChartNo, DemographicNo, BandNumber
 	}
 	
 	public static enum SORTMODE {
@@ -51,6 +53,16 @@ public class DemographicSearchRequest {
 	
 	private SORTDIR sortDir;
 	
+	private DemographicExt.FIRST_NATION_KEY firstNationKey;
+	
+	
+	public DemographicExt.FIRST_NATION_KEY getFirstNationKey() {
+		return firstNationKey;
+	}
+
+	public void setFirstNationKey( DemographicExt.FIRST_NATION_KEY firstNationKey) {
+		this.firstNationKey = firstNationKey;
+	}
 
 	public SEARCHMODE getMode() {
 		return mode;

@@ -601,7 +601,7 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
     	            object = callback.waitForResponse();
     	        } catch (TimeoutException e) {
     	            log2.debug("No response from server."+server_url);
-    	        }catch(Throwable ethrow){
+    	        }catch(Exception ethrow){
     	            log2.debug("Throwing error."+ethrow.getMessage());
     	        }
     	        result = (Vector)object;

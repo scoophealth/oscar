@@ -39,6 +39,7 @@ import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONObject;
 
+import org.apache.cxf.common.util.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -49,7 +50,6 @@ import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.OcanForm;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.ProviderPreferenceDao;
-import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.dao.ServiceRequestTokenDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Facility;
@@ -96,10 +96,17 @@ public final class LoginAction extends DispatchAction {
     private ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");
     private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
     private UserPropertyDAO propDao =(UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
-	
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
+			
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	boolean ajaxResponse = request.getParameter("ajaxResponse") != null?Boolean.valueOf(request.getParameter("ajaxResponse")):false;
     	
+    	if(!"POST".equals(request.getMethod())) {
+    		MiscUtils.getLogger().error("Someone is trying to login with a GET request.",new Exception());
+    		 String newURL = mapping.findForward("error").getPath();
+             newURL = newURL + "?errormsg=Application Error. See Log.";         
+             return new ActionForward(newURL);
+    	}
     	String ip = request.getRemoteAddr();
         Boolean isMobileOptimized = request.getSession().getAttribute("mobileOptimized") != null;
     	
@@ -113,6 +120,7 @@ public final class LoginAction extends DispatchAction {
         String where = "failure";
         
     	if (request.getParameter("forcedpasswordchange") != null && request.getParameter("forcedpasswordchange").equalsIgnoreCase("true")) {
+    		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
     		//Coming back from force password change.
     	    userName = (String) request.getSession().getAttribute("userName");
     	    password = (String) request.getSession().getAttribute("password");
@@ -123,6 +131,11 @@ public final class LoginAction extends DispatchAction {
     	    String confirmPassword = ((LoginForm) form).getConfirmPassword();
     	    String oldPassword = ((LoginForm) form).getOldPassword();
     	   
+    	    String newPin = ((LoginForm) form).getNewPin();
+    	    String confirmPin = ((LoginForm) form).getConfirmPin();
+    	    String oldPin = ((LoginForm) form).getOldPin();
+    	   
+    	    
     	    
     	    try{
         	    String errorStr = errorHandling(password, newPassword, confirmPassword, encodePassword(oldPassword), oldPassword);
@@ -133,11 +146,23 @@ public final class LoginAction extends DispatchAction {
     	        	newURL = newURL + errorStr;  	        	
     	            return(new ActionForward(newURL));  
         	    }
+        	    
+        	    if(!StringUtils.isEmpty(pin)) {
+	        	    String errorStr2 = errorHandling2(pin, newPin, confirmPin, oldPin);
+	        	    //Error Handling
+	        	    if (errorStr2 != null && !errorStr2.isEmpty()) {
+	    	        	String newURL = mapping.findForward("forcepasswordreset").getPath();
+	    	        	newURL = newURL + errorStr2;  	        	
+	    	            return(new ActionForward(newURL));  
+	        	    }
+        	    }
         	   
-        	    persistNewPassword(userName, newPassword);
-        	            	    
+        	    persistNewPasswordAndPin(loggedInInfo, userName, newPassword, newPin);
+        	    
+        	    
         	    password = newPassword;
-        	            	    
+        	    pin = newPin;
+        	    
         	    //Remove the attributes from session
         	    removeAttributesFromSession(request);
          	}  
@@ -242,9 +267,14 @@ public final class LoginAction extends DispatchAction {
             /* 
              * This section is added for forcing the initial password change.
              */
-            Security security = getSecurity(userName);
-            if (!OscarProperties.getInstance().getBooleanProperty("mandatory_password_reset", "false") && 
-            	security.isForcePasswordReset() != null && security.isForcePasswordReset() && forcedpasswordchange	) {
+           boolean isForcePasswordReset = securityManager.getPasswordResetFlag(userName);
+            
+           boolean requiresUpgrade = "true".equals(OscarProperties.getInstance().getProperty("password.forcePasswordResetToUpdateStorage", "true")) 
+        		   && securityManager.isRequireUpgradeToStorage(userName);
+        
+           
+            if ((!OscarProperties.getInstance().getBooleanProperty("mandatory_password_reset", "false") && 
+            	isForcePasswordReset && forcedpasswordchange) || requiresUpgrade	) {
             	
             	String newURL = mapping.findForward("forcepasswordreset").getPath();
             	
@@ -523,10 +553,31 @@ public final class LoginAction extends DispatchAction {
 
 	    if (!encodedOldPassword.equals(password)) {
      	   newURL = newURL + "?errormsg=Your old password, does NOT match the password in the system. Please enter your old password.";  
-     	} else if (!newPassword.equals(confirmPassword)) {
-      	   newURL = newURL + "?errormsg=Your new password, does NOT match the confirmed password. Please try again.";  
+     	} else if(StringUtils.isEmpty(newPassword)) {
+ 	       newURL = newURL + "?errormsg=Your new password is empty.";  
+ 	    } else if (!newPassword.equals(confirmPassword)) {
+      	   newURL = newURL + "?errormsg=Your new password does NOT match the confirmed password. Please try again.";  
       	} else if (!Boolean.parseBoolean(OscarProperties.getInstance().getProperty("IGNORE_PASSWORD_REQUIREMENTS")) && newPassword.equals(oldPassword)) {
-       	   newURL = newURL + "?errormsg=Your new password, is the same as your old password. Please choose a new password.";  
+       	   newURL = newURL + "?errormsg=Your new password is the same as your old password. Please choose a new password.";  
+       	} 
+	    
+	    
+    	    
+	    return newURL;
+     }
+    
+    private String errorHandling2(String pin, String  newPin, String  confirmPin, String  oldPin){
+	    
+    	String newURL = "";
+
+	    if (!oldPin.equals(pin)) {
+     	   newURL = newURL + "?errormsg=Your old PIN, does NOT match the PIN in the system. Please enter your old PIN.";  
+     	} else if(StringUtils.isEmpty(newPin)) {
+  	       newURL = newURL + "?errormsg=Your new PIN is empty.";  
+  	    } else if (!newPin.equals(confirmPin)) {
+      	   newURL = newURL + "?errormsg=Your new PIN does NOT match the confirmed PIN. Please try again.";  
+      	} else if (!Boolean.parseBoolean(OscarProperties.getInstance().getProperty("IGNORE_PASSWORD_REQUIREMENTS")) && newPin.equals(oldPin)) {
+       	   newURL = newURL + "?errormsg=Your new PIN is the same as your old PIN. Please choose a new PIN.";  
        	} 
     	    
 	    return newURL;
@@ -557,10 +608,9 @@ public final class LoginAction extends DispatchAction {
      * @param username
      * @return
      */
-    private Security getSecurity(String username) {
+    private Security getSecurity(LoggedInInfo loggedInInfo, String username) {
 
-		SecurityDao securityDao = (SecurityDao) SpringUtils.getBean("securityDao");
-		List<Security> results = securityDao.findByUserName(username);
+		List<Security> results = securityManager.findByUserName(loggedInInfo, username);
 		Security security = null;
 		if (results.size() > 0) security = results.get(0);
 
@@ -580,13 +630,18 @@ public final class LoginAction extends DispatchAction {
      * @param newPassword
      * @return
      */
-    private void  persistNewPassword(String userName, String newPassword) throws Exception{
+    private void  persistNewPasswordAndPin(LoggedInInfo loggedInInfo, String userName, String newPassword, String newPin) throws Exception{
     
-	    Security security = getSecurity(userName);
-	    security.setPassword(encodePassword(newPassword));
+	    Security security = getSecurity(loggedInInfo, userName);
+	    security.setPassword(PasswordHash.createHash(newPassword));
 	    security.setForcePasswordReset(Boolean.FALSE);
-	    SecurityDao securityDao = (SecurityDao) SpringUtils.getBean("securityDao");	    
-	    securityDao.saveEntity(security); 
+	    security.setStorageVersion(Security.STORAGE_VERSION_2);
+	    
+	    if(!StringUtils.isEmpty(newPin)) {
+	    	security.setPin(PasswordHash.createHash(newPin));
+	    }
+	    
+	    securityManager.updateSecurityRecord(loggedInInfo, security); 
 		
     }
          

@@ -23,7 +23,12 @@
 
 package org.caisi.tickler.web;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -44,6 +49,8 @@ import org.caisi.service.DemographicManagerTickler;
 import org.caisi.tickler.prepared.PreparedTickler;
 import org.caisi.tickler.prepared.PreparedTicklerManager;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.common.dao.EChartDao;
@@ -60,6 +67,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 
+import net.sf.json.JSONArray;
 import oscar.OscarProperties;
 
 public class TicklerAction extends DispatchAction {
@@ -72,6 +80,8 @@ public class TicklerAction extends DispatchAction {
 	private ProgramManager programMgr = null;
 
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	private ProviderManager providerManager = SpringUtils.getBean(ProviderManager.class);
+	
 	
 	public void setDemographicManager(DemographicManagerTickler demographicManager) {
 		this.demographicMgr = demographicManager;
@@ -310,9 +320,21 @@ public class TicklerAction extends DispatchAction {
 		if (programId == null) {
 			programId = String.valueOf(programMgr.getProgramIdByProgramName("OSCAR"));
 		}
-		request.setAttribute("providers", providerMgr.getActiveProviders(null, programId));
+		//request.setAttribute("providers", providerMgr.getActiveProviders(null, programId));
 		request.setAttribute("program_name", programMgr.getProgramName(programId));
 		request.setAttribute("from", getFrom(request));
+		
+		
+		//using the current program (or the user selected one by priority) , filter the provider list by that providers
+		//that are staff of that program.
+		List<ProgramProvider> pps = programMgr.getProgramProviders(programId);
+		List<Provider> providers = new ArrayList<Provider>();
+		for(ProgramProvider pp:pps) {
+			Provider provider = providerManager.getProvider(pp.getProviderNo()); 
+			if("1".equals(provider.getStatus())) {
+				providers.add(provider);
+			}
+		}
 
 		String demographicNo = request.getParameter("tickler.demographicNo");
 		if(!StringUtils.isEmpty(demographicNo)) {
@@ -321,6 +343,34 @@ public class TicklerAction extends DispatchAction {
 				request.setAttribute("demographicName", demo.getFormattedName());
 			}
 		}
+		
+		List<Program> programDomain = programMgr.getProgramDomain(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo());
+		//further filter by patient admissions.
+		AdmissionManager admissionManager = SpringUtils.getBean(AdmissionManager.class);
+		if(demographicNo != null) {
+			programDomain = admissionManager.filterProgramListByCurrentPatientAdmissions(programDomain,Integer.parseInt(demographicNo));
+		}
+		
+		//is the set program in the available domain? if not, choose the first one
+		boolean found=false;
+		for(Program p:programDomain) {
+			if(p.getId().intValue() == Integer.parseInt(programId)) {
+				found=true;
+				break;
+			}
+		}
+		
+		if(!found) {
+			programId = programDomain.get(0).getId().toString();
+		}
+
+		Collections.sort(providers,  new Provider().ComparatorName());
+		
+		request.setAttribute("programDomain",programDomain);
+		request.setAttribute("currentProgramId", programId);
+		request.setAttribute("program_name", programMgr.getProgramName(programId));
+
+		request.setAttribute("providers", providers);
 		
 		return mapping.findForward("edit");
 	}
@@ -339,10 +389,25 @@ public class TicklerAction extends DispatchAction {
 		String docId = request.getParameter("docId"); 
 		
 		// set the program which the tickler was written in if there is a program.
-		String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
-		if (programIdStr != null) tickler.setProgramId(Integer.valueOf(programIdStr));
+		//String programIdStr = (String) request.getSession().getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
+		//if (programIdStr != null) tickler.setProgramId(Integer.valueOf(programIdStr));
 
+		String programNo = request.getParameter("tickler.program_no");
+		if(!StringUtils.isEmpty(programNo)) {
+			tickler.setProgramId(Integer.valueOf(programNo));
+		}
+			
+		
 		/* get service time */
+		String service_date = request.getParameter("tickler.serviceDateWeb");
+		Date serviceDateDt = null;
+		try {
+			serviceDateDt = new SimpleDateFormat("yyyy-MM-dd").parse(service_date);
+		}catch(ParseException e) {
+			serviceDateDt = new Date();
+		}
+		tickler.setServiceDate(serviceDateDt);
+		
 		String service_hour = request.getParameter("tickler.service_hour");
 		String service_minute = request.getParameter("tickler.service_minute");
 		String service_ampm = request.getParameter("tickler.service_ampm");
@@ -518,5 +583,75 @@ public class TicklerAction extends DispatchAction {
 		}
 
 		return null;
+	}
+	
+	public ActionForward getProgramDomain(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String providerNo = request.getParameter("providerNo");
+		
+		List<Program> programs = programMgr.getProgramDomain(providerNo);
+		List<Integer> programIds = new ArrayList<Integer>();
+		for(Program p:programs) {
+			programIds.add(p.getId());
+		}
+		
+		JSONArray jsonArray = JSONArray.fromObject( programIds );
+		response.getWriter().print(jsonArray);
+		
+		return null;
+	}
+	
+	public ActionForward getProvidersByProgram(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String programNo = request.getParameter("programNo");
+		
+		List<ProgramProvider> pps = programMgr.getProgramProviders(programNo);
+		List<LightProvider> providers = new ArrayList<LightProvider>();
+		for(ProgramProvider pp:pps) {
+			Provider provider = providerManager.getProvider(pp.getProviderNo()); 
+			if("1".equals(provider.getStatus())) {
+				providers.add(new LightProvider(provider.getProviderNo(),provider.getFormattedName()));
+				
+			}
+		}
+		//sort
+		Collections.sort(providers,  TicklerAction.NameComparator);
+		
+		JSONArray jsonArray = JSONArray.fromObject( providers );
+		response.getWriter().print(jsonArray);
+		
+		return null;
+	}
+	
+	public static final Comparator<LightProvider> NameComparator = new Comparator<LightProvider>() {
+        public int compare(LightProvider dm1, LightProvider dm2) {
+        	return dm1.getName().compareTo(dm2.getName());
+        }
+    }; 
+	
+	public class LightProvider {
+		private String providerNo;
+		private String name;
+		
+		public LightProvider(String providerNo, String name) {
+			this.providerNo = providerNo;
+			this.name = name;
+			
+		}
+
+		public String getProviderNo() {
+			return providerNo;
+		}
+	
+		public void setProviderNo(String providerNo) {
+			this.providerNo = providerNo;
+		}
+	
+		public String getName() {
+			return name;
+		}
+	
+		public void setName(String name) {
+			this.name = name;
+		}
+		
 	}
 }

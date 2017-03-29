@@ -1,0 +1,8 @@
+MSH|^~\&|OCF|GBHS-OS|XENOS|GBHS-OS|20120324142545||ORU^R01|Q68569216|T|2.3
+PID|1||320950^^^GBHS-OS||POKE^SLOW^TOBY||19890803|Male|||123 WALKING LEASH^^WALKERTOWN^Ontario^W8W8W8^Canada^^^Lambton, Brooke-Alvinston, TP.|Lambton, Brooke-Alvinston, TP.|(519)888-8888^Home||English|Married||3347592^^^GBHS-OS^FIN NBR 
+PV1|1|Inpt.|4-1^4106^1^GBHS-OS^^Bed(s)^GBHS-OS|Urgent|||00154^Harada^Glenn^K|^CNTest^GBHS Phys|00154^Harada^Glenn|Medicine|4-1^^^^^Nurse Unit(s)|||Other|||00154^Harada^Glenn^K|Inpt.Ac.|2012090166202^^^^Visit Id|OHIP|||||||||||||||||||GBHS-OS||Active|||20120316132401||||||2012090166202 
+OBR|1|83204616^HNAM_ORDERID||Glucose Random^Glu Random|||20120323153300|||||||20120323153600|Blood&Blood|00152^Kaal^Nuri||||000002012082000009^HNA_ACCN~2354867^HNA_ACCNID||20120324142544||General Lab|Auth (Verified)||1^^^20120323142300^^Urgent~^^^^^UR|||||||||20120323153300 
+OBX|1|NM|Glucose Random^Glucose Random||50.0|mmol/L^mmol/L|3.9-7.0^3.9^7.0|CRIT|||Auth (Verified)|||20120324142543|||^^^OSC Fusion 
+NTE|1|Notes|checked 
+NTE|2|Interpretive Data|Glucose: \.br\According to CDA  guidelines,  a random glucose  of greater than 11.0 mmol/L is consistent with a diagnosis of diabetes mellitus.\.br\ 
+

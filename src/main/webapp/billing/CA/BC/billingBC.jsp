@@ -49,7 +49,7 @@ if(!authed) {
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="oscar.oscarDemographic.data.*"%>
 <%@page import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.*,oscar.entities.*"%>
-<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.util.SpringUtils"%>
 <%!
   public void fillDxcodeList(BillingFormData.BillingService[] servicelist, Map dxcodeList) {
     for (int i = 0; i < servicelist.length; i++) {

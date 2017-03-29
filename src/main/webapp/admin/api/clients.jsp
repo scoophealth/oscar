@@ -173,7 +173,7 @@ if(!authed) {
 			<th>Name</th>
 			<th>Client Key</th>
 			<th>Client Secret</th>
-			<th>URI</td>
+			<th>URI *</td>
 			<th>Actions</th>
 		</tr>
 	</thead>
@@ -203,7 +203,7 @@ if(!authed) {
 <hr/>
 <table class="table table-bordered table-striped table-hover table-condensed">
 	<tr>
-		<td>Temporary Credential Request:</td>
+		<td>Temporary Credential Request URI:</td>
 		<td><%=here%>/ws/oauth/initiate</td>
 	</tr>
 	<tr>
@@ -215,6 +215,9 @@ if(!authed) {
 		<td><%=here%>/ws/oauth/token</td>
 	</tr>
 </table>
+
+
+<aside>* Callback URI must start with the client URI in your credential request parameters.</aside>
 
 <div id="new-form" title="Create Client">
 	<p class="validateTips"></p>

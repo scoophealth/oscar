@@ -57,15 +57,15 @@ public class BillingRAPrep {
 		List ret = dbObj.getRASummary(raNo, providerOhipNo);
 		double dCFee = 0.0;
 		double dPFee = 0.0;
-		BigDecimal BigCTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
-		BigDecimal BigPTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
-		BigDecimal BigOBTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
-		BigDecimal BigCOTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
-		BigDecimal BigHTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
-		BigDecimal BigLocalHTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
-		BigDecimal BigTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
-		BigDecimal BigOTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
-		BigDecimal BigLTotal = new BigDecimal(0.).setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigDecimal BigCTotal = new BigDecimal("0").setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigDecimal BigPTotal = new BigDecimal("0").setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigDecimal BigOBTotal = new BigDecimal("0").setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigDecimal BigCOTotal = new BigDecimal("0").setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigDecimal BigHTotal = new BigDecimal("0").setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigDecimal BigLocalHTotal = new BigDecimal("0").setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigDecimal BigTotal = new BigDecimal("0").setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigDecimal BigOTotal = new BigDecimal("0").setScale(2, BigDecimal.ROUND_HALF_UP);
+		BigDecimal BigLTotal = new BigDecimal("0").setScale(2, BigDecimal.ROUND_HALF_UP);
 		// Billing No Provider Patient HIN Service Date Service Code Invoiced :
 		// new BigDecimal(0)
 		// Paid Clinic Pay Hospital Pay OB Error
@@ -89,11 +89,11 @@ public class BillingRAPrep {
 			String obPay = "";
 
 			dCFee = Double.parseDouble(amountsubmit);
-			BigDecimal bdCFee = new BigDecimal(dCFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+			BigDecimal bdCFee = new BigDecimal(amountsubmit).setScale(2, BigDecimal.ROUND_HALF_UP);
 			BigCTotal = BigCTotal.add(bdCFee);
 
 			dPFee = Double.parseDouble(amountpay);
-			BigDecimal bdPFee = new BigDecimal(dPFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+			BigDecimal bdPFee = new BigDecimal(amountpay).setScale(2, BigDecimal.ROUND_HALF_UP);
 			BigPTotal = BigPTotal.add(bdPFee);
 			String COflag = "0";
 			String OBflag = "0";
@@ -117,7 +117,7 @@ public class BillingRAPrep {
 			if (OBflag.equals("1")) {
 				String amountOB = amountpay;
 				double dOBFee = Double.parseDouble(amountOB);
-				BigDecimal bdOBFee = new BigDecimal(dOBFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+				BigDecimal bdOBFee = new BigDecimal(amountOB).setScale(2, BigDecimal.ROUND_HALF_UP);
 				BigOBTotal = BigOBTotal.add(bdOBFee);
                                 obPay = amountpay;
 			} else {
@@ -128,7 +128,7 @@ public class BillingRAPrep {
 			if (COflag.equals("1")) {
 				String amountCO = amountpay;
 				double dCOFee = Double.parseDouble(amountCO);
-				BigDecimal bdCOFee = new BigDecimal(dCOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+				BigDecimal bdCOFee = new BigDecimal(amountCO).setScale(2, BigDecimal.ROUND_HALF_UP);
 				BigCOTotal = BigCOTotal.add(bdCOFee);
 			} else {
 				// amountCO = "N/A";
@@ -141,7 +141,7 @@ public class BillingRAPrep {
 
 			if (location.compareTo("02") == 0) {
 				double dHFee = Double.parseDouble(amountpay);
-				BigDecimal bdHFee = new BigDecimal(dHFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+				BigDecimal bdHFee = new BigDecimal(amountpay).setScale(2, BigDecimal.ROUND_HALF_UP);
 				BigHTotal = BigHTotal.add(bdHFee);
 				clinicPay = "N/A";
 				hospitalPay = "N/A";
@@ -154,13 +154,13 @@ public class BillingRAPrep {
 			} else {
 				if (location.compareTo("00") == 0 && demo_hin.length() > 1 && servicedate.equals(localServiceDate)) {
 					double dFee = Double.parseDouble(amountpay);
-					BigDecimal bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+					BigDecimal bdFee = new BigDecimal(amountpay).setScale(2, BigDecimal.ROUND_HALF_UP);
 					BigTotal = BigTotal.add(bdFee);
 					clinicPay = amountpay;
 					hospitalPay = "N/A";
 				} else {
 					double dOFee = Double.parseDouble(amountpay);
-					BigDecimal bdOFee = new BigDecimal(dOFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+					BigDecimal bdOFee = new BigDecimal(amountpay).setScale(2, BigDecimal.ROUND_HALF_UP);
 					BigOTotal = BigOTotal.add(bdOFee);
 					clinicPay = "N/A";
 					hospitalPay = "N/A";

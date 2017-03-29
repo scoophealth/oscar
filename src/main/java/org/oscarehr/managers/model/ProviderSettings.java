@@ -140,6 +140,7 @@ public class ProviderSettings {
 	private String myDrugRefId;
 	private boolean useMyMeds;
 	private boolean disableBornPrompts;
+	private boolean enableTicklerEmailProvider;
 	private boolean dashboardShare;
 	
 
@@ -657,15 +658,16 @@ public class ProviderSettings {
 	public void setDisableBornPrompts(boolean disableBornPrompts) {
 		this.disableBornPrompts = disableBornPrompts;
 	}
+	public boolean isEnableTicklerEmailProvider() {
+		return enableTicklerEmailProvider;
+	}
+	public void setEnableTicklerEmailProvider(boolean enableTicklerEmailProvider) {
+		this.enableTicklerEmailProvider = enableTicklerEmailProvider;
+	}
 	public boolean isDashboardShare() {
 		return dashboardShare;
 	}
 	public void setDashboardShare(boolean dashboardShare) {
 		this.dashboardShare = dashboardShare;
 	}
-	
-	
-	
-	
-
 }

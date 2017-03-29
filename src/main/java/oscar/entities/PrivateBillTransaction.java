@@ -47,7 +47,7 @@ public class PrivateBillTransaction {
   }
 
   public void setAmount_received(double amount_received) {
-    BigDecimal bdFee = new BigDecimal(amount_received).setScale(2,
+    BigDecimal bdFee = BigDecimal.valueOf(amount_received).setScale(2,
         BigDecimal.ROUND_HALF_UP);
     this.amount_received = bdFee.doubleValue();
   }

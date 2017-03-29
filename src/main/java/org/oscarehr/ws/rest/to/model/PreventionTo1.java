@@ -36,15 +36,18 @@ public class PreventionTo1 {
 	private String providerNo;
 	private String preventionType;
 
-	private char deleted;
-	private char refused;
-	private char never;
+	private char deleted = '0';
+	private char refused = '0';
+	private char never = '0';
 
 	private Date nextDate;
 
 	private String creatorProviderNo;
 	
 	private Date lastUpdateDate;
+	
+	private Boolean restrictToProgram = false;
+	private Integer programNo;
 
 	public Integer getDemographicId() {
 		return demographicId;
@@ -151,5 +154,22 @@ public class PreventionTo1 {
 	public String getDeletedRawValue() {
 		return String.valueOf(deleted);
 	}
+
+	public Boolean getRestrictToProgram() {
+		return restrictToProgram;
+	}
+
+	public void setRestrictToProgram(Boolean restrictToProgram) {
+		this.restrictToProgram = restrictToProgram;
+	}
+
+	public Integer getProgramNo() {
+		return programNo;
+	}
+
+	public void setProgramNo(Integer programNo) {
+		this.programNo = programNo;
+	}
+	
 	
 }

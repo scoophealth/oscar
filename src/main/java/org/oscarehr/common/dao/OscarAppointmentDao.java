@@ -43,6 +43,7 @@ import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
 
+import oscar.util.UtilDateUtilities;
 @Repository
 @SuppressWarnings("unchecked")
 public class OscarAppointmentDao extends AbstractDao<Appointment> {
@@ -98,7 +99,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 	}
 
 	public List<Appointment> getAppointmentHistory(Integer demographicNo) {
-		String sql = "select a from Appointment a where a.demographicNo=? order by a.appointmentDate DESC, a.startTime DESC";
+		String sql = "select a from Appointment a where a.demographicNo=? and a.status not in ('C', 'D') order by a.appointmentDate DESC, a.startTime DESC";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, demographicNo);
 
@@ -128,6 +129,18 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 
 		return rs;
 	}
+
+	public List<Appointment> getAllByDemographicNoOrderByApptDate(Integer demographicNo) {
+		String sql = "SELECT a FROM Appointment a WHERE a.demographicNo = " + demographicNo + " ORDER BY a.appointmentDate";
+		Query query = entityManager.createQuery(sql);
+
+		@SuppressWarnings("unchecked")
+		List<Appointment> rs = query.getResultList();
+
+		return rs;
+	}
+
+
 	
 	/**
 	 * @return results ordered by lastUpdateDate
@@ -308,7 +321,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 	
 	
     public List<Appointment> findNonCancelledFutureAppointments(Integer demographicId) {
-		Query query = entityManager.createQuery("FROM Appointment appt WHERE appt.demographicNo = :demographicNo AND appt.status NOT LIKE '%C%' " +
+		Query query = entityManager.createQuery("FROM Appointment appt WHERE appt.demographicNo = :demographicNo AND appt.status NOT LIKE '%C%' AND appt.status NOT LIKE '%D%'" +
 				" AND appt.appointmentDate >= CURRENT_DATE ORDER BY appt.appointmentDate");
 		query.setParameter("demographicNo", demographicId);
 		return query.getResultList();
@@ -348,6 +361,14 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		return appointment;
 	}
 	
+	public int findProvideAppointmentTodayNum(String provide,String appdate){
+		Date appointDate = UtilDateUtilities.StringToDate(appdate);
+		String sql = "SELECT COUNT(a) FROM Appointment a WHERE a.providerNo = ?1 AND a.status != 'C' AND a.status != 'D' AND a.appointmentDate= ?2";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, provide);
+		query.setParameter(2, appointDate);
+		return Integer.parseInt(String.valueOf(query.getSingleResult()));
+	}
 
 	public List<Appointment> findByEverything(Date appointmentDate, String providerNo, Date startTime, Date endTime, String name, String notes, String reason, Date createDateTime, String creator, int demographicNo) {
 		String sql = "SELECT a FROM Appointment a WHERE a.appointmentDate=? and a.providerNo=? and a.startTime=? and a.endTime=? and a.name=? and a.notes=? and a.reason=? and a.createDateTime like ? and a.creator = ? and a.demographicNo=?";
@@ -601,11 +622,11 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		return query.getResultList();
 	}
     
-    public List<Appointment> searchappointmentday(String providerNo, Date appointmentDate, Integer programId) {
-    	Query query = createQuery("appt", "appt.providerNo = :providerNo AND appt.appointmentDate = :appointmentDate AND appt.programId = :programId ORDER BY appt.startTime, appt.status DESC");
+    public List<Appointment> searchappointmentday(String providerNo, Date appointmentDate, List<Integer> programIds) {
+    	Query query = createQuery("appt", "appt.providerNo = :providerNo AND appt.appointmentDate = :appointmentDate AND appt.programId IN (:programIds) ORDER BY appt.startTime, appt.status DESC");
     	query.setParameter("providerNo", providerNo);
         query.setParameter("appointmentDate", appointmentDate);
-        query.setParameter("programId", programId);
+        query.setParameter("programIds", programIds);
         return query.getResultList();
     }
 

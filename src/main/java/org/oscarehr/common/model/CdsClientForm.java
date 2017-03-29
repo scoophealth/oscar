@@ -31,7 +31,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PreRemove;
-import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -68,6 +67,9 @@ public class CdsClientForm extends AbstractModel<Integer> implements Serializabl
 	@Temporal(TemporalType.DATE)
 	private Date assessmentDate;
 
+	@Temporal(TemporalType.DATE)
+	private Date serviceInitiationDate;
+	
 	@Override
     public Integer getId() {
 		return id;
@@ -140,22 +142,47 @@ public class CdsClientForm extends AbstractModel<Integer> implements Serializabl
 	public void setAssessmentDate(Date assessmentDate) {
     	this.assessmentDate = assessmentDate;
     }
+	
+	
+	public Date getServiceInitiationDate() {
+    	return serviceInitiationDate;
+    }
+
+	public void setServiceInitiationDate(Date serviceInitiationDate) {
+    	this.serviceInitiationDate = serviceInitiationDate;
+    }
 
 	@Override
-    public int hashCode() {
-		return (id != null ? id.hashCode() : 0);
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
 	}
-	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (!super.equals(obj)) return false;
+		if (getClass() != obj.getClass()) return false;
+		CdsClientForm other = (CdsClientForm) obj;
+		if (id == null) {
+			if (other.id != null) return false;
+		} else if (!id.equals(other.id)) return false;
+		return true;
+	}
+
 	@PreRemove
 	protected void jpaPreventDelete()
 	{
 		throw(new UnsupportedOperationException("Remove is not allowed for this type of item."));
 	}
 
+	/* allow update cds form with correct admission date, referral date, service initialization date.
 	@PreUpdate
 	protected void jpaPreventUpdate()
 	{
 		throw(new UnsupportedOperationException("Update is not allowed for this type of item."));
 	}
-
+	*/
 }

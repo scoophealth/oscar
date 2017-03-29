@@ -33,6 +33,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
+
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
@@ -59,11 +61,13 @@ import org.oscarehr.eyeform.model.EyeformTestBook;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.oscarClinic.ClinicData;
 import oscar.util.DateUtils;
 import oscar.OscarProperties;
 import oscar.eform.util.GraphicalCanvasToImage;
 import oscar.eform.APExecute;
 
+import com.lowagie.text.Cell;
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -74,6 +78,7 @@ import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
+import com.lowagie.text.Table;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPCell;
@@ -98,9 +103,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class PdfRecordPrinter {
 
     private static Logger logger = MiscUtils.getLogger();
+
+    private HttpServletRequest request;
 
     private static final String BILLING_INVOICE_TEMPLATE_FILE = "org/oscarehr/common/web/BillingInvoiceTemplate.jrxml";
     //private static final String OSCAR_LOGO_FILE = "org/oscarehr/common/web/images/Oscar.jpg";
@@ -130,6 +139,31 @@ public class PdfRecordPrinter {
     private BillingONExtDao billingONExtDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");
     private ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
     private ClinicDAO clinicDao = (ClinicDAO) SpringUtils.getBean("clinicDAO");
+    
+    public PdfRecordPrinter(HttpServletRequest request, OutputStream os) throws DocumentException,IOException {
+        this.request = request;
+        this.os = os;
+        formatter = new SimpleDateFormat("dd-MMM-yyyy");
+
+        //Create the font we are going to print to
+        bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+        font = new Font(bf, FONTSIZE, Font.NORMAL);
+        boldFont = new Font(bf,FONTSIZE,Font.BOLD);
+
+        //Create the document we are going to write to
+        document = new Document();
+        writer = PdfWriter.getInstance(document,os);
+        writer.setPageEvent(new EndPage());
+        writer.setStrictImageSequence(true);
+
+        document.setPageSize(PageSize.LETTER);
+        
+        document.open();
+    }
+    
+    public HttpServletRequest getRequest() {
+    	return request;
+    }
     
     public PdfRecordPrinter(OutputStream os) {
         this.os = os;
@@ -238,6 +272,21 @@ public class PdfRecordPrinter {
             document.resetFooter();
 
             String headerTitle = demographic.getFormattedName() + " " + demographic.getAge() + " " + demographic.getSex() + " DOB:" + demographic.getFormattedDob();
+
+    	//set up document title and header
+        ResourceBundle propResource = ResourceBundle.getBundle("oscarResources");
+        String title = propResource.getString("oscarEncounter.pdfPrint.title") + " " + (String)request.getAttribute("demoName") + "\n";
+        String gender = propResource.getString("oscarEncounter.pdfPrint.gender") + " " + (String)request.getAttribute("demoSex") + "\n";
+        String dob = propResource.getString("oscarEncounter.pdfPrint.dob") + " " + (String)request.getAttribute("demoDOB") + "\n";
+        String age = propResource.getString("oscarEncounter.pdfPrint.age") + " " + (String)request.getAttribute("demoAge") + "\n";
+        String mrp = propResource.getString("oscarEncounter.pdfPrint.mrp") + " " + (String)request.getAttribute("mrp") + "\n";
+        String[] info = new String[] { title, gender, dob, age, mrp };
+
+        ClinicData clinicData = new ClinicData();
+        clinicData.refreshClinicData();
+        String[] clinic = new String[] {clinicData.getClinicName(), clinicData.getClinicAddress(),
+        clinicData.getClinicCity() + ", " + clinicData.getClinicProvince(),
+        clinicData.getClinicPostal(), clinicData.getClinicPhone()};
 
             if( newPage ) {
                 document.newPage();
@@ -673,9 +722,9 @@ public class PdfRecordPrinter {
             phrase = new Phrase(LEADING, "", font);
 
             if(compact) {
-            	phrase.add(new Chunk(formatter.format(note.getObservation_date()) + ":"));
+            	phrase.add(new Chunk(formatter.format(note.getUpdate_date()) + ":"));
             } else {
-            	chunk = new Chunk("Impression/Plan: (" + formatter.format(note.getObservation_date()) + ")\n", obsfont);
+            	chunk = new Chunk("Impression/Plan: (" + formatter.format(note.getUpdate_date()) + ")\n", obsfont);
             	phrase.add(chunk);
             }
             if(compact) {
@@ -860,6 +909,2038 @@ public class PdfRecordPrinter {
     	return;
     }
 
+    public void printEyeformMeasurements(MeasurementFormatter mf,int appointmentNo) throws DocumentException {
+    	Font obsfont = new Font(getBaseFont(), FONTSIZE, Font.UNDERLINE);
+
+
+        Paragraph p = new Paragraph();
+        p.setAlignment(Paragraph.ALIGN_LEFT);
+        Phrase phrase = new Phrase(LEADING, "\n", getFont());
+       // p.add(phrase);
+        phrase = new Phrase(LEADING, "Ocular Examination", obsfont);
+        p.add(phrase);
+        getDocument().add(p);
+        
+        oscar.OscarProperties props1 = oscar.OscarProperties.getInstance();
+        String eyeform = props1.getProperty("cme_js");
+        
+        if("eyeform3.2".equals(eyeform)){
+	        Table table2 = new Table(2);
+	        table2.setAlignment(Element.ALIGN_LEFT);
+	    	table2.setBorder(0);
+	    	table2.setWidth(100);
+	        p = new Paragraph();
+	        p.add(new Phrase("GLASSES HISTORY: ",getFont()));
+	        Cell  cell = new Cell(p);
+//	        cell.setHeader(true);
+	        cell.setColspan(2);
+	        cell.disableBorderSide(1);
+	        cell.disableBorderSide(2);
+	        cell.disableBorderSide(4);
+	        cell.disableBorderSide(8);
+	        table2.addCell(cell);
+//	        table2.endHeaders();
+	        boolean addGlassesRx = false;
+	        if(mf.getGlassesRx(appointmentNo).length() > 0){
+	        	String str[] = mf.getGlassesRx1(appointmentNo);
+	        	if(str[0].length() > 0){
+	        		p = new Paragraph();
+		        	p.add(new Phrase("Glasses Rx ",boldFont));
+		        	p.add(new Phrase(str[0],getFont()));
+	        		cell = new Cell(p);
+	        		cell.disableBorderSide(1);
+	    	        cell.disableBorderSide(2);
+	    	        cell.disableBorderSide(4);
+	    	        cell.disableBorderSide(8);
+	    	        table2.addCell(cell);
+	    	        addGlassesRx=true;
+	        	}
+	        	if(str[1].length() > 0){
+	        		p = new Paragraph();
+		        	p.add(new Phrase("Glasses Rx ",boldFont));
+		        	p.add(new Phrase(str[1],getFont()));
+	        		cell = new Cell(p);
+	        		cell.disableBorderSide(1);
+	    	        cell.disableBorderSide(2);
+	    	        cell.disableBorderSide(4);
+	    	        cell.disableBorderSide(8);
+	    	        table2.addCell(cell);
+	    	        addGlassesRx=true;
+	        	}
+	        	if(str[2].length() > 0){
+	        		p = new Paragraph();
+		        	p.add(new Phrase("Glasses Rx ",boldFont));
+		        	p.add(new Phrase(str[2],getFont()));
+	        		cell = new Cell(p);
+	        		cell.disableBorderSide(1);
+	    	        cell.disableBorderSide(2);
+	    	        cell.disableBorderSide(4);
+	    	        cell.disableBorderSide(8);
+	    	        table2.addCell(cell);
+	    	        addGlassesRx=true;
+	        	}
+	        	if(str[3].length() > 0){
+	        		p = new Paragraph();
+		        	p.add(new Phrase("Glasses Rx ",boldFont));
+		        	p.add(new Phrase(str[3],getFont()));
+	        		cell = new Cell(p);
+	        		cell.disableBorderSide(1);
+	    	        cell.disableBorderSide(2);
+	    	        cell.disableBorderSide(4);
+	    	        cell.disableBorderSide(8);
+	    	        table2.addCell(cell);
+	    	        addGlassesRx=true;
+	        	}
+	        }
+	        if(addGlassesRx) {
+	        	getDocument().add(table2);
+	        }
+	        
+	        table2 = new Table(2);
+	        table2.setAlignment(Element.ALIGN_LEFT);
+	    	table2.setBorder(0);
+	    	table2.setWidth(100);
+	        p = new Paragraph();
+	        p.add(new Phrase("VISION ASSESSMENT: ",getFont()));
+	        cell = new Cell(p);
+//	        cell.setHeader(true);
+	        cell.setColspan(2);
+	        cell.disableBorderSide(1);
+	        cell.disableBorderSide(2);
+	        cell.disableBorderSide(4);
+	        cell.disableBorderSide(8);
+	        table2.addCell(cell);
+//	        table2.endHeaders();
+	        boolean addVisionAssessment = false;
+	        if(mf.getVisionAssessmentDistanceVision_sc().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Distance vision (sc) ",boldFont));
+	        	p.add(new Phrase(mf.getVisionAssessmentDistanceVision_sc(),getFont()));
+	        	cell = new Cell(p);
+	        	cell.disableBorderSide(1);
+	            cell.disableBorderSide(2);
+	            cell.disableBorderSide(4);
+	            cell.disableBorderSide(8);
+	        	table2.addCell(cell);
+	        	addVisionAssessment=true;
+	        }
+	        if(mf.getVisionAssessmentDistanceVision_cc().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Distance vision (cc) ",boldFont));
+	        	p.add(new Phrase(mf.getVisionAssessmentDistanceVision_cc(),getFont()));
+	        	cell = new Cell(p);
+	        	cell.disableBorderSide(1);
+	            cell.disableBorderSide(2);
+	            cell.disableBorderSide(4);
+	            cell.disableBorderSide(8);
+	        	table2.addCell(cell);
+	        	addVisionAssessment=true;
+	        }
+	        if(mf.getVisionAssessmentDistanceVision_ph().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Distance vision (ph) ",boldFont));
+	        	p.add(new Phrase(mf.getVisionAssessmentDistanceVision_ph(),getFont()));
+	        	cell = new Cell(p);
+	        	cell.disableBorderSide(1);
+	            cell.disableBorderSide(2);
+	            cell.disableBorderSide(4);
+	            cell.disableBorderSide(8);
+	        	table2.addCell(cell);
+	        	addVisionAssessment=true;
+	        }
+	        if(mf.getVisionAssessmentIntermediateVision_sc().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Intermediate vision (sc) ",boldFont));
+	        	p.add(new Phrase(mf.getVisionAssessmentIntermediateVision_sc(),getFont()));
+	        	cell = new Cell(p);
+	        	cell.disableBorderSide(1);
+	            cell.disableBorderSide(2);
+	            cell.disableBorderSide(4);
+	            cell.disableBorderSide(8);
+	        	table2.addCell(cell); 
+	        	addVisionAssessment=true;
+	        }
+	        if(mf.getVisionAssessmentIntermediateVision_cc().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Intermediate vision (cc) ",boldFont));
+	        	p.add(new Phrase(mf.getVisionAssessmentIntermediateVision_cc(),getFont()));
+	        	cell = new Cell(p);
+	        	cell.disableBorderSide(1);
+	            cell.disableBorderSide(2);
+	            cell.disableBorderSide(4);
+	            cell.disableBorderSide(8);
+	        	table2.addCell(cell); 
+	        	addVisionAssessment=true;
+	        }
+	        if(mf.getVisionAssessmentNearVision_sc().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Near vision (sc) ",boldFont));
+	        	p.add(new Phrase(mf.getVisionAssessmentNearVision_sc(),getFont()));
+	        	cell = new Cell(p);
+	        	cell.disableBorderSide(1);
+	            cell.disableBorderSide(2);
+	            cell.disableBorderSide(4);
+	            cell.disableBorderSide(8);
+	        	table2.addCell(cell);
+	        	addVisionAssessment=true;
+	        }
+	        if(mf.getVisionAssessmentNearVision_cc().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Near vision (cc) ",boldFont));
+	        	p.add(new Phrase(mf.getVisionAssessmentNearVision_cc(),getFont()));
+	        	cell = new Cell(p);
+	        	cell.disableBorderSide(1);
+	            cell.disableBorderSide(2);
+	            cell.disableBorderSide(4);
+	            cell.disableBorderSide(8);
+	        	table2.addCell(cell);
+	        	addVisionAssessment=true;
+	        }
+	        if(addVisionAssessment) {
+	        	getDocument().add(table2);
+	        }
+	        
+	        table2 = new Table(2);
+	        table2.setAlignment(Element.ALIGN_LEFT);
+	    	table2.setBorder(0);
+	    	table2.setWidth(100);
+	        p = new Paragraph();
+	        p.add(new Phrase("STEREO VISION: ",getFont()));
+	        cell = new Cell(p);
+//	        cell.setHeader(true);
+	        cell.setColspan(2);
+	        cell.disableBorderSide(1);
+	        cell.disableBorderSide(2);
+	        cell.disableBorderSide(4);
+	        cell.disableBorderSide(8);
+	        table2.addCell(cell);
+//	        table2.endHeaders();
+	        boolean addStereoVision = false;
+		    if(mf.getFlytest().length() > 0){
+				p = new Paragraph();
+				p.add(new Phrase("Fly test ", boldFont));
+			  	p.add(new Phrase(mf.getFlytest(),getFont()));
+			  	cell = new Cell(p);
+			  	cell.disableBorderSide(1);
+				cell.disableBorderSide(2);
+				cell.disableBorderSide(4);
+				cell.disableBorderSide(8);
+			  	table2.addCell(cell);
+			  	addStereoVision = true;
+		   }
+		   if(mf.getStereo_acuity().length() > 0){
+			  	p = new Paragraph();
+			  	p.add(new Phrase("Stereo-acuity ", boldFont));
+			  	p.add(new Phrase(mf.getStereo_acuity(),getFont()));
+			  	cell = new Cell(p);
+			  	cell.disableBorderSide(1);
+			    cell.disableBorderSide(2);
+			    cell.disableBorderSide(4);
+			    cell.disableBorderSide(8);
+			  	table2.addCell(cell);
+			  	addStereoVision = true;
+		   }
+		   if(addStereoVision) {
+			   getDocument().add(table2);
+		   }
+	        
+		   table2 = new Table(2);
+	       table2.setAlignment(Element.ALIGN_LEFT);
+	   	   table2.setBorder(0);
+	   	   table2.setWidth(100);
+	       p = new Paragraph();
+	       p.add(new Phrase("VISION MEASUREMENT: ",getFont()));
+	       cell = new Cell(p);
+//	       cell.setHeader(true);
+	       cell.setColspan(2);
+	       cell.disableBorderSide(1);
+	       cell.disableBorderSide(2);
+	       cell.disableBorderSide(4);
+	       cell.disableBorderSide(8);
+	       table2.addCell(cell);
+//	       table2.endHeaders();
+	       boolean addVisionMeasurement = false;
+	       if(mf.getKeratometry().length() > 0){
+	    	   p = new Paragraph();
+	    	   p.add(new Phrase("Keratometry ", boldFont));
+			   p.add(new Phrase(mf.getKeratometry(),getFont()));
+			   cell = new Cell(p);
+		       cell.disableBorderSide(1);
+		       cell.disableBorderSide(2);
+		       cell.disableBorderSide(4);
+		       cell.disableBorderSide(8);
+		       table2.addCell(cell);
+	       	   addVisionMeasurement = true;
+	       }
+	       if(mf.getAutoRefraction().length() > 0){
+	    	   p = new Paragraph();
+	    	   p.add(new Phrase("Auto-refraction ", boldFont));
+	       	   p.add(new Phrase(mf.getAutoRefraction(),getFont()));
+	       	   cell = new Cell(p);
+		       cell.disableBorderSide(1);
+		       cell.disableBorderSide(2);
+		       cell.disableBorderSide(4);
+		       cell.disableBorderSide(8);
+		       table2.addCell(cell);
+	       	   addVisionMeasurement = true;
+	       }
+	       if(mf.getManifestDistance().length() > 0){
+	    	   p = new Paragraph();
+	    	   p.add(new Phrase("Manifest distance ", boldFont));
+	    	   p.add(new Phrase(mf.getManifestDistance(),getFont()));
+	    	   cell = new Cell(p);
+		       cell.disableBorderSide(1);
+		       cell.disableBorderSide(2);
+		       cell.disableBorderSide(4);
+		       cell.disableBorderSide(8);
+		       table2.addCell(cell);
+		       addVisionMeasurement = true;
+	       }
+	       if(mf.getManifestNear().length() > 0){
+	    	   p = new Paragraph();
+	       	   p.add(new Phrase("Manifest near ", boldFont));
+	       	   p.add(new Phrase(mf.getManifestNear(),getFont()));
+	       	   cell = new Cell(p);
+	       	   cell.disableBorderSide(1);
+	       	   cell.disableBorderSide(2);
+	       	   cell.disableBorderSide(4);
+	       	   cell.disableBorderSide(8);
+	       	   table2.addCell(cell);
+	       	   addVisionMeasurement = true;
+	       }
+	       if(mf.getCycloplegicRefraction().length() > 0){
+	    	   p = new Paragraph();
+	    	   p.add(new Phrase("Cycloplegic refraction ", boldFont));
+	    	   p.add(new Phrase(mf.getCycloplegicRefraction(),getFont()));
+	    	   cell = new Cell(p);
+		       cell.disableBorderSide(1);
+		       cell.disableBorderSide(2);
+		       cell.disableBorderSide(4);
+		       cell.disableBorderSide(8);
+		       table2.addCell(cell);
+		       addVisionMeasurement = true;
+	       }
+	       if(addVisionMeasurement) {
+	    	   getDocument().add(table2);
+	       }
+	       
+	       table2 = new Table(2);
+	       table2.setAlignment(Element.ALIGN_LEFT);
+	   	   table2.setBorder(0);
+	   	   table2.setWidth(100);
+	       p = new Paragraph();
+	       p.add(new Phrase("INTRAOCULAR PRESSURE: ",getFont()));
+	       cell = new Cell(p);
+//	       cell.setHeader(true);
+	       cell.setColspan(2);
+	       cell.disableBorderSide(1);
+	       cell.disableBorderSide(2);
+	       cell.disableBorderSide(4);
+	       cell.disableBorderSide(8);
+	       table2.addCell(cell);
+//	       table2.endHeaders();
+	       boolean addIntraocularPressure = false;
+	       if(mf.getNCT().length() > 0){
+	    	    p = new Paragraph();
+				p.add(new Phrase("NCT ", boldFont));
+				p.add(new Phrase(mf.getNCT(),getFont()));
+				cell = new Cell(p);
+			    cell.disableBorderSide(1);
+			    cell.disableBorderSide(2);
+			    cell.disableBorderSide(4);
+			    cell.disableBorderSide(8);
+			    table2.addCell(cell);
+			    addIntraocularPressure = true;
+	        }
+	       if(mf.getApplanation().length() > 0){
+	    	    p = new Paragraph();
+	        	p.add(new Phrase("Applanation ", boldFont));
+	        	p.add(new Phrase(mf.getApplanation(),getFont()));
+	        	cell = new Cell(p);
+			    cell.disableBorderSide(1);
+			    cell.disableBorderSide(2);
+			    cell.disableBorderSide(4);
+			    cell.disableBorderSide(8);
+			    table2.addCell(cell);
+	        	addIntraocularPressure = true;
+	        }
+	        if(mf.getCCT().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Central corneal thickness ", boldFont));
+	        	p.add(new Phrase(mf.getCCT(),getFont()));
+	        	cell = new Cell(p);
+			    cell.disableBorderSide(1);
+			    cell.disableBorderSide(2);
+			    cell.disableBorderSide(4);
+			    cell.disableBorderSide(8);
+			    table2.addCell(cell);
+	        	addIntraocularPressure = true;
+	        }
+	        if(addIntraocularPressure) {
+	        	getDocument().add(table2);
+	        }
+	        
+	        table2 = new Table(2);
+	        table2.setAlignment(Element.ALIGN_LEFT);
+	   	    table2.setBorder(0);
+	   	    table2.setWidth(100);
+	        p = new Paragraph();
+	        p.add(new Phrase("REFRACTIVE: ",getFont()));
+	        cell = new Cell(p);
+//	        cell.setHeader(true);
+	        cell.setColspan(2);
+	        cell.disableBorderSide(1);
+	        cell.disableBorderSide(2);
+	        cell.disableBorderSide(4);
+	        cell.disableBorderSide(8);
+	        table2.addCell(cell);
+//	        table2.endHeaders();
+	        boolean addRefractive = false;
+	        if(mf.getDominance().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Dominance ", boldFont));
+	        	p.add(new Phrase(mf.getDominance(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addRefractive = true;
+	        }
+	        if(mf.getMesopicPupilSize().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Mesopic pupil size ", boldFont));
+	        	p.add(new Phrase(mf.getMesopicPupilSize(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addRefractive = true;
+	        }
+	        if(mf.getAngleKappa().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Angle Kappa ", boldFont));
+	        	p.add(new Phrase(mf.getAngleKappa(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addRefractive = true;
+	        }
+	        if(addRefractive) {
+	        	getDocument().add(table2);
+	        }
+	        
+	        table2 = new Table(2);
+	        table2.setAlignment(Element.ALIGN_LEFT);
+	   	    table2.setBorder(0);
+	   	    table2.setWidth(100);
+	        p = new Paragraph();
+	        p.add(new Phrase("OTHER EXAM: ",getFont()));
+	        cell = new Cell(p);
+//	        cell.setHeader(true);
+	        cell.setColspan(2);
+	        cell.disableBorderSide(1);
+	        cell.disableBorderSide(2);
+	        cell.disableBorderSide(4);
+	        cell.disableBorderSide(8);
+	        table2.addCell(cell);
+//	        table2.endHeaders();
+	        boolean addOtherExam = false;
+	        if(mf.getColourVision().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Colour vision ", boldFont));
+	        	p.add(new Phrase(mf.getColourVision(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addOtherExam = true;
+	        }
+	        if(mf.getPupil().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Pupil ", boldFont));
+	        	p.add(new Phrase(mf.getPupil(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addOtherExam = true;
+	        }
+	        if(mf.getAmslerGrid().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Amsler grid ", boldFont));
+	        	p.add(new Phrase(mf.getAmslerGrid(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addOtherExam = true;
+	        }
+	        if(mf.getPAM().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Potential acuity meter ", boldFont));
+	        	p.add(new Phrase(mf.getPAM(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addOtherExam = true;
+	        }
+	        if(mf.getConfrontation().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Confrontation fields ", boldFont));
+	        	p.add(new Phrase(mf.getConfrontation(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addOtherExam = true;
+	        }
+	        if(mf.getMaddoxrod().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Maddox rod             ", boldFont));
+	        	p.add(new Phrase(mf.getMaddoxrod(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addOtherExam = true;
+	        }
+	        if(mf.getBagolinitest().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Bagolini test          ", boldFont));
+	        	p.add(new Phrase(mf.getBagolinitest(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addOtherExam = true;
+	        }
+	        if(mf.getW4dD().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Worth 4 Dot (distance) ", boldFont));
+	        	p.add(new Phrase(mf.getW4dD(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addOtherExam = true;
+	        }
+	        if(mf.getW4dN().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Worth 4 Dot (near)     ", boldFont));
+	        	p.add(new Phrase(mf.getW4dN(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addOtherExam = true;
+	        }
+	        if(addOtherExam) {
+	        	getDocument().add(table2);
+	        }
+	        
+	        table2 = new Table(3);
+	        table2.setAlignment(Element.ALIGN_LEFT);
+	   	    table2.setBorder(0);
+	   	    table2.setWidth(100);
+	        p = new Paragraph();
+	        p.add(new Phrase("DUCTION/DIPLOPIA TESTING: ",getFont()));
+	        cell = new Cell(p);
+//	        cell.setHeader(true);
+	        cell.setColspan(3);
+	        cell.disableBorderSide(1);
+	        cell.disableBorderSide(2);
+	        cell.disableBorderSide(4);
+	        cell.disableBorderSide(8);
+	        table2.addCell(cell);
+//	        table2.endHeaders();
+	        boolean addDDT = false;
+	        if(mf.getDuction().length() > 0){
+	        	String str[] = mf.getDuction1();
+	        	if((str[0].length() > 0) || (str[1].length() > 0) || (str[2].length() > 0) || (str[3].length() > 0) || (str[4].length() > 0) || (str[5].length() > 0)){
+	        		Table table3 = new Table(3);
+	        		table3.setAlignment(Element.ALIGN_LEFT);
+	    	   	    table3.setBorder(0);
+	    	   	    cell = new Cell("OD");
+	    	   	    cell.setRowspan(3);
+		    	   	cell.disableBorderSide(1);
+		 	        cell.disableBorderSide(2);
+		 	        cell.disableBorderSide(4);
+		 	        cell.disableBorderSide(8);
+		 	        table3.addCell(cell);
+		 	        
+		 	        if(str[0].length() > 0){
+		 	        	cell = new Cell(str[0]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table3.addCell(cell);
+		 	        }
+		 	        if(str[1].length() > 0){
+		 	        	cell = new Cell(str[1]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table3.addCell(cell);
+		 	        }
+		 	        if(str[2].length() > 0){
+		 	        	cell = new Cell(str[2]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table3.addCell(cell);
+		 	        }
+		 	        if(str[3].length() > 0){
+		 	        	cell = new Cell(str[3]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table3.addCell(cell);
+		 	        }
+		 	        if(str[4].length() > 0){
+		 	        	cell = new Cell(str[4]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table3.addCell(cell);
+		 	        }
+		 	        if(str[5].length() > 0){
+		 	        	cell = new Cell(str[5]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table3.addCell(cell);
+		 	        }
+		 	        cell = new Cell(table3);
+		 	        cell.disableBorderSide(1);
+		 	        cell.disableBorderSide(2);
+		 	        cell.disableBorderSide(4);
+		 	        cell.disableBorderSide(8);
+		 	        table2.addCell(cell);
+		 	        addDDT = true;
+	        	}
+	        	if((str[6].length() > 0) || (str[7].length() > 0) || (str[8].length() > 0) || (str[9].length() > 0) || (str[10].length() > 0) || (str[11].length() > 0)){
+	        		Table table4 = new Table(3);
+	        		table4.setAlignment(Element.ALIGN_LEFT);
+	    	   	    table4.setBorder(0);
+	    	   	    cell = new Cell("OS");
+	    	   	    cell.setRowspan(3);
+		    	   	cell.disableBorderSide(1);
+		 	        cell.disableBorderSide(2);
+		 	        cell.disableBorderSide(4);
+		 	        cell.disableBorderSide(8);
+		 	        table4.addCell(cell);
+		 	        
+		 	        if(str[6].length() > 0){
+		 	        	cell = new Cell(str[6]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table4.addCell(cell);
+		 	        }
+		 	        if(str[7].length() > 0){
+		 	        	cell = new Cell(str[7]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table4.addCell(cell);
+		 	        }
+		 	        if(str[8].length() > 0){
+		 	        	cell = new Cell(str[8]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table4.addCell(cell);
+		 	        }
+		 	        if(str[9].length() > 0){
+		 	        	cell = new Cell(str[9]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table4.addCell(cell);
+		 	        }
+		 	        if(str[10].length() > 0){
+		 	        	cell = new Cell(str[10]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table4.addCell(cell);
+		 	        }
+		 	        if(str[11].length() > 0){
+		 	        	cell = new Cell(str[11]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table4.addCell(cell);
+		 	        }
+		 	        cell = new Cell(table4);
+		 	        cell.disableBorderSide(1);
+		 	        cell.disableBorderSide(2);
+		 	        cell.disableBorderSide(4);
+		 	        cell.disableBorderSide(8);
+		 	        table2.addCell(cell);
+		 	        addDDT = true;
+	        	}
+	        	if((str[12].length() > 0) || (str[13].length() > 0) || (str[15].length() > 0) || (str[16].length() > 0) || (str[18].length() > 0) || (str[19].length() > 0)){
+	        		Table table5 = new Table(3);
+	        		table5.setAlignment(Element.ALIGN_LEFT);
+	    	   	    table5.setBorder(0);
+	    	   	    cell = new Cell("OU");
+	    	   	    cell.setRowspan(3);
+		    	   	cell.disableBorderSide(1);
+		 	        cell.disableBorderSide(2);
+		 	        cell.disableBorderSide(4);
+		 	        cell.disableBorderSide(8);
+		 	        table5.addCell(cell);
+		 	        
+		 	        if(str[12].length() > 0){
+		 	        	cell = new Cell(str[12]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table5.addCell(cell);
+		 	        }
+		 	        if(str[13].length() > 0){
+		 	        	cell = new Cell(str[13]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table5.addCell(cell);
+		 	        }
+		 	        if(str[15].length() > 0){
+		 	        	cell = new Cell(str[15]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table5.addCell(cell);
+		 	        }
+		 	        if(str[16].length() > 0){
+		 	        	cell = new Cell(str[16]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table5.addCell(cell);
+		 	        }
+		 	        if(str[18].length() > 0){
+		 	        	cell = new Cell(str[18]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table5.addCell(cell);
+		 	        }
+		 	        if(str[19].length() > 0){
+		 	        	cell = new Cell(str[19]);
+		 	        	cell.disableBorderSide(1);
+			 	        cell.disableBorderSide(2);
+			 	        cell.disableBorderSide(4);
+			 	        cell.disableBorderSide(8);
+			 	        table5.addCell(cell);
+		 	        }
+		 	        cell = new Cell(table5);
+		 	        cell.disableBorderSide(1);
+		 	        cell.disableBorderSide(2);
+		 	        cell.disableBorderSide(4);
+		 	        cell.disableBorderSide(8);
+		 	        table2.addCell(cell);
+		 	        addDDT = true;
+	        	}
+	        }
+	        if(addDDT){
+	        	getDocument().add(table2);
+	        }
+	       
+	        table2 = new Table(2);
+	        table2.setAlignment(Element.ALIGN_LEFT);
+	   	    table2.setBorder(0);
+	   	    table2.setWidth(100);
+	        p = new Paragraph();
+	        p.add(new Phrase("DEVIATION MEASUREMENT: ",getFont()));
+	        cell = new Cell(p);
+//	        cell.setHeader(true);
+	        cell.setColspan(2);
+	        cell.disableBorderSide(1);
+	        cell.disableBorderSide(2);
+	        cell.disableBorderSide(4);
+	        cell.disableBorderSide(8);
+	        table2.addCell(cell);
+//	        table2.endHeaders();
+	        boolean addDeviationMeasurement = false;
+	        if(mf.getPrimarygaze().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Primary gaze      ", boldFont));
+	        	p.add(new Phrase(mf.getPrimarygaze(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addDeviationMeasurement = true;
+	        }
+	        if(mf.getUpgaze().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Up gaze           ", boldFont));
+	        	p.add(new Phrase(mf.getUpgaze(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addDeviationMeasurement = true;
+	        }
+	        if(mf.getDowngaze().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Down gaze         ", boldFont));
+	        	p.add(new Phrase(mf.getDowngaze(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addDeviationMeasurement = true;
+	        }
+	        if(mf.getRightgaze().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Right gaze        ", boldFont));
+	        	p.add(new Phrase(mf.getRightgaze(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addDeviationMeasurement = true;
+	        }
+	        if(mf.getLeftgaze().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Left gaze         ", boldFont));
+	        	p.add(new Phrase(mf.getLeftgaze(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addDeviationMeasurement = true;
+	        }        
+	        if(mf.getRighthead().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Right head tilt   ", boldFont));
+	        	p.add(new Phrase(mf.getRighthead(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addDeviationMeasurement = true;
+	        }
+	        if(mf.getLefthead().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Left head tilt   ", boldFont));
+	        	p.add(new Phrase(mf.getLefthead(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addDeviationMeasurement = true;
+	        }
+	        if(mf.getNear().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Near              ", boldFont));
+	        	p.add(new Phrase(mf.getNear(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addDeviationMeasurement = true;
+	        }
+	        if(mf.getNearwith().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Near with +3D ", boldFont));
+	        	p.add(new Phrase(mf.getNearwith(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addDeviationMeasurement = true;
+	        }
+	        if(mf.getFardistance().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Far distance ", boldFont));
+	        	p.add(new Phrase(mf.getFardistance(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addDeviationMeasurement = true;
+	        }
+	        if(addDeviationMeasurement) {
+	        	getDocument().add(table2);
+	        }
+	        
+	        table2 = new Table(2);
+	        table2.setAlignment(Element.ALIGN_LEFT);
+	   	    table2.setBorder(0);
+	   	    table2.setWidth(100);
+	        p = new Paragraph();
+	        p.add(new Phrase("EXTERNAL/ORBIT: ",getFont()));
+	        cell = new Cell(p);
+//	        cell.setHeader(true);
+	        cell.setColspan(2);
+	        cell.disableBorderSide(1);
+	        cell.disableBorderSide(2);
+	        cell.disableBorderSide(4);
+	        cell.disableBorderSide(8);
+	        table2.addCell(cell);
+//	        table2.endHeaders();
+	        boolean addExternalOrbit = false;
+	        if(mf.getFace().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Face ", boldFont));
+	        	p.add(new Phrase(mf.getFace(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addExternalOrbit = true;
+	        }
+	        if(mf.getRetropulsion().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Retropulsion ", boldFont));
+	        	p.add(new Phrase(mf.getRetropulsion(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addExternalOrbit = true;
+	        }
+	        if(mf.getHertel().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Hertel ", boldFont));
+	        	p.add(new Phrase(mf.getHertel(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addExternalOrbit = true;
+	        }
+	        if(addExternalOrbit) {
+	        	getDocument().add(table2);
+	        }
+	        
+	        table2 = new Table(2);
+	        table2.setAlignment(Element.ALIGN_LEFT);
+	   	    table2.setBorder(0);
+	   	    table2.setWidth(100);	
+	        p = new Paragraph();
+	        p.add(new Phrase("EYELID/NASOLACRIMAL DUCT: ",getFont()));
+	        cell = new Cell(p);
+//	        cell.setHeader(true);
+	        cell.setColspan(2);
+	        cell.disableBorderSide(1);
+	        cell.disableBorderSide(2);
+	        cell.disableBorderSide(4);
+	        cell.disableBorderSide(8);
+	        table2.addCell(cell);
+//	        table2.endHeaders();
+	        boolean addEyelidDuct = false;
+	        if(mf.getUpperLid().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Upper lid ", boldFont));
+	        	p.add(new Phrase(mf.getUpperLid(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+		        table2.endHeaders();
+	        	addEyelidDuct = true;
+	        }
+	        if(mf.getLowerLid().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Lower lid ", boldFont));
+	        	p.add(new Phrase(mf.getUpperLid(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+		        table2.endHeaders();
+	        	addEyelidDuct = true;
+	        }
+	        if(mf.getLacrimalLake().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Lacrimal lake ", boldFont));
+	        	p.add(new Phrase(mf.getLacrimalLake(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+		        table2.endHeaders();
+	        	addEyelidDuct = true;
+	        }
+	        if(mf.getLacrimalIrrigation().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Lacrimal irrigation ", boldFont));
+	        	p.add(new Phrase(mf.getLacrimalIrrigation(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+		        table2.endHeaders();
+	        	addEyelidDuct = true;
+	        }
+	        if(mf.getPunctum().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Punctum ", boldFont));
+	        	p.add(new Phrase(mf.getPunctum(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+		        table2.endHeaders();
+	        	addEyelidDuct = true;
+	        }
+	        if(mf.getNLD().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Nasolacrimal duct ", boldFont));
+	        	p.add(new Phrase(mf.getNLD(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+		        table2.endHeaders();
+	        	addEyelidDuct = true;
+	        }
+	        if(mf.getDyeDisappearance().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Dye disappearance ", boldFont));
+	        	p.add(new Phrase(mf.getDyeDisappearance(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+		        table2.endHeaders();
+	        	addEyelidDuct = true;
+	        }
+	        if(addEyelidDuct) {
+	        	getDocument().add(table2);
+	        }
+	        
+	        table2 = new Table(2);
+	        table2.setAlignment(Element.ALIGN_LEFT);
+	   	    table2.setBorder(0);
+	   	    table2.setWidth(100);
+	        p = new Paragraph();
+	        p.add(new Phrase("EYELID MEASUREMENT: ",getFont()));
+	        cell = new Cell(p);
+//	        cell.setHeader(true);
+	        cell.setColspan(2);
+	        cell.disableBorderSide(1);
+	        cell.disableBorderSide(2);
+	        cell.disableBorderSide(4);
+	        cell.disableBorderSide(8);
+	        table2.addCell(cell);
+//	        table2.endHeaders();
+	        boolean addEyelidMeasurement = false;
+	        if(mf.getMarginReflexDistance().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Margin reflex distance ", boldFont));
+	        	p.add(new Phrase(mf.getMarginReflexDistance(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addEyelidMeasurement = true;
+	        }
+	        if(mf.getInferiorScleralShow().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Inferior scleral show ", boldFont));
+	        	p.add(new Phrase(mf.getInferiorScleralShow(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addEyelidMeasurement = true;
+	        }
+	        if(mf.getLevatorFunction().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Levator function ", boldFont));
+	        	p.add(new Phrase(mf.getLevatorFunction(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addEyelidMeasurement = true;
+	        }
+	        if(mf.getLagophthalmos().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Lagophthalmos ", boldFont));
+	        	p.add(new Phrase(mf.getLagophthalmos(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addEyelidMeasurement = true;
+	        }
+	        if(mf.getBlink().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Blink reflex ", boldFont));
+	        	p.add(new Phrase(mf.getBlink(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addEyelidMeasurement = true;
+	        }
+	        if(mf.getCNVii().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Cranial Nerve VII function ", boldFont));
+	        	p.add(new Phrase(mf.getCNVii(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addEyelidMeasurement = true;
+	        }
+	        if(mf.getBells().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Bell's phenomenon ", boldFont));
+	        	p.add(new Phrase(mf.getBells(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addEyelidMeasurement = true;
+	        }
+	        if(mf.getSchirmertest().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Schirmer test ", boldFont));
+	        	p.add(new Phrase(mf.getSchirmertest(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addEyelidMeasurement = true;
+	        }
+	        if(addEyelidMeasurement) {
+	        	getDocument().add(table2);
+	        }
+	        
+	        table2 = new Table(2);
+	        table2.setAlignment(Element.ALIGN_LEFT);
+	   	    table2.setBorder(0);
+	   	    table2.setWidth(100);
+	        p = new Paragraph();
+	        p.add(new Phrase("ANTERIOR SEGMENT: ",getFont()));
+	        cell = new Cell(p);
+//	        cell.setHeader(true);
+	        cell.setColspan(2);
+	        cell.disableBorderSide(1);
+	        cell.disableBorderSide(2);
+	        cell.disableBorderSide(4);
+	        cell.disableBorderSide(8);
+	        table2.addCell(cell);
+//	        table2.endHeaders();
+	        boolean addAnteroirSegment = false;
+	        if(mf.getCornea().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Cornea ", boldFont));
+	        	p.add(new Phrase(mf.getCornea(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addAnteroirSegment = true;
+	        }
+	        if(mf.getConjuctivaSclera().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Conjunctiva/Sclera ", boldFont));
+	        	p.add(new Phrase(mf.getConjuctivaSclera(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addAnteroirSegment = true;
+	        }
+	        if(mf.getAnteriorChamber().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Anterior chamber ", boldFont));
+	        	p.add(new Phrase(mf.getAnteriorChamber(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addAnteroirSegment = true;
+	        }
+	        if(mf.getAngle().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Angle ", boldFont));
+	        	p.add(new Phrase(mf.getAngle(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addAnteroirSegment = true;
+	        }
+	        if(mf.getIris().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Iris ", boldFont));
+	        	p.add(new Phrase(mf.getIris(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addAnteroirSegment = true;
+	        }
+	        if(mf.getLens().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Lens ", boldFont));
+	        	p.add(new Phrase(mf.getLens(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addAnteroirSegment = true;
+	        }
+	        if(addAnteroirSegment) {
+	        	getDocument().add(table2);
+	        }
+	        
+	        table2 = new Table(2);
+	        table2.setAlignment(Element.ALIGN_LEFT);
+	   	    table2.setBorder(0);
+	   	    table2.setWidth(100);
+	        p = new Paragraph();
+	        p.add(new Phrase("POSTERIOR SEGMENT: ",getFont()));
+	        cell = new Cell(p);
+//	        cell.setHeader(true);
+	        cell.setColspan(2);
+	        cell.disableBorderSide(1);
+	        cell.disableBorderSide(2);
+	        cell.disableBorderSide(4);
+	        cell.disableBorderSide(8);
+	        table2.addCell(cell);
+//	        table2.endHeaders();
+	        boolean addPosteriorSegment = false;
+	        if(mf.getDisc().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Optic disc ", boldFont));
+	        	p.add(new Phrase(mf.getDisc(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addPosteriorSegment = true;
+	        }
+	        if(mf.getCdRatio().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("C/D ratio ", boldFont));
+	        	p.add(new Phrase(mf.getCdRatio(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addPosteriorSegment = true;
+	        }
+	        if(mf.getMacula().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Macula ", boldFont));
+	        	p.add(new Phrase(mf.getMacula(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addPosteriorSegment = true;
+	        }
+	        if(mf.getRetina().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Retina ", boldFont));
+	        	p.add(new Phrase(mf.getRetina(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addPosteriorSegment = true;
+	        }
+	        if(mf.getVitreous().length() > 0){
+	        	p = new Paragraph();
+	        	p.add(new Phrase("Vitreous ", boldFont));
+	        	p.add(new Phrase(mf.getVitreous(),getFont()));
+	        	cell = new Cell(p);
+		        cell.disableBorderSide(1);
+		        cell.disableBorderSide(2);
+		        cell.disableBorderSide(4);
+		        cell.disableBorderSide(8);
+		        table2.addCell(cell);
+	        	addPosteriorSegment = true;
+	        }
+	        if(addPosteriorSegment) {
+	        	getDocument().add(table2);
+	        }
+	        
+	        
+        }else{
+    	 p = new Paragraph();
+	     boolean addGlassesRx = false;
+	     p.add(new Phrase("GLASSES HISTORY: ",getFont()));
+	     if(mf.getGlassesRx(appointmentNo).length() > 0){
+	    	 
+	    	 String glassesRx = mf.getGlassesRx(appointmentNo);
+	    	 glassesRx = glassesRx.replaceAll("<b>", "");
+	    	 glassesRx = glassesRx.replaceAll("</b>", "");
+	    	 
+	     p.add(new Phrase(glassesRx,getFont()));
+	       	addGlassesRx=true;
+	     }
+	     p.add(new Phrase("\n\n"));
+	     if(addGlassesRx) {
+	       	getDocument().add(p);
+	     }
+           
+          p = new Paragraph();
+          boolean addVisionAssessment = false;
+          p.add(new Phrase("VISION ASSESSMENT: \n",getFont()));
+          if(mf.getVisionAssessmentDistanceVision_sc().length() > 0){
+          	p.add(new Phrase("Distance vision (sc) ",boldFont));
+          	p.add(new Phrase(mf.getVisionAssessmentDistanceVision_sc(),getFont()));
+          	addVisionAssessment=true;
+          }
+          if(mf.getVisionAssessmentDistanceVision_cc().length() > 0){
+        	if("eyeform3.2".equals(eyeform)){
+        		p.add("\n");
+        	}
+          	p.add(new Phrase("Distance vision (cc) ", boldFont));
+          	p.add(new Phrase(mf.getVisionAssessmentDistanceVision_cc(),getFont()));
+          	addVisionAssessment = true;
+          }
+          if(mf.getVisionAssessmentDistanceVision_ph().length() > 0){
+        	if("eyeform3.2".equals(eyeform)){
+        		p.add("\n");
+        	}
+          	p.add(new Phrase("Distance vision (ph) ", boldFont));
+          	p.add(new Phrase(mf.getVisionAssessmentDistanceVision_ph(),getFont()));
+          	addVisionAssessment = true;
+          }
+          if(mf.getVisionAssessmentIntermediateVision_sc().length() > 0){
+        	if("eyeform3.2".equals(eyeform)){
+        		p.add("\n");
+        	}
+          	p.add(new Phrase("Intermediate vision (sc) ", boldFont));
+          	p.add(new Phrase(mf.getVisionAssessmentIntermediateVision_sc(),getFont()));
+          	addVisionAssessment = true;
+          }
+          if(mf.getVisionAssessmentIntermediateVision_cc().length() > 0){
+        	if("eyeform3.2".equals(eyeform)){
+        		p.add("\n");
+        	}
+          	p.add(new Phrase("Intermediate vision (cc) ", boldFont));
+          	p.add(new Phrase(mf.getVisionAssessmentIntermediateVision_cc(),getFont()));
+          	addVisionAssessment = true;
+          }
+          if(mf.getVisionAssessmentNearVision_sc().length() > 0){
+        	if("eyeform3.2".equals(eyeform)){
+        		p.add("\n");
+        	}
+          	p.add(new Phrase("Near vision (sc) ", boldFont));
+          	p.add(new Phrase(mf.getVisionAssessmentNearVision_sc(),getFont()));
+          	addVisionAssessment = true;
+          }
+          if(mf.getVisionAssessmentNearVision_cc().length() > 0){
+          	p.add(new Phrase("Near vision (cc) ", boldFont));
+          	p.add(new Phrase(mf.getVisionAssessmentNearVision_cc(),getFont()));
+          	addVisionAssessment = true;
+          }
+          p.add(new Phrase("\n\n"));
+          if(addVisionAssessment) {
+          	getDocument().add(p);
+          }
+
+          p = new Paragraph();
+          boolean addStereoVision = false;
+          p.add(new Phrase("STEREO VISION:\n ",getFont()));
+          if(mf.getFlytest().length() > 0){
+        	if("eyeform3.2".equals(eyeform)){
+        		p.add(new Phrase("Fly test      ", boldFont));
+        	}else{
+        		p.add(new Phrase("Fly test ", boldFont));
+        	}
+          	p.add(new Phrase(mf.getFlytest(),getFont()));
+          	addStereoVision = true;
+          }
+          if(mf.getStereo_acuity().length() > 0){
+        	if("eyeform3.2".equals(eyeform)){
+        		p.add("\n");
+        	}
+          	p.add(new Phrase("Stereo-acuity ", boldFont));
+          	p.add(new Phrase(mf.getStereo_acuity(),getFont()));
+          	addStereoVision = true;
+          }
+          p.add(new Phrase("\n\n"));
+          if(addStereoVision) {
+          	getDocument().add(p);
+          }
+
+          p = new Paragraph();
+          boolean addVisionMeasurement = false;
+          p.add(new Phrase("VISION MEASUREMENT: \n",getFont()));
+          if(mf.getKeratometry().length() > 0){
+          	p.add(new Phrase("Keratometry ", boldFont));
+          	p.add(new Phrase(mf.getKeratometry(),getFont()));
+          	addVisionMeasurement = true;
+          }
+          if(mf.getAutoRefraction().length() > 0){
+        	if("eyeform3.2".equals(eyeform)){
+        		p.add("\n");
+        	}
+          	p.add(new Phrase("Auto-refraction ", boldFont));
+          	p.add(new Phrase(mf.getAutoRefraction(),getFont()));
+          	addVisionMeasurement = true;
+          }
+          if(mf.getManifestDistance().length() > 0){
+        	if("eyeform3.2".equals(eyeform)){
+        		p.add("\n");
+        	}
+          	p.add(new Phrase("Manifest distance ", boldFont));
+          	p.add(new Phrase(mf.getManifestDistance(),getFont()));
+          	addVisionMeasurement = true;
+          }
+          if(mf.getManifestNear().length() > 0){
+        	if("eyeform3.2".equals(eyeform)){
+        		p.add("\n");
+        	}
+          	p.add(new Phrase("Manifest near ", boldFont));
+          	p.add(new Phrase(mf.getManifestNear(),getFont()));
+          	addVisionMeasurement = true;
+          }
+          if(mf.getCycloplegicRefraction().length() > 0){
+        	if("eyeform3.2".equals(eyeform)){
+        		p.add("\n");
+        	}
+          	p.add(new Phrase("Cycloplegic refraction ", boldFont));
+          	p.add(new Phrase(mf.getCycloplegicRefraction(),getFont()));
+          	addVisionMeasurement = true;
+          }
+          p.add(new Phrase("\n\n"));
+          if(addVisionMeasurement) {
+          	getDocument().add(p);
+          } 
+          
+          p = new Paragraph();
+          boolean addIntraocularPressure = false;
+          p.add(new Phrase("INTRAOCULAR PRESSURE: \n",getFont()));
+          if(mf.getNCT().length() > 0){
+          	p.add(new Phrase("NCT ", boldFont));
+          	p.add(new Phrase(mf.getNCT(),getFont()));
+          	addIntraocularPressure = true;
+          }
+          if(mf.getApplanation().length() > 0){
+        	if("eyeform3.2".equals(eyeform)){
+        		p.add("\n");
+        	}
+          	p.add(new Phrase("Applanation ", boldFont));
+          	p.add(new Phrase(mf.getApplanation(),getFont()));
+          	addIntraocularPressure = true;
+          }
+          if(mf.getCCT().length() > 0){
+        	if("eyeform3.2".equals(eyeform)){
+        		p.add("\n");
+        	}
+          	p.add(new Phrase("Central corneal thickness ", boldFont));
+          	p.add(new Phrase(mf.getCCT(),getFont()));
+          	addIntraocularPressure = true;
+          }
+          p.add(new Phrase("\n\n"));
+          if(addIntraocularPressure) {
+          	getDocument().add(p);
+          }
+          
+          p = new Paragraph();
+          boolean addRefractive = false;
+          p.add(new Phrase("REFRACTIVE: \n",getFont()));
+          if(mf.getDominance().length() > 0){
+          	p.add(new Phrase("Dominance ", boldFont));
+          	p.add(new Phrase(mf.getDominance(),getFont()));
+          	addRefractive = true;
+          }
+          if(mf.getMesopicPupilSize().length() > 0){
+        	if("eyeform3.2".equals(eyeform)){
+        		p.add("\n");
+        	}
+          	p.add(new Phrase("Mesopic pupil size ", boldFont));
+          	p.add(new Phrase(mf.getMesopicPupilSize(),getFont()));
+          	addRefractive = true;
+          }
+          if(mf.getAngleKappa().length() > 0){
+        	if("eyeform3.2".equals(eyeform)){
+        		p.add("\n");
+        	}
+          	p.add(new Phrase("Angle Kappa ", boldFont));
+          	p.add(new Phrase(mf.getAngleKappa(),getFont()));
+          	addRefractive = true;
+          }
+          p.add(new Phrase("\n\n"));
+          if(addRefractive) {
+          	getDocument().add(p);
+          }
+          p = new Paragraph();
+          boolean addOtherExam = false;
+          p.add(new Phrase("OTHER EXAM: \n",getFont()));
+          if(mf.getColourVision().length() > 0){
+          	p.add(new Phrase("Colour vision ", boldFont));
+          	p.add(new Phrase(mf.getColourVision(),getFont()));
+          	addOtherExam = true;
+          }
+          if(mf.getPupil().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Pupil ", boldFont));
+          	p.add(new Phrase(mf.getPupil(),getFont()));
+          	addOtherExam = true;
+          }
+          if(mf.getAmslerGrid().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Amsler grid ", boldFont));
+          	p.add(new Phrase(mf.getAmslerGrid(),getFont()));
+          	addOtherExam = true;
+          }
+          if(mf.getPAM().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Potential acuity meter ", boldFont));
+          	p.add(new Phrase(mf.getPAM(),getFont()));
+          	addOtherExam = true;
+          }
+          if(mf.getConfrontation().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Confrontation fields ", boldFont));
+          	p.add(new Phrase(mf.getConfrontation(),getFont()));
+          	addOtherExam = true;
+          }
+          if(mf.getMaddoxrod().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add(new Phrase("\nMaddox rod             ", boldFont));
+          	}else{
+          		p.add(new Phrase("Maddox rod ", boldFont));
+          	}
+          	p.add(new Phrase(mf.getMaddoxrod(),getFont()));
+          	addOtherExam = true;
+          }
+          if(mf.getBagolinitest().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add(new Phrase("\nBagolini test          ", boldFont));
+          	}else{
+          		p.add(new Phrase("Bagolini test ", boldFont));
+          	}
+          	p.add(new Phrase(mf.getBagolinitest(),getFont()));
+          	addOtherExam = true;
+          }
+          if(mf.getW4dD().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Worth 4 Dot (distance) ", boldFont));
+          	p.add(new Phrase(mf.getW4dD(),getFont()));
+          	addOtherExam = true;
+          }
+          if(mf.getW4dN().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add(new Phrase("\nWorth 4 Dot (near)     ", boldFont));
+          	}else{
+          		p.add(new Phrase("Worth 4 Dot (near) ", boldFont));
+          	}
+          	p.add(new Phrase(mf.getW4dN(),getFont()));
+          	addOtherExam = true;
+          }
+          p.add(new Phrase("\n\n"));
+          if(addOtherExam) {
+          	getDocument().add(p);
+          }
+          
+          p = new Paragraph();
+          boolean addDDT = false;
+          p.add(new Phrase("DUCTION/DIPLOPIA TESTING: \n",getFont()));
+          if(mf.getDuction().length() > 0){
+          	//p.add(new Phrase(" ", boldFont));
+        	String duction = mf.getDuction();
+        	duction = duction.replaceAll("<table>", "");
+        	duction = duction.replaceAll("</table>", "");
+        	duction = duction.replaceAll("<tr>", "");
+        	duction = duction.replaceAll("</tr>", "");
+        	duction = duction.replaceAll("<td>", " ");
+        	duction = duction.replaceAll("</td>", "");
+          	p.add(new Phrase(duction,getFont()));
+          	addDDT = true;
+          }
+          p.add(new Phrase("\n\n"));
+          if(addDDT) {
+          	getDocument().add(p);
+          }
+          p = new Paragraph();
+          boolean addDeviationMeasurement = false;
+          p.add(new Phrase("DEVIATION MEASUREMENT: \n",getFont()));
+          if(mf.getPrimarygaze().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add(new Phrase("Primary gaze      ", boldFont));
+          	}else{
+          		p.add(new Phrase("Primary gaze ", boldFont));
+          	}
+          	p.add(new Phrase(mf.getPrimarygaze(),getFont()));
+          	addDeviationMeasurement = true;
+          }
+          if(mf.getUpgaze().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add(new Phrase("\nUp gaze           ", boldFont));
+          	}else{
+          		p.add(new Phrase("Up gaze ", boldFont));
+          	}
+          	p.add(new Phrase(mf.getUpgaze(),getFont()));
+          	addDeviationMeasurement = true;
+          }
+          if(mf.getDowngaze().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add(new Phrase("\nDown gaze         ", boldFont));
+          	}else{
+          		p.add(new Phrase("Down gaze", boldFont));
+          	}
+          	p.add(new Phrase(mf.getDowngaze(),getFont()));
+          	addDeviationMeasurement = true;
+          }
+          if(mf.getRightgaze().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add(new Phrase("\nRight gaze        ", boldFont));
+          	}else{
+          		p.add(new Phrase("Right gaze", boldFont));
+          	}
+          	p.add(new Phrase(mf.getRightgaze(),getFont()));
+          	addDeviationMeasurement = true;
+          }
+          if(mf.getLeftgaze().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add(new Phrase("\nLeft gaze         ", boldFont));
+          	}else{
+          		p.add(new Phrase("Left gaze ", boldFont));
+          	}
+          	p.add(new Phrase(mf.getLeftgaze(),getFont()));
+          	addDeviationMeasurement = true;
+          }        
+          if(mf.getRighthead().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add(new Phrase("\nRight head tilt   ", boldFont));
+          	}else{
+          		p.add(new Phrase("Right head tilt ", boldFont));
+          	}
+          	p.add(new Phrase(mf.getRighthead(),getFont()));
+          	addDeviationMeasurement = true;
+          }
+          if(mf.getLefthead().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add(new Phrase("\nLeft head tilt   ", boldFont));
+          	}else{
+          		p.add(new Phrase("Left head tilt ", boldFont));
+          	}
+          	p.add(new Phrase(mf.getLefthead(),getFont()));
+          	addDeviationMeasurement = true;
+          }
+          if(mf.getNear().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add(new Phrase("\nNear              ", boldFont));
+          	}else{
+          		p.add(new Phrase("Near", boldFont));
+          	}
+          	p.add(new Phrase(mf.getNear(),getFont()));
+          	addDeviationMeasurement = true;
+          }
+          if(mf.getNearwith().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Near with +3D ", boldFont));
+          	p.add(new Phrase(mf.getNearwith(),getFont()));
+          	addDeviationMeasurement = true;
+          }
+          if(mf.getFardistance().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add(new Phrase("\nFar distance      ", boldFont));
+          	}else{
+          		p.add(new Phrase("Far distance ", boldFont));
+          	}
+          	p.add(new Phrase(mf.getFardistance(),getFont()));
+          	addDeviationMeasurement = true;
+          }
+          p.add(new Phrase("\n\n"));
+          if(addDeviationMeasurement) {
+          	getDocument().add(p);
+          }
+          p = new Paragraph();
+          boolean addExternalOrbit = false;
+          p.add(new Phrase("EXTERNAL/ORBIT: \n",getFont()));
+          if(mf.getFace().length() > 0){
+          	p.add(new Phrase("Face ", boldFont));
+          	p.add(new Phrase(mf.getFace(),getFont()));
+          	addExternalOrbit = true;
+          }
+          if(mf.getRetropulsion().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Retropulsion ", boldFont));
+          	p.add(new Phrase(mf.getRetropulsion(),getFont()));
+          	addExternalOrbit = true;
+          }
+          if(mf.getHertel().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Hertel ", boldFont));
+          	p.add(new Phrase(mf.getHertel(),getFont()));
+          	addExternalOrbit = true;
+          }
+          p.add(new Phrase("\n\n"));
+          if(addExternalOrbit) {
+          	getDocument().add(p);
+          }
+          p = new Paragraph();
+          boolean addEyelidDuct = false;
+          p.add(new Phrase("EYELID/NASOLACRIMAL DUCT: \n",getFont()));
+          if(mf.getUpperLid().length() > 0){
+          	p.add(new Phrase("Upper lid ", boldFont));
+          	p.add(new Phrase(mf.getUpperLid(),getFont()));
+          	addEyelidDuct = true;
+          }
+          if(mf.getLowerLid().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Lower lid ", boldFont));
+          	p.add(new Phrase(mf.getUpperLid(),getFont()));
+          	addEyelidDuct = true;
+          }
+          if(mf.getLacrimalLake().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Lacrimal lake ", boldFont));
+          	p.add(new Phrase(mf.getLacrimalLake(),getFont()));
+          	addEyelidDuct = true;
+          }
+          if(mf.getLacrimalIrrigation().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Lacrimal irrigation ", boldFont));
+          	p.add(new Phrase(mf.getLacrimalIrrigation(),getFont()));
+          	addEyelidDuct = true;
+          }
+          if(mf.getPunctum().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Punctum ", boldFont));
+          	p.add(new Phrase(mf.getPunctum(),getFont()));
+          	addEyelidDuct = true;
+          }
+          if(mf.getNLD().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Nasolacrimal duct ", boldFont));
+          	p.add(new Phrase(mf.getNLD(),getFont()));
+          	addEyelidDuct = true;
+          }
+          if(mf.getDyeDisappearance().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Dye disappearance ", boldFont));
+          	p.add(new Phrase(mf.getDyeDisappearance(),getFont()));
+          	addEyelidDuct = true;
+          }
+          p.add(new Phrase("\n\n"));
+          if(addEyelidDuct) {
+          	getDocument().add(p);
+          }
+          p = new Paragraph();
+          boolean addEyelidMeasurement = false;
+          p.add(new Phrase("EYELID MEASUREMENT: \n",getFont()));
+          if(mf.getMarginReflexDistance().length() > 0){
+          	p.add(new Phrase("Margin reflex distance ", boldFont));
+          	p.add(new Phrase(mf.getMarginReflexDistance(),getFont()));
+          	addEyelidMeasurement = true;
+          }
+          if(mf.getInferiorScleralShow().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Inferior scleral show ", boldFont));
+          	p.add(new Phrase(mf.getInferiorScleralShow(),getFont()));
+          	addEyelidMeasurement = true;
+          }
+          if(mf.getLevatorFunction().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Levator function ", boldFont));
+          	p.add(new Phrase(mf.getLevatorFunction(),getFont()));
+          	addEyelidMeasurement = true;
+          }
+          if(mf.getLagophthalmos().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Lagophthalmos ", boldFont));
+          	p.add(new Phrase(mf.getLagophthalmos(),getFont()));
+          	addEyelidMeasurement = true;
+          }
+          if(mf.getBlink().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Blink reflex ", boldFont));
+          	p.add(new Phrase(mf.getBlink(),getFont()));
+          	addEyelidMeasurement = true;
+          }
+          if(mf.getCNVii().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Cranial Nerve VII function ", boldFont));
+          	p.add(new Phrase(mf.getCNVii(),getFont()));
+          	addEyelidMeasurement = true;
+          }
+          if(mf.getBells().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Bell's phenomenon ", boldFont));
+          	p.add(new Phrase(mf.getBells(),getFont()));
+          	addEyelidMeasurement = true;
+          }
+          if(mf.getSchirmertest().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Schirmer test ", boldFont));
+          	p.add(new Phrase(mf.getSchirmertest(),getFont()));
+          	addEyelidMeasurement = true;
+          }
+          p.add(new Phrase("\n\n"));
+          if(addEyelidMeasurement) {
+          	getDocument().add(p);
+          }
+          p = new Paragraph();
+          boolean addAnteroirSegment = false;
+          p.add(new Phrase("ANTERIOR SEGMENT: \n",getFont()));
+          if(mf.getCornea().length() > 0){
+          	p.add(new Phrase("Cornea ", boldFont));
+          	p.add(new Phrase(mf.getCornea(),getFont()));
+          	addAnteroirSegment = true;
+          }
+          if(mf.getConjuctivaSclera().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Conjunctiva/Sclera ", boldFont));
+          	p.add(new Phrase(mf.getConjuctivaSclera(),getFont()));
+          	addAnteroirSegment = true;
+          }
+          if(mf.getAnteriorChamber().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Anterior chamber ", boldFont));
+          	p.add(new Phrase(mf.getAnteriorChamber(),getFont()));
+          	addAnteroirSegment = true;
+          }
+          if(mf.getAngle().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Angle ", boldFont));
+          	p.add(new Phrase(mf.getAngle(),getFont()));
+          	addAnteroirSegment = true;
+          }
+          if(mf.getIris().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Iris ", boldFont));
+          	p.add(new Phrase(mf.getIris(),getFont()));
+          	addAnteroirSegment = true;
+          }
+          if(mf.getLens().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Lens ", boldFont));
+          	p.add(new Phrase(mf.getLens(),getFont()));
+          	addAnteroirSegment = true;
+          }
+          p.add(new Phrase("\n\n"));
+          if(addAnteroirSegment) {
+          	getDocument().add(p);
+          }
+          
+          p = new Paragraph();
+          boolean addPosteriorSegment = false;
+          p.add(new Phrase("POSTERIOR SEGMENT: \n",getFont()));
+          if(mf.getDisc().length() > 0){
+          	p.add(new Phrase("Optic disc ", boldFont));
+          	p.add(new Phrase(mf.getDisc(),getFont()));
+          	addPosteriorSegment = true;
+          }
+          if(mf.getCdRatio().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("C/D ratio ", boldFont));
+          	p.add(new Phrase(mf.getCdRatio(),getFont()));
+          	addPosteriorSegment = true;
+          }
+          if(mf.getMacula().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Macula ", boldFont));
+          	p.add(new Phrase(mf.getMacula(),getFont()));
+          	addPosteriorSegment = true;
+          }
+          if(mf.getRetina().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Retina ", boldFont));
+          	p.add(new Phrase(mf.getRetina(),getFont()));
+          	addPosteriorSegment = true;
+          }
+          if(mf.getVitreous().length() > 0){
+          	if("eyeform3.2".equals(eyeform)){
+          		p.add("\n");
+          	}
+          	p.add(new Phrase("Vitreous ", boldFont));
+          	p.add(new Phrase(mf.getVitreous(),getFont()));
+          	addPosteriorSegment = true;
+          }
+          p.add(new Phrase("\n\n"));
+          if(addPosteriorSegment) {
+          	getDocument().add(p);
+          }
+        }
+    }
+    
     public void printEyeformMeasurements(MeasurementFormatter mf) throws DocumentException {
     	/*
 		if( getNewPage() )

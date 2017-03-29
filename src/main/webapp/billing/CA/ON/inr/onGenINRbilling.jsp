@@ -17,6 +17,23 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect("../../../../securityError.jsp?type=_billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
+
 <%
 	String user_no = (String) session.getAttribute("user");
 %>
@@ -27,8 +44,12 @@
 <%@page import="org.oscarehr.billing.CA.dao.BillingInrDao" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="oscar.util.ConversionUtils" %>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+
 <%
 	BillingInrDao billingInrDao = SpringUtils.getBean(BillingInrDao.class);
+LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+
 %>
 <%//
 			JdbcBillingClaimImpl dbObj = new JdbcBillingClaimImpl();
@@ -148,7 +169,7 @@
 					claim1Header.setAsstProvider_no("");
 					claim1Header.setCreator(creator);
 
-					int nNo = dbObj.addOneClaimHeaderRecord(claim1Header);
+					int nNo = dbObj.addOneClaimHeaderRecord(loggedInInfo, claim1Header);
 					String billNo = "" + nNo;
 
 					int recordAffected = 0;

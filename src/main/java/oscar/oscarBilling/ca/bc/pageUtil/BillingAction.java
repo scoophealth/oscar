@@ -39,14 +39,15 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.oscarehr.billing.Clinicaid.util.ClinicaidCommunication;
 import org.oscarehr.decisionSupport.model.DSConsequence;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.billing.Clinicaid.util.ClinicaidCommunication;
 
 import oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic;
 import oscar.oscarBilling.ca.bc.decisionSupport.BillingGuidelines;
 import oscar.util.SqlUtils;
+import oscar.util.SuperSiteUtil;
 
 public final class BillingAction extends Action {
   private static Logger _log = MiscUtils.getLogger();
@@ -63,7 +64,7 @@ public final class BillingAction extends Action {
     String encounter = request.getAttribute("encounter") != null ?
         (String) request.getAttribute("encounter") : "";
     String region = request.getParameter("billRegion");
-
+    SuperSiteUtil.getInstance().checkSuperSiteAccess(request, response, "demographic_no");
     if ("ON".equals(region)) {
       String newURL = mapping.findForward("ON").getPath();
       newURL = newURL + "?" + request.getQueryString();

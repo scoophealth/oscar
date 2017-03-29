@@ -38,7 +38,7 @@ public class CdsForm4Action {
 	private static CdsClientFormDao cdsClientFormDao = (CdsClientFormDao) SpringUtils.getBean("cdsClientFormDao");
 	private static CdsClientFormDataDao cdsClientFormDataDao = (CdsClientFormDataDao) SpringUtils.getBean("cdsClientFormDataDao");
 
-	public static CdsClientForm createCdsClientForm(LoggedInInfo loggedInInfo, Integer admissionId, Integer clientId, Date initialContactDate, Date assessmentDate, boolean signed)
+	public static CdsClientForm createCdsClientForm(LoggedInInfo loggedInInfo, Integer admissionId, Integer clientId, Date initialContactDate, Date assessmentDate, Date serviceInitiationDate, boolean signed)
 	{
 		CdsClientForm cdsClientForm=new CdsClientForm();
 		cdsClientForm.setAdmissionId(admissionId);
@@ -48,6 +48,7 @@ public class CdsForm4Action {
 		cdsClientForm.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 		cdsClientForm.setInitialContactDate(initialContactDate);
 		cdsClientForm.setAssessmentDate(assessmentDate);
+		cdsClientForm.setServiceInitiationDate(serviceInitiationDate);
 		cdsClientForm.setSigned(signed);
 		cdsClientFormDao.persist(cdsClientForm);
 		

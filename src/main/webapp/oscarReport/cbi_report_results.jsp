@@ -64,7 +64,8 @@ if(!authed) {
 <%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.managers.ProviderManager2"%>
-
+<%@page import="org.oscarehr.common.dao.FunctionalCentreAdmissionDao"%>
+<%@page import="org.oscarehr.common.model.FunctionalCentreAdmission"%>
 
 <%@page import="org.oscarehr.common.model.CdsFormOption"%>
 <%@page import="org.oscarehr.web.Cds4ReportUIBean"%>
@@ -78,6 +79,7 @@ if(!authed) {
 	AdmissionDao admissionDao = (AdmissionDao) SpringUtils.getBean("admissionDao");
     ProgramDao programDao = (ProgramDao) SpringUtils.getBean("programDao");
 	FunctionalCentreDao functionalCentreDao = (FunctionalCentreDao) SpringUtils.getBean("functionalCentreDao");
+	FunctionalCentreAdmissionDao fc_admissionDao = (FunctionalCentreAdmissionDao) SpringUtils.getBean("functionalCentreAdmissionDao");
 	
 	int totalCount = 0, successCount = 0, failureCount = 0;
 	
@@ -138,16 +140,13 @@ if(!authed) {
 			for(OcanSubmissionLog log : submissionLogListFilteredByProivders) {
 				OcanStaffForm form = cbiUtil.getCBIFormDataBySubmissionId(currentFacilityId, log.getId());
 				if(form!=null && form.getAdmissionId()!=null) {
-					Admission admission = admissionDao.getAdmission(form.getAdmissionId());	
-					if(admission!=null)	{
-						Program program = admission.getProgram();
-						if(program!=null) {						
-							 String fcId = program.getFunctionalCentreId();	
-							 if(fcId!=null && functionalCentreId.equalsIgnoreCase(fcId)) {
-								 submissionLogListFilteredByFunctionalCentre.add(log);
-						  	}
-						}
-					}
+					FunctionalCentreAdmission fc_admission = fc_admissionDao.find(form.getAdmissionId());
+					if(fc_admission.getFunctionalCentreId()!=null && fc_admission.getFunctionalCentreId().trim().length()>0) {
+						String fcId = fc_admission.getFunctionalCentreId();
+						if(fcId!=null && functionalCentreId.equalsIgnoreCase(fcId)) {
+							 submissionLogListFilteredByFunctionalCentre.add(log);
+					  	}
+					}					
 				}
 			}
 		}
@@ -239,17 +238,19 @@ if(!authed) {
 								OcanStaffForm ocanStaffForm = cbiUtil.getCBIFormDataBySubmissionId(currentFacilityId, ocanSubmissionLog.getId());
 								
 								if(ocanStaffForm!=null)
-								{									
-									Admission admission = admissionDao.getAdmission(ocanStaffForm.getAdmissionId());
-									
+								{	
 									String admissionDate = "", functionalCentre = "";
-									if(admission!=null)
+									SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");									
+									if(ocanStaffForm.getAdmissionDate()!=null)
 									{
-										admissionDate = admission.getAdmissionDate("yyyy-MM-dd");
-										if(admission.getProgram()!=null)
-											functionalCentre = admission.getProgram().getFunctionalCentreId(); 
+										admissionDate = formatter.format(ocanStaffForm.getAdmissionDate());
 									}
 									
+									FunctionalCentreAdmission fc_admission = fc_admissionDao.find(ocanStaffForm.getAdmissionId());
+									if(fc_admission!=null && fc_admission.getFunctionalCentreId()!=null && fc_admission.getFunctionalCentreId().trim().length()>0) {
+										functionalCentre = fc_admission.getFunctionalCentreId();
+									}
+																		
 									String result = ocanSubmissionLog.getResult();
 									String cls = "";
 									if(result.equalsIgnoreCase("failure"))

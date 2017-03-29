@@ -26,6 +26,7 @@
 package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.io.File;
+import java.net.URLEncoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,7 +61,7 @@ public class DownloadFileAction extends DownloadAction{
         String fileName = request.getParameter("filename");
         
         response.setHeader("Content-disposition", 
-                           "attachment; filename=" + fileName);
+                           "attachment; filename=" + URLEncoder.encode(fileName,"UTF-8"));
         File file = null;
         try{
            File directory = new File(home_dir);

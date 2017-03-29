@@ -1,0 +1,14 @@
+MSH|^~\&|OCF|GBHS-OS|XENOS|GBHS-OS|20120324133709||ORU^R01|Q68569163|T|2.3
+PID|1||320850^^^GBHS-OS||TESTING^PATHNET||19500117|Male|||246 TESTING DRIVE^^CERNERVILLE^Ontario^H1H1H1^Canada^^^Grey, Owen Sound, C,|Grey, Owen Sound, C,|||English|Married||3347360^^^GBHS-OS^FIN NBR 
+PV1|1|Inpt.|6-1^6105^1^GBHS-OS^^Bed(s)^GBHS-OS|Elective|||00154^Harada^Glenn^K|||Medicine|6-1^^^^^Nurse Unit(s)|||Home|||00154^Harada^Glenn^K|Inpt.Ac.|2012090165970^^^^Visit Id|OHIP|||||||||||||||||||GBHS-OS||Active|||20120128120400||||||2012090165970 
+OBR|1|83204949^HNAM_ORDERID||Group and Rh^Group and Rh|||20120324111600|||||||20120324111600|Blood&Blood|00095^Rudrick^Brian^F||||000002012083000007^HNA_ACCN~2354879^HNA_ACCNID||20120324133707||Blood Bank|Auth (Verified)|Crossmatch Group and Screen&Crossmatch Group and Screen|1^^^20120324111600^^Routine~^^^20120324111600^^Routine||83204946&HNAM_ORDERID|||||||20120324111600 
+OBX|1|CE|A1R^A1R||3^3|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|2|CE|RhC^RhC||0^0|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|3|CE|Anti-A^Anti-A||0^0|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|4|CE|Anti-D2^Anti-D2||0^0|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|5|ST|ABORh^ABORh||O NEG|||Unknown||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|6|CE|Anti-D1^Anti-D1||0-^0-|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|7|CE|BR^BR||3^3|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|8|CE|Anti-A,B^Anti-A,B||0^0|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion 
+OBX|9|CE|Anti-B^Anti-B||0^0|||||? Unknown|Auth (Verified)|||20120324133706|||^^^OSB Transfusion
+

@@ -90,7 +90,8 @@ public class PreferenceManager {
 	public static final String ASSESSMENTS_POS = "summary.item.assessments.position";
 	public static final String INCOMING_POS = "summary.item.incoming.position";
 	public static final String DS_SUPPORT_POS = "summary.item.dssupport.position";
-	
+	public static final String DISEASES_POS = "summary.item.diseases.position";
+
 	
 	public boolean displaySummaryItem(LoggedInInfo loggedInInfo, String item){
 		if(isCustomSummaryEnabled(loggedInInfo)){			

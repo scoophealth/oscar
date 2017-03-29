@@ -275,7 +275,6 @@
 				<div class="checkbox" >
 				    <label>
 				      <input type="checkbox" ng-model="groupNotesForm.issue.issueId" ng-checked="true" ng-true-value="'{{page.issueId}}'" ng-false-value="'0'">  <em>{{page.title}}</em>  as part of cpp
-
 				    </label>
 				</div>				
 				  </div>

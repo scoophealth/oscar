@@ -130,7 +130,7 @@
 
 				<td><%=demographic_name%></td>
 				<td><%=provider_name%></td>
-				<td><c:out value="${tickler.service_date}" /></td>
+				<td><c:out value="${tickler.serviceDateWeb}" /></td>
 				<td><c:out value="${tickler.priority}" /></td>
 				<td><%=assignee_name%></td>
 				<td><%=status%></td>

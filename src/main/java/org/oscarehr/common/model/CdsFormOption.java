@@ -62,16 +62,26 @@ public class CdsFormOption extends AbstractModel<Integer> implements Serializabl
 		return cdsDataCategoryName;
 	}
 
-	public boolean equals(CdsFormOption o) {
-		try {
-			return (id != null && id.intValue() == o.id.intValue());
-		} catch (Exception e) {
-			return (false);
-		}
-	}
-
+	@Override
 	public int hashCode() {
-		return (id != null ? id.hashCode() : 0);
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+	
+	
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (!super.equals(obj)) return false;
+		if (getClass() != obj.getClass()) return false;
+		CdsFormOption other = (CdsFormOption) obj;
+		if (id == null) {
+			if (other.id != null) return false;
+		} else if (!id.equals(other.id)) return false;
+		return true;
 	}
 
 	@PreRemove

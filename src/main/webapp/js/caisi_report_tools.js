@@ -47,6 +47,11 @@ function createStreetHealthReport()
         if (startDate == null) {
             return false;
         }
+        if (!dojo.validate.isValidDate(startDate, 'YYYY-MM-DD')) {
+            alert("'" + startDate + "' is not a valid start date");
+            return false;
+        }
+
     }
 
     alert('Generating report for date ' + startDate);

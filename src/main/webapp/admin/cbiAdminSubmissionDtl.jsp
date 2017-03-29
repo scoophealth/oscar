@@ -41,6 +41,9 @@ if(!authed) {
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.common.model.Admission"%>
 <%@page import="org.oscarehr.common.dao.AdmissionDao"%>
+<%@page import="org.oscarehr.common.model.FunctionalCentreAdmission"%>
+<%@page import="org.oscarehr.common.dao.FunctionalCentreAdmissionDao"%>
+
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.common.model.OcanStaffForm"%>
 <%@page import="org.oscarehr.PMmodule.model.OcanSubmissionLog"%>
@@ -144,15 +147,18 @@ if(submissionLogList!=null)
 								OcanStaffForm ocanStaffForm = cbiUtil.getCBIFormDataBySubmissionId(currentFacilityId, ocanSubmissionLog.getId());
 								
 								if(ocanStaffForm!=null)
-								{									
-									Admission admission = admissionDao.getAdmission(ocanStaffForm.getAdmissionId());
-									
+								{	
 									String admissionDate = "", functionalCentre = "";
-									if(admission!=null)
+									SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");									
+									if(ocanStaffForm.getAdmissionDate()!=null)
 									{
-										admissionDate = admission.getAdmissionDate("yyyy-MM-dd");
-										if(admission.getProgram()!=null)
-											functionalCentre = admission.getProgram().getFunctionalCentreId(); 
+										admissionDate = formatter.format(ocanStaffForm.getAdmissionDate());
+									}
+									
+									FunctionalCentreAdmissionDao fc_admissionDao = (FunctionalCentreAdmissionDao) SpringUtils.getBean("functionalCentreAdmissionDao");
+									FunctionalCentreAdmission fc_admission = fc_admissionDao.find(ocanStaffForm.getAdmissionId());
+									if(fc_admission!=null && fc_admission.getFunctionalCentreId()!=null && fc_admission.getFunctionalCentreId().trim().length()>0) {
+										functionalCentre = fc_admission.getFunctionalCentreId();
 									}
 									
 									String result = ocanSubmissionLog.getResult();

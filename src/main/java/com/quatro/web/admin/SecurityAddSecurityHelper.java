@@ -25,27 +25,29 @@ package com.quatro.web.admin;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
-import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.model.Security;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.MyDateFormat;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
+import oscar.login.PasswordHash;
 
 
 /**
  * Helper class for securityaddsecurity.jsp page.
  */
 public class SecurityAddSecurityHelper {
+	
 
-	private SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+	private org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
 
 	/**
 	 * Adds a security record (i.e. user login information) for the provider.
@@ -62,6 +64,7 @@ public class SecurityAddSecurityHelper {
 	
 	private String process(PageContext pageContext) {
 		ServletRequest request = pageContext.getRequest();
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession((HttpServletRequest)request);
 		
 		StringBuilder sbTemp = new StringBuilder();
 		MessageDigest md;
@@ -76,32 +79,43 @@ public class SecurityAddSecurityHelper {
 		for (int i = 0; i < btNewPasswd.length; i++)
 			sbTemp = sbTemp.append(btNewPasswd[i]);
 
-		boolean isUserRecordAlreadyCreatedForProvider = !securityDao.findByProviderNo(request.getParameter("provider_no")).isEmpty();
+		String hashedPassword = null;
+		String hashedPin = null;
+		
+		try {
+			hashedPassword = PasswordHash.createHash(request.getParameter("password"));
+			hashedPin = PasswordHash.createHash(request.getParameter("pin"));
+		} catch(Exception e) {
+			MiscUtils.getLogger().error("Error with hashing passwords on this system!",e);
+			return "admin.securityaddsecurity.msgAdditionFailure";
+		}
+		
+		boolean isUserRecordAlreadyCreatedForProvider = securityManager.findByProviderNo(loggedInInfo, request.getParameter("provider_no"))!=null;
 		if (isUserRecordAlreadyCreatedForProvider) return "admin.securityaddsecurity.msgLoginAlreadyExistsForProvider";
 
-		boolean isUserAlreadyExists = securityDao.findByUserName(request.getParameter("user_name")).size() > 0;
+		boolean isUserAlreadyExists = securityManager.findByUserName(loggedInInfo, request.getParameter("user_name")).size() > 0;
 		if (isUserAlreadyExists) return "admin.securityaddsecurity.msgAdditionFailureDuplicate";
 
 		Security s = new Security();
 		s.setUserName(request.getParameter("user_name"));
-		s.setPassword(sbTemp.toString());
+		s.setPassword(hashedPassword);
 		s.setProviderNo(request.getParameter("provider_no"));
-		s.setPin(request.getParameter("pin"));
+		s.setPin(hashedPin);
 		s.setBExpireset(request.getParameter("b_ExpireSet") == null ? 0 : Integer.parseInt(request.getParameter("b_ExpireSet")));
 		s.setDateExpiredate(MyDateFormat.getSysDate(request.getParameter("date_ExpireDate")));
 		s.setBLocallockset(request.getParameter("b_LocalLockSet") == null ? 0 : Integer.parseInt(request.getParameter("b_LocalLockSet")));
 		s.setBRemotelockset(request.getParameter("b_RemoteLockSet") == null ? 0 : Integer.parseInt(request.getParameter("b_RemoteLockSet")));
-		
+		s.setStorageVersion(Security.STORAGE_VERSION_2);
     	if (request.getParameter("forcePasswordReset") != null && request.getParameter("forcePasswordReset").equals("1")) {
     	    s.setForcePasswordReset(Boolean.TRUE);
     	} else {
     		s.setForcePasswordReset(Boolean.FALSE);  
         }
+    	s.setPasswordUpdateDate(new java.util.Date());
+    	s.setPinUpdateDate(new java.util.Date());
+    	s.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
 		
-    	s.setPasswordUpdateDate(new Date());
-    	s.setPinUpdateDate(new Date());
-    	
-		securityDao.persist(s);
+    	securityManager.saveNewSecurityRecord(loggedInInfo, s);
 
 		LogAction.addLog((String) pageContext.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_SECURITY, request.getParameter("user_name"), request.getRemoteAddr());
 

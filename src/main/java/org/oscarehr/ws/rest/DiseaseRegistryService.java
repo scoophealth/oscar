@@ -88,7 +88,7 @@ public class DiseaseRegistryService extends AbstractServiceImpl {
 				dx.setCodingSystem(item.getCodingSystem());
 				dx.setDescription(desc);
 				dxList.getDxList().add(dx);
-			}
+			}			
 		}
 		
 		

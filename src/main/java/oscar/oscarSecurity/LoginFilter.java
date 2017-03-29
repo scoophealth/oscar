@@ -74,6 +74,7 @@ public class LoginFilter implements Filter {
 		"/ProxyEformNotification",
 		"/js/jquery-1.7.1.min.js",
 		"/js/bootstap",
+		"/js/global.js",
 		"/css/bootstrap",
 		"/myoscar_login_tester.jsp",
 		"/myoscar_login_tester2.jsp"

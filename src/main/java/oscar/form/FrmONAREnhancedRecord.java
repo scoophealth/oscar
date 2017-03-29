@@ -117,7 +117,7 @@ public class FrmONAREnhancedRecord extends FrmRecord {
         return ((new FrmRecordHelp()).createActionURL(where, action, demoId, formId));
     }
 
-	public boolean isSendToPing(String demoNo) throws SQLException {
+	public boolean isSendToPing(String demoNo)  {
 		boolean ret = false;
 
 		if ("yes".equalsIgnoreCase(OscarProperties.getInstance().getProperty("PHR", ""))) {

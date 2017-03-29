@@ -31,11 +31,13 @@
 <%@ page import="oscar.log.*"%>
 
 <%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
 <%@ page import="org.oscarehr.common.model.Security" %>
-<%@ page import="org.oscarehr.common.dao.SecurityDao" %>
+<%@ page import="org.oscarehr.managers.SecurityManager" %>
 
 <%
-	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
+	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+	org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
 	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 	String curUser_no = (String)session.getAttribute("user");
 
@@ -79,7 +81,7 @@ if(!authed) {
   if (isSiteAccessPrivacy && vec.size() > 0) {
 
 	  List<String> userList = new ArrayList<String>();
-	  List<Security> securityList = securityDao.findByProviderSite(curUser_no);
+	  List<Security> securityList = securityManager.findByProviderSite(loggedInInfo,curUser_no);
 
 	  for(Security security : securityList) {
 		userList.add(security.getUserName());

@@ -81,7 +81,8 @@ if(!authed) {
 		<jsp:include
 			page="listTemplates.jsp">
 			<jsp:param name="templateviewid" value="" />
-		</jsp:include></td>
+		</jsp:include>
+		</td>
 		<td class="MainTableRightColumn" valign="top">
 		<%ArrayList templates = (new ReportManager()).getReportTemplatesNoParam();
             String templateViewId = request.getParameter("templateviewid");

@@ -79,15 +79,17 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
         }
 
         //now we list prevention modules as items
-        PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
-        ArrayList<HashMap<String,String>> prevList = pdc.getPreventions();
+        PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance(loggedInInfo);
+        ArrayList<HashMap<String,String>> prevList = pdc.getPreventions(loggedInInfo);
         Map warningTable = p.getWarningMsgs();
 
-
-
-        String highliteColour = "#FF0000";
-        String inelligibleColour = "#FF6600";
-        String pendingColour = "#FF00FF";
+        String highliteColour 	= "#FF0000";
+        //String inelligibleColour = "#FF6600";
+        String refusedColour 	= "#EAACAC";	//light pink 
+        String ineligibleColour	= "#FFCC24";	//orange
+        String pendingColour 	= "#FF00FF";	//dark pink
+        String abnormalColor 	= "#FF4D4D";	//dark salmon
+        
         Date date = null;
         //Date defaultDate = new Date(System.currentTimeMillis());
         url += "; return false;";
@@ -118,8 +120,15 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
                     
                     item.setDate(date);
 
-                    if( hdata.get("refused") != null && hdata.get("refused").equals("2") ) {
-                        item.setColour(inelligibleColour);
+                    if( hdata.get("refused") != null && hdata.get("refused").equals("1") ) { // 1 for refused
+                        item.setColour(refusedColour);
+                    }
+                    else if( hdata.get("refused") != null && hdata.get("refused").equals("2") ) {	// 2 for ineligible 
+                        item.setColour(ineligibleColour);
+                    }
+
+                    else if( result != null && result.equalsIgnoreCase("abnormal") ) {
+                        item.setColour(abnormalColor);
                     }
                     else if( result != null && result.equalsIgnoreCase("pending") ) {
                         item.setColour(pendingColour);

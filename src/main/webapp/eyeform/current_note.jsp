@@ -161,7 +161,15 @@ function saveFlags() {
 </style>
 
 <span note_addon="saveEyeformNoteNoGenerate"></span>
-<span><input type="button" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/EyeformPlan.do?method=form&amp;followup.demographicNo=<%=demographicNo %>&amp;noteId=<%=noteId%>&amp;followup.appointmentNo=<%=aptNo%>','eyeFormPlan',600,1200);" value="Arrange Plan"/></span>
+<span><input type="button" onclick="popupPageOne('<c:out value="${ctx}"/>/eyeform/EyeformPlan.do?method=form&amp;followup.demographicNo=<%=demographicNo %>&amp;noteId=<%=noteId%>&amp;followup.appointmentNo=<%=aptNo%>','eyeFormPlan',600,1200);" value="Arrange Plan"/>
+ <%
+	oscar.OscarProperties props1 = oscar.OscarProperties.getInstance();
+	String impression_history_show = props1.getProperty("cme_js", "eyeform3");
+	if(("eyeform3".equals(impression_history_show)) || ("eyeform3.1".equals(impression_history_show)) ||( "eyeform3.2".equals(impression_history_show))){
+%>
+           <input value="Impression History" onclick="popupPage(500,900,'Impressionhistory1','<c:out value="${ctx}"/>/eyeform/Impression_History.jsp')" id="stickler1" style="color: black;" type="button"> 
+   <%} %>
+</span>
 
 <table width="100%" class="plan">
 <tr>
@@ -235,14 +243,14 @@ function saveFlags() {
            
             <td nowrap="nowrap" width="40%">
             
-           <input tabindex="251" value="Generate Note" onclick="saveEyeformNote();return false;" id="stickler0" style="color: black;" type="button">			
+           <input tabindex="302" value="Generate Note" onclick="saveEyeformNote();return false;" id="stickler0" style="color: black;" type="button">			
            &nbsp;
            <b>Send tickler to:</b>
 
             
             
 
-	        <select name="front" tabindex="250" class="special2" id="ticklerRecip">
+	        <select name="front" tabindex="303" class="special2" id="ticklerRecip">
 	        	<c:forEach var="item" items="${internalList}">
             		<option value="<c:out value="${item.providerNo}"/>"><c:out value="${item.formattedName}"/></option>
             	</c:forEach>           
@@ -252,7 +260,7 @@ function saveFlags() {
     
            </td>
            <td width="15%" nowrap="nowrap">            
-			<input tabindex="251" value="Send Tickler" onclick="saveNoteAndSendTickler();return false;" id="stickler" style="color: black;" type="button">
+			<input tabindex="304" value="Send Tickler" onclick="saveNoteAndSendTickler();return false;" id="stickler" style="color: black;" type="button">
 			 
             </td>
             <td width="45%"></td>

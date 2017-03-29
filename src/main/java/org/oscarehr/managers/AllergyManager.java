@@ -40,19 +40,29 @@ import oscar.log.LogAction;
 public class AllergyManager {
 	@Autowired
 	private AllergyDao allergyDao;
+	@Autowired
+	SecurityInfoManager securityInfoManager;
 
 	public Allergy getAllergy(LoggedInInfo loggedInInfo, Integer id) {
 		Allergy result = allergyDao.find(id);
 
 		//--- log action ---
 		if (result != null) {
-			LogAction.addLogSynchronous(loggedInInfo, "AllergyManager.getAllergy", "id=" + id);
+			LogAction.addLogSynchronous( loggedInInfo, "AllergyManager.getAllergy", "id=" + id);
 		}
 
 		return (result);
 	}
-	
-	public List<Allergy> getActiveAllergies(LoggedInInfo loggedInInfo, Integer demographicNo) {
+
+	public List<Allergy> getActiveAllergies( LoggedInInfo loggedInInfo, Integer demographicNo ) {
+		if(demographicNo == null) {
+			return null;
+		}
+		
+		if (! securityInfoManager.hasPrivilege(loggedInInfo, "_allergy", SecurityInfoManager.READ, demographicNo) ) {
+			throw new RuntimeException("Access Denied");
+		}
+		
 		List<Allergy> results = allergyDao.findActiveAllergiesOrderByDescription(demographicNo);
 		
 		//--- log action ---
@@ -82,4 +92,5 @@ public class AllergyManager {
 
 		return (results);
 	}
+	
 }

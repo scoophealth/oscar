@@ -22,6 +22,22 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@ include file="/taglibs.jsp"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_report" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_report");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
+
 <%@page import="org.oscarehr.util.MiscUtils"%><%@page import="java.io.FileInputStream"%>
 <%@page import="java.io.OutputStream"%>
 <%@page import="java.io.File"%>

@@ -17,6 +17,21 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_billing");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%@page import="org.oscarehr.billing.CA.ON.model.BillingPercLimit"%>
 <%@page import="org.oscarehr.billing.CA.ON.dao.BillingPercLimitDao"%>
 <%@page import="org.oscarehr.common.model.BillingService"%>
@@ -25,10 +40,15 @@
 <%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.oscarehr.common.model.Provider"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+
 <%
   if (session.getAttribute("user") == null) {
     response.sendRedirect("../../../logout.jsp");
   }
+
+  LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+
 
   String user_no         = (String)session.getAttribute("user");
   String providerview    = request.getParameter("providerview") == null
@@ -118,9 +138,7 @@
 	demoFirst = demo.getFirstName();
 	demoLast = demo.getLastName();
 	demoSex = demo.getSex();
-	if (demo.getHin()!=null && demo.getVer()!=null) {
-		demoHIN = demo.getHin() + demo.getVer();
-	}
+	if (demo.getHin()!=null && demo.getVer()!=null) demoHIN = demo.getHin() + demo.getVer();
 	if (demoSex.compareTo("M")==0) demoSex ="1";
 	if (demoSex.compareTo("F")==0) demoSex ="2";
 
@@ -368,7 +386,7 @@
                                         }
 				}
 				Vector vecT = saveObj.getBillingClaimHospObj(request, tempDate[k], total, vecServiceCode, vecServiceCodeUnit, vecServiceCodePrice);
-				saveObj.addABillingRecord(vecT);
+				saveObj.addABillingRecord(loggedInInfo, vecT);
 			} else {
 				Billing b = new Billing();
 				b.setClinicNo(Integer.parseInt(param[0]));

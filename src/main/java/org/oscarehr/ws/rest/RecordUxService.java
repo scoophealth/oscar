@@ -145,7 +145,7 @@ public class RecordUxService extends AbstractServiceImpl {
 		menulist.add(MenuItemTo1.generateStateMenuItem(idCounter++, "Health Tracker", "record.tracker"));
 		
 		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.prescriptions", "r", null)) {
-			menulist.add(new MenuItemTo1(idCounter++, "Rx", "../oscarRx/choosePatient.do?demographicNo="+demographicNo));
+			menulist.add(MenuItemTo1.generateStateMenuItem(idCounter++, "Rx", "record.rx"));
 		}
 		
 		//PHR
@@ -323,6 +323,10 @@ public class RecordUxService extends AbstractServiceImpl {
 				summaryList.add(new SummaryTo1("Assessments",count++,SummaryTo1.ASSESSMENTS_CODE));
 			}
 			//summaryList[9] = new SummaryTo1("Outgoing",7,"outgoing");
+
+			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.DxRegistry", "r", null) && preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.DISEASES_POS)) {
+				summaryList.add(new SummaryTo1("Disease Registry", count++, SummaryTo1.DISEASES));
+			}
 		}
 		return summaryList;
 	}
@@ -347,8 +351,9 @@ public class RecordUxService extends AbstractServiceImpl {
 		result.put("incoming","labsDocsSummary");
 		result.put("dssupport","decisionSupportSummary");
 		result.put("allergies","allergiesSummary");
-		result.put("riskfactors","issueNoteSummary"); 
-		
+		result.put("riskfactors","issueNoteSummary");
+		result.put("diseases","dxSummary");
+
         return Collections.unmodifiableMap(result);
     }
 	
@@ -543,5 +548,4 @@ public class RecordUxService extends AbstractServiceImpl {
 		
 		return response;
 	}
-	
 }

@@ -53,7 +53,9 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.apache.tika.io.IOUtils;
 import org.oscarehr.common.dao.FaxConfigDao;
 import org.oscarehr.common.dao.FaxJobDao;
 import org.oscarehr.common.model.FaxConfig;
@@ -109,15 +111,19 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 					writer.println("<script>alert('Error: No fax number found!');window.close();</script>");
 				} else {
 		                	// write to file
-		                	String pdfFile = "prescription_"+req.getParameter("pdfId")+".pdf";
+		                	String pdfFile = "prescription_"+Integer.parseInt(req.getParameter("pdfId"))+".pdf";
 		                	String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + "/";
-		                	FileOutputStream fos = new FileOutputStream(path+pdfFile);
-		                	baosPDF.writeTo(fos);
-		                	fos.close();
 
-							String tempPath = OscarProperties.getInstance().getProperty(
+		                	FileOutputStream fos = null;
+		                	try {
+		                		fos = new FileOutputStream(path+pdfFile);
+		                		baosPDF.writeTo(fos);
+		                	} finally {
+		                		IOUtils.closeQuietly(fos);
+		                	}
+
+					String tempPath = OscarProperties.getInstance().getProperty(
 								"fax_file_location", System.getProperty("java.io.tmpdir"));
-		                	
 		                	// write to file
 		                	String tempPdf = tempPath + "/prescription_" + req.getParameter("pdfId") + ".pdf";
 		                	// Copying the fax pdf.
@@ -130,7 +136,8 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			                	out.write(faxNo);
 		                    } finally {
 		                    	if (out != null) out.close();
-		                	}
+		                	}		                	
+		                	
 		                	
 			                String faxNumber = req.getParameter("clinicFax");
 			                String demo = req.getParameter("demographic_no");
@@ -168,7 +175,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			        if( validFaxNumber ) {
 			        	
 			        	LogAction.addLog(provider_no, LogConst.SENT, LogConst.CON_FAX, "PRESCRIPTION " + pdfFile );
-			        	writer.println("<script>alert('Fax sent to: " + req.getParameter("pharmaName") + " (" + req.getParameter("pharmaFax") + ")');window.close();</script>");
+			        	writer.println("<script>alert('Fax sent to: " + StringEscapeUtils.escapeJavaScript(req.getParameter("pharmaName")) + " (" + faxNo + ")');window.close();</script>");
 			        	
 			        }
 				}
@@ -202,7 +209,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 				sos = res.getOutputStream();
 
 				baosPDF.writeTo(sos);
-
+				
 				sos.flush();
 			}
 		} catch (DocumentException dex) {
@@ -260,6 +267,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         private String patientDOB;
         private String patientHIN;
         private String patientChartNo;
+        private String bandNumber;
         private String pracNo;
 		private String sigDoctorName;
 		private String rxDate;
@@ -272,14 +280,17 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 		public EndPage() {
 		}
 
-        public EndPage(String clinicName, String clinicTel, String clinicFax, String patientPhone, String patientCityPostal, String patientAddress,
-                String patientName,String patientDOB, String sigDoctorName, String rxDate,String origPrintDate,String numPrint, String imgPath, String patientHIN, String patientChartNo,String pracNo, Locale locale) {
+
+		public EndPage(String clinicName, String clinicTel, String clinicFax, String patientPhone, String patientCityPostal, String patientAddress,
+                String patientName,String patientDOB, String sigDoctorName, String rxDate,String origPrintDate,String numPrint, String imgPath, 
+                String patientHIN, String patientChartNo, String bandNumber, String pracNo, Locale locale) {
+
 			this.clinicName = clinicName==null ? "" : clinicName;
 			this.clinicTel = clinicTel==null ? "" : clinicTel;
 			this.clinicFax = clinicFax==null ? "" : clinicFax;
 			this.patientPhone = patientPhone==null ? "" : patientPhone;
 			this.patientCityPostal = patientCityPostal==null ? "" : patientCityPostal;
-			this.patientAddress = patientAddress==null ? "" : patientAddress;
+			this.patientAddress = patientAddress==null ? "" : patientAddress;	
 			this.patientName = patientName;
             this.patientDOB=patientDOB;
 			this.sigDoctorName = sigDoctorName==null ? "" : sigDoctorName;
@@ -295,6 +306,8 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			this.patientChartNo = patientChartNo==null ? "" : patientChartNo;
 			this.pracNo = pracNo==null ? "" : pracNo;
 			this.locale = locale;
+            this.bandNumber = bandNumber;            
+
 		}
 
 		@Override
@@ -342,6 +355,11 @@ public class FrmCustomedPDFServlet extends HttpServlet {
                                 if (patientChartNo != null && !patientChartNo.isEmpty()) {
                                     String chartNoTitle = geti18nTagValue(locale, "oscar.oscarRx.chartNo") ;
                                     hStr.append(newline).append(chartNoTitle).append(patientChartNo);
+                                }
+                                
+                                if( bandNumber != null && ! bandNumber.isEmpty() ) {
+                                	String bandNumberTitle = org.oscarehr.util.LocaleUtils.getMessage(locale, "oscar.oscarRx.bandNumber");
+                                	 hStr.append(newline).append(bandNumberTitle).append(bandNumber);
                                 }
                                 
 				BaseFont bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
@@ -534,6 +552,7 @@ public class FrmCustomedPDFServlet extends HttpServlet {
         String imgFile=req.getParameter("imgFile");
         String patientHIN=req.getParameter("patientHIN");
         String patientChartNo = req.getParameter("patientChartNo");
+        String patientBandNumber = req.getParameter("bandNumber");
         String pracNo=req.getParameter("pracNo");
         Locale locale = req.getLocale();
         
@@ -638,7 +657,11 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 
 			// writer = PdfWriter.getInstance(document, baosPDF);
 			writer = PdfWriterFactory.newInstance(document, baosPDF, FontSettings.HELVETICA_10PT);
-			writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax, patientPhone, patientCityPostal, patientAddress, patientName,patientDOB, sigDoctorName, rxDate, origPrintDate, numPrint, imgFile, patientHIN, patientChartNo, pracNo, locale));
+			writer.setPageEvent(new EndPage(clinicName, clinicTel, clinicFax, patientPhone, patientCityPostal, 
+					patientAddress, patientName,patientDOB, sigDoctorName, rxDate, origPrintDate, numPrint, 
+					imgFile, patientHIN, patientChartNo, patientBandNumber, pracNo, 
+					locale));
+
 			document.addTitle(title);
 			document.addSubject("");
 			document.addKeywords("pdf, itext");
@@ -653,6 +676,22 @@ public class FrmCustomedPDFServlet extends HttpServlet {
 			BaseFont bf; // = normFont;
 
 			cb.setRGBColorStroke(0, 0, 255);
+			// add water mark
+			if (OscarProperties.getInstance().getBooleanProperty("enable_rx_watermark", "true")) {
+				Image image = null;
+				if (!"oscarRxFax".equals(req.getParameter("__method"))) {
+					if(OscarProperties.getInstance().getProperty("rx_watermark_file_name") !=null ) {
+						image = Image.getInstance(req.getSession().getServletContext().getRealPath("/") + "images/" + OscarProperties.getInstance().getProperty("rx_watermark_file_name"));
+					} else {
+						image = Image.getInstance(req.getSession().getServletContext().getRealPath("/") + "images/watermark.png");
+					}
+					image.setAbsolutePosition(0, 0);
+					image.setAlignment(Image.MIDDLE | Image.UNDERLYING);
+					image.scaleToFit(pageSize.getWidth(), pageSize.getHeight());
+					cb.addImage(image);
+				}
+			}
+			
 			// render prescriptions
 			for (String rxStr : listRx) {
 				bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);

@@ -53,6 +53,7 @@ public class NoteDisplayNonNote implements NoteDisplay {
 	private Date date;
 	private String note;
 	private Provider provider;
+	private boolean isFreeDraw = false;
 	private boolean isEformData = false;
 	private boolean isEncounterForm = false;
 	private boolean isInvoice = false;
@@ -254,6 +255,10 @@ public class NoteDisplayNonNote implements NoteDisplay {
 
 	public boolean isEformData() {
 		return isEformData;
+	}
+	
+	public boolean isFreeDraw() {
+		return isFreeDraw;
 	}
 
 	public boolean isGroupNote() {

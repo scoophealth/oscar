@@ -22,10 +22,42 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed2=true;
+%>
+<security:oscarSec roleName="<%=roleName2$%>" objectName="_form" rights="w" reverse="<%=true%>">
+	<%authed2=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_form");%>
+</security:oscarSec>
+<%
+	if(!authed2) {
+		return;
+	}
+%>
+
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.common.model.CdsClientForm"%>
 <%@page import="org.oscarehr.common.model.Admission"%>
 <%@page import="org.oscarehr.PMmodule.web.CdsForm4"%>
+<%@page import="org.oscarehr.util.SessionConstants"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.apache.commons.lang.time.DateFormatUtils" %>
+<%@page import="org.oscarehr.common.model.FunctionalCentreAdmission" %>
+<%@page import="org.oscarehr.common.dao.FunctionalCentreAdmissionDao" %>
+<%@page import="org.oscarehr.common.model.FunctionalCentre" %>
+<%@page import="org.oscarehr.common.dao.FunctionalCentreDao" %>
+<%@page import="org.oscarehr.common.dao.CdsClientFormDao" %>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+
+<%@include file="/layouts/caisi_html_top-jquery.jspf"%>
+<script type="text/javascript">
+var $j = jQuery.noConflict();
+</script>
+
+<script src="<%=request.getContextPath()%>/share/javascript/prototype.js" type="text/javascript"></script>
+
 
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
@@ -34,7 +66,11 @@
 	Integer cdsFormId=null;
 
 	// must be populated some how
-	int currentDemographicId=0;
+	
+	int currentDemographicId;
+	
+	String currentProgramId = (String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID);
+	String view = (String) request.getParameter("view");
 	
 	// must be populated some how
 	CdsClientForm cdsClientForm=null;
@@ -48,14 +84,103 @@
 	else
 	{
 		currentDemographicId=Integer.parseInt(request.getParameter("demographicId"));
-		cdsClientForm=CdsForm4.getCdsClientFormByClientId(loggedInInfo.getCurrentFacility().getId(), currentDemographicId);
+		//cdsClientForm=CdsForm4.getCdsClientFormByClientId(currentDemographicId);
+		cdsClientForm = new CdsClientForm();
+		cdsFormId = cdsClientForm.getId();
 	}
 	
 	boolean printOnly=request.getParameter("print")!=null;
 	if (printOnly) request.setAttribute("noMenus", true);
+	
+	boolean disabledStr = false;
+	if(cdsClientForm.isSigned())
+		disabledStr = true;
 %>
 
-<%@include file="/layouts/caisi_html_top2.jspf"%>
+
+<script>
+//setup validation plugin
+$j("document").ready(function() {	
+	$j("#cds_form").validate({meta: "validate"});
+		
+	$j.validator.addMethod('postalCode', function (value) { 
+	    return /^((\d{5}-\d{4})|(\d{5})|()|([A-Z]\d[A-Z]\s\d[A-Z]\d))$/.test(value); 
+	}, 'Please enter a valid US or Canadian postal code.');
+
+	$j.validator.addMethod('digitalNumber', function(value) {
+		 return /^((\d|\d{2}|\d{3}|\d{4}|()))$/.test(value);		  
+	}, 'Digits only');
+});
+
+$j('document').ready(function() {
+	
+	var demographicId='<%=currentDemographicId%>';	
+	var cdsFormId = '<%=cdsClientForm.getId()%>';
+	var programId = '<%=currentProgramId%>';
+	var view = '<%=view%>';
+	
+	if(document.getElementById("cds_dates") == null) {
+		$j.get('cds_get_dates.jsp?view='+view+'&cdsFormId='+cdsFormId+'&demographicId='+demographicId+'&admissionId=0&programId='+programId, function(data) {
+			$j("#center_block_dates").append(data);					 
+			});				
+	}
+});
+
+function changeFunctionalCentre(selectBox) {
+	
+	var selectBoxId = selectBox.id;	
+	var selectBoxValue = selectBox.options[selectBox.selectedIndex].value;
+	
+	var demographicId='<%=currentDemographicId%>';	
+	var cdsFormId = '<%=cdsFormId%>';
+	var view = '<%=view%>';
+	
+	if(document.getElementById("assessmentDate") == null) {	
+			$j.get('cds_get_dates.jsp?view='+view+'&cdsFormId='+cdsFormId+'&demographicId='+demographicId+'&programId=0&admissionId='+selectBoxValue, function(data) {
+				  $j("#center_block_dates").append(data);					 
+				});														
+	} 
+	else if(document.getElementById("assessmentDate") !=null ) {		
+		$j("#cds_dates").remove();
+		$j.get('cds_get_dates.jsp?view='+view+'&cdsFormId='+cdsFormId+'&demographicId='+demographicId+'&programId=0&admissionId='+selectBoxValue, function(data) {
+			  $j("#center_block_dates").append(data);					 
+			});	
+	}
+		
+}
+
+</script>
+
+<script type="text/javascript">
+function submitCdsForm() {
+	var admissionId = document.getElementById('admissionId').value;
+	if(! admissionId || typeof admissionId == 'undefined') {
+			return false;
+	}
+	
+	var serviceInitDate = document.cds_form.serviceInitiationDate.value;
+	if(!serviceInitDate || typeof serviceInitDate == 'undefined') {
+		alert("Please give the service initiation date on history page.");
+		return false;
+	}
+	
+	var status = document.getElementById('signed').checked;
+	if(!status) {
+		$j('#cds_form').unbind('submit').submit();		
+		return true;
+	}
+	
+	if(!$j("#cds_form").validate()) {
+		alert('Validation failed. Please check all required fields highlighted');
+		return false;
+	} 
+	
+	return confirm("CDS Baseline data cannot be changed once the initial CDS form is signed and saved. Are you sure you want to sign it?");
+}
+</script>
+<style>
+.error {color:red;}
+</style>
 
 Client name : <%=CdsForm4.getEscapedClientName(currentDemographicId)%> 
 <br />
@@ -65,47 +190,93 @@ Client date of birth : <%=CdsForm4.getFormattedClientBirthDay(currentDemographic
 CDS form (CDS-MH v4.05)
 <br />
 
-<form action="cds_form_4_action.jsp" name="form">
+<form id="cds_form" action="cds_form_4_action.jsp" name="cds_form" method="post" onsubmit="return submitCdsForm();" >
+<input type="hidden" name="cdsFormId" id="cdsFormId" value="<%=cdsFormId%>" />
 	<table style="margin-left:auto;margin-right:auto;background-color:#f0f0f0;border-collapse:collapse">
 		<tr>
 			<td class="genericTableHeader">Select corresponding admission</td>
 			<td class="genericTableData">
-				<select name="admissionId">
-					<%
-						for (Admission admission : CdsForm4.getAdmissions(loggedInInfo.getCurrentFacility().getId(), currentDemographicId))
-						{
-							String selected="";
-							
-							if (cdsClientForm.getAdmissionId()!=null && cdsClientForm.getAdmissionId().intValue()==admission.getId().intValue()) selected="selected=\"selected\"";
-							
-							%>
-								<option <%=selected%> value="<%=admission.getId()%>"><%=CdsForm4.getEscapedAdmissionSelectionDisplay(admission)%></option>
-							<%
-						}
+				
+					<%	
+					FunctionalCentreAdmissionDao fcAdmissionDao = (FunctionalCentreAdmissionDao) SpringUtils.getBean("functionalCentreAdmissionDao");	
+					FunctionalCentreDao functionalCentreDao = (FunctionalCentreDao) SpringUtils.getBean("functionalCentreDao");	
+					CdsClientFormDao cdsClientFormDao = (CdsClientFormDao) SpringUtils.getBean("cdsClientFormDao");	
+					//LoggedInInfo loggedInInfo=LoggedInInfo.loggedInInfo.get();
+					
+					String selected="";
+					if(cdsFormId==null)	{ //new form: list all programs IDs not used in cds form.
 					%>
-				</select>			
+						<select name="admissionId" id="admissionId" onchange="changeFunctionalCentre(this);" class="{validate: {required:true}}" >
+						<option value=""> </option>
+					<%
+						for (FunctionalCentreAdmission fcAdmission : fcAdmissionDao.getDistinctAdmissionsByDemographicNo(Integer.valueOf(currentDemographicId)) )
+						{	
+							FunctionalCentre functionalCentre = functionalCentreDao.find(fcAdmission.getFunctionalCentreId());
+							CdsClientForm existingCdsForm = cdsClientFormDao.findLatestByFacilityAdmissionId(loggedInInfo.getCurrentFacility().getId(), Integer.valueOf(fcAdmission.getId()), null);
+							if(existingCdsForm!=null) 
+								continue;                                       
+									                                                   
+							%>
+								<option <%=selected%> value="<%=fcAdmission.getId()%>"><%=functionalCentre.getDescription() %> - <%=DateFormatUtils.ISO_DATE_FORMAT.format(fcAdmission.getAdmissionDate()) %></option>
+							<%						
+						}
+					 } else { //open existing form 
+						  selected="selected";
+						  FunctionalCentreAdmission ad = fcAdmissionDao.find(cdsClientForm.getAdmissionId());
+						  FunctionalCentre functionalCentre = functionalCentreDao.find(ad.getFunctionalCentreId());
+					 %>
+					 	<input type="hidden" name="admissionId" id="admissionId" value="<%=cdsClientForm.getAdmissionId() %>" />
+					 
+					 	  <select name="admissionId_tmp" disabled>
+						  <option value=""> </option>
+					
+						  <option <%=selected%> value="<%=cdsClientForm.getAdmissionId()%>"><%=functionalCentre.getDescription() %> - <%=DateFormatUtils.ISO_DATE_FORMAT.format(ad.getAdmissionDate()) %></option>
+					 <%
+					  }
+					
+					%>
+					
+					
+					
+						
 			</td>
 		</tr>
+		
+		<tr><td colspan="2">
+		
+		<div id="center_block_dates">
+		<!-- results from adding cds form dates will go into this block -->
+		</div>
+		</td>
+		</tr>
+		
+	<!--	
 		<tr>
 			<td class="genericTableHeader">7a. Waiting list / assessment</td>
 			<td class="genericTableData">
 				<table>
 					<tr>
-						<td>Date of initial contact (waiting list)</td>
-						<td><input type="text" name="initialContactDate" id="initialContactDate" value="<%=CdsForm4.getDateAsISOString(cdsClientForm.getInitialContactDate())%>" size="10"> <img src="<%=request.getContextPath()%>/images/cal.gif" id="initialContactDate_cal"></td>
+						<td>Date of initial contact (FC Referral Date)</td>
+						<td><input type="text" name="initialContactDate" id="initialContactDate" class="{validate: {required:true}}" value="<%=CdsForm4.getDateAsISOString(cdsClientForm.getInitialContactDate())%>" size="10"> <img src="<%=request.getContextPath()%>/images/cal.gif" id="initialContactDate_cal"></td>
 					</tr>
 					<tr>
-						<td>Date of assessment / interview</td>
-						<td><input type="text" name="assessmentDate" id="assessmentDate" value="<%=CdsForm4.getDateAsISOString(cdsClientForm.getAssessmentDate())%>" size="10"> <img src="<%=request.getContextPath()%>/images/cal.gif" id="assessmentDate_cal"></td>
+						<td>Date of assessment interview (FC Admission Date)</td>
+						<td><input type="text" name="assessmentDate" id="assessmentDate" class="{validate: {required:true}}" value="<%=CdsForm4.getDateAsISOString(cdsClientForm.getAssessmentDate())%>" size="10"> <img src="<%=request.getContextPath()%>/images/cal.gif" id="assessmentDate_cal"></td>
+					</tr>
+					<tr>
+						<td>Service Initiation Date</td>
+						<td><input type="text" name="serviceInitiationDate" id="serviceInitiationDate" class="{validate: {required:true}}" value="<%=CdsForm4.getDateAsISOString(cdsClientForm.getServiceInitiationDate())%>" size="10"> <img src="<%=request.getContextPath()%>/images/cal.gif" id="serviceInitiationDate_cal"></td>
 					</tr>
 				</table>
 				
 				<script type="text/javascript">
 					Calendar.setup({ inputField : "initialContactDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "initialContactDate_cal", singleClick : true, step : 1 });
 					Calendar.setup({ inputField : "assessmentDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "assessmentDate_cal", singleClick : true, step : 1 });
+					Calendar.setup({ inputField : "serviceInitiationDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "serviceInitiationDate_cal", singleClick : true, step : 1 });
 				</script>			
 			</td>
 		</tr>
+	-->
 		<tr>
 			<td class="genericTableHeader">8. Gender</td>
 			<td class="genericTableData">
@@ -115,13 +286,13 @@ CDS form (CDS-MH v4.05)
 		<tr>
 			<td class="genericTableHeader">10. Service Recipient Location</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "serviceRecipientLocation", CdsForm4.getCdsFormOptions("010"))%>
+				<%=CdsForm4.renderSelectQuestion(false, false, true, printOnly, cdsClientForm.getId(), "serviceRecipientLocation", CdsForm4.getCdsFormOptions("010"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">10a. Service Recipient LHIN</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "serviceRecipientLhin", CdsForm4.getCdsFormOptions("10a"))%>
+				<%=CdsForm4.renderSelectQuestion(false,false, true, printOnly, cdsClientForm.getId(), "serviceRecipientLhin", CdsForm4.getCdsFormOptions("10a"), "class=\"{validate: {required:true}}\" " )%>
 			</td>
 		</tr>
 		<tr>
@@ -139,13 +310,13 @@ CDS form (CDS-MH v4.05)
 		<tr>
 			<td class="genericTableHeader">13. Baseline Legal status</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(true, false, printOnly, cdsClientForm.getId(), "baselineLegalStatus", CdsForm4.getCdsFormOptions("013"))%>
+				<%=CdsForm4.renderSelectQuestion(disabledStr, false, true, printOnly, cdsClientForm.getId(), "baselineLegalStatus", CdsForm4.getCdsFormOptions("013"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">14. Current Legal status</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(true, false, printOnly, cdsClientForm.getId(), "currentLegalStatus", CdsForm4.getCdsFormOptions("014"))%>
+				<%=CdsForm4.renderSelectQuestion(false,false, true, printOnly, cdsClientForm.getId(), "currentLegalStatus", CdsForm4.getCdsFormOptions("014"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
@@ -157,7 +328,7 @@ CDS form (CDS-MH v4.05)
 		<tr>
 			<td class="genericTableHeader">16. Diagnostic Categories</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "diagnosticCategories", CdsForm4.getCdsFormOptions("016"))%>
+				<%=CdsForm4.renderSelectQuestion(false,false, true, printOnly, cdsClientForm.getId(), "diagnosticCategories", CdsForm4.getCdsFormOptions("016"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
@@ -169,19 +340,19 @@ CDS form (CDS-MH v4.05)
 		<tr>
 			<td class="genericTableHeader">17. Presenting Issues (to be) Addressed</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(true, false, printOnly, cdsClientForm.getId(), "presentingIssues", CdsForm4.getCdsFormOptions("017"))%>
+				<%=CdsForm4.renderSelectQuestion(false,true, false, printOnly, cdsClientForm.getId(), "presentingIssues", CdsForm4.getCdsFormOptions("017"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">18. Source of Referral</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "sourceOfReferral", CdsForm4.getCdsFormOptions("018"))%>
+				<%=CdsForm4.renderSelectQuestion(false,false, true, printOnly, cdsClientForm.getId(), "sourceOfReferral", CdsForm4.getCdsFormOptions("018"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">19. Exit Disposition</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "exitDisposition", CdsForm4.getCdsFormOptions("019"))%>
+				<%=CdsForm4.renderSelectQuestion(false,false, true, printOnly, cdsClientForm.getId(), "exitDisposition", CdsForm4.getCdsFormOptions("019"),  "")%>
 			</td>
 		</tr>
 		<tr>
@@ -246,7 +417,7 @@ CDS form (CDS-MH v4.05)
 									var ajaxArgs =
 									{
 										method:'get',
-										parameters: {clientId : <%=currentDemographicId%>, preventCache: (new Date()).getMilliseconds()},
+										parameters: {clientId : <%=currentDemographicId%>, demographicId: <%=currentDemographicId%>, preventCache: (new Date()).getMilliseconds()},
 										onFailure: function(transport)
 										{
 											alert('Error retrieving hospital days : '+transport) 
@@ -268,7 +439,7 @@ CDS form (CDS-MH v4.05)
 								</tr>
 								<tr>
 									<td>Admission Date</td>
-									<td><input type="text" name="hospitalAdmission" id="hospitalAdmission" value="" size="10"> <img src="<%=request.getContextPath()%>/images/cal.gif" id="hospitalAdmission_cal"></td>
+									<td><input type="text" name="hospitalAdmission" id="hospitalAdmission"  value="" size="10"> <img src="<%=request.getContextPath()%>/images/cal.gif" id="hospitalAdmission_cal"></td>
 								</tr>
 								<tr>
 									<td>Discharge Date</td>
@@ -289,7 +460,7 @@ CDS form (CDS-MH v4.05)
 									var ajaxArgs =
 									{
 										method:'post',
-										parameters: {clientId : <%=currentDemographicId%>, hospitalAdmission: $(hospitalAdmission).value, hospitalDischarge : $(hospitalDischarge).value },
+										parameters: {clientId : <%=currentDemographicId%>, demographicId:<%=currentDemographicId%>, hospitalAdmission: $('hospitalAdmission').value, hospitalDischarge : $('hospitalDischarge').value },
 										asynchronous : false,
 										onSuccess: updateHospitalisedListDisplay,
 										onFailure: function(transport)
@@ -309,93 +480,94 @@ CDS form (CDS-MH v4.05)
 		<tr>
 			<td class="genericTableHeader">22. Baseline Living Arrangement</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "baselineLivingArrangement", CdsForm4.getCdsFormOptions("022"))%>
+				<%=CdsForm4.renderSelectQuestion(disabledStr, false, true, printOnly, cdsClientForm.getId(), "baselineLivingArrangement", CdsForm4.getCdsFormOptions("022"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">23. Current Living Arrangement</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "currentLivingArrangement", CdsForm4.getCdsFormOptions("023"))%>
+				<%=CdsForm4.renderSelectQuestion(false,false, true, printOnly, cdsClientForm.getId(), "currentLivingArrangement", CdsForm4.getCdsFormOptions("023"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">24. Baseline Residence Type</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "baselineResidenceType", CdsForm4.getCdsFormOptions("024"))%>
+				<%=CdsForm4.renderSelectQuestion(disabledStr, false, true, printOnly, cdsClientForm.getId(), "baselineResidenceType", CdsForm4.getCdsFormOptions("024"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">24a. Baseline Level of Residential Support</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "baselineResidentialSupport", CdsForm4.getCdsFormOptions("24a"))%>
+				<%=CdsForm4.renderSelectQuestion(disabledStr, false, true, printOnly, cdsClientForm.getId(), "baselineResidentialSupport", CdsForm4.getCdsFormOptions("24a"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">25. Current Residence Type</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "currentResidenceType", CdsForm4.getCdsFormOptions("025"))%>
+				<%=CdsForm4.renderSelectQuestion(false,false, true, printOnly, cdsClientForm.getId(), "currentResidenceType", CdsForm4.getCdsFormOptions("025"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">25a. Current Level of Residential Support</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "currentResidentialSupport", CdsForm4.getCdsFormOptions("25a"))%>
+				<%=CdsForm4.renderSelectQuestion(false,false, true, printOnly, cdsClientForm.getId(), "currentResidentialSupport", CdsForm4.getCdsFormOptions("25a"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">26. Baseline Employment Status</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "baselineEmploymentStatus", CdsForm4.getCdsFormOptions("026"))%>
+				<%=CdsForm4.renderSelectQuestion(disabledStr, false, true, printOnly, cdsClientForm.getId(), "baselineEmploymentStatus", CdsForm4.getCdsFormOptions("026"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">27.Current Employment Status</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "currentEmploymentStatus", CdsForm4.getCdsFormOptions("027"))%>
+				<%=CdsForm4.renderSelectQuestion(false,false, true, printOnly, cdsClientForm.getId(), "currentEmploymentStatus", CdsForm4.getCdsFormOptions("027"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">28. Baseline Educational Status</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "baselineEducationStatus", CdsForm4.getCdsFormOptions("028"))%>
+				<%=CdsForm4.renderSelectQuestion(disabledStr, false, true, printOnly, cdsClientForm.getId(), "baselineEducationStatus", CdsForm4.getCdsFormOptions("028"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">29. Current Educational Status</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "currentEducationStatus", CdsForm4.getCdsFormOptions("029"))%>
+				<%=CdsForm4.renderSelectQuestion(false,false, true, printOnly, cdsClientForm.getId(), "currentEducationStatus", CdsForm4.getCdsFormOptions("029"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">29a. Highest Level of Education</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "highestLevelEducation", CdsForm4.getCdsFormOptions("29a"))%>
+				<%=CdsForm4.renderSelectQuestion(false,false, true, printOnly, cdsClientForm.getId(), "highestLevelEducation", CdsForm4.getCdsFormOptions("29a"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">30. Baseline Primary Income Source</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "baselinePrimaryIncome", CdsForm4.getCdsFormOptions("030"))%>
+				<%=CdsForm4.renderSelectQuestion(disabledStr, false, true, printOnly, cdsClientForm.getId(), "baselinePrimaryIncome", CdsForm4.getCdsFormOptions("030"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr>
 			<td class="genericTableHeader">31. Current Primary Income Source</td>
 			<td class="genericTableData">
-				<%=CdsForm4.renderSelectQuestion(false, true, printOnly, cdsClientForm.getId(), "currentPrimaryIncome", CdsForm4.getCdsFormOptions("031"))%>
+				<%=CdsForm4.renderSelectQuestion(false, false, true, printOnly, cdsClientForm.getId(), "currentPrimaryIncome", CdsForm4.getCdsFormOptions("031"),  "class=\"{validate: {required:true}}\" ")%>
 			</td>
 		</tr>
 		<tr style="background-color:white">
 			<td colspan="2">
 				<br />
 				<input type="hidden" name="clientId" value="<%=currentDemographicId%>" />
-				Sign <input type="checkbox" name="signed" <%=printOnly&&cdsClientForm.isSigned()?"checked=\"checked\"":""%>/>
+				<input type="hidden" name="demographicId" value="<%=currentDemographicId%>" />
+				Sign <input type="checkbox" id="signed" name="signed" <%=printOnly || cdsClientForm.isSigned()?"checked=\"checked\"":""%>/>
 
 				<%
 					if (!printOnly)
 					{
 						%>
 							&nbsp;&nbsp;&nbsp;&nbsp;
-							<input type="submit" value="Save CDS Data" />
+							<input type="submit" name="submit" value="Save CDS Data" />
 						<%
 					}
 				%>

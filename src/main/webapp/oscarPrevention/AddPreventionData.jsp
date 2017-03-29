@@ -53,6 +53,7 @@ if(!authed) {
 %>
 
 <%
+  LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
   DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
       		
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
@@ -116,8 +117,8 @@ if(!authed) {
   
   String prevResultDesc = request.getParameter("prevResultDesc");
 
-  PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
-  HashMap<String,String> prevHash = pdc.getPrevention(prevention);
+  PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance(loggedInInfo);
+  HashMap<String,String> prevHash = pdc.getPrevention(loggedInInfo,prevention);
 
   String layoutType = prevHash.get("layout");
   if ( layoutType == null){
@@ -138,12 +139,12 @@ if(!authed) {
   }
   
   //calc age at time of prevention
-  Date dob = PreventionData.getDemographicDateOfBirth(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.valueOf(demographic_no));
+  Date dob = PreventionData.getDemographicDateOfBirth(loggedInInfo, Integer.valueOf(demographic_no));
   SimpleDateFormat fmt = new SimpleDateFormat(dateFmt);
   Date dateOfPrev = fmt.parse(prevDate);
   String age = UtilDateUtilities.calcAgeAtDate(dob, dateOfPrev);
   DemographicData demoData = new DemographicData();
-  String[] demoInfo = demoData.getNameAgeSexArray(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.valueOf(demographic_no));
+  String[] demoInfo = demoData.getNameAgeSexArray(loggedInInfo, Integer.valueOf(demographic_no));
   String nameage = demoInfo[0] + ", " + demoInfo[1] + " " + demoInfo[2] + " " + age;
 
   HashMap<String,String> genders = new HashMap<String,String>();
@@ -469,11 +470,17 @@ function displayCloseWarning(){
                             <label for="prevDate" class="fields" >Date:</label>    <input readonly='readonly' type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="15" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
                             <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName" value="<%=providerName%>"/>
                                   <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
-                                      <%for (int i=0; i < providers.size(); i++) {
-                                           Map<String,String> h = providers.get(i);%>
-                                        <option value="<%= h.get("providerNo")%>" <%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
+                                      <%
+										boolean provInList=false;
+										for (int i=0; i < providers.size(); i++) {
+                                           Map<String,String> h = providers.get(i);String sel = "";
+                                           if(h.get("providerNo").equals(provider)){
+											   sel = " selected";
+											   provInList=true;
+										   }%>
+                                        <option value="<%= h.get("providerNo")%>" <%= sel %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
                                       <%}%>
-                                      <option value="-1" <%= ( "-1".equals(provider) ? " selected" : "" ) %> >Other</option>
+                                      <option value="-1" <%= ( !provInList ? " selected" : "" ) %> >Other</option>
                                   </select>
                                   <br/>
                              <label for="creator" class="fields" >Creator:</label> <input type="text" name="creator" value="<%=creatorName%>" readonly/> <br/>
@@ -519,11 +526,17 @@ function displayCloseWarning(){
                             <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
                             <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName" value="<%=providerName%>"/>
                                   <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
-                                      <%for (int i=0; i < providers.size(); i++) {
-                                           Map<String,String> h = providers.get(i);%>
-                                        <option value="<%= h.get("providerNo")%>" <%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
+                                      <%
+										boolean provInList=false;
+										for (int i=0; i < providers.size(); i++) {
+                                           Map<String,String> h = providers.get(i);String sel = "";
+                                           if(h.get("providerNo").equals(provider)){
+											   sel = " selected";
+											   provInList=true;
+										   }%>
+                                        <option value="<%= h.get("providerNo")%>" <%= sel %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
                                       <%}%>
-                                      <option value="-1" <%= ( "-1".equals(provider) ? " selected" : "" ) %> >Other</option>
+                                      <option value="-1" <%= ( !provInList ? " selected" : "" ) %> >Other</option>
                                   </select>
                                   <br/>
                              <label for="creator" class="fields" >Creator:</label> <input type="text" name="creator" value="<%=creatorName%>" readonly/> <br/>
@@ -614,11 +627,17 @@ function displayCloseWarning(){
                             <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
                             <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName"/>
                                   <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
-                                      <%for (int i=0; i < providers.size(); i++) {
-                                           Map<String,String> h = providers.get(i);%>
-                                        <option value="<%= h.get("providerNo")%>" <%= ( h.get("providerNo").equals(provider) ? " selected" : "" ) %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
+                                      <%
+										boolean provInList=false;
+										for (int i=0; i < providers.size(); i++) {
+                                           Map<String,String> h = providers.get(i);String sel = "";
+                                           if(h.get("providerNo").equals(provider)){
+											   sel = " selected";
+											   provInList=true;
+										   }%>
+                                        <option value="<%= h.get("providerNo")%>" <%= sel %>><%= h.get("lastName") %> <%= h.get("firstName") %></option>
                                       <%}%>
-                                      <option value="-1" >Other</option>
+                                      <option value="-1" <%= ( !provInList ? " selected" : "" ) %> >Other</option>
                                   </select>
                                   <br/>
                                   <label for="creator" class="fields" >Creator:</label> <input type="text" name="creator" value="<%=creatorName%>" readonly/> <br/>

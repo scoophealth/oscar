@@ -62,10 +62,13 @@
 <%@page import="org.oscarehr.common.model.Provider" %>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%@page import="org.oscarehr.common.model.Security" %>
-<%@page import="org.oscarehr.common.dao.SecurityDao" %>
+<%@ page import="org.oscarehr.util.LoggedInInfo" %>
+<%@ page import="org.oscarehr.managers.SecurityManager" %>
 <%
+	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+	org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
+
 	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
-	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
 	
 	OscarProperties op = OscarProperties.getInstance();
 %>
@@ -227,8 +230,8 @@
 	List<Map<String,Object>> resultList ;
     if (isSiteAccessPrivacy) {
     	for(Provider p : providerDao.getActiveProviders()) {
-    		List<Security> s = securityDao.findByProviderNo(p.getProviderNo());
-    		if(s.size() > 0) {
+    		Security s = securityManager.findByProviderNo(loggedInInfo, p.getProviderNo());
+    		if(s != null) {
     			%>
     			<option value="<%=p.getProviderNo()%>"><%=p.getFormattedName()%></option>    			
     			<%

@@ -42,7 +42,6 @@ import org.oscarehr.ws.rest.to.InboxResponse;
 import org.oscarehr.ws.rest.to.model.InboxTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import oscar.oscarLab.ca.on.LabResultData;
 
 @Path("/inbox")
@@ -75,7 +74,7 @@ public class InboxService extends AbstractServiceImpl {
 		
 		InboxManagerResponse response = inboxManager.getInboxResults(loggedInInfo, query);
 		
-		List<LabResultData> labDocs = response.getLabdocs();
+		List<LabResultData> labDocs = response.getLabdocs();		
 		List<InboxTo1> responseItems = new ArrayList<InboxTo1>();
 	
 		for(LabResultData result:labDocs) {
@@ -115,6 +114,7 @@ public class InboxService extends AbstractServiceImpl {
 	
 	@GET
 	@Path("/mine/count")
+	@Produces("application/json")
 	public int getMyUnacknowlegedReportsCount() {
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
 		String providerNo=loggedInInfo.getLoggedInProviderNo();

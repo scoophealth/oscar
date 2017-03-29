@@ -38,6 +38,7 @@
 	}
 %>
 
+<%@page import="org.oscarehr.managers.DemographicManager"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="java.sql.*, java.util.*, java.net.URLEncoder, oscar.oscarDB.*, oscar.MyDateFormat, oscar.oscarWaitingList.WaitingList, org.oscarehr.common.OtherIdManager" errorPage="errorpage.jsp"%>
 <%@ page import="oscar.log.*"%>
@@ -67,10 +68,14 @@
 <%@page import="org.oscarehr.common.dao.DemographicExtArchiveDao" %>
 <%@page import="org.oscarehr.common.model.DemographicExtArchive" %>
 
+<%@page import="org.oscarehr.common.dao.DemographicContactDao"%>
+<%@page import="org.oscarehr.common.model.DemographicContact"%>
 <%@page import="org.oscarehr.managers.PatientConsentManager" %>
 <%@page import="org.oscarehr.common.model.Consent" %>
 <%@page import="org.oscarehr.common.model.ConsentType" %>
 <%@page import="oscar.OscarProperties" %>
+<%@page import="org.oscarehr.common.dao.DemographicSiteDao" %>
+<%@page import="org.oscarehr.common.model.DemographicSite" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -91,7 +96,7 @@
 	
 	DemographicExtArchiveDao demographicExtArchiveDao = SpringUtils.getBean(DemographicExtArchiveDao.class);
 	DemographicArchiveDao demographicArchiveDao = (DemographicArchiveDao)SpringUtils.getBean("demographicArchiveDao");
-		
+	DemographicContactDao demographicContactDao = SpringUtils.getBean(DemographicContactDao.class);
 %>
 
 <html:html locale="true">
@@ -248,19 +253,36 @@
     bufDoctorNo = new StringBuilder( StringUtils.trimToEmpty("provider_no") );
 
     demographicDao.save(demographic);
+  	//multiple site, update site
+	if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { 
+		 DemographicSiteDao demographicSiteDao = (DemographicSiteDao)SpringUtils.getBean("demographicSiteDao");
+		 DemographicSite ds = new DemographicSite();
+		 String[] sites = request.getParameterValues("sites");
+		 //demographicSiteDao.removeSitesByDemographicId(Integer.valueOf(demographic.getDemographicNo()));
+			
+		 if(sites!=null) {
+			int demoNo = demographic.getDemographicNo();
+			for (int i = 0; i < sites.length; i++) {				
+				DemographicSite demographicSite = new DemographicSite();
+				demographicSite.setDemographicId(Integer.valueOf(demoNo));
+				demographicSite.setSiteId(Integer.valueOf(sites[i]));
+				demographicSiteDao.persist(demographicSite);				
+			}
+		}
+	}
 
 
           GenericIntakeEditAction gieat = new GenericIntakeEditAction();
           gieat.setAdmissionManager(am);
           gieat.setProgramManager(pm);
           String bedP = request.getParameter("rps");
-          gieat.admitBedCommunityProgram(demographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),Integer.parseInt(bedP),"","",null);
+          gieat.admitBedCommunityProgram(loggedInInfo, demographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),Integer.parseInt(bedP),"","",new java.util.Date());
 
           String[] servP = request.getParameterValues("sp");
           if(servP!=null&&servP.length>0){
 	  Set<Integer> s = new HashSet<Integer>();
             for(String _s:servP) s.add(Integer.parseInt(_s));
-            gieat.admitServicePrograms(demographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),s,"",null);
+            gieat.admitServicePrograms(loggedInInfo, demographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),s,"", new java.util.Date(), null);
           }
         
 
@@ -298,6 +320,7 @@
 		}
 
        String proNo = (String) session.getValue("user");
+
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "hPhoneExt", request.getParameter("hPhoneExt"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "wPhoneExt", request.getParameter("wPhoneExt"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "demo_cell", request.getParameter("demo_cell"), "");
@@ -310,13 +333,31 @@
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "given_consent", request.getParameter("given_consent"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "rxInteractionWarningLevel", request.getParameter("rxInteractionWarningLevel"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "primaryEMR", request.getParameter("primaryEMR"), "");
-       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "aboriginal", request.getParameter("aboriginal"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "phoneComment", request.getParameter("phoneComment"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "usSigned", request.getParameter("usSigned"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "privacyConsent", request.getParameter("privacyConsent"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "informedConsent", request.getParameter("informedConsent"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "IPHISClientNumber", request.getParameter("IPHISClientNumber"),"");
+
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "PanoramaClientNumber", request.getParameter("PanoramaClientNumber"),"");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "IscisClientNumber", request.getParameter("IscisClientNumber"),"");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "OhissClientNumber", request.getParameter("OhissClientNumber"),"");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "EpiInfoClientNumber", request.getParameter("EpiInfoClientNumber"),"");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "HedgehogClientNumber", request.getParameter("HedgehogClientNumber"),"");
+
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "HasPrimaryCarePhysician", request.getParameter("HasPrimaryCarePhysician"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "EmploymentStatus", request.getParameter("EmploymentStatus"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "recipientLocation", request.getParameter("recipientLocation"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "lhinConsumerResides", request.getParameter("lhinConsumerResides"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "address2", request.getParameter("address2"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "middleName", request.getParameter("middleName"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "lastNameAtBirth", request.getParameter("lastNameAtBirth"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "preferredName", request.getParameter("preferredName"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "maritalStatus", request.getParameter("maritalStatus"), "");
+      
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "fNationFamilyNumber",    request.getParameter("fNationFamilyNumber"),    "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "fNationFamilyPosition",    request.getParameter("fNationFamilyPosition"),    "");
+
        //for the IBD clinic
 		OtherIdManager.saveIdDemographic(dem, "meditech_id", request.getParameter("meditech_id"));
 
@@ -384,6 +425,134 @@
 
         } //end of waitingl list
 
+        //enable_child_record
+        String strMaxChildRecords=request.getParameter("max_child_record");
+        
+        int maxChildRecords = 0;
+        try {
+        	maxChildRecords = Integer.parseInt(strMaxChildRecords);
+        }catch(NumberFormatException e) {
+        	//ignore
+        }
+        
+        for(int x=0;x<maxChildRecords+1;x++) {
+	        String childLastName = request.getParameter("child_last_name" +x);
+	        String childFirstName = request.getParameter("child_first_name"+x);
+	        String childGender = request.getParameter("child_gender"+x);
+	        String childDateOfBirth = request.getParameter("child_dob"+x);
+	        
+	        if(!StringUtils.isEmpty(childLastName) && !StringUtils.isEmpty(childFirstName) && !StringUtils.isEmpty(childGender) && !StringUtils.isEmpty(childDateOfBirth)) {
+	        	Demographic childDemographic = new Demographic();
+	        	childDemographic.setLastName(childLastName);
+	        	childDemographic.setFirstName(childFirstName);
+	        	childDemographic.setSex(childGender);
+	        	if(childDateOfBirth.split("-").length==3) {
+	        		String[] dateParts = childDateOfBirth.split("-");
+	        		childDemographic.setYearOfBirth(dateParts[0]);
+	        		childDemographic.setMonthOfBirth(dateParts[1]);
+	        		childDemographic.setDateOfBirth(dateParts[2]);
+	        	}
+	        	childDemographic.setTitle("");
+	        	childDemographic.setAddress("");
+	        	childDemographic.setCity("");
+	        	childDemographic.setProvince("");
+	        	childDemographic.setPostal("");
+	        	childDemographic.setPhone("");
+	        	childDemographic.setPhone2("");
+	        	childDemographic.setEmail("");
+	        	childDemographic.setHin("");
+	        	childDemographic.setVer("");
+	        	childDemographic.setPatientStatus("AC");
+	        	childDemographic.setPatientStatusDate(new java.util.Date());
+	        	childDemographic.setDateJoined(new java.util.Date());
+	        	childDemographic.setChartNo("");
+	        	childDemographic.setSpokenLanguage("");
+	        	childDemographic.setRosterStatus("");
+	        	childDemographic.setProviderNo("");
+	        	childDemographic.setHcType(demographic.getHcType());
+	        	childDemographic.setFamilyDoctor("<rdohip></rdohip><rd></rd>");
+	        	childDemographic.setSin("");
+	        	childDemographic.setCountryOfOrigin("-1");
+	        	childDemographic.setNewsletter("Unknown");
+	        	childDemographic.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
+	        	
+	        	demographicDao.save(childDemographic);
+	        	
+	        	
+	        	//setup relationship
+	        	DemographicContact dc1 = new DemographicContact();
+	       		dc1.setActive(true);
+	       		dc1.setCategory("personal");
+	       		dc1.setConsentToContact(true);
+	       		dc1.setCreated(new java.util.Date());
+	       		dc1.setCreator(loggedInInfo.getLoggedInProviderNo());
+	       		dc1.setEc("");
+	       		dc1.setFacilityId(loggedInInfo.getCurrentFacility().getId());
+	       		dc1.setNote("");
+	       		dc1.setSdm("");
+	       		dc1.setType(1);
+	       		
+	       		dc1.setDemographicNo(demographic.getDemographicNo());
+	       		dc1.setContactId(childDemographic.getDemographicNo().toString());
+	       		
+	       		if(childDemographic.getSex().equalsIgnoreCase("M")) {
+	       			dc1.setRole("Son");
+	       		}else if(childDemographic.getSex().equalsIgnoreCase("F")) {
+	       			dc1.setRole("Daughter");
+	       		} else {
+	       			dc1.setRole("Child");
+	       		}
+	       		
+	       		dc1.setUpdateDate(new java.util.Date());
+	       		demographicContactDao.persist(dc1);
+	       		
+	       		DemographicContact dc2 = new DemographicContact();
+	       		dc2.setActive(true);
+	       		dc2.setCategory("personal");
+	       		dc2.setConsentToContact(true);
+	       		dc2.setCreated(new java.util.Date());
+	       		dc2.setCreator(loggedInInfo.getLoggedInProviderNo());
+	       		dc2.setEc("");
+	       		dc2.setFacilityId(loggedInInfo.getCurrentFacility().getId());
+	       		dc2.setNote("");
+	       		dc2.setSdm("");
+	       		dc2.setType(1);
+	       		
+	       		dc2.setDemographicNo(childDemographic.getDemographicNo());
+	       		dc2.setContactId(demographic.getDemographicNo().toString());
+	       		
+	       		if(demographic.getSex().equalsIgnoreCase("M")) {
+	       			dc2.setRole("Father");
+	       		}else if(demographic.getSex().equalsIgnoreCase("F")) {
+	       			dc2.setRole("Mother");
+	       		} else {
+	       			dc2.setRole("Parent");
+	       		}
+	       		
+	       		dc2.setUpdateDate(new java.util.Date());
+	       		demographicContactDao.persist(dc2);
+	       	
+	       		//admit the child in same programs as the parent
+	            gieat = new GenericIntakeEditAction();
+	            gieat.setAdmissionManager(am);
+	            gieat.setProgramManager(pm);
+	            gieat.admitBedCommunityProgram(loggedInInfo, childDemographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),Integer.parseInt(bedP),"","",new java.util.Date());
+	
+	    
+	            if(servP!=null&&servP.length>0){
+	  	  		  Set<Integer> s = new HashSet<Integer>();
+	              for(String _s:servP) s.add(Integer.parseInt(_s));
+	              gieat.admitServicePrograms(loggedInInfo, childDemographic.getDemographicNo(),loggedInInfo.getLoggedInProviderNo(),s,"",new java.util.Date(), loggedInInfo.getCurrentFacility().getId());
+	            }
+	          
+	            LogAction.addLog(curUser_no, "add", "demographic", childDemographic.getDemographicNo().toString(), ip, childDemographic.getDemographicNo().toString());
+	
+	        }
+	       		
+        }
+        //end of enable_child_record
+        
+        
         //if(request.getParameter("fromAppt")!=null && request.getParameter("provider_no").equals("1")) {
         if(start_time2!=null && !start_time2.equals("null")) {
 	%>

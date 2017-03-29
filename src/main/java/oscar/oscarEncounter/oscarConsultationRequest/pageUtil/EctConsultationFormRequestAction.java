@@ -51,6 +51,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.IsPropertiesOn;
 import org.oscarehr.common.dao.ClinicDAO;
+import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.ConsultationRequestExtDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
@@ -60,6 +61,7 @@ import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01.ObservationData;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.RefI12;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
 import org.oscarehr.common.model.Clinic;
+import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.ConsultationRequestExt;
 import org.oscarehr.common.model.Demographic;
@@ -75,6 +77,11 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WebUtils;
 
+import com.lowagie.text.DocumentException;
+
+import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.v26.message.ORU_R01;
+import ca.uhn.hl7v2.model.v26.message.REF_I12;
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
@@ -82,16 +89,13 @@ import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.ParameterActionForward;
-import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.v26.message.ORU_R01;
-import ca.uhn.hl7v2.model.v26.message.REF_I12;
-
-import com.lowagie.text.DocumentException;
 
 public class EctConsultationFormRequestAction extends Action {
 
 	private static final Logger logger=MiscUtils.getLogger();
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	private ConsultDocsDao consultDocsDao = (ConsultDocsDao)SpringUtils.getBean("consultDocsDao");
+	
 	
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -229,6 +233,8 @@ public class EctConsultationFormRequestAction extends Action {
 									if (docs[idx].length() > 0) {
 										if (docs[idx].charAt(0) == 'D') EDocUtil.attachDocConsult(providerNo, docs[idx].substring(1), requestId);
 										else if (docs[idx].charAt(0) == 'L') ConsultationAttachLabs.attachLabConsult(providerNo, docs[idx].substring(1), requestId);
+										else if (docs[idx].charAt(0) == 'H') consultDocsDao.attachDocConsult(providerNo, docs[idx].substring(1), requestId, ConsultDocs.DOCTYPE_HRM);
+
 									}
 								}
 			}

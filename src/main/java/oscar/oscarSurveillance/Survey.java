@@ -68,10 +68,10 @@ public class Survey {
 	private Hashtable answerTable = null;
 	String surveyStatus = "";
 
-	public static String DEFFERED = "D";
-	public static String NOTSELECTED = "P";
-	public static String ANSWERED = "A";
-	public static String DOESNOTMEETCRITERIA = "C";
+	public static final String DEFFERED = "D";
+	public static final String NOTSELECTED = "P";
+	public static final String ANSWERED = "A";
+	public static final String DOESNOTMEETCRITERIA = "C";
 	Random random = null;
 
 	/** Creates a new instance of Survey */

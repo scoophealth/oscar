@@ -60,6 +60,34 @@ public class TagObject {
     public void setObjectClass(String objectClass) {
         this.objectClass = objectClass;
     }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((assignedTags == null) ? 0 : assignedTags.hashCode());
+		result = prime * result + ((objectClass == null) ? 0 : objectClass.hashCode());
+		result = prime * result + ((objectId == null) ? 0 : objectId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		TagObject other = (TagObject) obj;
+		if (assignedTags == null) {
+			if (other.assignedTags != null) return false;
+		} else if (!assignedTags.equals(other.assignedTags)) return false;
+		if (objectClass == null) {
+			if (other.objectClass != null) return false;
+		} else if (!objectClass.equals(other.objectClass)) return false;
+		if (objectId == null) {
+			if (other.objectId != null) return false;
+		} else if (!objectId.equals(other.objectId)) return false;
+		return true;
+	}
     
     
     

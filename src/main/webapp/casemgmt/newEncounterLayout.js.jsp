@@ -120,21 +120,20 @@ function displayEaapsWindow(url, notificationId, message) {
 		}, 500
 	);
 }
-
-//////Timer
+	//////Timer for classic encounter
+	
         var d = new Date();  //the start
-
         var totalSeconds = 0;
         var myVar = setInterval(setTime, 1000);
-	var toggle = true;
+        var toggle = true;
 
 	function toggleATimer(){
  	    if (toggle) {
-			document.getElementById("toggleTimer").innerHTML="&gt;";
+			document.getElementById("toggleTimer").innerHTML="&gt;"; // >
 			clearInterval(myVar);
 			toggle=false;
 		} else {
-			document.getElementById("toggleTimer").innerHTML="&#8741;";
+			document.getElementById("toggleTimer").innerHTML="&#8741;";  // ||
 			myVar = setInterval(setTime, 1000);
 			toggle=true;
 		}
@@ -162,5 +161,4 @@ function displayEaapsWindow(url, notificationId, message) {
                 return valString;
             }
         }
-	
 	

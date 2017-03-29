@@ -110,6 +110,16 @@
 		<put name="navigation" value="/PMmodule/navigation.jsp" />
 		<put name="body" value="/PMmodule/Admin/Facility/ViewFacility.jsp" />
 	</definition>
+	<definition name="page.pmm.admin.functionalCentre.list" path="/PMmodule/layout.jsp">
+		<put name="header" value="/PMModule/Header.jsp" />
+		<put name="navigation" value="/PMmodule/navigation.jsp" />
+		<put name="body" value="/PMmodule/Admin/FunctionalCentre/ListFunctionalCentre.jsp" />
+	</definition>
+	<definition name="page.pmm.admin.functionalCentre.edit" path="/PMmodule/layout.jsp">
+		<put name="navigation" value="/PMmodule/navigation.jsp" />
+		<put name="body" value="/PMmodule/Admin/FunctionalCentre/EditFunctionalCentre.jsp" />
+	</definition>
+	
 	<definition name="page.pmm.client.searchform" path="/PMmodule/layout.jsp">
 		<put name="navigation" value="/PMmodule/navigation.jsp" />
 		<put name="body" value="/demographic/search.jsp" />

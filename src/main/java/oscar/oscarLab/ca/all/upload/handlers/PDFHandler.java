@@ -48,7 +48,7 @@ import oscar.log.LogConst;
  * @author mweston4
  */
 public class PDFHandler  implements MessageHandler{
-    protected static Logger logger = Logger.getLogger(PDFHandler.class);
+    private Logger logger = Logger.getLogger(PDFHandler.class);
     
     @Override
     public String parse(LoggedInInfo loggedInInfo, String serviceName, String fileName, int fileId, String ipAddr) {
@@ -112,7 +112,7 @@ public class PDFHandler  implements MessageHandler{
                 }                
             } catch (IOException e1) {
                 logger.info("An unexpected error has occurred:" + e1.toString());
-                return null;
+               
             }
         }			      	              
 		

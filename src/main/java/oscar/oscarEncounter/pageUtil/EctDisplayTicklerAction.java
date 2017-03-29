@@ -92,7 +92,8 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     for(Tickler t : ticklers) {
         NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
         serviceDate = t.getServiceDate();
-        priority = t.getPriorityWeb().toUpperCase();
+        priority = t.getPriorityWeb().toUpperCase( );
+
         item.setDate(serviceDate);
         days = (today.getTime() - serviceDate.getTime())/(1000*60*60*24);
         if( days > 0 )

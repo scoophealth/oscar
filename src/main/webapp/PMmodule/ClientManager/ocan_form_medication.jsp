@@ -22,6 +22,21 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_form" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_form");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
+%>
+
 <%@page import="org.oscarehr.common.model.OcanStaffForm"%>
 <%@page import="org.oscarehr.common.model.Admission"%>
 <%@page import="org.oscarehr.common.model.Demographic"%>

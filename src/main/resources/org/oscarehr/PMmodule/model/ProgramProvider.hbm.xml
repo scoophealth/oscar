@@ -40,5 +40,9 @@
 			column="provider_no" update="false" insert="false" lazy="false" />
 		<many-to-one name="program" class="org.oscarehr.PMmodule.model.Program"
 			column="program_id" update="false" insert="false" lazy="false" />
+		<property column="lastUpdateUser" length="255" name="LastUpdateUser"
+			not-null="false" type="java.lang.String" />
+		<property column="lastUpdateDate" length="11" name="LastUpdateDate"
+			not-null="false" type="java.util.Date" />
 	</class>
 </hibernate-mapping>

@@ -80,4 +80,13 @@ public class PreventionExtDao extends AbstractDao<PreventionExt> {
 
 		return results;
 	}
+	
+	public int updateKeyValue(int preventionId, String keyval, String val) {
+		Query q = entityManager.createQuery("update PreventionExt set val=?1 where preventionId =?2 and keyval=?3");
+		q.setParameter(1, val);
+		q.setParameter(2, preventionId);
+		q.setParameter(3, keyval);
+		
+		return q.executeUpdate();
+	}
 }

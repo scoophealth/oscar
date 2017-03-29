@@ -47,11 +47,8 @@
 <%@ page import="oscar.log.LogAction,oscar.log.LogConst"%>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Security" %>
-<%@ page import="org.oscarehr.common.dao.SecurityDao" %>
-<%
-	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
-%>
-<%@page import="org.oscarehr.util.MiscUtils"%><html:html locale="true">
+<%@page import="org.oscarehr.util.MiscUtils"%>
+<html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title><bean:message key="admin.securityaddsecurity.title" /></title>

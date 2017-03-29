@@ -45,6 +45,7 @@
 	<bean name="/PMmodule/VacancyClientMatch" class="org.oscarehr.PMmodule.web.VacancyClientMatchAction" singleton="false" autowire="byName"/>
 	<bean name="/PMmodule/AgencyManager" class="org.oscarehr.PMmodule.web.admin.AgencyManagerAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/FacilityManager" class="org.oscarehr.PMmodule.web.admin.FacilityManagerAction" singleton="false" autowire="byName" />
+	<bean name="/PMmodule/FunctionalCentreManager" class="org.oscarehr.PMmodule.web.admin.FunctionalCentreManagerAction" singleton="false" autowire="byName" />
 	<bean name="/FacilityManager" class="oscar.facility.FacilityManagerAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/BedManager" class="org.oscarehr.PMmodule.web.admin.BedManagerAction" singleton="false" autowire="byName" />
 	<bean name="/PMmodule/ProviderSearch" class="org.oscarehr.PMmodule.web.ProviderSearchAction" singleton="false" autowire="byName" />

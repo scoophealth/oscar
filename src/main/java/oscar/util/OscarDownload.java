@@ -32,7 +32,7 @@ import javax.servlet.http.HttpSession;
 
 public class OscarDownload extends GenericDownload  {
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		HttpSession session = req.getSession(true);
+		HttpSession session = req.getSession();
 		String filename = req.getParameter("filename") != null ? req.getParameter("filename") : "null";
 		String homepath = req.getParameter("homepath") != null ? req.getParameter("homepath") : "null";
 		

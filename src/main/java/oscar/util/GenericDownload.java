@@ -47,7 +47,7 @@ public class GenericDownload extends HttpServlet {
     public GenericDownload() {}
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        HttpSession session = req.getSession(true);
+        HttpSession session = req.getSession();
 
         OscarProperties oscarProps = OscarProperties.getInstance();
 

@@ -127,7 +127,11 @@ public class MeasurementDSHelper {
         try{
            ret = Double.parseDouble(mdb.getDataField());
         }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
+        	if(mdb.getType()!=null){
+        		MiscUtils.getLogger().error("Error for measurement type: " + mdb.getType(), e);
+        	}else{
+        		MiscUtils.getLogger().error("Error", e);
+        	}            
             problem =true;
         }  
         log.debug("DOUBLE val : "+ret);

@@ -17,6 +17,22 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+      String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+      boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_report,_admin.reporting,_admin" rights="r" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_report&type=_admin.reporting&type=_admin");%>
+</security:oscarSec>
+<%
+if(!authed) {
+	return;
+}
+%>
+
 <%    
 
 if(((String)session.getAttribute("userrole")).indexOf("admin") >=0 ||
@@ -57,28 +73,7 @@ String xml_appointment_date = request.getParameter("xml_appointment_date")==null
 <title>Billing Report</title>
 <link rel="stylesheet" href="../web.css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
-<script language="JavaScript">
-<!--
 
-function selectprovider(s) {
-  if(self.location.href.lastIndexOf("&providerview=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&providerview="));
-  else a = self.location.href;
-	self.location.href = a + "&providerview=" +s.options[s.selectedIndex].value ;
-}
-function openBrWindow(theURL,winName,features) { //v2.0
-  window.open(theURL,winName,features);
-}
-
-function refresh() {
-  var u = self.location.href;
-  if(u.lastIndexOf("view=1") > 0) {
-    self.location.href = u.substring(0,u.lastIndexOf("view=1")) + "view=0" + u.substring(eval(u.lastIndexOf("view=1")+6));
-  } else {
-    history.go(0);
-  }
-}
-//-->
-</script>
 
 
 </head>

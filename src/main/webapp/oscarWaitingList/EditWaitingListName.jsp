@@ -19,9 +19,7 @@
 --%>
 <%@page import="org.oscarehr.util.SessionConstants"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
-<%
-    if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
-%>
+
 <%@ page
 	import="java.util.*,oscar.util.*, org.apache.struts.action.*, oscar.oscarWaitingList.bean.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>

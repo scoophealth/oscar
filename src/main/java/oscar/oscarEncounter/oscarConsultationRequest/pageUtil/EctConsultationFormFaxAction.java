@@ -215,7 +215,6 @@ public class EctConsultationFormFaxAction extends Action {
 				String tempPath = OscarProperties.getInstance().getProperty(
 					"fax_file_location", System.getProperty("java.io.tmpdir"));
                 String faxClinicId = OscarProperties.getInstance().getProperty("fax_clinic_id","");
-
 				
 				PdfReader pdfReader = new PdfReader(faxPdf);
 				int numPages = pdfReader.getNumberOfPages();
@@ -231,7 +230,6 @@ public class EctConsultationFormFaxAction extends Action {
 				for (int i = 0; i < recipients.size(); i++) {					
 				    String faxNo = recipients.get(i).replaceAll("\\D", "");
 				    if (faxNo.length() < 7) { throw new DocumentException("Document target fax number '"+faxNo+"' is invalid."); }
-				
 				    String tempName = "CRF-" + faxClinicId + reqId + "." + System.currentTimeMillis();
 					
 					String tempPdf = String.format("%s%s%s.pdf", tempPath, File.separator, tempName);
@@ -256,7 +254,6 @@ public class EctConsultationFormFaxAction extends Action {
 					if (!new File(tempPdf).exists() || !new File(tempTxt).exists()) {
 						throw new DocumentException("Unable to create files for fax of consultation request " + reqId + ".");
 					}
-					
 				    validFaxNumber = false;
 				    
 				    faxJob = new FaxJob();

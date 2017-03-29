@@ -30,6 +30,7 @@ import java.util.Vector;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.billing.CA.ON.dao.BillingONDiskNameDao;
 import org.oscarehr.billing.CA.ON.dao.BillingONFilenameDao;
 import org.oscarehr.billing.CA.ON.dao.BillingONHeaderDao;
@@ -52,6 +53,8 @@ import org.oscarehr.common.model.BillingONRepo;
 import org.oscarehr.common.model.BillingOnItemPayment;
 import org.oscarehr.common.model.BillingOnTransaction;
 import org.oscarehr.common.model.BillingPaymentType;
+import org.oscarehr.managers.ProgramManager2;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -66,7 +69,7 @@ public class JdbcBillingClaimImpl {
 	private BillingONDiskNameDao diskNameDao = SpringUtils.getBean(BillingONDiskNameDao.class);
 	private BillingONFilenameDao filenameDao = SpringUtils.getBean(BillingONFilenameDao.class);
 	private BillingONRepoDao repoDao = SpringUtils.getBean(BillingONRepoDao.class);
-
+	private ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
 	
 
 	SimpleDateFormat dateformatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -101,7 +104,7 @@ public class JdbcBillingClaimImpl {
 		return b.getId();
 	}
 
-	public int addOneClaimHeaderRecord(BillingClaimHeader1Data val) {
+	public int addOneClaimHeaderRecord(LoggedInInfo loggedInInfo, BillingClaimHeader1Data val) {
 		BillingONCHeader1 b = new BillingONCHeader1();
 		b.setHeaderId(0);
 		b.setTranscId(val.transc_id);
@@ -163,6 +166,79 @@ public class JdbcBillingClaimImpl {
 		b.setCreator(val.creator);
 		b.setClinic(val.clinic);
 		
+		ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+		
+		if(pp != null) {
+			b.setProgramNo(pp.getProgramId().intValue());
+		}
+		
+		cheaderDao.persist(b);
+		
+		return b.getId();
+	}
+	
+	public int addOneClaimHeaderRecord(BillingClaimHeader1Data val) {
+		BillingONCHeader1 b = new BillingONCHeader1();
+		b.setHeaderId(0);
+		b.setTranscId(val.transc_id);
+		b.setRecId(val.rec_id);
+		b.setHin(val.hin);
+		b.setVer(val.ver);
+		b.setDob(val.dob);
+		b.setPayProgram(val.pay_program);
+		b.setPayee(val.payee);
+		b.setRefNum(val.ref_num);
+		b.setFaciltyNum(val.facilty_num);
+		if(val.admission_date.length()>0)
+			try{
+				b.setAdmissionDate(dateformatter.parse(val.admission_date));
+			}catch(ParseException e){/*empty*/}
+		
+		b.setRefLabNum(val.ref_lab_num);
+		b.setManReview(val.man_review);
+		b.setLocation(val.location);
+		b.setDemographicNo(Integer.parseInt(val.demographic_no));
+		b.setProviderNo(val.provider_no);
+		String apptNo = StringUtils.trimToNull(val.appointment_no);
+		
+		if( apptNo != null ) {
+			b.setAppointmentNo(Integer.parseInt(val.appointment_no));
+		}
+		else {
+			b.setAppointmentNo(null);
+		}
+		
+		b.setDemographicName(val.demographic_name);
+		b.setSex(val.sex);
+		b.setProvince(val.province);
+		if(val.billing_date.length()>0)
+			try {
+				b.setBillingDate(dateformatter.parse(val.billing_date));
+			}catch(ParseException e){/*empty*/}
+		if(val.billing_time.length()>0)
+			try {
+				b.setBillingTime(timeFormatter.parse(val.billing_time));
+			}catch(ParseException e){MiscUtils.getLogger().error("Invalid time", e);}
+
+		
+		b.setTotal(new BigDecimal(val.total==null?"0.00":val.total));
+				
+		if(val.paid == null || val.paid.isEmpty()){
+			b.setPaid(new BigDecimal("0.00"));
+		}else{
+			b.setPaid(new BigDecimal(val.paid));
+		}
+		
+		b.setStatus(val.status);
+		b.setComment(val.comment);
+		b.setVisitType(val.visittype);
+		b.setProviderOhipNo(val.provider_ohip_no);
+		b.setProviderRmaNo(val.provider_rma_no);
+		b.setApptProviderNo(val.apptProvider_no);
+		b.setAsstProviderNo(val.asstProvider_no);
+		b.setCreator(val.creator);
+		b.setClinic(val.clinic);
+		
 		cheaderDao.persist(b);
 		
 		return b.getId();
@@ -196,10 +272,10 @@ public class JdbcBillingClaimImpl {
 		return retval;
 	}
 
-	public boolean addItemPaymentRecord(List lVal, int id, int paymentId, int paymentType) {
+	public boolean addItemPaymentRecord(List lVal, int id, int paymentId, int paymentType, Date paymentDate) {
 		int retval = 0;
 		BillingOnItemPayment billOnItemPayment = null;
-		Timestamp ts = new Timestamp(new Date().getTime());
+		Timestamp ts = new Timestamp(paymentDate.getTime());
 		BillingOnItemPaymentDao billOnItemPaymentDao = (BillingOnItemPaymentDao)SpringUtils.getBean(BillingOnItemPaymentDao.class);
 		for (int i = 0; i < lVal.size(); i++) {
 			BillingItemData val = (BillingItemData) lVal.get(i);
@@ -394,6 +470,18 @@ public class JdbcBillingClaimImpl {
 				_logger.error("add3rdBillExt wrong date format " + paymentDateParam);
 				return retval;
 	    	}
+			
+			//allow user to override with the text box added
+			String paymentDateOverride = mVal.get("payment_date");
+			if(paymentDateOverride != null && paymentDateOverride.length()>0) {
+				try {
+		    		paymentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(paymentDateOverride + " 00:00:00");
+		    	} catch(ParseException ex) {
+					_logger.error("add3rdBillExt wrong date format " + paymentDateOverride);
+					return retval;
+		    	}
+			}
+			
 	    	if(paymentTypeParam==null || paymentTypeParam.equals("")) {
 	    		paymentTypeParam="1";
 	    	}
@@ -413,7 +501,7 @@ public class JdbcBillingClaimImpl {
 		    	
 		    	//payment.setBillingPaymentType(type);
 		    	billingONPaymentDao.persist(payment);
-		    	addItemPaymentRecord((List) vecObj.get(1), id , payment.getId(), Integer.parseInt(paymentTypeParam));
+		    	addItemPaymentRecord((List) vecObj.get(1), id , payment.getId(), Integer.parseInt(paymentTypeParam), paymentDate);
 		    	addCreate3rdInvoiceTrans((BillingClaimHeader1Data) vecObj.get(0), (List<BillingItemData>)vecObj.get(1), payment);
 	    	}
         }

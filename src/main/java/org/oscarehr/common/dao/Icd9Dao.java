@@ -41,6 +41,32 @@ public class Icd9Dao extends AbstractCodeSystemDao<Icd9>{
 	public Icd9Dao() {
 		super(Icd9.class);
 	}
+	
+/*	public Icd9 findBySynonym(String synonym) {
+		
+		Query query = null;
+		Icd9Synonym icd9Synonym = null;
+		String dxCode = "";
+		String querySynonym = "SELECT x FROM Icd9Synonym WHERE x.patientFriendly LIKE ?1";
+		String queryIcd9 = "SELECT y FROM Icd9 y WHERE y.icd9 LIKE ?1";
+		
+		query = entityManager.createQuery( querySynonym );
+        query.setParameter(1, "%"+synonym+"%");
+        icd9Synonym = (Icd9Synonym) query.getSingleResult();
+        
+        if( icd9Synonym != null ) {
+        	dxCode = icd9Synonym.getDxCode();
+        }
+        
+        if( ! dxCode.isEmpty() ) {
+        	query = entityManager.createQuery( queryIcd9 );
+            query.setParameter(1, dxCode);
+        }
+        
+		Icd9 icd9 = (Icd9) query.getSingleResult();
+        
+        return icd9;
+	}*/
 
 	public List<Icd9> getIcd9Code(String icdCode){
 		Query query = entityManager.createQuery("select i from Icd9 i where i.icd9=?");

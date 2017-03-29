@@ -23,7 +23,7 @@
     Ontario, Canada
 
 */
-oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams,$state,demographicService,patientDetailStatusService,securityService,staticDataService,demo,user) {
+oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams,$state,$modal, demographicService,patientDetailStatusService,securityService,staticDataService,demo,user) {
 	console.log("details ctrl ", $stateParams, $state, demo);
 	
 	var page = {};
@@ -137,7 +137,12 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 			else if (demo.extras[i].key=="rxInteractionWarningLevel") demo.scrRxInteractionLevel = demo.extras[i].value;
 			else if (demo.extras[i].key=="HasPrimaryCarePhysician") demo.hasPrimaryCarePhysician = demo.extras[i].value;
 			else if (demo.extras[i].key=="EmploymentStatus") demo.employmentStatus = demo.extras[i].value;
-			
+			else if (demo.extras[i].key=="statusNum") demo.scrStatusNum = demo.extras[i].value;
+			else if (demo.extras[i].key=="fNationCom") demo.scrFNationCom = demo.extras[i].value; 
+			else if (demo.extras[i].key=="fNationFamilyNumber") demo.scrFNationFamilyNumber = demo.extras[i].value;
+			else if (demo.extras[i].key=="fNationFamilyPosition") demo.scrFNationFamilyPosition = demo.extras[i].value;
+			else if (demo.extras[i].key=="ethnicity") demo.scrEthnicity = demo.extras[i].value;
+
 			//record array position of extras by keys - to be used on saving
 			posExtras[demo.extras[i].key] = i;
 		}
@@ -864,7 +869,7 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		else if (func=="WaitingList") url="../oscarWaitingList/SetupDisplayPatientWaitingList.do?demographic_no="+demo.demographicNo;
 		window.open(url, "Appointment", "width=960, height=700");
 	}
-	
+
 	//billing buttons
 	$scope.billingDo = function(func){
 		var url = null;
@@ -906,6 +911,13 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		window.open(url, "DemographicExport", "width=960, height=700");
 	}
 
+	//view as cda
+	$scope.viewAsCDA = function(){
+		var url = "../ws/rs/e2eCDA/"+demo.demographicNo;
+		var title = demo.firstName + " " + demo.lastName + ": E2E CDA Chart";
+		window.open(url, title, "width=960, height=700");
+	}
+	
 	//HCValidation on open & save
 	$scope.validateHCSave = function(doSave){
 		if (demo.hin==null || demo.hin=="") {
@@ -935,7 +947,6 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		}
 	}
 	$scope.validateHCSave();
-	
 	
 	//-----------------//
 	// save operations //
@@ -1008,6 +1019,12 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		newDemoExtras = updateDemoExtras("rxInteractionWarningLevel", demo.scrRxInteractionLevel, posExtras, demo.extras, newDemoExtras);
 		newDemoExtras = updateDemoExtras("HasPrimaryCarePhysician", demo.hasPrimaryCarePhysician, posExtras, demo.extras, newDemoExtras);
 		newDemoExtras = updateDemoExtras("EmploymentStatus", demo.employmentStatus, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("statusNum", demo.scrStatusNum, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("fNationCom", demo.scrFNationCom, posExtras, demo.extras, newDemoExtras); 
+		newDemoExtras = updateDemoExtras("fNationFamilyNumber", demo.scrFNationFamilyNumber, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("fNationFamilyPosition", demo.scrFNationFamilyPosition, posExtras, demo.extras, newDemoExtras);
+		newDemoExtras = updateDemoExtras("ethnicity", demo.scrEthnicity, posExtras, demo.extras, newDemoExtras);
+
 		demo.extras = newDemoExtras;
 		
 		//save to database
@@ -1016,6 +1033,35 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 		//show Saving... message and refresh screen
 		page.saving = true;
 		location.reload();
+	}
+
+	$scope.loadHistoryList = function() {
+		/*
+		demographicService.historyList($scope.page.demo.demographicNo).then(function(data){
+			alert(JSON.stringify(data));
+		},function(error){
+			
+		});
+		*/
+		
+		var modalInstance = $modal.open({
+        	templateUrl: 'record/details/historyList.jsp',
+            controller: 'DetailsHistoryListCtrl',
+            backdrop: false,
+            size: 'lg',
+            resolve: {
+                historyList: function() {
+                	return demographicService.historyList($scope.page.demo.demographicNo);
+                }
+            }
+        });
+        
+        modalInstance.result.then(function(data){
+        	console.log('data from modalInstance '+data);
+        },function(reason){
+        	alert(reason);
+        });
+        
 	}
 });
 

@@ -164,7 +164,7 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 			
 			for (Integer d : eighteenMonthDemos) {
 				logger.debug("fetching xml for demographic no " + d);
-				Object[] data = eighteenMonthConnector.getXmlForDemographic(d);
+				Object[] data = eighteenMonthConnector.getXmlForDemographic(x, d);
 				if(data == null) {
 					logger.warn("no data to send");
 					continue;

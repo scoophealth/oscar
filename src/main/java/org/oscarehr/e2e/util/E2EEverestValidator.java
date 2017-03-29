@@ -45,7 +45,7 @@ public class E2EEverestValidator {
 				} else if (dtl.getType() == ResultDetailType.WARNING) {
 					log.warn(dtl.getMessage());
 				} else {
-					log.error(dtl.getMessage());
+					log.error(dtl.getMessage(), dtl.getException());
 				}
 			}
 

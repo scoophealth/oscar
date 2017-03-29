@@ -48,20 +48,20 @@ import oscar.util.ConversionUtils;
 
 public class MSPReconcile {
 
-	public static String REJECTED = "R";
-	public static String NOTSUBMITTED = "O";
-	public static String SUBMITTED = "B";
-	public static String SETTLED = "S";
-	public static String DELETED = "D";
-	public static String HELD = "Z";
-	public static String DATACENTERCHANGED = "C";
-	public static String PAIDWITHEXP = "E";
-	public static String REFUSED = "F";
-	public static String BADDEBT = "X";
-	public static String WCB = "W";
-	public static String CAPITATED = "H";
-	public static String DONOTBILL = "N";
-	public static String BILLPATIENT = "P";
+	public static final String REJECTED = "R";
+	public static final String NOTSUBMITTED = "O";
+	public static final String SUBMITTED = "B";
+	public static final String SETTLED = "S";
+	public static final String DELETED = "D";
+	public static final String HELD = "Z";
+	public static final String DATACENTERCHANGED = "C";
+	public static final String PAIDWITHEXP = "E";
+	public static final String REFUSED = "F";
+	public static final String BADDEBT = "X";
+	public static final String WCB = "W";
+	public static final String CAPITATED = "H";
+	public static final String DONOTBILL = "N";
+	public static final String BILLPATIENT = "P";
 
 	private BillingmasterDAO billingmasterDao = SpringUtils.getBean(BillingmasterDAO.class);
 

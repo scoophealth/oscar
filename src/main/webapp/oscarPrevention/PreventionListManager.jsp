@@ -86,7 +86,7 @@ if(request.getParameter("formAction")!=null && request.getParameter("formAction"
 }
 
 LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
-ArrayList<HashMap<String,String>> prevList = preventionManager.getPreventionTypeDescList();
+ArrayList<HashMap<String,String>> prevList = preventionManager.getPreventionTypeDescList(loggedInInfo);
 
 String customPreventionItems = "";
 

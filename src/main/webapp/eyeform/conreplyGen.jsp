@@ -51,6 +51,17 @@ if(!authed) {
 <%@page import="org.oscarehr.eyeform.web.EyeformAction"%>
 <%@page import="java.util.List"%>
 <%@page import="org.oscarehr.common.model.DemographicContact"%>
+<%@ page import="oscar.OscarProperties"%>
+
+<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.model.ProfessionalSpecialist" %>
+<%@page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
+<%@page import="org.oscarehr.common.dao.ContactDao" %>
+<%@page import="org.oscarehr.common.model.Contact" %>
+<%@page import="org.oscarehr.util.MiscUtils" %>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@page import="org.oscarehr.common.model.Provider" %>
+<%@page import="org.oscarehr.eyeform.model.EyeformConsultationReport" %>
 
 <html:html>
 <head>
@@ -107,6 +118,27 @@ select {
 	request.setAttribute("sections",EyeformAction.getMeasurementSections());
 	request.setAttribute("headers",EyeformAction.getMeasurementHeaders());
 	request.setAttribute("providers",EyeformAction.getActiveProviders());
+	
+	oscar.OscarProperties props1 = oscar.OscarProperties.getInstance();
+	String eyeform = props1.getProperty("cme_js");
+	String exam_val = (String)request.getAttribute("old_examination");
+	if(exam_val == null){
+		exam_val = "";
+	}
+	boolean faxEnabled = props1.getBooleanProperty("faxEnable", "yes");
+	
+	EyeformConsultationReport cp = (EyeformConsultationReport)request.getAttribute("cp");
+	
+	String clDoctor = "", otherDocFax = "";
+	if (cp != null && cp.getOtherReferralId() != 0) {
+		ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
+		ProfessionalSpecialist professionalSpecialist = null;
+		professionalSpecialist = professionalSpecialistDao.find(Integer.valueOf(cp.getOtherReferralId()));
+		if(professionalSpecialist != null){
+			clDoctor = professionalSpecialist.getFormattedName();
+			otherDocFax = professionalSpecialist.getFaxNumber();
+		}
+	}
 %>
 
 <style type="text/css">
@@ -204,6 +236,7 @@ function confirmPrint(btn) {
 		con_<%=customCppIssue%>='<%=request.getAttribute(customCppIssue)%>';
 		<%
 	}
+	String whichEyeForm =  oscar.OscarProperties.getInstance().getProperty("cme_js","");
 %>
 
 
@@ -226,11 +259,24 @@ function confirmPrint(btn) {
  	}
  	function savesubmit(){
  		document.eyeForm.method.value='saveConRequest';
- 		//window.close()
  		document.eyeForm.submit();
+ 		window.close();
+ 	}
+ 	function faxSubmit() {
+ 		document.eyeForm.method.value='faxConRequest';
+ 		document.eyeForm.submit();
+ 		//window.close();
+ 	}
+ 	
+ 	function faxSubmit1() {
+ 		document.eyeForm.method.value='faxConRequest';
+ 		document.eyeForm.submit();
+ 		window.close();
  	}
 	function checkform(){
-		if (document.eyeForm.elements['cp.referralNo'].value=='')
+		if (document.eyeForm.elements['cp.referralNo'].value==''
+			&& (document.eyeForm.referral_doc_name.value == null
+				|| document.eyeForm.referral_doc_name.value.length<=0))
 		{
 			alert("Please choose the referral doctor.");
 			return false;
@@ -288,11 +334,13 @@ function confirmPrint(btn) {
 		document.eyeForm.elements["cp.plan"].value+=val;
 
 	}
-	function addExam(ob){
+	function addExaminationOptions(ob){
 		var selected = new Array();
-		for (var i = 0; i < ob.options.length; i++)
-			if (ob.options[ i ].selected)
+		for (var i = 0; i < ob.options.length; i++) {
+			if (ob.options[ i ].selected) {
 				selected.push(ob.options[ i ].value);
+			}	
+		}		
 		for (var i = 0; i < selected.length; i++)
 			addField(selected[i]);
 
@@ -450,11 +498,49 @@ function confirmPrint(btn) {
   		}
   		if (x == 1) { return remote; }
 	}
-	function referralScriptAttach2(elementName, name2) {
-     var d = elementName;
-     t0 = escape("document.forms[0].elements[\'"+d+"\'].value");
-     t1 = escape("document.forms[0].elements[\'"+name2+"\'].value");
-     rs('att',('<%=(String)session.getAttribute("oscar_context_path")%>/billing/CA/ON/searchRefDoc.jsp?param='+t0+'&param2='+t1),600,600,1);
+	function referralScriptAttach2(elementName, name2, name3, name4, name5) {
+	 var e = name3;
+	 var t0,t1,t2,t3,t4;
+	 if (elementName != null) {
+		 t0 = escape("document.forms[0].elements[\'"+elementName+"\'].value");
+	 } else {
+		 t0 = "";
+	 }
+	 if (name2 != null) {
+		 t1 = escape("document.forms[0].elements[\'"+name2+"\'].value");;
+	 } else {
+		 t1 = "";
+	 }
+	 
+	 if (name3 != null) {
+		 t2 = escape("document.forms[0].elements[\'"+name3+"\'].value");;
+	 } else {
+		 t2 = "";
+	 }
+	 
+	 if (name4 != null) {
+		 t3 = escape("document.forms[0].elements[\'"+name4+"\'].value");;
+	 } else {
+		 t3 = "";
+	 }
+	 
+	 if (name5 != null) {
+		 t4 = escape("document.forms[0].elements[\'"+name5+"\'].value");;
+	 } else {
+		 t4 = "";
+	 }
+     
+     var url = '<%=(String)session.getAttribute("oscar_context_path")%>/billing/CA/ON/searchRefDoc.jsp?'
+    		 + 'param=' + t0 + '&param2=' + t1
+    		 + '&param3='+ t2 + '&param4=' + t3 + '&param5=' + t4;
+	
+     rs('att',(url),600,600,1);
+	}
+	
+	function selectFamDoc() {
+		// set cp.contactId and cp.contactType
+		jQuery("input[name='cp.contactId']").val(jQuery("#fam_doc option:selected")[0].getAttribute("contactId"));
+		jQuery("input[name='cp.contactType']").val(jQuery("#fam_doc option:selected")[0].getAttribute("contactType"));
 	}
   </script>
    <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
@@ -495,6 +581,11 @@ jQuery(document).ready(function() {
 	<html:hidden property="cp.reason"/>
 	<html:hidden property="cp.referralId"/>
 	<html:hidden property="cp.referralNo"/>
+	<html:hidden property="cp.examination"/>
+	<html:hidden property="cp.referralFax"/>
+	<html:hidden property="cp.otherReferralId"/>
+	<html:hidden property="cp.contactId"/>
+	<html:hidden property="cp.contactType"/>
 
 
 	<table class="MainTable" id="scrollNumber1" name="encounterTable">
@@ -505,7 +596,11 @@ jQuery(document).ready(function() {
 				<tr>
 					<td class="Header"
 						style="padding-left: 1px; padding-right: 1px; border-right: 1px solid #003399; text-align: left; font-size: 80%; font-weight: bold; width: 100%;"
-						NOWRAP><c:out value="${demographicName}"/> </td>
+						NOWRAP><c:out value="${demographicName}"/><nested:equal
+						property="isRefOnline" value="true">
+						<img align="absmiddle" src="${pageContext.request.contextPath}/images/onlineicon.gif" height="20"
+							width="20" border="0">
+					</nested:equal> </td>
 				</tr>
 			</table>
 			</td>
@@ -557,7 +652,14 @@ jQuery(document).ready(function() {
 					<td class="tite4" colspan="2">
 					<table>
 						<tr>
-							<td class="stat"><html:radio property="cp.status" value="Completed,and sent" /></td>
+							<td class="stat">
+							<nested:equal property="isRefOnline"
+								value="true">
+								<html:radio property="cp.status" value="Completed,and sent"
+									onclick="return confirmCompleted(this)" />
+							</nested:equal> <nested:notEqual property="isRefOnline" value="true">
+								<html:radio property="cp.status" value="Completed,and sent" />
+							</nested:notEqual></td>
 							<td class="stat">Completed,and sent</td>
 						</tr>
 					</table>
@@ -582,11 +684,46 @@ jQuery(document).ready(function() {
 								String referralDocName = (String)request.getAttribute("referral_doc_name");
 								if(referralDocName==null)
 									referralDocName=new String();
+								
+								String specialty = "";								
+								if(("eyeform3".equals(eyeform)) || ("eyeform3.1".equals(eyeform)) || ("eyeform3.2".equals(eyeform))){	
+									ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
+									
+									Integer referralId = (Integer)request.getAttribute("referral_id");
+									if((referralId != null) && (referralId > 0)){
+										ProfessionalSpecialist professionalSpecialist = null;
+										professionalSpecialist = professionalSpecialistDao.find(referralId);
+										if(professionalSpecialist != null){
+											specialty = professionalSpecialist.getSpecialtyType();
+										}
+									}else{
+										List<ProfessionalSpecialist> professionalSpecialists = null;
+										String re_na = referralDocName==null?"":referralDocName;
+										if(!re_na.equals("")){
+											String[] temp = re_na.split("\\,\\p{Space}*");
+											if (temp.length>1) {		
+												professionalSpecialists = professionalSpecialistDao.findByFullName(temp[0], temp[1]);
+											}else{		
+												professionalSpecialists = professionalSpecialistDao.findByLastName(temp[0]);
+											}
+										}
+										if(professionalSpecialists != null){
+											specialty = professionalSpecialists.get(0).getSpecialtyType();
+										}
+									}
+								}
+								if (specialty == null) {
+									specialty = "";
+								}
 							%>
 							<td align="left" class="tite1"><input type="text"
 								name="referral_doc_name" value="<%=referralDocName%>"/><a
-								href="javascript:referralScriptAttach2('cp.referralNo','referral_doc_name')"><span
-								style="font-size: 10;">Search #</span></a></td>
+								href="javascript:referralScriptAttach2('cp.referralNo','referral_doc_name','cp.referralId', 'cp.referralFax')"><span
+								style="font-size: 10;">Search #</span></a>&nbsp;&nbsp;&nbsp;<p id="specialty_value" name="specialty_value" style="display:inline"><%=specialty%></p>
+								<%if (faxEnabled) {%>
+								<input type="button" class="btn" onclick="addToFax();" value="Add to fax recipients" />
+								<%} %>
+							</td>
 					</table>
 					</td>
 					<td valign="top" cellspacing="1" class="tite4">
@@ -605,16 +742,41 @@ jQuery(document).ready(function() {
 					<table width="100%">
 						<tr>
 							<td class="tite4">
-								<select id="fam_doc">
+								<select id="fam_doc" onchange="selectFamDoc(this);">
 									<%
 										List<DemographicContact> contacts = (List<DemographicContact>)request.getAttribute("contacts");
+										ContactDao contactDao = (ContactDao)SpringUtils.getBean(ContactDao.class);
+										ProviderDao providerDao = (ProviderDao)SpringUtils.getBean(ProviderDao.class);
 										for(DemographicContact c:contacts) {
-											%><option value="<%=c.getContactName()%>"><%=c.getRole()%> - <%=c.getContactName() %></option><%
+											String faxNum = "";
+											try {
+												// internal provider
+												if (c.getType() == 0) {
+													Provider prov = providerDao.getProvider(c.getContactId());
+													if (prov != null) {
+														faxNum = oscar.SxmlMisc.getXmlContent(prov.getComments(), "xml_p_fax");
+													}
+												} else if (c.getType() == 2) { // external specialist
+													Contact contactTmp = contactDao.find(Integer.parseInt(c.getContactId()));
+													faxNum = contactTmp.getFax();
+												}
+											} catch (Exception e) {
+												MiscUtils.getLogger().info(e.toString());
+											}
+											String selected = "";
+											if (cp != null && cp.getContactId()!=null && c.getContactId()!=null && cp.getContactId().equals(c.getContactId()) && cp.getContactType() == c.getType()) {
+												selected = "selected";
+											}
+											
+											%><option <%=selected %> faxNum="<%=faxNum%>" contactId="<%=c.getContactId() %>" contactType="<%=c.getType() %>" value="<%=c.getContactName() %>"><%=c.getRole()%> - <%=c.getContactName() %></option><%
 										}
 									%>
 								</select>
 								&nbsp;
 								<input type="button" class="btn" onclick="addFamDoc();" value="add to cc">
+								<%if (faxEnabled) {%>
+								<input type="button" class="btn" onclick="addFamFax();" value="Add to fax recipients" />
+								<%} %>
 							</td>
 
 							<td></td>
@@ -625,17 +787,22 @@ jQuery(document).ready(function() {
 					<table width="100%">
 						<tr>
 							<td class="tite1" colspan="2">
-								<input type="text" style="width:120px;" name="clDoctor" />
+								<input type="text" style="width:120px;" name="clDoctor" value="<%=clDoctor%>"/>
+								<input type="hidden" name="otherDocFax" value="<%=otherDocFax%>"/>
 								<input type="button" class="btn" onclick="addDoc();" value="add to cc">
-								<a href="javascript:referralScriptAttach2('otherDocId','clDoctor')">
-								<span style="font-size: 10;">Search #</span></a> </td>
+								<a href="javascript:referralScriptAttach2('otherDocId','clDoctor','cp.otherReferralId','otherDocFax')">
+								<span style="font-size: 10;">Search #</span></a>
+								<%if (faxEnabled) {%>
+								<input type="button" class="btn" onclick="addCcFax()" value="Add to fax recipients" />
+								<%} %>
+							</td>
 						</tr>
 					</table>
 					</td>
 				</tr>
-
+				
 				<tr>
-					<td colspan="4">
+					<td colspan="2">
 					<table style="width: 100%">
 						<tr>
 							<td width="10%" class="tite4">cc:</td>
@@ -645,9 +812,29 @@ jQuery(document).ready(function() {
 					</table>
 					</td>
 				</tr>
+				
+				<%if (faxEnabled) {%>
+				<tr>
+					<td colspan="2">
+						<table style="width: 100%">
+							<tr><td>
+								<ul id="faxRecipients">
+									<!--
+									var remove = "<a href='javascript:void(0);' onclick='removeRecipient(this)'>remove</a>";
+									var html = "<li>"+name+"<b>, Fax No: </b>"+number+ " " +remove
+										+"<input type='hidden' name='faxRecipients' value='"+number+"'></input></li>";
+									jQuery("#faxRecipients").append(jQuery(html));
+									-->
+								</ul></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<%} %>
 
 				<tr>
-					<td colspan="4">
+				<% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { %>
+					<td>
 					<table style="background-color: #ddddff;" width="100%">
 						<tr>
 							<td class="tite4" width="10%">Greeting:</td>
@@ -659,6 +846,34 @@ jQuery(document).ready(function() {
 						</tr>
 					</table>
 					</td>
+					<td>
+					<table style="background-color: #ddddff;" width="100%">
+						<tr>
+							<td class="tite4" width="10%">Site:</td>
+							<td class="tite4" width="60%">
+								<html:select property="cp.siteId">
+								     <c:forEach var="site" items="${sites}">
+								         <html:option value="${site.id}"><c:out value="${site.name}"/></html:option>
+								     </c:forEach>
+							        </html:select><c:out value="${cp.siteId}"/>
+							</td>
+						</tr>
+					</table>
+					</td>
+				<%  } else { %>
+					<td colspan="4">
+					<table style="background-color: #ddddff;" width="100%">
+						<tr>
+							<td class="tite4" width="10%">Greeting:</td>
+							<td class="tite4" width="60%"><html:select
+								property="cp.greeting">
+								<html:option value="1">standard consult report</html:option>
+								<html:option value="2">assessment report</html:option>
+							</html:select></td>
+						</tr>
+					</table>
+					</td>				
+				<%  }  %>
 				</tr>
 
 				<tr>
@@ -667,6 +882,19 @@ jQuery(document).ready(function() {
 						<tr>
 							<td width="27%" class="tite4">Clinical information:</td>
 							<td>
+					<%if(whichEyeForm !=null && whichEyeForm.equalsIgnoreCase("eyeform_DrJinapriya")) { %>
+							<input type="button" class="btn" value="subjective"	name="chis"	onclick="clinicalInfoAdd('Current history:',con_cHis)">
+							<input type="button" class="btn" value="past ocular hx" name="phis"	onclick="clinicalInfoAdd('Past ocular history:',con_pHis)">
+							<input type="button" class="btn" value="medical hx" name="mhis"	onclick="clinicalInfoAdd('Medical history:',con_mHis)">
+							<input type="button" class="btn" value="ocular diag" name="fhis" onclick="clinicalInfoAdd('Family history:',con_fHis)">
+							<input type="button" class="btn" value="specs hx" name="shis" onclick="clinicalInfoAdd('Specs history:',con_sHis)">
+
+							<input type="button" class="btn" value="drops admin" name="ohis" onclick="clinicalInfoAdd('Ocular meds:',con_oMeds)">
+							<input type="button" class="btn" value="systemic meds" name="ohis"	onclick="clinicalInfoAdd('Other meds:',con_oHis)">
+							<input type="button" class="btn" value="objective" name="dnote" onclick="clinicalInfoAdd('Diagnostics notes:',con_diag)">
+							<input type="button" class="btn" value="ocular proc" name="opro" onclick="ocluarproAdd('Ocular procedure:',con_ocularpro)">
+							
+					<%} else { %>
 							<input type="button" class="btn" value="current hx"	name="chis"	onclick="clinicalInfoAdd('Current history:',con_cHis)">
 							<input type="button" class="btn" value="past ocular hx" name="phis"	onclick="clinicalInfoAdd('Past ocular history:',con_pHis)">
 							<input type="button" class="btn" value="medical hx" name="mhis"	onclick="clinicalInfoAdd('Medical history:',con_mHis)">
@@ -677,7 +905,7 @@ jQuery(document).ready(function() {
 							<input type="button" class="btn" value="other meds" name="ohis"	onclick="clinicalInfoAdd('Other meds:',con_oHis)">
 							<input type="button" class="btn" value="diag notes" name="dnote" onclick="clinicalInfoAdd('Diagnostics notes:',con_diag)">
 							<input type="button" class="btn" value="ocular proc" name="opro" onclick="ocluarproAdd('Ocular procedure:',con_ocularpro)">
-
+					<% } %>
 <%
 	for(String customCppIssue:customCppIssues) {
 		%><input type="button" class="btn" value="<%=customCppIssue %>" name="<%=customCppIssue %>" onclick="clinicalInfoAdd('<%=customCppIssue%>:',con_<%=customCppIssue%>)"><%
@@ -731,34 +959,69 @@ jQuery(document).ready(function() {
 					<table>
 						<tr>
                		<td>
+						<%if(("eyeform3".equals(eyeform)) || ("eyeform3.1".equals(eyeform)) || ("eyeform3.2".equals(eyeform))){%>
+							<select name="fromlist1" multiple="multiple" size="9" ondblclick="addSection1(document.eyeForm.elements['fromlist1'],document.eyeForm.elements['fromlist2']);">
+						<%}else{%>
                 			<select name="fromlist1" multiple="multiple" size="9" ondblclick="addSection(document.eyeForm.elements['fromlist1'],document.eyeForm.elements['fromlist2']);">
-                				<c:forEach var="item" items="${sections}">
+                		<%}%>
+								<c:forEach var="item" items="${sections}">
                 					<option value="<c:out value="${item.value}"/>"><c:out value="${item.label}"/></option>
                 				</c:forEach>
                 			</select>
                 		</td>
                 		<td valign="middle">
+							<%if(("eyeform3".equals(eyeform)) || ("eyeform3.1".equals(eyeform)) || ("eyeform3.2".equals(eyeform))){%>
+							<input type="button" value=">>" onclick="addSection1(document.eyeForm.elements['fromlist1'],document.eyeForm.elements['fromlist2']);"/>
+							<%}else{%>
                 			<input type="button" value=">>" onclick="addSection(document.eyeForm.elements['fromlist1'],document.eyeForm.elements['fromlist2']);"/>
+							<%}%>
                 		</td>
                 		<td>
-                			<select id="fromlist2" name="fromlist2" multiple="multiple" size="9" ondblclick="addExam(ctx,'fromlist2',document.eyeForm.elements['cp.examination'],appointmentNo);">
+							<%if(("eyeform3".equals(eyeform)) || ("eyeform3.1".equals(eyeform)) || ("eyeform3.2".equals(eyeform))){%>
+                			<select id="fromlist2" name="fromlist2" multiple="multiple" size="9" ondblclick="addExam(ctx,'fromlist2',document.getElementById('cp.examination'),appointmentNo);">
+                			<%}else{%>
+							<select id="fromlist2" name="fromlist2" multiple="multiple" size="9" ondblclick="addExam(ctx,'fromlist2',document.eyeForm.elements['cp.examination'],appointmentNo);">
+							<%}%>
                 				<c:forEach var="item" items="${headers}">
                 					<option value="<c:out value="${item.value}"/>"><c:out value="${item.label}"/></option>
                 				</c:forEach>
                 			</select>
+							<%if(("eyeform3".equals(eyeform)) || ("eyeform3.1".equals(eyeform)) || ("eyeform3.2".equals(eyeform))){%>
+							<input style="vertical-align: middle;" type="button" value="add" onclick="addExam(ctx,'fromlist2',document.getElementById('cp_examination'),appointmentNo);">
+							<%}else{%>
 							<input style="vertical-align: middle;" type="button" value="add" onclick="addExam(ctx,'fromlist2',document.eyeForm.elements['cp.examination'],appointmentNo);">
+							<%}%>
 						</td>
 						</tr>
 					</table>
 					</td>
 				</tr>
-
+<script type="text/javascript">
+	function change_examination(){
+		var str = jQuery("#cp_examination").html();
+		str = str.replace(new RegExp("<b>", 'g'),"");
+		str = str.replace(new RegExp("</b>", 'g'),"");
+		str = str.replace(new RegExp("<br>", 'g'),"");
+		if(str.length == 0){
+			str = "";
+			jQuery("#cp_examination").html("");
+			document.getElementsByName("cp.examination")[0].value = "";
+		}else{
+			document.getElementsByName("cp.examination")[0].value = jQuery("#cp_examination").html();
+		}
+	}
+</script>
 				<tr>
 					<td colspan=2 style="width: 100%">
 					<table style="width: 100%">
 						<tr>
-							<td width="74%"><html:textarea rows="7" style="width:100%"
-								property="cp.examination" /></td>
+							<td width="74%">
+							<%if(("eyeform3".equals(eyeform)) || ("eyeform3.1".equals(eyeform)) || ("eyeform3.2".equals(eyeform))){%>
+								<div contentEditable="true" name="cp_examination" id="cp_examination" onKeyUp="change_examination();" style="display:block;border:1px solid gray;overflow:scroll;height:150px;width:970px;overflow-x:hidden;word-wrap:break-word;"><%=exam_val%></div>
+							<%}else{%>
+								<html:textarea rows="7" style="width:100%" property="cp.examination"/>	
+							<%}%>
+							</td>
 						</tr>
 					</table>
 					</td>
@@ -814,8 +1077,17 @@ jQuery(document).ready(function() {
 				</c:if>
 				<tr>
 					<td colspan="2" align="right">
-					<input type="button" value="print review"
+					<% if(faxEnabled) { %>
+					<input type="button" name="faxBtn" id="faxBtn" value="save and fax" onclick="if (checkform()) {faxSubmit1();} else {return false;}"/>
+					<%} %>
+					<nested:equal property="isRefOnline" value="true">
+						<input type="button" value="save and print"
+							onclick="if (confirmPrint()) if (checkform())printsubmit();else return false;">
+					</nested:equal> 
+					<nested:notEqual property="isRefOnline" value="true">
+						<input type="button" value="save and print"
 							onclick="if (checkform())printsubmit();else return false;">
+					</nested:notEqual>
 					<input type="button" value="save and close"
 						onclick="if (checkform())savesubmit();else return false;">
 					</td>
@@ -827,7 +1099,54 @@ jQuery(document).ready(function() {
 			</td>
 		</tr>
 	</table>
+	
+	
 </html:form>
-
+	
+	<script type="text/javascript">
+	
+	function addToFax() {
+		var referralfax = jQuery("input[name='cp.referralFax']")[0];
+		if (referralfax == null) {
+			return;
+		}
+		_addFaxRecipient("To", jQuery("input[name='referral_doc_name']")[0].value, referralfax.value.trim());
+	}
+	
+	function addFamFax() {
+		var sel = jQuery("#fam_doc option:selected");
+		if (sel == null) {
+			return;
+		}
+		_addFaxRecipient("Fam", sel.text(), sel[0].getAttribute("faxNum"));
+	}
+	
+	function addCcFax() {
+		var otherDocFax = jQuery("input[name='otherDocFax']")[0];
+		if (otherDocFax == null) {
+			return;
+		}
+		_addFaxRecipient("CC", jQuery("input[name='clDoctor']")[0].value, otherDocFax.value.trim());
+	}
+	
+	function _addFaxRecipient(type, referalName, faxNum) {
+		if (faxNum == null) {
+			return;
+		}
+		var obj = jQuery("#faxRecipients").find("a[type='" + type + "']");
+		if (obj != null) {
+			removeRecipient(obj[0]);
+		}
+		var remove = "<a type='"+type+"' href='javascript:void(0);' onclick='removeRecipient(this)'>remove</a>";
+		var html = "<li>" + referalName + "&nbsp;&nbsp;<b>Fax:</b>"+faxNum+ " " +remove+"<input type='hidden' name='faxRecipients' value='"+faxNum+"'></input></li>";
+		jQuery("#faxRecipients").append(html);
+	}
+	
+	function removeRecipient(el) {
+		var el = jQuery(el);
+		if (el) { el.parent().remove(); }
+		else { alert("Unable to remove recipient."); }
+	}
+	</script>
 </body>
 </html:html>

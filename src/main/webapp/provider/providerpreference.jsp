@@ -777,13 +777,14 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
     	<td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewHideOldEchartLinkInAppt');return false;"><bean:message key="provider.btnHideOldEchartLinkInAppt"/></a></td>
     </tr>
     <% } %>
-    <tr>
-    	<td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewBornPrefs');return false;"><bean:message key="provider.btnViewBornPrefs"/></a></td>
-    </tr>
+    
 	<tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewAppointmentCardPrefs');return false;"><bean:message key="provider.btnEditSetAppointmentCardPrefs"/></a></td>
       </tr>
-     
+<tr>
+    	<td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewBornPrefs');return false;"><bean:message key="provider.btnViewBornPrefs"/></a></td>
+    </tr>
+    
 	 <oscar:oscarPropertiesCheck property="util.erx.enabled" value="true">
 	 	<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r">
         <tr>
@@ -855,6 +856,13 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
           </tr>
         </security:oscarSec>
   </oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="tickler_email_provider_enabled" value="true">
+		<tr>
+        	<td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewTicklerProviderEmailPrefs');return false;"><bean:message key="provider.btnTicklerEmailProviderPrefs"/></a></td>
+        </tr>
+</oscar:oscarPropertiesCheck>
+      
  <tr>
     	<td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewDashboardPrefs');return false;"><bean:message key="provider.btnViewDashboardPrefs"/></a></td>
     </tr>

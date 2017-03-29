@@ -42,6 +42,7 @@ import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import oscar.log.LogAction;
 import oscar.oscarPrevention.PreventionDisplayConfig;
 import oscar.util.StringUtils;
@@ -86,10 +87,10 @@ public class PreventionManager {
 		return (results);
 	}
 
-	public ArrayList<String> getPreventionTypeList() {
+	public ArrayList<String> getPreventionTypeList(LoggedInInfo loggedInInfo) {
 		if (preventionTypeList.isEmpty()) {
-			PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
-			for (HashMap<String, String> prevTypeHash : pdc.getPreventions()) {
+			PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance(loggedInInfo);
+			for (HashMap<String, String> prevTypeHash : pdc.getPreventions(loggedInInfo)) {
 				if (prevTypeHash != null && StringUtils.filled(prevTypeHash.get("name"))) {
 					preventionTypeList.add(prevTypeHash.get("name").trim());
 				}
@@ -98,9 +99,9 @@ public class PreventionManager {
 		return preventionTypeList;
 	}
 	
-	public ArrayList<HashMap<String,String>> getPreventionTypeDescList() {
-		PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
-		ArrayList<HashMap<String,String>> preventionTypeDescList = pdc.getPreventions();
+	public ArrayList<HashMap<String,String>> getPreventionTypeDescList(LoggedInInfo loggedInInfo) {
+		PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance(loggedInInfo);
+		ArrayList<HashMap<String,String>> preventionTypeDescList = pdc.getPreventions(loggedInInfo);
 		
 		return preventionTypeDescList;
 	}
@@ -151,7 +152,8 @@ public class PreventionManager {
 			x.setValue(items);
 			propertyDao.persist(x);
 		}
-	}	
+	}
+	
 
 	public void addPreventionWithExts(Prevention prevention, HashMap<String, String> exts) {
 		if (prevention == null) return;

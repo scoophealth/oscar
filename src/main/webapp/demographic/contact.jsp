@@ -29,11 +29,21 @@
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@page import="org.oscarehr.common.model.DemographicContact"%>
+<%@page import="org.oscarehr.managers.ProgramManager2" %>
+<%@page import="org.oscarehr.util.LoggedInInfo" %>
+<%@page import="java.util.List" %>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider" %>
+
 <%
+	ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+	
 	String id = request.getParameter("id");
     StringUtils.trimToEmpty(id);
 	ProviderDao providerDao = (ProviderDao)SpringUtils.getBean("providerDao");
 	request.setAttribute("providers",providerDao.getActiveProviders());
+	
+	List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
 %>
 
 <div id="contact_<%=id%>">
@@ -69,14 +79,28 @@
 	            	
 	            	&nbsp;
 	            	
-	            	<select name="contact_<%=id%>.consentToContact" id="procontact_<%=id%>.consentToContact" title="Consent to Contact">
+	            	<select name="contact_<%=id%>.consentToContact" id="contact_<%=id%>.consentToContact" title="Consent to Contact">
 	            		<option value="1">Consent</option>
 						<option value="0">No Consent</option>
 	            	</select>
 	            	
 	            	&nbsp;
 	            	
-	            	<select name="contact_<%=id%>.active" id="procontact_<%=id%>.active" title="Active">
+	            	<select name="contact_<%=id%>.programId" id="contact_<%=id%>.programId" title="Restrict to Program">
+	            		<option value="0"></option>
+	            		<%
+	            			for(ProgramProvider pp:ppList) {
+	            		%>
+							<option value="<%=pp.getProgramId()%>"><%=pp.getProgram().getName() %></option>
+						<%
+	            			}
+						%>
+	            	</select>
+	            	
+	            	
+	            	&nbsp;
+	            	
+	            	<select name="contact_<%=id%>.active" id="contact_<%=id%>.active" title="Active">
 	            		<option value="1">Active</option>
 						<option value="0">Inactive</option>
 	            	</select>

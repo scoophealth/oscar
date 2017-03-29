@@ -25,6 +25,8 @@
 
 package org.oscarehr.common.model;
 
+import org.apache.commons.lang.StringUtils;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -70,6 +72,8 @@ public class Favorite extends AbstractModel<Integer> {
 	private String durationUnit;
 
 	private String quantity;
+
+	private String dispensingUnits;
 
 	@Column(name="`repeat`")
 	private int repeat;
@@ -202,6 +206,14 @@ public class Favorite extends AbstractModel<Integer> {
 	public void setQuantity(String quantity) {
     	this.quantity = quantity;
     }
+
+	public String getDispensingUnits() {
+		return dispensingUnits;
+	}
+
+	public void setDispensingUnits(String dispensingUnits) {
+		this.dispensingUnits = StringUtils.trimToNull(dispensingUnits);
+	}
 
 	public int getRepeat() {
     	return repeat;

@@ -313,7 +313,7 @@ public class CourseManagerAction extends DispatchAction {
 		}
 
 		for(ProgramProvider pp:results) {
-			programManager.saveProgramProvider(pp);
+			programManager.saveProgramProvider(LoggedInInfo.getLoggedInInfoFromSession(request),pp);
 		}
 
 		logger.info("saved course");

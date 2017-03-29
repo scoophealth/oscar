@@ -96,6 +96,19 @@ angular.module("demographicServices", [])
             });
        
             return deferred.promise;
+        },
+        
+        historyList: function(demographicNo){
+        	var data = {demographicNo:demographicNo};
+        	var deferred = $q.defer();
+        	$http.post(this.apiPath+'demographics/historyList',data).success(function(data){
+        		deferred.resolve(data);
+            }).error(function(){
+          	  console.log("error fetching history list");
+              deferred.reject("An error occured while fetching history list");
+            });
+       
+            return deferred.promise;
         }
     };
 });

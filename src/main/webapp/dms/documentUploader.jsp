@@ -254,9 +254,10 @@ if (isFirefox > 0) {
 <script src="<%=resourcePath%>jquery.fileupload-ui.js"></script>
 <script type="text/javascript">
 jQuery(function () {
+	var maxFiles = <%=Integer.parseInt(OscarProperties.getInstance().getProperty("documentUploader.maxNumberOfFiles", "5")) %>;
     'use strict';
     jQuery('#fileupload').fileupload({
-    	sequentialUploads: true
+    	sequentialUploads: true, maxNumberOfFiles:maxFiles
     });
 });
 </script>

@@ -37,10 +37,28 @@ public class PatientInfo implements Comparable<PatientInfo> {
 		// TODO Auto-generated method stub
 		return lastName + ("".equals(lastName) ? "" : ", ") + firstName;			
 	}
+	
+	
 	@Override
-	public boolean equals(Object obj) {			
-		return obj instanceof PatientInfo && ((PatientInfo)obj).id == this.id;
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
 	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		PatientInfo other = (PatientInfo) obj;
+		if (id != other.id) return false;
+		return true;
+	}
+
+
 	public PatientInfo(int id, String firstName, String lastName) {
 		super();
 		this.id = id;

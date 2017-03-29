@@ -27,6 +27,7 @@ package org.oscarehr.eyeform.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,12 +35,13 @@ import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-
+import javax.persistence.Table;
 import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Provider;
 
 @Entity
+@Table(name="EyeformConsultationReport")
 public class EyeformConsultationReport extends AbstractModel<Integer> {
 	
 	@Id
@@ -83,7 +85,15 @@ public class EyeformConsultationReport extends AbstractModel<Integer> {
 	private Provider provider = null;
 	@Transient
 	private String referralNo;
+	@Transient
+	private String referralFax;
 	
+	private Integer siteId;
+	
+	private String contactId; // demographic's contacts which will be displayed as the first cc doctor
+	@Column(name="contact_type", length=10)
+	private int contactType; // 0: providers (Internal)  2: professional (external, different from the specialist in admin page)
+	private int otherReferralId; // people from the specialist in admin page
 	
 	public EyeformConsultationReport() {
 		date = new Date();
@@ -118,6 +128,9 @@ public class EyeformConsultationReport extends AbstractModel<Integer> {
 		this.greeting = greeting;
 	}
 
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public int getAppointmentNo() {
 		return appointmentNo;
@@ -351,6 +364,44 @@ public class EyeformConsultationReport extends AbstractModel<Integer> {
 		this.referralNo = referralNo;
 	}
 	
+	public String getReferralFax() {
+		return referralFax;
+	}
+
+	public void setReferralFax(String referralFax) {
+		this.referralFax = referralFax;
+	}
+
+	public Integer getSiteId() {
+		return this.siteId;
+	}
+	public void setSiteId(Integer siteId) {
+		this.siteId = siteId;
+	}
+
+	public String getContactId() {
+		return contactId;
+	}
+
+	public void setContactId(String contactId) {
+		this.contactId = contactId;
+	}
+
+	public int getContactType() {
+		return contactType;
+	}
+
+	public void setContactType(int contactType) {
+		this.contactType = contactType;
+	}
+
+	public int getOtherReferralId() {
+		return otherReferralId;
+	}
+
+	public void setOtherReferralId(int otherReferralId) {
+		this.otherReferralId = otherReferralId;
+	}
 	
 	
 }

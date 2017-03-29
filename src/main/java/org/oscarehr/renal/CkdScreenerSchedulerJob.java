@@ -61,7 +61,7 @@ public class CkdScreenerSchedulerJob extends TimerTask {
 
 			logger.info("done renal background ckd screening job");
 
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			logger.error("Error", e);
 		} finally {
 			DbConnectionFilter.releaseAllThreadDbResources();

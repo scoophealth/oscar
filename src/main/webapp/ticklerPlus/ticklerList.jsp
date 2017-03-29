@@ -425,7 +425,8 @@ int curMonth = now.get(Calendar.MONTH) + 1;
 			<%
 			String style = "";
 			style = "color:black;";
-			if ("High".equals(temp.getPriority())) {
+
+			if ("High".equals(temp.getPriority().toString())) {
 				style = "color:red;";
 			}
 			%>

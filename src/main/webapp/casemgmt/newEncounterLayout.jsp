@@ -55,6 +55,7 @@
 	CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean)session.getAttribute(frmName);
 
     String encTimeMandatoryValue = OscarProperties.getInstance().getProperty("ENCOUNTER_TIME_MANDATORY","false");
+    String transportationTimeMandatoryValue = OscarProperties.getInstance().getProperty("TRANSPORTATION_TIME_MANDATORY","false");
 
 %>
 
@@ -697,6 +698,11 @@ div.autocomplete ul li {
         encTimeMandatoryMsg = "<bean:message key="oscarEncounter.encounterTimeMandatory.msg"/>";
 		encTimeMandatory = <%=encTimeMandatoryValue%>;
 
+		transportationTimeMandatoryMsg = "<bean:message key="oscarEncounter.transportationTimeMandatory.msg"/>";
+		transportationTimeMandatory = <%=transportationTimeMandatoryValue%>;
+		transportationTimeError = "<bean:message key="oscarEncounter.transportationTimeError.msg"/>";
+		
+		
         assignEncTypeError = "<bean:message key="oscarEncounter.assignEncTypeError.msg"/>";
         savingNoteError = "<bean:message key="oscarEncounter.savingNoteError.msg"/>";
         changeIssueMsg = "<bean:message key="oscarEncounter.change.title"/>";

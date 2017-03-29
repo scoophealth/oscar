@@ -94,7 +94,7 @@ public final class FrmSetupFormAction extends Action {
 		 **/
 		//System.gc();
 		MiscUtils.getLogger().debug("SetupFormAction is called");
-		HttpSession session = request.getSession(true);
+		HttpSession session = request.getSession();
 
 		FrmFormForm frm = (FrmFormForm) form;
 		EctSessionBean bean = (EctSessionBean) request.getSession().getAttribute("EctSessionBean");

@@ -23,7 +23,6 @@
  */
 package org.oscarehr.managers;
 
-import java.security.MessageDigest;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +37,7 @@ import org.springframework.stereotype.Service;
 
 import oscar.OscarProperties;
 import oscar.log.LogAction;
+import oscar.login.PasswordHash;
 
 @Service
 public class SecurityManager {
@@ -86,7 +86,7 @@ public class SecurityManager {
 		try {
 			Security dbSecurity = securityDao.getByProviderNo(providerNo);
 			
-			if(!"0".equals(previousPasswordPolicy) && !validatePassword(newPassword, dbSecurity.getPassword())) {
+			if(!"0".equals(previousPasswordPolicy) && !PasswordHash.validatePassword(newPassword, dbSecurity.getPassword())) {
 		
 				int numToGoBack = Integer.parseInt(previousPasswordPolicy);
 				List<String> archives = securityArchiveDao.findPreviousPasswordsByProviderNo(providerNo,numToGoBack);
@@ -94,7 +94,7 @@ public class SecurityManager {
 				boolean foundItInPast=false;
 				
 				for(String a:archives) {
-					if(validatePassword(newPassword, a)) {
+					if(PasswordHash.validatePassword(newPassword, a)) {
 						foundItInPast = true;
 						break;
 					}
@@ -110,32 +110,6 @@ public class SecurityManager {
 		}
 		return false;
 	}
-	
-	private boolean validatePassword(String newPassword, String existingPassword) {
-		
-		try {
-			String p1 = encodePassword(newPassword);
-			if(p1.equals(existingPassword)) {
-				return true;
-			}
-		} catch(Exception e) {
-			MiscUtils.getLogger().error("Error",e);
-		}
-		
-		return false;
-	}
-	
-    private String encodePassword(String password) throws Exception{
-
-    	MessageDigest md = MessageDigest.getInstance("SHA");
-    	
-    	StringBuilder sbTemp = new StringBuilder();
-	    byte[] btNewPasswd= md.digest(password.getBytes());
-	    for(int i=0; i<btNewPasswd.length; i++) sbTemp = sbTemp.append(btNewPasswd[i]);
-	
-	    return sbTemp.toString();
-	    
-    }
 	
 	
 	public Security findByProviderNo(LoggedInInfo loggedInInfo, String providerNo) {
@@ -178,6 +152,17 @@ public class SecurityManager {
 		}
 		
 		return (results.get(0).isForcePasswordReset() != null && results.get(0).isForcePasswordReset().equals(Boolean.TRUE));
+	}
+	
+	public boolean isRequireUpgradeToStorage(String userName) {
+		
+		List<Security> results = securityDao.findByUserName(userName);
+		
+		if(results.isEmpty()) {
+			return false;
+		}
+		
+		return (results.get(0).getStorageVersion() != Security.STORAGE_VERSION_2);
 	}
 
 	public List<Security> findByProviderSite(LoggedInInfo loggedInInfo, String providerNo) {

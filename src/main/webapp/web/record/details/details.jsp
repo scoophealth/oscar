@@ -23,7 +23,7 @@
     Ontario, Canada
 
 --%>
-
+<% String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user"); %>
 <style>
 	label {
 		width: 125px;
@@ -43,7 +43,10 @@
 		cursor: pointer;
 	}
 </style>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 
 <div class="col-md-12" ng-hide="page.canRead">
 	<bean:message key="demographic.demographiceditdemographic.accessDenied"/>
@@ -96,7 +99,7 @@
 		</div>
 		<div class="btn-group">
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				<bean:message key="admin.admin.billing" /> <span class="caret"></span>
+				<bean:message key="admin.admin.billing" /><span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu">
 				<li><a class="hand-hover" ng-click="billingDo('BillingHistory')">{{page.billingHistoryLabel}}</a></li>
@@ -118,8 +121,19 @@
 			</ul>
 		</div>
 		<div class="btn-group">
-			<button type="button" class="btn btn-default" ng-click="exportDemographic()"><bean:message key="export"/></button>
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				<bean:message key="export"/><span class="caret">
+			</button>
+			<ul class="dropdown-menu">
+				<li><a class="hand-hover" ng-click="exportDemographic()"><bean:message key="export"/></a></li>
+				<oscar:oscarPropertiesCheck property="E2EViewerEnabled" value="true">
+					<security:oscarSec roleName="<%=roleName$%>" objectName="_demographicExport" rights="r" reverse="<%=false%>">
+						<li><a class="hand-hover" ng-click="viewAsCDA()"><bean:message key="demographic.demographiceditdemographic.msgViewAsE2ECDA"/></a></li>
+					</security:oscarSec>
+				</oscar:oscarPropertiesCheck>
+			</ul>
 		</div>
+		<button type="button" class="btn btn-default" ng-click="loadHistoryList()" ><bean:message key="web.record.details.history"/></button>
 	</div>
 
 	<button type="button" class="btn {{page.readyForSwipe}}" ng-show="page.workflowEnhance" ng-click="setSwipeReady()" title="Click for Card Swipe" style="padding-top: 0px; padding-bottom: 0px; font-size: small">
@@ -220,7 +234,7 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formPostal"/></label>
-			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formPostal"/>" title="<bean:message key="demographic.demographiceditdemographic.formPostal"/>" ng-model="page.demo.address.postal" ng-change="checkPostal()" ng-blur="isPostalComplete()"/>
+			<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formPostal"/>" title="Postal Code" ng-model="page.demo.address.postal" ng-change="checkPostal()" ng-blur="isPostalComplete()"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formEmail"/></label>
@@ -284,24 +298,80 @@
 				<button class="btn" title="Validate HIN #" ng-click="validateHC()" ng-hide="page.demo.hin==null || page.demo.hin=='' || page.demo.hcType!='ON'" style="padding: 0px 5px; font-size: small">Validate</button>
 			</label>
 			<span style="white-space:nowrap">
-				<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.msgHealthIns"/>" title="<bean:message key="demographic.demographiceditdemographic.msgHealthIns"/>" ng-model="page.demo.hin" ng-change="checkHin()" style="width:140px; background-color:{{page.hinColor}}"/>
+				<input type="text" class="form-control form-control-details" placeholder="HIN" title="Health Insurance Number" ng-model="page.demo.hin" ng-change="checkHin()" style="width:140px; background-color:{{page.hinColor}}"/>
 				<input type="text" class="form-control form-control-details" placeholder="<bean:message key="demographic.demographiceditdemographic.formVer"/>" title="HIN Version" ng-model="page.demo.ver" ng-change="checkHinVer()" style="width:55px; background-color:{{page.verColor}}"/>
 			</span>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formHCType"/></label>
-			<select class="form-control form-control-details" title="Health Card Type" ng-model="page.demo.hcType" ng-options="hct.value as hct.label for hct in page.provinces" style="background-color:{{page.hcTypeColor}}">
+			<select class="form-control form-control-details" title="<bean:message key="demographic.demographiceditdemographic.formHCType"/>" ng-model="page.demo.hcType" ng-options="hct.value as hct.label for hct in page.provinces" style="background-color:{{page.hcTypeColor}}">
 				<option value="" >--</option>
 			</select>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formEFFDate"/></label>
-			<input id="effDate" ng-model="page.demo.effDate" type="text" class="form-control form-control-details" title="Health Card Effective Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.effDatePicker" ng-click="page.effDatePicker = true" placeholder="YYYY-MM-DD" style="background-color:{{page.effDateColor}}" ng-change="preventManualEffDate()"/>
+			<input id="effDate" ng-model="page.demo.effDate" type="text" class="form-control form-control-details" 
+				datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.effDatePicker" 
+				ng-click="page.effDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="demographic.demographiceditdemographic.formEFFDate"/>" 
+				style="background-color:{{page.effDateColor}}" ng-change="preventManualEffDate()"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formHCRenewDate"/></label>
-			<input id="hcRenewDate" ng-model="page.demo.hcRenewDate" type="text" class="form-control form-control-details" title="Health Card Renew Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.hcRenewDatePicker" ng-click="page.hcRenewDatePicker = true" placeholder="YYYY-MM-DD" style="background-color:{{page.hcRenewDateColor}}" ng-change="preventManualHcRenewDate()"/>
+			<input id="hcRenewDate" ng-model="page.demo.hcRenewDate" type="text" class="form-control form-control-details" 
+				datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.hcRenewDatePicker" 
+				ng-click="page.hcRenewDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="demographic.demographiceditdemographic.formHCRenewDate"/>" 
+				style="background-color:{{page.hcRenewDateColor}}" ng-change="preventManualHcRenewDate()"/>
 		</div>
+
+		<oscar:oscarPropertiesCheck value="true" defaultVal="false" property="FIRST_NATIONS_MODULE">  
+			<div class="col-md-6">
+				<label><bean:message key="demographic.firstnations.bandNumber" /></label>
+				<input type="text" id="statusNum" class="form-control form-control-details" ng-model="page.demo.scrStatusNum" />
+			</div>
+			
+			<oscar:oscarPropertiesCheck value="false" defaultVal="true" property="showBandNumberOnly">
+				
+				<div class="col-md-6">
+					<label><bean:message key="demographic.firstnations.bandName" /></label>
+					<input type="text" id="fNationCom" class="form-control form-control-details" ng-model="page.demo.scrFNationCom" />
+				</div>
+				
+				<div class="col-md-6">
+					<label><bean:message key="demographic.firstnations.familyNumber" /></label>
+					<input type="text" id="fNationFamilyNumber" class="form-control form-control-details" ng-model="page.demo.scrFNationFamilyNumber">	
+				</div>
+				
+				<div class="col-md-6">
+					<label><bean:message key="demographic.firstnations.familyPosition" /></label>
+					<input type="text" id="fNationFamilyPosition" class="form-control form-control-details" ng-model="page.demo.scrFNationFamilyPosition">
+				</div>
+				
+			</oscar:oscarPropertiesCheck>
+			
+			<oscar:oscarPropertiesCheck value="true" defaultVal="false" property="showBandNumberOnly">
+				<input type="hidden" id="fNationCom" ng-model="page.demo.scrFNationCom" />
+				<input type="hidden" id="fNationFamilyNumber" ng-model="page.demo.scrFNationFamilyNumber" />	
+				<input type="hidden" id="fNationFamilyPosition" ng-model="page.demo.scrFNationFamilyPosition" />			
+			</oscar:oscarPropertiesCheck>
+			
+			<div class="col-md-6">
+				<label><bean:message key="demographic.firstnations.status" /></label>
+				<select class="form-control form-control-details" ng-model="page.demo.scrEthnicity" >
+					<option value="-1" ${ page.demo.scrEthnicity eq -1 ? 'selected' : '' } >Not Set</option>
+					<option value="1" ${ page.demo.scrEthnicity eq 1 ? 'selected' : '' } >On-reserve</option>
+					<option value="2" ${ page.demo.scrEthnicity eq 2 ? 'selected' : '' } >Off-reserve</option>
+					<option value="3" ${ page.demo.scrEthnicity eq 3 ? 'selected' : '' } >Non-status On-reserve</option>
+					<option value="4" ${ page.demo.scrEthnicity eq 4 ? 'selected' : '' } >Non-status Off-reserve</option>
+					<option value="5" ${ page.demo.scrEthnicity eq 5 ? 'selected' : '' } >Metis</option>
+					<option value="6" ${ page.demo.scrEthnicity eq 6 ? 'selected' : '' } >Inuit</option>
+					<option value="11" ${ page.demo.scrEthnicity eq 11 ? 'selected' : '' } >Homeless</option>
+					<option value="12" ${ page.demo.scrEthnicity eq 12 ? 'selected' : '' } >Out of Country Residents</option>
+					<option value="13" ${ page.demo.scrEthnicity eq 13 ? 'selected' : '' } >Other</option>
+				</select> 
+			</div>
+			
+		</oscar:oscarPropertiesCheck>
+		
 	</div>
 	
 	<div class="form-group row">
@@ -310,25 +380,25 @@
 		</fieldset>
 		<div class="col-md-6">
 			<label><bean:message key="web.record.details.mrp"/></label>
-			<select class="form-control form-control-details" title="MRP" ng-model="page.demo.providerNo" ng-options="mrp.providerNo as mrp.name for mrp in page.demo.doctors">
+			<select class="form-control form-control-details" title="<bean:message key="web.record.details.mrp"/>" ng-model="page.demo.providerNo" ng-options="mrp.providerNo as mrp.name for mrp in page.demo.doctors">
 				<option value="">--</option>
 			</select>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formNurse"/></label>
-			<select class="form-control form-control-details" title="Nurse" ng-model="page.demo.nurse" ng-options="ns.providerNo as ns.name for ns in page.demo.nurses">
+			<select class="form-control form-control-details" title="<bean:message key="demographic.demographiceditdemographic.formNurse"/>" ng-model="page.demo.nurse" ng-options="ns.providerNo as ns.name for ns in page.demo.nurses">
 				<option value="">--</option>
 			</select>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="web.record.details.midwife"/></label>
-			<select class="form-control form-control-details" title="Midwife" ng-model="page.demo.midwife" ng-options="mw.providerNo as mw.name for mw in page.demo.midwives">
+			<select class="form-control form-control-details" title="<bean:message key="web.record.details.midwife"/>" ng-model="page.demo.midwife" ng-options="mw.providerNo as mw.name for mw in page.demo.midwives">
 				<option value="">--</option>
 			</select>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formResident"/></label>
-			<select class="form-control form-control-details" title="Resident" ng-model="page.demo.resident" ng-options="res.providerNo as res.name for res in page.demo.doctors">
+			<select class="form-control form-control-details" title="<bean:message key="demographic.demographiceditdemographic.formResident"/>" ng-model="page.demo.resident" ng-options="res.providerNo as res.name for res in page.demo.doctors">
 				<option value="">--</option>
 			</select>
 		</div>
@@ -360,7 +430,7 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.DateJoined"/></label>
-			<input id="rosterDate" ng-model="page.demo.rosterDate" type="text" class="form-control form-control-details" title="Roster Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.rosterDatePicker" ng-click="page.rosterDatePicker = true" placeholder="YYYY-MM-DD" ng-change="preventManualRosterDate()"/>
+			<input id="rosterDate" ng-model="page.demo.rosterDate" type="text" class="form-control form-control-details" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.rosterDatePicker" ng-click="page.rosterDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="demographic.demographiceditdemographic.DateJoined"/>" ng-change="preventManualRosterDate()"/>
 		</div>
 		<div class="col-md-6" ng-show="isRosterTerminated()">
 			<label style="width:150px"><bean:message key="demographic.demographiceditdemographic.RosterTerminationDate"/></label>
@@ -390,11 +460,11 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formDateJoined1"/></label>
-			<input id="dateJoined" ng-model="page.demo.dateJoined" type="text" class="form-control form-control-details" title="Date Joined" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.dateJoinedPicker" ng-click="page.dateJoinedPicker = true" placeholder="YYYY-MM-DD" ng-change="preventManualDateJoined()"/>
+			<input id="dateJoined" ng-model="page.demo.dateJoined" type="text" class="form-control form-control-details" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.dateJoinedPicker" ng-click="page.dateJoinedPicker = true" title="YYYY-MM-DD" placeholder="<bean:message key="demographic.demographiceditdemographic.formDateJoined1"/>" ng-change="preventManualDateJoined()"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formEndDate"/></label>
-			<input id="endDate" ng-model="page.demo.endDate" type="text" class="form-control form-control-details" title="End Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.endDatePicker" ng-click="page.endDatePicker = true" placeholder="YYYY-MM-DD" ng-change="preventManualEndDate()"/>
+			<input id="endDate" ng-model="page.demo.endDate" type="text" class="form-control form-control-details" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.endDatePicker" ng-click="page.endDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="demographic.demographiceditdemographic.formEndDate"/>" ng-change="preventManualEndDate()"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographiceditdemographic.formChartNo"/></label>
@@ -430,7 +500,7 @@
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographicaddarecordhtm.msgDateOfReq"/></label>
-			<input id="onWaitingListSinceDate" ng-model="page.demo.onWaitingListSinceDate" type="text" class="form-control form-control-details" title="<bean:message key="demographic.demographicaddarecordhtm.msgDateOfReq"/>" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.onWaitingListSinceDatePicker" ng-click="page.onWaitingListSinceDatePicker = true" placeholder="YYYY-MM-DD" ng-change="preventManualOnWaitingListSinceDate()"/>
+			<input id="onWaitingListSinceDate" ng-model="page.demo.onWaitingListSinceDate" type="text" class="form-control form-control-details" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.onWaitingListSinceDatePicker" ng-click="page.onWaitingListSinceDatePicker=true" title="YYYY-MM-DD" placeholder="<bean:message key="demographic.demographicaddarecordhtm.msgDateOfReq"/>"  ng-change="preventManualOnWaitingListSinceDate()"/>
 		</div>
 		<div class="col-md-6">
 			<label><bean:message key="demographic.demographicaddarecordhtm.msgWaitListNote"/></label>

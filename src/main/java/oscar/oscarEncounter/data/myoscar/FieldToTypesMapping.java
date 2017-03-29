@@ -33,7 +33,7 @@ import org.oscarehr.myoscar.commons.MedicalDataType;
 
 public class FieldToTypesMapping {
 
-	public static Map<MedicalDataType, List<String>> mapping;
+	private static Map<MedicalDataType, List<String>> mapping;
 	static {
 		Map<MedicalDataType, List<String>> mapping = new HashMap<MedicalDataType, List<String>>();
 		mapping.put(MedicalDataType.BLOOD_PRESSURE, Collections.unmodifiableList(Arrays.asList(new String[] {"SystolicValue", "DiastolicValue", "HeartRate"})));
@@ -44,6 +44,10 @@ public class FieldToTypesMapping {
 	
 	public static List<String> getFields(MedicalDataType type) {
 		return mapping.get(type);
+	}
+	
+	public static Map<MedicalDataType, List<String>> getMap() {
+		return mapping;
 	}
 	
 }

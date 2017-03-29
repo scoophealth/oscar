@@ -15,10 +15,24 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%
-  if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
   String userRole = (String)session.getAttribute("userrole");
   String status = (String)request.getAttribute("status");
   EFormDao efd = (EFormDao) SpringUtils.getBean("EFormDao");
+%>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
+<%
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    boolean authed=true;
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.eform" rights="w" reverse="<%=true%>">
+	<%authed=false; %>
+	<%response.sendRedirect(request.getContextPath() + "/securityError.jsp?type=_admin.eform");%>
+</security:oscarSec>
+<%
+	if(!authed) {
+		return;
+	}
 %>
 
 <html:html locale="true">

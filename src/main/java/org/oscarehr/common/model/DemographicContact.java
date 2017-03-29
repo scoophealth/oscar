@@ -52,6 +52,7 @@ public class DemographicContact extends AbstractModel<Integer> {
 
 	public static final String CATEGORY_PERSONAL = "personal";
 	public static final String CATEGORY_PROFESSIONAL = "professional";
+	public static final String CATEGORY_OTHER = "other";
 
 
 	private static final long serialVersionUID = 1L;
@@ -77,6 +78,9 @@ public class DemographicContact extends AbstractModel<Integer> {
 
 	private Boolean consentToContact = true;
 	private Boolean active = true;
+	private boolean mrp = Boolean.FALSE;
+	
+	private Integer programNo;
 	
 	@Transient
 	private String contactName;
@@ -236,6 +240,14 @@ public class DemographicContact extends AbstractModel<Integer> {
 		this.active = active;
 	}
 
+	public boolean isMrp() {
+		return mrp;
+	}
+
+	public void setMrp(boolean mrp) {
+		this.mrp = mrp;
+	}
+
 	public Contact getDetails() {
 	    return details;
     }
@@ -243,6 +255,14 @@ public class DemographicContact extends AbstractModel<Integer> {
 	public void setDetails(Contact details) {
 	    this.details = details;
     }
+
+	public Integer getProgramNo() {
+		return programNo;
+	}
+
+	public void setProgramNo(Integer programNo) {
+		this.programNo = programNo;
+	}
 
 	
 }

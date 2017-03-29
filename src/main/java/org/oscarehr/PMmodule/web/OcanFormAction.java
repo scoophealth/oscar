@@ -91,22 +91,34 @@ public class OcanFormAction {
 		answer=StringUtils.trimToNull(answer);
 		if (answer==null || answer=="") return;
 		OcanStaffFormData ocanStaffFormData;
-		//if(ocanStaffFormDataDao.findByQuestion(ocanStaffFormId, question).isEmpty()) {
+		if(ocanStaffFormDataDao.findByQuestion(ocanStaffFormId, question).isEmpty()) {
 			ocanStaffFormData=new OcanStaffFormData();
 			ocanStaffFormData.setOcanStaffFormId(ocanStaffFormId);
 			ocanStaffFormData.setQuestion(question);
 			ocanStaffFormData.setAnswer(answer);			
 			ocanStaffFormDataDao.persist(ocanStaffFormData); //create
-		//} else {
-		//	ocanStaffFormData = ocanStaffFormDataDao.findLatestByQuestion(ocanStaffFormId, question);
-		//	ocanStaffFormData.setOcanStaffFormId(ocanStaffFormId);
-		//	ocanStaffFormData.setQuestion(question);
-		//	ocanStaffFormData.setAnswer(answer);			
-		//	ocanStaffFormDataDao.merge(ocanStaffFormData); //update
-		//}
-		
+		} else {
+			ocanStaffFormData = ocanStaffFormDataDao.findLatestByQuestion(ocanStaffFormId, question);
+			ocanStaffFormData.setOcanStaffFormId(ocanStaffFormId);
+			ocanStaffFormData.setQuestion(question);
+			ocanStaffFormData.setAnswer(answer);			
+			ocanStaffFormDataDao.merge(ocanStaffFormData); //update
+		}
 	}
 	
+	public static void addOcanStaffFormDataMultipleAnswers(Integer ocanStaffFormId, String question, String answer)
+	{
+		answer=StringUtils.trimToNull(answer);
+		if (answer==null || answer=="") return;
+		OcanStaffFormData ocanStaffFormData;
+		
+			ocanStaffFormData=new OcanStaffFormData();
+			ocanStaffFormData.setOcanStaffFormId(ocanStaffFormId);
+			ocanStaffFormData.setQuestion(question);
+			ocanStaffFormData.setAnswer(answer);			
+			ocanStaffFormDataDao.persist(ocanStaffFormData); //create
+				
+	}
 	public static OcanClientForm createOcanClientForm(LoggedInInfo loggedInInfo, Integer clientId)
 	{
 		OcanClientForm ocanClientForm=new OcanClientForm();		

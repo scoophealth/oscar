@@ -23,9 +23,13 @@
     Ontario, Canada
 
 --%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 
+<security:oscarSec roleName='${ sessionScope[userrole] }, ${ sessionScope[user] }' rights="x" objectName="_admin,_admin.userAdmin">
+	<c:redirect url="../../securityError.jsp?type=_admintype=_admin.userAdmin" />
+</security:oscarSec>
 
 	<c:choose>
 		<c:when test="${ not empty requestScope.lookupLists }">

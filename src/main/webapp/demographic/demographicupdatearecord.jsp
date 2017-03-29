@@ -73,6 +73,8 @@
 <%@page import="org.oscarehr.common.model.Consent" %>
 <%@page import="org.oscarehr.common.model.ConsentType" %>
 <%@page import="oscar.OscarProperties" %>
+<%@page import="org.oscarehr.common.dao.DemographicSiteDao" %>
+<%@page import="org.oscarehr.common.model.DemographicSite" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -247,14 +249,17 @@
 		for( ConsentType consentType : consentTypes ) {
 			consentTypeId = request.getParameter( consentType.getType() );
 			String patientConsentId = request.getParameter( consentType.getType() + "_id" );
-			if (patientConsentId!=null) patientConsentIdInt = Integer.parseInt( patientConsentId );
+			if (consentTypeId == null && !StringUtils.isNumeric(patientConsentId)) {
+				continue;
+			}
+			patientConsentIdInt = Integer.parseInt( patientConsentId );
 			
 			// checked box means add or edit consent. 
 			if( consentTypeId != null ) {		
 				patientConsentManager.addConsent(loggedInInfo, demographic.getDemographicNo(), Integer.parseInt( consentTypeId ) );
 			
 			// unchecked and patientConsentId > 0 could mean the patient opted out. 
-			} else if( patientConsentIdInt > 0 ) {
+			} else if ( patientConsentIdInt > 0 ) {
 				patientConsentManager.optoutConsent( loggedInInfo, patientConsentIdInt );		
 			}		
 		}
@@ -275,6 +280,8 @@
 	extensions.add(new DemographicExt(request.getParameter("area_id"), proNo, demographicNo, "area", request.getParameter("area")));
 	extensions.add(new DemographicExt(request.getParameter("statusNum_id"), proNo, demographicNo, "statusNum",  request.getParameter("statusNum")));
 	extensions.add(new DemographicExt(request.getParameter("fNationCom_id"), proNo, demographicNo, "fNationCom", request.getParameter("fNationCom")));
+	extensions.add(new DemographicExt( request.getParameter("fNationFamilyPositionOrig"), proNo, demographicNo,"fNationFamilyPosition", request.getParameter("fNationFamilyPosition") ));
+	extensions.add(new DemographicExt(request.getParameter("fNationFamilyNumberOrig"), proNo, demographicNo,"fNationFamilyNumber", request.getParameter("fNationFamilyNumber")));
 	extensions.add(new DemographicExt(request.getParameter("given_consent_id"), proNo, demographicNo, "given_consent", request.getParameter("given_consent")));
 	extensions.add(new DemographicExt(request.getParameter("rxInteractionWarningLevel_id"), proNo, demographicNo, "rxInteractionWarningLevel", request.getParameter("rxInteractionWarningLevel")));
 	extensions.add(new DemographicExt(request.getParameter("primaryEMR_id"), proNo, demographicNo, "primaryEMR", request.getParameter("primaryEMR")));
@@ -282,6 +289,24 @@
 	extensions.add(new DemographicExt(request.getParameter("usSigned_id"), proNo, demographicNo, "usSigned", request.getParameter("usSigned")));
 	extensions.add(new DemographicExt(request.getParameter("privacyConsent_id"), proNo, demographicNo, "privacyConsent", request.getParameter("privacyConsent")));
 	extensions.add(new DemographicExt(request.getParameter("informedConsent_id"), proNo, demographicNo, "informedConsent", request.getParameter("informedConsent")));
+	extensions.add(new DemographicExt(request.getParameter("IPHISClientNumber_id"), proNo, demographicNo, "IPHISClientNumber", request.getParameter("IPHISClientNumber")));
+	extensions.add(new DemographicExt(request.getParameter("PanoramaClientNumber_id"), proNo, demographicNo, "PanoramaClientNumber", request.getParameter("PanoramaClientNumber")));
+	extensions.add(new DemographicExt(request.getParameter("IscisClientNumber_id"), proNo, demographicNo, "IscisClientNumber", request.getParameter("IscisClientNumber")));
+	extensions.add(new DemographicExt(request.getParameter("OhissClientNumber_id"), proNo, demographicNo, "OhissClientNumber", request.getParameter("OhissClientNumber")));
+	extensions.add(new DemographicExt(request.getParameter("EpiInfoClientNumber_id"), proNo, demographicNo, "EpiInfoClientNumber", request.getParameter("EpiInfoClientNumber")));
+	extensions.add(new DemographicExt(request.getParameter("HedgehogClientNumber_id"), proNo, demographicNo, "HedgehogClientNumber", request.getParameter("HedgehogClientNumber")));
+	extensions.add(new DemographicExt(request.getParameter("recipientLocation_id"), proNo, demographicNo, "recipientLocation", request.getParameter("recipientLocation")));
+	extensions.add(new DemographicExt(request.getParameter("lhinConsumerResides_id"), proNo, demographicNo, "lhinConsumerResides", request.getParameter("lhinConsumerResides")));
+	extensions.add(new DemographicExt(request.getParameter("address2_id"), proNo, demographicNo, "address2", request.getParameter("address2")));
+	extensions.add(new DemographicExt(request.getParameter("middleName_id"), proNo, demographicNo, "middleName", request.getParameter("middleName")));
+	extensions.add(new DemographicExt(request.getParameter("lastNameAtBirth_id"), proNo, demographicNo, "lastNameAtBirth", request.getParameter("lastNameAtBirth")));
+	extensions.add(new DemographicExt(request.getParameter("preferredName_id"), proNo, demographicNo, "preferredName", request.getParameter("preferredName")));
+	extensions.add(new DemographicExt(request.getParameter("maritalStatus_id"), proNo, demographicNo, "maritalStatus", request.getParameter("maritalStatus")));
+
+	ProgramManager pm = SpringUtils.getBean(ProgramManager.class);
+	AdmissionManager admissionManager = SpringUtils.getBean(AdmissionManager.class);
+	
+	
 	extensions.add(new DemographicExt(request.getParameter("paper_chart_archived_id"), proNo, demographicNo, "paper_chart_archived", request.getParameter("paper_chart_archived")));
 	extensions.add(new DemographicExt(request.getParameter("paper_chart_archived_date_id"), proNo, demographicNo, "paper_chart_archived_date", request.getParameter("paper_chart_archived_date")));
 	extensions.add(new DemographicExt(request.getParameter("paper_chart_archived_program_id"), proNo, demographicNo, "paper_chart_archived_program", request.getParameter("paper_chart_archived_program")));
@@ -345,6 +370,23 @@
 	
     demographicDao.save(demographic);
     
+  	//multiple site, update site
+	if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) { 
+		DemographicSiteDao demographicSiteDao = (DemographicSiteDao)SpringUtils.getBean("demographicSiteDao");
+		DemographicSite ds = new DemographicSite();
+		String[] sites = request.getParameterValues("sites");
+		demographicSiteDao.removeSitesByDemographicId(Integer.valueOf(demoNo));
+	
+		if(sites!=null) {
+			for (int i = 0; i < sites.length; i++) {				
+				DemographicSite demographicSite = new DemographicSite();
+				demographicSite.setDemographicId(Integer.valueOf(demoNo));
+				demographicSite.setSiteId(Integer.valueOf(sites[i]));
+				demographicSiteDao.persist(demographicSite);				
+			}
+		 }
+	}
+    
     try{
     	oscar.oscarDemographic.data.DemographicNameAgeString.resetDemographic(request.getParameter("demographic_no"));
     }catch(Exception nameAgeEx){
@@ -373,15 +415,14 @@
 
     //update admission information
     GenericIntakeEditAction gieat = new GenericIntakeEditAction();
-    ProgramManager pm = SpringUtils.getBean(ProgramManager.class);
-	AdmissionManager am = SpringUtils.getBean(AdmissionManager.class);
+    AdmissionManager am = SpringUtils.getBean(AdmissionManager.class);
     gieat.setAdmissionManager(am);
     gieat.setProgramManager(pm);
     
 	String bedP = request.getParameter("rps");
     if(bedP != null && bedP.length()>0) {
 	    try {
-	   	 gieat.admitBedCommunityProgram(demographic.getDemographicNo(), (String)session.getAttribute("user"), Integer.parseInt(bedP), "", "(Master record change)", new java.util.Date());
+	   	 gieat.admitBedCommunityProgram(loggedInInfo, demographic.getDemographicNo(), (String)session.getAttribute("user"), Integer.parseInt(bedP), "", "(Master record change)", new java.util.Date());
 	    }catch(Exception e) {
 	    	
 	    }
@@ -392,7 +433,7 @@
     	Set<Integer> s = new HashSet<Integer>();
         for(String _s:servP) s.add(Integer.parseInt(_s));
    		try {
-   	   	 gieat.admitServicePrograms(demographic.getDemographicNo(), (String)session.getAttribute("user"), s, "(Master record change)", new java.util.Date());
+   	   	 gieat.admitServicePrograms(loggedInInfo, demographic.getDemographicNo(), (String)session.getAttribute("user"), s, "(Master record change)", new java.util.Date(), loggedInInfo.getCurrentFacility().getId());
    	    }catch(Exception e) {
    	 }
     }
@@ -403,7 +444,7 @@
     for(Program p:allServiceProgramsShown) {
     	if(!isFound(servP,p.getId().toString())) {
     		try {
-    			am.processDischarge(p.getId(), demographic.getDemographicNo(), "(Master record change)", "0");
+    			am.processDischarge(loggedInInfo, p.getId(), demographic.getDemographicNo(), "(Master record change)", "0");
     		}catch(org.oscarehr.PMmodule.exception.AdmissionException e) {}
     	}
     }
@@ -428,7 +469,7 @@
 		<input type="hidden" name="dboperation" value="search_detail" /> 
 
 <%
-	if(!request.getParameter("list_id").equalsIgnoreCase("0")){
+	if(!  "0".equals( request.getParameter("list_id") )){
 		String wlDemoId = request.getParameter("demographic_no");
 		String wlId = request.getParameter("list_id");
 	

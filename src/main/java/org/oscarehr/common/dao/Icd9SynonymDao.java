@@ -23,7 +23,11 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
 import javax.persistence.Query;
+
+import org.oscarehr.common.model.AbstractCodeSystemModel;
 import org.oscarehr.common.model.Icd9Synonym;
 import org.springframework.stereotype.Repository;
 /*
@@ -33,7 +37,7 @@ import org.springframework.stereotype.Repository;
  * For: UBC Pharmacy Clinic and McMaster Department of Family Medicine
  */
 @Repository
-public class Icd9SynonymDao extends AbstractDao<Icd9Synonym> {
+public class Icd9SynonymDao extends AbstractCodeSystemDao<Icd9Synonym> {
 
 	public Icd9SynonymDao() {
 	    super(Icd9Synonym.class);
@@ -43,8 +47,35 @@ public class Icd9SynonymDao extends AbstractDao<Icd9Synonym> {
 		String queryString = "SELECT x FROM Icd9Synonym x WHERE x.dxCode LIKE ?1";
 		Query query = entityManager.createQuery(queryString);
         query.setParameter(1, dxCode);
-
         return super.getSingleResultOrNull(query);
 	}
+	
+	public List<Icd9Synonym> findBySynonym(String keyword) {
+
+		String queryString = "SELECT x FROM Icd9Synonym x WHERE x.patientFriendly LIKE ?1";
+		Query query = entityManager.createQuery(queryString);
+        query.setParameter(1, "%"+keyword+"%");
+        List<Icd9Synonym> icd9Synonyms = query.getResultList();
+        return icd9Synonyms;
+	}
+
+	@Override
+    public List<Icd9Synonym> searchCode(String term) {
+	    return findBySynonym(term);
+    }
+
+	@Override
+    public Icd9Synonym findByCode(String code) {
+		return findPatientFriendlyTranslationFor(code);
+    }
+
+	@Override
+    public AbstractCodeSystemModel<?> findByCodingSystem(String codingSystem) {
+		Query query = entityManager.createQuery("FROM Icd9Synonym i WHERE i.dxCode like :cs");
+		query.setParameter("cs", codingSystem);
+		query.setMaxResults(1);
+		
+		return getSingleResultOrNull(query);
+    }
 
 }

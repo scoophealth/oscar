@@ -51,6 +51,8 @@ if(!authed) {
 <%@page import="java.util.GregorianCalendar"%>
 <%@page import="java.text.DateFormatSymbols"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
+
 
 <%@ include file="/taglibs.jsp"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}"
@@ -63,13 +65,60 @@ if(!authed) {
 
     LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	List<FunctionalCentre> functionalCentres=functionalCentreDao.findInUseByFacility(loggedInInfo.getCurrentFacility().getId());
+	
+	Calendar cal = Calendar.getInstance();
+	String today = DateFormatUtils.ISO_DATE_FORMAT.format(cal);
+	cal.add(Calendar.MONTH,-1);
+	String lastMonth = DateFormatUtils.ISO_DATE_FORMAT.format(cal);
+
+	List<Program> programs=programManager.getPrograms(loggedInInfo.getCurrentFacility().getId());
+	
 %>
 
+<%@include file="/layouts/html_top.jspf"%>
+
+<script>
+function chooseProgramProviderFilter() {
+	var pId = jQuery("#pIds").val();
+    jQuery.getJSON("../PMmodule/ProviderSearch.do?method=search",
+            {
+    			programNo: pId
+            },
+            function(response){
+        		$("#providerIds").find('option').remove();
+        		
+        		for(var x=0;x<response.length;x++) {
+        			$('#providerIds').append($('<option>', {
+        			    value: response[x].id,
+        			    text: response[x].name
+        			}));
+
+        		}
+        		
+      });
+
+}
+
+</script>
+
+<script type="text/javascript">
+	function validate(form)
+	{
+		var fields = form.elements;
+
+		if (fields.functionalCentreId.value==null||fields.functionalCentreId.value=="")
+		{
+			alert('Please select a functional centre.');
+			return(false);
+		}
+	}
+</script>
+
 <div class="page-header">
-	<h4>CDS Reports</h4>
+	<h1>CDS Reports</h1>
 </div>
 
-<form class="well form-horizontal" action="cds_4_report_results.jsp"
+<form class="well form-horizontal" action="${ctx}/oscarReport/cds_4_report_results.jsp"
 	id="cdsForm">
 	<fieldset>
 
@@ -129,7 +178,7 @@ if(!authed) {
 		<div class="control-group">
 			<label class="control-label">Filter By</label>
 			<div class="controls">
-				<select id="filterCriteriaSelection" onchange="showFilterCriteria()">
+				<select id="filterCriteriaSelection" name="filterCriteriaSelection" onchange="showFilterCriteria()">
 					<option value="">None</option>
 					<option value="PROVIDER">Provider</option>
 					<option value="PROGRAM">Program</option>
@@ -143,6 +192,7 @@ if(!authed) {
 						{
 							jQuery('#providerText').show();
 							jQuery('#providerOptions').show();
+							jQuery('#providerFilterOptions').show();
 							jQuery('#programText').hide();
 							jQuery('#programOptions').hide();
 						}
@@ -150,6 +200,7 @@ if(!authed) {
 						{
 							jQuery('#providerText').hide();
 							jQuery('#providerOptions').hide();
+							jQuery('#providerFilterOptions').hide();
 							jQuery('#programText').show();
 							jQuery('#programOptions').show();							
 						}
@@ -157,6 +208,7 @@ if(!authed) {
 						{
 							jQuery('#providerText').hide();
 							jQuery('#providerOptions').hide();
+							jQuery('#providerFilterOptions').hide();
 							jQuery('#programText').hide();
 							jQuery('#programOptions').hide();
 						}
@@ -168,14 +220,37 @@ if(!authed) {
 				</script>
 			</div>
 		</div>
+			
+			
+		<div id="providerFilterOptions" class="control-group">
+		
+			<label class="control-label">Filter provider list by program <small>(optional)</small>
+			</label>
+			<div class="controls">
+				<select id="pIds" name="pIds" class="input-medium" style="width:225px" onClick="chooseProgramProviderFilter()">
+					<option value=""></option>
+					<%
+						
+						for (Program program : programs)
+						{
+							%>
+								<option value="<%=program.getId()%>"><%=StringEscapeUtils.escapeHtml(program.getName()+" ("+program.getType()+")")%></option>
+							<%
+						}
+					%>
+				</select>
+			</div>
+		</div>
+		
 		<div id="providerOptions" class="control-group">
+		
 			<label class="control-label">Providers to include
 				<small>
 					(multi select is allowed)
 				</small>
 			</label>
 			<div class="controls">
-				<select name="providerIds" class="input-medium" multiple="multiple">
+				<select name="providerIds" id="providerIds" class="input-medium" multiple="multiple"  style="width:225px" size="10">
 					<%
 						// null for both active and inactive because the report might be for a provider who's just left in the current reporting period.
 						List<Provider> providers=providerManager.getProviders(loggedInInfo, null);
@@ -194,6 +269,7 @@ if(!authed) {
 			</div>
 		</div>
 
+
 		<div id="programOptions" class="control-group">
 			<label class="control-label">Programs to include
 				<small>
@@ -201,10 +277,9 @@ if(!authed) {
 				</small>
 			</label>
 			<div class="controls">
-				<select name="programIds" class="input-medium" multiple="multiple">
+				<select name="programIds" class="input-medium" multiple="multiple" style="width:225px" size="10">
 					<%
-						List<Program> programs=programManager.getPrograms(loggedInInfo.getCurrentFacility().getId());
-					
+						
 						for (Program program : programs)
 						{
 							%>
@@ -224,6 +299,7 @@ if(!authed) {
 
 	</fieldset>
 </form>
+<%@include file="/layouts/caisi_html_bottom.jspf"%>
 
 <div id="cds-results"></div>
 <script type="text/javascript">
@@ -235,7 +311,17 @@ if(!authed) {
 				}
 			}
 		});
+		
+		$('#cdsForm').submit(function() {
+			if(!$('#cdsForm').valid()){
+				return false;
+			}
+			var data = $('#cdsForm').serialize();
+			$.post($('#cdsForm').attr('action'), data, function(returnData) {
+				$('#cds-results').html(returnData);
+			})
+			return false;
+		});
+		
 	});
-
-	registerFormSubmit('cdsForm', 'cds-results');
 </script>

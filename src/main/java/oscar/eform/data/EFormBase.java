@@ -51,6 +51,8 @@ public class EFormBase {
     protected boolean showLatestFormOnly=false;
     protected boolean patientIndependent=false;
     protected String roleType;
+    protected String programNo;
+    protected boolean restrictByProgram = false;
 
     protected ArrayList<String> updateFields = new ArrayList<String>();
 
@@ -70,7 +72,7 @@ public class EFormBase {
     }
 
     public EFormBase(String fid, String formName, String formSubject,
-            String formFileName, String formHtml, boolean showLatestFormOnly, boolean patientIndependent, String roleType) {
+            String formFileName, String formHtml, boolean showLatestFormOnly, boolean patientIndependent, String roleType, String programNo, boolean restrictByProgram) {
         this.fid = fid;
         this.formName = formName;
         this.formSubject = formSubject;
@@ -79,6 +81,8 @@ public class EFormBase {
         this.showLatestFormOnly = showLatestFormOnly;
         this.patientIndependent = patientIndependent;
         this.roleType = roleType;
+        this.programNo = programNo;
+        this.restrictByProgram = restrictByProgram;
         dateTimeStamp();
     }
 
@@ -192,4 +196,21 @@ public class EFormBase {
     public void setPatientIndependent(boolean patientIndependent) {
         this.patientIndependent = patientIndependent;
     }
+
+	public String getProgramNo() {
+		return programNo;
+	}
+
+	public void setProgramNo(String programNo) {
+		this.programNo = programNo;
+	}
+
+	public boolean isRestrictByProgram() {
+		return restrictByProgram;
+	}
+
+	public void setRestrictByProgram(boolean restrictByProgram) {
+		this.restrictByProgram = restrictByProgram;
+	}
+    
 }

@@ -51,7 +51,6 @@ import org.oscarehr.common.dao.EFormDao;
 import org.oscarehr.common.dao.EFormGroupDao;
 import org.oscarehr.common.dao.EncounterFormDao;
 import org.oscarehr.common.dao.MyGroupDao;
-import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.EForm;
 import org.oscarehr.common.model.EncounterForm;
@@ -77,7 +76,7 @@ import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 public class UserPreferenceAction extends DispatchAction {
 	
 	private Logger logger = MiscUtils.getLogger();
-	protected SecurityDao securityDao = (SecurityDao)SpringUtils.getBean("securityDao");
+	protected org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
 	protected UserPropertyDAO userPropertyDao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
 	static Map<String,String> defaults = new HashMap<String,String>();	
 	protected Map<String,String> siteDefaults = new HashMap<String,String>();	
@@ -206,7 +205,7 @@ public class UserPreferenceAction extends DispatchAction {
 		String stroldpasswd = sbTemp.toString();
 	    	    
 		//get password from db
-		Security secRecord = securityDao.getByProviderNo(providerNo);		
+		Security secRecord = securityManager.findByProviderNo(loggedInInfo, providerNo);		
 		String strDBpasswd = secRecord.getPassword();
 		if (strDBpasswd.length()<20) {
 			sbTemp = new StringBuilder();		
@@ -223,7 +222,7 @@ public class UserPreferenceAction extends DispatchAction {
 		    	   sbTemp = sbTemp.append(btNewPasswd[i]);
 
 		       secRecord.setPassword(sbTemp.toString());
-		       securityDao.merge(secRecord);
+		       securityManager.updateSecurityRecord(loggedInInfo, secRecord);
 		       
 		       logger.info("password changed for provider");
 		} else {					

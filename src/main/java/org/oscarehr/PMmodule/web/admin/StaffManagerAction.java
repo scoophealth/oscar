@@ -228,7 +228,7 @@ public class StaffManagerAction extends DispatchAction {
 		ProgramTeam team = programManager.getProgramTeam(teamId);
 		if(existingPP != null && team != null) {
 			existingPP.getTeams().add(team);
-			programManager.saveProgramProvider(existingPP);
+			programManager.saveProgramProvider(LoggedInInfo.getLoggedInInfoFromSession(request),existingPP);
 		}
 
 		setEditAttributes(request,providerManager.getProvider(provider.getProviderNo()));
@@ -253,7 +253,7 @@ public class StaffManagerAction extends DispatchAction {
 					break;
 				}
 			}
-			programManager.saveProgramProvider(existingPP);
+			programManager.saveProgramProvider(LoggedInInfo.getLoggedInInfoFromSession(request),existingPP);
 		}
 
 		setEditAttributes(request,providerManager.getProvider(provider.getProviderNo()));
@@ -272,11 +272,11 @@ public class StaffManagerAction extends DispatchAction {
 				programManager.deleteProgramProvider(String.valueOf(existingPP.getId()));
 			} else {
 				existingPP.setRoleId(pp.getRoleId());
-				programManager.saveProgramProvider(existingPP);
+				programManager.saveProgramProvider(LoggedInInfo.getLoggedInInfoFromSession(request),existingPP);
 			}
 		} else {
 			pp.setProviderNo(provider.getProviderNo());
-			programManager.saveProgramProvider(pp);
+			programManager.saveProgramProvider(LoggedInInfo.getLoggedInInfoFromSession(request),pp);
 		}
 
 		setEditAttributes(request,providerManager.getProvider(provider.getProviderNo()));

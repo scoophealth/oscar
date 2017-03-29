@@ -138,6 +138,82 @@ public class DrugDao extends AbstractDao<Drug> {
 
 		return (results);
 	}
+	
+	/**
+	 * Only be used to get methadone or suboxone for custom rx modules 
+	 * @param demographicId
+	 * @param rxName
+	 * @return
+	 */
+	public List<Drug> findCustomByDemographicIdOrderByPosition(Integer demographicId, String rxName) {
+		if (rxName == null || (!rxName.toLowerCase().contains("methadone") 
+				&& !rxName.toLowerCase().contains("suboxone")
+				&& !rxName.toLowerCase().contains("buprenorphine"))) {
+			return null;  
+		}
+		
+		// build sql string
+		String sqlCommand = "select x from Drug x where x.demographicId=?1 and ";
+		if (rxName.toLowerCase().contains("methadone")) {
+			sqlCommand += "(x.brandName like ?2 or x.customName like ?3)";
+		} else {
+			sqlCommand += "(x.brandName like ?2 or x.customName like ?3 or x.brandName like ?4 or x.customName like ?5)";
+		}
+		sqlCommand += " order by x.position desc, x.rxDate desc, x.id desc";
+
+		// set parameters
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
+		if (rxName.toLowerCase().contains("methadone")) {
+			query.setParameter(2, "%methadone%");
+			query.setParameter(3, "%methadone%");
+		} else {
+			query.setParameter(2, "%suboxone%");
+			query.setParameter(3, "%suboxone%");
+			query.setParameter(4, "%buprenorphine%");
+			query.setParameter(5, "%buprenorphine%");
+		}
+		// run query
+		@SuppressWarnings("unchecked")
+		List<Drug> results = query.getResultList();
+
+		return (results);
+	}
+	
+	public Drug getLastRxForCustomRx(int demoNo, String rxName) {
+		if (rxName == null || (!rxName.toLowerCase().contains("methadone") 
+				&& !rxName.toLowerCase().contains("suboxone")
+				&& !rxName.toLowerCase().contains("buprenorphine"))) {
+			return null;  
+		}
+		// build sql string 
+		String sqlCommand = "select x from Drug x where x.demographicId=?1 and ( x.archived!=true or x.archivedReason!='deleted') and ";
+		if (rxName.toLowerCase().contains("methadone")) {
+			sqlCommand += "(x.brandName like ?2 or x.customName like ?3)";
+		} else {
+			sqlCommand += "(x.brandName like ?2 or x.customName like ?3 or x.brandName like ?4 or x.customName like ?5)";
+		}
+		sqlCommand += " order by x.endDate desc";
+
+		// set parameters
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demoNo);
+		query.setMaxResults(1);
+		if (rxName.toLowerCase().contains("methadone")) {
+			query.setParameter(2, "%methadone%");
+			query.setParameter(3, "%methadone%");
+		} else {
+			query.setParameter(2, "%suboxone%");
+			query.setParameter(3, "%suboxone%");
+			query.setParameter(4, "%buprenorphine%");
+			query.setParameter(5, "%buprenorphine%");
+		}
+		List<Drug> drugList = query.getResultList();
+		if (drugList.size() == 0) {
+			return null;
+		}
+		return drugList.get(0);
+	}
 
 	public List<Drug> findByDemographicIdSimilarDrugOrderByDate(Integer demographicId, String regionalIdentifier, String customName) {
 		// build sql string

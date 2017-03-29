@@ -42,6 +42,7 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.OscarProperties;
 import oscar.oscarLab.ca.all.upload.handlers.DefaultHandler;
 import oscar.oscarLab.ca.all.upload.handlers.MessageHandler;
 
@@ -61,10 +62,19 @@ public final class HandlerClassFactory {
         String msgType;
         String msgHandler = "";
         
+        String enabled = OscarProperties.getInstance().getProperty("lab.handler."+type+".enabled", "false");
+        if(!"true".equals(enabled)) {
+			logger.info("Handler " + type + " is not enabled. add lab.handler."+type+".enabled=true in your properties file");
+			return null;
+		}
+        
         if (type.equals("")){
             logger.debug("Type not specified using Default Handler");
             return( new DefaultHandler());
         }
+        
+       
+        
         try{
             InputStream is = HandlerClassFactory.class.getClassLoader().getResourceAsStream("oscar/oscarLab/ca/all/upload/message_config.xml");
             SAXBuilder parser = new SAXBuilder();
@@ -77,12 +87,16 @@ public final class HandlerClassFactory {
             for (int i = 0; i < items.size(); i++){
                 Element e = (Element) items.get(i);
                 msgType = e.getAttributeValue("name");
+                
                 String className = e.getAttributeValue("className");
                 if (msgType.equals(type) && (className.indexOf(".")==-1) )
                     msgHandler = "oscar.oscarLab.ca.all.upload.handlers."+e.getAttributeValue("className");
                 if (msgType.equals(type) && (className.indexOf(".")!=-1) )
                 	msgHandler = className;
             }
+            
+            
+            
         }catch(Exception e){
             logger.error("Could not parse config file", e);
         }

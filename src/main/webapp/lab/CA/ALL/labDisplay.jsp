@@ -1167,24 +1167,23 @@ pre {
 						boolean	isVIHARtf = false;
 						boolean isSGorCDC = false;
 
-							//Checks to see if the PATHL7 lab is an unstructured document, a VIHA RTF pathology report, or if the patient location is SG/CDC
-							//labs that fall into any of these categories have certain requirements per Excelleris
-							if(handler.getMsgType().equals("PATHL7")){
-								isUnstructuredDoc = ((PATHL7Handler) handler).unstructuredDocCheck(headers.get(i));
-								isVIHARtf = ((PATHL7Handler) handler).vihaRtfCheck(headers.get(i));
-								if(handler.getPatientLocation().equals("SG") || handler.getPatientLocation().equals("CDC")){
-									isSGorCDC = true;
-								}
-	
-							} else if(handler.getMsgType().equals("CLS")){
-	                            isUnstructuredDoc = ((CLSHandler) handler).isUnstructured();
-	                        }
+						//Checks to see if the PATHL7 lab is an unstructured document, a VIHA RTF pathology report, or if the patient location is SG/CDC
+						//labs that fall into any of these categories have certain requirements per Excelleris
+						if(handler.getMsgType().equals("PATHL7")){
+							isUnstructuredDoc = ((PATHL7Handler) handler).unstructuredDocCheck(headers.get(i));
+							isVIHARtf = ((PATHL7Handler) handler).vihaRtfCheck(headers.get(i));
+							if(handler.getPatientLocation().equals("SG") || handler.getPatientLocation().equals("CDC")){
+								isSGorCDC = true;
+							}
 
-					
-							if( handler.getMsgType().equals("MEDITECH") ) {
-								isUnstructuredDoc = ((MEDITECHHandler) handler).isUnstructured();
-							} %>
-							
+						} else if(handler.getMsgType().equals("CLS")){
+                            isUnstructuredDoc = ((CLSHandler) handler).isUnstructured();
+                        }
+						
+						if( handler.getMsgType().equals("MEDITECH") ) {
+							isUnstructuredDoc = ((MEDITECHHandler) handler).isUnstructured();
+						} %>
+						
 		                       <table style="page-break-inside:avoid;" bgcolor="#003399" border="0" cellpadding="0" cellspacing="0" width="100%">
 	                           <tr>
 	                               <td colspan="4" height="7">&nbsp;</td>
@@ -1219,15 +1218,11 @@ pre {
 									   <td width="20%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>
 								   <% } %>
 
-	                               <td width="31%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formTestName"/></td>
-	                               <td width="31%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formResult"/></td>
-	                               <td width="31%" align="middle" valign="bottom" class="Cell"><bean:message key="oscarMDS.segmentDisplay.formDateTimeCompleted"/></td>
-
 	                           </tr><%
 						} else {%>
                        <table width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#CCCCFF" bordercolor="#9966FF" bordercolordark="#bfcbe3" name="tblDiscs" id="tblDiscs">
                            
-                           <% if( handler instanceof MEDITECHHandler && "MIC".equals( ((MEDITECHHandler) handler).getSendingApplication() ) ) { %>
+                           <% if( "MIC".equals( ((MEDITECHHandler) handler).getSendingApplication() ) ) { %>
 	                          		<tr>
 			                   			<td colspan="8" ></td>
 		                   			</tr>
@@ -1262,12 +1257,13 @@ pre {
  							<%
 						} // end else / if isUnstructured
                            
-                           for ( j=0; j < OBRCount; j++){
+                        for ( j=0; j < OBRCount; j++) {
 
                         	   String lastObxSetId = "0";
                                boolean obrFlag = false;
                                int obxCount = handler.getOBXCount(j);
-                               for (k=0; k < obxCount; k++){
+                               
+                               for (k=0; k < obxCount; k++) {
 
                                	String obxName = handler.getOBXName(j, k);
 
@@ -1522,67 +1518,55 @@ pre {
 										    	rtfParser.read(rtfStream, doc, 0);
 										    	String rtfText = doc.getText(0, doc.getLength()).replaceAll("\n", "<br>");
 										    	String disclaimer = "<br>IMPORTANT DISCLAIMER: You are viewing a PREVIEW of the original report. The rich text formatting contained in the original report may convey critical information that must be considered for clinical decision making. Please refer to the ORIGINAL report, by clicking 'Print', prior to making any decision on diagnosis or treatment.";%>
-										    	<td align="left"><%= rtfText + disclaimer %></td>
-										    <%}else{%>
-                                           		<td align="left"><%= handler.getOBXResult( j, k) %></td>
-                                           	<%} %>
-                                           	
-                                          	<% if(handler.getTimeStamp(j, k).equals(handler.getTimeStamp(j, k-1)) && (obxCount>1)){ %>
-                                       			<td align="center"></td>
-                                       		<%} else {%> 
-                                       			<td align="center"><%= handler.getTimeStamp(j, k) %></td>
-                                       		<%} 
-                                       		
-                                       		} else {//if it isn't a PATHL7 doc %>
+										    	<td align="left"><%= rtfText + disclaimer %></td><%} %><%
+											else{%>
+                                           		<td align="left"><%= handler.getOBXResult( j, k) %></td><%} %>
+                                           	<%if(handler.getTimeStamp(j, k).equals(handler.getTimeStamp(j, k-1)) && (obxCount>1)){
+                                        			%><td align="center"></td><%}
+	                                       		else{%> <td align="center"><%= handler.getTimeStamp(j, k) %></td><%}%>
+	                                          	
+                                           	<td align="center" valign="top">
+	                                          		<a href="javascript:void(0);" title="Annotation" onclick="window.open('<%=request.getContextPath()%>/annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=segmentID%>&amp;demo=<%=demographicID%>&amp;other_id=<%=String.valueOf(j) + "-" + String.valueOf(k) %>','anwin','width=400,height=500');">
+			                                        	<%if(!isPrevAnnotation){ %><img src="../../../images/notes.gif" alt="rxAnnotation" height="16" width="13" border="0"/><%}else{ %><img src="../../../images/filledNotes.gif" alt="rxAnnotation" height="16" width="13" border="0"/> <%} %>
+			                                        </a>
+			                                    </td>
+			                                           	
+	                                          	
+	                                  			<% }//end of isUnstructuredDoc
+                                   			
+                                   			else{//if it isn't a PATHL7 doc%>
 
-                               				<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                               				
-                               				<% if(handler.getMsgType().equals("PATHL7") && !isAllowedDuplicate && (obxCount>1) && handler.getOBXIdentifier(j, k).equalsIgnoreCase(handler.getOBXIdentifier(j, k-1)) && (handler.getOBXValueType(j, k).equals("TX") || handler.getOBXValueType(j, k).equals("FT"))){%>
+                               		<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
+                               		
+                               		
+                               		
+                               		<%
+                               			if(handler.getMsgType().equals("PATHL7") && !isAllowedDuplicate && (obxCount>1) && handler.getOBXIdentifier(j, k).equalsIgnoreCase(handler.getOBXIdentifier(j, k-1)) && (handler.getOBXValueType(j, k).equals("TX") || handler.getOBXValueType(j, k).equals("FT"))){%>
+
                                    				<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= URLEncoder.encode(handler.getOBXIdentifier(j, k).replaceAll("&","%26"),"UTF-8") %>')"></a><%
-                                   			} else {
+                                   				}
+                               				else{
                                				
-
+                               				 
                                					if(handler instanceof AlphaHandler && lastObxSetId.equals(((AlphaHandler)handler).getObxSetId(j, k))) {
-								%>
-                               							<td></td>
-                               					<% } else { %>
-			                                           <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= URLEncoder.encode(handler.getOBXIdentifier(j, k).replaceAll("&","%26"),"UTF-8") %>')"><%=obxName %></a>
-			                
-                                           				<% if(loincCode != null) { %>
-                                                			<a href="javascript:popupStart('660','1000','http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.1&mainSearchCriteria.v.c=<%=loincCode%>&informationRecipient.languageCode.c=en')"> info</a>
-                                                		<%} %> 
-                                                		
-                                                		</td>
-                                           		<% }
-                                   		
-                               					
-                               				}%>
+                               						%><td></td><%
+                               					} else {
+                               				
+                               				%>
+                                           <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= URLEncoder.encode(handler.getOBXIdentifier(j, k).replaceAll("&","%26"),"UTF-8") %>')"><%=obxName %></a>
+                                           &nbsp;<%if(loincCode != null){ %>
+                                                	<a href="javascript:popupStart('660','1000','http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.1&mainSearchCriteria.v.c=<%=loincCode%>&informationRecipient.languageCode.c=en')"> info</a>
+                                                	<%} %> </td>
+                                           <%} }%>
                                            
                                            
                                            <% if(handler instanceof AlphaHandler && "FT".equals(handler.getOBXValueType(j, k))) { %>
                                            		<td colspan="4"><%= handler.getOBXResult( j, k) %></td>
                                            <%
                                        			lastObxSetId = ((AlphaHandler)handler).getObxSetId(j,k);
-                                    	  
-                                           } else { %> 
-                                           <%
-                                           	String align = "right";
-                                          	//for pathl7, if it is an SG/CDC result greater than 100 characters, left justify it
-                                           	if((handler.getOBXResult(j, k).length() > 100) && (isSGorCDC)){
-                                           		align="left";
-                                           	}%>
-                 	
-                                           	<%
-                                           		//CLS textual results - use 4 columns.
-                                           		if(handler instanceof CLSHandler && ( (oscar.oscarLab.ca.all.parsers.CLSHandler) handler).isUnstructured()) {
-                                           	%>
-                                           		<td align="left" colspan="4"><%= handler.getOBXResult( j, k) %></td>
+												
+                                           } else if(handler.getMsgType().equals("MEDITECH")  && isUnstructuredDoc ) { %>
                                            	
-                                           	<%		
-                                           		} 
-
-                                           		else if(handler.getMsgType().equals("MEDITECH")  && isUnstructuredDoc ) {
-                                           	%>
                                            	
 				                                        <pre>
 					                             		<%= handler.getOBXResult(j,k) %>
@@ -1596,9 +1580,15 @@ pre {
 					                             		</tr>
 				                                 
                                            	<%		
-                                           		} 
-                                           		// else {
+                                           		} else {
                                            	%>
+                                           	
+                                           	<%
+                                           	String align = "right";
+                                          	//for pathl7, if it is an SG/CDC result greater than 100 characters, left justify it
+                                           	if((handler.getOBXResult(j, k).length() > 100) && (isSGorCDC)){
+                                           		align="left";
+                                           	}%>
 
                                            <td align="<%=align%>"><%= handler.getOBXResult( j, k) %></td>
                                           
@@ -1640,14 +1630,15 @@ pre {
                                              </td>
                                             </tr>
                                        			<%}
-                                       	} // end for loop %> 
+                                       	} 
+                                       	
+                                       
+                                       	%>
+								 <%  }
 
-                                 <%  }  
-                                    
                                   }
-
-                               }
-                        
+                                    
+                           } // end for (k=0; k < obxCount; k++){
 
                            if (!handler.getMsgType().equals("PFHT")) {
                                if (headers.get(i).equals(handler.getObservationHeader(j, 0))) {
@@ -1674,14 +1665,14 @@ pre {
 	                                         </tr>
 	                              		<%}
                                	}
-                                }//end for k=0
-
-
-                             }//end if handler.getObservation..
-                          } // end for if (PFHT)
-                        	  
-                              } //end for j=0; j<obrCount;
-                          } // // end for headersfor i=0... (headers) line 625
+                                } // end for (k=0; k < handler.getOBRCommentCount(j); k++)
+                             }//end if (headers.get(i).equals(handler.getObservationHeader(j, 0))) {
+                          } // end (!handler.getMsgType().equals("PFHT"))
+                        	
+                               
+                       } //end for ( j=0; j < OBRCount; j++)
+                            		  
+                    } // end for(i=0;i<headers.size();i++)
                          
 							if (handler.getMsgType().equals("Spire")) {
 
@@ -1713,13 +1704,13 @@ pre {
 									<%
 									lineNumber++;
 								}
-							}
+							} // end (handler.getMsgType().equals("Spire")
 
-                           %>
-                       </table>
-                       <%
+                           %> 
+                           </table> 
+                           <%
 
-                       } // end for handler.getMsgType().equals("MEDVUE")
+                } // end for handler.getMsgType().equals("MEDVUE")
 
                        %>
 <%-- FOOTER --%>

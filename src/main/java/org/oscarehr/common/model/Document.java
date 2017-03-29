@@ -148,6 +148,8 @@ public class Document extends AbstractModel<Integer> implements Serializable {
 
     private Boolean restrictToProgram=false;
     
+    private String fileSignature;
+    
     public Document() {
     }
 
@@ -375,6 +377,15 @@ public class Document extends AbstractModel<Integer> implements Serializable {
 	public void setRestrictToProgram(Boolean restrictToProgram) {
 		this.restrictToProgram = restrictToProgram;
 	}
+
+	public String getFileSignature() {
+		return fileSignature;
+	}
+
+	public void setFileSignature(String fileSignature) {
+		this.fileSignature = fileSignature;
+	}
+	
 	
 	
 }

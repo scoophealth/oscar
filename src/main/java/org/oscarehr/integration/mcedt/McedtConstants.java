@@ -23,6 +23,7 @@
  */
 package org.oscarehr.integration.mcedt;
 
+
 public class McedtConstants {
 	
 	public static final String REQUEST_ATTR_KEY_RESOURCE_ID = "resourceId";
@@ -43,5 +44,5 @@ public class McedtConstants {
 	public static final String SESSION_SUCCESSFUL_UPLOADS ="successfulUpload";
 	public static final String SESSION_KEY_UPLOAD_RESPONSE_RESULT = "uploadResponseResult";
 	public static final String SESSION_KEY_SUBMIT_RESPONSE_RESULT = "submitResponseResult";
-	
+
 }
