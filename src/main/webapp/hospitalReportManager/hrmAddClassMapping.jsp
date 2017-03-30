@@ -85,6 +85,12 @@ if(!authed) {
 		</div>
 		<div class="control-group">
 			<label class="control-label">Sending Facility ID (* for all):</label>
+						<div class="controls">
+				<input type="text" name="sendingFacilityId" value="*" />
+			</div>	
+		</div>
+		<div class="control-group">
+			<label class="control-label">Category:</label>
 			<div class="controls">
 				<select name="category">
 				<%
@@ -97,12 +103,6 @@ if(!authed) {
 					}
 				%>
 				</select>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label">Category:</label>
-			<div class="controls">
-				<input type="text" name="sendingFacilityId" value="*" />
 			</div>
 		</div>
 		<div class="control-group">
