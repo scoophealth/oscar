@@ -103,6 +103,10 @@ public class BillingClaimsErrorReportBeanHandlerSave {
 					erObj.setVer(nextline.substring(13, 15));
 					erObj.setDob(nextline.substring(15, 23));
 					erObj.setBilling_no(nextline.substring(23, 31));
+					
+					if(erObj.getBilling_no().startsWith("FC")) {
+						erObj.setBilling_no(erObj.getBilling_no().substring(2));
+					}
 					erObj.setRef_no(nextline.substring(35, 41));
 					erObj.setFacility(nextline.substring(41, 45));
 					erObj.setAdmitted_date(nextline.substring(45, 53));
