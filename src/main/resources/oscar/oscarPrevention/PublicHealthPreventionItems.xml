@@ -363,6 +363,7 @@ Varicella Immunoglobulin	VarIg
  
 	<item
 		resultDesc=""
+		private="sexualHealth"
 		desc="HepB screen= Hepatitis B serology (hep B sAg + anti-HBc or anti-HBs) in those with multiple sex partners, MSM, and injection drug users"
 		name="Hep B screen"
 		link="http://www.cdc.gov/std/treatment/"
@@ -371,7 +372,7 @@ Varicella Immunoglobulin	VarIg
 		maxAge="24"
 		showIfMinRecordNum="1" />
 		
-	<!-- item		
+	<!--item		
 		resultDesc=""
 		desc="VDRL = VDRL screening for syphillis; pregnant women at the first prenatal visit (and 3rd trimester and delivery high-risk groups), all sex workers, in correctional facilities, diagnosed with another STD, MSM with high-risk behaviors"
 		name="VDRL"
@@ -408,16 +409,18 @@ Varicella Immunoglobulin	VarIg
             minAge="0" atc="J07BB02" /-->
 
 	<item 
+		private="sexualHealth"
 		resultDesc=""
 		desc="Other Layout A" name="OtherA" link="" layout="injection"
 		showIfMinRecordNum="1" />
 
 	<item 
+		private="sexualHealth"
 		resultDesc=""
 		desc="Other Layout B" name="OtherB" link="" layout="PAPMAM"
 		showIfMinRecordNum="1" />
 		
-	<!-- item
+	<!--item
 		resultDesc=""
 		desc= "Smoking history"
 		name="Smoking"		
@@ -654,6 +657,19 @@ Varicella Immunoglobulin	VarIg
 		resultDesc=""
 		desc="Women ages of 9 and 26 years are recommended to receive human papillomavirus vaccine" 
 		name="HPV Vaccine"
+		healthCanadaType="HPV"
+		link="http://www.cdc.gov/std/treatment/" 
+		layout="injection" 
+		minAge="9"
+		maxAge="26" sex = "F"
+   		showIfMinRecordNum="1" />
+
+
+	<item 
+		private="sexualHealth"
+		resultDesc=""
+		desc="Women ages of 9 and 26 years are recommended to receive human papillomavirus vaccine" 
+		name="RX HPV Vaccine"
 		healthCanadaType="HPV"
 		link="http://www.cdc.gov/std/treatment/" 
 		layout="injection" 
