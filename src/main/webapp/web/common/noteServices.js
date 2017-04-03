@@ -80,9 +80,7 @@ angular.module("noteServices", [])
        },
        tmpSave: function(demographicNo,notea){
           	var deferred = $q.defer();
-           	var noteToSave = { encounterNote: notea };
-           	console.log("sending to server ",noteToSave);
-           	 $http.post(this.apiPath+'/'+demographicNo+'/tmpSave',noteToSave).success(function(data){
+           	 $http.post(this.apiPath+'/'+demographicNo+'/tmpSave',notea).success(function(data){
                	console.log("returned from /tmpSave",data);
                	deferred.resolve(data);
                }).error(function(){
