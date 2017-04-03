@@ -37,6 +37,7 @@
 
 <%@ include file="/taglibs.jsp"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<script type="text/javascript" src="../share/javascript/Oscar.js" ></script>
 
 <% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
 
@@ -172,7 +173,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 				 </security:oscarSec>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r">
 				<li>
-					<a HREF="#" ONCLICK ="popupOscarRx(700,687,'<html:rewrite page="/admin/admin.jsp"/>');return false;"><bean:message key="global.admin"/></a>
+					 <a href="javascript:void(0)" id="admin-panel" TITLE='Administration Panel' onclick="newWindow('<%=request.getContextPath()%>/administration/','admin')">Administration</a>
 				</li>
 </security:oscarSec>
 				<oscar:oscarPropertiesCheck property="referral_menu" value="yes">
