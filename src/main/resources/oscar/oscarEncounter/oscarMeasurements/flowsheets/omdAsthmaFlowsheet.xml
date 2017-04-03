@@ -13,7 +13,7 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
   -->
-<flowsheet name="ASTH" display_name="ASTHMA" warning_colour="#E00000" recommendation_colour="yellow" dxcode_triggers="icd9:493" ds_rules="diab.drl" top_HTML="">
+<flowsheet name="ASTH" display_name="ASTHMA" warning_colour="#E00000" recommendation_colour="yellow" dxcode_triggers="icd9:493" ds_rules="diab.drl">
     <indicator key="HIGH 1" colour="#E00000" />
     <indicator key="HIGH" colour="orange" />
     <indicator key="LOW" colour="#9999FF" />
