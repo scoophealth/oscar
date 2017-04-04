@@ -83,6 +83,11 @@ String pageToShow=request.getParameter("load");
 						<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/unLock.jsp">
 						<bean:message key="admin.admin.unlockAcct"/></a></li>
 					</security:oscarSec>
+					
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/quickUser.jsp">
+						<bean:message key="admin.admin.btnQuickUser" />
+					</a></li>
+					
 				</ul>
 				</div>
 				</div>

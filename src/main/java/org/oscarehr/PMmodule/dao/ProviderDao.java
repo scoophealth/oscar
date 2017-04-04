@@ -434,6 +434,19 @@ public class ProviderDao extends HibernateDaoSupport {
 		}
 	
 	}
+	
+	public List<String> getAllProviderIds() {
+		Session session = getSession();
+		try {
+			SQLQuery query = session.createSQLQuery("select provider_no from provider");
+			List<String> results = query.list();
+			return results;
+		}finally {
+			this.releaseSession(session);
+		}
+	
+	}
+	
 
     public void updateProvider( Provider provider) {
         this.getHibernateTemplate().update(provider);
