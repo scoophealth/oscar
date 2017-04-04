@@ -429,7 +429,7 @@
 		<dependency>
 			<groupId>org.oscarehr.caisi_integrator</groupId>
 			<artifactId>caisi_integrator_client_stubs</artifactId>
-			<version>0.2</version>
+			<version>0.8</version>
 		</dependency>
 
 		<!-- macplus -->

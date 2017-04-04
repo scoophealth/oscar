@@ -23,11 +23,20 @@
 
 package org.oscarehr.PMmodule.caisi_integrator;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,18 +52,22 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.ws.WebServiceException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.tika.io.IOUtils;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.SecUserRole;
-import org.oscarehr.PMmodule.web.forms.IntegratorPausedException;
 import org.oscarehr.caisi_integrator.ws.CachedAdmission;
 import org.oscarehr.caisi_integrator.ws.CachedAppointment;
 import org.oscarehr.caisi_integrator.ws.CachedBillingOnItem;
@@ -87,9 +100,7 @@ import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityWs;
 import org.oscarehr.caisi_integrator.ws.Gender;
 import org.oscarehr.caisi_integrator.ws.NoteIssue;
-import org.oscarehr.caisi_integrator.ws.ProgramWs;
 import org.oscarehr.caisi_integrator.ws.ProviderTransfer;
-import org.oscarehr.caisi_integrator.ws.ProviderWs;
 import org.oscarehr.caisi_integrator.ws.Role;
 import org.oscarehr.caisi_integrator.ws.SetConsentTransfer;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
@@ -140,8 +151,7 @@ import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
-
-import org.oscarehr.common.model.IntegratorProgress;
+import org.oscarehr.common.model.IntegratorFileLog;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementMap;
 import org.oscarehr.common.model.MeasurementType;
@@ -151,6 +161,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Security;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.labs.LabIdAndType;
+import org.oscarehr.managers.IntegratorFileLogManager;
 import org.oscarehr.managers.IntegratorPushManager;
 import org.oscarehr.managers.PatientConsentManager;
 import org.oscarehr.util.BenchmarkTimer;
@@ -158,12 +169,12 @@ import org.oscarehr.util.CxfClientUtilsOld;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.MiscUtilsOld;
-import org.oscarehr.util.ShutdownException;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.XmlUtils;
 import org.springframework.beans.BeanUtils;
 import org.w3c.dom.Document;
+
+import com.google.common.io.Files;
 
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
@@ -181,14 +192,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private static final Logger logger = MiscUtils.getLogger();
 
 	private static final String INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY = "INTEGRATOR_UPDATE_PERIOD";
-	private static final String INTEGRATOR_THROTTLE_DELAY_PROPERTIES_KEY = "INTEGRATOR_THROTTLE_DELAY";
-	private static final long INTEGRATOR_THROTTLE_DELAY = Long.parseLong((String) OscarProperties.getInstance().get(INTEGRATOR_THROTTLE_DELAY_PROPERTIES_KEY));
-	private static final String INTEGRATOR_SLEEP_ON_ERROR_KEY = "INTEGRATOR_SLEEP_ON_ERROR";
-	private static final long SLEEP_ON_ERROR = Long.parseLong((String) OscarProperties.getInstance().get(INTEGRATOR_SLEEP_ON_ERROR_KEY));
-	private static final double SLEEP_ON_ERROR_STEP = 1.5;
 
 	private static boolean ISACTIVE_PATIENT_CONSENT_MODULE = Boolean.FALSE; 
-
+	
+	ObjectOutputStream out = null;
+	
 	
 	private static Timer timer = new Timer("CaisiIntegratorUpdateTask Timer", true);
 
@@ -222,16 +230,17 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private MeasurementDao measurementDao = (MeasurementDao) SpringUtils.getBean("measurementDao");
 	private AllergyDao allergyDao = (AllergyDao) SpringUtils.getBean("allergyDao");
 	private PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
-	private IntegratorPushManager integratorPushManager = SpringUtils.getBean(IntegratorPushManager.class);
-
+	
 	private UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
 	private PatientConsentManager patientConsentManager = (PatientConsentManager) SpringUtils.getBean(PatientConsentManager.class);
+	private IntegratorFileLogManager integratorFileLogManager = SpringUtils.getBean(IntegratorFileLogManager.class);
+	private MeasurementTypeDao measurementTypeDao = (MeasurementTypeDao) SpringUtils.getBean("measurementTypeDao");
+	
+	
 	private ConsentType consentType;
 	
 	private static TimerTask timerTask = null;
 
-	private HashSet<Integer> programIds;
-	
 	public static synchronized void startTask() {
 		if (timerTask == null) {
 			long period = 0;
@@ -280,6 +289,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		loggedInInfo.setLoggedInProvider(p);
 		loggedInInfo.setLoggedInSecurity(security);
 		
+		if(p == null) {
+			logger.warn("INTEGRATOR_USER doesn't exist..please check properties file");
+			return;
+		}
+		
 		// If "push all patients that have consented" is set in the Integrator properties
 		// this will ensure that only consenting patients will be pushed.
 		// Note: the consent module must be activated in the Oscar properties file; and the Integrator Patient Consent program
@@ -290,17 +304,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			consentType = patientConsentManager.getConsentType( UserProperty.INTEGRATOR_PATIENT_CONSENT );
 		}
 		
-		if(p == null) {
-			logger.warn("INTEGRATOR_USER doesn't exist..please check properties file");
-			return;
-		}
-		
 		logger.debug("CaisiIntegratorUpdateTask starting #" + numberOfTimesRun+"  running as "+loggedInInfo.getLoggedInProvider());
 
 		try {
 			pushAllFacilities(loggedInInfo);
-		} catch (ShutdownException e) {
-			logger.debug("CaisiIntegratorUpdateTask received shutdown notice.");
 		} catch (Exception e) {
 			logger.error("unexpected error occurred", e);
 		} finally {
@@ -310,14 +317,13 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	public void pushAllFacilities(LoggedInInfo loggedInInfo) throws ShutdownException {
+	public void pushAllFacilities(LoggedInInfo loggedInInfo)  {
 		List<Facility> facilities = facilityDao.findAll(true);
 
 		for (Facility facility : facilities) {
 			try {
 				if (facility.isIntegratorEnabled()) {
 					pushAllDataForOneFacility(loggedInInfo, facility);
-					findChangedRecordsFromIntegrator(loggedInInfo, facility);
 				}
 			} catch (WebServiceException e) {
 				if (CxfClientUtilsOld.isConnectionException(e)) {
@@ -326,15 +332,15 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				} else {
 					logger.error("Unexpected error.", e);
 				}
-			} catch (ShutdownException e) {
-				throw (e);
 			} catch (Exception e) {
 				logger.error("Unexpected error.", e);
 			}
 		}
 	}
+	
+	
 
-	private void pushAllDataForOneFacility(LoggedInInfo loggedInInfo, Facility facility) throws IOException, ShutdownException, IntegratorPausedException {
+	private void pushAllDataForOneFacility(LoggedInInfo loggedInInfo, Facility facility) throws IOException {
 		logger.info("Start pushing data for facility : " + facility.getId() + " : " + facility.getName());
 
 		// check all parameters are present
@@ -347,76 +353,121 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			return;
 		}
 
+
+		// start at the beginning of time (aka jan 1, 1970) so by default everything is pushed
+		Date lastDataUpdated = new Date(0);
+		
+		IntegratorFileLog lastFile = integratorFileLogManager.getLastFileData();
+		if (lastFile != null && lastFile.getCurrentDate() != null){
+			lastDataUpdated = lastFile.getCurrentDate();
+		}
+		
 		FacilityWs service = CaisiIntegratorManager.getFacilityWs(loggedInInfo, facility);
 		CachedFacility cachedFacility = service.getMyFacility();
 
-		// start at the beginning of time so by default everything is pushed
-		Date lastDataUpdated = new Date(0);
-		if (cachedFacility != null && cachedFacility.getLastDataUpdate() != null){
-			lastDataUpdated = DateUtils.toDate(cachedFacility.getLastDataUpdate());
-		}else{
-			userPropertyDao.saveProp(UserProperty.INTEGRATOR_FULL_PUSH+facility.getId(), "1");
-		}
 
 		// this needs to be set now, before we do any sends, this will cause anything updated after now to be resent twice but it's better than items being missed that were updated after this started.
 		Date currentUpdateDate = new Date();
 
 		//setup this list once for this facility
 		List<Program> programs = programDao.getProgramsByFacilityId(facility.getId());
-		programIds = new HashSet<Integer>();
-		for (Program program : programs) {
-			programIds.add(program.getId());
+	
+		String documentDir = OscarProperties.getInstance().getProperty("DOCUMENT_DIR").trim();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+		String dateOnFile = formatter.format(currentUpdateDate);
+		String filename = "IntegratorPush_" + facility.getId() + "_" + dateOnFile;
+		
+		try {
+			//create the first file
+			out = new ObjectOutputStream(new FileOutputStream(new File(documentDir + File.separator + filename + ".1.ser")));
+		
+			IntegratorFileHeader header = new IntegratorFileHeader();
+			header.setDate(currentUpdateDate);
+			header.setLastDate(lastDataUpdated);
+			header.setDependsOn(lastFile!=null?lastFile.getChecksum():null);
+			out.writeUnshared(header);
+			
+			pushFacility(out,facility, lastDataUpdated);
+			pushProviders(out,lastDataUpdated, facility);
+			pushPrograms(out,lastDataUpdated, facility);
+			
+			// sync the Patient Consent tables. See method signature for details.
+			if( CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE ) {
+				this.pushPatientConsentTable(out, loggedInInfo, lastDataUpdated, facility);
+			}
+			
+			IOUtils.closeQuietly(out);
+			out = new ObjectOutputStream(new FileOutputStream(new File(documentDir + File.separator + filename + ".2.ser")));
+			
+			
+			
+			int currentFileNumber = pushAllDemographics(documentDir + File.separator + filename,loggedInInfo, facility, lastDataUpdated,cachedFacility,programs);
+			///////////////////////////////
+			//pushAllDemographicsMultiThreaded(documentDir + File.separator + filename,loggedInInfo, facility, lastDataUpdated,cachedFacility,programs);
+			
+			//int currentFileNumber = 2;
+			/////////////////////////////////////
+			
+			IOUtils.closeQuietly(out);
+			out = new ObjectOutputStream(new FileOutputStream(new File(documentDir + File.separator + filename + "."+(++currentFileNumber)+".ser")));
+			
+			IntegratorFileFooter footer =new IntegratorFileFooter();
+			out.writeUnshared(footer);
+			
+		}catch(IOException e) {
+			logger.error("Error writing to integrator file. Cannot use the file needed to store the data. Aborting.", e);
+			return;
+		} finally {
+			IOUtils.closeQuietly(out);
+		}
+		
+		//creates a zip (.zipTemp) and returns the checksum for th elog
+		String checksum = null;
+		try {
+			checksum = completeFile(documentDir,filename);
+		} catch(Exception e) {
+			throw new IOException(e);
+		}
+		
+		//save this log
+		integratorFileLogManager.saveNewFileData(filename + ".zip",checksum,lastDataUpdated,currentUpdateDate);
+		
+		//publish the file
+		try {
+			Files.move(new File(documentDir + File.separator + filename + ".zipTemp"), new File(documentDir + File.separator + filename + ".zip"));
+		}catch(Exception e) {
+			logger.error("Error renaming file",e);	
 		}
 				
-		// do all the sync work
-		// in theory sync should only send changed data, but currently due to
-		// the lack of proper data models, we don't have a reliable timestamp on when things change so we just push everything, highly inefficient but it works until we fix the
-		// data model. The last update date is available though as per above...
-		pushFacility(facility, lastDataUpdated);
-		pushProviders(lastDataUpdated, facility);
-		pushPrograms(lastDataUpdated, facility);
 		
-		// sync the Patient Consent tables. See method signature for details.
-		if( CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE ) {
-			this.pushPatientConsentTable(loggedInInfo, lastDataUpdated, facility);
-		}
-		
-		pushAllDemographics(loggedInInfo, facility, lastDataUpdated,cachedFacility,programs);
-		
-		// all things updated successfully
-		service.updateMyFacilityLastUpdateDate(DateUtils.toCalendar(currentUpdateDate));
-
 		logger.info("Finished pushing data for facility : " + facility.getId() + " : " + facility.getName());
 	}
 
-	private void pushFacility(Facility facility, Date lastDataUpdated) throws MalformedURLException {
+
+	private void pushFacility(ObjectOutputStream out, Facility facility, Date lastDataUpdated) throws MalformedURLException, IOException {
 		if (facility.getLastUpdated().after(lastDataUpdated)) {
 			logger.debug("pushing facility record");
 
 			CachedFacility cachedFacility = new CachedFacility();
 			BeanUtils.copyProperties(facility, cachedFacility);
 
-			FacilityWs service = CaisiIntegratorManager.getFacilityWs(null, facility);
-			service.setMyFacility(cachedFacility);
+			
+			out.writeUnshared(cachedFacility);
 		} else {
 			logger.debug("skipping facility record, not updated since last push");
 		}
 	}
 
-	private void pushPrograms(Date lastDataUpdated, Facility facility) throws MalformedURLException, ShutdownException {
-		// all are always sent so program deletions have be proliferated.
-		//List<Program> programs = programDao.getProgramsByFacilityId(facility.getId());
+	private void pushPrograms(ObjectOutputStream out, Date lastDataUpdated, Facility facility) throws MalformedURLException, IOException {
 		List<Integer> programIds = programDao.getRecordsAddedAndUpdatedSinceTime(facility.getId(),lastDataUpdated);
 		
 		ArrayList<CachedProgram> cachedPrograms = new ArrayList<CachedProgram>();
-		ProgramWs service = CaisiIntegratorManager.getProgramWs(null, facility);
 		
 		for (Integer programId : programIds) {
 			Program program = programDao.getProgram(programId);
 			
 			logger.debug("pushing program : " + program.getId() + ':' + program.getName());
-			MiscUtilsOld.checkShutdownSignaled();
-
+			
 			CachedProgram cachedProgram = new CachedProgram();
 
 			BeanUtils.copyProperties(program, cachedProgram);
@@ -428,9 +479,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			try {
 				cachedProgram.setGender(Gender.valueOf(program.getManOrWoman().toUpperCase()));
 			} catch (Exception e) {
-				// do nothing, we can't assume anything is right or wrong with genders
-				// until the whole mess is sorted out, for now it's a what you get is
-				// what you get
+				
 			}
 
 			if (program.isTransgender()) cachedProgram.setGender(Gender.T);
@@ -443,19 +492,16 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 
 		if(cachedPrograms.size()>0) {
-			service.setCachedPrograms(cachedPrograms);
-			throttleAndChecks();
+			out.writeUnshared(cachedPrograms);
 		}
 		
 		List<Integer> allProgramIds = programDao.getRecordsByFacilityId(facility.getId());
 		if(allProgramIds.size()>0) {
-			service.deleteCachedProgramsMissingFromList(allProgramIds);
+			out.writeUnshared(new ProgramDeleteIdWrapper(allProgramIds) );
 		}
 	}
 
-	private void pushProviders(Date lastDataUpdated, Facility facility) throws MalformedURLException, ShutdownException {
-		ProviderWs service = CaisiIntegratorManager.getProviderWs(null, facility);
-
+	private void pushProviders(ObjectOutputStream out, Date lastDataUpdated, Facility facility) throws MalformedURLException, IOException {
 		List<String> providerIds = providerDao.getRecordsAddedAndUpdatedSinceTime(lastDataUpdated);
 		providerIds.addAll(secUserRoleDao.getRecordsAddedAndUpdatedSinceTime(lastDataUpdated));
 		
@@ -493,16 +539,14 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			providerTransfers.add(providerTransfer);
 			
 			if((++i % 50) == 0) {
-				service.setCachedProviders(providerTransfers);
-				throttleAndChecks();
+				out.writeUnshared(providerTransfers);
 				providerTransfers.clear();
 			}
 			
 		}
 		
 		if(providerTransfers.size()>0) {
-			service.setCachedProviders(providerTransfers);
-			throttleAndChecks();
+			out.writeUnshared(providerTransfers);
 		}
 	}
 	
@@ -510,17 +554,18 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		UserProperty fullPushProp = userPropertyDao.getProp(UserProperty.INTEGRATOR_FULL_PUSH+facility.getId());
 		
 		if (OscarProperties.getInstance().isPropertyActive("INTEGRATOR_FORCE_FULL")) {
-			fullPushProp.setValue("1");
+			return true;
 		}
 		
 		if (fullPushProp != null && fullPushProp.getValue().equals("1")) {
+			userPropertyDao.saveProp(UserProperty.INTEGRATOR_FULL_PUSH+facility.getId(), "0"); 
 			return true;
 		}
 		
 		return false;
 	}
 	
-	//all facilities
+
 	private boolean isPushDisabled() {
 		UserProperty prop = userPropertyDao.getProp(IntegratorPushManager.DISABLE_INTEGRATOR_PUSH_PROP);
 		
@@ -542,7 +587,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		
 		for( int demographicNo : demographicNoList ) {
 			if( checkPatientConsent( demographicNo ) ) {
-				logger.info( "Adding consented Demographic " + demographicNo + " to the Integrator push list" );
+				logger.debug( "Adding consented Demographic " + demographicNo + " to the Integrator push list" );
 				consentedSet.add( demographicNo );
 			}
 		}
@@ -557,17 +602,18 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	}
 
 	private List<Integer> getDemographicIdsToPush(Facility facility, Date lastDataUpdated, List<Program> programs) {
+	
+		List<Integer> fullFacilitydemographicIds = null;
 		
-		List<Integer> fullFacilitydemographicIds  = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
+		fullFacilitydemographicIds = DemographicDao.getDemographicIdsAdmittedIntoFacility(facility.getId());
 		
-		
-		if ( isFullPush(facility) ) {
+		if ( isFullPush(facility) || lastDataUpdated.getTime() == 0 ) {
 			logger.info("Integrator pushing ALL demographics");
 			
 			// check if patient consent module is active and then sort out all patients that 
 			// have given consent
 			if( CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE ) {
-				logger.info("Integrator patient consent is active. Checking demographic list.");				
+				logger.debug("Integrator patient consent is active. Checking demographic list.");				
 				return checkPatientConsent( fullFacilitydemographicIds );
 			} else {
 				return fullFacilitydemographicIds;
@@ -614,168 +660,286 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			
 	        while(demoIterator.hasNext()){ //Verify that the demographic is in the Facility
 	                Integer demo = demoIterator.next();
-	                if( ! fullFacilitydemographicIds.contains(demo) ){
+	                if(! fullFacilitydemographicIds.contains(demo) ){
 	                	demoIterator.remove();
 	                } 
 	                
 	                else if( CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE && ! checkPatientConsent( demo ) ) {
-	    				logger.info("Integrator patient consent is active. Checking demographic list of changed demographics");				
+	    				logger.debug("Integrator patient consent is active. Checking demographic list of changed demographics");				
 	    				demoIterator.remove();
 	    			}
 	        }
-			
-	        if( isFullPush(facility) ){
-				   userPropertyDao.saveProp(UserProperty.INTEGRATOR_FULL_PUSH+facility.getId(), "0");
-			}
+	       
 			
 			return(new ArrayList<Integer>(uniqueDemographicIdsWithSomethingNew));
 			
 		}
 	}
-
-	private void pushAllDemographics(LoggedInInfo loggedInInfo, Facility facility,Date lastDataUpdated, 
-			CachedFacility cachedFacility, List<Program> programs) 
-			throws MalformedURLException, ShutdownException, IntegratorPausedException {
+	
+	protected int pushAllDemographicsMultiThreaded(String parentFilename, LoggedInInfo loggedInInfo, Facility facility,Date lastDataUpdated, 
+			CachedFacility cachedFacility, List<Program> programs) {
+		
+		
+		String documentDir = OscarProperties.getInstance().getProperty("DOCUMENT_DIR").trim();
+		int currentFileNumber = 2;
 		
 		List<Integer> demographicIds = getDemographicIdsToPush(facility,lastDataUpdated, programs);
-
-		//populate the DB with the information about this run. Update as we go along.
-		//When complete, then set some status to show that the job is done.
-		IntegratorProgress ip = null;
-		if (isFullPush(facility)) {
-			if((ip=integratorPushManager.getCurrentlyRunning()) != null) {
-				//continue a previously running one
-				demographicIds = integratorPushManager.findOutstandingDemographicNos(ip);
-			} else {
-				//insert demographic ids into the progress tables, and mark job
-				ip = integratorPushManager.createNewPush(demographicIds);
-				if(ip != null) {
-					logger.info("marked start of full push by creating " + ip);
-				}
-			}
-		} 
-				
-		long currentSleepOnErrorTime = SLEEP_ON_ERROR;
+		List<Program> programsInFacility = programDao.getProgramsByFacilityId(facility.getId());
+		List<String> providerIdsInFacility = providerDao.getProviderIds(facility.getId());
+		boolean rid = integratorControlDao.readRemoveDemographicIdentity(facility.getId());
 		
-		DemographicWs demographicService = CaisiIntegratorManager.getDemographicWs(null, facility);
+		
+		int numOfThreads = Runtime.getRuntime().availableProcessors();
+		
+		int dim = (int) Math.ceil((double) demographicIds.size() / numOfThreads);
+	    logger.info("Block Dimension: " + dim);
+	        
+	    final ForkJoinPool pool = new ForkJoinPool(numOfThreads);
+
+	    final int n = demographicIds.size();
+        final int numOfOcc = pool.invoke(new PushDemographicSetToFile(0, n - 1, dim));
+        
+		
+		return 0;
+	}
+	
+	class PushDemographicSetToFile extends RecursiveTask<Integer> {
+		int start, end, dim;
+		
+		 public PushDemographicSetToFile(final int start, final int end, final int dim) {
+			 this.start = start;
+	            this.end = end;
+	            this.dim = dim;
+		 }
+		 
+		 public Integer compute() {
+			// if the number of elements is lower than the addressable size we process this range
+	            if ((this.end - this.start) < this.dim) {
+	                int ris = 0;
+	                
+	                // we show the partial result of the sub-problem and the name of the thread that has calculated it
+	                System.out.println("\t [" + Thread.currentThread().getName() + "]: " + ris + " occurrences of " 
+	                                   + " within the range from " + this.start + " to "
+	                                   + this.end);
+	                return ris;
+	            }
+
+	            // otherwise, if the range is still too big, we divide it again in half
+	            final int mid = (this.start + this.end) / 2;
+	            System.out.printf("Fork the computation in two ranges: "
+	                                      + "from %d to %d and from %d to %d %n",
+	                              this.start,
+	                              mid,
+	                              mid + 1,
+	                              this.end);
+
+	            // we assign the calculation of the first half to a task
+	            final PushDemographicSetToFile subTask1 = new PushDemographicSetToFile(this.start,
+	                                                                      mid,
+	                                                                      this.dim);
+	            // and we invoke it, forking a new process
+	            subTask1.fork();
+
+	            // we assign the calculation of the second half to another task
+	            final PushDemographicSetToFile subTask2 = new PushDemographicSetToFile(mid + 1,
+	                                                                       this.end,
+	                                                                       this.dim);
+	            // and we calculate it
+	            final int resultSecond = subTask2.compute();
+
+	            // we wait for termination of the forked thread and we put results together
+	            return subTask1.join() + resultSecond;
+
+	        }
+		 
+	}
+
+	protected int pushAllDemographics(String parentFilename, LoggedInInfo loggedInInfo, Facility facility,Date lastDataUpdated, 
+			CachedFacility cachedFacility, List<Program> programs) 
+			throws IOException {
+		
+		List<Integer> demographicIds = getDemographicIdsToPush(facility,lastDataUpdated, programs);
 		List<Program> programsInFacility = programDao.getProgramsByFacilityId(facility.getId());
 		List<String> providerIdsInFacility = providerDao.getProviderIds(facility.getId());
 
+
+		
 		long startTime = System.currentTimeMillis();
 		int demographicPushCount = 0;
+		
+		String documentDir = OscarProperties.getInstance().getProperty("DOCUMENT_DIR").trim();
+		int currentFileNumber = 2;
+		
+		boolean rid = integratorControlDao.readRemoveDemographicIdentity(facility.getId());
+		
+		
+		//we could parallelize this. basically we want X records per file. So we just assign each unit of work to be
+		//a set of demographicIds which will end up being a single file. so we need to know the file number and the ids for it
+		
 		for (Integer demographicId : demographicIds) {
-			//if someone set the pause flag, we can leave the job.
-			UserProperty up = userPropertyDao.getProp(IntegratorPushManager.INTEGRATOR_PAUSE_FULL_PUSH);
-			if(up != null && "true".equals(up.getValue())) {
-				throw new IntegratorPausedException("needed to exit as there was a pause detected");
-			}
 			
 			demographicPushCount++;
-			logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId + "  " + demographicPushCount + " of " + demographicIds.size());
+			//logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId + "  " + demographicPushCount + " of " + demographicIds.size());
 			BenchmarkTimer benchTimer = new BenchmarkTimer("pushing demo facilityId:" + facility.getId() + ", demographicId:" + demographicId + "  " + demographicPushCount + " of " + demographicIds.size());
 
+			String filename = "IntegratorPush_" + facility.getId() + "_" + demographicId + ".ser";				
+			ObjectOutputStream demoOut = null;
+			
+			
 			try {
-		
-				demographicService.setLastPushDate(demographicId);
 				
-				pushDemographic(lastDataUpdated, facility, demographicService, demographicId, facility.getId());
-				// it's safe to set the consent later so long as we default it to none when we send the original demographic data in the line above.
+				if((demographicPushCount % 500) == 0) {
+					IOUtils.closeQuietly(out);
+					out = new ObjectOutputStream(new FileOutputStream(new File(parentFilename + "." +  (++currentFileNumber) + ".ser")));
+					logger.info("starting a new file ("+currentFileNumber+")");
+				}
+				
+				demoOut = new ObjectOutputStream(new FileOutputStream(new File(documentDir + File.separator + filename)));
+
+				pushDemographic(demoOut,lastDataUpdated, facility, demographicId,rid);
 				benchTimer.tag("pushDemographic");
 				
 				// see new method pushPatientConsentTable() for reason.
 				if( ! CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE ) {
-					pushDemographicConsent(lastDataUpdated, facility, demographicService, demographicId);
+					pushDemographicConsent(demoOut,lastDataUpdated, facility, demographicId);
 					benchTimer.tag("pushDemographicConsent");
 				}
 				
-				pushDemographicIssues(lastDataUpdated, facility, programsInFacility, demographicService, demographicId, cachedFacility);
+				pushDemographicIssues(demoOut,lastDataUpdated, facility, programsInFacility, demographicId, cachedFacility);
 				benchTimer.tag("pushDemographicIssues");
-				pushDemographicPreventions(lastDataUpdated, facility, providerIdsInFacility, demographicService, demographicId);
+				
+				pushDemographicPreventions(demoOut,lastDataUpdated, facility, providerIdsInFacility, demographicId);
 				benchTimer.tag("pushDemographicPreventions");
-				pushDemographicNotes(lastDataUpdated, facility, demographicService, demographicId);
+				
+				pushDemographicNotes(demoOut,lastDataUpdated, facility, demographicId, programsInFacility);
 				benchTimer.tag("pushDemographicNotes");
-				pushDemographicDrugs(lastDataUpdated, facility, providerIdsInFacility, demographicService, demographicId);
+				
+				pushDemographicDrugs(demoOut,lastDataUpdated, facility, providerIdsInFacility, demographicId);
 				benchTimer.tag("pushDemographicDrugs");
-				pushAdmissions(lastDataUpdated, facility, programsInFacility, demographicService, demographicId);
+				
+				pushAdmissions(demoOut,lastDataUpdated, facility, programsInFacility, demographicId);
 				benchTimer.tag("pushAdmissions");
-				pushAppointments(lastDataUpdated, facility, demographicService, demographicId);
+				
+				pushAppointments(demoOut,lastDataUpdated, facility, demographicId);
 				benchTimer.tag("pushAppointments");
-				pushMeasurements(lastDataUpdated, facility, demographicService, demographicId);
+				
+				pushMeasurements(demoOut,lastDataUpdated, facility, demographicId);
 				benchTimer.tag("pushMeasurements");
-				pushDxresearchs(lastDataUpdated, facility, demographicService, demographicId);
+				
+				pushDxresearchs(demoOut,lastDataUpdated, facility, demographicId);
 				benchTimer.tag("pushDxresearchs");
 				
-				// TODO Need additional methods for other billing regions here.
+				
 				if( OscarProperties.getInstance().isOntarioBillingRegion() ) {
-					pushBillingItems(lastDataUpdated, facility, demographicService, demographicId);
+					pushBillingItems(demoOut,lastDataUpdated, facility, demographicId);
 					benchTimer.tag("pushBillingItems");
 				}
-				
-				pushEforms(lastDataUpdated, facility, demographicService, demographicId);
-				benchTimer.tag("pushEforms");
-				pushAllergies(lastDataUpdated, facility, demographicService, demographicId);
-				benchTimer.tag("pushAllergies");
-				pushDocuments(loggedInInfo, lastDataUpdated, facility, demographicService, demographicId);
-				benchTimer.tag("pushDocuments");
-				pushForms(lastDataUpdated, facility, demographicService, demographicId);
-				benchTimer.tag("pushForms");
-				pushLabResults(lastDataUpdated, facility, demographicService, demographicId);
-				benchTimer.tag("pushLabResults");
 
-				if(ip != null) {
-					integratorPushManager.updateItem(ip,demographicId);
-				}
+				pushEforms(demoOut,lastDataUpdated, facility, demographicId);
+				benchTimer.tag("pushEforms");
+
+				pushAllergies(demoOut,lastDataUpdated, facility, demographicId);
+				benchTimer.tag("pushAllergies");
+				
+				pushDocuments(demoOut,loggedInInfo, lastDataUpdated, facility, demographicId);
+				benchTimer.tag("pushDocuments");
+				
+				pushForms(demoOut,lastDataUpdated, facility, demographicId);
+				benchTimer.tag("pushForms");
+				
+				pushLabResults(demoOut,lastDataUpdated, facility, demographicId);
+				benchTimer.tag("pushLabResults");
 				
 				logger.debug(benchTimer.report());
 
 				DbConnectionFilter.releaseAllThreadDbResources();
-				currentSleepOnErrorTime = SLEEP_ON_ERROR;
 				
+				demoOut.flush();
+				
+			} catch( IOException e) {
+				logger.error("Error creating patient file. Cannot create the file to send to integrator for this patient ("+demographicId+"), skipping.", e);
+				cleanFile(filename);
+				continue;
 			} catch (IllegalArgumentException iae) {
 				// continue processing demographics if date values in current demographic are bad
 				// all other errors thrown by the above methods should indicate a failure in the service
 				// connection at large -- continuing to process not possible
 				// need some way of notification here.
-				logger.error("Error updating demographic, continuing with Demographic batch", iae);
-			} catch (ShutdownException e) {
-				throw (e);
+				logger.error("Error updating demographic "+demographicId+", continuing with Demographic batch", iae);
+				cleanFile(filename);
+				continue;
 			} catch (Exception e) {
+				logger.error("Unexpected error during processing of " + demographicId, e);
+				cleanFile(filename);
+				continue;
+			} finally {
+				IOUtils.closeQuietly(demoOut);
+			}
+			
+			
+			//Now we add the completed demographic to the main file, and delete the demographic one.
+			ObjectInputStream ois = null;
+			FileInputStream fis = null;
+			
+			try {
+				File f = new File(documentDir + File.separator + filename);
+				fis = new FileInputStream(f);
+				ois = new ObjectInputStream(fis);
 				
-				Throwable cause = e.getCause();
-				if( cause instanceof SocketTimeoutException ) {
-										
+				Object obj = null;
+				
+				while(true) {
 					try {
-	                    Thread.sleep(currentSleepOnErrorTime);
-                    } catch (InterruptedException e1) {	                 
-                    }
-					
-					currentSleepOnErrorTime = Math.round(currentSleepOnErrorTime * SLEEP_ON_ERROR_STEP);
+						obj = ois.readUnshared();
+						
+					}catch(EOFException eofEx) {
+						break;
+					}
+					out.writeUnshared(obj);
 				}
 				
 				
-				logger.error("Unexpected error.", e);
-				//not so sure about this yet. We don't want to end up in a loop where an exception is being thrown
-				//so we just keep retrying..this way a new job gets created.
-				//integratorPushManager.setError(ip,e);
+				obj = null;
+				fis.close();
+				ois.close();
+				
+				fis = null;
+				ois = null;
+			
+			}catch(ClassNotFoundException e) {
+				throw new RuntimeException("This should never happen",e);
+			}catch(IOException e) {
+				throw e;
+			} finally {
+				IOUtils.closeQuietly(fis);
+				IOUtils.closeQuietly(ois);
+			}
+			//the exceptions above could corrupt the file, so we have to abandon by rethrowing an exception up instead of a continue
+		
+			//delete the file
+			boolean deleted = new File(documentDir + File.separator + filename).delete();
+			if(!deleted) {
+				logger.warn("unable to delete temp demographic file");
 			}
 			
 		}
 		
-		if(ip != null) {
-			integratorPushManager.completePush(ip,true);
-		}
-		
 		logger.debug("Total pushAllDemographics :" + (System.currentTimeMillis() - startTime));
+		return currentFileNumber;
+	}
+	
+	private void cleanFile(String filename) {
+		new File(filename).delete();
 	}
 
-	//TODO: DemographicExt are not sent?
-	private void pushDemographic(Date lastDataUpdated, Facility facility, DemographicWs service, Integer demographicId, Integer facilityId) throws ShutdownException {
+	//TODO: DemographicExt are not sent
+	private void pushDemographic(ObjectOutputStream demoOut, Date lastDataUpdated, Facility facility, Integer demographicId, boolean rid) throws IOException {
 		DemographicTransfer demographicTransfer = new DemographicTransfer();
 
 		// set demographic info
 		Demographic demographic = demographicDao.getDemographicById(demographicId);
 		
-		//TODO: we can remove this once we know our demographic id list is good
+		//we can remove this once we know our demographic id list is good
 		if(demographic.getLastUpdateDate().before(lastDataUpdated)) return;
 		
 
@@ -800,8 +964,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		try {
 			demographicTransfer.setGender(Gender.valueOf(demographic.getSex().toUpperCase()));
 		} catch (Exception e) {
-			// do nothing, for now gender is on a "good luck" what ever you
-			// get is what you get basis until the whole gender mess is sorted.
+			logger.warn("Error mapping gender on demographic " + demographic.getDemographicNo() + "(" + demographic.getSex() + ")");
 		}
 
 		// set image
@@ -812,12 +975,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 
 		// set flag to remove demographic identity
-		boolean rid = integratorControlDao.readRemoveDemographicIdentity(facilityId);
 		demographicTransfer.setRemoveId(rid);
-
-		// send the request
-		service.setDemographic(demographicTransfer);
-		throttleAndChecks();
+		
+		demoOut.writeUnshared(demographicTransfer);
 
 		conformanceTestLog(facility, "Demographic", String.valueOf(demographicId));
 	}
@@ -831,21 +991,15 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	 * 
 	 * This method ensures that the all current consents from the Patient Consent Module ()  
 	 */
-	private void pushPatientConsentTable(LoggedInInfo loggedinInfo, Date lastDataUpdated, Facility facility ) {
+	private void pushPatientConsentTable(ObjectOutputStream out, LoggedInInfo loggedinInfo, Date lastDataUpdated, Facility facility ) throws IOException{
 		
-		DemographicWs demographicService = null;
 		List<Consent> consents = null;
 		List<IntegratorConsent> tempConsents = null;
 			
-		try {
-			demographicService = CaisiIntegratorManager.getDemographicWs(null, facility);
-			consents = patientConsentManager.getConsentsByTypeAndEditDate( loggedinInfo, this.consentType, lastDataUpdated );
-			tempConsents = new ArrayList<IntegratorConsent>();
-		} catch (MalformedURLException e) {
-			logger.error("Connection error while updating patient consents", e);
-		}
+		consents = patientConsentManager.getConsentsByTypeAndEditDate( loggedinInfo, this.consentType, lastDataUpdated );
+		tempConsents = new ArrayList<IntegratorConsent>();
 		
-		logger.info("Updating last edited consent list after " +  lastDataUpdated);
+		logger.debug("Updating last edited consent list after " +  lastDataUpdated);
 		
 		// Convert a Consent object into an IntegratorConsent object so that it 
 		// the IntegratorConsent object can be converted to a transfer object to 
@@ -859,38 +1013,41 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 		
 		if( tempConsents != null && tempConsents.size() > 0 ) {
-			pushDemographicConsent( tempConsents, demographicService );
+			pushDemographicConsent( out, tempConsents );
 		}
 	}
 
-	private void pushDemographicConsent(Date lastUpdatedData, Facility facility, DemographicWs demographicService, Integer demographicId) {
+	private void pushDemographicConsent(ObjectOutputStream out, Date lastUpdatedData, Facility facility,  Integer demographicId) throws IOException {
 		// find the latest relevant consent that needs to be pushed.
-		pushDemographicConsent( integratorConsentDao.findByFacilityAndDemographicSince(facility.getId(), demographicId,lastUpdatedData), demographicService );		
+		pushDemographicConsent(out, integratorConsentDao.findByFacilityAndDemographicSince(facility.getId(), demographicId,lastUpdatedData) );		
 	}
 	
-	private void pushDemographicConsent( List<IntegratorConsent> tempConsents, DemographicWs demographicService ) {
+	private void pushDemographicConsent(ObjectOutputStream out,List<IntegratorConsent> tempConsents ) throws IOException {
 		for (IntegratorConsent tempConsent : tempConsents) {
 			if (tempConsent.getClientConsentStatus() == ConsentStatus.GIVEN || tempConsent.getClientConsentStatus() == ConsentStatus.REVOKED) {
 				SetConsentTransfer consentTransfer = CaisiIntegratorManager.makeSetConsentTransfer(tempConsent);
-				demographicService.setCachedDemographicConsent(consentTransfer);
+				out.writeUnshared(consentTransfer);
 				logger.debug("pushDemographicConsent:" + tempConsent.getId() + "," + tempConsent.getFacilityId() + "," + tempConsent.getDemographicId());
 				// return;
 			}
 		}
 	}
+	
 
-	private void pushDemographicIssues(Date lastDataUpdated, Facility facility, List<Program> programsInFacility, DemographicWs service, Integer demographicId, CachedFacility cachedFacility) throws ShutdownException {
+	private void pushDemographicIssues(ObjectOutputStream out, Date lastDataUpdated, Facility facility, List<Program> programsInFacility, Integer demographicId, CachedFacility cachedFacility) throws IOException {
 		logger.debug("pushing demographicIssues facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
+		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.issues.disabled", "false"))) {
+			return;
+		}
 		List<CaseManagementIssue> caseManagementIssues = caseManagementIssueDAO.getIssuesByDemographicSince(demographicId.toString(),lastDataUpdated);
 		StringBuilder sentIds = new StringBuilder();
 		if (caseManagementIssues.size() == 0) return;
 		
-		Properties prop = OscarProperties.getInstance();
-
+	
 		for (CaseManagementIssue caseManagementIssue : caseManagementIssues) {
 			// don't send issue if it is not in our facility.
-			logger.debug("Facility:" + facility.getName() + " - caseManagementIssue = " + caseManagementIssue.toString());
+			//logger.debug("Facility:" + facility.getName() + " - caseManagementIssue = " + caseManagementIssue.toString());
 			if (caseManagementIssue.getProgram_id() == null || !isProgramIdInProgramList(programsInFacility, caseManagementIssue.getProgram_id())) continue;
 
 			long issueId = caseManagementIssue.getIssue_id();
@@ -914,6 +1071,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			else if( Issue.SNOMED.equalsIgnoreCase(issue.getType()) ) {
 				facilityDemographicIssuePrimaryKey.setCodeType(CodeType.SNOMED);
 			}
+			else if( Issue.SNOMED_CORE.equalsIgnoreCase(issue.getType()) ) {
+				facilityDemographicIssuePrimaryKey.setCodeType(CodeType.SNOMED_CORE);
+			}
 			else {
 				logger.warn("UNKNOWN ISSUE TYPE. " + issue.getType() + " ID:" + issue.getId() + " SKIPPING...");
 				continue;
@@ -928,30 +1088,37 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 			ArrayList<CachedDemographicIssue> issues = new ArrayList<CachedDemographicIssue>();
 			issues.add(cachedDemographicIssue);
-			service.setCachedDemographicIssues(issues);
-			throttleAndChecks();
 
+			out.writeUnshared(issues);
 			sentIds.append("," + caseManagementIssue.getId());
+			
+			facilityDemographicIssuePrimaryKey = null;
+			cachedDemographicIssue = null;
+			issues = null;
+			
 		}
 		
-		//let integrator know our current and active list of issues for this patient. The integrator will delete all not found in this list in it's db.
-		service.deleteCachedDemographicIssues(demographicId, caseManagementIssueDAO.getIssueIdsForIntegrator(cachedFacility.getIntegratorFacilityId(),demographicId));
+		if(cachedFacility != null) {
+			DeleteCachedDemographicIssuesWrapper wrapper = new DeleteCachedDemographicIssuesWrapper(demographicId, caseManagementIssueDAO.getIssueIdsForIntegrator(cachedFacility.getIntegratorFacilityId(),demographicId));
+			out.writeUnshared(wrapper);
+		}
 		conformanceTestLog(facility, "CaseManagementIssue", sentIds.toString());
 	}
 
-	private void pushAdmissions(Date lastDataUpdated, Facility facility, List<Program> programsInFacility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
+	private void pushAdmissions(ObjectOutputStream out,Date lastDataUpdated, Facility facility, List<Program> programsInFacility, Integer demographicId) throws IOException {
 		logger.debug("pushing admissions facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
+		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.admissions.disabled", "false"))) {
+			return;
+		}
+		
 		List<Admission> admissions = admissionDao.getAdmissionsByFacilitySince(demographicId, facility.getId(),lastDataUpdated);
 		StringBuilder sentIds = new StringBuilder();
 		if (admissions.size() == 0) return;
 		ArrayList<CachedAdmission> cachedAdmissions = new ArrayList<CachedAdmission>();
 		
-		int i=0;
 		for (Admission admission : admissions) {
 
-			// don't send admission if it is not in our facility. yeah I know I'm double checking since it's selected
-			// but the reality is I don't trust it and our facility segmentation is flakey at best so.. better to check again.
 			logger.debug("Facility:" + facility.getName() + " - admissionId = " + admission.getId());
 			if (!isProgramIdInProgramList(programsInFacility, admission.getProgramId())) continue;
 
@@ -967,25 +1134,15 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedAdmission.setCaisiProgramId(admission.getProgramId());
 			cachedAdmission.setDischargeDate(DateUtils.toCalendar(admission.getDischargeDate()));
 			cachedAdmission.setDischargeNotes(admission.getDischargeNotes());
-			//TODO:missing status from the whole transfer?
+			//missing status from the whole transfer?
 			
+			cachedAdmissions.clear();
 			cachedAdmissions.add(cachedAdmission);
+			out.writeUnshared(cachedAdmissions);
 			
-			
-			if((++i % 50) == 0) {
-				demographicService.setCachedAdmissions(cachedAdmissions);
-				throttleAndChecks();
-				cachedAdmissions.clear();
-			}
-
 			sentIds.append("," + admission.getId());
 		}
 		
-		if(cachedAdmissions.size()>0) {
-			demographicService.setCachedAdmissions(cachedAdmissions);
-			throttleAndChecks();
-		}
-
 		conformanceTestLog(facility, "Admission", sentIds.toString());
 	}
 
@@ -997,9 +1154,13 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		return (false);
 	}
 
-	private void pushDemographicPreventions(Date lastDataUpdated, Facility facility, List<String> providerIdsInFacility, DemographicWs service, Integer demographicId) throws ShutdownException, ParserConfigurationException, ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+	private void pushDemographicPreventions(ObjectOutputStream demoOut,Date lastDataUpdated, Facility facility, List<String> providerIdsInFacility, Integer demographicId) throws IOException, ParserConfigurationException, ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		logger.debug("pushing demographicPreventions facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
+		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.preventions.disabled", "false"))) {
+			return;
+		}
+		
 		ArrayList<CachedDemographicPrevention> preventionsToSend = new ArrayList<CachedDemographicPrevention>();
 		StringBuilder sentIds = new StringBuilder();
 
@@ -1017,11 +1178,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedDemographicPrevention.setCaisiDemographicId(demographicId);
 			cachedDemographicPrevention.setCaisiProviderId(localPrevention.getProviderNo());
 
-			{
-				FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
-				pk.setCaisiItemId(localPrevention.getId());
-				cachedDemographicPrevention.setFacilityPreventionPk(pk);
-			}
+			
+			FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
+			pk.setCaisiItemId(localPrevention.getId());
+			cachedDemographicPrevention.setFacilityPreventionPk(pk);
+			
 
 			cachedDemographicPrevention.setNextDate(DateUtils.toCalendar(localPrevention.getNextDate()));
 			cachedDemographicPrevention.setPreventionDate(DateUtils.toCalendar(localPrevention.getPreventionDate()));
@@ -1038,47 +1199,45 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			}
 			cachedDemographicPrevention.setAttributes(XmlUtils.toString(doc, false));
 
+			preventionsToSend.clear();
 			preventionsToSend.add(cachedDemographicPrevention);
 
+			demoOut.writeUnshared(preventionsToSend);
+			
+			cachedDemographicPrevention = null;
+			pk = null;
+			doc = null;
+			
+			
 			sentIds.append("," + localPrevention.getId());
 		}
-
-		if (preventionsToSend.size() > 0) {
-			service.setCachedDemographicPreventions(preventionsToSend);
-			throttleAndChecks();
-			conformanceTestLog(facility, "Prevention", sentIds.toString());
-		}
+		conformanceTestLog(facility, "Prevention", sentIds.toString());
 
 		//let integrator know our current and active list of preventions for this patient. The integrator will delete all not found in this list in it's db.
-		service.deleteCachedDemographicPreventions(demographicId, preventionDao.findNonDeletedIdsByDemographic(demographicId));
+		DeleteCachedDemographicPreventionsWrapper wrapper = new DeleteCachedDemographicPreventionsWrapper(demographicId, preventionDao.findNonDeletedIdsByDemographic(demographicId));
+		demoOut.writeUnshared(wrapper);
 		
+		wrapper = null;
 	}
 
-	private void pushDocuments(LoggedInInfo loggedInInfo, Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException {
+	private void pushDocuments(ObjectOutputStream out,LoggedInInfo loggedInInfo, Date lastDataUpdated, Facility facility, Integer demographicId) throws IOException  {
 		logger.debug("pushing demographicDocuments facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
+		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.documents.disabled", "false"))) {
+			return;
+		}
+		
 		StringBuilder sentIds = new StringBuilder();
 
 		List<EDoc> privateDocs = EDocUtil.listDocsSince(loggedInInfo, "demographic", demographicId.toString(), "all", EDocUtil.PRIVATE, EDocSort.OBSERVATIONDATE, "",lastDataUpdated);
-		int i=0;
 		for (EDoc eDoc : privateDocs) {
-			sendSingleDocument(demographicWs, eDoc, demographicId);
-			
-			if((++i % 10) == 0) {
-				throttleAndChecks();
-			}
-			
+			sendSingleDocument(out, eDoc, demographicId);
 			sentIds.append("," + eDoc.getDocId());
 		}
-		
-		if(sentIds.length()>0) {
-			throttleAndChecks();
-		}
-
 		conformanceTestLog(facility, "EDoc", sentIds.toString());
 	}
 
-	private void sendSingleDocument(DemographicWs demographicWs, EDoc eDoc, Integer demographicId) {
+	private void sendSingleDocument(ObjectOutputStream out, EDoc eDoc, Integer demographicId) throws IOException  {
 		
 		// send this document
 		CachedDemographicDocument cachedDemographicDocument = new CachedDemographicDocument();
@@ -1086,7 +1245,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		facilityIdIntegerCompositePk.setCaisiItemId(Integer.parseInt(eDoc.getDocId()));
 		cachedDemographicDocument.setFacilityIntegerPk(facilityIdIntegerCompositePk);
 
-		cachedDemographicDocument.setAppointmentNo(eDoc.getAppointmentNo());
+		if(eDoc.getAppointmentNo() != null) {
+			cachedDemographicDocument.setAppointmentNo(eDoc.getAppointmentNo());
+		}
 		cachedDemographicDocument.setCaisiDemographicId(demographicId);
 		cachedDemographicDocument.setContentType(eDoc.getContentType());
 		cachedDemographicDocument.setDocCreator(eDoc.getCreatorId());
@@ -1110,15 +1271,20 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			logger.warn("Unable to send document - the file does not exist or can't be read!! " +  OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + '/' + eDoc.getFileName());
 			return;
 		}
-		demographicWs.addCachedDemographicDocumentAndContents(cachedDemographicDocument, contents);
+		out.writeUnshared(cachedDemographicDocument);
+		out.writeUnshared(new ByteWrapper(contents));
 	}
 
-	private void pushLabResults(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException, ParserConfigurationException, UnsupportedEncodingException, ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+	private void pushLabResults(ObjectOutputStream out, Date lastDataUpdated, Facility facility, Integer demographicId) throws IOException, ParserConfigurationException, UnsupportedEncodingException, ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		logger.debug("pushing pushLabResults facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
+		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.labs.disabled", "false"))) {
+			return;
+		}
+		
 		CommonLabResultData comLab = new CommonLabResultData();
 		
-		//we need to check the patient lab routing table on it's own too..the case where a lab is updated, but the link is done later
+		//TODO:we need to check the patient lab routing table on it's own too..the case where a lab is updated, but the link is done later
 		OscarProperties op = OscarProperties.getInstance();
 		String cml = op.getProperty("CML_LABS","false");
 		String mds = op.getProperty("MDS_LABS","false");
@@ -1149,9 +1315,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			LabResultData lab = comLab.getLab(labIdAndType);
 			if(lab != null) {
 				CachedDemographicLabResult cachedDemographicLabResult = makeCachedDemographicLabResult(demographicId, lab);
-				demographicWs.addCachedDemographicLabResult(cachedDemographicLabResult);
-
-				throttleAndChecks();
+				out.writeUnshared(cachedDemographicLabResult);
 				sentIds.append("," + lab.getLabPatientId() + ":" + lab.labType + ":" + lab.segmentID);
 			} else {
 				logger.warn("Lab missing!!! " + labIdAndType.getLabType() + ":"+ labIdAndType.getLabId());
@@ -1182,18 +1346,20 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		return (cachedDemographicLabResult);
 	}
 
-	private void pushForms(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws ShutdownException, SQLException, IOException, ParseException {
+	private void pushForms(ObjectOutputStream out, Date lastDataUpdated, Facility facility, Integer demographicId) throws SQLException, IOException, ParseException {
 		logger.debug("pushing demographic forms facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-		// TODO add additional methods for other forms here
+		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.forms.disabled", "false"))) {
+			return;
+		}
 		
 		if( OscarProperties.getInstance().isOntarioBillingRegion() ) {
 			// LabReq2007 and up is only used in Ontario
-			pushLabReq2007(lastDataUpdated, facility, demographicWs, demographicId);	
+			pushLabReq2007(out, lastDataUpdated, facility, demographicId);	
 		}
 	}
 
-	private void pushLabReq2007(Date lastDataUpdated, Facility facility, DemographicWs demographicWs, Integer demographicId) throws SQLException, ShutdownException, IOException, ParseException {
+	private void pushLabReq2007(ObjectOutputStream out, Date lastDataUpdated, Facility facility, Integer demographicId) throws SQLException, IOException, ParseException {
 		List<Properties> records = FrmLabReq07Record.getPrintRecordsSince(demographicId,lastDataUpdated);
 		if (records.size() == 0) return;
 
@@ -1222,19 +1388,20 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			p.store(baos, null);
 			cachedDemographicForm.setFormData(baos.toString());
 
-			demographicWs.addCachedDemographicForm(cachedDemographicForm);
-
-			throttleAndChecks();
+			out.writeUnshared(cachedDemographicForm);
 			sentIds.append("," + p.getProperty("ID"));
 		}
 
 		conformanceTestLog(facility, "formLabReq07", sentIds.toString());
 	}
 
-	private void pushDemographicNotes(Date lastDataUpdated, Facility facility, DemographicWs service, Integer demographicId) throws ShutdownException {
+	private void pushDemographicNotes(ObjectOutputStream demoOut, Date lastDataUpdated, Facility facility, Integer demographicId, List<Program> programs) throws IOException {
 		logger.debug("pushing demographicNotes facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-		List<Program> programs = programDao.getProgramsByFacilityId(facility.getId());
+		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.notes.disabled", "false"))) {
+			return;
+		}
+		
 		HashSet<Integer> programIds = new HashSet<Integer>();
 		for (Program program : programs)
 			programIds.add(program.getId());
@@ -1242,20 +1409,23 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		List<CaseManagementNote> localNotes = caseManagementNoteDAO.getNotesByDemographic(demographicId.toString());
 
 		StringBuilder sentIds = new StringBuilder();
-
+		ArrayList<CachedDemographicNote> notesToSend = new ArrayList<CachedDemographicNote>();
+		
 		for (CaseManagementNote localNote : localNotes) {	
 			try {
 				// if it's locked or if it's not in this facility ignore it.
-				if (localNote.isLocked() || !programIds.contains(Integer.parseInt(localNote.getProgram_no()))) continue;
+				if (localNote.isLocked() || (localNote.getProgram_no() != null && localNote.getProgram_no().length()>0 && !programIds.contains(Integer.parseInt(localNote.getProgram_no())))) continue;
 
 				// note hasn't changed since last sync
 				if (localNote.getUpdate_date() != null && localNote.getUpdate_date().before(lastDataUpdated)) continue;
 
 				CachedDemographicNote noteToSend = makeRemoteNote(localNote);
-				ArrayList<CachedDemographicNote> notesToSend = new ArrayList<CachedDemographicNote>();
+				notesToSend.clear();
 				notesToSend.add(noteToSend);
-				service.setCachedDemographicNotes(notesToSend);
+				demoOut.writeUnshared(notesToSend);
 
+				noteToSend = null;
+				
 				sentIds.append("," + localNote.getId());
 			} catch (NumberFormatException e) {
 				logger.error("Unexpected error. ProgramNo=" + localNote.getProgram_no(), e);
@@ -1266,9 +1436,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		sentIds = new StringBuilder();
 
 		// add group notes as well.
-		logger.info("checking for group notes for " + demographicId);
+		logger.debug("checking for group notes for " + demographicId);
 		List<GroupNoteLink> noteLinks = groupNoteDao.findLinksByDemographic(demographicId);
-		logger.info("found " + noteLinks.size() + " group notes for " + demographicId);
+		logger.debug("found " + noteLinks.size() + " group notes for " + demographicId);
 		for (GroupNoteLink noteLink : noteLinks) {
 			int orginalNoteId = noteLink.getNoteId();
 			CaseManagementNote localNote = caseManagementNoteDAO.getNote(Long.valueOf(orginalNoteId));
@@ -1279,10 +1449,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				if (localNote.isLocked() || !programIds.contains(Integer.parseInt(localNote.getProgram_no()))) continue;
 
 				CachedDemographicNote noteToSend = makeRemoteNote(localNote);
-				ArrayList<CachedDemographicNote> notesToSend = new ArrayList<CachedDemographicNote>();
+				notesToSend.clear();
 				notesToSend.add(noteToSend);
-				service.setCachedDemographicNotes(notesToSend);
-				logger.info("adding group note to send");
+				demoOut.writeUnshared(notesToSend);
+				logger.debug("adding group note to send");
 
 				sentIds.append("," + noteLink.getId());
 			} catch (NumberFormatException e) {
@@ -1293,7 +1463,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		conformanceTestLog(facility, "GroupNoteLink", sentIds.toString());
 
-		throttleAndChecks();
 	}
 
 	private CachedDemographicNote makeRemoteNote(CaseManagementNote localNote) {
@@ -1305,7 +1474,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		note.setCachedDemographicNoteCompositePk(pk);
 
 		note.setCaisiDemographicId(Integer.parseInt(localNote.getDemographic_no()));
-		note.setCaisiProgramId(Integer.parseInt(localNote.getProgram_no()));
+		if(localNote.getProgram_no() != null && localNote.getProgram_no().length()>0) {
+			note.setCaisiProgramId(Integer.parseInt(localNote.getProgram_no()));
+		}
 		note.setEncounterType(localNote.getEncounter_type());
 		note.setNote(localNote.getNote());
 		note.setObservationCaisiProviderId(localNote.getProviderNo());
@@ -1335,6 +1506,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			else if( Issue.SNOMED.equalsIgnoreCase(issueCodeType) ) {
 				noteIssue.setCodeType(CodeType.SNOMED);
 			}
+			else if( Issue.SNOMED_CORE.equalsIgnoreCase(issueCodeType) ) {
+				noteIssue.setCodeType(CodeType.SNOMED_CORE);
+			}
 			else if( Issue.SYSTEM.equalsIgnoreCase(issueCodeType) ) {
 				noteIssue.setCodeType(CodeType.SYSTEM);
 			}
@@ -1349,8 +1523,13 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		return (note);
 	}
 
-	private void pushDemographicDrugs(Date lastDataUpdated, Facility facility, List<String> providerIdsInFacility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
+	private void pushDemographicDrugs(ObjectOutputStream out, Date lastDataUpdated, Facility facility, List<String> providerIdsInFacility, Integer demographicId) throws IOException {
 		logger.debug("pushing demographicDrugss facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+		
+		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.drugs.disabled", "false"))) {
+			return;
+		}
+		
 		StringBuilder sentIds = new StringBuilder();
 
 		List<Drug> drugs = drugDao.findByDemographicIdUpdatedAfterDate(demographicId, lastDataUpdated);
@@ -1403,21 +1582,22 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 				ArrayList<CachedDemographicDrug> drugsToSend = new ArrayList<CachedDemographicDrug>();
 				drugsToSend.add(cachedDemographicDrug);
-				demographicService.setCachedDemographicDrugs(drugsToSend);
-
+				out.writeUnshared(drugsToSend);
 				sentIds.append("," + drug.getId());
 			}
 		}
 
-		// if (drugsToSend.size()>0) demographicService.setCachedDemographicDrugs(drugsToSend);
-
-		throttleAndChecks();
+		
 		conformanceTestLog(facility, "Drug", sentIds.toString());
 	}
 
-	private void pushAllergies(Date lastDataUpdated, Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
+	private void pushAllergies(ObjectOutputStream out, Date lastDataUpdated, Facility facility, Integer demographicId) throws IOException {
 		logger.debug("pushing demographicAllergies facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
+		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.allergies.disabled", "false"))) {
+			return;
+		}
+		
 		AllergyDao allergyDao = (AllergyDao) SpringUtils.getBean("allergyDao");
 		List<Allergy> allergies = allergyDao.findByDemographicIdUpdatedAfterDate(demographicId, lastDataUpdated);
 		if (allergies.size() == 0) return;
@@ -1425,7 +1605,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		
 		StringBuilder sentIds = new StringBuilder();
 
-		int i = 0;
 		for (Allergy allergy : allergies) {
 			CachedDemographicAllergy cachedAllergy = new CachedDemographicAllergy();
 
@@ -1461,34 +1640,29 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedAllergy.setTypeCode(allergy.getTypeCode());
 
 			cachedAllergies.add(cachedAllergy);
-			
-			if((++i % 50) == 0) {
-				demographicService.setCachedDemographicAllergies(cachedAllergies);
-				throttleAndChecks();
-				cachedAllergies.clear();
-			}
-
 			sentIds.append("," + allergy.getAllergyId());
 		}
 		
 		if(cachedAllergies.size() > 0) {
-			demographicService.setCachedDemographicAllergies(cachedAllergies);
-			throttleAndChecks();	
+			out.writeUnshared(cachedAllergies);
 		}
 
 		conformanceTestLog(facility, "Allergy", sentIds.toString());
 	}
 
-	private void pushAppointments(Date lastDataUpdated, Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
+	private void pushAppointments(ObjectOutputStream out, Date lastDataUpdated, Facility facility, Integer demographicId) throws IOException  {
 		logger.debug("pushing appointments facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
+		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.appointments.disabled", "false"))) {
+			return;
+		}
+		
 		List<Appointment> appointments = appointmentDao.getAllByDemographicNoSince(demographicId,lastDataUpdated);
 		if (appointments.size() == 0) return;
 
 		StringBuilder sentIds = new StringBuilder();
 		ArrayList<CachedAppointment> cachedAppointments = new ArrayList<CachedAppointment>();
 		
-		int i=0;
 		for (Appointment appointment : appointments) {
 			
 			CachedAppointment cachedAppointment = new CachedAppointment();
@@ -1512,34 +1686,28 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedAppointment.setType(appointment.getType());
 			cachedAppointment.setUpdateDatetime(DateUtils.toCalendar(appointment.getUpdateDateTime()));
 
+			cachedAppointments.clear();
 			cachedAppointments.add(cachedAppointment);
-			
-			if((++i % 50) == 0) {
-				demographicService.setCachedAppointments(cachedAppointments);
-				throttleAndChecks();
-				cachedAppointments.clear();
-			}
+			out.writeUnshared(cachedAppointments);
 			sentIds.append("," + appointment.getId());
-		}
-		
-		if(cachedAppointments.size()>0) {
-			demographicService.setCachedAppointments(cachedAppointments);
-			throttleAndChecks();
 		}
 		
 		conformanceTestLog(facility, "Appointment", sentIds.toString());
 	}
 
-	private void pushDxresearchs(Date lastDataUpdated, Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
+	private void pushDxresearchs(ObjectOutputStream out, Date lastDataUpdated, Facility facility, Integer demographicId) throws IOException {
 		logger.debug("pushing dxresearchs facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
+		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.dx.disabled", "false"))) {
+			return;
+		}
+		
 		List<Dxresearch> dxresearchs = dxresearchDao.getByDemographicNoSince(demographicId,lastDataUpdated);
 		if (dxresearchs.size() == 0) return;
 
 		StringBuilder sentIds = new StringBuilder();
 		ArrayList<CachedDxresearch> cachedDxresearchs = new ArrayList<CachedDxresearch>();
 		
-		int i=0;
 		for (Dxresearch dxresearch : dxresearchs) {
 			
 			CachedDxresearch cachedDxresearch = new CachedDxresearch();
@@ -1554,31 +1722,25 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedDxresearch.setUpdateDate(DateUtils.toCalendar(dxresearch.getUpdateDate()));
 			cachedDxresearch.setStatus(String.valueOf(dxresearch.getStatus()));
 
-			cachedDxresearchs.add(cachedDxresearch);
-			
-			if((++i % 50) == 0) {
-				demographicService.setCachedDxresearch(cachedDxresearchs);
-				throttleAndChecks();
-				cachedDxresearchs.clear();
-			}
-			
+			cachedDxresearchs.add(cachedDxresearch);		
 			sentIds.append("," + dxresearch.getId());
 		}
 		
-		if(cachedDxresearchs.size() > 0) {
-			demographicService.setCachedDxresearch(cachedDxresearchs);
-			throttleAndChecks();
-		}
-
+		out.writeUnshared(cachedDxresearchs);
+		
 		
 		conformanceTestLog(facility, "DxResearch", sentIds.toString());
 	}
 
-	private void pushBillingItems(Date lastDataUpdated, Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
+	private void pushBillingItems(ObjectOutputStream out, Date lastDataUpdated, Facility facility, Integer demographicId) throws IOException {
 		logger.debug("pushing billingitems facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
+		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.billing.disabled", "false"))) {
+			return;
+		}
+		
 		List<BillingONCHeader1> billingCh1s = billingONItemDao.getCh1ByDemographicNoSince(demographicId, lastDataUpdated);
-		//TODO: don't think we need this based on my tests, but ideally, you'd want to check the timestamps of the billing items, and make sure you have a 
+		//don't think we need this based on my tests, but ideally, you'd want to check the timestamps of the billing items, and make sure you have a 
 		//full list of billing headers..but I couldn't replicate editing a bill without the header being updated..so i'll just leave this
 		//as a note.
 		
@@ -1586,13 +1748,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		ArrayList<CachedBillingOnItem> cachedBillingOnItems = new ArrayList<CachedBillingOnItem>();
 		
-		int i=0;
-
+		
 		for (BillingONCHeader1 billingCh1 : billingCh1s) {
 			List<BillingONItem> billingItems = billingONItemDao.getBillingItemByCh1Id(billingCh1.getId());
 			for (BillingONItem billingItem : billingItems) {
-				MiscUtilsOld.checkShutdownSignaled();
-
 				CachedBillingOnItem cachedBillingONItem = new CachedBillingOnItem();
 				FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
 				facilityIdIntegerCompositePk.setCaisiItemId(billingItem.getId());
@@ -1611,26 +1770,19 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				cachedBillingONItem.setStatus(billingItem.getStatus());
 
 				cachedBillingOnItems.add(cachedBillingONItem);
-				
-				if((++i % 50) == 0) {
-					demographicService.setCachedBillingOnItem(cachedBillingOnItems);
-					throttleAndChecks();
-					cachedBillingOnItems.clear();
-				}
-			
 			}
-		}
-
-		if(cachedBillingOnItems.size() > 0) {
-			demographicService.setCachedBillingOnItem(cachedBillingOnItems);
-			throttleAndChecks();
+			out.writeUnshared(cachedBillingOnItems);
 		}
 
 	}
 
-	private void pushEforms(Date lastDataUpdated, Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
+	private void pushEforms(ObjectOutputStream out, Date lastDataUpdated, Facility facility, Integer demographicId) throws IOException {
 		logger.debug("pushing eforms facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
+		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.eforms.disabled", "false"))) {
+			return;
+		}
+		
 		List<EFormData> eformDatas = eFormDataDao.findByDemographicIdSinceLastDate(demographicId,lastDataUpdated);
 		if (eformDatas.size() == 0) return;
 
@@ -1659,8 +1811,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedEformDatas.add(cachedEformData);
 			
 			if((++i % 50) == 0) {
-				demographicService.setCachedEformData(cachedEformDatas);
-				throttleAndChecks();
+				out.writeUnshared(cachedEformDatas);
 				cachedEformDatas.clear();
 			}
 			
@@ -1670,56 +1821,60 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 		
 		if(cachedEformDatas.size()>0) {
-			demographicService.setCachedEformData(cachedEformDatas);
-			throttleAndChecks();
+			out.writeUnshared(cachedEformDatas);
 		}
 
 		conformanceTestLog(facility, "EFormData", sentIds.toString());
 
-		List<EFormValue> eFormValues = eFormValueDao.findByFormDataIdList(fdids);
-		ArrayList<CachedEformValue> cachedEformValues = new ArrayList<CachedEformValue>();
-		
-		if (eFormValues.size() == 0) return;
-		
-		i = 0;
-		for (EFormValue eFormValue : eFormValues) {
-			CachedEformValue cachedEformValue = new CachedEformValue();
-			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
-			facilityIdIntegerCompositePk.setCaisiItemId(eFormValue.getId());
-			cachedEformValue.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
-
-			cachedEformValue.setCaisiDemographicId(demographicId);
-			cachedEformValue.setFormId(eFormValue.getFormId());
-			cachedEformValue.setFormDataId(eFormValue.getFormDataId());
-			cachedEformValue.setVarName(eFormValue.getVarName());
-			cachedEformValue.setVarValue(eFormValue.getVarValue());
-
-			cachedEformValues.add(cachedEformValue);
+		if("false".equals(OscarProperties.getInstance().getProperty("integrator.send.eform_values.disabled", "true"))) {
+			List<EFormValue> eFormValues = eFormValueDao.findByFormDataIdList(fdids);
+			ArrayList<CachedEformValue> cachedEformValues = new ArrayList<CachedEformValue>();
 			
-			if((++i % 50) == 0) {
-				demographicService.setCachedEformValues(cachedEformValues);
-				throttleAndChecks();
-				cachedEformValues.clear();
+			if (eFormValues.size() == 0) return;
+			
+			i = 0;
+			for (EFormValue eFormValue : eFormValues) {
+				CachedEformValue cachedEformValue = new CachedEformValue();
+				FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
+				facilityIdIntegerCompositePk.setCaisiItemId(eFormValue.getId());
+				cachedEformValue.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
+	
+				cachedEformValue.setCaisiDemographicId(demographicId);
+				cachedEformValue.setFormId(eFormValue.getFormId());
+				cachedEformValue.setFormDataId(eFormValue.getFormDataId());
+				cachedEformValue.setVarName(eFormValue.getVarName());
+				cachedEformValue.setVarValue(eFormValue.getVarValue());
+	
+				cachedEformValues.add(cachedEformValue);
+				
+				if((++i % 50) == 0) {
+					out.writeUnshared(cachedEformValues);
+					cachedEformValues.clear();
+				}
+				
 			}
-			
-		}
-
-		if(cachedEformValues.size() > 0) {
-			demographicService.setCachedEformValues(cachedEformValues);
-			throttleAndChecks();
+	
+			if(cachedEformValues.size() > 0) {
+				out.writeUnshared(cachedEformValues);
+			}
 		}
 	}
 
-	private void pushMeasurements(Date lastDataUpdated, Facility facility, DemographicWs demographicService, Integer demographicId) throws ShutdownException {
+	private void pushMeasurements(ObjectOutputStream out, Date lastDataUpdated, Facility facility, Integer demographicId) throws IOException {
 		logger.debug("pushing measurements facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
-		MeasurementDao measurementDao = (MeasurementDao) SpringUtils.getBean("measurementDao");
-
+		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.measurements.disabled", "false"))) {
+			return;
+		}
+		
 		List<Measurement> measurements = measurementDao.findByDemographicIdUpdatedAfterDate(demographicId, lastDataUpdated);
 		if (measurements.size() == 0) return;
 
 		StringBuilder sentIds = new StringBuilder();
 
+		ArrayList<CachedMeasurement> cachedMeasurements = new ArrayList<CachedMeasurement>();
+		
+		
 		for (Measurement measurement : measurements) {
 			CachedMeasurement cachedMeasurement = new CachedMeasurement();
 			FacilityIdIntegerCompositePk facilityIdIntegerCompositePk = new FacilityIdIntegerCompositePk();
@@ -1735,68 +1890,67 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedMeasurement.setMeasuringInstruction(measurement.getMeasuringInstruction());
 			cachedMeasurement.setType(measurement.getType());
 
-			ArrayList<CachedMeasurement> cachedMeasurements = new ArrayList<CachedMeasurement>();
+			cachedMeasurements.clear();
 			cachedMeasurements.add(cachedMeasurement);
-			demographicService.setCachedMeasurements(cachedMeasurements);
+			out.writeUnshared(cachedMeasurements);
 
 			sentIds.append("," + measurement.getId());
 
-			List<MeasurementsExt> measurementExts = measurementsExtDao.getMeasurementsExtByMeasurementId(measurement.getId());
-			for (MeasurementsExt measurementExt : measurementExts) {
-				MiscUtilsOld.checkShutdownSignaled();
-				CachedMeasurementExt cachedMeasurementExt = new CachedMeasurementExt();
-				FacilityIdIntegerCompositePk fidIntegerCompositePk = new FacilityIdIntegerCompositePk();
-				fidIntegerCompositePk.setCaisiItemId(measurementExt.getId());
-				cachedMeasurementExt.setFacilityIdIntegerCompositePk(fidIntegerCompositePk);
-
-				cachedMeasurementExt.setMeasurementId(measurementExt.getMeasurementId());
-				cachedMeasurementExt.setKeyval(measurementExt.getKeyVal());
-				cachedMeasurementExt.setVal(measurementExt.getVal());
-
-				ArrayList<CachedMeasurementExt> cachedMeasurementExts = new ArrayList<CachedMeasurementExt>();
-				cachedMeasurementExts.add(cachedMeasurementExt);
-				demographicService.setCachedMeasurementExts(cachedMeasurementExts);
+			if("false".equals(OscarProperties.getInstance().getProperty("integrator.send.measurementExts.disabled", "true"))) {
+				List<MeasurementsExt> measurementExts = measurementsExtDao.getMeasurementsExtByMeasurementId(measurement.getId());
+				for (MeasurementsExt measurementExt : measurementExts) {
+					CachedMeasurementExt cachedMeasurementExt = new CachedMeasurementExt();
+					FacilityIdIntegerCompositePk fidIntegerCompositePk = new FacilityIdIntegerCompositePk();
+					fidIntegerCompositePk.setCaisiItemId(measurementExt.getId());
+					cachedMeasurementExt.setFacilityIdIntegerCompositePk(fidIntegerCompositePk);
+	
+					cachedMeasurementExt.setMeasurementId(measurementExt.getMeasurementId());
+					cachedMeasurementExt.setKeyval(measurementExt.getKeyVal());
+					cachedMeasurementExt.setVal(measurementExt.getVal());
+	
+					ArrayList<CachedMeasurementExt> cachedMeasurementExts = new ArrayList<CachedMeasurementExt>();
+					cachedMeasurementExts.add(cachedMeasurementExt);
+					out.writeUnshared(cachedMeasurementExts);
+				}
 			}
-
-			MeasurementTypeDao measurementTypeDao = (MeasurementTypeDao) SpringUtils.getBean("measurementTypeDao");
-			List<MeasurementType> measurementTypes = measurementTypeDao.findByType(measurement.getType());
-			for (MeasurementType measurementType : measurementTypes) {
-				MiscUtilsOld.checkShutdownSignaled();
-
-				CachedMeasurementType cachedMeasurementType = new CachedMeasurementType();
-				FacilityIdIntegerCompositePk fidIntegerCompositePk = new FacilityIdIntegerCompositePk();
-				fidIntegerCompositePk.setCaisiItemId(measurementType.getId());
-				cachedMeasurementType.setFacilityIdIntegerCompositePk(fidIntegerCompositePk);
-
-				cachedMeasurementType.setType(measurementType.getType());
-				cachedMeasurementType.setTypeDescription(measurementType.getTypeDescription());
-				cachedMeasurementType.setMeasuringInstruction(measurementType.getMeasuringInstruction());
-
-				ArrayList<CachedMeasurementType> cachedMeasurementTypes = new ArrayList<CachedMeasurementType>();
-				cachedMeasurementTypes.add(cachedMeasurementType);
-				demographicService.setCachedMeasurementTypes(cachedMeasurementTypes);
+			if("false".equals(OscarProperties.getInstance().getProperty("integrator.send.measurementTypes.disabled", "true"))) {
+				List<MeasurementType> measurementTypes = measurementTypeDao.findByType(measurement.getType());
+				for (MeasurementType measurementType : measurementTypes) {
+					CachedMeasurementType cachedMeasurementType = new CachedMeasurementType();
+					FacilityIdIntegerCompositePk fidIntegerCompositePk = new FacilityIdIntegerCompositePk();
+					fidIntegerCompositePk.setCaisiItemId(measurementType.getId());
+					cachedMeasurementType.setFacilityIdIntegerCompositePk(fidIntegerCompositePk);
+	
+					cachedMeasurementType.setType(measurementType.getType());
+					cachedMeasurementType.setTypeDescription(measurementType.getTypeDescription());
+					cachedMeasurementType.setMeasuringInstruction(measurementType.getMeasuringInstruction());
+	
+					ArrayList<CachedMeasurementType> cachedMeasurementTypes = new ArrayList<CachedMeasurementType>();
+					cachedMeasurementTypes.add(cachedMeasurementType);
+					out.writeUnshared(cachedMeasurementTypes);
+				}
 			}
-
-			List<MeasurementMap> measurementMaps = measurementMapDao.getMapsByIdent(measurement.getType());
-			for (MeasurementMap measurementMap : measurementMaps) {
-
-				CachedMeasurementMap cachedMeasurementMap = new CachedMeasurementMap();
-				FacilityIdIntegerCompositePk fidIntegerCompositePk = new FacilityIdIntegerCompositePk();
-				fidIntegerCompositePk.setCaisiItemId(measurementMap.getId());
-				cachedMeasurementMap.setFacilityIdIntegerCompositePk(fidIntegerCompositePk);
-
-				cachedMeasurementMap.setIdentCode(measurementMap.getIdentCode());
-				cachedMeasurementMap.setLoincCode(measurementMap.getLoincCode());
-				cachedMeasurementMap.setName(measurementMap.getName());
-				cachedMeasurementMap.setLabType(measurementMap.getLabType());
-
-				ArrayList<CachedMeasurementMap> cachedMeasurementMaps = new ArrayList<CachedMeasurementMap>();
-				cachedMeasurementMaps.add(cachedMeasurementMap);
-				demographicService.setCachedMeasurementMaps(cachedMeasurementMaps);
+			if("false".equals(OscarProperties.getInstance().getProperty("integrator.send.measurementMaps.disabled", "true"))) {
+				List<MeasurementMap> measurementMaps = measurementMapDao.getMapsByIdent(measurement.getType());
+				for (MeasurementMap measurementMap : measurementMaps) {
+	
+					CachedMeasurementMap cachedMeasurementMap = new CachedMeasurementMap();
+					FacilityIdIntegerCompositePk fidIntegerCompositePk = new FacilityIdIntegerCompositePk();
+					fidIntegerCompositePk.setCaisiItemId(measurementMap.getId());
+					cachedMeasurementMap.setFacilityIdIntegerCompositePk(fidIntegerCompositePk);
+	
+					cachedMeasurementMap.setIdentCode(measurementMap.getIdentCode());
+					cachedMeasurementMap.setLoincCode(measurementMap.getLoincCode());
+					cachedMeasurementMap.setName(measurementMap.getName());
+					cachedMeasurementMap.setLabType(measurementMap.getLabType());
+	
+					ArrayList<CachedMeasurementMap> cachedMeasurementMaps = new ArrayList<CachedMeasurementMap>();
+					cachedMeasurementMaps.add(cachedMeasurementMap);
+					out.writeUnshared(cachedMeasurementMaps);
+				}
 			}
 		}
 
-		throttleAndChecks();
 		conformanceTestLog(facility, "Measurements", sentIds.toString());
 	}
 	
@@ -1808,7 +1962,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	2) demographicWs.getDemographicsPushedAfterDate : 
 		which is a raw listing of the direct records which have changed, i.e. (facilityId, oscarDemographicId).
 	*/	
-	private void findChangedRecordsFromIntegrator(LoggedInInfo loggedInInfo, Facility facility) throws MalformedURLException {//throws IOException, ShutdownException {
+	protected void findChangedRecordsFromIntegrator(LoggedInInfo loggedInInfo, Facility facility) throws MalformedURLException {//throws IOException, ShutdownException {
 		logger.info("Start fetch data for facility : " + facility.getId() + " : " + facility.getName());
 		boolean integratorLocalStore = OscarProperties.getInstance().getBooleanProperty("INTEGRATOR_LOCAL_STORE","yes");
 		if(!integratorLocalStore){
@@ -1894,13 +2048,91 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 
-	private static void throttleAndChecks() throws ShutdownException {
-		MiscUtilsOld.checkShutdownSignaled();
-
+	private String completeFile(String parentDir,final String parentFile) throws NoSuchAlgorithmException, IOException {
+		
+		String[] files = new File(parentDir).list(new FilenameFilter(){
+		    public boolean accept(File dir, String name) {
+		    	if(name.startsWith(parentFile)) {
+		    		return true;
+		    	}
+		    	return false;
+		    }
+		});
+		
+		ZipOutputStream out =null;
 		try {
-			Thread.sleep(INTEGRATOR_THROTTLE_DELAY);
-		} catch (InterruptedException e) {
-			logger.error("Error", e);
+			out = new ZipOutputStream(new FileOutputStream(parentDir + File.separator + parentFile + ".zipTemp"));
+			 out.setMethod(ZipOutputStream.DEFLATED);
+			 byte data[] = new byte[1024];
+			 
+			for(int x=0;x<files.length;x++) {
+				//out.putNextEntry(new ZipEntry(files[x].getName()));
+			  FileInputStream fi = new FileInputStream(parentDir + File.separator + files[x]);
+				BufferedInputStream origin = new BufferedInputStream(fi, 1024);
+                ZipEntry entry = new ZipEntry(files[x].toString());
+                out.putNextEntry(entry);
+                int count;
+                while((count = origin.read(data, 0, 1024)) != -1) {
+                   out.write(data, 0, count);
+                }
+                origin.close(); 
+			}
+			
+			out.close();
+			
+		} catch(Exception e) {
+			logger.error("Error creating zip file",e);
+		} finally {
+			IOUtils.closeQuietly(out);
 		}
+		
+		//delete those files since they are zipped
+		for(int x=0;x<files.length;x++) {
+			new File(parentDir + File.separator + files[x]).delete();
+		}
+		
+		//Create checksum for this file
+		File file = new File(parentDir + File.separator + parentFile + ".zipTemp");
+		MessageDigest md5Digest = MessageDigest.getInstance("MD5");
+		
+		 
+		//Get the checksum
+		String checksum = getFileChecksum(md5Digest, file);
+			
+		
+		return checksum;
+		
+	}
+	
+	private static String getFileChecksum(MessageDigest digest, File file) throws IOException
+	{
+	    //Get file input stream for reading the file content
+	    FileInputStream fis = new FileInputStream(file);
+	     
+	    //Create byte array to read data in chunks
+	    byte[] byteArray = new byte[1024];
+	    int bytesCount = 0; 
+	      
+	    //Read file data and update in message digest
+	    while ((bytesCount = fis.read(byteArray)) != -1) {
+	        digest.update(byteArray, 0, bytesCount);
+	    }
+	     
+	    //close the stream; We don't need it now.
+	    fis.close();
+	     
+	    //Get the hash's bytes
+	    byte[] bytes = digest.digest();
+	     
+	    //This bytes[] has bytes in decimal format;
+	    //Convert it to hexadecimal format
+	    StringBuilder sb = new StringBuilder();
+	    for(int i=0; i< bytes.length ;i++)
+	    {
+	        sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+	    }
+	     
+	    //return complete hash
+	   return sb.toString();
 	}
 }
