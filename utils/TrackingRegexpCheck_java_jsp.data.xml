@@ -3050,9 +3050,9 @@
         <ViolationValue>/src/main/webapp/provider/appointmentprovideradminmonth.jsp:strReason = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/formar2_99_08.jsp:StringBuffer tt;</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/formar2_99_08.jsp:tt = new StringBuffer().append(e.nextElement());</ViolationValue>
-        <ViolationValue>/src/main/webapp/provider/infirmarydemographiclist.jspf:studyDescription = new StringBuffer("");</ViolationValue>
-        <ViolationValue>/src/main/webapp/provider/infirmarydemographiclist.jspf:study_link = new StringBuffer("");</ViolationValue>
-        <ViolationValue>/src/main/webapp/provider/infirmarydemographiclist.jspf:study_no = new StringBuffer("");</ViolationValue>
+        <ViolationValue>/src/main/webapp/provider/infirmarydemographiclist.jspf:StringBuffer studyDescription = new StringBuffer("");</ViolationValue>
+        <ViolationValue>/src/main/webapp/provider/infirmarydemographiclist.jspf:StringBuffer study_link = new StringBuffer("");</ViolationValue>
+        <ViolationValue>/src/main/webapp/provider/infirmarydemographiclist.jspf:StringBuffer study_no = new StringBuffer("");</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/providernewgroup.jsp:StringBuffer strbuf=new StringBuffer(e.nextElement().toString());</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/providersavemygroup.jsp:StringBuffer strbuf=new StringBuffer(e.nextElement().toString());</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/providerupdatepassword.jsp:StringBuffer sbTemp = new StringBuffer();</ViolationValue>

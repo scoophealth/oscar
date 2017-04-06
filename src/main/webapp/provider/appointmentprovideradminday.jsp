@@ -1578,8 +1578,21 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 <!-- caisi infirmary view exteion add -->
 <!--  fffffffffffffffffffffffffffffffffffffffffff-->
 <caisi:isModuleLoad moduleName="caisi">
-<jsp:include page="infirmarydemographiclist.jspf"/>
+
+<%
+String eURL =  "../oscarEncounter/IncomingEncounter.do?providerNo="+curUser_no+"&curProviderNo="+curProvider_no[nProvider]+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+year+"-"+month+"-"+day+"&source=cm";
+%>
+<jsp:include page="infirmarydemographiclist.jspf">
+	<jsp:param value="<%=userAvail %>" name="userAvail"/>
+	<jsp:param name="strDate" value="<%userAvail %>"/>
+	<jsp:param name="bShowDocLink" value="<%=bShowDocLink %>"/>
+	<jsp:param name="bShowEncounterLink" value="<%=bShowEncounterLink %>"/>
+	<jsp:param name="eURL" value="<%eURL%>"/>
+</jsp:include>
+
 </caisi:isModuleLoad>
+
+
 <logic:notEqual name="infirmaryView_isOscar" value="false">
 <!-- caisi infirmary view exteion add end ffffffffffffffffff-->
 <!-- =============== following block is the original oscar code. -->

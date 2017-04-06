@@ -774,6 +774,14 @@ public class ProviderManager2 {
 
 	}
 	
+	public void saveProvider(LoggedInInfo loggedInInfo, Provider provider) {
+		providerDao.saveProvider(provider);
+		
+		//--- log action ---
+		LogAction.addLogSynchronous(loggedInInfo, "ProviderManager.saveProvider, providerNo=" + provider.getProviderNo(), null);
+
+	}
+	
 	public List<Provider> getActiveProvidersInMyDomain(LoggedInInfo loggedInInfo, List<Integer> programDomain) {
 		
 		List<Provider> providers = programProviderDao.getProvidersByPrograms(programDomain);
@@ -781,4 +789,15 @@ public class ProviderManager2 {
 		return providers;
 	}
 
+	public String suggestProviderNo() {
+		List<String> providerNos = providerDao.getAllProviderIds();
+		
+		for(int x=0;x<100000;x++) {
+			if(!providerNos.contains(String.valueOf(x))) {
+				return String.valueOf(x);
+			}
+		}
+		
+		return null;
+	}
 }
