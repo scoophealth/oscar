@@ -25,8 +25,10 @@ package org.oscarehr.managers;
 
 
 
+
 import java.util.Collections;
 import java.util.List;
+
 import org.oscarehr.common.dao.EFormDao;
 import org.oscarehr.common.dao.EFormDao.EFormSortOrder;
 import org.oscarehr.common.dao.EFormDataDao;
@@ -38,6 +40,10 @@ import org.oscarehr.common.model.EncounterForm;
 import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import oscar.dms.ConvertToEdoc;
+import oscar.dms.EDoc;
+import oscar.form.util.FormTransportContainer;
 import oscar.log.LogAction;
 
 /**
@@ -60,12 +66,14 @@ public class FormsManager {
 	
 	@Autowired
 	private EncounterFormDao encounterFormDao;
+	
+	@Autowired
+	DocumentManager documentManager;
 
 	public static final String EFORM = "eform"; 
 	public static final String FORM = "form";
 	
-	
-	
+		
 	/**
 	 * Finds all eforms based on the status. 
 	 * 
@@ -131,6 +139,25 @@ public class FormsManager {
 		List<EncounterForm> results = encounterFormDao.findAllNotHidden();
 		Collections.sort(results, EncounterForm.FORM_NAME_COMPARATOR);
 		return (results);
+	}
+	
+	/**
+	 * Saves an form as PDF EDoc. 
+	 * Returns the id of the converted document. 
+	 */
+	public Integer saveFormDataAsEDoc( LoggedInInfo loggedInInfo, FormTransportContainer formTransportContainer ) {
+				
+		EDoc edoc = ConvertToEdoc.from( formTransportContainer );
+		documentManager.moveDocument( loggedInInfo, edoc.getDocument(), ConvertToEdoc.getFilePath(), null );		
+		Integer documentId = documentManager.saveDocument( loggedInInfo, edoc );
+
+		if( documentId != null ) {
+			LogAction.addLogSynchronous(loggedInInfo, "FormsManager.saveFormDataAsEDoc", "Document ID saved: " + documentId );
+		} else {
+			LogAction.addLogSynchronous(loggedInInfo, "FormsManager.saveFormDataAsEDoc", "Document conversion for Form " + edoc.getFileName() + " failed.");
+		}
+		
+		return documentId;
 	}
 	
 }

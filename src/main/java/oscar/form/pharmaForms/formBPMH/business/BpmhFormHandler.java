@@ -151,6 +151,7 @@ public class BpmhFormHandler {
 	private ProfessionalContactDao proContactDao;
 	private DemographicContactDao demographicContactDao;
 	private ClinicDAO clinicDao;
+	private LoggedInInfo loggedInInfo;
 	
 	/**
 	 * Depends on: 
@@ -200,8 +201,10 @@ public class BpmhFormHandler {
     	setClinicDao( (ClinicDAO) SpringUtils.getBean(ClinicDAO.class) );
     }
 	
-    public void populateFormBean() { 
-    	populateFormBean(null);
+    public void populateFormBean( LoggedInInfo loggedInInfo ) { 
+    	this.loggedInInfo = loggedInInfo;
+    	BpmhFormBean bpmhFormBean = null;
+    	populateFormBean( bpmhFormBean );
 	}
 	
 	/**
@@ -211,7 +214,7 @@ public class BpmhFormHandler {
 	 *  - retrieve form history
 	 */
 	@SuppressWarnings("unchecked") // json conversion is unchecked.
-    public void populateFormBean(BpmhFormBean bpmhFormBean) {
+    public void populateFormBean( BpmhFormBean bpmhFormBean ) {
 		if(bpmhFormBean != null) {
 			setBpmhFormBean(bpmhFormBean);
 		}
@@ -407,8 +410,7 @@ public class BpmhFormHandler {
 
 			// look for the Dr. in the demographic health care team.
 			demographicManager = SpringUtils.getBean(DemographicManager.class);
-			demographicContact = demographicManager.getHealthCareMemberbyRole(LoggedInInfo.getLoggedInInfoAsCurrentClassAndMethod(), 
-					demographicNo, BpmhFormHandler.PRIMARY_DR_CODE);
+			demographicContact = demographicManager.getHealthCareMemberbyRole( loggedInInfo, demographicNo, BpmhFormHandler.PRIMARY_DR_CODE );
 			if( demographicContact != null ) {
 				professionalContact = demographicContact.getDetails();
 				demographicContactId = demographicContact.getId();

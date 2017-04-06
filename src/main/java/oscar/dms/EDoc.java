@@ -36,11 +36,16 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
 import org.apache.struts.upload.FormFile;
+import org.oscarehr.common.model.CtlDocument;
+import org.oscarehr.common.model.CtlDocumentPK;
+import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.MyDateFormat;
 import oscar.OscarProperties;
 import oscar.oscarTags.TagObject;
+import oscar.util.ConversionUtils;
 import oscar.util.UtilDateUtilities;
 
 public class EDoc extends TagObject implements Comparable<EDoc> {
@@ -78,6 +83,9 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 	private Integer appointmentNo = -1;
 	private boolean restrictToProgram=false;
 	private String fileSignature;
+	
+	private org.oscarehr.common.model.Document document;
+	private CtlDocument ctlDocument;
 	
 
 	/** Creates a new instance of EDoc */
@@ -536,6 +544,46 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 
 	public void setRestrictToProgram(boolean restrictToProgram) {
 		this.restrictToProgram = restrictToProgram;
+	}
+
+	public Document getDocument() {
+		
+		document = new Document();
+		document.setDoctype(this.getType());
+		document.setDocClass(this.getDocClass());
+		document.setDocSubClass(this.getDocSubClass());
+		document.setDocdesc(this.getDescription());
+		document.setDocxml(this.getHtml());
+		document.setDocfilename(this.getFileName());
+		document.setDoccreator(this.getCreatorId());
+		document.setSource(this.getSource());
+		document.setSourceFacility(this.getSourceFacility());
+		document.setResponsible(this.getResponsibleId());
+		document.setProgramId(this.getProgramId());
+		document.setUpdatedatetime(this.getDateTimeStampAsDate());
+        document.setContentdatetime(this.getContentDateTime());
+		document.setStatus(this.getStatus());
+		document.setContenttype(this.getContentType());
+		document.setPublic1(ConversionUtils.fromIntString(this.getDocPublic()));
+		document.setObservationdate(MyDateFormat.getSysDate(this.getObservationDate()));
+		document.setNumberofpages(this.getNumberOfPages());
+		document.setAppointmentNo(this.getAppointmentNo());
+		document.setRestrictToProgram(this.isRestrictToProgram());
+		document.setFileSignature( getFileSignature() );
+		return document;
+	}
+
+	public CtlDocument getCtlDocument() {
+		
+		ctlDocument = new CtlDocument();
+		CtlDocumentPK cdpk = new CtlDocumentPK();
+		cdpk.setModule( this.getModule() );
+		cdpk.setModuleId( Integer.parseInt( this.getModuleId() ) );
+		
+		ctlDocument.setId(cdpk);
+		ctlDocument.setStatus( String.valueOf( this.getStatus() ) );
+
+		return ctlDocument;
 	}
 
 	@Override

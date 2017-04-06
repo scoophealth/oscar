@@ -370,6 +370,10 @@
 						<html:submit property="method" >
 							<bean:message key="colcamex.formBPMH.print" />
 						</html:submit>
+						
+						<html:submit property="method" >
+							eDocument
+						</html:submit>
 		
 						<logic:equal name="bpmh" property="formId" value="0">
 							<html:submit property="method" >
@@ -378,7 +382,7 @@
 						</logic:equal>
 					
 					</c:if>
-		
+
 					<logic:messagesPresent message="true">
 					    <html:messages id="saved" message="true">
 					        <logic:present name="saved">
