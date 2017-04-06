@@ -119,7 +119,7 @@ function submitStatus(ctrl) {// only place other than infirmaction.java to set i
 		</c:forEach>
 	</select>
 	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
-		<caisi:ProgramExclusiveView providerNo="<%=curUser_no%>" value="no">
+		<caisi:ProgramExclusiveView providerNo="<%=((LoggedInInfo)LoggedInInfo.getLoggedInInfoFromSession(request)).getLoggedInProviderNo()%>" value="no">
 			<a href='providercontrol.jsp?infirmaryView_isOscar=true&GoToCaisiViewFromOscarView=false&<%=session.getAttribute("infirmaryView_OscarQue") %>'>|
 			Oscar View</a>
 		</caisi:ProgramExclusiveView>
@@ -127,7 +127,7 @@ function submitStatus(ctrl) {// only place other than infirmaction.java to set i
 </logic:notEqual>
 
 <logic:equal name="infirmaryView_isOscar" value="true">
-	<caisi:ProgramExclusiveView providerNo="<%=curUser_no%>" value="no">
+	<caisi:ProgramExclusiveView providerNo="<%=((LoggedInInfo)LoggedInInfo.getLoggedInInfoFromSession(request)).getLoggedInProviderNo()%>" value="no">
 		<caisi:isModuleLoad moduleName="oscarClinic" reverse="true">
 		<div align="right"><a
 			href='providercontrol.jsp?infirmaryView_isOscar=false&GoToCaisiViewFromOscarView=true&<%=session.getAttribute("infirmaryView_OscarQue") %>'>|

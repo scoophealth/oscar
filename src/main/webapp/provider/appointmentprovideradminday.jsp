@@ -1094,7 +1094,7 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 <%
 	if (caseload) {
 %>
-<%@include file="caseload.jspf" %>
+<jsp:include page="caseload.jspf"/>
 <%
 	} else {
 %>
@@ -1371,7 +1371,7 @@ if(!"true".equals(oscarVariables.getProperty("schedule.groupsFromPrograms","fals
 <!-- caisi infirmary view extension add fffffffffffff-->
 <caisi:isModuleLoad moduleName="caisi">
 
-	<%@include file="infirmaryviewprogramlist.jspf" %>
+	<jsp:include page="infirmaryviewprogramlist.jspf"/>
 
 </caisi:isModuleLoad>
 <!-- caisi infirmary view extension add end fffffffffffff-->
@@ -1578,6 +1578,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 <!-- caisi infirmary view exteion add -->
 <!--  fffffffffffffffffffffffffffffffffffffffffff-->
 <caisi:isModuleLoad moduleName="caisi">
+
 <%@include file="infirmarydemographiclist.jspf" %>
 </caisi:isModuleLoad>
 <logic:notEqual name="infirmaryView_isOscar" value="false">

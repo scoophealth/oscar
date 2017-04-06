@@ -140,8 +140,7 @@ if ((k/2)*2==k){ %>
 					rights="r">
 
 					<%String appointment_no=rsAppointNO;%>
-					<%@include file="appointmentFormsLinks.jspf" %>
- 
+				
 				</security:oscarSec> <!-- billing code block --> <security:oscarSec
 					roleName="<%=roleName$%>" objectName="_masterLink" rights="r">
 					

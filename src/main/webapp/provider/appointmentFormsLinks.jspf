@@ -7,12 +7,12 @@
 
 <%
 	LoggedInInfo loggedInInfo3=LoggedInInfo.getLoggedInInfoFromSession(request);
-	ProviderPreference providerPreference1 = (ProviderPreference)request.getAttribute("providerPreference");
-	String demographic_no1 = request.getParameter("demographic_no");
-	String appointment_no1 = request.getParameter("appointment_no");
-	if (providerPreference1!=null)
+	ProviderPreference providerPreference = (ProviderPreference)request.getAttribute("providerPreference");
+	String demographic_no = request.getParameter("demographic_no");
+	String appointment_no = request.getParameter("appointment_no");
+	if (providerPreference!=null)
 	{
-		Collection<String> formNames=providerPreference1.getAppointmentScreenForms();
+		Collection<String> formNames=providerPreference.getAppointmentScreenForms();
 		List<String>formNamesList = new ArrayList<String>(formNames);
 		Collections.sort(formNamesList);
 		
@@ -21,29 +21,29 @@
 			String trimmedEscapedLinkName=StringEscapeUtils.escapeHtml(AppointmentProviderAdminDayUIBean.getLengthLimitedLinkName(loggedInInfo3, formNameTemp));
 			String escapedLinkName=StringEscapeUtils.escapeHtml(formNameTemp);
 			%>
-				|<a href=# onClick='popupPage2("../form/forwardshortcutname.jsp?formname=<%=escapedLinkName%>&amp;demographic_no=<%=demographic_no1%>&amp;appointmentNo=<%=appointment_no1%>")' title='<%=escapedLinkName%>'><%=trimmedEscapedLinkName%></a>
+				|<a href=# onClick='popupPage2("../form/forwardshortcutname.jsp?formname=<%=escapedLinkName%>&amp;demographic_no=<%=demographic_no%>&amp;appointmentNo=<%=appointment_no%>")' title='<%=escapedLinkName%>'><%=trimmedEscapedLinkName%></a>
 			<%
 		}
 		
-		Collection<Integer> eFormIds=providerPreference1.getAppointmentScreenEForms();
+		Collection<Integer> eFormIds=providerPreference.getAppointmentScreenEForms();
 		for (Integer eFormIdTemp : eFormIds)
 		{
 			EForm eForm=AppointmentProviderAdminDayUIBean.getEForms(eFormIdTemp);
 			String trimmedEscapedLinkName=StringEscapeUtils.escapeHtml(AppointmentProviderAdminDayUIBean.getLengthLimitedLinkName(loggedInInfo3, eForm.getFormName()));
 			String escapedLinkName=StringEscapeUtils.escapeHtml(eForm.getFormName());
 			%>
-				|<a href=# onClick='popupPage2("<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=eFormIdTemp%>&amp;demographic_no=<%=demographic_no1%>&amp;appointment=<%=appointment_no1%>")' title='<%=escapedLinkName%>'><%=trimmedEscapedLinkName%></a>
+				|<a href=# onClick='popupPage2("<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=eFormIdTemp%>&amp;demographic_no=<%=demographic_no%>&amp;appointment=<%=appointment_no%>")' title='<%=escapedLinkName%>'><%=trimmedEscapedLinkName%></a>
 			<%
 		}
 
-		Collection<ProviderPreference.QuickLink> quickLinks=providerPreference1.getAppointmentScreenQuickLinks();
+		Collection<ProviderPreference.QuickLink> quickLinks=providerPreference.getAppointmentScreenQuickLinks();
 		for (ProviderPreference.QuickLink quickLink : quickLinks)
 		{
 			String trimmedEscapedLinkName=StringEscapeUtils.escapeHtml(AppointmentProviderAdminDayUIBean.getLengthLimitedLinkName(loggedInInfo3, quickLink.getName()));
 			
 			String escapedLinkUrl=quickLink.getUrl();
 			escapedLinkUrl=escapedLinkUrl.replaceAll("\\$\\{contextPath\\}", request.getContextPath());
-			escapedLinkUrl=escapedLinkUrl.replaceAll("\\$\\{demographicId\\}", String.valueOf(demographic_no1));
+			escapedLinkUrl=escapedLinkUrl.replaceAll("\\$\\{demographicId\\}", String.valueOf(demographic_no));
 			escapedLinkUrl=StringEscapeUtils.escapeHtml(escapedLinkUrl);
 			
 			String escapedLinkName=StringEscapeUtils.escapeHtml(quickLink.getName());
