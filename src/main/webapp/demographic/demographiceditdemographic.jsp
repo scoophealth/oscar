@@ -3198,7 +3198,16 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 			                    <%}%>
 			                </td>
 			            </tr>
-			            
+
+				<%
+					boolean show_LHIN_info = false;
+					for(Program _p:pset){
+						if(_p.isEnableOCAN()){
+							show_LHIN_info=true;
+						}
+					}
+				%>
+			          <% if(show_LHIN_info){ %>  
 			            <caisi:isModuleLoad moduleName="caisi">		
 			           	<tr>
 			            	<td>Recipient Location</font></td>
@@ -3239,6 +3248,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 			                </td>
 			            </tr>
 			            </caisi:isModuleLoad>
+				<% } %>
 			        </table>
 			    </td>
 			</tr>
