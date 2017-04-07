@@ -37,8 +37,8 @@ pg1_ncMidwife	: left, 470, 187, 0, BaseFont.HELVETICA, 8 , Midwife
 c_nc	: left, 418, 197, 0, BaseFont.HELVETICA, 8 
 c_famPhys	: left, 510, 197, 0, BaseFont.HELVETICA, 8 
 
-c_allergies	: left, 50, 210, 0, BaseFont.HELVETICA, 8  , _, 320, 235, 10
-c_meds	: left, 325, 210, 0, BaseFont.HELVETICA, 8  , _, 580, 235, 10
+c_allergies	: left, 50, 210, 0, BaseFont.HELVETICA, 7  , _, 320, 235, 10
+c_meds	: left, 325, 210, 0, BaseFont.HELVETICA, 7  , _, 580, 235, 10
 
 pg1_menLMP	: left, 80, 255, 0, BaseFont.HELVETICA, 8 
 pg1_psCertY	: left, 249, 255, 0, BaseFont.HELVETICA, 8 , X

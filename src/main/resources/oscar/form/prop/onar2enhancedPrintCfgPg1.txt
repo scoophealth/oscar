@@ -13,8 +13,8 @@ c_nc	: left, 188, 117, 0, BaseFont.HELVETICA, 8
 c_famPhys	: left, 50, 137, 0, BaseFont.HELVETICA, 8 
 
 c_finalEDB	: left, 218, 147, 0, BaseFont.HELVETICA, 9 
-c_allergies	: left, 324, 127, 0, BaseFont.HELVETICA, 8  , _, 428, 160, 10
-c_meds	: left, 462, 127, 0, BaseFont.HELVETICA, 8  , _, 580, 160, 10
+c_allergies	: left, 324, 127, 5, BaseFont.HELVETICA, 7  , _, 450, 160, 8
+c_meds	: left, 462, 127, 5, BaseFont.HELVETICA, 7  , _, 590, 160, 8
 c_gravida	: left, 50, 158, 0, BaseFont.HELVETICA, 8 
 c_term	: left, 78, 158, 0, BaseFont.HELVETICA, 8 
 c_prem	: left, 105, 158, 0, BaseFont.HELVETICA, 8 
