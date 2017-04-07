@@ -134,7 +134,7 @@ You have no rights to access the data!
             session.setAttribute(strBeanName, bean);
             session.setAttribute("casemgmt_bean_flag", "true");
                     String hrefurl=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+URLEncoder.encode(bean.userName)+"&appointmentNo="+request.getParameter("appointmentNo")+"&reason=" + URLEncoder.encode(request.getParameter("reason")==null?"":request.getParameter("reason")) + "&appointmentDate="+request.getParameter("appointmentDate")+"&start_time="+request.getParameter("startTime")+ "&apptProvider=" + request.getParameter("apptProvider_no")+"&providerview="+ request.getParameter("providerview") +
-                    "&msgType="+request.getParameter("msgType")+"&OscarMsgTypeLink="+request.getParameter("OscarMsgTypeLink")+"&noteId="+request.getParameter("noteId")+"&forceNote=true";
+                    "&msgType="+request.getParameter("msgType")+"&OscarMsgTypeLink="+request.getParameter("OscarMsgTypeLink")+"&noteId="+request.getParameter("noteId")+(request.getParameter("noteId") != null ? "&forceNote=true" :"");
 
             if( request.getParameter("noteBody") != null )
                 hrefurl += "&noteBody=" + request.getParameter("noteBody");
