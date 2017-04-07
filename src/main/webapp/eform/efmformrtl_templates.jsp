@@ -14,6 +14,7 @@
 
 <%
 ArrayList<String> templates = EFormUtil.listRichTextLetterTemplates();
+Collections.sort(templates);
 File file = null;
 for (String template : templates) {
 	String name = template;
