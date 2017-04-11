@@ -125,7 +125,7 @@
 			    	$scope.k2aActive = data.success;
 			    	console.log($scope.k2aActive );
 			    	if($scope.k2aActive){
-			    		getPreventionRulesList();
+			    		////getPreventionRulesList();  SHOULD BE ENABLED BEFORE COMMIT
 			    		getCurrentPreventionRulesVersion();
 			    		getLuCodesList();
 			    		getCurrentLuCodesVersion();
