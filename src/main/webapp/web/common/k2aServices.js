@@ -124,6 +124,41 @@ angular.module("k2aServices", [])
 		});
 	      return deferred.promise;
 	},
+	
+	luCodesList: function() {
+		var deferred = $q.defer();
+		$http.get(this.apiPath+'/resources/luCodesList').success(function(data){
+		console.log("return from /luCodesList",data);
+		deferred.resolve(data);
+		}).error(function(){
+		  console.log("error getting luCodesList");
+		  deferred.reject("An error occured while trying to remove a comment from k2a");
+		});
+	      return deferred.promise;
+	},
+	loadLuCodesById: function(id) {
+		var deferred = $q.defer();
+		
+		$http.post(this.apiPath+'/resources/loadLuCodesById/'+id.id,id,this.configHeaders).success(function(data){
+		console.log("return from /loadLuCodesById",data);
+		deferred.resolve(data);
+		}).error(function(){
+		  console.log("error loading loadLuCodesById from k2a");
+		  deferred.reject("An error occured while trying to loadLuCodesById");
+		});
+	      return deferred.promise;
+	},
+	currentLuCodesVersion: function() {
+		var deferred = $q.defer();
+		$http.get(this.apiPath+'/resources/currentLuCodesVersion').success(function(data){
+		console.log("return from /currentLuCodesVersion",data);
+		deferred.resolve(data);
+		}).error(function(){
+		  console.log("error currentLuCodesVersion");
+		  deferred.reject("An error occured while trying to currentLuCodesVersion");
+		});
+	      return deferred.promise;
+	},
 	getNotifications: function() {
 		var deferred = $q.defer();
 		$http.get(this.apiPath+'/resources/notifications').success(function(data){
