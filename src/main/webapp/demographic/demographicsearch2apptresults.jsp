@@ -203,6 +203,9 @@ function searchAll() {
                 <option value="search_chart_no" <%=request.getParameter("search_mode").equals("search_chart_no")?"selected":""%>>
                     <bean:message key="demographic.demographicsearch2apptresults.optChart"/>
                 </option>
+		<option value="search_demographic_no" <%=request.getParameter("search_mode").equals("search_demographic_no")?"selected":""%>>
+                    <bean:message key="demographic.demographicsearch2apptresults.demographicId"/>
+                </option>
             </select>
         </li>
         <li>
@@ -403,6 +406,10 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 		else if(searchMode.equals("search_chart_no")) {
 			demoList = demographicDao.findDemographicByChartNo(keyword, limit, offset,providerNo,outOfDomain);
 		}
+                else if(searchMode.equals("search_demographic_no")) {
+                        demoList = demographicDao.findDemographicByDemographicNo(keyword, limit, offset,providerNo,outOfDomain);
+                }
+
 	}
 	else if( "active".equals(ptstatus) ) {
 	    if(searchMode.equals("search_name")) {
@@ -423,6 +430,9 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 		else if(searchMode.equals("search_chart_no")) {
 			demoList = demographicDao.findDemographicByChartNoAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
 		}
+		else if(searchMode.equals("search_demographic_no")) {
+			demoList = demographicDao.findDemographicByDemographicNoAndNotStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
+		}
 	}
 	else if( "inactive".equals(ptstatus) ) {
 	    if(searchMode.equals("search_name")) {
@@ -442,6 +452,9 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 		}
 		else if(searchMode.equals("search_chart_no")) {
 			demoList = demographicDao.findDemographicByChartNoAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
+		}
+		else if(searchMode.equals("search_demographic_no")) {
+			demoList = demographicDao.findDemographicByDemographicNoAndStatus(keyword, stati, limit, offset,providerNo,outOfDomain);
 		}
 	}
         }
