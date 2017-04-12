@@ -25,6 +25,7 @@
 package oscar.oscarRx.util;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +39,10 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
+import org.oscarehr.common.dao.ResourceStorageDao;
+import org.oscarehr.common.model.ResourceStorage;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 
@@ -81,22 +85,34 @@ public class LimitedUseLookup {
 		}
 		return "";
 	}
+	static public void reLoadLookupInformation(){
+		loaded = false;
+		loadLULookupInformation();
+	}
 
 	static private void loadLULookupInformation() {
 		log.debug("current LU lookup size " + luLookup.size());
 		if (!loaded) {
 			LimitedUseLookup rdf = new LimitedUseLookup();
 			InputStream is = null;
-
+			ResourceStorageDao resourceStorageDao = SpringUtils.getBean(ResourceStorageDao.class);
 			try {
 
 				String fileName = OscarProperties.getInstance().getProperty("odb_formulary_file");
 				if (fileName != null && !fileName.isEmpty()) {
 					is = new BufferedInputStream(new FileInputStream(fileName));
+					log.info("loading odb file from property "+fileName);
 
 				} else {
-					String dosing = "oscar/oscarRx/data_extract_20161124.xml";
-					is = rdf.getClass().getClassLoader().getResourceAsStream(dosing);
+					ResourceStorage resourceStorage = resourceStorageDao.findActive(ResourceStorage.LU_CODES);
+		        	if(resourceStorage != null){
+		        		is = new ByteArrayInputStream(resourceStorage.getFileContents());
+		        		log.info("loading odb file from resource storage id"+resourceStorage.getId());
+		        	}else{
+						String dosing = "oscar/oscarRx/data_extract_20161124.xml";
+						log.info("loading odb file from internal resource "+dosing);
+						is = rdf.getClass().getClassLoader().getResourceAsStream(dosing);
+		        	}
 				}
 
 				SAXBuilder parser = new SAXBuilder();
