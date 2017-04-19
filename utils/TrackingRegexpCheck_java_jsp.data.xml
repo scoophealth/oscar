@@ -955,9 +955,6 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctMentalHealthRecord.java:rsNew = DBHandler.GetSQL(sqlNew);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctPalliativeCareRecord.java:ResultSet rs = DBHandler.GetSQL(sql, true);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctPalliativeCareRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctPatientData.java:ResultSet rs = DBHandler.GetSQL("SELECT demographic_no, last_name, first_name, sex, year_of_birth, month_of_birth, date_of_birth, address, city, postal, phone, roster_status FROM demographic WHERE demographic_no = "</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctPatientData.java:ResultSet rs = DBHandler.GetSQL("SELECT provider_no FROM demographic WHERE demographic_no = "</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctPatientData.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctPeriMenopausalRecord.java:ResultSet rs = DBHandler.GetSQL(sql, true);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctPeriMenopausalRecord.java:rs = DBHandler.GetSQL(sql);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctRourkeRecord.java:ResultSet rsDB = DBHandler.GetSQL(sqlDB);</ViolationValue>
@@ -2851,7 +2848,6 @@
         <ViolationValue>/src/main/webapp/oscarReport/oscarMeasurements/InitializePatientsMetGuidelineCDMReport.jsp:&lt;logic:iterate id="mInstrc" name='&lt;%="mInstrcs" + ctr%&gt;' property="measuringInstrcVector" indexId="index"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/oscarMeasurements/InitializePatientsMetGuidelineCDMReport.jsp:property="measurementTypeVector" indexId="ctr"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarReport/oscarReportDxReg.jsp:&lt;logic:iterate id="quickLists" name="allQuickLists" property="dxQuickListBeanVector"&gt;</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarResearch/oscarDxResearch/currentCodeList.jsp://Collection list = dxList.getDxQuickListItemsVectorNotInPatientsList(patientDx);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarResearch/oscarDxResearch/currentCodeList.jsp:Vector patientDx = dxResearchBeanHand.getDxResearchBeanVector();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarResearch/oscarDxResearch/dxQuickList.jsp:&lt;logic:iterate id="item" name="allQuickListItems" property="dxQuickListItemsVector"&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarResearch/oscarDxResearch/dxQuickList.jsp:&lt;logic:iterate id="quickLists" name="allQuickLists" property="dxQuickListBeanVector" &gt;</ViolationValue>
@@ -3046,9 +3042,9 @@
         <ViolationValue>/src/main/webapp/provider/appointmentprovideradminmonth.jsp:strReason = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/formar2_99_08.jsp:StringBuffer tt;</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/formar2_99_08.jsp:tt = new StringBuffer().append(e.nextElement());</ViolationValue>
-        <ViolationValue>/src/main/webapp/provider/infirmarydemographiclist.jspf:studyDescription = new StringBuffer("");</ViolationValue>
-        <ViolationValue>/src/main/webapp/provider/infirmarydemographiclist.jspf:study_link = new StringBuffer("");</ViolationValue>
-        <ViolationValue>/src/main/webapp/provider/infirmarydemographiclist.jspf:study_no = new StringBuffer("");</ViolationValue>
+        <ViolationValue>/src/main/webapp/provider/infirmarydemographiclist.jspf:StringBuffer studyDescription = new StringBuffer("");</ViolationValue>
+        <ViolationValue>/src/main/webapp/provider/infirmarydemographiclist.jspf:StringBuffer study_link = new StringBuffer("");</ViolationValue>
+        <ViolationValue>/src/main/webapp/provider/infirmarydemographiclist.jspf:StringBuffer study_no = new StringBuffer("");</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/providernewgroup.jsp:StringBuffer strbuf=new StringBuffer(e.nextElement().toString());</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/providersavemygroup.jsp:StringBuffer strbuf=new StringBuffer(e.nextElement().toString());</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/providerupdatepassword.jsp:StringBuffer sbTemp = new StringBuffer();</ViolationValue>
