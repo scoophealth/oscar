@@ -140,15 +140,15 @@ if(!authed) {
 			<script LANGUAGE="JavaScript">
 				self.opener.refresh();  
 				self.location.href="<%=request.getParameter("url_back")%>";
-		    	</script>
+			</script>
 		<% }
 
 		if (request.getParameter("submit") != null && "Save".equals(request.getParameter("submit"))) { %>
 			<script LANGUAGE="JavaScript">
 				self.opener.refresh();  
-			</script>		
-
+			</script>
 		<% }
+
 		if(!"Settle & Print Invoice".equals(request.getParameter("submit")) && !"Save & Print Invoice".equals(request.getParameter("submit"))) { %>
 			<a href="billingON3rdInv.jsp?billingNo=<%=billingNo%>"> Print invoice</a>
 		<% } %>

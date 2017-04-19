@@ -33,6 +33,8 @@ import org.oscarehr.drools.RuleBaseFactory;
 @Entity
 public class ResourceStorage extends AbstractModel<Integer> {
 	public static final String PREVENTION_RULES = "PREVENTION_RULES";
+
+	public static final String LU_CODES = "LU_CODES";
 	
 	/*create table ResourceStorage (
 			id int(10)  NOT NULL auto_increment primary key,

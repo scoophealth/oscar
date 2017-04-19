@@ -47,8 +47,7 @@ angular.module("demographicServices", [])
         
         saveDemographic: function (demographic) {
         	var deferred = $q.defer();
-        	var demographicTo1 = {demographicTo1:demographic};
-            $http.post(this.apiPath+'demographics',demographicTo1).success(function(data){
+        	$http.post(this.apiPath+'demographics',demographic).success(function(data){
             	console.log(data);
             	deferred.resolve(data);
           }).error(function(){
@@ -61,8 +60,7 @@ angular.module("demographicServices", [])
         
         updateDemographic: function(demographic){
         	var deferred = $q.defer();
-        	var demographicTo1 = {demographicTo1:demographic};
-        	$http.put(this.apiPath+'demographics',demographicTo1).success(function(data){
+        	$http.put(this.apiPath+'demographics',demographic).success(function(data){
             	console.log(data);
                 deferred.resolve(data.demographicTo1);
             }).error(function(){
