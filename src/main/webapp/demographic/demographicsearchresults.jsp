@@ -66,6 +66,7 @@
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
+
 <%
      Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
 
@@ -143,6 +144,7 @@
 	OscarProperties props = OscarProperties.getInstance();
 %>
 
+
 <script language="JavaScript">
 
 	function showHideItem(id) {
@@ -214,6 +216,115 @@
 		  }
 		}
 </SCRIPT>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/nhpup_1.1.js"></script>
+<style>
+
+abbr
+{
+        border-bottom: 1px dotted #666;
+	cursor: help;
+}
+
+.tooltip
+{
+	position:absolute;
+	background-color:#eeeefe;
+	border: 1px solid #aaaaca;
+	font-size: smaller;
+	padding:4px;
+	width: 160px;
+	box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+	-moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+	-webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);	
+}
+
+</style>
+
+<script>
+jQuery(document).ready(function() {	
+	
+	/**
+	 * store the value of and then remove the title attributes from the
+	 * abbreviations (thus removing the default tooltip functionality of
+         * the abbreviations)
+	 */
+	jQuery('abbr').each(function(){		
+		
+		jQuery(this).data('title',jQuery(this).attr('title'));
+		jQuery(this).removeAttr('title');
+	
+	});
+
+	
+        /**
+	 * when abbreviations are mouseover-ed show a tooltip with the data from the title attribute
+	 */	
+	jQuery('abbr').mouseover(function() {		
+		
+		// first remove all existing abbreviation tooltips
+		jQuery('abbr').next('.tooltip').remove();
+		
+		var demographic_no = jQuery(this).data('title');
+		
+		var data = "<img src='../images/ui-anim_basic_16x16.gif' border='0'/>";
+		// create the tooltip
+		jQuery(this).after('<span class="tooltip" id="temp_tooltip">' + data + '</span>');
+		
+		// position the tooltip 4 pixels above and 4 pixels to the left of the abbreviation
+		var left = jQuery(this).position().left + jQuery(this).width() + 4;
+		var top = jQuery(this).position().top - 4;
+		jQuery(this).next().css('left',left);
+		jQuery(this).next().css('top',top);				
+		
+		//now that we've setup the window, let's call the ajax that will populate the span
+        jQuery.getJSON("../Tickler.do?method=getTicklerSummaryForSearchPageTooltip&demographic_no="+demographic_no, {},
+        	function(xml) {
+        		if(xml instanceof Array) {
+        			var msg = '';
+        			for(var i=0;i<xml.length;i++) {
+        				if(i>0) {
+        					msg += "<hr/>";
+        				}
+        			//	console.log(JSON.stringify(xml[i]));
+        				var t = xml[i].message;
+        				if(t.length > 120) {
+        					t = t.substring(0,120) + "...";
+        				}
+        			
+        				msg += "<b>"+xml[i].serviceDate + "</b> : " +t;
+        			}
+        			jQuery("#temp_tooltip").html(msg);
+        		}
+        });
+	});
+
+	
+	/**
+	 * when abbreviations are clicked trigger their mouseover event then fade the tooltip
+	 * (this is friendly to touch interfaces)
+	 */
+	jQuery('abbr').click(function(){
+		
+		jQuery(this).mouseover();
+		
+		// after a slight 2 second fade, fade out the tooltip for 1 second
+		jQuery(this).next().animate({opacity: 0.9},{duration: 2000, complete: function(){
+			jQuery(this).fadeOut(1000);
+		}});
+		
+	});
+	
+	/**
+	 * Remove the tooltip on abbreviation mouseout
+	 */
+	jQuery('abbr').mouseout(function(){
+			
+		jQuery(this).next('.tooltip').remove();				
+
+	});	
+	
+});
+</script>
 </head>
 	
 
@@ -493,7 +604,19 @@
 		</security:oscarSec> <!-- Rights --> <security:oscarSec roleName="<%=roleName$%>"
 			objectName="_rx" rights="r">
 			<a class="rxBtn" title="Prescriptions" href="#" onclick="popup(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=demo.getProviderNo()%>&demographicNo=<%=dem_no%>')">Rx</a>
-		</security:oscarSec></td>
+		</security:oscarSec>
+		
+		<security:oscarSec roleName="<%=roleName$%>"
+			objectName="_tickler" rights="r">
+			<span>
+			<abbr title="<%=dem_no%>">
+				<a class="rxBtn" href="#" onclick="popup(700,1027,'../Tickler.do?filter.demographicNo=<%=dem_no%>')">T</a>
+			</abbr>
+			</span>
+		</security:oscarSec>
+		
+		
+		</td>
 
 	<%	
 		}

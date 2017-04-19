@@ -68,6 +68,7 @@ import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import oscar.OscarProperties;
 
 public class TicklerAction extends DispatchAction {
@@ -617,6 +618,37 @@ public class TicklerAction extends DispatchAction {
 		
 		JSONArray jsonArray = JSONArray.fromObject( providers );
 		response.getWriter().print(jsonArray);
+		
+		return null;
+	}
+	
+	public ActionForward getTicklerSummaryForSearchPageTooltip(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_tickler", "r", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		
+		String demographicNo = request.getParameter("demographic_no");
+		String limit = request.getParameter("limit");
+		
+		int nLimit = limit != null ? Integer.parseInt(limit) : 5;
+		
+		
+		CustomFilter cf = new CustomFilter();
+		cf.setDemographicNo(demographicNo);
+		
+		List<Tickler> ticklers = ticklerManager.getTicklers(LoggedInInfo.getLoggedInInfoFromSession(request), cf,0,nLimit);
+		
+		JSONArray arr = new JSONArray();
+		for(Tickler t:ticklers) {
+			JSONObject o = new JSONObject();
+			o.put("id", t.getId());
+			o.put("message", t.getMessage());
+			o.put("serviceDate", t.getServiceDateWeb());
+			arr.add(o);
+		}
+		
+		arr.write(response.getWriter());
 		
 		return null;
 	}
