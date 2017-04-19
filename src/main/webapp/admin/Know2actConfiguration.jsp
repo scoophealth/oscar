@@ -78,6 +78,28 @@
 	  		
 	  		
 	 	</div>
+	 	<div data-ng-show="k2aActive">
+	  		<h4><bean:message key="admin.k2a.LUCodes"/> <small>{{currentLuCodesVersion}}</small></h4>
+	  		<table class="table table-bordered table-condensed">
+	  			<tr>
+	  				<th><bean:message key="admin.k2a.table.luCodeFilename"/></th>
+	  				<th><bean:message key="admin.k2a.table.dateCreated"/></th>
+	  				<th><bean:message key="admin.k2a.table.createdBy"/></th>
+	  				<th>&nbsp;</th>
+	  			</tr>
+	  			<tr data-ng-repeat="fileSet in availableLuCodes | limitTo:LUListQuantity"> 
+	  				<td>{{fileSet.name}}</td>
+	  				<td>{{fileSet.created_at}}</td>
+	  				<td>{{fileSet.author}}</td>					
+	  				<td><button class="btn btn-default btn-sm" ng-click="loadLuCodesById(fileSet)"><bean:message key="admin.k2a.load"/></button></td>
+	  			</tr>
+	  		</table>
+	  		<button  class="btn btn-default btn-sm pull-right" ng-click="increaseLUListQuantity()"><bean:message key="admin.k2a.loadMore"/></button>
+	  		
+	  		
+	 	</div>
+	 	
+	 	
 		<div data-ng-hide="k2aActive">
 			<form action="Know2actConfiguration.jsp"  method="POST">
 				<fieldset>
@@ -105,6 +127,8 @@
 			    	if($scope.k2aActive){
 			    		getPreventionRulesList();
 			    		getCurrentPreventionRulesVersion();
+			    		getLuCodesList();
+			    		getCurrentLuCodesVersion();
 			    	}
 				});
 			}
@@ -112,6 +136,9 @@
 		    
 		    $scope.availablePreventionRuleSets = [];
 		    $scope.currentPreventionRulesSet = "";
+		    $scope.currentLuCodesVersion = "";
+		    
+		    $scope.availableLuCodes = [];
 		    
 		    getPreventionRulesList = function(){
 		    	k2aService.preventionRulesList().then(function(data){
@@ -121,6 +148,14 @@
 				});
 		    }; 
 		    
+		    getLuCodesList = function(){
+		    	k2aService.luCodesList().then(function(data){
+			    	console.log("lu data coming back",data);
+			    	 $scope.availableLuCodes = data;
+			    	console.log("lu codes ",$scope.availableLuCodes );
+				});
+		    };
+		    
 		    getCurrentPreventionRulesVersion = function(){
 		    	k2aService.getCurrentPreventionRulesVersion().then(function(data){
 			    	console.log("data coming back",data);
@@ -128,6 +163,16 @@
 			    	console.log("prev rules ",$scope.availablePreventionRuleSets );
 				});
 		    }
+		    
+		    
+		    getCurrentLuCodesVersion = function(){
+		    	k2aService.currentLuCodesVersion().then(function(data){
+			    	console.log("data coming back",data);
+			    	 $scope.currentLuCodesVersion = data;
+			    	console.log("prev rules ",$scope.currentLuCodesVersion );
+				});
+		    }
+		    
 		    
 		    $scope.loadPreventionRuleById = function(prevSet){
 		    	
@@ -142,10 +187,31 @@
 		    	}
 		    }; 
 		    
+		    
+			$scope.loadLuCodesById = function(prevSet){
+		    	
+		    	if(confirm("<bean:message key="admin.k2a.confirmation"/>")){
+		    		console.log("prev",prevSet);
+		    		prevSet.agreement = "<bean:message key="admin.k2a.confirmation"/>";
+			    	k2aService.loadLuCodesById(prevSet).then(function(data){
+				    	console.log("lu data coming back",data);
+				    	getCurrentLuCodesVersion();
+				    	console.log("prev rules ",$scope.availablePreventionRuleSets );
+					});
+		    	}
+		    }; 
+		    
+		    
 		    $scope.PrevListQuantity = 10;
 		    
 		    $scope.increasePrevListQuantity =function(){
 		    	$scope.PrevListQuantity = $scope.availablePreventionRuleSets.length;
+		    }
+		    
+			$scope.LUListQuantity = 10;
+		    
+		    $scope.increaseLUListQuantity =function(){
+		    	$scope.LUListQuantity = $scope.availableLuCodes.length;
 		    }
 		    
 		    //

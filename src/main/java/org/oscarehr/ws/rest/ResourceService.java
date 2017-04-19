@@ -62,6 +62,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import oscar.OscarProperties;
 import oscar.log.LogAction;
 import oscar.oscarPrevention.PreventionDS;
+import oscar.oscarRx.util.LimitedUseLookup;
 
 
 @Path("/resources")
@@ -230,6 +231,120 @@ public class ResourceService extends AbstractServiceImpl {
 		}
 		return null;
 	}
+	
+	@GET
+	@Path("/luCodesList")
+	@Produces("application/json")
+	public JSONArray getLUCodeFileListFromK2A(@Context HttpServletRequest request) {
+		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_admin", "r", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		JSONArray retArray = new JSONArray();
+		try {
+			LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+			String resource = getResource(loggedInInfo,"/ws/api/oscar/get/LU_CODES/list", "/ws/api/oscar/get/LU_CODES/list"); 
+			JSONArray rulesArray = JSONArray.fromObject(resource);
+			
+			//id  |  type  |       created_at       |       updated_at       | created_by | updated_by |       body        |      name      | private 
+			logger.info("rules json"+rulesArray);
+			for(int i = 0; i < rulesArray.size(); i++){
+				JSONObject jobject = new JSONObject();
+				JSONObject rule = (JSONObject) rulesArray.get(i);
+				jobject.put("id", rule.getString("id"));
+				jobject.put("name", rule.getString("name"));
+				jobject.put("rulesXML", rule.getString("body"));
+				jobject.put("created_at", rule.getString("created_at"));
+				jobject.put("author", rule.getString("author"));
+				
+				retArray.add(jobject);
+			}
+			
+		} catch(Exception e) {
+			logger.error("Error retrieving prevention list",e);
+			return null;
+		}
+		
+		
+		return retArray;
+	}
+	
+	@POST
+	@Path("/loadLuCodesById/{id}")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public String addLuCodes(@PathParam("id") String id, @Context HttpServletRequest request,JSONObject jSONObject) {
+		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_admin", "r", null) && !securityInfoManager.hasPrivilege(getLoggedInInfo(), "_report", "w", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+    	
+		try {
+			LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+			
+			//Log agreement
+			if(jSONObject.containsKey("agreement")){
+				String action = "oauth1_AGREEMENT";
+		    	String content = "LU_CODES_AGREEMENT";
+		    	String contentId = id;
+		    	String demographicNo = null;
+		    	String data = jSONObject.getString("agreement");
+		    	LogAction.addLog(loggedInInfo, action, content, contentId, demographicNo, data);
+			}
+			
+			
+			String resource = getResource(loggedInInfo,"/ws/api/oscar/get/LU_CODES/id/"+id, "/ws/api/oscar/get/LU_CODES/id/"+id); 
+			
+			if(resource !=null){
+				//JSONObject jSONObject = JSONObject.fromObject(resource);
+				ResourceStorage resourceStorage = new ResourceStorage();
+				resourceStorage.setActive(true);
+				resourceStorage.setResourceName(jSONObject.getString("name"));
+				resourceStorage.setResourceType(ResourceStorage.LU_CODES);
+				if(jSONObject.containsKey("uuid")){
+					resourceStorage.setUuid(jSONObject.getString("uuid"));
+				}
+				resourceStorage.setUploadDate(new Date());
+				resourceStorage.setFileContents(resource.getBytes());
+				resourceStorage.setUuid(null);
+				
+				List<ResourceStorage> currActive=  resourceStorageDao.findActiveAll(ResourceStorage.LU_CODES);
+				if(currActive != null){
+					for(ResourceStorage rs: currActive){
+						rs.setActive(false);
+						resourceStorageDao.merge(rs);
+					}
+				}
+				resourceStorageDao.persist(resourceStorage);
+				LimitedUseLookup.reLoadLookupInformation();
+			}
+			
+		} catch(Exception e) {
+			logger.error("Error saving Resource to Storage",e);
+		}
+		return null;
+	}
+	
+	
+	@GET
+	@Path("/currentLuCodesVersion")
+	@Produces("application/json")
+	public String getCurrentLuCodesVersion(){
+		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_admin", "r", null) && !securityInfoManager.hasPrivilege(getLoggedInInfo(), "_report", "w", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		ResourceBundle bundle = getResourceBundle();
+		
+		String fileName = OscarProperties.getInstance().getProperty("odb_formulary_file");
+		if (fileName != null && !fileName.isEmpty()) {
+			return bundle.getString("lucodes.currentrules.propertyfile");
+		}else{	
+	    	ResourceStorage resourceStorage = resourceStorageDao.findActive(ResourceStorage.LU_CODES);
+	    	if(resourceStorage != null){
+	    		return bundle.getString("lucodes.currentrules.resourceStorage")+" "+resourceStorage.getResourceName();
+	    	}
+		}
+        return bundle.getString("lucodes.currentrules.default");
+	}
+	
 	
 	@GET
 	@Path("/notifications")
