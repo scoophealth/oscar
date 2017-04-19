@@ -218,18 +218,6 @@
 </SCRIPT>
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/nhpup_1.1.js"></script>
 <style>
-#pup {
-  position:absolute;
-  z-index:200; /* aaaalways on top*/
-  padding: 3px;
-  margin-left: 10px;
-  margin-top: 5px;
-  width: 250px;
-  border: 1px solid black;
-  background-color: #777;
-  color: white;
-  font-size: 0.95em;
-}
 
 abbr
 {
