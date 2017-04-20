@@ -54,6 +54,11 @@ import org.w3c.dom.Node;
 import oscar.oscarLab.ca.all.parsers.DefaultGenericHandler;
 import oscar.oscarLab.ca.all.upload.MessageUploader;
 
+@Deprecated
+/**
+ * @Deprecated use IHAPOIHandler
+ * 
+ */
 public class IHAHandler extends DefaultGenericHandler implements MessageHandler {
     Logger logger = Logger.getLogger(IHAHandler.class);
     String hl7Type = null;

@@ -80,7 +80,15 @@ public class MEDITECHHandler implements MessageHandler {
 		Parser parser = new PipeParser();
 		parser.setValidationContext(new NoValidation());
 		msg = (ORU_R01) parser.parse(hl7Body.replaceAll( "\n", "\r\n" ).replace("\\.Zt\\", "\t"));
-		terser = new Terser(msg);
+		setTerser( new Terser(msg) );
+	}
+
+	protected Terser getTerser() {
+		return terser;
+	}
+
+	protected void setTerser(Terser terser) {
+		this.terser = terser;
 	}
 
 	public String getXML() {

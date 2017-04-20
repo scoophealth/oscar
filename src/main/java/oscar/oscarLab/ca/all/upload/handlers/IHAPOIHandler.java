@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * of the License, or (at your option) any later version. 
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,7 +21,6 @@
  * Hamilton
  * Ontario, Canada
  */
-
 package oscar.oscarLab.ca.all.upload.handlers;
 
 import java.io.FileInputStream;
@@ -41,6 +40,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -48,9 +48,9 @@ import org.xml.sax.SAXException;
 
 import oscar.oscarLab.ca.all.upload.MessageUploader;
 
-public class MEDITECHHandler implements MessageHandler {
-
-	private static Logger logger = Logger.getLogger(MEDITECHHandler.class);
+public class IHAPOIHandler implements MessageHandler {
+	
+	Logger logger = MiscUtils.getLogger();
 	private final String XML = "<(\\S+?)(.*?)>(.*?)</\\1>";
 	
 	@Override
@@ -66,7 +66,7 @@ public class MEDITECHHandler implements MessageHandler {
 			hl7BodyList = parse( is );	
 			int index = 0;
 			while ( "success".equals( success ) && index < hl7BodyList.size() ) {				
-				success = MessageUploader.routeReport(loggedInInfo, serviceName, "MEDITECH", hl7BodyList.get(index), fileId);				
+				success = MessageUploader.routeReport(loggedInInfo, serviceName, "IHAPOI", hl7BodyList.get(index), fileId);				
 				index++;
 			}
 			
@@ -76,14 +76,14 @@ public class MEDITECHHandler implements MessageHandler {
 
 		} catch (Exception e) {
 			success = null;
-			logger.error("Could not upload MEDITECH message " + fileName , e);
+			logger.error("Could not upload IHAPOI message " + fileName , e);
 		} finally {
 			if( is != null ) {
 				try {
 					is.close();
 					is = null;
 				} catch (IOException e) {
-					logger.error("Failed to close MEDITECH InputStream ", e);
+					logger.error("Failed to close IHAPOI InputStream ", e);
 				}
 			}
 			if( success == null ) {
@@ -181,5 +181,4 @@ public class MEDITECHHandler implements MessageHandler {
 
 		return writer.toString();
 	}
-
 }
