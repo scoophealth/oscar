@@ -119,7 +119,7 @@ public class ConvertToEdoc {
 		if( execute( eformString, filename ) ) {
 			edoc = buildEDoc( filename, 
 					eform.getSubject(), 
-					eformString, 
+					"", 
 					eform.getProviderNo(), 
 					demographicNo, 
 					DocumentType.eForm );
@@ -135,28 +135,6 @@ public class ConvertToEdoc {
 	 * temporary DEFAULT_FILE_PATH. This file can be persisted by moving from the 
 	 * temporary path to a file storage path prior to persisting this Object to the 
 	 * database. 
-	 * 
-	 * Example use:
-	 * 
-	 * public ActionForward eDocument(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-			FormBean bpmh = (FormBean) form;
-
-			FormTransportContainer formTransportContainer = new FormTransportContainer( 
-					response, request, mapping.findForward("success").getPath() );
-
-			formTransportContainer.setDemographicNo( bpmh.getDemographicNo() );
-			formTransportContainer.setProviderNo( bpmh.getProvider().getProviderNo() );
-			formTransportContainer.setSubject( "BPMH Form ID " + bpmh.getFormId() );
-			formTransportContainer.setFormName( "bpmh" );
-			formTransportContainer.setRealPath( getServlet().getServletContext().getRealPath( File.separator ) );
-			
-			FormsManager#saveFormDataAsEDoc( LoggedInInfo.getLoggedInInfoFromSession(request), formTransportContainer );
-			
-			return ActionForward;
-		}
-	 * 
 	 */
 	public synchronized static final EDoc from( FormTransportContainer formTransportContainer ) {
 	
@@ -177,7 +155,7 @@ public class ConvertToEdoc {
 		if( execute( htmlString, filename ) ) {			
 			edoc = buildEDoc( filename, 
 					subject, 
-					htmlString, 
+					"", 
 					providerNo, 
 					demographicNo, 
 					formTransportContainer.getDocumentType() );			
@@ -382,7 +360,11 @@ public class ConvertToEdoc {
 	 * This tag would be inserted between the section tag of a Rich Text Letter Template. 
 	 * The custom stylesheet will be retrieved from Oscar's images directory. Only the filename needs to be 
 	 * given by the input tag. This method will build the filepath.
-
+	 * 
+	 * An alternative method is to set the stylesheet into the ConvertToEdocConfig object prior to converting 
+	 * the HTML into a PDF.  This may be done from inside an action class in order to retrieve custom stylesheets
+	 * from anywhere in the file system.
+	 * 
 	 * - Adds a head element to the document if one does not exist.
 	 *   
 	 */
