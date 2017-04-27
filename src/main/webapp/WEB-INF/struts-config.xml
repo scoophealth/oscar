@@ -2918,7 +2918,7 @@
 		<action input="/billing/CA/ON/billingON3rdInv.jsp" name="FrmForm" path="/billing/ca/on/DisplayInvoiceLogo" scope="request" type="org.oscarehr.billing.CA.ON.util.DisplayInvoiceLogo"></action>
 		<action path="/billing/CA/ON/preventionBilling" type="oscar.oscarBilling.ca.on.administration.PreventionsBillingAction" parameter="method" scope="request"></action>
 		
-		<action name="CreateQuickUser" path="/admin/createQuickUser" scope="request" type="org.oscarehr.web.CreateQuickUserAction" input="/admin/createQuick.jsp" >
+		<action name="CreateQuickUser" path="/admin/createQuickUser" scope="request" type="org.oscarehr.web.CreateQuickUserAction" input="/admin/createQuick.jsp" parameter="method">
             <forward name="success" path="/admin/quickUserSuccess.jsp" />
             <forward name="failure" path="/admin/quickUser.jsp" />
 		</action> 		

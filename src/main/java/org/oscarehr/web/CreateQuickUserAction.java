@@ -23,6 +23,7 @@
  */
 package org.oscarehr.web;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
@@ -31,10 +32,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.SecUserRole;
@@ -42,24 +43,58 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Security;
 import org.oscarehr.managers.ProviderManager2;
+import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import net.sf.json.JSONObject;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.login.PasswordHash;
 
-public class CreateQuickUserAction extends Action {
+public class CreateQuickUserAction extends DispatchAction {
 
 	ProviderManager2 providerManager = SpringUtils.getBean(ProviderManager2.class);
 	org.oscarehr.managers.SecurityManager securityManager = SpringUtils.getBean(org.oscarehr.managers.SecurityManager.class);
 	SecUserRoleDao secUserRoleDao = SpringUtils.getBean(SecUserRoleDao.class);
 	ProgramManager programManager = SpringUtils.getBean(ProgramManager.class);
+	SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
+	public ActionForward checkUsername(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException  {
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
+		
+		String userName = request.getParameter("user_name");
+		
+		JSONObject resp = new JSONObject();
+		
+		if(userName != null) {
+			boolean isUserAlreadyExists = securityManager.findByUserName(LoggedInInfo.getLoggedInInfoFromSession(request), userName).size() > 0;
+			if (isUserAlreadyExists) {
+				resp.put("usernameExists", true);
+			} else {
+				resp.put("usernameExists", false);
+			}
+			
+		} else {
+			resp.put("error", true);
+			resp.put("error.message", "Must pass user_name as a parameter");
+		}
+		
+		resp.write(response.getWriter());
+		
+		return null;
+	}
 	
 	@Override
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		
+		if(!securityInfoManager.hasPrivilege(loggedInInfo, "_admin", "w", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
 		
 		CreateQuickUserBean userForm = (CreateQuickUserBean)form;
 		
