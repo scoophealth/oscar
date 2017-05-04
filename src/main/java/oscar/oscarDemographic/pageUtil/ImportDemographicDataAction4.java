@@ -3078,8 +3078,13 @@ import oscar.util.UtilDateUtilities;
 		List<String> accessionsDone = new ArrayList<String>();
 		
 		for(LaboratoryResults labResult: labResultArr) {
+			if(labResult.getAccessionNumber() == null || labResult.getAccessionNumber().isEmpty()) {
+				//lets generate one!
+				UUID uuid = UUID.randomUUID();
+				labResult.setAccessionNumber("OSCAR-" + uuid.toString().substring(0, 10));
+			}
 			
-			if(accessionsDone.contains(labResult.getAccessionNumber())) {
+			else if(accessionsDone.contains(labResult.getAccessionNumber())) {
 				continue;
 			}
 			
