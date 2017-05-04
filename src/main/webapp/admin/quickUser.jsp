@@ -52,6 +52,8 @@
 <%@ page import="org.oscarehr.util.LoggedInInfo" %>
 <%@ page import="org.oscarehr.common.model.Provider" %>
 <%@ page import="java.util.List" %>
+<%@ page import="org.oscarehr.common.model.UserProperty" %>
+<%@ page import="org.oscarehr.common.dao.UserPropertyDAO" %>
 
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
@@ -59,6 +61,8 @@
 	
 	ProviderManager2 providerManager = SpringUtils.getBean(ProviderManager2.class);
 	List<Provider> providers = providerManager.getProviders(loggedInInfo, true);
+	
+	UserPropertyDAO userPropertyDAO = SpringUtils.getBean(UserPropertyDAO.class);
 	
 %>
 <html:html locale="true">
@@ -127,6 +131,7 @@
 			errors += "<span>Please choose a provider</span><br/>";
 		}
 		
+		
 		if(errors.length > 0) {
 			$("#errors").html(errors);
 			return false;
@@ -134,6 +139,42 @@
 		
 		return true;
 	}
+	
+	function usernameChanged() {
+		$("#submitButton").prop("disabled", true).addClass("ui-state-disabled");
+		
+		var username = $("#username").val();
+		
+		if(username.length == 0) {
+			return;
+		}
+		
+		//check the username
+		var ctx = '<%=request.getContextPath()%>';
+		jQuery.getJSON(ctx + "/admin/createQuickUser.do?method=checkUsername&user_name="+username, {},
+        	function(xml) {
+        	    if(xml.usernameExists != null && !xml.usernameExists) {
+        	    	 $("#submitButton").prop("disabled", false).removeClass("ui-state-disabled"); 	
+        	    }
+        	    if(xml.usernameExists != null && xml.usernameExists) {
+       	    	 alert('Username already exists. Please try another');
+       	    	}
+        	    
+        	    if(xml.error == true) {
+        	    	alert('Error checking username.');
+        	    	//$("#submitButton").prop("disabled", false).removeClass("ui-state-disabled"); 	
+        	    }
+        	
+        });
+		
+		
+		
+	}
+	
+	$(document).ready(function(){
+		usernameChanged();	
+	});
+	
 </script>
 </head>
 
@@ -155,11 +196,31 @@
                                 <input name="lastName" type="text" size="25" placeholder="Last Name"/>
                        </div>
                        <div class="controls">
-                               <input name="gender" type="text" size="10" placeholder="Gender"/><br/>
+                               <%
+                        	       oscar.OscarProperties props = oscar.OscarProperties.getInstance();
+
+	                               UserProperty sexProp = userPropertyDAO.getProp(provider.getProviderNo() ,  UserProperty.DEFAULT_SEX);
+	                               String sex = "";
+	                               if (sexProp != null) {
+	                                   sex = sexProp.getValue();
+	                               } else {
+	                                   // Access defaultsex system property
+	                                   sex = props.getProperty("defaultsex","");
+	                               }
+                               %>
+                               <select  name="gender" id="gender">
+			                        <option value=""></option>
+			                		<% for(org.oscarehr.common.Gender gn : org.oscarehr.common.Gender.values()){ %>
+			                        <option value="<%=gn.name()%>" <%=((sex.toUpperCase().equals(gn.name())) ? "selected=\"selected\"" : "") %>><%=gn.getText()%></option>
+			                        <% } %>
+			                        </select>
+			                        
+			                       
+                               <br/>
                               
                        </div>
                        <div class="controls">
-                               <input name="username" type="text" size="25" placeholder="Username"/>&nbsp;&nbsp;
+                               <input name="username" id="username" type="text" size="25" placeholder="Username" onchange="usernameChanged()"/>&nbsp;&nbsp;
                                <input name="pin" type="text" size="25" placeholder="PIN"/><br/>
                        </div>
                        
@@ -184,7 +245,7 @@
                 </div>
                 
                <div class="control-group">
-                        <input type="submit" class="btn btn-primary" value="Save"/>&nbsp;
+                        <input type="submit" id="submitButton" class="btn btn-primary" value="Save"/>&nbsp;
                         
                 </div>
                
