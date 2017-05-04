@@ -110,6 +110,21 @@
         <ap-sql>SELECT email FROM provider WHERE provider_no='${provider}' </ap-sql>
         <ap-output>${email}</ap-output>
     </databaseap>
+    <databaseap>
+        <ap-name>current_user_fax</ap-name>
+        <ap-sql>SELECT
+            MID( comments,
+                INSTR(comments,'&lt;xml_p_fax&gt;')+11,
+                INSTR(comments,'&lt;/xml_p_fax&gt;')-INSTR(comments,'&lt;xml_p_fax&gt;')-11
+            ) AS fax
+            FROM provider WHERE provider_no='${provider}' </ap-sql>
+        <ap-output>${fax}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>current_user_team</ap-name>
+        <ap-sql>SELECT team FROM provider WHERE provider_no='${provider}' </ap-sql>
+        <ap-output>${team}</ap-output>
+    </databaseap>
 
     
 <!-- Patient demographic information -->
