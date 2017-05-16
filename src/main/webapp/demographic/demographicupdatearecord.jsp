@@ -333,7 +333,19 @@
 	        }
 	    }
 	}
+     
+    if(demographic.getMyOscarUserName() != null && !demographic.getMyOscarUserName().trim().isEmpty()){ 
+     	Demographic myoscarDemographic = demographicDao.getDemographicByMyOscarUserName(demographic.getMyOscarUserName());
+     	if(!myoscarDemographic.getDemographicNo().equals(demographic.getDemographicNo())){
 
+%>
+			***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedPHR" /></font>
+			***<br><br><a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message key="global.btnBack" /></b></a> 
+<% 
+			return;
+     	}
+
+    } 
     Long archiveId = demographicArchiveDao.archiveRecord(demographic);
 	for (DemographicExt extension : extensions) {
 		DemographicExtArchive archive = new DemographicExtArchive(extension);
