@@ -59,6 +59,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.EChart;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
+import org.oscarehr.common.model.TicklerComment;
 import org.oscarehr.common.model.TicklerLink;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.managers.TicklerManager;
@@ -645,6 +646,14 @@ public class TicklerAction extends DispatchAction {
 			o.put("id", t.getId());
 			o.put("message", t.getMessage());
 			o.put("serviceDate", t.getServiceDateWeb());
+			if(!t.getComments().isEmpty()) {
+				TicklerComment comment = null;
+				for(TicklerComment c:t.getComments()) {
+					comment = c;
+				}
+				o.put("latestComment", comment.getMessage());
+				o.put("latestCommentAuthor", comment.getProvider().getFormattedName());
+			}
 			arr.add(o);
 		}
 		

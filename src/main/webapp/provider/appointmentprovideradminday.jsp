@@ -1584,10 +1584,10 @@ String eURL =  "../oscarEncounter/IncomingEncounter.do?providerNo="+curUser_no+"
 %>
 <jsp:include page="infirmarydemographiclist.jspf">
 	<jsp:param value="<%=userAvail %>" name="userAvail"/>
-	<jsp:param name="strDate" value="<%userAvail %>"/>
+	<jsp:param name="strDate" value="<%=strDate %>"/>
 	<jsp:param name="bShowDocLink" value="<%=bShowDocLink %>"/>
 	<jsp:param name="bShowEncounterLink" value="<%=bShowEncounterLink %>"/>
-	<jsp:param name="eURL" value="<%eURL%>"/>
+	<jsp:param name="eURL" value="<%=eURL%>"/>
 </jsp:include>
 
 </caisi:isModuleLoad>
