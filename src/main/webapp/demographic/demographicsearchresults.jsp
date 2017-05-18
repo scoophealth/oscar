@@ -290,8 +290,15 @@ jQuery(document).ready(function() {
         				if(t.length > 120) {
         					t = t.substring(0,120) + "...";
         				}
+        				
+        				if(xml[i].latestComment != null) {
+        					t += "[<i>" + xml[i].latestComment + "</i>]";
+        				}
         			
         				msg += "<b>"+xml[i].serviceDate + "</b> : " +t;
+        			}
+        			if(msg == '') {
+        				msg = "<i>No ticklers found</i>";
         			}
         			jQuery("#temp_tooltip").html(msg);
         		}
