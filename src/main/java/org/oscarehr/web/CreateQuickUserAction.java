@@ -181,6 +181,9 @@ public class CreateQuickUserAction extends DispatchAction {
 		s.setBLocallockset(1);
 		s.setBRemotelockset(0);
 		s.setForcePasswordReset(false);
+		if(userForm.getForcePasswordReset() != null && "1".equals(userForm.getForcePasswordReset())) {
+			s.setForcePasswordReset(true);
+		}
 		s.setStorageVersion(Security.STORAGE_VERSION_2);
 		s.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
 		s.setLastUpdateDate(new Date());

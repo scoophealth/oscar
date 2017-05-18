@@ -34,7 +34,8 @@ public class CreateQuickUserBean extends ActionForm {
 	private String confirmPassword;
 	private String copyProviderNo;
 	private String pin;
-	
+	private String forcePasswordReset;
+		
 	
 	public String getFirstName() {
 		return firstName;
@@ -98,6 +99,14 @@ public class CreateQuickUserBean extends ActionForm {
 
 	public void setPin(String pin) {
 		this.pin = pin;
+	}
+
+	public String getForcePasswordReset() {
+		return forcePasswordReset;
+	}
+
+	public void setForcePasswordReset(String forcePasswordReset) {
+		this.forcePasswordReset = forcePasswordReset;
 	}
 	
 	

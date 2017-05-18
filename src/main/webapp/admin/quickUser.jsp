@@ -228,6 +228,15 @@
                               	<input name="password" type="password" size="25" placeholder="Password"/>&nbsp;&nbsp;
                                 <input name="confirmPassword" type="password" size="25" placeholder="Confirm Password"/><br/>
                        </div>
+                       <div class="controls">
+                       		<b>Force Password Reset:</b>
+                             <select name="forcePasswordReset">
+                          	   <option value="0" selected="selected">false</option>
+								<option value="1">true</option>
+								
+							</select>	
+                       </div>
+                       
                         <div class="controls">
                                <b>Copy role info from:</b> <select name="copyProviderNo">
                                <option value=""><i>[Select Below]</i></option>
