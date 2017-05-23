@@ -71,6 +71,42 @@
 	<ap-sql>SELECT providerExt.signature FROM providerExt WHERE providerExt.provider_no='${provider}' </ap-sql>
 	<ap-output>${signature}</ap-output>
     </databaseap>
+    <databaseap>
+        <ap-name>current_user_address</ap-name>
+        <ap-sql>SELECT address FROM provider WHERE provider_no='${provider}' </ap-sql>
+        <ap-output>${address}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>current_user_phone</ap-name>
+        <ap-sql>SELECT phone FROM provider WHERE provider_no='${provider}' </ap-sql>
+        <ap-output>${phone}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>current_user_workphone</ap-name>
+        <ap-sql>SELECT work_phone FROM provider WHERE provider_no='${provider}' </ap-sql>
+        <ap-output>${work_phone}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>current_user_email</ap-name>
+        <ap-sql>SELECT email FROM provider WHERE provider_no='${provider}' </ap-sql>
+        <ap-output>${email}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>current_user_fax</ap-name>
+        <ap-sql>SELECT
+            MID( comments,
+                INSTR(comments,'&lt;xml_p_fax&gt;')+11,
+                INSTR(comments,'&lt;/xml_p_fax&gt;')-INSTR(comments,'&lt;xml_p_fax&gt;')-11
+            ) AS fax
+            FROM provider WHERE provider_no='${provider}' </ap-sql>
+        <ap-output>${fax}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>current_user_team</ap-name>
+        <ap-sql>SELECT team FROM provider WHERE provider_no='${provider}' </ap-sql>
+        <ap-output>${team}</ap-output>
+    </databaseap>
+
     
 <!-- Patient demographic information -->
     <databaseap>
@@ -264,6 +300,12 @@
         <ap-sql>SELECT sin FROM demographic WHERE demographic_no=${demographic}</ap-sql>
         <ap-output>${sin}</ap-output>
     </databaseap>
+    <databaseap>
+        <ap-name>date_joined</ap-name>
+        <ap-sql>SELECT date_joined FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${date_joined}</ap-output>
+    </databaseap>
+
 
 <!-- Patient medical information -->
     <databaseap>
