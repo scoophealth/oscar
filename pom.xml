@@ -57,6 +57,11 @@
 			<id>oscar_repo</id>
 			<url>http://oscarmcmaster.sourceforge.net/m2</url>
 		</repository>
+
+		<repository>
+			<id>new_oscar_repo</id>
+			<url>http://mvn.oscar-emr.com/repository</url>
+		</repository>
 		
 		<!-- MARC-HI (Everest & SHIC) -->
 		<repository>
@@ -1120,6 +1125,12 @@
 	    <groupId>org.jasypt</groupId>
 	    <artifactId>jasypt</artifactId>
 	    <version>1.8</version>
+	</dependency>
+
+	<dependency>
+	    <groupId>net.rgielen</groupId>
+	    <artifactId>struts1filter</artifactId>
+	    <version>1.0.1-SNAPSHOT</version>
 	</dependency>
 
 	</dependencies>
