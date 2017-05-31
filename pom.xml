@@ -405,9 +405,13 @@
 					<groupId>org.bouncycastle</groupId>
 					<artifactId>bctsp-jdk14</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>eclipse</groupId>
+					<artifactId>jdtcore</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
-        <dependency>
+        	<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports-fonts</artifactId>
 			<version>4.0.0</version>
@@ -416,6 +420,11 @@
 			<groupId>net.sourceforge.barbecue</groupId>
 			<artifactId>barbecue</artifactId>
 			<version>1.0.6b</version>
+		</dependency>
+	        <dependency>
+			<groupId>eclipse</groupId>
+			<artifactId>jdtcore</artifactId>
+			<version>3.2.0.v_658</version>
 		</dependency>
 
 		<!-- joda time -->
