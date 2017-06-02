@@ -29,7 +29,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.MsgDemoMap;
-import org.oscarehr.common.model.MsgDemoMapPK;
 import org.oscarehr.util.SpringUtils;
 
 public class MsgDemoMapDaoTest extends DaoTestFixtures {
