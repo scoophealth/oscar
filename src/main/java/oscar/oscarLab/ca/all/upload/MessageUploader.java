@@ -128,7 +128,7 @@ public final class MessageUploader {
 			String accessionNum = h.getAccessionNum();
 			String fillerOrderNum = h.getFillerOrderNumber();
 			String sendingFacility = h.getPatientLocation();
-			ArrayList docNums = h.getDocNums();
+			ArrayList<?> docNums = h.getDocNums();
 			int finalResultCount = h.getOBXFinalResultCount();
 			String obrDate = h.getMsgDate();
 
@@ -158,9 +158,9 @@ public final class MessageUploader {
 					docNums = findProvidersForSpireLab(docNames);
 				}
             }
-            //logger.debug("docNums:");
+            logger.info("docNums:");
             for (int i=0; i < docNums.size(); i++) {
-				//logger.debug(i + " " + docNums.get(i));
+				logger.info(i + " " + docNums.get(i));
 			}
 
 			try {
@@ -275,7 +275,7 @@ public final class MessageUploader {
 					search = "provider_no";
 				}
 				
-				if( "MEDITECH".equals(type) ) {
+				if( "MEDITECH".equals(type) || "IHAPOI".equals(type) ) {
 					search = "practitionerNo";
 				}
 				
@@ -355,7 +355,7 @@ public final class MessageUploader {
 	/**
 	 * Attempt to match the doctors from the lab to a provider
 	 */ 
-	private static void providerRouteReport(String labId, ArrayList docNums, Connection conn, String altProviderNo, String labType, String search_on, Integer limit, boolean orderByLength) throws Exception {
+	private static void providerRouteReport(String labId, ArrayList<?> docNums, Connection conn, String altProviderNo, String labType, String search_on, Integer limit, boolean orderByLength) throws Exception {
 		ArrayList<String> providerNums = new ArrayList<String>();
 		PreparedStatement pstmt;
 		String sql = "";
@@ -379,7 +379,7 @@ public final class MessageUploader {
 			for (int i = 0; i < docNums.size(); i++) {
 
 				if (docNums.get(i) != null && !((String) docNums.get(i)).trim().equals("")) {
-					sql = "select provider_no from provider where "+ sqlSearchOn +" = '" + ((String) docNums.get(i)) + "'" + sqlOrderByLength + sqlLimit;
+					sql = "select provider_no from provider where "+ sqlSearchOn +" LIKE '" + ((String) docNums.get(i)) + "'" + sqlOrderByLength + sqlLimit;
 					pstmt = conn.prepareStatement(sql);
 					ResultSet rs = pstmt.executeQuery();
 					while (rs.next()) {
@@ -429,15 +429,15 @@ public final class MessageUploader {
 	private static String patientRouteReport(LoggedInInfo loggedInInfo, int labId, String lastName, String firstName, String sex, String dob, String hin, Connection conn) throws SQLException {
 		PatientLabRoutingResult result = null;
 		
-			String sql;
+			String sql = null;
 			String demo = "0";
 			String provider_no = "0";
 			// 19481015
 			String dobYear = "%";
 			String dobMonth = "%";
 			String dobDay = "%";
-			String hinMod = "%";
-	
+			String hinMod = null;
+
 			
 			try {
 	
@@ -455,34 +455,43 @@ public final class MessageUploader {
 					dobDay = dobArray[2];
 				}
 	
+				// only the first letter of names
 				if (!firstName.equals("")) firstName = firstName.substring(0, 1);
 				if (!lastName.equals("")) lastName = lastName.substring(0, 1);
 	
-				if (hinMod.equals("%")) {
-					sql = "select demographic_no, provider_no from demographic where" + " last_name like '" + lastName + "%' and " + " first_name like '" + firstName + "%' and " + " year_of_birth like '" + dobYear + "' and " + " month_of_birth like '" + dobMonth + "' and " + " date_of_birth like '" + dobDay + "' and " + " sex like '" + sex + "%' ";
-				} else if (OscarProperties.getInstance().getBooleanProperty("LAB_NOMATCH_NAMES", "yes")) {
-					sql = "select demographic_no, provider_no from demographic where hin='" + hinMod + "' and " + " year_of_birth like '" + dobYear + "' and " + " month_of_birth like '" + dobMonth + "' and " + " date_of_birth like '" + dobDay + "' and " + " sex like '" + sex + "%' ";
-				} else {
-					sql = "select demographic_no, provider_no from demographic where hin='" + hinMod + "' and " + " last_name like '" + lastName + "%' and " + " first_name like '" + firstName + "%' and " + " year_of_birth like '" + dobYear + "' and " + " month_of_birth like '" + dobMonth + "' and " + " date_of_birth like '" + dobDay + "' and " + " sex like '" + sex + "%' ";
-				}
-	
-				logger.debug(sql);
-				PreparedStatement pstmt = conn.prepareStatement(sql);
-				ResultSet rs = pstmt.executeQuery();
-				int count = 0;
+				// there are too many wild cards for this query to work with any amount of accuracy.
+//				if (hinMod.equals("%")) {
+//					sql = "select demographic_no, provider_no from demographic where" + " last_name like '" + lastName + "%' and " + " first_name like '" + firstName + "%' and " + " year_of_birth like '" + dobYear + "' and " + " month_of_birth like '" + dobMonth + "' and " + " date_of_birth like '" + dobDay + "' and " + " sex like '" + sex + "%' ";
+//				} 
 				
-				while (rs.next()) {
-					result = new PatientLabRoutingResult();
-					demo = oscar.Misc.getString(rs, "demographic_no");
-					provider_no = oscar.Misc.getString(rs, "provider_no");
-					result.setDemographicNo(Integer.parseInt(demo));
-					result.setProviderNo(provider_no);
-					count++;
+				// HIN is ALWAYS required for lab matching. Please do not revert this code. Previous iterations have caused fatal patient miss-matches.				
+				if( hinMod != null ) {
+					if (OscarProperties.getInstance().getBooleanProperty("LAB_NOMATCH_NAMES", "yes")) {
+						sql = "select demographic_no, provider_no from demographic where hin='" + hinMod + "' and " + " year_of_birth like '" + dobYear + "' and " + " month_of_birth like '" + dobMonth + "' and " + " date_of_birth like '" + dobDay + "' and " + " sex like '" + sex + "%' ";
+					} else {
+						sql = "select demographic_no, provider_no from demographic where hin='" + hinMod + "' and " + " last_name like '" + lastName + "%' and " + " first_name like '" + firstName + "%' and " + " year_of_birth like '" + dobYear + "' and " + " month_of_birth like '" + dobMonth + "' and " + " date_of_birth like '" + dobDay + "' and " + " sex like '" + sex + "%' ";
+					}
 				}
-				rs.close();
-				pstmt.close();
-				if(count > 1) {
-					result = null;
+				
+				if( sql != null ) {
+					logger.debug(sql);
+					PreparedStatement pstmt = conn.prepareStatement(sql);
+					ResultSet rs = pstmt.executeQuery();
+					int count = 0;
+					
+					while (rs.next()) {
+						result = new PatientLabRoutingResult();
+						demo = oscar.Misc.getString(rs, "demographic_no");
+						provider_no = oscar.Misc.getString(rs, "provider_no");
+						result.setDemographicNo(Integer.parseInt(demo));
+						result.setProviderNo(provider_no);
+						count++;
+					}
+					rs.close();
+					pstmt.close();
+					if(count > 1) {
+						result = null;
+					}
 				}
 			} catch (SQLException sqlE) {
 				throw sqlE;

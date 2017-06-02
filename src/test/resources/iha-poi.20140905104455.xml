@@ -1,0 +1,1999 @@
+<result xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <messages>
+    <message format="HL7" msgId="OE4367801.hl7" version="2.3"><![CDATA[MSH|^~\&|IHAOE^2.1|IHKBH|ITS||201408141408||ORU^R01|J3197228|D|2.3|||AL|NE|||||||||J3197228
+EVN|001|201408141407|
+PID|1|A0-B20121217113722750|KA00009360||PrimaryProvider^ED^7 Dawn - Rose||19761010|F|||4832 Sunny Place^^Kamloops^BC^V2B 6S2||250-834-8244|||||KA0055300/15|
+PV1|1|I|KAMRIH1S^RIH107^2|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC|||||||||||||||||||IHRIH||ADM|||201405210954|
+ORC||
+OBR|1||4713IHRIH|HIM.COK^Consultation Report^^11488-4^Consultation Note^pCLOCD|||201408141400|201408141406||||||||PLISIHDU^Plisiha^Dusty^^^Dr||||HIM.COK|CO|201408141407||OE|S|||KINT5^Kinnee^Todd^^^||||93171^Plisiha^Dusty^^^Dr^^PLISIHDU|||^McArthur^Heather^^^^^MCAH3|
+OBX|1|TX||| Interior Health   Kelowna General Hospital   Kelowna, BC / Ph: 250-862-4000  |
+OBX|2|TX|||  |
+OBX|3|TX|||Name: PrimaryProvider,ED 7 Dawn - Rose  |
+OBX|4|TX|||MRP: Kinnee,Todd        Age: 37    Type: ADM ACIN     Acct: KA0055300/15     |
+OBX|5|TX|||FamPhys:         DOB: 10/10/1976    Loc: KAMRIH1S     MedRec: KA00009360     |
+OBX|6|TX|||        Sex: F    ADM: 21/05/14     HC#:      |
+OBX|7|TX|||        Ph: 250-834-8244    DIS:           |
+OBX|8|TX|||  |
+OBX|9|TX|||  |
+OBX|10|TX|||  |
+OBX|11|TX||| Consultation Report  |
+OBX|12|TX||| Signed  |
+OBX|13|TX||| ___________________________________________________________________________________________________|
+OBX|14|TX|||  |
+OBX|15|TX|||  |
+OBX|16|TX|||Testing #2 /hm  |
+OBX|17|TX|||  |
+OBX|18|TX|||  |
+OBX|19|TX|||Plisiha,Dusty  |
+OBX|20|TX|||  |
+OBX|21|TX|||Dictated by: Plisiha,Dusty         Dictated Date: 14/08/14 1400       |
+OBX|22|TX|||Transcribed by: MCAH3         Transcribed Date: 14/08/14 1406      |
+OBX|23|TX|||  |
+OBX|24|TX|||Copies: Plisiha,Dusty  |
+OBX|25|TX|||Report: 1408-0002        |
+OBX|26|TX|||  |
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP^|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~PLISIHDU^Plisiha^Dusty^^^Dr^^^^^^^^^ATP^||||KINT5^Kinnee^Todd^^^^^^^^^^^^PCP^|
+]]></message>
+    <message format="HL7" msgId="OE4377592.hl7" version="2.3"><![CDATA[MSH|^~\&|IHAOE^2.1|IHKBH|ITS||201408210827||ORU^R01|J3200196|D|2.3|||AL|NE|||||||||J3200196
+EVN|001|201408210826|
+PID|1|A0-B20121217113722750|KA00009360||PrimaryProvider^ED^7 Dawn - Rose||19761010|F|||4832 Sunny Place^^Kamloops^BC^V2B 6S2||250-834-8244|||||KA0055300/15|
+PV1|1|I|KAMRIH1S^RIH107^2|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC|||||||||||||||||||IHRIH||ADM|||201405210954|
+ORC||
+OBR|1||4721IHRIH|HIM.COK^Consultation Report^^11488-4^Consultation Note^pCLOCD|||201408210800|201408210815||||||||PLISIHAA^Plisihd^Aaron^^^Dr||||HIM.COK|CO|201408210826||OE|S|||KINT5^Kinnee^Todd^^^||||93190^Plisihd^Aaron^^^Dr^^PLISIHAA|||^McArthur^Heather^^^^^MCAH3|
+OBX|1|TX||| Interior Health   Kelowna General Hospital   Kelowna, BC / Ph: 250-862-4000  |
+OBX|2|TX|||  |
+OBX|3|TX|||Name: PrimaryProvider,ED 7 Dawn - Rose  |
+OBX|4|TX|||MRP: Kinnee,Todd        Age: 37    Type: ADM ACIN     Acct: KA0055300/15     |
+OBX|5|TX|||FamPhys:         DOB: 10/10/1976    Loc: KAMRIH1S     MedRec: KA00009360     |
+OBX|6|TX|||        Sex: F    ADM: 21/05/14     HC#:      |
+OBX|7|TX|||        Ph: 250-834-8244    DIS:           |
+OBX|8|TX|||  |
+OBX|9|TX|||  |
+OBX|10|TX|||  |
+OBX|11|TX||| Consultation Report  |
+OBX|12|TX||| Signed  |
+OBX|13|TX||| ___________________________________________________________________________________________________|
+OBX|14|TX|||  |
+OBX|15|TX|||  |
+OBX|16|TX|||Stokinger,Daniel (MEDITECH) - Aug 21, 2014 - 0922 EDT:   |
+OBX|17|TX|||Hi Heather,  |
+OBX|18|TX|||  |
+OBX|19|TX|||Thank you for confirming. Do you have a multiple page report that you used in  |
+OBX|20|TX|||TEST that I could review? I would like to compare this against the LIVE  |
+OBX|21|TX|||instance.  |
+OBX|22|TX|||  |
+OBX|23|TX|||Thanks  |
+OBX|24|TX|||Dan  |
+OBX|25|TX|||  |
+OBX|26|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|27|TX|||Heather McArthur (via Web) - Aug 19, 2014 - 1819 EDT:   |
+OBX|28|TX|||Hi Erin, no I have not been able to reproduce in TEST. Not consistent.  |
+OBX|29|TX|||  |
+OBX|30|TX|||Status changed from 'Customer' to 'Open'.  |
+OBX|31|TX|||  |
+OBX|32|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1429 EDT: I found where this was  |
+OBX|33|TX|||reported before and saw that a DTS was delivered to resolve the issue (CS RAD  |
+OBX|34|TX|||5655). Is this reproducible in TEST?  |
+OBX|35|TX|||  |
+OBX|36|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|37|TX|||  |
+OBX|38|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1316 EDT: I am reviewing this issue.  |
+OBX|39|TX|||  |
+OBX|40|TX|||Reith,Megan (MEDITECH) - Jul 11, 2014 - 1401 EDT:   |
+OBX|41|TX|||  |
+OBX|42|TX|||Hi Heather,  |
+OBX|43|TX|||  |
+OBX|44|TX|||Thank you for entering this task. We will review the examples you provided and  |
+OBX|45|TX|||update this task with our findings!  |
+OBX|46|TX|||In the meantime, please let me know if you have any other questions!  |
+OBX|47|TX|||  |
+OBX|48|TX|||Thanks,  |
+OBX|49|TX|||Megan  |
+OBX|50|TX|||  |
+OBX|51|TX|||Heather McArthur (via Web) - Jul 11, 2014 - 1359 EDT:   |
+OBX|52|TX|||We have had this problem in the past and it had been fixed, but has now  |
+OBX|53|TX|||recurred.   |
+OBX|54|TX|||  |
+OBX|55|TX|||The page numbering on transcribed reports is off.   |
+OBX|56|TX|||  |
+OBX|57|TX|||PR39403/15 - There is only one page of the report, but it says "Page 1 of 2" at  |
+OBX|58|TX|||the bottom of the report.  |
+OBX|59|TX|||  |
+OBX|60|TX|||PR38785/15 - Page 1 says "Page 1 of 4", Page 2 says "Page 2 of 4", Page 3 says  |
+OBX|61|TX|||"Page 3 of 4" and there is no page 4.  |
+OBX|62|TX|||  |
+OBX|63|TX|||There are also issues where it would say "Page 3 of 2" at the bottom of the last  |
+OBX|64|TX|||page of a 3 page report. Sorry, I don't have examples. We came across MANY of  |
+OBX|65|TX|||them when we were resending reports out in our large project to send reports  |
+OBX|66|TX|||that did not leave document manager into our print system. This is another major  |
+OBX|67|TX|||problem attached to the print issue, so hopefully it can be addressed  |
+OBX|68|TX|||immediately.  |
+OBX|69|TX|||Stokinger,Daniel (MEDITECH) - Aug 21, 2014 - 0922 EDT:   |
+OBX|70|TX|||Hi Heather,  |
+OBX|71|TX|||  |
+OBX|72|TX|||Thank you for confirming. Do you have a multiple page report that you used in  |
+OBX|73|TX|||TEST that I could review? I would like to compare this against the LIVE  |
+OBX|74|TX|||instance.  |
+OBX|75|TX|||  |
+OBX|76|TX|||Thanks  |
+OBX|77|TX|||Dan  |
+OBX|78|TX|||  |
+OBX|79|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|80|TX|||Heather McArthur (via Web) - Aug 19, 2014 - 1819 EDT:   |
+OBX|81|TX|||Hi Erin, no I have not been able to reproduce in TEST. Not consistent.  |
+OBX|82|TX|||  |
+OBX|83|TX|||Status changed from 'Customer' to 'Open'.  |
+OBX|84|TX|||  |
+OBX|85|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1429 EDT: I found where this was  |
+OBX|86|TX|||reported before and saw that a DTS was delivered to resolve the issue (CS RAD  |
+OBX|87|TX|||5655). Is this reproducible in TEST?  |
+OBX|88|TX|||  |
+OBX|89|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|90|TX|||  |
+OBX|91|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1316 EDT: I am reviewing this issue.  |
+OBX|92|TX|||  |
+OBX|93|TX|||Reith,Megan (MEDITECH) - Jul 11, 2014 - 1401 EDT:   |
+OBX|94|TX|||  |
+OBX|95|TX|||Hi Heather,  |
+OBX|96|TX|||  |
+OBX|97|TX|||Thank you for entering this task. We will review the examples you provided and  |
+OBX|98|TX|||update this task with our findings!  |
+OBX|99|TX|||In the meantime, please let me know if you have any other questions!  |
+OBX|100|TX|||  |
+OBX|101|TX|||Thanks,  |
+OBX|102|TX|||Megan  |
+OBX|103|TX|||  |
+OBX|104|TX|||Heather McArthur (via Web) - Jul 11, 2014 - 1359 EDT:   |
+OBX|105|TX|||We have had this problem in the past and it had been fixed, but has now  |
+OBX|106|TX|||recurred.   |
+OBX|107|TX|||  |
+OBX|108|TX|||The page numbering on transcribed reports is off.   |
+OBX|109|TX|||  |
+OBX|110|TX|||PR39403/15 - There is only one page of the report, but it says "Page 1 of 2" at  |
+OBX|111|TX|||the bottom of the report.  |
+OBX|112|TX|||  |
+OBX|113|TX|||PR38785/15 - Page 1 says "Page 1 of 4", Page 2 says "Page 2 of 4", Page 3 says  |
+OBX|114|TX|||"Page 3 of 4" and there is no page 4.  |
+OBX|115|TX|||  |
+OBX|116|TX|||There are also issues where it would say "Page 3 of 2" at the bottom of the last  |
+OBX|117|TX|||page of a 3 page report. Sorry, I don't have examples. We came across MANY of  |
+OBX|118|TX|||them when we were resending reports out in our large project to send reports  |
+OBX|119|TX|||that did not leave document manager into our print system. This is another major  |
+OBX|120|TX|||problem attached to the print issue, so hopefully it can be addressed  |
+OBX|121|TX|||immediately.  |
+OBX|122|TX|||Stokinger,Daniel (MEDITECH) - Aug 21, 2014 - 0922 EDT:   |
+OBX|123|TX|||Hi Heather,  |
+OBX|124|TX|||  |
+OBX|125|TX|||Thank you for confirming. Do you have a multiple page report that you used in  |
+OBX|126|TX|||TEST that I could review? I would like to compare this against the LIVE  |
+OBX|127|TX|||instance.  |
+OBX|128|TX|||  |
+OBX|129|TX|||Thanks  |
+OBX|130|TX|||Dan  |
+OBX|131|TX|||  |
+OBX|132|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|133|TX|||Heather McArthur (via Web) - Aug 19, 2014 - 1819 EDT:   |
+OBX|134|TX|||Hi Erin, no I have not been able to reproduce in TEST. Not consistent.  |
+OBX|135|TX|||  |
+OBX|136|TX|||Status changed from 'Customer' to 'Open'.  |
+OBX|137|TX|||  |
+OBX|138|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1429 EDT: I found where this was  |
+OBX|139|TX|||reported before and saw that a DTS was delivered to resolve the issue (CS RAD  |
+OBX|140|TX|||5655). Is this reproducible in TEST?  |
+OBX|141|TX|||  |
+OBX|142|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|143|TX|||  |
+OBX|144|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1316 EDT: I am reviewing this issue.  |
+OBX|145|TX|||  |
+OBX|146|TX|||Reith,Megan (MEDITECH) - Jul 11, 2014 - 1401 EDT:   |
+OBX|147|TX|||  |
+OBX|148|TX|||Hi Heather,  |
+OBX|149|TX|||  |
+OBX|150|TX|||Thank you for entering this task. We will review the examples you provided and  |
+OBX|151|TX|||update this task with our findings!  |
+OBX|152|TX|||In the meantime, please let me know if you have any other questions!  |
+OBX|153|TX|||  |
+OBX|154|TX|||Thanks,  |
+OBX|155|TX|||Megan  |
+OBX|156|TX|||  |
+OBX|157|TX|||Heather McArthur (via Web) - Jul 11, 2014 - 1359 EDT:   |
+OBX|158|TX|||We have had this problem in the past and it had been fixed, but has now  |
+OBX|159|TX|||recurred.   |
+OBX|160|TX|||  |
+OBX|161|TX|||The page numbering on transcribed reports is off.   |
+OBX|162|TX|||  |
+OBX|163|TX|||PR39403/15 - There is only one page of the report, but it says "Page 1 of 2" at  |
+OBX|164|TX|||the bottom of the report.  |
+OBX|165|TX|||  |
+OBX|166|TX|||PR38785/15 - Page 1 says "Page 1 of 4", Page 2 says "Page 2 of 4", Page 3 says  |
+OBX|167|TX|||"Page 3 of 4" and there is no page 4.  |
+OBX|168|TX|||  |
+OBX|169|TX|||There are also issues where it would say "Page 3 of 2" at the bottom of the last  |
+OBX|170|TX|||page of a 3 page report. Sorry, I don't have examples. We came across MANY of  |
+OBX|171|TX|||them when we were resending reports out in our large project to send reports  |
+OBX|172|TX|||that did not leave document manager into our print system. This is another major  |
+OBX|173|TX|||problem attached to the print issue, so hopefully it can be addressed  |
+OBX|174|TX|||immediately.  |
+OBX|175|TX|||Stokinger,Daniel (MEDITECH) - Aug 21, 2014 - 0922 EDT:   |
+OBX|176|TX|||Hi Heather,  |
+OBX|177|TX|||  |
+OBX|178|TX|||Thank you for confirming. Do you have a multiple page report that you used in  |
+OBX|179|TX|||TEST that I could review? I would like to compare this against the LIVE  |
+OBX|180|TX|||instance.  |
+OBX|181|TX|||  |
+OBX|182|TX|||Thanks  |
+OBX|183|TX|||Dan  |
+OBX|184|TX|||  |
+OBX|185|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|186|TX|||Heather McArthur (via Web) - Aug 19, 2014 - 1819 EDT:   |
+OBX|187|TX|||Hi Erin, no I have not been able to reproduce in TEST. Not consistent.  |
+OBX|188|TX|||  |
+OBX|189|TX|||Status changed from 'Customer' to 'Open'.  |
+OBX|190|TX|||  |
+OBX|191|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1429 EDT: I found where this was  |
+OBX|192|TX|||reported before and saw that a DTS was delivered to resolve the issue (CS RAD  |
+OBX|193|TX|||5655). Is this reproducible in TEST?  |
+OBX|194|TX|||  |
+OBX|195|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|196|TX|||  |
+OBX|197|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1316 EDT: I am reviewing this issue.  |
+OBX|198|TX|||  |
+OBX|199|TX|||Reith,Megan (MEDITECH) - Jul 11, 2014 - 1401 EDT:   |
+OBX|200|TX|||  |
+OBX|201|TX|||Hi Heather,  |
+OBX|202|TX|||  |
+OBX|203|TX|||Thank you for entering this task. We will review the examples you provided and  |
+OBX|204|TX|||update this task with our findings!  |
+OBX|205|TX|||In the meantime, please let me know if you have any other questions!  |
+OBX|206|TX|||  |
+OBX|207|TX|||Thanks,  |
+OBX|208|TX|||Megan  |
+OBX|209|TX|||  |
+OBX|210|TX|||Heather McArthur (via Web) - Jul 11, 2014 - 1359 EDT:   |
+OBX|211|TX|||We have had this problem in the past and it had been fixed, but has now  |
+OBX|212|TX|||recurred.   |
+OBX|213|TX|||  |
+OBX|214|TX|||The page numbering on transcribed reports is off.   |
+OBX|215|TX|||  |
+OBX|216|TX|||PR39403/15 - There is only one page of the report, but it says "Page 1 of 2" at  |
+OBX|217|TX|||the bottom of the report.  |
+OBX|218|TX|||  |
+OBX|219|TX|||PR38785/15 - Page 1 says "Page 1 of 4", Page 2 says "Page 2 of 4", Page 3 says  |
+OBX|220|TX|||"Page 3 of 4" and there is no page 4.  |
+OBX|221|TX|||  |
+OBX|222|TX|||There are also issues where it would say "Page 3 of 2" at the bottom of the last  |
+OBX|223|TX|||page of a 3 page report. Sorry, I don't have examples. We came across MANY of  |
+OBX|224|TX|||them when we were resending reports out in our large project to send reports  |
+OBX|225|TX|||that did not leave document manager into our print system. This is another major  |
+OBX|226|TX|||problem attached to the print issue, so hopefully it can be addressed  |
+OBX|227|TX|||immediately.  |
+OBX|228|TX|||Stokinger,Daniel (MEDITECH) - Aug 21, 2014 - 0922 EDT:   |
+OBX|229|TX|||Hi Heather,  |
+OBX|230|TX|||  |
+OBX|231|TX|||Thank you for confirming. Do you have a multiple page report that you used in  |
+OBX|232|TX|||TEST that I could review? I would like to compare this against the LIVE  |
+OBX|233|TX|||instance.  |
+OBX|234|TX|||  |
+OBX|235|TX|||Thanks  |
+OBX|236|TX|||Dan  |
+OBX|237|TX|||  |
+OBX|238|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|239|TX|||Heather McArthur (via Web) - Aug 19, 2014 - 1819 EDT:   |
+OBX|240|TX|||Hi Erin, no I have not been able to reproduce in TEST. Not consistent.  |
+OBX|241|TX|||  |
+OBX|242|TX|||Status changed from 'Customer' to 'Open'.  |
+OBX|243|TX|||  |
+OBX|244|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1429 EDT: I found where this was  |
+OBX|245|TX|||reported before and saw that a DTS was delivered to resolve the issue (CS RAD  |
+OBX|246|TX|||5655). Is this reproducible in TEST?  |
+OBX|247|TX|||  |
+OBX|248|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|249|TX|||  |
+OBX|250|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1316 EDT: I am reviewing this issue.  |
+OBX|251|TX|||  |
+OBX|252|TX|||Reith,Megan (MEDITECH) - Jul 11, 2014 - 1401 EDT:   |
+OBX|253|TX|||  |
+OBX|254|TX|||Hi Heather,  |
+OBX|255|TX|||  |
+OBX|256|TX|||Thank you for entering this task. We will review the examples you provided and  |
+OBX|257|TX|||update this task with our findings!  |
+OBX|258|TX|||In the meantime, please let me know if you have any other questions!  |
+OBX|259|TX|||  |
+OBX|260|TX|||Thanks,  |
+OBX|261|TX|||Megan  |
+OBX|262|TX|||  |
+OBX|263|TX|||Heather McArthur (via Web) - Jul 11, 2014 - 1359 EDT:   |
+OBX|264|TX|||We have had this problem in the past and it had been fixed, but has now  |
+OBX|265|TX|||recurred.   |
+OBX|266|TX|||  |
+OBX|267|TX|||The page numbering on transcribed reports is off.   |
+OBX|268|TX|||  |
+OBX|269|TX|||PR39403/15 - There is only one page of the report, but it says "Page 1 of 2" at  |
+OBX|270|TX|||the bottom of the report.  |
+OBX|271|TX|||  |
+OBX|272|TX|||PR38785/15 - Page 1 says "Page 1 of 4", Page 2 says "Page 2 of 4", Page 3 says  |
+OBX|273|TX|||"Page 3 of 4" and there is no page 4.  |
+OBX|274|TX|||  |
+OBX|275|TX|||There are also issues where it would say "Page 3 of 2" at the bottom of the last  |
+OBX|276|TX|||page of a 3 page report. Sorry, I don't have examples. We came across MANY of  |
+OBX|277|TX|||them when we were resending reports out in our large project to send reports  |
+OBX|278|TX|||that did not leave document manager into our print system. This is another major  |
+OBX|279|TX|||problem attached to the print issue, so hopefully it can be addressed  |
+OBX|280|TX|||immediately.  |
+OBX|281|TX|||Stokinger,Daniel (MEDITECH) - Aug 21, 2014 - 0922 EDT:   |
+OBX|282|TX|||Hi Heather,  |
+OBX|283|TX|||  |
+OBX|284|TX|||Thank you for confirming. Do you have a multiple page report that you used in  |
+OBX|285|TX|||TEST that I could review? I would like to compare this against the LIVE  |
+OBX|286|TX|||instance.  |
+OBX|287|TX|||  |
+OBX|288|TX|||Thanks  |
+OBX|289|TX|||Dan  |
+OBX|290|TX|||  |
+OBX|291|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|292|TX|||Heather McArthur (via Web) - Aug 19, 2014 - 1819 EDT:   |
+OBX|293|TX|||Hi Erin, no I have not been able to reproduce in TEST. Not consistent.  |
+OBX|294|TX|||  |
+OBX|295|TX|||Status changed from 'Customer' to 'Open'.  |
+OBX|296|TX|||  |
+OBX|297|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1429 EDT: I found where this was  |
+OBX|298|TX|||reported before and saw that a DTS was delivered to resolve the issue (CS RAD  |
+OBX|299|TX|||5655). Is this reproducible in TEST?  |
+OBX|300|TX|||  |
+OBX|301|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|302|TX|||  |
+OBX|303|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1316 EDT: I am reviewing this issue.  |
+OBX|304|TX|||  |
+OBX|305|TX|||Reith,Megan (MEDITECH) - Jul 11, 2014 - 1401 EDT:   |
+OBX|306|TX|||  |
+OBX|307|TX|||Hi Heather,  |
+OBX|308|TX|||  |
+OBX|309|TX|||Thank you for entering this task. We will review the examples you provided and  |
+OBX|310|TX|||update this task with our findings!  |
+OBX|311|TX|||In the meantime, please let me know if you have any other questions!  |
+OBX|312|TX|||  |
+OBX|313|TX|||Thanks,  |
+OBX|314|TX|||Megan  |
+OBX|315|TX|||  |
+OBX|316|TX|||Heather McArthur (via Web) - Jul 11, 2014 - 1359 EDT:   |
+OBX|317|TX|||We have had this problem in the past and it had been fixed, but has now  |
+OBX|318|TX|||recurred.   |
+OBX|319|TX|||  |
+OBX|320|TX|||The page numbering on transcribed reports is off.   |
+OBX|321|TX|||  |
+OBX|322|TX|||PR39403/15 - There is only one page of the report, but it says "Page 1 of 2" at  |
+OBX|323|TX|||the bottom of the report.  |
+OBX|324|TX|||  |
+OBX|325|TX|||PR38785/15 - Page 1 says "Page 1 of 4", Page 2 says "Page 2 of 4", Page 3 says  |
+OBX|326|TX|||"Page 3 of 4" and there is no page 4.  |
+OBX|327|TX|||  |
+OBX|328|TX|||There are also issues where it would say "Page 3 of 2" at the bottom of the last  |
+OBX|329|TX|||page of a 3 page report. Sorry, I don't have examples. We came across MANY of  |
+OBX|330|TX|||them when we were resending reports out in our large project to send reports  |
+OBX|331|TX|||that did not leave document manager into our print system. This is another major  |
+OBX|332|TX|||problem attached to the print issue, so hopefully it can be addressed  |
+OBX|333|TX|||immediately.  |
+OBX|334|TX|||Stokinger,Daniel (MEDITECH) - Aug 21, 2014 - 0922 EDT:   |
+OBX|335|TX|||Hi Heather,  |
+OBX|336|TX|||  |
+OBX|337|TX|||Thank you for confirming. Do you have a multiple page report that you used in  |
+OBX|338|TX|||TEST that I could review? I would like to compare this against the LIVE  |
+OBX|339|TX|||instance.  |
+OBX|340|TX|||  |
+OBX|341|TX|||Thanks  |
+OBX|342|TX|||Dan  |
+OBX|343|TX|||  |
+OBX|344|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|345|TX|||Heather McArthur (via Web) - Aug 19, 2014 - 1819 EDT:   |
+OBX|346|TX|||Hi Erin, no I have not been able to reproduce in TEST. Not consistent.  |
+OBX|347|TX|||  |
+OBX|348|TX|||Status changed from 'Customer' to 'Open'.  |
+OBX|349|TX|||  |
+OBX|350|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1429 EDT: I found where this was  |
+OBX|351|TX|||reported before and saw that a DTS was delivered to resolve the issue (CS RAD  |
+OBX|352|TX|||5655). Is this reproducible in TEST?  |
+OBX|353|TX|||  |
+OBX|354|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|355|TX|||  |
+OBX|356|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1316 EDT: I am reviewing this issue.  |
+OBX|357|TX|||  |
+OBX|358|TX|||Reith,Megan (MEDITECH) - Jul 11, 2014 - 1401 EDT:   |
+OBX|359|TX|||  |
+OBX|360|TX|||Hi Heather,  |
+OBX|361|TX|||  |
+OBX|362|TX|||Thank you for entering this task. We will review the examples you provided and  |
+OBX|363|TX|||update this task with our findings!  |
+OBX|364|TX|||In the meantime, please let me know if you have any other questions!  |
+OBX|365|TX|||  |
+OBX|366|TX|||Thanks,  |
+OBX|367|TX|||Megan  |
+OBX|368|TX|||  |
+OBX|369|TX|||Heather McArthur (via Web) - Jul 11, 2014 - 1359 EDT:   |
+OBX|370|TX|||We have had this problem in the past and it had been fixed, but has now  |
+OBX|371|TX|||recurred.   |
+OBX|372|TX|||  |
+OBX|373|TX|||The page numbering on transcribed reports is off.   |
+OBX|374|TX|||  |
+OBX|375|TX|||PR39403/15 - There is only one page of the report, but it says "Page 1 of 2" at  |
+OBX|376|TX|||the bottom of the report.  |
+OBX|377|TX|||  |
+OBX|378|TX|||PR38785/15 - Page 1 says "Page 1 of 4", Page 2 says "Page 2 of 4", Page 3 says  |
+OBX|379|TX|||"Page 3 of 4" and there is no page 4.  |
+OBX|380|TX|||  |
+OBX|381|TX|||There are also issues where it would say "Page 3 of 2" at the bottom of the last  |
+OBX|382|TX|||page of a 3 page report. Sorry, I don't have examples. We came across MANY of  |
+OBX|383|TX|||them when we were resending reports out in our large project to send reports  |
+OBX|384|TX|||that did not leave document manager into our print system. This is another major  |
+OBX|385|TX|||problem attached to the print issue, so hopefully it can be addressed  |
+OBX|386|TX|||immediately.  |
+OBX|387|TX|||Stokinger,Daniel (MEDITECH) - Aug 21, 2014 - 0922 EDT:   |
+OBX|388|TX|||Hi Heather,  |
+OBX|389|TX|||  |
+OBX|390|TX|||Thank you for confirming. Do you have a multiple page report that you used in  |
+OBX|391|TX|||TEST that I could review? I would like to compare this against the LIVE  |
+OBX|392|TX|||instance.  |
+OBX|393|TX|||  |
+OBX|394|TX|||Thanks  |
+OBX|395|TX|||Dan  |
+OBX|396|TX|||  |
+OBX|397|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|398|TX|||Heather McArthur (via Web) - Aug 19, 2014 - 1819 EDT:   |
+OBX|399|TX|||Hi Erin, no I have not been able to reproduce in TEST. Not consistent.  |
+OBX|400|TX|||  |
+OBX|401|TX|||Status changed from 'Customer' to 'Open'.  |
+OBX|402|TX|||  |
+OBX|403|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1429 EDT: I found where this was  |
+OBX|404|TX|||reported before and saw that a DTS was delivered to resolve the issue (CS RAD  |
+OBX|405|TX|||5655). Is this reproducible in TEST?  |
+OBX|406|TX|||  |
+OBX|407|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|408|TX|||  |
+OBX|409|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1316 EDT: I am reviewing this issue.  |
+OBX|410|TX|||  |
+OBX|411|TX|||Reith,Megan (MEDITECH) - Jul 11, 2014 - 1401 EDT:   |
+OBX|412|TX|||  |
+OBX|413|TX|||Hi Heather,  |
+OBX|414|TX|||  |
+OBX|415|TX|||Thank you for entering this task. We will review the examples you provided and  |
+OBX|416|TX|||update this task with our findings!  |
+OBX|417|TX|||In the meantime, please let me know if you have any other questions!  |
+OBX|418|TX|||  |
+OBX|419|TX|||Thanks,  |
+OBX|420|TX|||Megan  |
+OBX|421|TX|||  |
+OBX|422|TX|||Heather McArthur (via Web) - Jul 11, 2014 - 1359 EDT:   |
+OBX|423|TX|||We have had this problem in the past and it had been fixed, but has now  |
+OBX|424|TX|||recurred.   |
+OBX|425|TX|||  |
+OBX|426|TX|||The page numbering on transcribed reports is off.   |
+OBX|427|TX|||  |
+OBX|428|TX|||PR39403/15 - There is only one page of the report, but it says "Page 1 of 2" at  |
+OBX|429|TX|||the bottom of the report.  |
+OBX|430|TX|||  |
+OBX|431|TX|||PR38785/15 - Page 1 says "Page 1 of 4", Page 2 says "Page 2 of 4", Page 3 says  |
+OBX|432|TX|||"Page 3 of 4" and there is no page 4.  |
+OBX|433|TX|||  |
+OBX|434|TX|||There are also issues where it would say "Page 3 of 2" at the bottom of the last  |
+OBX|435|TX|||page of a 3 page report. Sorry, I don't have examples. We came across MANY of  |
+OBX|436|TX|||them when we were resending reports out in our large project to send reports  |
+OBX|437|TX|||that did not leave document manager into our print system. This is another major  |
+OBX|438|TX|||problem attached to the print issue, so hopefully it can be addressed  |
+OBX|439|TX|||immediately.  |
+OBX|440|TX|||Stokinger,Daniel (MEDITECH) - Aug 21, 2014 - 0922 EDT:   |
+OBX|441|TX|||Hi Heather,  |
+OBX|442|TX|||  |
+OBX|443|TX|||Thank you for confirming. Do you have a multiple page report that you used in  |
+OBX|444|TX|||TEST that I could review? I would like to compare this against the LIVE  |
+OBX|445|TX|||instance.  |
+OBX|446|TX|||  |
+OBX|447|TX|||Thanks  |
+OBX|448|TX|||Dan  |
+OBX|449|TX|||  |
+OBX|450|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|451|TX|||Heather McArthur (via Web) - Aug 19, 2014 - 1819 EDT:   |
+OBX|452|TX|||Hi Erin, no I have not been able to reproduce in TEST. Not consistent.  |
+OBX|453|TX|||  |
+OBX|454|TX|||Status changed from 'Customer' to 'Open'.  |
+OBX|455|TX|||  |
+OBX|456|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1429 EDT: I found where this was  |
+OBX|457|TX|||reported before and saw that a DTS was delivered to resolve the issue (CS RAD  |
+OBX|458|TX|||5655). Is this reproducible in TEST?  |
+OBX|459|TX|||  |
+OBX|460|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|461|TX|||  |
+OBX|462|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1316 EDT: I am reviewing this issue.  |
+OBX|463|TX|||  |
+OBX|464|TX|||Reith,Megan (MEDITECH) - Jul 11, 2014 - 1401 EDT:   |
+OBX|465|TX|||  |
+OBX|466|TX|||Hi Heather,  |
+OBX|467|TX|||  |
+OBX|468|TX|||Thank you for entering this task. We will review the examples you provided and  |
+OBX|469|TX|||update this task with our findings!  |
+OBX|470|TX|||In the meantime, please let me know if you have any other questions!  |
+OBX|471|TX|||  |
+OBX|472|TX|||Thanks,  |
+OBX|473|TX|||Megan  |
+OBX|474|TX|||  |
+OBX|475|TX|||Heather McArthur (via Web) - Jul 11, 2014 - 1359 EDT:   |
+OBX|476|TX|||We have had this problem in the past and it had been fixed, but has now  |
+OBX|477|TX|||recurred.   |
+OBX|478|TX|||  |
+OBX|479|TX|||The page numbering on transcribed reports is off.   |
+OBX|480|TX|||  |
+OBX|481|TX|||PR39403/15 - There is only one page of the report, but it says "Page 1 of 2" at  |
+OBX|482|TX|||the bottom of the report.  |
+OBX|483|TX|||  |
+OBX|484|TX|||PR38785/15 - Page 1 says "Page 1 of 4", Page 2 says "Page 2 of 4", Page 3 says  |
+OBX|485|TX|||"Page 3 of 4" and there is no page 4.  |
+OBX|486|TX|||  |
+OBX|487|TX|||There are also issues where it would say "Page 3 of 2" at the bottom of the last  |
+OBX|488|TX|||page of a 3 page report. Sorry, I don't have examples. We came across MANY of  |
+OBX|489|TX|||them when we were resending reports out in our large project to send reports  |
+OBX|490|TX|||that did not leave document manager into our print system. This is another major  |
+OBX|491|TX|||problem attached to the print issue, so hopefully it can be addressed  |
+OBX|492|TX|||immediately.  |
+OBX|493|TX|||Stokinger,Daniel (MEDITECH) - Aug 21, 2014 - 0922 EDT:   |
+OBX|494|TX|||Hi Heather,  |
+OBX|495|TX|||  |
+OBX|496|TX|||Thank you for confirming. Do you have a multiple page report that you used in  |
+OBX|497|TX|||TEST that I could review? I would like to compare this against the LIVE  |
+OBX|498|TX|||instance.  |
+OBX|499|TX|||  |
+OBX|500|TX|||Thanks  |
+OBX|501|TX|||Dan  |
+OBX|502|TX|||  |
+OBX|503|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|504|TX|||Heather McArthur (via Web) - Aug 19, 2014 - 1819 EDT:   |
+OBX|505|TX|||Hi Erin, no I have not been able to reproduce in TEST. Not consistent.  |
+OBX|506|TX|||  |
+OBX|507|TX|||Status changed from 'Customer' to 'Open'.  |
+OBX|508|TX|||  |
+OBX|509|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1429 EDT: I found where this was  |
+OBX|510|TX|||reported before and saw that a DTS was delivered to resolve the issue (CS RAD  |
+OBX|511|TX|||5655). Is this reproducible in TEST?  |
+OBX|512|TX|||  |
+OBX|513|TX|||Status changed from 'Open' to 'Customer'.  |
+OBX|514|TX|||  |
+OBX|515|TX|||Underhill,Erin (MEDITECH) - Jul 25, 2014 - 1316 EDT: I am reviewing this issue.  |
+OBX|516|TX|||  |
+OBX|517|TX|||Reith,Megan (MEDITECH) - Jul 11, 2014 - 1401 EDT:   |
+OBX|518|TX|||  |
+OBX|519|TX|||Hi Heather,  |
+OBX|520|TX|||  |
+OBX|521|TX|||Thank you for entering this task. We will review the examples you provided and  |
+OBX|522|TX|||update this task with our findings!  |
+OBX|523|TX|||In the meantime, please let me know if you have any other questions!  |
+OBX|524|TX|||  |
+OBX|525|TX|||Thanks,  |
+OBX|526|TX|||Megan  |
+OBX|527|TX|||  |
+OBX|528|TX|||Heather McArthur (via Web) - Jul 11, 2014 - 1359 EDT:   |
+OBX|529|TX|||We have had this problem in the past and it had been fixed, but has now  |
+OBX|530|TX|||recurred.   |
+OBX|531|TX|||  |
+OBX|532|TX|||The page numbering on transcribed reports is off.   |
+OBX|533|TX|||  |
+OBX|534|TX|||PR39403/15 - There is only one page of the report, but it says "Page 1 of 2" at  |
+OBX|535|TX|||the bottom of the report.  |
+OBX|536|TX|||  |
+OBX|537|TX|||PR38785/15 - Page 1 says "Page 1 of 4", Page 2 says "Page 2 of 4", Page 3 says  |
+OBX|538|TX|||"Page 3 of 4" and there is no page 4.  |
+OBX|539|TX|||  |
+OBX|540|TX|||There are also issues where it would say "Page 3 of 2" at the bottom of the last  |
+OBX|541|TX|||page of a 3 page report. Sorry, I don't have examples. We came across MANY of  |
+OBX|542|TX|||them when we were resending reports out in our large project to send reports  |
+OBX|543|TX|||that did not leave document manager into our print system. This is another major  |
+OBX|544|TX|||problem attached to the print issue, so hopefully it can be addressed  |
+OBX|545|TX|||immediately.  |
+OBX|546|TX|||  |
+OBX|547|TX|||Plisihd,Aaron  |
+OBX|548|TX|||  |
+OBX|549|TX|||Dictated by: Plisihd,Aaron         Dictated Date: 21/08/14 0800       |
+OBX|550|TX|||Transcribed by: MCAH3         Transcribed Date: 21/08/14 0815      |
+OBX|551|TX|||  |
+OBX|552|TX|||Copies: Plisihd,Aaron  |
+OBX|553|TX|||Report: 2108-0001        |
+OBX|554|TX|||  |
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP^|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~PLISIHAA^Plisihd^Aaron^^^Dr^^^^^^^^^ATP^||||KINT5^Kinnee^Todd^^^^^^^^^^^^PCP^|
+]]></message>
+    <message format="HL7" msgId="LAB4377658.hl7" version="2.3"><![CDATA[MSH|^~\&|IHALAB^2.1|IHEKH|LAB||201408310958||ORU^R01|A3202168|D|2.3|
+PID|1|A00001410|EK00008095||Omekhsot^Train03^OM Only||19490403|M|||2940 Bolston Road^^CRANBROOK^BC^V1C 0C6||250-690-4920|||||EK0055099/15|
+PV1|1|I|CRAEKH2^EKHTEST^03|UR|||KINT5^Kinnee^Todd^^^||ACKC^Ackermann^Carel^W^^Dr|MED||||ER|||KINT5^Kinnee^Todd^^^|IN||BC|||||||||||||||||||IHEKH||ADM|||201407141627|
+ORC|RE|MT4860859.2805|||CM|N|||201408310858|PREJ7^Prevost^Jocelyn^^^||KINT5^Kinnee^Todd^^^||
+OBR|1|MT2108:S00002U859.2805|MT2108:S00002U|859.2805^Von Will Ag Pre DDAVP^00003649^^^pCLOCD|R||201408210958|||HOFW||||201408210958||KINT5^Kinnee^Todd^^^||00003649||||201408210957||LAB|F||^^^^^R|ACKC^Ackermann^Carel^W^^Dr~KINT5^Kinnee^Todd^^^|
+OBX|1|ST|859.2805^Von Will Ag Pre DDAVP^00003649^^^pCLOCD|1||||||A~S|F|||201408310958|XSP^St.Paul's Hospital, Vancouver^L|
+NTE|1||Specimen sent to referral lab. When the performing lab|
+NTE|2||completes testing, the results will be available in PLIS|
+NTE|3||through the provincial eHealth Viewer system.  A link to|
+NTE|4||eHealth Viewer is available from the Meditech EMR, Select|
+NTE|5||Visits screen.|
+ORC|RE|MT4860859.2825|||CM|N|||201408310858|PREJ7^Prevost^Jocelyn^^^||KINT5^Kinnee^Todd^^^||
+OBR|2|MT2108:S00002U859.2825|MT2108:S00002U|859.2825^Von Will Act Pre DDAVP^00003649^^^pCLOCD|R||201408210958|||HOFW||||201408210958||KINT5^Kinnee^Todd^^^||00003649||||201408210957||LAB|F||^^^^^R|ACKC^Ackermann^Carel^W^^Dr~KINT5^Kinnee^Todd^^^|
+OBX|1|ST|859.2825^Von Will Act Pre DDAVP^00003649^^^pCLOCD|1||||||A~S|F|||201408310958|XSP^St.Paul's Hospital, Vancouver^L|
+NTE|6||Specimen sent to referral lab. When the performing lab|
+NTE|7||completes testing, the results will be available in PLIS|
+NTE|8||through the provincial eHealth Viewer system.  A link to|
+NTE|9||eHealth Viewer is available from the Meditech EMR, Select|
+NTE|10||Visits screen.|
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP|ACKC^Ackermann^Carel^W^^Dr^^^^^^^^^OTP|
+]]></message>
+    <message format="HL7" msgId="OE4377601.hl7" version="2.3"><![CDATA[MSH|^~\&|IHAOE^2.1|IHABC|ITS||201408221443||ORU^R01|J3200662|D|2.3|||AL|NE|||||||||J3200662
+EVN|001|201408221111|
+PID|1|A0-B20120417133427536|KG00011356|9879682696|Regekhsot^Fabek||19560709|M|||Flick St^^Dawsons Landing^BC^V0N 1M0||250-456-9056|||||KG0051671/14|9879682696|
+PV1|1|I|KELKGHR4B^KGHRD4B^E|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC|||||||||||||||||||IHKGH||ADM|||201402140932|
+ORC|NW|CARD20140822-0002IHKGH||||||||IHSVC.ECG^IHSVC.ECG^ECG^^^||KINT5^Kinnee^Todd^^^|
+OBR|1|CARD20140822-0002IHKGH|4723IHKGH|CARD^ECG12^ECG 12^11524-6^EKG^pCLOCD||201408220848|201408221014|||||||||HOOR^Hooper^Richard^O^^Dr||AB00016902KGH||CARD|ECG|201408221111||OE|S||1^^^^^R||||Reason for Exam:|03376^Hooper^Richard^O^^Dr^^HOOR|||^IHSVC.ECG^ECG^^^^^IHSVC.ECG|
+OBX|1|TX||| Interior Health - Kelowna General Hospital Kelowna, BC / Ph: 250-862-4000  |
+OBX|2|TX|||Name: Regekhsot,Fabek  |
+OBX|3|TX|||MRP: Kinnee,Todd        Age: 58    Type: ADM ACIN     Acct: KG0051671/14     |
+OBX|4|TX|||FamPhys:         DOB: 09/07/1956    Loc: KELKGHR4B     MedRec: KG00011356     |
+OBX|5|TX|||        Sex: M    ADM: 14/02/14     HC#: 9879682696     |
+OBX|6|TX|||        Ph: 250-456-9056    DIS:      WCB#:     |
+OBX|7|TX|||                                                         |
+OBX|8|TX||| Electrocardiogram Report  |
+OBX|9|TX||| Signed with Addenda  |
+OBX|10|TX||| ________________________________________________________________________________  |
+OBX|11|TX|||  |
+OBX|12|TX|||OrdPhys: Kinnee,Todd  |
+OBX|13|TX|||Exam Date: 22/08/14  |
+OBX|14|TX|||Accession Number: AB00016902KGH  |
+OBX|15|TX|||Exam(s): CARD / ECG 12  |
+OBX|16|TX|||  |
+OBX|17|TX|||  |
+OBX|18|TX|||  |
+OBX|19|TX|||ECG Severity: - DEFECTIVE ECG -  |
+OBX|20|TX|||   |
+OBX|21|TX||| ECG Impression:  |
+OBX|22|TX||| 12ML  |
+OBX|23|TX||| All 12 leads are missing  |
+OBX|24|TX|||   |
+OBX|25|TX||| HEART RATE: Invalid bpm  |
+OBX|26|TX||| P-R Interval:  ms  |
+OBX|27|TX||| QT Interval:  ms  |
+OBX|28|TX||| QTcB: 0 ms  |
+OBX|29|TX||| QTcF: 0 ms  |
+OBX|30|TX|||   |
+OBX|31|TX|||  |
+OBX|32|TX|||  |
+OBX|33|TX|||  |
+OBX|34|TX|||  |
+OBX|35|TX|||ECG Severity: - DEFECTIVE ECG -  |
+OBX|36|TX|||   |
+OBX|37|TX||| ECG Impression:  |
+OBX|38|TX||| 12ML  |
+OBX|39|TX||| All 12 leads are missing  |
+OBX|40|TX|||   |
+OBX|41|TX||| HEART RATE: Invalid bpm  |
+OBX|42|TX||| P-R Interval:  ms  |
+OBX|43|TX||| QT Interval:  ms  |
+OBX|44|TX||| QTcB: 0 ms  |
+OBX|45|TX||| QTcF: 0 ms  |
+OBX|46|TX|||   |
+OBX|47|TX|||Confirmed by: Richard O Hooper MD,        |
+OBX|48|TX|||Created by: IHSVC.ECG         Created Date: 22/08/14 1014  |
+OBX|49|TX|||  |
+OBX|50|TX|||"Produced by Intellispace technology".  |
+OBX|51|TX|||  |
+OBX|52|TX|||Copies: Kinnee,Todd  |
+OBX|53|TX|||Report: CARD2208-0002  |
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP^|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~HOOR^Hooper^Richard^O^^Dr^^^^^^^^^ATP^|
+]]></message>
+    <message format="HL7" msgId="OE4377602.hl7" version="2.3"><![CDATA[MSH|^~\&|IHAOE^2.1|IHABC|ITS||201408221456||ORU^R01|J3200666|D|2.3|||AL|NE|||||||||J3200666
+EVN|001|201408221455|
+PID|1|A0-20120307035215719|KA00009015|9879686726|Regrihsot^Carmen||19841005|F|||2006 Muirfield Rd^^Kamloops^BC^V1S 1S6||250-828-2002|||||KA0055908/14|9879686726|
+PV1|1|O|KAMRIHAM7N||||KINT5^Kinnee^Todd^^^|||||||HO||||CLI||OOP|||||||||||||||||||IHRIH||REG|||201402190921|
+ORC|NW|CARD20140822-0007IHRIH||||||||IHSVC.ECG^IHSVC.ECG^ECG^^^||KINT5^Kinnee^Todd^^^|
+OBR|1|CARD20140822-0007IHRIH|4728IHRIH|CARD^ECG12^ECG 12^11524-6^EKG^pCLOCD||201408221453|201403071305|||||||||HOOR^Hooper^Richard^O^^Dr||AB00016907RIH||CARD|ECG|201408221455||OE|S||1^^^^^A||||Reason for Exam:|03376^Hooper^Richard^O^^Dr^^HOOR|||^IHSVC.ECG^ECG^^^^^IHSVC.ECG|
+OBX|1|TX||| Interior Health - Royal Inland Hospital Kamloops, BC / Ph: 250-374-5111  |
+OBX|2|TX|||Name: Regrihsot,Carmen  |
+OBX|3|TX|||MRP: Kinnee,Todd        Age: 29    Type: REG CLI     Acct: KA0055908/14     |
+OBX|4|TX|||FamPhys:         DOB: 05/10/1984    Loc: KAMRIHAM7N     MedRec: KA00009015     |
+OBX|5|TX|||        Sex: F    ADM: 19/02/14     HC#: 9879686726     |
+OBX|6|TX|||        Ph: 250-828-2002    DIS:      WCB#:     |
+OBX|7|TX|||                                                         |
+OBX|8|TX||| Electrocardiogram Report  |
+OBX|9|TX||| Signed  |
+OBX|10|TX||| ________________________________________________________________________________  |
+OBX|11|TX|||  |
+OBX|12|TX|||OrdPhys: Kinnee,Todd  |
+OBX|13|TX|||Exam Date: 22/08/14  |
+OBX|14|TX|||Accession Number: AB00016907RIH  |
+OBX|15|TX|||Exam(s): CARD / ECG 12  |
+OBX|16|TX|||  |
+OBX|17|TX|||  |
+OBX|18|TX|||  |
+OBX|19|TX|||ECG Severity: - DEFECTIVE ECG -  |
+OBX|20|TX|||   |
+OBX|21|TX||| ECG Impression:  |
+OBX|22|TX||| 12ML  |
+OBX|23|TX||| ALL 12 LEADS ARE MISSING  |
+OBX|24|TX|||   |
+OBX|25|TX||| HEART RATE: Invalid bpm  |
+OBX|26|TX||| P-R Interval:  ms  |
+OBX|27|TX||| QT Interval:  ms  |
+OBX|28|TX||| QTcB:  ms  |
+OBX|29|TX||| QTcF: 0 ms  |
+OBX|30|TX|||   |
+OBX|31|TX|||Confirmed by: Richard O Hooper MD,        |
+OBX|32|TX|||Created by: IHSVC.ECG         Created Date: 07/03/14 1305  |
+OBX|33|TX|||  |
+OBX|34|TX|||"Produced by Intellispace technology".  |
+OBX|35|TX|||  |
+OBX|36|TX|||Copies: Kinnee,Todd  |
+OBX|37|TX|||Report: CARD2208-0005  |
+ZDR||KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~HOOR^Hooper^Richard^O^^Dr^^^^^^^^^ATP^|
+]]></message>
+    <message format="HL7" msgId="LAB4377603.hl7" version="2.3"><![CDATA[MSH|^~\&|IHALAB^2.1|IHKGH|BBK||201408251051||ORU^R01|D3200801S1|D|2.3|||||||||||||D3200801
+PID|1|A00004182|KG00009268|9879643275|Regkghsot^Cherise||19850709|F|||1235 Oak St^^Kelowna^BC^V1W 5K5||250-763-4747||||BUD|KG0050631/15|9879643275|
+PV1|1|I|KELKGHR4B^KGHR4126^A|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC|||||||||||||||||||IHKGH||ADM|||201405221340|
+ORC|RE|PT101077100.0010|||CM|N|||201408251051|CUPM2^Cupello^Michael^^^||KINT5^Kinnee^Todd^^^||
+OBR|1|PT2508:T00001R100.0010|PT2508:T00001R|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|R|201408251046|201408251046|||CUPM2|||Testing confidential flag|201408251049|T|KINT5^Kinnee^Todd^^^||00063236|||IHKGH|201408251049||BBK|F|||KINT5^Kinnee^Todd^^^|
+OBX|1|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|2|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|3|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||SPEC #: PT2508:T00001R       COLL: 25/08/14-1046     STATUS: CM           REQ #: 00063236|
+OBX|4|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||RECD: 25/08/14-1049                             SUBM DR: Kinnee, Todd|
+OBX|5|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|6|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||ENTERED: 25/08/14-1051                         OTHER DR: Kinnee, Todd|
+OBX|7|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|8|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||ORD TESTS: Group \T\ Screen|
+OBX|9|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|10|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||COMMENTS/QUERIES:|
+OBX|11|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|| Date required: 20140825|
+OBX|12|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|| Any previous transfusions in the past 3 months? No|
+OBX|13|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|| Pregnant now or in the last 3 months? No|
+OBX|14|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|| Has consent for blood products been obtained? Yes|
+OBX|15|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|16|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|17|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||Test                            Result                Flag                  Reference|
+OBX|18|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|19|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||Patient Blood Group             OPOS O Rh Pos                                    |
+OBX|20|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||Ab Screen Gel                   NEGATIVE NEGATIVE                                    |
+OBX|21|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|22|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|23|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP|
+]]></message>
+    <message format="HL7" msgId="LAB4377604.hl7" version="2.3"><![CDATA[MSH|^~\&|IHALAB^2.1|IHKGH|BBK||201408251051||ORU^R01|D3200801S2|D|2.3|||||||||||||D3200801
+PID|1|A00004182|KG00009268|9879643275|Regkghsot^Cherise||19850709|F|||1235 Oak St^^Kelowna^BC^V1W 5K5||250-763-4747||||BUD|KG0050631/15|9879643275|
+PV1|1|I|KELKGHR4B^KGHR4126^A|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC|||||||||||||||||||IHKGH||ADM|||201405221340|
+ORC|RE|PT101077150.0200|||CM|N|||201408251051|CUPM2^Cupello^Michael^^^||KINT5^Kinnee^Todd^^^||
+OBR|2|PT2508:T00001R150.0200|PT2508:T00001R|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|R|201408251046|201408251046|||CUPM2|||Testing confidential flag|201408251049|T|KINT5^Kinnee^Todd^^^||00063236|||IHKGH|201408251049||BBK|F|||KINT5^Kinnee^Todd^^^|
+OBX|1|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|2|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|3|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||SPEC #: PT2508:T00001R       COLL: 25/08/14-1046     STATUS: CM           REQ #: 00063236|
+OBX|4|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||RECD: 25/08/14-1049                             SUBM DR: Kinnee, Todd|
+OBX|5|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|6|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||ENTERED: 25/08/14-1051                         OTHER DR: Kinnee, Todd|
+OBX|7|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|8|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||ORD TESTS: ABO Group \T\ Rh Type Confirm|
+OBX|9|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|10|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||COMMENTS/QUERIES:|
+OBX|11|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|12|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|13|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||Test                            Result                Flag                  Reference|
+OBX|14|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|15|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||Patient Blood Group Confirm     OPOS O Rh Pos                                    |
+OBX|16|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|17|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|18|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP|
+]]></message>
+    <message format="HL7" msgId="RAD4377663.hl7" version="2.3"><![CDATA[MSH|^~\&|IHARAD^2.1|IHVRA|ITS||201409021545||ORU^R01|J3202310S1|D|2.3|||AL|NE|
+PID|1|A4-B20140715140936836|VA00008004||Itsvjhsot^Pdiv||19990909|M|||8888 Infinity Drive^^Vernon^BC^V1T 8T8||555-555-5555|||||VA0050002/15|
+PV1|1|O|VERVRADI||||^Kinnee^Todd^^^^^KINT5|||||||||||POV||BC|||||||||||||||||||IHVRA||REG|||201409021525|
+ORC|NW|BD20140902-0001IHVRA||||||||^Hudson^Cathy^^^^^HUDC6||^Kinnee^Todd^^^^^KINT5|
+OBR|1|BD20140902-0001IHVRA|4744IHVRA|BD^BD^BONE DENSITY MULTI AREAS^18748-4^Diagnostic Imaging Study^pCLOCD||20140902|201409021506|201409021539||||||||^Kinnee^Todd^^^^^KINT5||AB00016917VRA|BD|DI|DITRAN|201409021541||RAD|S||1^^^^^R||||Reason for Exam: PDIV   Print/Preview pop-ups for Transcr testing|^Evans^Patti^J^^^^EVAP|||^Hudson^Cathy^^^^^HUDC6|
+OBX|1|TX|1:RPT^Radiology Report|| Interior Health - Vernon Radiological Associates Vernon, BC / Ph: 250-545-0747  |
+OBX|2|TX|1:RPT^Radiology Report||  |
+OBX|3|TX|1:RPT^Radiology Report||Name: Itsvjhsot,Pdiv  |
+OBX|4|TX|1:RPT^Radiology Report||MRP: Kinnee,Todd        Age: 14    Type: REG POV     Acct: VA0050002/15     |
+OBX|5|TX|1:RPT^Radiology Report||FamPhys:         DOB: 09/09/1999    Loc: VERVRADI     MedRec: VA00008004     |
+OBX|6|TX|1:RPT^Radiology Report||        Sex: M    ADM: 02/09/14     HC#:      |
+OBX|7|TX|1:RPT^Radiology Report||        Ph: 555-555-5555    DIS:           |
+OBX|8|TX|1:RPT^Radiology Report||  |
+OBX|9|TX|1:RPT^Radiology Report||  |
+OBX|10|TX|1:RPT^Radiology Report||  |
+OBX|11|TX|1:RPT^Radiology Report|| Diagnostic Imaging Report  |
+OBX|12|TX|1:RPT^Radiology Report|| Signed  |
+OBX|13|TX|1:RPT^Radiology Report||________________________________________________________________________________  |
+OBX|14|TX|1:RPT^Radiology Report||OrdPhys: Kinnee,Todd  |
+OBX|15|TX|1:RPT^Radiology Report||Exam Date: 02/09/14  |
+OBX|16|TX|1:RPT^Radiology Report||Accession Number: AB00016917VRA  |
+OBX|17|TX|1:RPT^Radiology Report||Exam(s): BD / BONE DENSITY MULTI AREAS  |
+OBX|18|TX|1:RPT^Radiology Report||Reason for Exam: PDIV   Print/Preview pop-ups for Transcr testing  |
+OBX|19|TX|1:RPT^Radiology Report||  |
+OBX|20|TX|1:RPT^Radiology Report||  |
+OBX|21|TX|1:RPT^Radiology Report||  |
+OBX|22|TX|1:RPT^Radiology Report||  |
+OBX|23|TX|1:RPT^Radiology Report||1. PDIV 516 testing.  |
+OBX|24|TX|1:RPT^Radiology Report||  |
+OBX|25|TX|1:RPT^Radiology Report||2. Testing ITS Access group settings for transcriptionists to remove the pop-ups prompting preview |
+OBX|26|TX|1:RPT^Radiology Report||  printing when saving a document.  |
+OBX|27|TX|1:RPT^Radiology Report||  |
+OBX|28|TX|1:RPT^Radiology Report||CH  |
+OBX|29|TX|1:RPT^Radiology Report||  |
+OBX|30|TX|1:RPT^Radiology Report||Patti J Evans ,  |
+OBX|31|TX|1:RPT^Radiology Report||  |
+OBX|32|TX|1:RPT^Radiology Report||                 |
+OBX|33|TX|1:RPT^Radiology Report||Dictated by: Evans,Patti J         Dictated Date: 02/09/14 1506       |
+OBX|34|TX|1:RPT^Radiology Report||Transcribed by: HUDC6         Transcribed Date: 02/09/14 1539      |
+OBX|35|TX|1:RPT^Radiology Report||Technologist: HUDC6  |
+OBX|36|TX|1:RPT^Radiology Report||  |
+OBX|37|TX|1:RPT^Radiology Report||Copies: Kinnee,Todd  |
+OBX|38|TX|1:RPT^Radiology Report||Report: DI0209-0002  |
+OBX|39|TX|1:RPT^Radiology Report||  |
+OBX|40|TX|1:RPT^Radiology Report||"This document has been transcribed as dictated and adheres to the established Interior Health |
+OBX|41|TX|1:RPT^Radiology Report||Authority, HIM Transcription Services, Authentication Standard. Revisions to this original record |
+OBX|42|TX|1:RPT^Radiology Report||must be requested by dictating physician within seven days following the transcribed date."   |
+ZDR||KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~EVAP^Evans^Patti^J^^^^^^^^^^^ATP^|
+]]></message>
+    <message format="HL7" msgId="RAD4377664.hl7" version="2.3"><![CDATA[MSH|^~\&|IHARAD^2.1|IHCVH|ITS||201409031545||ORU^R01|H3202759S1|D|2.3|||AL|NE|
+PID|1|A5-B20140714104147356|CV0055027/15||Itscvhsot^Pdiv||19930303|F|||2468 Main Street^^Creston^BC^V0B 1G8||555-555-5555|||||CV0055027/15|
+PV1|1|O|CRECVHDI||||^Kinnee^Todd^^^^^KINT5|||||||||||REF||BC|||||||||||||||||||IHCVH||REG|||201407141041|
+ORC|NW|US20140714-0003IHCVH||||||||^Hudson^Cathy^^^^^HUDC6||^Kinnee^Todd^^^^^KINT5|
+OBR|1|US20140714-0003IHCVH|109IHCVH|US^ABDPEL^ABD PELVIS^18748-4^Diagnostic Imaging Study^pCLOCD||20140714|201407141113|201407141113||||||||^Kinnee^Todd^^^^^KINT5||AB00000152CVH|US|DI|DI|201407141116||RAD|S||1^^^^^R||||Reason for Exam: Testing Placer Order Number update in McKesson - CH|^Evans^Patti^J^^^^EVAP|||^Hudson^Cathy^^^^^HUDC6|
+OBX|1|TX|1:RPT^Radiology Report|| Interior Health - Creston Valley Hospital Creston, BC / Ph: 250-428-2286  |
+OBX|2|TX|1:RPT^Radiology Report||  |
+OBX|3|TX|1:RPT^Radiology Report||Name: Itscvhsot,Pdiv  |
+OBX|4|TX|1:RPT^Radiology Report||MRP: Kinnee,Todd        Age: 21    Type: REG REF     Acct: CV0055027/15     |
+OBX|5|TX|1:RPT^Radiology Report||FamPhys:         DOB: 03/03/1993    Loc: CRECVHDI     MedRec:      |
+OBX|6|TX|1:RPT^Radiology Report||        Sex: F    ADM: 14/07/14     HC#:      |
+OBX|7|TX|1:RPT^Radiology Report||        Ph: 555-555-5555    DIS:           |
+OBX|8|TX|1:RPT^Radiology Report||  |
+OBX|9|TX|1:RPT^Radiology Report||  |
+OBX|10|TX|1:RPT^Radiology Report||  |
+OBX|11|TX|1:RPT^Radiology Report|| Diagnostic Imaging Report  |
+OBX|12|TX|1:RPT^Radiology Report|| Signed  |
+OBX|13|TX|1:RPT^Radiology Report||________________________________________________________________________________  |
+OBX|14|TX|1:RPT^Radiology Report||OrdPhys: Kinnee,Todd  |
+OBX|15|TX|1:RPT^Radiology Report||Exam Date: 14/07/14  |
+OBX|16|TX|1:RPT^Radiology Report||Accession Number: AB00000152CVH  |
+OBX|17|TX|1:RPT^Radiology Report||Exam(s): US / ABD PELVIS  |
+OBX|18|TX|1:RPT^Radiology Report||Reason for Exam: Testing Placer Order Number update in McKesson - CH  |
+OBX|19|TX|1:RPT^Radiology Report||  |
+OBX|20|TX|1:RPT^Radiology Report||  |
+OBX|21|TX|1:RPT^Radiology Report||Testing Placer Order Number update in McKesson - CH  |
+OBX|22|TX|1:RPT^Radiology Report||Testing update with report filing  |
+OBX|23|TX|1:RPT^Radiology Report||  |
+OBX|24|TX|1:RPT^Radiology Report||Patti J Evans ,  |
+OBX|25|TX|1:RPT^Radiology Report||  |
+OBX|26|TX|1:RPT^Radiology Report||                 |
+OBX|27|TX|1:RPT^Radiology Report||Dictated by: Evans,Patti J         Dictated Date: 14/07/14 1113       |
+OBX|28|TX|1:RPT^Radiology Report||Transcribed by: HUDC6         Transcribed Date: 14/07/14 1113      |
+OBX|29|TX|1:RPT^Radiology Report||Technologist: GNUC      |
+OBX|30|TX|1:RPT^Radiology Report||  |
+OBX|31|TX|1:RPT^Radiology Report||"Produced by Speech Recognition technology and may not have been edited by Transcription Services".  |
+OBX|32|TX|1:RPT^Radiology Report||  |
+OBX|33|TX|1:RPT^Radiology Report||Copies: Kinnee,Todd  |
+OBX|34|TX|1:RPT^Radiology Report||Report: DI1407-0001  |
+ZDR||KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~EVAP^Evans^Patti^J^^^^^^^^^^^ATP^|
+]]></message>
+    <message format="HL7" msgId="OE4377613.hl7" version="2.3"><![CDATA[MSH|^~\&|IHAOE^2.1|IHKBH|ITS||201408261046||ORU^R01|J3201394|D|2.3|||AL|NE|||||||||J3201394
+EVN|001|201408261046|
+PID|1|A0-B20120404143834427|KG00011301|9879684636|Sogbmvsot^Test^Only A||19650505|F|||1234 Scanner Road^^Oliver^BC^V0H 1T0||250-555-1234|||||KG0051588/14|9879684636|
+PV1|1|I|KELKGHCEOF^KGHCEDOF^25|EL|||KINT5^Kinnee^Todd^^^|||MED||||ER|||KINT5^Kinnee^Todd^^^|INO||BC|||||||||||||||||||IHKGH||ADM|||201402071454|
+ORC||
+OBR|1||4736IHKGH|HIM.COK^Consultation Report^^11488-4^Consultation Note^pCLOCD|||201408261000|201408261045||||||||SCON^Scotland^Newborne^Len^^Dr||||HIM.COK|CO|201408261046||OE|S|||BENM4^Benes^Marta^^^~BENM4^Benes^Marta^^^||||07781^Scotland^Newborne^Len^^Dr^^SCON|||^McArthur^Heather^^^^^MCAH3|
+OBX|1|TX||| Interior Health   Kelowna General Hospital   Kelowna, BC / Ph: 250-862-4000  |
+OBX|2|TX|||  |
+OBX|3|TX|||Name: Sogbmvsot,Test Only A  |
+OBX|4|TX|||MRP: Kinnee,Todd     Age: 49    Type: ADM INO     Acct: KG0051588/14     |
+OBX|5|TX|||FamPhys:      DOB: 05/05/1965    Loc: KELKGHCEOF     MedRec: KG00011301     |
+OBX|6|TX|||     Sex: F    ADM: 07/02/14     HC#: 9879684636     |
+OBX|7|TX|||     Ph: 250-555-1234    DIS:           |
+OBX|8|TX|||  |
+OBX|9|TX||| Consultation Report  |
+OBX|10|TX||| Signed  |
+OBX|11|TX||| ___________________________________________________________________________________________________|
+OBX|12|TX|||_____  |
+OBX|13|TX|||  |
+OBX|14|TX|||  |
+OBX|15|TX|||TESTING HEADER/FOOTER FOR PCM  |
+OBX|16|TX|||Created by: Newborne Scotland MD, FRCPC   |
+OBX|17|TX|||  |
+OBX|18|TX|||Copies: Scotland,Newborne Len  |
+OBX|19|TX|||Report: 2608-0001        |
+OBX|20|TX|||  |
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP^|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~SCON^Scotland^Newborne^Len^^Dr^^^^^^^^^ATP^|||BENM4^Benes^Marta^^^^^^^^^^^^ERP^|
+]]></message>
+    <message format="HL7" msgId="OE4377618.hl7" version="2.3"><![CDATA[MSH|^~\&|IHAOE^2.1|IHKBH|ITS||201408261050||ORU^R01|J3201399|D|2.3|||AL|NE|||||||||J3201399
+EVN|001|201408261046|
+PID|1|A0-B20120404143834427|KG00011301|9879684636|Sogbmvsot^Test^Only A||19650505|F|||1234 Scanner Road^^Oliver^BC^V0H 1T0||250-555-1234|||||KG0051588/14|9879684636|
+PV1|1|I|KELKGHCEOF^KGHCEDOF^25|EL|||KINT5^Kinnee^Todd^^^|||MED||||ER|||KINT5^Kinnee^Todd^^^|INO||BC|||||||||||||||||||IHKGH||ADM|||201402071454|
+ORC||
+OBR|1||4736IHKGH|HIM.COK^Consultation Report^^11488-4^Consultation Note^pCLOCD|||201408261000|201408261045||||||||SCON^Scotland^Newborne^Len^^Dr||||HIM.COK|CO|201408261047||OE|S|||BENM4^Benes^Marta^^^~BENM4^Benes^Marta^^^||||07781^Scotland^Newborne^Len^^Dr^^SCON|||^McArthur^Heather^^^^^MCAH3|
+OBX|1|TX||| Interior Health   Kelowna General Hospital   Kelowna, BC / Ph: 250-862-4000  |
+OBX|2|TX|||  |
+OBX|3|TX|||Name: Sogbmvsot,Test Only A  |
+OBX|4|TX|||MRP: Kinnee,Todd     Age: 49    Type: ADM INO     Acct: KG0051588/14     |
+OBX|5|TX|||FamPhys:      DOB: 05/05/1965    Loc: KELKGHCEOF     MedRec: KG00011301     |
+OBX|6|TX|||     Sex: F    ADM: 07/02/14     HC#: 9879684636     |
+OBX|7|TX|||     Ph: 250-555-1234    DIS:           |
+OBX|8|TX|||  |
+OBX|9|TX||| Consultation Report  |
+OBX|10|TX||| Signed  |
+OBX|11|TX||| ___________________________________________________________________________________________________|
+OBX|12|TX|||_____  |
+OBX|13|TX|||  |
+OBX|14|TX|||  |
+OBX|15|TX|||TESTING HEADER/FOOTER FOR PCM  |
+OBX|16|TX|||  |
+OBX|17|TX|||Patient Header  |
+OBX|18|TX||| Centered Text:   |
+OBX|19|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|20|TX|||·   Locate the Toolbar and click on the “Visible” button once. This will make all format controls |
+OBX|21|TX|||such as spacing, indentations, columns, and line breaks visible.   |
+OBX|22|TX|||·   Locate the Toolbar and click on the “Align” button once.   |
+OBX|23|TX|||·   Enter text between the two carrots positioned on the center of the page. When finished, make |
+OBX|24|TX|||sure the cursor is positioned before the right carrot and press “enter” to move to the next line; |
+OBX|25|TX|||this will create a carrot in a downward position marking the line break. A new carrot and cursor |
+OBX|26|TX|||will appear at the starting position found on the left hand side of the page.   |
+OBX|27|TX|||·   Repeat instructions to continue to center text on the next line.  |
+OBX|28|TX|||Patient Header  |
+OBX|29|TX||| Centered Text:   |
+OBX|30|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|31|TX|||·   Locate the Toolbar and click on the “Visible” button once. This will make all format controls |
+OBX|32|TX|||such as spacing, indentations, columns, and line breaks visible.   |
+OBX|33|TX|||·   Locate the Toolbar and click on the “Align” button once.   |
+OBX|34|TX|||·   Enter text between the two carrots positioned on the center of the page. When finished, make |
+OBX|35|TX|||sure the cursor is positioned before the right carrot and press “enter” to move to the next line; |
+OBX|36|TX|||this will create a carrot in a downward position marking the line break. A new carrot and cursor |
+OBX|37|TX|||will appear at the starting position found on the left hand side of the page.   |
+OBX|38|TX|||·   Repeat instructions to continue to center text on the next line.  |
+OBX|39|TX|||Patient Header  |
+OBX|40|TX||| Centered Text:   |
+OBX|41|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|42|TX|||·   Locate the Toolbar and click on the “Visible” button once. This will make all format controls |
+OBX|43|TX|||such as spacing, indentations, columns, and line breaks visible.   |
+OBX|44|TX|||·   Locate the Toolbar and click on the “Align” button once.   |
+OBX|45|TX|||·   Enter text between the two carrots positioned on the center of the page. When finished, make |
+OBX|46|TX|||sure the cursor is positioned before the right carrot and press “enter” to move to the next line; |
+OBX|47|TX|||this will create a carrot in a downward position marking the line break. A new carrot and cursor |
+OBX|48|TX|||will appear at the starting position found on the left hand side of the page.   |
+OBX|49|TX|||·   Repeat instructions to continue to center text on the next line.  |
+OBX|50|TX|||Patient Header  |
+OBX|51|TX||| Centered Text:   |
+OBX|52|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|53|TX|||·   Locate the Toolbar and click on the “Visible” button once. This will make all format controls |
+OBX|54|TX|||such as spacing, indentations, columns, and line breaks visible.   |
+OBX|55|TX|||·   Locate the Toolbar and click on the “Align” button once.   |
+OBX|56|TX|||·   Enter text between the two carrots positioned on the center of the page. When finished, make |
+OBX|57|TX|||sure the cursor is positioned before the right carrot and press “enter” to move to the next line; |
+OBX|58|TX|||this will create a carrot in a downward position marking the line break. A new carrot and cursor |
+OBX|59|TX|||will appear at the starting position found on the left hand side of the page.   |
+OBX|60|TX|||·   Repeat instructions to continue to center text on the next line.  |
+OBX|61|TX|||Patient Header  |
+OBX|62|TX||| Centered Text:   |
+OBX|63|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|64|TX|||·   Locate the Toolbar and click on the “Visible” button once. This will make all format controls |
+OBX|65|TX|||such as spacing, indentations, columns, and line breaks visible.   |
+OBX|66|TX|||·   Locate the Toolbar and click on the “Align” button once.   |
+OBX|67|TX|||·   Enter text between the two carrots positioned on the center of the page. When finished, make |
+OBX|68|TX|||sure the cursor is positioned before the right carrot and press “enter” to move to the next line; |
+OBX|69|TX|||this will create a carrot in a downward position marking the line break. A new carrot and cursor |
+OBX|70|TX|||will appear at the starting position found on the left hand side of the page.   |
+OBX|71|TX|||·   Repeat instructions to continue to center text on the next line.  |
+OBX|72|TX|||Patient Header  |
+OBX|73|TX||| Centered Text:   |
+OBX|74|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|75|TX|||·   Locate the Toolbar and click on the “Visible” button once. This will make all format controls |
+OBX|76|TX|||such as spacing, indentations, columns, and line breaks visible.   |
+OBX|77|TX|||·   Locate the Toolbar and click on the “Align” button once.   |
+OBX|78|TX|||·   Enter text between the two carrots positioned on the center of the page. When finished, make |
+OBX|79|TX|||sure the cursor is positioned before the right carrot and press “enter” to move to the next line; |
+OBX|80|TX|||this will create a carrot in a downward position marking the line break. A new carrot and cursor |
+OBX|81|TX|||will appear at the starting position found on the left hand side of the page.   |
+OBX|82|TX|||·   Repeat instructions to continue to center text on the next line.  |
+OBX|83|TX|||Patient Header  |
+OBX|84|TX||| Centered Text:   |
+OBX|85|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|86|TX|||·   Locate the Toolbar and click on the “Visible” button once. This will make all format controls |
+OBX|87|TX|||such as spacing, indentations, columns, and line breaks visible.   |
+OBX|88|TX|||·   Locate the Toolbar and click on the “Align” button once.   |
+OBX|89|TX|||·   Enter text between the two carrots positioned on the center of the page. When finished, make |
+OBX|90|TX|||sure the cursor is positioned before the right carrot and press “enter” to move to the next line; |
+OBX|91|TX|||this will create a carrot in a downward position marking the line break. A new carrot and cursor |
+OBX|92|TX|||will appear at the starting position found on the left hand side of the page.   |
+OBX|93|TX|||·   Repeat instructions to continue to center text on the next line.  |
+OBX|94|TX|||Patient Header  |
+OBX|95|TX||| Centered Text:   |
+OBX|96|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|97|TX|||·   Locate the Toolbar and click on the “Visible” button once. This will make all format controls |
+OBX|98|TX|||such as spacing, indentations, columns, and line breaks visible.   |
+OBX|99|TX|||·   Locate the Toolbar and click on the “Align” button once.   |
+OBX|100|TX|||·   Enter text between the two carrots positioned on the center of the page. When finished, make |
+OBX|101|TX|||sure the cursor is positioned before the right carrot and press “enter” to move to the next line; |
+OBX|102|TX|||this will create a carrot in a downward position marking the line break. A new carrot and cursor |
+OBX|103|TX|||will appear at the starting position found on the left hand side of the page.   |
+OBX|104|TX|||·   Repeat instructions to continue to center text on the next line.Patient Header  |
+OBX|105|TX||| Centered Text:   |
+OBX|106|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|107|TX|||·   Locate the Toolbar and click on the “Visible” button once. This will make all format controls |
+OBX|108|TX|||such as spacing, indentations, columns, and line breaks visible.   |
+OBX|109|TX|||·   Locate the Toolbar and click on the “Align” button once.   |
+OBX|110|TX|||·   Enter text between the two carrots positioned on the center of the page. When finished, make |
+OBX|111|TX|||sure the cursor is positioned before the right carrot and press “enter” to move to the next line; |
+OBX|112|TX|||this will create a carrot in a downward position marking the line break. A new carrot and cursor |
+OBX|113|TX|||will appear at the starting position found on the left hand side of the page.   |
+OBX|114|TX|||·   Repeat instructions to continue to center text on the next line.Patient Header  |
+OBX|115|TX||| Centered Text:   |
+OBX|116|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|117|TX|||·   Locate the Toolbar and click on the “Visible” button once. This will make all format controls |
+OBX|118|TX|||such as spacing, indentations, columns, and line breaks visible.   |
+OBX|119|TX|||·   Locate the Toolbar and click on the “Align” button once.   |
+OBX|120|TX|||·   Enter text between the two carrots positioned on the center of the page. When finished, make |
+OBX|121|TX|||sure the cursor is positioned before the right carrot and press “enter” to move to the next line; |
+OBX|122|TX|||this will create a carrot in a downward position marking the line break. A new carrot and cursor |
+OBX|123|TX|||will appear at the starting position found on the left hand side of the page.   |
+OBX|124|TX|||·   Repeat instructions to continue to center text on the next line.Patient Header  |
+OBX|125|TX||| Centered Text:   |
+OBX|126|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|127|TX|||·   Locate the Toolbar and click on the “Visible” button once. This will make all format controls |
+OBX|128|TX|||such as spacing, indentations, columns, and line breaks visible.   |
+OBX|129|TX|||·   Locate the Toolbar and click on the “Align” button once.   |
+OBX|130|TX|||·   Enter text between the two carrots positioned on the center of the page. When finished, make |
+OBX|131|TX|||sure the cursor is positioned before the right carrot and press “enter” to move to the next line; |
+OBX|132|TX|||this will create a carrot in a downward position marking the line break. A new carrot and cursor |
+OBX|133|TX|||will appear at the starting position found on the left hand side of the page.   |
+OBX|134|TX|||·   Repeat instructions to continue to center text on the next line.Patient Header  |
+OBX|135|TX||| Centered Text:   |
+OBX|136|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|137|TX|||·   Locate the Toolbar and click on the “Visible” button once. This will make all format controls |
+OBX|138|TX|||such as spacing, indentations, columns, and line breaks visible.   |
+OBX|139|TX|||·   Locate the Toolbar and click on the “Align” button once.   |
+OBX|140|TX|||·   Enter text between the two carrots positioned on the center of the page. When finished, make |
+OBX|141|TX|||sure the cursor is positioned before the right carrot and press “enter” to move to the next line; |
+OBX|142|TX|||this will create a carrot in a downward position marking the line break. A new carrot and cursor |
+OBX|143|TX|||will appear at the starting position found on the left hand side of the page.   |
+OBX|144|TX|||·   Repeat instructions to continue to center text on the next line.Patient Header  |
+OBX|145|TX||| Centered Text:   |
+OBX|146|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|147|TX|||·   Locate the Toolbar and click on the “Visible” button once. This will make all format controls |
+OBX|148|TX|||such as spacing, indentations, columns, and line breaks visible.   |
+OBX|149|TX|||·   Locate the Toolbar and click on the “Align” button once.   |
+OBX|150|TX|||·   Enter text between the two carrots positioned on the center of the page. When finished, make |
+OBX|151|TX|||sure the cursor is positioned before the right carrot and press “enter” to move to the next line; |
+OBX|152|TX|||this will create a carrot in a downward position marking the line break. A new carrot and cursor |
+OBX|153|TX|||will appear at the starting position found on the left hand side of the page.   |
+OBX|154|TX|||·   Repeat instructions to continue to center text on the next line.  |
+OBX|155|TX|||Created by: Newborne Scotland MD, FRCPC   |
+OBX|156|TX|||  |
+OBX|157|TX|||Copies: Scotland,Newborne Len  |
+OBX|158|TX|||Report: 2608-0001        |
+OBX|159|TX|||  |
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP^|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~SCON^Scotland^Newborne^Len^^Dr^^^^^^^^^ATP^|||BENM4^Benes^Marta^^^^^^^^^^^^ERP^|
+]]></message>
+    <message format="HL7" msgId="LAB4377621.hl7" version="2.3"><![CDATA[MSH|^~\&|IHALAB^2.1|IHKBH|PTH||201406111530||ORU^R01|D3178622|D|2.3|||||||||||||D3178622
+PID|1|A00003774|KB00014205|9698650654|Ihhash^Plis||19891029|M|||3361 Keziah Island^^Montrose^BC^V7O 0Q9||377-5508|||||KB0055358/13|9698650654|
+PV1|1|R|TRAKBHLB||||PLISIHMI^Plisihf^Mikel^^^Dr|||||||||||RCR||BC|||||||||||||||||||IHKBH||REG|||201207270933|
+ORC|RE|PT981181AH|||CM|N|||201406111530|SAVD^Savarie^Donna^^^||PLISIHMI^Plisihf^Mikel^^^Dr||
+OBR|1|AT14-8R|AT14-8R|1AH^Autopsy Hospital^00061042^^^pCLOCD|||201406111400|201406111400||IHKBH^Kootenay Boundary Hosp, Trail||||201406111526||PLISIHMI^Plisihf^Mikel^^^Dr||00061042|||IHKBH|201406111526||PTH|F|PTH||PLISIHMI^Plisihf^Mikel^^^Dr|
+OBX|1|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD||------------------------------------------------------------------------------------------|||||||||
+OBX|2|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD||PATIENT: Ihhash,Plis                     ACCT: KB0055358/13 LOC:  TRAKBHLB     U: KB00014205|||||||||
+OBX|3|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD||                                       AGE/SX: 22/M         ROOM:            REG: 27/07/12|||||||||
+OBX|4|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD||REG DR:  Plisihf,Mikel                 DOB:    29/10/1989   BED:             DIS:|||||||||
+OBX|5|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD||                                       STATUS: REG RCR      TLOC:|||||||||
+OBX|6|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD||------------------------------------------------------------------------------------------|||||||||
+OBX|7|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|8|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD||Specimen: AT14-8R          SOUT     Received:  11/06/14-1526     Spec Type: Autopsy|||||||||
+OBX|9|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|10|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD||   Clinical History|||||||||
+OBX|11|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|12|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD||      Testing new report format.|||||||||
+OBX|13|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|14|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD||   Microscopic|||||||||
+OBX|15|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|16|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD||      Testing new report format.|||||||||
+OBX|17|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|18|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD||Signed __________(signature on file)___________ Donna Savarie 11/06/14 1530|||||||||
+OBX|19|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|20|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD||------------------------------------------------------------------------------------------|||||||||
+OBX|21|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|22|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|23|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|24|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|25|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|26|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|27|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|28|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|29|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|30|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|31|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|32|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|33|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|34|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|35|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|36|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|37|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|38|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|39|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|40|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|41|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|42|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|43|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|44|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|45|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|46|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|47|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|48|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|49|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|50|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|51|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|52|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|53|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|54|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|55|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|56|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|57|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD|||||||||||
+OBX|58|TX|1AH^Autopsy Hospital^00061042^^^pCLOCD||                                   ** END OF REPORT **|||||||||
+ZDR||PLISIHMI^Plisihf^Mikel^^^Dr^^^^^^^^^ATP|]]></message>
+    <message format="HL7" msgId="LAB4377635.hl7" version="2.3"><![CDATA[MSH|^~\&|IHALAB^2.1|IHEKH|PTH||201408131445||ORU^R01|F3196780|D|2.3|||||||||||||F3196780
+PID|1|A00008840|EK0055091/15||Pthekhsot^test^Savd3||19670305|F|||176 PP9 Drive^^Vernon^BC^V1B 2Y4||250-558-1359|||||EK0055091/15|
+PV1|1|O|CRAEKHLB||||SAVD^Savarie^Donna^^^|||||||||||REF||SELF|||||||||||||||||||IHEKH||REG|||201406240948|
+ORC|RE|MT48441AH|||CM|N|||201408131345|SAVD^Savarie^Donna^^^||SAVD^Savarie^Donna^^^||
+OBR|1|MT:AC14-3R|MT:AC14-3R|1AH^Autopsy Hospital^00003639^^^pCLOCD|||201408131300|201408131300||IHEKH^East Kootenay Hosp, Cranbrook||||201408131403||SAVD^Savarie^Donna^^^||00003639|||IHEKH|201408131404||PTH|F|PTH||SAVD^Savarie^Donna^^^|
+OBX|1|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||--------------------------------------------------------------------------------------------|||||||||
+OBX|2|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||RUN DATE: 13/08/14             Interior Health Mountain LAB *TEST6.13*             PAGE 1|||||||||
+OBX|3|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||RUN TIME: 1345                            Specimen Inquiry|||||||||
+OBX|4|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||--------------------------------------------------------------------------------------------|||||||||
+OBX|5|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||PATIENT: Pthekhsot,test Savd3            ACCT: EK0055091/15 LOC:  CRAEKHLB     U:|||||||||
+OBX|6|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||                                       AGE/SX: 47/F         ROOM:            REG: 24/06/14|||||||||
+OBX|7|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||REG DR:  Savarie,Donna                 DOB:    05/03/1967   BED:             DIS:|||||||||
+OBX|8|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||                                       STATUS: REG REF      TLOC:|||||||||
+OBX|9|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||--------------------------------------------------------------------------------------------|||||||||
+OBX|10|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|11|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||SPEC : MT:AC14-3R         RECD: 13/08/14-1403     STATUS:  SOUT           REQ NUM: 00003639|||||||||
+OBX|12|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||                           COLL: 13/08/14-1300     SUBM DR: Savarie,Donna|||||||||
+OBX|13|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|14|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||ENTERED:  13/08/14-1404    SP TYPE: H Autopsy      OTHR DR:|||||||||
+OBX|15|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||ORDERED:  Aut Assist, Cut,Trim,Transf, Pt Handling, Path Gross, Rep Aut Typed|||||||||
+OBX|16|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|17|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||Histology:|||||||||
+OBX|18|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||   TISSUE          ID      BLK FRZ PCS BLOCK PROCEDURE      LEVEL LEVEL PROCEDURE COM    _______________ ____ ______ ___ ___ _______________ __________ _______________ ___|||||||||
+OBX|19|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||   Body            A    __________ _______________|||||||||
+OBX|20|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|21|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||PROCEDURES: Aut Assist (13/08/14-1404)|||||||||
+OBX|22|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||            Cut,Trim,Transf (13/08/14-1404)|||||||||
+OBX|23|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||            Pt Handling (13/08/14-1404)|||||||||
+OBX|24|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||            Path Gross (13/08/14-1404)|||||||||
+OBX|25|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||            Rep Aut Typed (13/08/14-1404)|||||||||
+OBX|26|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|27|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||TISSUES:|||||||||
+OBX|28|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||         A. Body|||||||||
+OBX|29|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|30|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||       Autopsy Diagnosis|||||||||
+OBX|31|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|32|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||  Suffocation from falling into a tree well.|||||||||
+OBX|33|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|34|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||  Autopsy Information-Hospital|||||||||
+OBX|35|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|36|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||   Consent given by: Spouse|||||||||
+OBX|37|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|38|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||   Reported Date of Death: 13/08/14|||||||||
+OBX|39|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||   Reported Time of Death: 1300|||||||||
+OBX|40|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||   Reported Date of Autopsy: 13/08/14|||||||||
+OBX|41|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||   Reported Time of Autopsy: 1407|||||||||
+OBX|42|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|43|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||        Clinical History|||||||||
+OBX|44|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|45|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||  Skiing accident.|||||||||
+OBX|46|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|47|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||     Gross Autopsy Findings|||||||||
+OBX|48|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|49|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||  Nothing to report.|||||||||
+OBX|50|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|51|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||            Summary|||||||||
+OBX|52|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|53|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||  Never ski alone!|||||||||
+OBX|54|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||--------------------------------------------------------------------------------------------|||||||||
+OBX|55|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|56|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||Signed __________(signature on file)___________ Donna Savarie 13/08/14 1445|||||||||
+OBX|57|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|58|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||--------------------------------------------------------------------------------------------|||||||||
+OBX|59|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|60|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|61|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD|||||||||||
+OBX|62|TX|1AH^Autopsy Hospital^00003639^^^pCLOCD||                                   ** END OF REPORT **|||||||||
+ZDR||SAVD^Savarie^Donna^^^^^^^^^^^^ATP|]]></message>
+    <message format="HL7" msgId="LAB4367575.hl7" version="2.3"><![CDATA[MSH|^~\&|IHALAB^2.1|IHKBH|LAB||201408111454||ORU^R01|C3196346|D|2.3|
+PID|1|A00008479|KB00014292|9879597977|Regkbhsot^Diara||19360514|F|||123 Any St^^Trail^BC^V1R 4V4||250-555-5555|||||KB0055514/14|9879597977|
+PV1|1|I|TRAKBH3^KBH305^01|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC||||||||||||||||H|||IHKBH||DIS|||201403060754|201404081404|
+ORC|RE|PT100207301.0100|||CM|N|||201408111454|SMIB7^Smith^Brian^^^||KINT5^Kinnee^Todd^^^||
+OBR|1|PT1108:H00001R301.0100|PT1108:H00001R|301.0100^Complete Blood Count (CBC)^00062680^57021-8^CBC \T\ Auto Differential^pCLOCD|R||201408111440|||SMIB7||||201408111440||KINT5^Kinnee^Todd^^^||00062680||||201408111452||LAB|F||^^^^^R|ABBM^Abbey^Mark^Douglas^^Dr~BABC^Baba^Carolyn^M^^Dr~CABF^Cabael^Felian^^^Dr~DAGP^Dagg^Paul^^^Dr~EASW^East^William^E^^Dr~FAHM3^Fahey^Meriah^S^^Dr~GABA2^Gabriel^Alexandra^^^Dr~HACG^Hackman^Gregory^^^Dr~IBBG^Ibbotson^Geoff^^^Dr~JABM^Jabi^Maha^/ GDML-Ont^^Dr~KAHJ^Kahale^Justin^^^Dr~LABE^LaBossiere^Emil^J^^Dr~KINT5^Kinnee^Todd^^^|
+OBX|1|ST|301.0500^White Blood Count (WBC)^00062680^6690-2^Leukocytes^pCLOCD|1|9.0|10\S\9/L|3.1-9.7|N||A~S|F|||201408111454|IHRIH^Royal Inland Hosp, Kamloops^L|
+OBX|2|ST|301.0600^Red Blood Count (RBC)^00062680^789-8^Erythrocytes^pCLOCD|1|3.6|10\S\12/L|3.7-5.0|L||A~S|F|||201408111454|IHRIH^Royal Inland Hosp, Kamloops^L|
+OBX|3|ST|301.0700^Hemoglobin (HGB)^00062680^718-7^Hemoglobin^pCLOCD|1|106|g/L|118-151|L||A~S|F|||201408111454|IHRIH^Royal Inland Hosp, Kamloops^L|
+OBX|4|ST|301.0900^Hematocrit (HCT)^00062680^4544-3^Hematocrit^pCLOCD|1|0.32|L/L|0.33-0.45|L||A~S|F|||201408111454|IHRIH^Royal Inland Hosp, Kamloops^L|
+OBX|5|ST|301.1100^MCV^00062680^787-2^Mean Corpuscular Volume^pCLOCD|1|87.9|fL|84.0-98.0|N||A~S|F|||201408111454|IHRIH^Royal Inland Hosp, Kamloops^L|
+OBX|6|ST|301.1300^MCH^00062680^785-6^Mean Corpuscular Hemoglobin^pCLOCD|1|29.5|pg|28.3-33.5|N||A~S|F|||201408111454|IHRIH^Royal Inland Hosp, Kamloops^L|
+OBX|7|ST|301.1500^MCHC^00062680^786-4^Mean Corpuscular Hemoglobin Concentration^pCLOCD|1|336|g/L|329-352|N||A~S|F|||201408111454|IHRIH^Royal Inland Hosp, Kamloops^L|
+OBX|8|ST|301.1700^RDW^00062680^788-0^Erythrocyte Distribution Width^pCLOCD|1|20.1|%|12.0-15.0|H||A~S|F|||201408111454|IHRIH^Royal Inland Hosp, Kamloops^L|
+OBX|9|ST|301.1900^Platelets^00062680^777-3^Platelets^pCLOCD|1|327|10\S\9/L|147-375|N||A~S|F|||201408111454|IHRIH^Royal Inland Hosp, Kamloops^L|
+OBX|10|ST|301.2100^Neutrophils^00062680^751-8^Neutrophils^pCLOCD|1|6.1|10\S\9/L|1.2-6.0|H||A~S|F|||201408111454|IHRIH^Royal Inland Hosp, Kamloops^L|
+OBX|11|ST|301.2300^Lymphocytes^00062680^731-0^Lymphocytes^pCLOCD|1|1.1|10\S\9/L|0.6-3.1|N||A~S|F|||201408111454|IHRIH^Royal Inland Hosp, Kamloops^L|
+OBX|12|ST|301.2500^Monocytes^00062680^742-7^Monocytes^pCLOCD|1|1.0|10\S\9/L|0.1-0.9|H||A~S|F|||201408111454|IHRIH^Royal Inland Hosp, Kamloops^L|
+OBX|13|ST|301.2700^Eosinophils^00062680^711-2^Eosinophils^pCLOCD|1|0.7|10\S\9/L|0.0-0.5|H||A~S|F|||201408111454|IHRIH^Royal Inland Hosp, Kamloops^L|
+OBX|14|ST|301.2900^Basophils^00062680^704-7^Basophils^pCLOCD|1|0.1|10\S\9/L|0.0-0.2|N||A~S|F|||201408111454|IHRIH^Royal Inland Hosp, Kamloops^L|
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP|ABBM^Abbey^Mark^Douglas^^Dr^^^^^^^^^OTP~BABC^Baba^Carolyn^M^^Dr^^^^^^^^^OTP~CABF^Cabael^Felian^^^Dr^^^^^^^^^OTP~DAGP^Dagg^Paul^^^Dr^^^^^^^^^OTP~EASW^East^William^E^^Dr^^^^^^^^^OTP~FAHM3^Fahey^Meriah^S^^Dr^^^^^^^^^OTP~GABA2^Gabriel^Alexandra^^^Dr^^^^^^^^^OTP~HACG^Hackman^Gregory^^^Dr^^^^^^^^^OTP~IBBG^Ibbotson^Geoff^^^Dr^^^^^^^^^OTP~JABM^Jabi^Maha^/ GDML-Ont^^Dr^^^^^^^^^OTP~KAHJ^Kahale^Justin^^^Dr^^^^^^^^^OTP~LABE^LaBossiere^Emil^J^^Dr^^^^^^^^^OTP|
+]]></message>
+    <message format="HL7" msgId="LAB4367576.hl7" version="2.3"><![CDATA[MSH|^~\&|IHALAB^2.1|IHKBH|LAB||201408111455||ORU^R01|C3196349|D|2.3|
+PID|1|A00008479|KB00014292|9879597977|Regkbhsot^Diara||19360514|F|||123 Any St^^Trail^BC^V1R 4V4||250-555-5555|||||KB0055514/14|9879597977|
+PV1|1|I|TRAKBH3^KBH305^01|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC||||||||||||||||H|||IHKBH||DIS|||201403060754|201404081404|
+ORC|RE|PT100209402.0500|||CM|N|||201408111455|SMIB7^Smith^Brian^^^||KINT5^Kinnee^Todd^^^||
+OBR|1|PT1108:HC00005R402.0500|PT1108:HC00005R|402.0500^INR^00062680^6301-6^INR^pCLOCD|R||201408111440|||SMIB7||||201408111440||KINT5^Kinnee^Todd^^^||00062680||||201408111452||LAB|F||^^^^^R|ABBM^Abbey^Mark^Douglas^^Dr~BABC^Baba^Carolyn^M^^Dr~CABF^Cabael^Felian^^^Dr~DAGP^Dagg^Paul^^^Dr~EASW^East^William^E^^Dr~FAHM3^Fahey^Meriah^S^^Dr~GABA2^Gabriel^Alexandra^^^Dr~HACG^Hackman^Gregory^^^Dr~IBBG^Ibbotson^Geoff^^^Dr~JABM^Jabi^Maha^/ GDML-Ont^^Dr~KAHJ^Kahale^Justin^^^Dr~LABE^LaBossiere^Emil^J^^Dr~KINT5^Kinnee^Todd^^^|
+NTE|1||Is patient on anticoagulants? Yes|
+NTE|2||Which anticoagulants: Warfarin (Coumadin)|
+OBX|1|ST|402.0500^INR^00062680^6301-6^INR^pCLOCD|1|2.0||0.8-1.2|H||A~S|F|||201408111455|IHRIH^Royal Inland Hosp, Kamloops^L|
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP|ABBM^Abbey^Mark^Douglas^^Dr^^^^^^^^^OTP~BABC^Baba^Carolyn^M^^Dr^^^^^^^^^OTP~CABF^Cabael^Felian^^^Dr^^^^^^^^^OTP~DAGP^Dagg^Paul^^^Dr^^^^^^^^^OTP~EASW^East^William^E^^Dr^^^^^^^^^OTP~FAHM3^Fahey^Meriah^S^^Dr^^^^^^^^^OTP~GABA2^Gabriel^Alexandra^^^Dr^^^^^^^^^OTP~HACG^Hackman^Gregory^^^Dr^^^^^^^^^OTP~IBBG^Ibbotson^Geoff^^^Dr^^^^^^^^^OTP~JABM^Jabi^Maha^/ GDML-Ont^^Dr^^^^^^^^^OTP~KAHJ^Kahale^Justin^^^Dr^^^^^^^^^OTP~LABE^LaBossiere^Emil^J^^Dr^^^^^^^^^OTP|
+]]></message>
+    <message format="HL7" msgId="LAB4367577.hl7" version="2.3"><![CDATA[MSH|^~\&|IHALAB^2.1|IHKBH|LAB||201408111456||ORU^R01|C3196353|D|2.3|
+PID|1|A00008479|KB00014292|9879597977|Regkbhsot^Diara||19360514|F|||123 Any St^^Trail^BC^V1R 4V4||250-555-5555|||||KB0055514/14|9879597977|
+PV1|1|I|TRAKBH3^KBH305^01|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC||||||||||||||||H|||IHKBH||DIS|||201403060754|201404081404|
+ORC|RE|PT100204602.5040|||CM|N|||201408111456|SMIB7^Smith^Brian^^^||KINT5^Kinnee^Todd^^^||
+OBR|1|PT1108:C00003T602.5040|PT1108:C00003T|602.5040^Gentamicin-Trough^00062681^3665-7^Gentamicin Trough^pCLOCD|R||201408111455|||SMIB7||||201408111455||KINT5^Kinnee^Todd^^^||00062681||||201408111447||LAB|F||^^^^^R|ABBM^Abbey^Mark^Douglas^^Dr~BABC^Baba^Carolyn^M^^Dr~CABF^Cabael^Felian^^^Dr~DAGP^Dagg^Paul^^^Dr~EASW^East^William^E^^Dr~FAHM3^Fahey^Meriah^S^^Dr~GABA2^Gabriel^Alexandra^^^Dr~HAGC4^Hagen^Catherine^^^Dr~IBBG^Ibbotson^Geoff^^^Dr~JACA2^Jackson^Aaron^D^^Dr~KAHJ^Kahale^Justin^^^Dr~LABE^LaBossiere^Emil^J^^Dr~MABA^Mabie^Amy^^^Dr~KINT5^Kinnee^Todd^^^|
+NTE|1||Date of Next Gentamicin Dose Due: 20140811|
+NTE|2||Time of Next Gentamicin Dose Due: 1530|
+OBX|1|ST|602.5040^Gentamicin-Trough^00062681^3665-7^Gentamicin Trough^pCLOCD|1|1.2|mg/L||||A~S|F|||201408111456|IHRIH^Royal Inland Hosp, Kamloops^L|
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP|ABBM^Abbey^Mark^Douglas^^Dr^^^^^^^^^OTP~BABC^Baba^Carolyn^M^^Dr^^^^^^^^^OTP~CABF^Cabael^Felian^^^Dr^^^^^^^^^OTP~DAGP^Dagg^Paul^^^Dr^^^^^^^^^OTP~EASW^East^William^E^^Dr^^^^^^^^^OTP~FAHM3^Fahey^Meriah^S^^Dr^^^^^^^^^OTP~GABA2^Gabriel^Alexandra^^^Dr^^^^^^^^^OTP~HAGC4^Hagen^Catherine^^^Dr^^^^^^^^^OTP~IBBG^Ibbotson^Geoff^^^Dr^^^^^^^^^OTP~JACA2^Jackson^Aaron^D^^Dr^^^^^^^^^OTP~KAHJ^Kahale^Justin^^^Dr^^^^^^^^^OTP~LABE^LaBossiere^Emil^J^^Dr^^^^^^^^^OTP~MABA^Mabie^Amy^^^Dr^^^^^^^^^OTP|
+]]></message>
+    <message format="HL7" msgId="LAB4367578.hl7" version="2.3"><![CDATA[MSH|^~\&|IHALAB^2.1|IHKBH|LAB||201408111456||ORU^R01|C3196354|D|2.3|
+PID|1|A00008479|KB00014292|9879597977|Regkbhsot^Diara||19360514|F|||123 Any St^^Trail^BC^V1R 4V4||250-555-5555|||||KB0055514/14|9879597977|
+PV1|1|I|TRAKBH3^KBH305^01|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC||||||||||||||||H|||IHKBH||DIS|||201403060754|201404081404|
+ORC|RE|PT100206602.5040|||CM|N|||201408111457|SMIB7^Smith^Brian^^^||KINT5^Kinnee^Todd^^^||
+OBR|1|PT1108:C00004T602.5040|PT1108:C00004T|602.5040^Gentamicin-Trough^00062683^3665-7^Gentamicin Trough^pCLOCD|R||201408111456|||SMIB7||||201408111456||KINT5^Kinnee^Todd^^^||00062683||||201408111449||LAB|F||^^^^^R|ABBM^Abbey^Mark^Douglas^^Dr~BABC^Baba^Carolyn^M^^Dr~CABF^Cabael^Felian^^^Dr~DAGP^Dagg^Paul^^^Dr~EASW^East^William^E^^Dr~FAHM3^Fahey^Meriah^S^^Dr~GABA2^Gabriel^Alexandra^^^Dr~HAGC4^Hagen^Catherine^^^Dr~IBBG^Ibbotson^Geoff^^^Dr~JACA2^Jackson^Aaron^D^^Dr~KAHJ^Kahale^Justin^^^Dr~LABE^LaBossiere^Emil^J^^Dr~MABA^Mabie^Amy^^^Dr~KINT5^Kinnee^Todd^^^|
+NTE|1||Date of Next Gentamicin Dose Due: 20140811|
+NTE|2||Time of Next Gentamicin Dose Due: 1530|
+OBX|1|ST|602.5040^Gentamicin-Trough^00062683^3665-7^Gentamicin Trough^pCLOCD|1|1.3|mg/L||||A~S|F|||201408111456|IHRIH^Royal Inland Hosp, Kamloops^L|
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP|ABBM^Abbey^Mark^Douglas^^Dr^^^^^^^^^OTP~BABC^Baba^Carolyn^M^^Dr^^^^^^^^^OTP~CABF^Cabael^Felian^^^Dr^^^^^^^^^OTP~DAGP^Dagg^Paul^^^Dr^^^^^^^^^OTP~EASW^East^William^E^^Dr^^^^^^^^^OTP~FAHM3^Fahey^Meriah^S^^Dr^^^^^^^^^OTP~GABA2^Gabriel^Alexandra^^^Dr^^^^^^^^^OTP~HAGC4^Hagen^Catherine^^^Dr^^^^^^^^^OTP~IBBG^Ibbotson^Geoff^^^Dr^^^^^^^^^OTP~JACA2^Jackson^Aaron^D^^Dr^^^^^^^^^OTP~KAHJ^Kahale^Justin^^^Dr^^^^^^^^^OTP~LABE^LaBossiere^Emil^J^^Dr^^^^^^^^^OTP~MABA^Mabie^Amy^^^Dr^^^^^^^^^OTP|
+]]></message>
+    <message format="HL7" msgId="LAB4367583.hl7" version="2.3"><![CDATA[MSH|^~\&|IHALAB^2.1|IHRIH|LAB||201408131347||ORU^R01|C3196782|D|2.3|
+PID|1|A00004151|KA0055488/13|9879643497|Labrihsot^Test^Mike Mike||19741226|M|||123 Iha St^^Kamloops^BC^V2C 2T1||250-123-4567|||||KA0055488/13|9879643497|
+PV1|1|O|KAMRIHLB||||LOLP^Loland^Peter^^^Dr||HAHM^Hahn^Meredith^Elizabeth^^|||||||||REF||SELF|||||||||||||||||||IHRIH||REG|||201208161041||||||||KINT5^Kinnee^Todd^^^|
+ORC|RE|PT100258602.0200|||CM|N|||201408131347|CUPM2^Cupello^Michael^^^||LOLP^Loland^Peter^^^Dr||
+OBR|1|PT1308:C00003R602.0200|PT1308:C00003R|602.0200^AST^00062727^1920-8^Aspartate Aminotransferase^pCLOCD|R||201408131342|||CUPM2||||201408131342||LOLP^Loland^Peter^^^Dr||00062727||||201408131342||LAB|F||^^^^^R|CUPM2^Cupello^Michael^^^~HAHM^Hahn^Meredith^Elizabeth^^~KINT5^Kinnee^Todd^^^~LOLP^Loland^Peter^^^Dr|
+OBX|1|ST|602.0200^AST^00062727^1920-8^Aspartate Aminotransferase^pCLOCD|1|ND|U/L|15-45|N||A~S|F|||201408131346|IHRIH^Royal Inland Hosp, Kamloops^L|
+NTE|1||Specimen was rejected due to specimen mislabeled.|
+NTE|2|
+NTE|3||Physician notified? Y (Y/N)|
+NTE|4|
+NTE|5||Patient recalled by Lab? N (Y/N)|
+NTE|6|
+ZDR||LOLP^Loland^Peter^^^Dr^^^^^^^^^ATP|HAHM^Hahn^Meredith^Elizabeth^^^^^^^^^^^OTP|KINT5^Kinnee^Todd^^^^^^^^^^^^FAP||CUPM2^Cupello^Michael^^^^^^^^^^^^PCP|
+]]></message>
+    <message format="HL7" msgId="LAB4367584.hl7" version="2.3"><![CDATA[MSH|^~\&|IHALAB^2.1|IHRIH|LAB||201408131510||ORU^R01|C3196890|D|2.3|
+PID|1|A00004151|KA0055488/13|9879643497|Labrihsot^Test^Mike Mike||19741226|M|||123 Iha St^^Kamloops^BC^V2C 2T1||250-123-4567|||||KA0055488/13|9879643497|
+PV1|1|O|KAMRIHLB||||LOLP^Loland^Peter^^^Dr||HAHM^Hahn^Meredith^Elizabeth^^|||||||||REF||SELF|||||||||||||||||||IHRIH||REG|||201208161041||||||||KINT5^Kinnee^Todd^^^|
+ORC|RE|PT100267601.0100|||CM|N|||201408131510|CUPM2^Cupello^Michael^^^||LOLP^Loland^Peter^^^Dr||
+OBR|1|PT1308:C00006R601.0100|PT1308:C00006R|601.0100^Sodium (Na)^00062736^2951-2^Sodium^pCLOCD|R||201408131508|||CUPM2||||201408131508||LOLP^Loland^Peter^^^Dr||00062736||||201408131508||LAB|F||^^^^^R|CUPM2^Cupello^Michael^^^~HAHM^Hahn^Meredith^Elizabeth^^~KINT5^Kinnee^Todd^^^~LOLP^Loland^Peter^^^Dr|
+OBX|1|ST|601.0100^Sodium (Na)^00062736^2951-2^Sodium^pCLOCD|1|ND|mmol/L|137-145|N||A~S|F|||201408131509|IHRIH^Royal Inland Hosp, Kamloops^L|
+NTE|1||Specimen was rejected due to specimen mislabeled.|
+NTE|2|
+NTE|3||Physician notified? N (Y/N)|
+NTE|4|
+NTE|5||Patient recalled by Lab? N (Y/N)|
+NTE|6|
+ZDR||LOLP^Loland^Peter^^^Dr^^^^^^^^^ATP|HAHM^Hahn^Meredith^Elizabeth^^^^^^^^^^^OTP|KINT5^Kinnee^Todd^^^^^^^^^^^^FAP||CUPM2^Cupello^Michael^^^^^^^^^^^^PCP|
+]]></message>
+    <message format="HL7" msgId="OE4367797.hl7" version="2.3"><![CDATA[MSH|^~\&|IHAOE^2.1|IHKBH|ITS||201408141338||ORU^R01|J3197222|D|2.3|||AL|NE|||||||||J3197222
+EVN|001|201408141336|
+PID|1|A0-B20121217113722750|KA00009360||PrimaryProvider^ED^7 Dawn - Rose||19761010|F|||4832 Sunny Place^^Kamloops^BC^V2B 6S2||250-834-8244|||||KA0055300/15|
+PV1|1|I|KAMRIH1S^RIH107^2|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC|||||||||||||||||||IHRIH||ADM|||201405210954|
+ORC||
+OBR|1||4712IHRIH|HIM.COK^Consultation Report^^11488-4^Consultation Note^pCLOCD|||201408141300|201408141335||||||||PLISIHAA^Plisihd^Aaron^^^Dr||||HIM.COK|CO|201408141338||OE|S|||PLISIHBR^Plisihc^Brent^^^Dr~PLISIHCU^Plisihl^Curt^^^Dr~KINT5^Kinnee^Todd^^^||||93190^Plisihd^Aaron^^^Dr^^PLISIHAA|||^McArthur^Heather^^^^^MCAH3|
+OBX|1|TX||| Interior Health   Kelowna General Hospital   Kelowna, BC / Ph: 250-862-4000  |
+OBX|2|TX|||  |
+OBX|3|TX|||Name: PrimaryProvider,ED 7 Dawn - Rose  |
+OBX|4|TX|||MRP: Kinnee,Todd        Age: 37    Type: ADM ACIN     Acct: KA0055300/15     |
+OBX|5|TX|||FamPhys:         DOB: 10/10/1976    Loc: KAMRIH1S     MedRec: KA00009360     |
+OBX|6|TX|||        Sex: F    ADM: 21/05/14     HC#:      |
+OBX|7|TX|||        Ph: 250-834-8244    DIS:           |
+OBX|8|TX|||  |
+OBX|9|TX|||  |
+OBX|10|TX|||  |
+OBX|11|TX||| Consultation Report  |
+OBX|12|TX||| Signed  |
+OBX|13|TX||| ___________________________________________________________________________________________________|
+OBX|14|TX|||  |
+OBX|15|TX|||  |
+OBX|16|TX|||Testing for Cindie R /hm  |
+OBX|17|TX|||  |
+OBX|18|TX|||Making an edit /hm  |
+OBX|19|TX|||  |
+OBX|20|TX|||  |
+OBX|21|TX|||Plisihd,Aaron  |
+OBX|22|TX|||  |
+OBX|23|TX|||Dictated by: Plisihd,Aaron         Dictated Date: 14/08/14 1300       |
+OBX|24|TX|||Transcribed by: MCAH3         Transcribed Date: 14/08/14 1335      |
+OBX|25|TX|||  |
+OBX|26|TX|||Copies: Plisihc,Brent; Plisihd,Aaron; Plisihl,Curt  |
+OBX|27|TX|||Report: 1408-0001        |
+OBX|28|TX|||  |
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP^|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~PLISIHAA^Plisihd^Aaron^^^Dr^^^^^^^^^ATP^|PLISIHBR^Plisihc^Brent^^^Dr^^^^^^^^^OTP^~PLISIHCU^Plisihl^Curt^^^Dr^^^^^^^^^OTP^|||KINT5^Kinnee^Todd^^^^^^^^^^^^PCP^|
+]]></message>
+    <message format="HL7" msgId="OE4367803.hl7" version="2.3"><![CDATA[MSH|^~\&|IHAOE^2.1|IHKBH|ITS||201408141509||ORU^R01|J3197267|D|2.3|||AL|NE|||||||||J3197267
+EVN|001|201408141407|
+PID|1|A0-B20121217113722750|KA00009360||PrimaryProvider^ED^7 Dawn - Rose||19761010|F|||4832 Sunny Place^^Kamloops^BC^V2B 6S2||250-834-8244|||||KA0055300/15|
+PV1|1|I|KAMRIH1S^RIH107^2|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC|||||||||||||||||||IHRIH||ADM|||201405210954|
+ORC||
+OBR|1||4713IHRIH|HIM.COK^Consultation Report^^11488-4^Consultation Note^pCLOCD|||201408141400|201408141406||||||||PLISIHDU^Plisiha^Dusty^^^Dr||||HIM.COK|CO|201408141508||OE|S|||KINT5^Kinnee^Todd^^^||||93171^Plisiha^Dusty^^^Dr^^PLISIHDU|||^McArthur^Heather^^^^^MCAH3|
+OBX|1|TX||| Interior Health   Kelowna General Hospital   Kelowna, BC / Ph: 250-862-4000  |
+OBX|2|TX|||  |
+OBX|3|TX|||Name: PrimaryProvider,ED 7 Dawn - Rose  |
+OBX|4|TX|||MRP: Kinnee,Todd        Age: 37    Type: ADM ACIN     Acct: KA0055300/15     |
+OBX|5|TX|||FamPhys:         DOB: 10/10/1976    Loc: KAMRIH1S     MedRec: KA00009360     |
+OBX|6|TX|||        Sex: F    ADM: 21/05/14     HC#:      |
+OBX|7|TX|||        Ph: 250-834-8244    DIS:           |
+OBX|8|TX|||  |
+OBX|9|TX|||  |
+OBX|10|TX|||  |
+OBX|11|TX||| Consultation Report  |
+OBX|12|TX||| Signed  |
+OBX|13|TX||| ___________________________________________________________________________________________________|
+OBX|14|TX|||  |
+OBX|15|TX|||  |
+OBX|16|TX|||Making an edit /hm  |
+OBX|17|TX|||  |
+OBX|18|TX|||Testing #2 /hm  |
+OBX|19|TX|||  |
+OBX|20|TX|||  |
+OBX|21|TX|||Plisiha,Dusty  |
+OBX|22|TX|||  |
+OBX|23|TX|||Dictated by: Plisiha,Dusty         Dictated Date: 14/08/14 1400       |
+OBX|24|TX|||Transcribed by: MCAH3         Transcribed Date: 14/08/14 1406      |
+OBX|25|TX|||  |
+OBX|26|TX|||Copies: Plisiha,Dusty  |
+OBX|27|TX|||Report: 1408-0002        |
+OBX|28|TX|||  |
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP^|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~PLISIHDU^Plisiha^Dusty^^^Dr^^^^^^^^^ATP^||||KINT5^Kinnee^Todd^^^^^^^^^^^^PCP^|
+]]></message>
+    <message format="HL7" msgId="OE4377598.hl7" version="2.3"><![CDATA[MSH|^~\&|IHAOE^2.1|IHABC|ITS||201408221114||ORU^R01|J3200635|D|2.3|||AL|NE|||||||||J3200635
+EVN|001|201408221111|
+PID|1|A0-B20120417133427536|KG00011356|9879682696|Regekhsot^Fabek||19560709|M|||Flick St^^Dawsons Landing^BC^V0N 1M0||250-456-9056|||||KG0051671/14|9879682696|
+PV1|1|I|KELKGHR4B^KGHRD4B^E|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC|||||||||||||||||||IHKGH||ADM|||201402140932|
+ORC|NW|CARD20140822-0002IHKGH||||||||IHSVC.ECG^IHSVC.ECG^ECG^^^||KINT5^Kinnee^Todd^^^|
+OBR|1|CARD20140822-0002IHKGH|4723IHKGH|CARD^ECG12^ECG 12^11524-6^EKG^pCLOCD||201408220848|201408221014|||||||||HOOR^Hooper^Richard^O^^Dr||AB00016902KGH||CARD|ECG|201408221111||OE|S||1^^^^^R||||Reason for Exam:|03376^Hooper^Richard^O^^Dr^^HOOR|||^IHSVC.ECG^ECG^^^^^IHSVC.ECG|
+OBX|1|TX||| Interior Health - Kelowna General Hospital Kelowna, BC / Ph: 250-862-4000  |
+OBX|2|TX|||Name: Regekhsot,Fabek  |
+OBX|3|TX|||MRP: Kinnee,Todd        Age: 58    Type: ADM ACIN     Acct: KG0051671/14     |
+OBX|4|TX|||FamPhys:         DOB: 09/07/1956    Loc: KELKGHR4B     MedRec: KG00011356     |
+OBX|5|TX|||        Sex: M    ADM: 14/02/14     HC#: 9879682696     |
+OBX|6|TX|||        Ph: 250-456-9056    DIS:      WCB#:     |
+OBX|7|TX|||                                                         |
+OBX|8|TX||| Electrocardiogram Report  |
+OBX|9|TX||| Signed  |
+OBX|10|TX||| ________________________________________________________________________________  |
+OBX|11|TX|||  |
+OBX|12|TX|||OrdPhys: Kinnee,Todd  |
+OBX|13|TX|||Exam Date: 22/08/14  |
+OBX|14|TX|||Accession Number: AB00016902KGH  |
+OBX|15|TX|||Exam(s): CARD / ECG 12  |
+OBX|16|TX|||  |
+OBX|17|TX|||  |
+OBX|18|TX|||  |
+OBX|19|TX|||ECG Severity: - DEFECTIVE ECG -  |
+OBX|20|TX|||   |
+OBX|21|TX||| ECG Impression:  |
+OBX|22|TX||| 12ML  |
+OBX|23|TX||| All 12 leads are missing  |
+OBX|24|TX|||   |
+OBX|25|TX||| HEART RATE: Invalid bpm  |
+OBX|26|TX||| P-R Interval:  ms  |
+OBX|27|TX||| QT Interval:  ms  |
+OBX|28|TX||| QTcB: 0 ms  |
+OBX|29|TX||| QTcF: 0 ms  |
+OBX|30|TX|||   |
+OBX|31|TX|||Confirmed by: Richard O Hooper MD,      Confirm Date: 22/08/14 1014  |
+OBX|32|TX|||Created by: IHSVC.ECG         Created Date: 22/08/14 1014  |
+OBX|33|TX|||  |
+OBX|34|TX|||"Produced by Intellispace technology".  |
+OBX|35|TX|||  |
+OBX|36|TX|||Copies: Kinnee,Todd  |
+OBX|37|TX|||Report: CARD2208-0002  |
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP^|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~HOOR^Hooper^Richard^O^^Dr^^^^^^^^^ATP^|
+]]></message>
+    <message format="HL7" msgId="LAB4377646.hl7" version="2.3"><![CDATA[MSH|^~\&|IHALAB^2.1|IHKGH|BBK||201408270800||ORU^R01|D3201564S1|D|2.3|||||||||||||D3201564
+PID|1|A00004182|KG00009268|9879643275|Regkghsot^Cherise||19850709|F|||1235 Oak St^^Kelowna^BC^V1W 5K5||250-763-4747||||BUD|KG0050631/15|9879643275|
+PV1|1|I|KELKGHR4B^KGHR4126^A|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC|||||||||||||||||||IHKGH||ADM|||201405221340|
+ORC|RE|PT101077100.0010|||CM|N|||201408270800|CUPM2^Cupello^Michael^^^||KINT5^Kinnee^Todd^^^||
+OBR|1|PT2508:T00001R100.0010|PT2508:T00001R|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|R|201408251046|201408251046|||CUPM2|||Testing confidential flag|201408251049|T|KINT5^Kinnee^Todd^^^||00063236|||IHKGH|201408251049||BBK|A|||KINT5^Kinnee^Todd^^^|
+OBX|1|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|2|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|3|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||SPEC #: PT2508:T00001R       COLL: 25/08/14-1046     STATUS: CM           REQ #: 00063236|
+OBX|4|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||RECD: 25/08/14-1049                             SUBM DR: Kinnee, Todd|
+OBX|5|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|6|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||ENTERED: 27/08/14-0800                         OTHER DR: Kinnee, Todd|
+OBX|7|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|8|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||ORD TESTS: Group \T\ Screen|
+OBX|9|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|10|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||COMMENTS/QUERIES:|
+OBX|11|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|| Date required: 20140825|
+OBX|12|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|| Any previous transfusions in the past 3 months? No|
+OBX|13|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|| Pregnant now or in the last 3 months? No|
+OBX|14|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|| Has consent for blood products been obtained? Yes|
+OBX|15|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|16|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|17|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||Test                            Result                Flag                  Reference|
+OBX|18|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|19|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||Patient Blood Group             OPOS O Rh Pos                                    |
+OBX|20|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||Ab Screen Gel                   NEGATIVE NEGATIVE                                    |
+OBX|21|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|22|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|23|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP|
+]]></message>
+    <message format="HL7" msgId="OE4377599.hl7" version="2.3"><![CDATA[MSH|^~\&|IHAOE^2.1|IHABC|ITS||201408221233||ORU^R01|J3200643|D|2.3|||AL|NE|||||||||J3200643
+EVN|001|201408221230|
+PID|1|A0-B20120417133427536|KG00011356|9879682696|Regekhsot^Fabek||19560709|M|||Flick St^^Dawsons Landing^BC^V0N 1M0||250-456-9056|||||KG0051671/14|9879682696|
+PV1|1|I|KELKGHR4B^KGHRD4B^E|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC|||||||||||||||||||IHKGH||ADM|||201402140932|
+ORC|NW|CARD20140822-0005IHKGH||||||||IHSVC.ECG^IHSVC.ECG^ECG^^^||KINT5^Kinnee^Todd^^^|
+OBR|1|CARD20140822-0005IHKGH|4725IHKGH|CARD^ECG12^ECG 12^11524-6^EKG^pCLOCD||201408221128|201407101413|||||||||HOOR^Hooper^Richard^O^^Dr||AB00016905KGH||CARD|ECG|201408221230||OE|S||1^^^^^R||||Reason for Exam:|03376^Hooper^Richard^O^^Dr^^HOOR|||^IHSVC.ECG^ECG^^^^^IHSVC.ECG|
+OBX|1|TX||| Interior Health - Kelowna General Hospital Kelowna, BC / Ph: 250-862-4000  |
+OBX|2|TX|||Name: Regekhsot,Fabek  |
+OBX|3|TX|||MRP: Kinnee,Todd        Age: 58    Type: ADM ACIN     Acct: KG0051671/14     |
+OBX|4|TX|||FamPhys:         DOB: 09/07/1956    Loc: KELKGHR4B     MedRec: KG00011356     |
+OBX|5|TX|||        Sex: M    ADM: 14/02/14     HC#: 9879682696     |
+OBX|6|TX|||        Ph: 250-456-9056    DIS:      WCB#:     |
+OBX|7|TX|||                                                         |
+OBX|8|TX||| Electrocardiogram Report  |
+OBX|9|TX||| Signed  |
+OBX|10|TX||| ________________________________________________________________________________  |
+OBX|11|TX|||  |
+OBX|12|TX|||OrdPhys: Kinnee,Todd  |
+OBX|13|TX|||Exam Date: 22/08/14  |
+OBX|14|TX|||Accession Number: AB00016905KGH  |
+OBX|15|TX|||Exam(s): CARD / ECG 12  |
+OBX|16|TX|||  |
+OBX|17|TX|||  |
+OBX|18|TX|||  |
+OBX|19|TX|||ECG Severity: - DEFECTIVE ECG -  |
+OBX|20|TX|||   |
+OBX|21|TX||| ECG Impression:  |
+OBX|22|TX||| 12ML  |
+OBX|23|TX||| All 12 leads are missing  |
+OBX|24|TX|||   |
+OBX|25|TX||| HEART RATE: Invalid bpm  |
+OBX|26|TX||| P-R Interval:  ms  |
+OBX|27|TX||| QT Interval:  ms  |
+OBX|28|TX||| QTcB: 0 ms  |
+OBX|29|TX||| QTcF: 0 ms  |
+OBX|30|TX|||   |
+OBX|31|TX|||Confirmed by: Richard O Hooper MD,      Confirm Date: 10/07/14 1413  |
+OBX|32|TX|||Created by: IHSVC.ECG         Created Date: 10/07/14 1413  |
+OBX|33|TX|||  |
+OBX|34|TX|||"Produced by Intellispace technology".  |
+OBX|35|TX|||  |
+OBX|36|TX|||Copies: Kinnee,Todd  |
+OBX|37|TX|||Report: CARD2208-0003  |
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP^|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~HOOR^Hooper^Richard^O^^Dr^^^^^^^^^ATP^|
+]]></message>
+    <message format="HL7" msgId="OE4377600.hl7" version="2.3"><![CDATA[MSH|^~\&|IHAOE^2.1|IHABC|ITS||201408221434||ORU^R01|J3200658|D|2.3|||AL|NE|||||||||J3200658
+EVN|001|201408221431|
+PID|1|A0-B20120417133427536|KG00011356|9879682696|Regekhsot^Fabek||19560709|M|||Flick St^^Dawsons Landing^BC^V0N 1M0||250-456-9056|||||KG0051671/14|9879682696|
+PV1|1|I|KELKGHR4B^KGHRD4B^E|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC|||||||||||||||||||IHKGH||ADM|||201402140932|
+ORC|NW|CARD20140822-0006IHKGH||||||||IHSVC.ECG^IHSVC.ECG^ECG^^^||KINT5^Kinnee^Todd^^^|
+OBR|1|CARD20140822-0006IHKGH|4727IHKGH|CARD^ECG12^ECG 12^11524-6^EKG^pCLOCD||201408221427|201406170902|||||||||HOOR^Hooper^Richard^O^^Dr||AB00016906KGH||CARD|ECG|201408221431||OE|S||1^^^^^R||||Reason for Exam:|03376^Hooper^Richard^O^^Dr^^HOOR|||^IHSVC.ECG^ECG^^^^^IHSVC.ECG|
+OBX|1|TX||| Interior Health - Kelowna General Hospital Kelowna, BC / Ph: 250-862-4000  |
+OBX|2|TX|||Name: Regekhsot,Fabek  |
+OBX|3|TX|||MRP: Kinnee,Todd        Age: 58    Type: ADM ACIN     Acct: KG0051671/14     |
+OBX|4|TX|||FamPhys:         DOB: 09/07/1956    Loc: KELKGHR4B     MedRec: KG00011356     |
+OBX|5|TX|||        Sex: M    ADM: 14/02/14     HC#: 9879682696     |
+OBX|6|TX|||        Ph: 250-456-9056    DIS:      WCB#:     |
+OBX|7|TX|||                                                         |
+OBX|8|TX||| Electrocardiogram Report  |
+OBX|9|TX||| Signed  |
+OBX|10|TX||| ________________________________________________________________________________  |
+OBX|11|TX|||  |
+OBX|12|TX|||OrdPhys: Kinnee,Todd  |
+OBX|13|TX|||Exam Date: 22/08/14  |
+OBX|14|TX|||Accession Number: AB00016906KGH  |
+OBX|15|TX|||Exam(s): CARD / ECG 12  |
+OBX|16|TX|||  |
+OBX|17|TX|||  |
+OBX|18|TX|||  |
+OBX|19|TX|||ECG Severity: - DEFECTIVE ECG -  |
+OBX|20|TX|||   |
+OBX|21|TX||| ECG Impression:  |
+OBX|22|TX||| PED  |
+OBX|23|TX||| -------------------- Pediatric ECG interpretation --------------------  |
+OBX|24|TX||| 12ML  |
+OBX|25|TX||| All 12 leads are missing  |
+OBX|26|TX|||   |
+OBX|27|TX||| HEART RATE: Invalid bpm  |
+OBX|28|TX||| P-R Interval:  ms  |
+OBX|29|TX||| QT Interval:  ms  |
+OBX|30|TX||| QTcB: 0 ms  |
+OBX|31|TX||| QTcF: 0 ms  |
+OBX|32|TX|||   |
+OBX|33|TX|||Confirmed by: Richard O Hooper MD,        |
+OBX|34|TX|||Created by: IHSVC.ECG         Created Date: 17/06/14 0902  |
+OBX|35|TX|||  |
+OBX|36|TX|||"Produced by Intellispace technology".  |
+OBX|37|TX|||  |
+OBX|38|TX|||Copies: Kinnee,Todd  |
+OBX|39|TX|||Report: CARD2208-0004  |
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP^|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~HOOR^Hooper^Richard^O^^Dr^^^^^^^^^ATP^|
+]]></message>
+    <message format="HL7" msgId="LAB4377647.hl7" version="2.3"><![CDATA[MSH|^~\&|IHALAB^2.1|IHKGH|BBK||201408270800||ORU^R01|D3201564S2|D|2.3|||||||||||||D3201564
+PID|1|A00004182|KG00009268|9879643275|Regkghsot^Cherise||19850709|F|||1235 Oak St^^Kelowna^BC^V1W 5K5||250-763-4747||||BUD|KG0050631/15|9879643275|
+PV1|1|I|KELKGHR4B^KGHR4126^A|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC|||||||||||||||||||IHKGH||ADM|||201405221340|
+ORC|RE|PT101077150.0200|||CM|N|||201408270800|CUPM2^Cupello^Michael^^^||KINT5^Kinnee^Todd^^^||
+OBR|2|PT2508:T00001R150.0200|PT2508:T00001R|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|R|201408251046|201408251046|||CUPM2|||Testing confidential flag|201408251049|T|KINT5^Kinnee^Todd^^^||00063236|||IHKGH|201408251049||BBK|A|||KINT5^Kinnee^Todd^^^|
+OBX|1|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|2|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|3|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||SPEC #: PT2508:T00001R       COLL: 25/08/14-1046     STATUS: CM           REQ #: 00063236|
+OBX|4|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||RECD: 25/08/14-1049                             SUBM DR: Kinnee, Todd|
+OBX|5|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|6|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||ENTERED: 27/08/14-0800                         OTHER DR: Kinnee, Todd|
+OBX|7|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|8|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||ORD TESTS: ABO Group \T\ Rh Type Confirm|
+OBX|9|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|10|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||COMMENTS/QUERIES:|
+OBX|11|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|12|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|13|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||Test                            Result                Flag                  Reference|
+OBX|14|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|15|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||Patient Blood Group Confirm     OPOS O Rh Pos                                    |
+OBX|16|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|17|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|18|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP|
+]]></message>
+    <message format="HL7" msgId="RAD4377652.hl7" version="2.3"><![CDATA[MSH|^~\&|IHARAD^2.1|IHKGH|ITS||201408281657||ORU^R01|J3202047S1|D|2.3|||AL|NE|
+PID|1|A2-B20140801085949600|KG0050935/15||Itskghsot^Rqis||19660606|M|||4321 That St^^KELOWNA^BC^V1V 3B4||555-555-5555|||||KG0050935/15|
+PV1|1|O|KELKGHRDI||||^Kinnee^Todd^^^^^KINT5|||||||||||REF||BC|||||||||||||||||||IHKGH||REG|||201408281606|
+ORC|NW|CT20140828-0001IHKGH||||||||^Hudson^Cathy^^^^^HUDC6||^Kinnee^Todd^^^^^KINT5|
+OBR|1|CT20140828-0001IHKGH|4738IHKGH|CT^HEA^HEAD/C-^18748-4^Diagnostic Imaging Study^pCLOCD||20140828|201408281655|201408281655||||||||^Kinnee^Todd^^^^^KINT5||AB00016910KGH|CT|DI|DI|201408281656||RAD|S||1^^^^^R||||Reason for Exam: RQIS testing|^Hudson^Cathy^^^^^HUDC6|||^Hudson^Cathy^^^^^HUDC6|
+OBX|1|TX|1:RPT^Radiology Report|| Interior Health - Kelowna General Hospital Kelowna, BC / Ph: 250-862-4000  |
+OBX|2|TX|1:RPT^Radiology Report||  |
+OBX|3|TX|1:RPT^Radiology Report||Name: Itskghsot,Rqis  |
+OBX|4|TX|1:RPT^Radiology Report||MRP: Kinnee,Todd        Age: 48    Type: REG REF     Acct: KG0050935/15     |
+OBX|5|TX|1:RPT^Radiology Report||FamPhys:         DOB: 06/06/1966    Loc: KELKGHRDI     MedRec:      |
+OBX|6|TX|1:RPT^Radiology Report||        Sex: M    ADM: 28/08/14     HC#:      |
+OBX|7|TX|1:RPT^Radiology Report||        Ph: 555-555-5555    DIS:      WCB#:     |
+OBX|8|TX|1:RPT^Radiology Report||                                                |
+OBX|9|TX|1:RPT^Radiology Report||  |
+OBX|10|TX|1:RPT^Radiology Report|| Diagnostic Imaging Report  |
+OBX|11|TX|1:RPT^Radiology Report|| Signed  |
+OBX|12|TX|1:RPT^Radiology Report||________________________________________________________________________________  |
+OBX|13|TX|1:RPT^Radiology Report||OrdPhys: Kinnee,Todd  |
+OBX|14|TX|1:RPT^Radiology Report||Exam Date: 28/08/14  |
+OBX|15|TX|1:RPT^Radiology Report||Accession Number: AB00016910KGH  |
+OBX|16|TX|1:RPT^Radiology Report||Exam(s): CT / HEAD/C-  |
+OBX|17|TX|1:RPT^Radiology Report||Reason for Exam: RQIS testing  |
+OBX|18|TX|1:RPT^Radiology Report||  |
+OBX|19|TX|1:RPT^Radiology Report||  |
+OBX|20|TX|1:RPT^Radiology Report||  |
+OBX|21|TX|1:RPT^Radiology Report||  |
+OBX|22|TX|1:RPT^Radiology Report||RQIS TESTING  |
+OBX|23|TX|1:RPT^Radiology Report||CH  |
+OBX|24|TX|1:RPT^Radiology Report||  |
+OBX|25|TX|1:RPT^Radiology Report||Reported by: Cathy Hudson ,  |
+OBX|26|TX|1:RPT^Radiology Report||  |
+OBX|27|TX|1:RPT^Radiology Report||   |
+OBX|28|TX|1:RPT^Radiology Report||Dictated by: Hudson,Cathy         Dictated Date: 28/08/14 1655      |
+OBX|29|TX|1:RPT^Radiology Report||Transcribed by: HUDC6         Transcribed Date: 28/08/14 1655      |
+OBX|30|TX|1:RPT^Radiology Report||Technologist: HUDC6  |
+OBX|31|TX|1:RPT^Radiology Report||  |
+OBX|32|TX|1:RPT^Radiology Report||"Produced by Speech Recognition technology and may not have been edited by Transcription Services".  |
+OBX|33|TX|1:RPT^Radiology Report||  |
+OBX|34|TX|1:RPT^Radiology Report||Copies: Kinnee,Todd  |
+OBX|35|TX|1:RPT^Radiology Report||Report: DI2808-0001  |
+ZDR||KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~HUDC6^Hudson^Cathy^^^^^^^^^^^^ATP^|
+]]></message>
+    <message format="HL7" msgId="RAD4377653.hl7" version="2.3"><![CDATA[MSH|^~\&|IHARAD^2.1|IHKGH|ITS||201408281657||ORU^R01|J3202048S1|D|2.3|||AL|NE|
+PID|1|A2-B20140801085949600|KG0050935/15||Itskghsot^Rqis||19660606|M|||4321 That St^^KELOWNA^BC^V1V 3B4||555-555-5555|||||KG0050935/15|
+PV1|1|O|KELKGHRDI||||^Kinnee^Todd^^^^^KINT5|||||||||||REF||BC|||||||||||||||||||IHKGH||REG|||201408281606|
+ORC|NW|CT20140828-0002IHKGH||||||||^Hudson^Cathy^^^^^HUDC6||^Kinnee^Todd^^^^^KINT5|
+OBR|1|CT20140828-0002IHKGH|4739IHKGH|CT^PEL^PELVIS/C-^18748-4^Diagnostic Imaging Study^pCLOCD||20140828|201408281656|201408281656||||||||^Kinnee^Todd^^^^^KINT5||AB00016911KGH|CT|DI|DI|201408281656||RAD|S||1^^^^^R||||Reason for Exam: RQIS testing|^Hudson^Cathy^^^^^HUDC6|||^Hudson^Cathy^^^^^HUDC6|
+OBX|1|TX|1:RPT^Radiology Report|| Interior Health - Kelowna General Hospital Kelowna, BC / Ph: 250-862-4000  |
+OBX|2|TX|1:RPT^Radiology Report||  |
+OBX|3|TX|1:RPT^Radiology Report||Name: Itskghsot,Rqis  |
+OBX|4|TX|1:RPT^Radiology Report||MRP: Kinnee,Todd        Age: 48    Type: REG REF     Acct: KG0050935/15     |
+OBX|5|TX|1:RPT^Radiology Report||FamPhys:         DOB: 06/06/1966    Loc: KELKGHRDI     MedRec:      |
+OBX|6|TX|1:RPT^Radiology Report||        Sex: M    ADM: 28/08/14     HC#:      |
+OBX|7|TX|1:RPT^Radiology Report||        Ph: 555-555-5555    DIS:      WCB#:     |
+OBX|8|TX|1:RPT^Radiology Report||                                                |
+OBX|9|TX|1:RPT^Radiology Report||  |
+OBX|10|TX|1:RPT^Radiology Report|| Diagnostic Imaging Report  |
+OBX|11|TX|1:RPT^Radiology Report|| Signed  |
+OBX|12|TX|1:RPT^Radiology Report||________________________________________________________________________________  |
+OBX|13|TX|1:RPT^Radiology Report||OrdPhys: Kinnee,Todd  |
+OBX|14|TX|1:RPT^Radiology Report||Exam Date: 28/08/14  |
+OBX|15|TX|1:RPT^Radiology Report||Accession Number: AB00016911KGH  |
+OBX|16|TX|1:RPT^Radiology Report||Exam(s): CT / PELVIS/C-  |
+OBX|17|TX|1:RPT^Radiology Report||Reason for Exam: RQIS testing  |
+OBX|18|TX|1:RPT^Radiology Report||  |
+OBX|19|TX|1:RPT^Radiology Report||  |
+OBX|20|TX|1:RPT^Radiology Report||  |
+OBX|21|TX|1:RPT^Radiology Report||  |
+OBX|22|TX|1:RPT^Radiology Report||Testing for RQIS  |
+OBX|23|TX|1:RPT^Radiology Report||CH  |
+OBX|24|TX|1:RPT^Radiology Report||  |
+OBX|25|TX|1:RPT^Radiology Report||Reported by: Cathy Hudson ,  |
+OBX|26|TX|1:RPT^Radiology Report||  |
+OBX|27|TX|1:RPT^Radiology Report||   |
+OBX|28|TX|1:RPT^Radiology Report||Dictated by: Hudson,Cathy         Dictated Date: 28/08/14 1656      |
+OBX|29|TX|1:RPT^Radiology Report||Transcribed by: HUDC6         Transcribed Date: 28/08/14 1656      |
+OBX|30|TX|1:RPT^Radiology Report||Technologist: HUDC6  |
+OBX|31|TX|1:RPT^Radiology Report||  |
+OBX|32|TX|1:RPT^Radiology Report||"Produced by Speech Recognition technology and may not have been edited by Transcription Services".  |
+OBX|33|TX|1:RPT^Radiology Report||  |
+OBX|34|TX|1:RPT^Radiology Report||Copies: Kinnee,Todd  |
+OBX|35|TX|1:RPT^Radiology Report||Report: DI2808-0002  |
+ZDR||KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~HUDC6^Hudson^Cathy^^^^^^^^^^^^ATP^|
+]]></message>
+    <message format="HL7" msgId="LAB4377648.hl7" version="2.3"><![CDATA[MSH|^~\&|IHALAB^2.1|IHKGH|BBK||201408270800||ORU^R01|D3201565S1|D|2.3|||||||||||||D3201565
+PID|1|A00004182|KG00009268|9879643275|Regkghsot^Cherise||19850709|F|||1235 Oak St^^Kelowna^BC^V1W 5K5||250-763-4747||||BUD|KG0050631/15|9879643275|
+PV1|1|I|KELKGHR4B^KGHR4126^A|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC|||||||||||||||||||IHKGH||ADM|||201405221340|
+ORC|RE|PT101077100.0010|||CM|N|||201408270800|CUPM2^Cupello^Michael^^^||KINT5^Kinnee^Todd^^^||
+OBR|1|PT2508:T00001R100.0010|PT2508:T00001R|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|R|201408251046|201408251046|||CUPM2|||Testing confidential flag|201408251049|T|KINT5^Kinnee^Todd^^^||00063236|||IHKGH|201408251049||BBK|F|||KINT5^Kinnee^Todd^^^|
+OBX|1|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|2|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|3|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||SPEC #: PT2508:T00001R       COLL: 25/08/14-1046     STATUS: CM           REQ #: 00063236|
+OBX|4|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||RECD: 25/08/14-1049                             SUBM DR: Kinnee, Todd|
+OBX|5|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|6|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||ENTERED: 27/08/14-0800                         OTHER DR: Kinnee, Todd|
+OBX|7|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|8|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||ORD TESTS: Group \T\ Screen|
+OBX|9|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|10|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||COMMENTS/QUERIES:|
+OBX|11|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|| Date required: 20140825|
+OBX|12|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|| Any previous transfusions in the past 3 months? No|
+OBX|13|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|| Pregnant now or in the last 3 months? No|
+OBX|14|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|| Has consent for blood products been obtained? Yes|
+OBX|15|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|16|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|17|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||Test                            Result                Flag                  Reference|
+OBX|18|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|19|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||Patient Blood Group             OPOS O Rh Pos                                    |
+OBX|20|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||Ab Screen Gel                   NEGATIVE NEGATIVE                                    |
+OBX|21|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|22|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+OBX|23|TX|100.0010^Group \T\ Screen^00063236^34532-2^Blood Type \T\ Indirect Antibody Screen^pCLOCD|||
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP|
+]]></message>
+    <message format="HL7" msgId="LAB4377649.hl7" version="2.3"><![CDATA[MSH|^~\&|IHALAB^2.1|IHKGH|BBK||201408270800||ORU^R01|D3201565S2|D|2.3|||||||||||||D3201565
+PID|1|A00004182|KG00009268|9879643275|Regkghsot^Cherise||19850709|F|||1235 Oak St^^Kelowna^BC^V1W 5K5||250-763-4747||||BUD|KG0050631/15|9879643275|
+PV1|1|I|KELKGHR4B^KGHR4126^A|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC|||||||||||||||||||IHKGH||ADM|||201405221340|
+ORC|RE|PT101077150.0200|||CM|N|||201408270800|CUPM2^Cupello^Michael^^^||KINT5^Kinnee^Todd^^^||
+OBR|2|PT2508:T00001R150.0200|PT2508:T00001R|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|R|201408251046|201408251046|||CUPM2|||Testing confidential flag|201408251049|T|KINT5^Kinnee^Todd^^^||00063236|||IHKGH|201408251049||BBK|F|||KINT5^Kinnee^Todd^^^|
+OBX|1|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|2|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|3|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||SPEC #: PT2508:T00001R       COLL: 25/08/14-1046     STATUS: CM           REQ #: 00063236|
+OBX|4|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||RECD: 25/08/14-1049                             SUBM DR: Kinnee, Todd|
+OBX|5|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|6|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||ENTERED: 27/08/14-0800                         OTHER DR: Kinnee, Todd|
+OBX|7|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|8|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||ORD TESTS: ABO Group \T\ Rh Type Confirm|
+OBX|9|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|10|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||COMMENTS/QUERIES:|
+OBX|11|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|12|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|13|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||Test                            Result                Flag                  Reference|
+OBX|14|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|15|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||Patient Blood Group Confirm     OPOS O Rh Pos                                    |
+OBX|16|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD||--------------------------------------------------------------------------------------------|
+OBX|17|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+OBX|18|TX|150.0200^ABO Group \T\ Rh Type Confirm^00063236^XBC2561-8^ABO \T\ Rh Group; Confirmation^pCLOCD|||
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP|
+]]></message>
+    <message format="HL7" msgId="OE4377651.hl7" version="2.3"><![CDATA[MSH|^~\&|IHAOE^2.1|IHKBH|ITS||201408270944||ORU^R01|J3201569|D|2.3|||AL|NE|
+EVN|001|201408270940|
+PID|1|A0-B20120404143834427|KG00011301|9879684636|Sogbmvsot^Test^Only A||19650505|F|||1234 Scanner Road^^Oliver^BC^V0H 1T0||250-555-1234|||||KG0051588/14|9879684636|
+PV1|1|I|KELKGHCEOF^KGHCEDOF^25|EL|||KINT5^Kinnee^Todd^^^|||MED||||ER|||KINT5^Kinnee^Todd^^^|INO||BC|||||||||||||||||||IHKGH||ADM|||201402071454|
+ORC||
+OBR|1||4737IHKGH|HIM.COK^Consultation Report^^11488-4^Consultation Note^pCLOCD|||201408270900|201408270937||||||||SCON^Scotland^Newborne^Len^^Dr||||HIM.COK|CO|201408270940||OE|S|||BENM4^Benes^Marta^^^~BENM4^Benes^Marta^^^||||07781^Scotland^Newborne^Len^^Dr^^SCON|||^McArthur^Heather^^^^^MCAH3|
+OBX|1|TX||| Interior Health   Kelowna General Hospital   Kelowna, BC / Ph: 250-862-4000  |
+OBX|2|TX|||  |
+OBX|3|TX|||Name: Sogbmvsot,Test Only A  |
+OBX|4|TX|||MRP: Kinnee,Todd     Age: 49    Type: ADM INO     Acct: KG0051588/14     |
+OBX|5|TX|||FamPhys:      DOB: 05/05/1965    Loc: KELKGHCEOF     MedRec: KG00011301     |
+OBX|6|TX|||     Sex: F    ADM: 07/02/14     HC#: 9879684636     |
+OBX|7|TX|||     Ph: 250-555-1234    DIS:           |
+OBX|8|TX|||  |
+OBX|9|TX||| Consultation Report  |
+OBX|10|TX||| Signed  |
+OBX|11|TX||| ___________________________________________________________________________________________________|
+OBX|12|TX|||_____  |
+OBX|13|TX|||  |
+OBX|14|TX|||  |
+OBX|15|TX|||TESTING HEADER/FOOTER multipages  |
+OBX|16|TX|||Patient Header  |
+OBX|17|TX||| Centered Text:   |
+OBX|18|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|19|TX|||·   Locate the Toolbar and click on the “Visible” button once. This will make all format controls |
+OBX|20|TX|||such as spacing, indentations, columns, and line breaks visible.   |
+OBX|21|TX|||·   Locate the Toolbar and click on the “Align” button once.   |
+OBX|22|TX|||·   Enter text between the two carrots positioned on the center of the page. When finished, make |
+OBX|23|TX|||sure the cursor is positioned before the right carrot and press “enter” to move to the next line; |
+OBX|24|TX|||this will create a carrot in a downward position marking the line break. A new carrot and cursor |
+OBX|25|TX|||will appear at the starting position found on the left hand side of the page.   |
+OBX|26|TX|||·   Repeat instructions to continue to center text on the next line.  |
+OBX|27|TX||| Right-Justified Text:   |
+OBX|28|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|29|TX|||·   Locate the Toolbar and click on the “Visible” button once. (If this has not yet been done while |
+OBX|30|TX|||in the patient header.) This will make all format controls such as spacing, indentations, columns, |
+OBX|31|TX|||and line breaks visible.   |
+OBX|32|TX|||·   Locate the Toolbar and click on the “Align” button twice.   |
+OBX|33|TX|||·   Enter text between the two carrots positioned on the right hand side of the page.   |
+OBX|34|TX|||·   When finished entering text, or the carrot is located at the last visible position on the line, |
+OBX|35|TX|||press “enter” to move to the next line to continue typing; there is no word-wrap functionality when |
+OBX|36|TX|||building a header in the Meditor.   |
+OBX|37|TX|||·   Repeat instructions to continue to right justify text on the next line.  |
+OBX|38|TX|||    |
+OBX|39|TX|||Horizontal Line:  |
+OBX|40|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|41|TX|||·   Locate the Toolbar and click on the “Visible” button once. (If this has not yet been done while |
+OBX|42|TX|||in the patient header.) This will make all format controls such as spacing, indentations, columns, |
+OBX|43|TX|||and line breaks visible.   |
+OBX|44|TX|||·   Locate the Toolbar and click on the “Align” button twice.   |
+OBX|45|TX|||·   Hold the shift and hyphen key to move the left carrot across the page until the desired length |
+OBX|46|TX|||of line is achieved. (To create a line to span from the left to right hand side of the page, |
+OBX|47|TX|||continue to hold the shift and hyphen key until the position before the right carrot moves.) When |
+OBX|48|TX|||finished, make sure the cursor is positioned before the right carrot and press “enter” to move to |
+OBX|49|TX|||the next line.  |
+OBX|50|TX||| Columns·        The cursor and carrot should be positioned on the left hand side of the page.|
+OBX|51|TX|||Patient Header  |
+OBX|52|TX||| Centered Text:   |
+OBX|53|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|54|TX|||·   Locate the Toolbar and click on the “Visible” button once. This will make all format controls |
+OBX|55|TX|||such as spacing, indentations, columns, and line breaks visible.   |
+OBX|56|TX|||·   Locate the Toolbar and click on the “Align” button once.   |
+OBX|57|TX|||·   Enter text between the two carrots positioned on the center of the page. When finished, make |
+OBX|58|TX|||sure the cursor is positioned before the right carrot and press “enter” to move to the next line; |
+OBX|59|TX|||this will create a carrot in a downward position marking the line break. A new carrot and cursor |
+OBX|60|TX|||will appear at the starting position found on the left hand side of the page.   |
+OBX|61|TX|||·   Repeat instructions to continue to center text on the next line.  |
+OBX|62|TX||| Right-Justified Text:   |
+OBX|63|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|64|TX|||·   Locate the Toolbar and click on the “Visible” button once. (If this has not yet been done while |
+OBX|65|TX|||in the patient header.) This will make all format controls such as spacing, indentations, columns, |
+OBX|66|TX|||and line breaks visible.   |
+OBX|67|TX|||·   Locate the Toolbar and click on the “Align” button twice.   |
+OBX|68|TX|||·   Enter text between the two carrots positioned on the right hand side of the page.   |
+OBX|69|TX|||·   When finished entering text, or the carrot is located at the last visible position on the line, |
+OBX|70|TX|||press “enter” to move to the next line to continue typing; there is no word-wrap functionality when |
+OBX|71|TX|||building a header in the Meditor.   |
+OBX|72|TX|||·   Repeat instructions to continue to right justify text on the next line.  |
+OBX|73|TX|||    |
+OBX|74|TX|||Horizontal Line:  |
+OBX|75|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|76|TX|||·   Locate the Toolbar and click on the “Visible” button once. (If this has not yet been done while |
+OBX|77|TX|||in the patient header.) This will make all format controls such as spacing, indentations, columns, |
+OBX|78|TX|||and line breaks visible.   |
+OBX|79|TX|||·   Locate the Toolbar and click on the “Align” button twice.   |
+OBX|80|TX|||·   Hold the shift and hyphen key to move the left carrot across the page until the desired length |
+OBX|81|TX|||of line is achieved. (To create a line to span from the left to right hand side of the page, |
+OBX|82|TX|||continue to hold the shift and hyphen key until the position before the right carrot moves.) When |
+OBX|83|TX|||finished, make sure the cursor is positioned before the right carrot and press “enter” to move to |
+OBX|84|TX|||the next line.  |
+OBX|85|TX||| Columns·        The cursor and carrot should be positioned on the left hand side of the page.|
+OBX|86|TX|||Patient Header  |
+OBX|87|TX||| Centered Text:   |
+OBX|88|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|89|TX|||·   Locate the Toolbar and click on the “Visible” button once. This will make all format controls |
+OBX|90|TX|||such as spacing, indentations, columns, and line breaks visible.   |
+OBX|91|TX|||·   Locate the Toolbar and click on the “Align” button once.   |
+OBX|92|TX|||·   Enter text between the two carrots positioned on the center of the page. When finished, make |
+OBX|93|TX|||sure the cursor is positioned before the right carrot and press “enter” to move to the next line; |
+OBX|94|TX|||this will create a carrot in a downward position marking the line break. A new carrot and cursor |
+OBX|95|TX|||will appear at the starting position found on the left hand side of the page.   |
+OBX|96|TX|||·   Repeat instructions to continue to center text on the next line.  |
+OBX|97|TX||| Right-Justified Text:   |
+OBX|98|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|99|TX|||·   Locate the Toolbar and click on the “Visible” button once. (If this has not yet been done while |
+OBX|100|TX|||in the patient header.) This will make all format controls such as spacing, indentations, columns, |
+OBX|101|TX|||and line breaks visible.   |
+OBX|102|TX|||·   Locate the Toolbar and click on the “Align” button twice.   |
+OBX|103|TX|||·   Enter text between the two carrots positioned on the right hand side of the page.   |
+OBX|104|TX|||·   When finished entering text, or the carrot is located at the last visible position on the line, |
+OBX|105|TX|||press “enter” to move to the next line to continue typing; there is no word-wrap functionality when |
+OBX|106|TX|||building a header in the Meditor.   |
+OBX|107|TX|||·   Repeat instructions to continue to right justify text on the next line.  |
+OBX|108|TX|||    |
+OBX|109|TX|||Horizontal Line:  |
+OBX|110|TX|||·   The cursor and carrot should be positioned on the left hand side of the page.   |
+OBX|111|TX|||·   Locate the Toolbar and click on the “Visible” button once. (If this has not yet been done while |
+OBX|112|TX|||in the patient header.) This will make all format controls such as spacing, indentations, columns, |
+OBX|113|TX|||and line breaks visible.   |
+OBX|114|TX|||·   Locate the Toolbar and click on the “Align” button twice.   |
+OBX|115|TX|||·   Hold the shift and hyphen key to move the left carrot across the page until the desired length |
+OBX|116|TX|||of line is achieved. (To create a line to span from the left to right hand side of the page, |
+OBX|117|TX|||continue to hold the shift and hyphen key until the position before the right carrot moves.) When |
+OBX|118|TX|||finished, make sure the cursor is positioned before the right carrot and press “enter” to move to |
+OBX|119|TX|||the next line.  |
+OBX|120|TX||| Columns·        The cursor and carrot should be positioned on the left hand side of the page.  |
+OBX|121|TX|||  |
+OBX|122|TX|||Created by: Newborne Scotland MD, FRCPC   |
+OBX|123|TX|||  |
+OBX|124|TX|||Copies: Scotland,Newborne Len  |
+OBX|125|TX|||Report: 2708-0001        |
+OBX|126|TX|||  |
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP^|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~SCON^Scotland^Newborne^Len^^Dr^^^^^^^^^ATP^|||BENM4^Benes^Marta^^^^^^^^^^^^ERP^|
+]]></message>
+    <message format="HL7" msgId="LAB4377659.hl7" version="2.3"><![CDATA[MSH|^~\&|IHALAB^2.1|IHEKH|LAB||201408310958||ORU^R01|A3202174|D|2.3|
+PID|1|A00001410|EK00008095||Omekhsot^Train03^OM Only||19490403|M|||2940 Bolston Road^^CRANBROOK^BC^V1C 0C6||250-690-4920|||||EK0055099/15|
+PV1|1|I|CRAEKH2^EKHTEST^03|UR|||KINT5^Kinnee^Todd^^^||ACKC^Ackermann^Carel^W^^Dr|MED||||ER|||KINT5^Kinnee^Todd^^^|IN||BC|||||||||||||||||||IHEKH||ADM|||201407141627|
+ORC|RE|MT4858859.2810|||CM|N|||201408310858|PREJ7^Prevost^Jocelyn^^^||KINT5^Kinnee^Todd^^^||
+OBR|1|MT2108:S00001T859.2810|MT2108:S00001T|859.2810^Von Will Ag Post DDAVP^00003648^^^pCLOCD|R||201408210958|||HOFW||||201408210958||KINT5^Kinnee^Todd^^^||00003648||||201408210957||LAB|F||^^^^^R|ACKC^Ackermann^Carel^W^^Dr~KINT5^Kinnee^Todd^^^|
+OBX|1|ST|859.2810^Von Will Ag Post DDAVP^00003648^^^pCLOCD|1||||||A~S|F|||201408310958|XSP^St.Paul's Hospital, Vancouver^L|
+NTE|1||Specimen sent to referral lab. When the performing lab|
+NTE|2||completes testing, the results will be available in PLIS|
+NTE|3||through the provincial eHealth Viewer system.  A link to|
+NTE|4||eHealth Viewer is available from the Meditech EMR, Select|
+NTE|5||Visits screen.|
+ORC|RE|MT4858859.2830|||CM|N|||201408310858|PREJ7^Prevost^Jocelyn^^^||KINT5^Kinnee^Todd^^^||
+OBR|2|MT2108:S00001T859.2830|MT2108:S00001T|859.2830^Von Will Act Post DDAVP^00003648^^^pCLOCD|R||201408210958|||HOFW||||201408210958||KINT5^Kinnee^Todd^^^||00003648||||201408210957||LAB|F||^^^^^R|ACKC^Ackermann^Carel^W^^Dr~KINT5^Kinnee^Todd^^^|
+OBX|1|ST|859.2830^Von Will Act Post DDAVP^00003648^^^pCLOCD|1||||||A~S|F|||201408310958|XSP^St.Paul's Hospital, Vancouver^L|
+NTE|6||Specimen sent to referral lab. When the performing lab|
+NTE|7||completes testing, the results will be available in PLIS|
+NTE|8||through the provincial eHealth Viewer system.  A link to|
+NTE|9||eHealth Viewer is available from the Meditech EMR, Select|
+NTE|10||Visits screen.|
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP|ACKC^Ackermann^Carel^W^^Dr^^^^^^^^^OTP|
+]]></message>
+    <message format="HL7" msgId="OE4377660.hl7" version="2.3"><![CDATA[MSH|^~\&|IHAOE^2.1|IHABC|ITS||201409020838||ORU^R01|J3202186|D|2.3|||AL|NE|
+EVN|001|201408221111|
+PID|1|A0-B20120417133427536|KG00011356|9879682696|Regekhsot^Fabek||19560709|M|||Flick St^^Dawsons Landing^BC^V0N 1M0||250-456-9056|||||KG0051671/14|9879682696|
+PV1|1|I|KELKGHR4B^KGHRD4B^E|EL|||KINT5^Kinnee^Todd^^^|||MED||||HO|||KINT5^Kinnee^Todd^^^|IN||BC|||||||||||||||||||IHKGH||ADM|||201402140932|
+ORC|NW|CARD20140822-0002IHKGH||||||||IHSVC.ECG^IHSVC.ECG^ECG^^^||KINT5^Kinnee^Todd^^^|
+OBR|1|CARD20140822-0002IHKGH|4723IHKGH|CARD^ECG12^ECG 12^11524-6^EKG^pCLOCD||201408220848|201408221014|||||||||HOOR^Hooper^Richard^O^^Dr||AB00016902KGH||CARD|ECG|201408221111||OE|S||1^^^^^R||||Reason for Exam:|03376^Hooper^Richard^O^^Dr^^HOOR|||^IHSVC.ECG^ECG^^^^^IHSVC.ECG|
+OBX|1|TX||| Interior Health - Kelowna General Hospital Kelowna, BC / Ph: 250-862-4000  |
+OBX|2|TX|||Name: Regekhsot,Fabek  |
+OBX|3|TX|||MRP: Kinnee,Todd        Age: 58    Type: ADM ACIN     Acct: KG0051671/14     |
+OBX|4|TX|||FamPhys:         DOB: 09/07/1956    Loc: KELKGHR4B     MedRec: KG00011356     |
+OBX|5|TX|||        Sex: M    ADM: 14/02/14     HC#: 9879682696     |
+OBX|6|TX|||        Ph: 250-456-9056    DIS:      WCB#:     |
+OBX|7|TX|||                                                         |
+OBX|8|TX||| Electrocardiogram Report  |
+OBX|9|TX||| Signed with Addenda  |
+OBX|10|TX||| ________________________________________________________________________________  |
+OBX|11|TX|||  |
+OBX|12|TX|||OrdPhys: Kinnee,Todd  |
+OBX|13|TX|||Exam Date: 22/08/14  |
+OBX|14|TX|||Accession Number: AB00016902KGH  |
+OBX|15|TX|||Exam(s): CARD / ECG 12  |
+OBX|16|TX|||  |
+OBX|17|TX|||  |
+OBX|18|TX|||  |
+OBX|19|TX|||ECG Severity: - DEFECTIVE ECG -  |
+OBX|20|TX|||   |
+OBX|21|TX||| ECG Impression:  |
+OBX|22|TX||| 12ML  |
+OBX|23|TX||| All 12 leads are missing  |
+OBX|24|TX|||   |
+OBX|25|TX||| HEART RATE: Invalid bpm  |
+OBX|26|TX||| P-R Interval:  ms  |
+OBX|27|TX||| QT Interval:  ms  |
+OBX|28|TX||| QTcB: 0 ms  |
+OBX|29|TX||| QTcF: 0 ms  |
+OBX|30|TX|||   |
+OBX|31|TX|||  |
+OBX|32|TX|||  |
+OBX|33|TX|||  |
+OBX|34|TX|||  |
+OBX|35|TX|||ECG Severity: - DEFECTIVE ECG -  |
+OBX|36|TX|||   |
+OBX|37|TX||| ECG Impression:  |
+OBX|38|TX||| 12ML  |
+OBX|39|TX||| All 12 leads are missing  |
+OBX|40|TX|||   |
+OBX|41|TX||| HEART RATE: Invalid bpm  |
+OBX|42|TX||| P-R Interval:  ms  |
+OBX|43|TX||| QT Interval:  ms  |
+OBX|44|TX||| QTcB: 0 ms  |
+OBX|45|TX||| QTcF: 0 ms  |
+OBX|46|TX|||   |
+OBX|47|TX|||  |
+OBX|48|TX|||  |
+OBX|49|TX|||  |
+OBX|50|TX|||  |
+OBX|51|TX|||ECG Severity: - DEFECTIVE ECG -  |
+OBX|52|TX|||   |
+OBX|53|TX||| ECG Impression:  |
+OBX|54|TX||| 12ML  |
+OBX|55|TX||| All 12 leads are missing  |
+OBX|56|TX|||   |
+OBX|57|TX||| HEART RATE: Invalid bpm  |
+OBX|58|TX||| P-R Interval:  ms  |
+OBX|59|TX||| QT Interval:  ms  |
+OBX|60|TX||| QTcB: 0 ms  |
+OBX|61|TX||| QTcF: 0 ms  |
+OBX|62|TX|||   |
+OBX|63|TX|||Confirmed by: Richard O Hooper MD,        |
+OBX|64|TX|||Created by: IHSVC.ECG         Created Date: 22/08/14 1014  |
+OBX|65|TX|||  |
+OBX|66|TX|||"Produced by Intellispace technology".  |
+OBX|67|TX|||  |
+OBX|68|TX|||Copies: Kinnee,Todd  |
+OBX|69|TX|||Report: CARD2208-0002  |
+ZDR|KINT5^Kinnee^Todd^^^^^^^^^^^^ADP^|KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~HOOR^Hooper^Richard^O^^Dr^^^^^^^^^ATP^|
+]]></message>
+    <message format="HL7" msgId="RAD4377661.hl7" version="2.3"><![CDATA[MSH|^~\&|IHARAD^2.1|IHPRH|ITS||201409021516||ORU^R01|J3202302S1|D|2.3|||AL|NE|
+PID|1|A5-B20140902123739292|PR0050428/15||Itsprhsot^Pdiv^Cathy||19660606|F|||696 End St^^Kelowna^BC^V1X 1A1||555-555-5555|||||PR0050428/15|
+PV1|1|O|PENPRHDI||||^Kinnee^Todd^^^^^KINT5|||||||||||REF||BC|||||||||||||||||||IHPRH||REG|||201409021237|
+ORC|NW|CT20140902-0001IHPRH||||||||^Hudson^Cathy^^^^^HUDC6||^Kinnee^Todd^^^^^KINT5|
+OBR|1|CT20140902-0001IHPRH|4743IHPRH|CT^HEA^HEAD/C-^18748-4^Diagnostic Imaging Study^pCLOCD||201409022100|201409021514|201409021514||||||||^Kinnee^Todd^^^^^KINT5||AB00016915PRH|CT~RAD|DI|DI|201409021515||RAD|S||1^^^^^S||||Reason for Exam: PDIV 516 testing|^Evans^Patti^J^^^^EVAP|||^Hudson^Cathy^^^^^HUDC6|
+OBX|1|TX|1:RPT^Radiology Report|| Interior Health - Penticton Regional Hospital Penticton, BC / Ph: 250-492-4000  |
+OBX|2|TX|1:RPT^Radiology Report||  |
+OBX|3|TX|1:RPT^Radiology Report||Name: Itsprhsot,Pdiv Cathy  |
+OBX|4|TX|1:RPT^Radiology Report||MRP: Kinnee,Todd        Age: 48    Type: REG REF     Acct: PR0050428/15     |
+OBX|5|TX|1:RPT^Radiology Report||FamPhys:         DOB: 06/06/1966    Loc: PENPRHDI     MedRec:      |
+OBX|6|TX|1:RPT^Radiology Report||        Sex: F    ADM: 02/09/14     HC#:      |
+OBX|7|TX|1:RPT^Radiology Report||        Ph: 555-555-5555    DIS:      WCB#:     |
+OBX|8|TX|1:RPT^Radiology Report||                                                |
+OBX|9|TX|1:RPT^Radiology Report||  |
+OBX|10|TX|1:RPT^Radiology Report|| Diagnostic Imaging Report  |
+OBX|11|TX|1:RPT^Radiology Report|| Signed  |
+OBX|12|TX|1:RPT^Radiology Report||________________________________________________________________________________  |
+OBX|13|TX|1:RPT^Radiology Report||OrdPhys: Kinnee,Todd  |
+OBX|14|TX|1:RPT^Radiology Report||Exam Date: 02/09/14  |
+OBX|15|TX|1:RPT^Radiology Report||Accession Number: AB00016913PRH; AB00016915PRH  |
+OBX|16|TX|1:RPT^Radiology Report||Exam(s): CT; RAD / CHEST PORT; HEAD/C-  |
+OBX|17|TX|1:RPT^Radiology Report||Reason for Exam: PDIV 516 testing  |
+OBX|18|TX|1:RPT^Radiology Report||  |
+OBX|19|TX|1:RPT^Radiology Report||  |
+OBX|20|TX|1:RPT^Radiology Report||  |
+OBX|21|TX|1:RPT^Radiology Report||  |
+OBX|22|TX|1:RPT^Radiology Report||PDIV 4.4.516 testing  |
+OBX|23|TX|1:RPT^Radiology Report||Combo report  |
+OBX|24|TX|1:RPT^Radiology Report||CH  |
+OBX|25|TX|1:RPT^Radiology Report||  |
+OBX|26|TX|1:RPT^Radiology Report||Reported by: Patti J Evans ,  |
+OBX|27|TX|1:RPT^Radiology Report||  |
+OBX|28|TX|1:RPT^Radiology Report||   |
+OBX|29|TX|1:RPT^Radiology Report||Dictated by: Evans,Patti J         Dictated Date: 02/09/14 1514      |
+OBX|30|TX|1:RPT^Radiology Report||Transcribed by: HUDC6         Transcribed Date: 02/09/14 1514      |
+OBX|31|TX|1:RPT^Radiology Report||Technologist: HUDC6  |
+OBX|32|TX|1:RPT^Radiology Report||  |
+OBX|33|TX|1:RPT^Radiology Report||"Produced by Speech Recognition technology and may not have been edited by Transcription Services".  |
+OBX|34|TX|1:RPT^Radiology Report||  |
+OBX|35|TX|1:RPT^Radiology Report||Copies: Kinnee,Todd  |
+OBX|36|TX|1:RPT^Radiology Report||Report: DI0209-0001  |
+ZDR||KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~EVAP^Evans^Patti^J^^^^^^^^^^^ATP^|
+]]></message>
+    <message format="HL7" msgId="RAD4377662.hl7" version="2.3"><![CDATA[MSH|^~\&|IHARAD^2.1|IHPRH|ITS||201409021516||ORU^R01|J3202302S2|D|2.3|||AL|NE|
+PID|1|A5-B20140902123739292|PR0050428/15||Itsprhsot^Pdiv^Cathy||19660606|F|||696 End St^^Kelowna^BC^V1X 1A1||555-555-5555|||||PR0050428/15|
+PV1|1|O|PENPRHDI||||^Kinnee^Todd^^^^^KINT5|||||||||||REF||BC|||||||||||||||||||IHPRH||REG|||201409021237|
+ORC|NW|RAD20140902-0002IHPRH||||||||^Hudson^Cathy^^^^^HUDC6||^Kinnee^Todd^^^^^KINT5|
+OBR|1|RAD20140902-0002IHPRH|4743IHPRH|RAD^CXRP^CHEST PORT||20140902|201409021514|201409021514||||||||^Kinnee^Todd^^^^^KINT5||AB00016913PRH|CT~RAD|DI|DI|201409021515||RAD|S||1^^^^^S||||Reason for Exam: PDIV 516 testing|^Evans^Patti^J^^^^EVAP|||^Hudson^Cathy^^^^^HUDC6|
+OBX|1|TX|1:RPT^Radiology Report|| Interior Health - Penticton Regional Hospital Penticton, BC / Ph: 250-492-4000  |
+OBX|2|TX|1:RPT^Radiology Report||  |
+OBX|3|TX|1:RPT^Radiology Report||Name: Itsprhsot,Pdiv Cathy  |
+OBX|4|TX|1:RPT^Radiology Report||MRP: Kinnee,Todd        Age: 48    Type: REG REF     Acct: PR0050428/15     |
+OBX|5|TX|1:RPT^Radiology Report||FamPhys:         DOB: 06/06/1966    Loc: PENPRHDI     MedRec:      |
+OBX|6|TX|1:RPT^Radiology Report||        Sex: F    ADM: 02/09/14     HC#:      |
+OBX|7|TX|1:RPT^Radiology Report||        Ph: 555-555-5555    DIS:      WCB#:     |
+OBX|8|TX|1:RPT^Radiology Report||                                                |
+OBX|9|TX|1:RPT^Radiology Report||  |
+OBX|10|TX|1:RPT^Radiology Report|| Diagnostic Imaging Report  |
+OBX|11|TX|1:RPT^Radiology Report|| Signed  |
+OBX|12|TX|1:RPT^Radiology Report||________________________________________________________________________________  |
+OBX|13|TX|1:RPT^Radiology Report||OrdPhys: Kinnee,Todd  |
+OBX|14|TX|1:RPT^Radiology Report||Exam Date: 02/09/14  |
+OBX|15|TX|1:RPT^Radiology Report||Accession Number: AB00016913PRH; AB00016915PRH  |
+OBX|16|TX|1:RPT^Radiology Report||Exam(s): CT; RAD / CHEST PORT; HEAD/C-  |
+OBX|17|TX|1:RPT^Radiology Report||Reason for Exam: PDIV 516 testing  |
+OBX|18|TX|1:RPT^Radiology Report||  |
+OBX|19|TX|1:RPT^Radiology Report||  |
+OBX|20|TX|1:RPT^Radiology Report||  |
+OBX|21|TX|1:RPT^Radiology Report||  |
+OBX|22|TX|1:RPT^Radiology Report||PDIV 4.4.516 testing  |
+OBX|23|TX|1:RPT^Radiology Report||Combo report  |
+OBX|24|TX|1:RPT^Radiology Report||CH  |
+OBX|25|TX|1:RPT^Radiology Report||  |
+OBX|26|TX|1:RPT^Radiology Report||Reported by: Patti J Evans ,  |
+OBX|27|TX|1:RPT^Radiology Report||  |
+OBX|28|TX|1:RPT^Radiology Report||   |
+OBX|29|TX|1:RPT^Radiology Report||Dictated by: Evans,Patti J         Dictated Date: 02/09/14 1514      |
+OBX|30|TX|1:RPT^Radiology Report||Transcribed by: HUDC6         Transcribed Date: 02/09/14 1514      |
+OBX|31|TX|1:RPT^Radiology Report||Technologist: HUDC6  |
+OBX|32|TX|1:RPT^Radiology Report||  |
+OBX|33|TX|1:RPT^Radiology Report||"Produced by Speech Recognition technology and may not have been edited by Transcription Services".  |
+OBX|34|TX|1:RPT^Radiology Report||  |
+OBX|35|TX|1:RPT^Radiology Report||Copies: Kinnee,Todd  |
+OBX|36|TX|1:RPT^Radiology Report||Report: DI0209-0001  |
+ZDR||KINT5^Kinnee^Todd^^^^^^^^^^^^ATP^~EVAP^Evans^Patti^J^^^^^^^^^^^ATP^|
+]]></message>
+  </messages>
+</result>

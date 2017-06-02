@@ -37,7 +37,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.zip.ZipEntry;
@@ -59,8 +58,9 @@ import org.w3c.dom.NodeList;
 
 import ca.uhn.hl7v2.HL7Exception;
 import junit.framework.Assert;
-//import oscar.oscarLab.ca.all.parsers.IHAPOIHandler.OBX_DATA_TYPES;
-//import oscar.oscarLab.ca.all.parsers.IHAPOIHandler.UNSTRUCTURED;
+import oscar.oscarLab.ca.all.parsers.IHAPOIHandler.STRUCTURED;
+import oscar.oscarLab.ca.all.parsers.MEDITECHHandler.ORDER_STATUS;
+
 
 @RunWith(Parameterized.class)
 public class IHAPOIHandlerTest {
@@ -147,7 +147,6 @@ public class IHAPOIHandlerTest {
 		handler = new IHAPOIHandler();
 		try {
 	        handler.init( hl7Body );
-	        System.out.println( handler.getXML() );
 	        hl7XML = buildDocumentObject( handler.getXML() );
         } catch (HL7Exception e) {
 	        logger.error("Test Failed ", e);
@@ -172,14 +171,18 @@ public class IHAPOIHandlerTest {
 	}
 	
 	private String getElement( String elementName ) {
-		return getElement( elementName, null, null );
+		return getElement( elementName, null, null, null, null );
 	}
 	
 	private String getElement( String elementName, String elementChild ) {
-		return getElement( elementName, elementChild, null );
+		return getElement( elementName, elementChild, null, null, null );
 	}
 	
 	private String getElement( String elementName, String elementChild, String elementChild2 ) {
+		return getElement( elementName, elementChild, elementChild2, null, null );
+	}
+	
+	private String getElement( String elementName, String elementChild, String elementChild2, String elementChild3, String elementChild4 ) {
 		
 		NodeList nodeList = hl7XML.getElementsByTagName( elementName );
 		StringBuilder stringBuilder = new StringBuilder("");
@@ -190,6 +193,14 @@ public class IHAPOIHandlerTest {
 				stringBuilder.append( getElement( nodeList.item(i), elementChild ) );
 				if( elementChild2 != null ) {
 					stringBuilder.append( " " + getElement( nodeList.item(i), elementChild2 ) );
+				}
+				
+				if( elementChild3 != null ) {
+					stringBuilder.append( " " + getElement( nodeList.item(i), elementChild3 ) );
+				}
+				
+				if( elementChild4 != null ) {
+					stringBuilder.append( " " + getElement( nodeList.item(i), elementChild4 ) );
 				}
 				
 				stringBuilder.append( " " );
@@ -227,8 +238,8 @@ public class IHAPOIHandlerTest {
 	 * @return
 	 */
 	private static ArrayList<String> sortStringToList( String stringList ) {
-		
-		TreeSet<String> idSet = new TreeSet<String>( Arrays.asList( stringList.trim().split(" ") ) );		
+		String list = stringList.trim().replaceAll("\\s+", " ");
+		TreeSet<String> idSet = new TreeSet<String>( Arrays.asList( list.split(" ") ) );		
 		ArrayList<String> idList = new ArrayList<String>(  idSet );		
 		Collections.sort(idList);
 
@@ -257,7 +268,6 @@ public class IHAPOIHandlerTest {
 		Assert.assertEquals( getElement("OBR.15", "CM_SPS.3"), result );
 	}
 	
-	@Test
 	public void testGetDiscipline() {
 		logger.info("testGetDiscipline() " + handler.getDiscipline() );
 		
@@ -282,31 +292,17 @@ public class IHAPOIHandlerTest {
 
 		Assert.assertEquals( sortStringToList( expected ), sortStringToList( discipline ) );
 	}
-	
-//	@Test
-//	public void testIsReportData() {
-//		logger.info("testIsReportData() " + handler.isReportData() );
-//		Assert.assertEquals( ( OBX_DATA_TYPES.TX.name().equals( getElement("OBX.2") ) && ! handler.isUnstructured() ), handler.isReportData() );
-//	}
-//	
-//	@Test
-//	public void testIsUnstructured() {
-//		logger.info("testIsUnstructured() " + handler.isUnstructured() );
-//		
-//		boolean expected = Boolean.FALSE;
-//		for(UNSTRUCTURED lab : UNSTRUCTURED.values()) {
-//			if( lab.name().equalsIgnoreCase( getElement("MSH.3") ) ) {
-//				expected = Boolean.TRUE;
-//			}
-//		}
-//		
-//		Assert.assertEquals( expected, handler.isUnstructured() );
-//	}
+
+	@Test
+	public void testIsUnstructured() {
+		logger.info("testIsUnstructured() " + handler.isUnstructured() );
+		Assert.assertEquals( ! STRUCTURED.LAB.name().equalsIgnoreCase( handler.getDiagnosticServiceId() ), handler.isUnstructured() );
+	}
 	
 	@Test
 	public void testGetSendingApplication() {
 		logger.info("testGetSendingApplication() " + handler.getSendingApplication());
-		Assert.assertEquals( getElement("MSH.3"), handler.getSendingApplication() );
+		Assert.assertEquals( getElement("MSH.3", "HD.1"), handler.getSendingApplication() );
 	}
 
 	@Test
@@ -325,6 +321,14 @@ public class IHAPOIHandlerTest {
 	public void testGetMsgPriority() {
 		logger.info("testGetMsgPriority() " + handler.getMsgPriority());
 		Assert.assertEquals( "", handler.getMsgPriority() );
+	}
+	
+	/**
+	 * Cannot be tested. The placement of this in the HL7 is too erratic
+	 */
+	@Test
+	public void testGetOBRName() {
+		logger.info("testGetOBRName() " + handler.getOBRName(0) );
 	}
 
 	@Test
@@ -425,9 +429,9 @@ public class IHAPOIHandlerTest {
 		
 		logger.info( "testGetObservationHeader() " + stringBuilder.toString() );
 
-		String header = getElement("OBR.4", "CE.2");
+		String header = getElement("OBR.4", "CE.5");
 		if( header.isEmpty() ) {
-			header = getElement("OBR.4", "CE.1");
+			header = getElement("OBR.4", "CE.2");
 		}
 
 		Assert.assertEquals( sortStringToList( header ), sortStringToList( stringBuilder.toString() ) );
@@ -451,8 +455,7 @@ public class IHAPOIHandlerTest {
 		}
 
 		logger.info("testGetOBXIdentifier() " + stringBuilder.toString());
-
-		Assert.assertEquals( sortStringToList( getElement("OBX.3", "CE.1").trim() ), sortStringToList( stringBuilder.toString() ) );
+		Assert.assertEquals( sortStringToList( getElement("OBX.3", "CE.4") ), sortStringToList( stringBuilder.toString() ) );
 	}
 
 	@Test
@@ -501,12 +504,17 @@ public class IHAPOIHandlerTest {
 		for(int i = 0; i < handler.getOBRCount(); i++) {
 			obxCount = handler.getOBXCount(i);		
 			for(int j = 0; j < obxCount; j++) {
-				stringBuilder.append( " " + handler.getOBXResult( i, j ) ); 				
+				String result = handler.getOBXResult( i, j );
+				if( ! result.isEmpty() ) {
+					stringBuilder.append(" ");
+					stringBuilder.append( result ); 
+				}
 			}
 		}
+		
 		logger.info( "testGetOBXResult() " + stringBuilder.toString()); 
 		
-		Assert.assertEquals( sortStringToList( getElement("OBX.5") ), sortStringToList( stringBuilder.toString().trim() ) );
+		Assert.assertEquals( sortStringToList( getElement("OBX.5") ), sortStringToList( stringBuilder.toString() ) );
 	}
 
 	@Test
@@ -650,17 +658,28 @@ public class IHAPOIHandlerTest {
 		logger.info("testGetAge() " + handler.getAge());
 
 		String dob = IHAPOIHandler.formatDateTime( sortStringToList( getElement( "PID.7", "TS.1" ) ).get(0) );
-		String service = IHAPOIHandler.formatDateTime( sortStringToList( getElement( "OBR.7", "TS.1" ) ).get(0) );
+		String service = sortStringToList( getElement( "OBR.7", "TS.1" ) ).get(0);
+		if( service == null || service.isEmpty() ) {
+			service = sortStringToList( getElement( "OBR.14", "TS.1" ) ).get(0);
+		}
 		
+		service = IHAPOIHandler.formatDateTime( service );
+		
+		String ageString = "";
+
 		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar a = Calendar.getInstance();
 		Calendar b = Calendar.getInstance();
 		
 		try {
+			if( ! dob.isEmpty() ) {
 			java.util.Date birthDate = formatter.parse(dob);
 					a.setTime(birthDate);
+			}
+			if( ! service.isEmpty() ) {
 			java.util.Date serviceDate = formatter.parse(service);			
 					b.setTime(serviceDate);
+			}
 		} catch (ParseException e) {
 			logger.error("error",e);
 		}
@@ -671,7 +690,15 @@ public class IHAPOIHandlerTest {
             age--;
         }
 	    
-	    Assert.assertEquals( age + "", handler.getAge() );
+	    if( age > -1) {
+	    	ageString = age + "";
+	    }
+	    
+	    if( ageString.isEmpty() ) {
+	    	ageString = "N/A";
+	    }
+
+	    Assert.assertEquals( ageString, handler.getAge() );
 	}
 
 	@Test
@@ -683,7 +710,7 @@ public class IHAPOIHandlerTest {
 	@Test
 	public void testGetHealthNum() {
 		logger.info("testGetHealthNum() " + handler.getHealthNum());
-		String healthnumber = getElement( "PID.2", "CX.1" );
+		String healthnumber = getElement( "PID.4", "CX.1" );
 		if( healthnumber.isEmpty() ) {
 			 healthnumber = null;
 		}
@@ -727,7 +754,14 @@ public class IHAPOIHandlerTest {
 	@Test
 	public void testGetServiceDate() {
 		logger.info("testGetServiceDate() " + handler.getServiceDate());
-		Assert.assertEquals( IHAPOIHandler.formatDateTime( sortStringToList( getElement( "OBR.7", "TS.1" ) ).get(0) ), handler.getServiceDate() );
+		
+		// sometimes dates for Pathology labs are located in OBR.14
+		String serviceDate = sortStringToList( getElement( "OBR.7", "TS.1" ) ).get(0);
+		if( serviceDate == null || serviceDate.isEmpty() ) {
+			serviceDate = sortStringToList( getElement( "OBR.14", "TS.1" ) ).get(0);
+		}
+		
+		Assert.assertEquals( IHAPOIHandler.formatDateTime( serviceDate ), handler.getServiceDate() );
 	}
 
 	@Test
@@ -739,19 +773,55 @@ public class IHAPOIHandlerTest {
 	@Test
 	public void testGetOrderStatus() {
 		logger.info("testGetOrderStatus() " + handler.getOrderStatus());
-		Assert.assertEquals( sortStringToList( getElement("OBR.25") ), sortStringToList( handler.getOrderStatus() ) );
+
+		// a signed status should resolve to F for final
+		// empty OBR.25 statuses should check OBX.11 for alternate
+		// all empty status' shall be resolved to F
+		ArrayList<String> expectedResult = sortStringToList( getElement("OBR.25") );
+		String orderStatus = "";
+		
+		if( expectedResult == null || expectedResult.isEmpty() ) {
+			expectedResult = sortStringToList( getElement("OBX.11") );
+		}
+		
+		if( expectedResult != null && ! expectedResult.isEmpty() ) {
+			orderStatus = expectedResult.get( expectedResult.size() - 1 );
+		}
+		
+		if ( orderStatus.isEmpty() || ORDER_STATUS.S.name().equalsIgnoreCase( orderStatus ) ) {				
+			orderStatus = ORDER_STATUS.F.name();
+		}
+
+		Assert.assertEquals( orderStatus, handler.getOrderStatus() );
 	}
 
 	@Test
 	public void testGetOBXFinalResultCount() {
 		logger.info("testGetOBXFinalResultCount() " + handler.getOBXFinalResultCount());
 
-		String status = sortStringToList( getElement("OBR.25") ).get(0);
+		// a signed status should resolve to F for final
+		// empty OBR.25 statuses should check OBX.11 for alternate
+		// all empty status' shall be resolved to F
+		ArrayList<String> status = sortStringToList( getElement("OBR.25") );
+		String orderStatus = "";
+		
+		if( status == null || status.isEmpty() ) {
+			status = sortStringToList( getElement("OBX.11") );
+		}
+		
+		if( status != null && ! status.isEmpty() ) {
+			orderStatus = status.get( status.size() - 1 );
+		}
+		
+		if ( orderStatus.isEmpty() || ORDER_STATUS.S.name().equalsIgnoreCase( orderStatus ) ) {				
+			orderStatus = ORDER_STATUS.F.name();
+		}
+		
 		int count = hl7XML.getElementsByTagName( "OBX.11" ).getLength();
 		
-		if( "C".equalsIgnoreCase( status ) ) {
+		if( "C".equalsIgnoreCase( orderStatus ) ) {
 			count = count + 150;
-		} else if ( "F".equals( status ) ) {
+		} else if ( "F".equals( orderStatus ) ) {
 			count = count + 100;
 		}
 		
@@ -767,7 +837,7 @@ public class IHAPOIHandlerTest {
 	@Test
 	public void testGetAccessionNum() {
 		logger.info("testGetAccessionNum() " + handler.getAccessionNum());
-		Assert.assertEquals( sortStringToList( getElement("OBR.3", "EI.1") ), sortStringToList( handler.getAccessionNum() ) );
+		Assert.assertEquals( sortStringToList( getElement("OBR.2", "EI.1") ), sortStringToList( handler.getAccessionNum() ) );
 	}
 	
 	@Test
@@ -794,23 +864,23 @@ public class IHAPOIHandlerTest {
 	@Test
 	public void testGetAttendingPhysician() {
 		logger.info("testGetAttendingPhysician() " + handler.getAttendingPhysician() );
-		Assert.assertEquals( getElement("PV1.7", "XCN.3", "XCN.2"), handler.getAttendingPhysician() );
+		Assert.assertEquals( getElement("PV1.7", "XCN.6", "XCN.3", "XCN.4", "XCN.2"), handler.getAttendingPhysician() );
 	}
 	
 	@Test
 	public void testGetAdmittingPhysician() {
 		logger.info("testGetAdmittingPhysician() " + handler.getAdmittingPhysician());		
-		Assert.assertEquals( getElement("PV1.17", "XCN.3", "XCN.2"), handler.getAdmittingPhysician() );
+		Assert.assertEquals( getElement("PV1.17", "XCN.6", "XCN.3", "XCN.4", "XCN.2"), handler.getAdmittingPhysician() );
 	}
 
 	@Test
 	public void testGetDocName() {
 		logger.info("testGetDocName() " + handler.getDocName());
 		
-		String docname = getElement("OBR.16", "XCN.3", "XCN.2");
+		String docname = getElement("OBR.16", "XCN.6", "XCN.3", "XCN.4", "XCN.2");
 		
 		if( docname.isEmpty() ) {
-			docname = getElement("PV1.7", "XCN.3", "XCN.2");
+			docname = getElement("PV1.7", "XCN.6", "XCN.3", "XCN.4", "XCN.2");
 		}
 		
 		Assert.assertEquals( sortStringToList( docname ), sortStringToList( handler.getDocName() ) );
@@ -823,7 +893,7 @@ public class IHAPOIHandlerTest {
 		if( otherproviders.contains(",") ) {
 			otherproviders = otherproviders.replaceAll(",", "");
 		}
-		Assert.assertEquals( sortStringToList( getElement("OBR.28", "XCN.3", "XCN.2") ), sortStringToList( otherproviders ) );
+		Assert.assertEquals( sortStringToList( getElement("OBR.28", "XCN.6", "XCN.3", "XCN.4", "XCN.2") ), sortStringToList( otherproviders ) );
 	}
 	
 	/**
@@ -832,39 +902,12 @@ public class IHAPOIHandlerTest {
 	 */
 	@Test
 	public void testGetDocNums() {
-		logger.info("testGetDocNums() " + handler.getDocNums());
-		
-		HashSet<String> providerNumberSet = new HashSet<String>();
 
-		String[] admitting = getElement( "PV1.17", "XCN.1" ).split(" ");
-		String[] attending = getElement( "PV1.7", "XCN.1" ).split(" ");
-		String[] other = getElement( "PV1.52", "XCN.1" ).split(" ");
-		String[] ordering = getElement( "OBR.16", "XCN.1" ).split(" ");
-		String[] copies = getElement( "OBR.28", "XCN.1" ).split(" ");
-		
-		if( ! admitting[0].isEmpty() ) {
-			providerNumberSet.addAll( Arrays.asList(admitting) );
-		}
-		
-		if( ! attending[0].isEmpty() ) {
-			providerNumberSet.addAll( Arrays.asList(attending) );
-		}
-		
-		if( ! other[0].isEmpty() ) {
-			providerNumberSet.addAll( Arrays.asList(other) );
-		}
-		
-		if( ! ordering[0].isEmpty() ) {
-			providerNumberSet.addAll( Arrays.asList(ordering) );
-		}
-		
-		if( ! copies[0].isEmpty() ) {
-			providerNumberSet.addAll( Arrays.asList(copies) );
-		}
-		
-		ArrayList<String> providerNumberList = new ArrayList<String>( providerNumberSet );
+		ArrayList<String> doctorNumbers = handler.getDocNums(); 
+				Collections.sort( doctorNumbers );
+		logger.info( "testGetDocNums() " + doctorNumbers );
 
-		Assert.assertEquals( providerNumberList, handler.getDocNums() );
+		Assert.assertEquals( sortStringToList( getElement("UNKNOWN.1") ), doctorNumbers );
 	}
 
 	@Test
@@ -876,7 +919,15 @@ public class IHAPOIHandlerTest {
 	@Test
 	public void testGetFillerOrderNumber() {
 		logger.info("testGetFillerOrderNumber() " + handler.getFillerOrderNumber());
-		Assert.assertEquals( sortStringToList( getElement("OBR.3", "EI.1") ), sortStringToList( handler.getFillerOrderNumber() ) );
+		
+		String fillerOrder = getElement("OBR.3", "EI.1");
+
+		Assert.assertEquals( sortStringToList( fillerOrder ), sortStringToList( handler.getFillerOrderNumber() ) );
+	}
+	
+	@Test
+	public void testGetDiagnosticServiceId() {
+		logger.info("testGetDiagnosticServiceId() " + handler.getDiagnosticServiceId() );
 	}
 
 

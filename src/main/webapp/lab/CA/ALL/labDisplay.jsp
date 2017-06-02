@@ -1293,7 +1293,9 @@ pre {
                                    	//logger.info("ERROR :"+e);
                                    }
 
-                                   if (handler.getMsgType().equals("EPSILON")) {
+                                   if ( handler.getMsgType().equals("MEDITECH") ) {
+                                	   b2=true;
+                                   } if (handler.getMsgType().equals("EPSILON")) {
                                    	b2=true;
                                    	b3=true; //Because Observation header can never be the same as the header. Observation header = OBX-4.2 and header= OBX-4.1
                                    } else if(handler.getMsgType().equals("PFHT") || handler.getMsgType().equals("CML") || handler.getMsgType().equals("HHSEMR")) {
@@ -1370,39 +1372,7 @@ pre {
 
 	                                                </tr>
 	                                       	<% }
-                                       } else if (handler.getMsgType().equals("IHA") ) {
-                                           if(handler.getOBXValueType(j,k) != null &&  handler.getOBXValueType(j,k).equalsIgnoreCase("NAR")) {
-                                               %>                                         
-                                               <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%="NarrativeRes"%>" >
-                                                   <td align="left" colspan="7"style="padding-left:10px;"><%= handler.getOBXResult( j, k) %></td>
-                                               </tr>
-                                           <%}else{%>
-                                               <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                                   <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= URLEncoder.encode(handler.getOBXIdentifier(j, k).replaceAll("&","%26"),"UTF-8") %><%=remoteFacilityIdQueryString%>')"><%=obxName %></a>
-                                                   &nbsp;
-                                                   	<%if(loincCode != null){ %>
-                                                   	<a href="javascript:popupStart('660','1000','http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.1&mainSearchCriteria.v.c=<%=loincCode%>&informationRecipient.languageCode.c=en')"> info</a>
-                                                   	<%} %>
-                                                   </td>
-                                                   <td align="right"><%= handler.getOBXResult( j, k) %></td>
-                                                   <td align="center" valign="top"><%= handler.getOBXAbnormalFlag(j, k)%></td>
-                                                   <td align="left" valign="top"><%=handler.getOBXReferenceRange( j, k)%></td>
-                                                   <td align="left" valign="top"><%=handler.getOBXUnits( j, k) %></td>
-                                                   <td align="center" valign="top"><%= handler.getTimeStamp(j, k) %></td>
-                                                   <td align="center" valign="top"><%= handler.getOBXResultStatus( j, k) %></td>
-                                                   <td align="center" valign="top">
-   	                                                <a href="javascript:void(0);" title="Annotation" onclick="window.open('<%=request.getContextPath()%>/annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=segmentID%>&amp;demo=<%=demographicID%>&amp;other_id=<%=String.valueOf(j) + "-" + String.valueOf(k) %>','anwin','width=400,height=500');">
-   	                                                	<%if(!isPrevAnnotation){ %><img src="../../../images/notes.gif" alt="rxAnnotation" height="16" width="13" border="0"/><%}else{ %><img src="../../../images/filledNotes.gif" alt="rxAnnotation" height="16" width="13" border="0"/> <%} %>
-   	                                                </a>
-                                                   </td>
-                                               </tr>
-                                           <%}%>
-                                           <%for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
-                                               <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes" >
-                                                   <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
-                                               </tr>
-                                           <%}
-                                   
+
                                       } else if (handler.getMsgType().equals("PFHT") || handler.getMsgType().equals("HHSEMR") || handler.getMsgType().equals("CML")) {
                                    	   if (!obxName.equals("")) { %>
 	                                    		<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
@@ -1506,9 +1476,9 @@ pre {
 
                                     	if(isUnstructuredDoc){%>
                                    			<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%="NarrativeRes"%>"><% 
-                                   			if(handler.getOBXIdentifier(j, k).equalsIgnoreCase(handler.getOBXIdentifier(j, k-1)) && (obxCount>1)){%>
+                                   			if(handler.getOBXIdentifier(j, k).equalsIgnoreCase(handler.getOBXIdentifier(j, k-1)) && (obxCount>1) && ! handler.getMsgType().equals("MEDITECH") ){%>
                                    					<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier='<%= URLEncoder.encode(handler.getOBXIdentifier(j, k).replaceAll("&","%26"),"UTF-8")%>')"></a><%
-                                   			}else{%> 
+                                   			}else if(! handler.getMsgType().equals("MEDITECH") ) {%> 
                                    					<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= URLEncoder.encode(handler.getOBXIdentifier(j, k).replaceAll("&","%26"),"UTF-8") %>')"><%=obxName %></a>
                                    			<%}%>
 											<%if(isVIHARtf){
@@ -1524,7 +1494,11 @@ pre {
 										    	String disclaimer = "<br>IMPORTANT DISCLAIMER: You are viewing a PREVIEW of the original report. The rich text formatting contained in the original report may convey critical information that must be considered for clinical decision making. Please refer to the ORIGINAL report, by clicking 'Print', prior to making any decision on diagnosis or treatment.";%>
 										    	<td align="left"><%= rtfText + disclaimer %></td>
 										    <%}else{%>
-                                           		<td align="left"><%= handler.getOBXResult( j, k) %></td>
+                                           		<td align="left">
+	                                           		<pre>
+	                                           			<%= handler.getOBXResult( j, k) %>
+	                                           		</pre>
+                                           		</td>
                                            	<%} %>
                                            	
                                           	<% if(handler.getTimeStamp(j, k).equals(handler.getTimeStamp(j, k-1)) && (obxCount>1)){ %>
@@ -1790,7 +1764,6 @@ pre {
     ED Encapsulated Data
     FT Formatted Text (Display)
     MO Money
-    NAR Narrative (not official HL7. Added for IHA POI interface)
     NM Numeric
     PN Person Name
     RP Reference Pointer

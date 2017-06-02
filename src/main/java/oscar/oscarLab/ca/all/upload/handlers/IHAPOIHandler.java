@@ -23,10 +23,14 @@
  */
 package oscar.oscarLab.ca.all.upload.handlers;
 
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
+
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,18 +41,19 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import oscar.oscarLab.ca.all.upload.MessageUploader;
 
 public class IHAPOIHandler implements MessageHandler {
+	
+	public final String HL7_FORMAT = "IHAPOI";
 	
 	Logger logger = MiscUtils.getLogger();
 	private final String XML = "<(\\S+?)(.*?)>(.*?)</\\1>";
@@ -66,7 +71,7 @@ public class IHAPOIHandler implements MessageHandler {
 			hl7BodyList = parse( is );	
 			int index = 0;
 			while ( "success".equals( success ) && index < hl7BodyList.size() ) {				
-				success = MessageUploader.routeReport(loggedInInfo, serviceName, "IHAPOI", hl7BodyList.get(index), fileId);				
+				success = MessageUploader.routeReport(loggedInInfo, serviceName, HL7_FORMAT, hl7BodyList.get(index), fileId);				
 				index++;
 			}
 			
@@ -105,7 +110,13 @@ public class IHAPOIHandler implements MessageHandler {
 		Pattern pattern;
 		Matcher matcher;
 
-		String hl7Body = getString(is).trim();
+		ByteArrayInputStream bais = null;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		org.apache.commons.io.IOUtils.copy(is, baos);
+		byte[] bytes = baos.toByteArray();
+		String hl7Body = new String( bytes, StandardCharsets.UTF_8 ).trim();
+
+		// String hl7Body = getString(bais.).trim();
 		List<String> hl7BodyList = null;
 
 		if( hl7Body != null && hl7Body.length() > 0 ) {
@@ -114,39 +125,66 @@ public class IHAPOIHandler implements MessageHandler {
 			matcher = pattern.matcher( hl7Body );
 
 			if( matcher.matches() ) {
-				hl7BodyList = parseXml( hl7Body );
+				bais = new ByteArrayInputStream( bytes );
+				bais.reset();
+				hl7BodyList = parseXml( bais );
 			} else {
 				hl7BodyList = parseText( hl7Body );
 			}
 
 		}
+		
+		if( baos != null ) {
+			baos.close();
+		}
+		
+		if( bais != null ) {
+			bais.close();
+		}
 
 		return hl7BodyList;
 	}
 
-	private List<String> parseXml(String hl7Body) throws ParserConfigurationException, SAXException, IOException {
+	protected List<String> parseXml(InputStream is) throws ParserConfigurationException, SAXException, IOException {
 
-		Node messageSpec = null;
-		NodeList messages = null;
+		Element messageSpec = null;
+		Element messagesElement = null;
+		NodeList messagesNode = null;
 
 		List<String> hl7BodyList = null;
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-
+		docFactory.setNamespaceAware(true);
+		docFactory.setValidating(false);
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-		Document doc = docBuilder.parse(hl7Body);
+		Document doc = docBuilder.parse(is);
 
 		if(doc != null) {
-			messageSpec = doc.getFirstChild();
+			messageSpec = doc.getDocumentElement();
 		}
-
-		if(messageSpec != null) {
-			messages = messageSpec.getChildNodes();
-
-			for( int i = 0; i < messages.getLength(); i++ ) {
+	
+		if( messageSpec != null && messageSpec.hasChildNodes() ) {
+			messageSpec.normalize();
+			messagesNode = messageSpec.getChildNodes();
+			for(int i = 0; i < messagesNode.getLength(); i++) {
+				if (messagesNode.item(i) instanceof Element) {
+					messagesElement = (Element) messagesNode.item(i);
+					break;
+				}
+			}
+		}
+		
+		if(messagesElement != null && messagesElement.hasChildNodes() ) {
+			messagesNode = messagesElement.getChildNodes();
+		}
+		
+		if( messagesNode.getLength() > 0 ) {
+			for( int i = 0; i < messagesNode.getLength(); i++ ) {
 				if( hl7BodyList == null ) {
 					hl7BodyList = new ArrayList<String>();
 				}
-				hl7BodyList.add( messages.item(i).getFirstChild().getTextContent() );
+				if( messagesNode.item(i) instanceof Element ) {
+					hl7BodyList.add( ( (Element) messagesNode.item(i) ).getTextContent() );
+				}
 			}		
 		}
 
@@ -161,24 +199,4 @@ public class IHAPOIHandler implements MessageHandler {
 		return Arrays.asList( hl7BodyList );
 	}
 
-	private String getString(InputStream is) {
-
-		StringWriter writer = new StringWriter();
-
-		try {
-			IOUtils.copy(is, writer, "UTF-8");
-		} catch (IOException e) {
-			logger.fatal("InputStream failure", e );
-		} finally {
-			if( is != null ) {
-				try {
-					is.close();
-				} catch (IOException e) {
-					logger.fatal("Failed to close InputStream ", e );
-				}
-			}
-		}
-
-		return writer.toString();
-	}
 }

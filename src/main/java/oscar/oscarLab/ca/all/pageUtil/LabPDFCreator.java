@@ -53,6 +53,7 @@ import oscar.OscarProperties;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.all.parsers.CLSHandler;
 import oscar.oscarLab.ca.all.parsers.Factory;
+import oscar.oscarLab.ca.all.parsers.MEDITECHHandler;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.oscarLab.ca.all.parsers.PATHL7Handler;
 import oscar.util.UtilDateUtilities;
@@ -85,7 +86,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
     private OutputStream os;
     private boolean isUnstructuredDoc = false;
     private MessageHandler handler;
-    List<MessageHandler>handlers = new ArrayList<MessageHandler>();
+    private List<MessageHandler>handlers = new ArrayList<MessageHandler>();
     
     private int versionNum;
     private String[] multiID;
@@ -154,8 +155,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
         bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         font = new Font(bf, 11, Font.NORMAL);
         boldFont = new Font(bf, 12, Font.BOLD);
-     //   redFont = new Font(bf, 11, Font.NORMAL, Color.RED);
-        
+
         //add the patient information
         addRtfPatientInfo();
         
@@ -168,11 +168,9 @@ public class LabPDFCreator extends PdfPageEventHelper{
     public void printPdf() throws IOException, DocumentException{
 
         // check that we have data to print
-        if (handler == null)
+        if (handler == null) {
             throw new DocumentException();
-
-        //response.setContentType("application/pdf");  //octet-stream
-        //response.setHeader("Content-Disposition", "attachment; filename=\""+handler.getPatientName().replaceAll("\\s", "_")+"_LabReport.pdf\"");
+        }
 
         //Create the document we are going to write to
         document = new Document();
@@ -192,17 +190,28 @@ public class LabPDFCreator extends PdfPageEventHelper{
         bf = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         font = new Font(bf, 9, Font.NORMAL);
         boldFont = new Font(bf, 10, Font.BOLD);
-      //  redFont = new Font(bf, 9, Font.NORMAL, Color.RED);
 
         // add the header table containing the patient and lab info to the document
         createInfoTable();
 
         // add the tests and test info for each header
         ArrayList<String> headers = handler.getHeaders();
-        for (int i=0; i < headers.size(); i++){
-            addLabCategory( headers.get(i) ,null);
+        for (int i=0; i < headers.size(); i++) {
+        	
+        	String specimenSource = null;
+        	String specimenDescription = null;
+        	
+        	if( "MIC".equals( ((MEDITECHHandler) handler).getSendingApplication() ) ) {
+				specimenSource = ((MEDITECHHandler) handler).getSpecimenSource(i);
+				specimenSource = "SPECIMEN SOURCE: " + specimenSource;
+				specimenDescription = ((MEDITECHHandler) handler).getSpecimenDescription(i);
+				specimenDescription = "SPECIMEN DESCRIPTION: " + specimenDescription;
+        	}
+        	
+            addLabCategory( headers.get(i), specimenSource, specimenDescription );
         }
         
+        // It's not exactly clear that this block does anything. 
         for(MessageHandler extraHandler:handlers) {
         	ArrayList<String> extraHeaders = extraHandler.getHeaders();
             for (int i=0; i < extraHeaders.size(); i++)
@@ -241,7 +250,15 @@ public class LabPDFCreator extends PdfPageEventHelper{
 	 * Given the name of a lab category this method will add the category
 	 * header, the test result headers and the test results for that category.
 	 */
-	private void addLabCategory(String header, MessageHandler extraHandler) throws DocumentException {
+    private void addLabCategory(String header, MessageHandler extraHandler) throws DocumentException {
+    	addLabCategory(header, extraHandler, null, null);
+    }
+    
+    private void addLabCategory(String header, String specimenSource, String specimenDescription) throws DocumentException {
+    	addLabCategory(header, null, specimenSource, specimenDescription);
+    }
+    
+	private void addLabCategory(String header, MessageHandler extraHandler, String specimenSource, String specimenDescription ) throws DocumentException {
 		MessageHandler handler = (extraHandler!=null)?extraHandler:this.handler;
 		if(handler.getMsgType().equals("PATHL7")){
 			this.isUnstructuredDoc = ((PATHL7Handler) handler).unstructuredDocCheck(header);
@@ -249,99 +266,129 @@ public class LabPDFCreator extends PdfPageEventHelper{
 		{
 			this.isUnstructuredDoc = ((CLSHandler) handler).isUnstructured();
 		}
-		
-		float[] mainTableWidths;
-		if(isUnstructuredDoc){
-			if(handler.getMsgType().equals("CLS"))
-			{
-				mainTableWidths = new float[] { 5f, 10f, 3f, 2f};
-			} else
-			{
-				mainTableWidths = new float[] { 5f, 12f, 3f};
-			}
-		}else{
-			mainTableWidths = new float[] {5f, 3f, 1f, 3f, 2f, 4f, 2f };
-		}
-		
-		PdfPTable table = new PdfPTable(mainTableWidths);
-		if(isUnstructuredDoc){
-			table.setHeaderRows(1);}
-		else{
-		table.setHeaderRows(3);}
-		table.setWidthPercentage(100);
 
 		PdfPCell cell = new PdfPCell();
-		// category name
-		if(!isUnstructuredDoc){
-		cell.setPadding(3);
-		cell.setPhrase(new Phrase("  "));
-		cell.setBorder(0);
-		cell.setColspan(7);
-		table.addCell(cell);
-		cell.setBorder(15);
-		cell.setPadding(3);
-		cell.setColspan(2);
-		cell.setPhrase(new Phrase(header.replaceAll("<br\\s*/*>", "\n"),
-				new Font(bf, 12, Font.BOLD)));
-		table.addCell(cell);
-		cell.setPhrase(new Phrase("  "));
-		cell.setBorder(0);
-		cell.setColspan(5);
-		table.addCell(cell);}
+		float[] mainTableWidths;
+		PdfPTable table = null;
+		
+		if ( handler instanceof MEDITECHHandler && ((MEDITECHHandler) handler).isUnstructured()
+				|| ( handler instanceof MEDITECHHandler && ((MEDITECHHandler) handler).isReportData() ) ) {
+			table = new PdfPTable(1);
+		} else {
+		
+			if(isUnstructuredDoc){
+				if(handler.getMsgType().equals("CLS"))
+				{
+					mainTableWidths = new float[] { 5f, 10f, 3f, 2f};
+				} else
+				{
+					mainTableWidths = new float[] { 5f, 12f, 3f};
+				}
+			}else{
+				mainTableWidths = new float[] {5f, 3f, 1f, 3f, 2f, 4f, 2f };
+			}
+		
+			table = new PdfPTable(mainTableWidths);
+			if(isUnstructuredDoc){
+				table.setHeaderRows(1);
+			}
+			else{
+				table.setHeaderRows(3);
+			}
+			
+			table.setWidthPercentage(100);
 
-		// table headers
-		if(isUnstructuredDoc){
-			cell.setColspan(1);
-			cell.setBorder(15);
-			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			cell.setBackgroundColor(new Color(210, 212, 255));
-			cell.setPhrase(new Phrase("Test Name(s)", boldFont));
-			table.addCell(cell);
-			cell.setPhrase(new Phrase("Result", boldFont));
-			table.addCell(cell);
-			if(handler.getMsgType().equals("CLS"))
-			{
-				cell.setPhrase(new Phrase("Date/Time Collected", boldFont));
+			// category name
+			if(!isUnstructuredDoc){
+				cell.setPadding(3);
+				cell.setPhrase(new Phrase("  "));
+				cell.setBorder(0);
+				cell.setColspan(7);
+				table.addCell(cell);
+				cell.setBorder(15);
+				cell.setPadding(3);
+				cell.setColspan(2);
+				cell.setPhrase(new Phrase(header.replaceAll("<br\\s*/*>", "\n"),
+						new Font(bf, 12, Font.BOLD)));
+				table.addCell(cell);
+				cell.setPhrase(new Phrase("  "));
+				cell.setBorder(0);
+				cell.setColspan(5);
+				table.addCell(cell);
+			}
+
+			// table headers
+			if(isUnstructuredDoc){
+				cell.setColspan(1);
+				cell.setBorder(15);
+				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				cell.setBackgroundColor(new Color(210, 212, 255));
+				cell.setPhrase(new Phrase("Test Name(s)", boldFont));
+				table.addCell(cell);
+				cell.setPhrase(new Phrase("Result", boldFont));
+				table.addCell(cell);
+				
+				if(handler.getMsgType().equals("CLS"))
+				{
+					cell.setPhrase(new Phrase("Date/Time Collected", boldFont));
+					table.addCell(cell);
+					cell.setPhrase(new Phrase("Status", boldFont));
+					table.addCell(cell); 
+				} else 
+				{
+					cell.setPhrase(new Phrase("Date/Time Completed", boldFont));
+					table.addCell(cell);
+				}
+				
+			} else{
+				
+				if( "MIC".equals( ((MEDITECHHandler) handler).getSendingApplication() ) ) {
+
+					cell.setPhrase(new Phrase(specimenSource, boldFont));
+					cell.setColspan(7);
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+					table.addCell(cell);
+					cell.setColspan(1);
+					
+					
+					cell.setPhrase(new Phrase(specimenDescription, boldFont));
+					cell.setColspan(7);
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+					table.addCell(cell);
+					cell.setColspan(1);
+				}
+				
+				cell.setColspan(1);
+				cell.setBorder(15);
+				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				cell.setBackgroundColor(new Color(210, 212, 255));
+				cell.setPhrase(new Phrase("Test Name(s)", boldFont));
+				table.addCell(cell);
+				cell.setPhrase(new Phrase("Result", boldFont));
+				table.addCell(cell);
+				cell.setPhrase(new Phrase("Abn", boldFont));
+				table.addCell(cell);
+				cell.setPhrase(new Phrase("Reference Range", boldFont));
+				table.addCell(cell);
+				cell.setPhrase(new Phrase("Units", boldFont));
+				table.addCell(cell);
+				if(handler.getMsgType().equals("CLS")){
+					cell.setPhrase(new Phrase("Date/Time Collected", boldFont));
+				}
+				else
+				{
+					cell.setPhrase(new Phrase("Date/Time Completed", boldFont));
+				}
 				table.addCell(cell);
 				cell.setPhrase(new Phrase("Status", boldFont));
 				table.addCell(cell); 
-			} else 
-			{
-				cell.setPhrase(new Phrase("Date/Time Completed", boldFont));
-				table.addCell(cell);
 			}
-		} else{
-		cell.setColspan(1);
-		cell.setBorder(15);
-		cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-		cell.setBackgroundColor(new Color(210, 212, 255));
-		cell.setPhrase(new Phrase("Test Name(s)", boldFont));
-		table.addCell(cell);
-		cell.setPhrase(new Phrase("Result", boldFont));
-		table.addCell(cell);
-		cell.setPhrase(new Phrase("Abn", boldFont));
-		table.addCell(cell);
-		cell.setPhrase(new Phrase("Reference Range", boldFont));
-		table.addCell(cell);
-		cell.setPhrase(new Phrase("Units", boldFont));
-		table.addCell(cell);
-		if(handler.getMsgType().equals("CLS")){
-			cell.setPhrase(new Phrase("Date/Time Collected", boldFont));
 		}
-		else
-		{
-			cell.setPhrase(new Phrase("Date/Time Completed", boldFont));
-		}
-		table.addCell(cell);
-		cell.setPhrase(new Phrase("Status", boldFont));
-		table.addCell(cell); }
-
-
 		// add test results
 		int obrCount = handler.getOBRCount();
 		int linenum = 0;
 		cell.setBorder(12);
-		cell.setBorderColor(Color.BLACK); // cell.setBorderColor(Color.WHITE);
+		cell.setBorderColor(Color.WHITE);
 		cell.setBackgroundColor(new Color(255, 255, 255));
 
 		if (handler.getMsgType().equals("MEDVUE")) {
@@ -532,20 +579,23 @@ public class LabPDFCreator extends PdfPageEventHelper{
 							}
 						}
 						// if (DNS)
-						} else if ((handler.getMsgType().equals("EPSILON") && header.equals(handler.getOBXIdentifier(j,k)) && obxName.equals("")) || (handler.getMsgType().equals("PFHT") && obxName.equals("")&& header.equals(handler.getObservationHeader(j,k)))){
+						} else if ((handler.getMsgType().equals("EPSILON") && header.equals(handler.getOBXIdentifier(j,k)) && obxName.equals("")) || (handler.getMsgType().equals("PFHT") && obxName.equals("")&& header.equals(handler.getObservationHeader(j,k)))
+								|| (handler.getMsgType().equals("MEDITECH") 
+										&& obxName.equals("")) ){
 							// cell.setBackgroundColor(getHighlightColor(linenum));
 							linenum++;
+
 							cell.setPaddingLeft(100);
 							cell.setColspan(7);
 							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 							cell.setPhrase(new Phrase(handler
 									.getOBXResult(j, k).replaceAll(
 											"<br\\s*/*>", "\n"), font));
+							}
 							table.addCell(cell);
 							cell.setPadding(3);
 							cell.setColspan(1);
 						
-						}
 						if (handler.getMsgType().equals("PFHT") && !handler.getNteForOBX(j,k).equals("") && handler.getNteForOBX(j,k)!=null) {
 							// cell.setBackgroundColor(getHighlightColor(linenum));
 							linenum++;
