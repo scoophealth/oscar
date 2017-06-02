@@ -24,6 +24,7 @@
 package org.oscarehr.dashboard.handler;
 
 import static org.junit.Assert.*;
+import  org.junit.Assert;
 
 import java.io.IOException;
 import java.net.URL;
@@ -31,7 +32,6 @@ import java.net.URL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.eclipse.jdt.internal.core.Assert;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -119,7 +119,7 @@ public class IndicatorTemplateXMLTest {
 
 	@Test
 	public void testGetIndicatorQuery() {
-		Assert.isNotNull(indicatorTemplateXML.getIndicatorQuery());
+		Assert.assertNotNull(indicatorTemplateXML.getIndicatorQuery());
 	}
 
 	@Test
@@ -134,7 +134,7 @@ public class IndicatorTemplateXMLTest {
 
 	@Test
 	public void testGetDrillDownQuery() {
-		Assert.isNotNull( indicatorTemplateXML.getDrilldownQuery() );
+		Assert.assertNotNull( indicatorTemplateXML.getDrilldownQuery() );
 	}
 	
 	@Test
