@@ -1305,11 +1305,11 @@ pre {
                                    	String obrName = handler.getOBRName(j);
                                    	b1 = !obrFlag && !obrName.equals("");
                                    	b2 = !(obxName.contains(obrName));
-                                   	b3 = obxCount < 2;
+                                   	b3 = !(obxCount < 2 && !isUnstructuredDoc);
                                        if( b1 && b2 && b3){
                                        %>
                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >
-                                               <td valign="top" align="left"><%=obrName%></td>
+                                               <td valign="top" align="left"><span style="font-size:16px;font-weight: bold;"><%=obrName%></span></td>
                                                <td colspan="6">&nbsp;</td>
                                            </tr>
                                            <%obrFlag = true;
