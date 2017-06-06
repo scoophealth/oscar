@@ -84,8 +84,11 @@ public class ViewWCBAction extends Action {
         frm.setW_fname(demographic.getFirstName());
         frm.setW_lname(demographic.getLastName());
         frm.setW_gender(demographic.getSex());
-        frm.setW_phone(demographic.getPhone());
-        frm.setW_area(Misc.areaCode(demographic.getPhone()));
+        if(demographic.getPhone() != null && demographic.getPhone().length()>0) {
+        	frm.setW_phone(Misc.phoneNumber(demographic.getPhone().replaceAll("-","")));
+        	frm.setW_area(Misc.areaCode(demographic.getPhone()));
+        }
+       
         String[] pc = demographic.getPostal().split(" ");
 
         String postal = "";
