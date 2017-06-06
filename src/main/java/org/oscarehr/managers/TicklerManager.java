@@ -390,7 +390,7 @@ public class TicklerManager {
 	            }
 	        }
 	        else {
-	            if (ticklerRole.equals(role.getRoleName())) {                               
+	            if (ticklerRole != null && ticklerRole.equals(role.getRoleName())) {                               
 	                add = true;
 	            }
 	        }
