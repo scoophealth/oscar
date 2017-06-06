@@ -218,7 +218,7 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
     /**
      * Attempts to determine service date for any given lab.
      */
-    private static class ServiceDateLoader {
+    public static class ServiceDateLoader {
 
         private LabResultData labData;
 
