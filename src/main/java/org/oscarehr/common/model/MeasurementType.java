@@ -32,8 +32,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PreRemove;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -57,11 +55,6 @@ public class MeasurementType extends AbstractModel<Integer> implements Serializa
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDate=new Date();
 	
-	@PreRemove
-	@PreUpdate
-	protected void jpaPreventChange() {
-		throw (new UnsupportedOperationException("Remove/update is not allowed for this type of item."));
-	}
 
 	@Override
 	public Integer getId() {
