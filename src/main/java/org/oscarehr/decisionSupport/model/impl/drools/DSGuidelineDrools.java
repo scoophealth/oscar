@@ -80,7 +80,11 @@ public class DSGuidelineDrools extends DSGuideline {
 
 	public String getRuleBaseFactoryKey()
 	{
-		return("DSGuidelineDrools:"+getId());
+		if(getId() != null)
+			return("DSGuidelineDrools:"+getId());
+		else
+			return "DSGuidelineDrools:" + title;
+			
 	}
 	
 	public List<DSConsequence> evaluate(LoggedInInfo loggedInInfo, String demographicNo) throws DecisionSupportException {
@@ -276,6 +280,7 @@ public class DSGuidelineDrools extends DSGuideline {
 		long timer = System.currentTimeMillis();
 		try {
 			String ruleBaseFactoryKey=getRuleBaseFactoryKey();
+			
 			RuleBase result=RuleBaseFactory.getRuleBase(ruleBaseFactoryKey);
 			if (result!=null) 
 			{
