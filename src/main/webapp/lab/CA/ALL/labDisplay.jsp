@@ -711,6 +711,10 @@ pre {
 									<% } %>
 
 
+									<%
+										if(remoteLabKey == null || "".equals(remoteLabKey.length())) {
+									%>
+									
                                     <% if (!label.equals(null) && !label.equals("")) { %>
 										<button type="button" id="createLabel_<%=segmentID%>" value="Label" onclick="submitLabel(this, '<%=segmentID%>');">Label</button>
 										<%} else { %>
@@ -728,6 +732,7 @@ pre {
 						                 } %>
 					                 <span id="labelspan_<%=segmentID%>" class="Field2"><i>Label: <%=labelval %> </i></span>
 
+									<% } %>
                                     <span class="Field2"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span>
                                 </td>
                             </tr>
