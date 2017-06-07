@@ -956,5 +956,10 @@
         <ap-output>${provider_no}, ${last_name}, ${first_name}</ap-output>
         <ap-json-output>true</ap-json-output>
     </databaseap>
-
+    <databaseap>
+        <ap-name>provider_program_json</ap-name>
+        <ap-sql>SELECT provider.provider_no, provider.first_name, provider.last_name, program_provider.program_id AS program_id FROM provider LEFT JOIN program_provider ON provider.provider_no = program_provider.provider_no ORDER BY provider.last_name</ap-sql>
+        <ap-output>${provider_no}, ${last_name}, ${first_name}, ${program_id}</ap-output>
+        <ap-json-output>true</ap-json-output>
+    </databaseap>
 </eformap-config>
