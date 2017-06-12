@@ -275,10 +275,14 @@ public final class MessageUploader {
 					search = "provider_no";
 				}
 				
-				if( "MEDITECH".equals(type) || "IHAPOI".equals(type) ) {
+				if( "MEDITECH".equals(type) ) {
 					search = "practitionerNo";
 				}
 				
+				if( "IHAPOI".equals(type) ) {
+					search = "hso_no";
+				}
+								
 				providerRouteReport(String.valueOf(insertID), docNums, DbConnectionFilter.getThreadLocalDbConnection(), demProviderNo, type, search, limit, orderByLength);
 			}
 			retVal = h.audit();
