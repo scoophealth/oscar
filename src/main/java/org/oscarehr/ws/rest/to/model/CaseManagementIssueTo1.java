@@ -38,8 +38,9 @@ public class CaseManagementIssueTo1 {
 	protected boolean resolved;
 	protected String type;
 	protected Date update_date = new Date();
-	protected Issue issue;
+	protected IssueTo1 issue;
 	protected Integer program_id = null;
+	private boolean unsaved;
 	
 	protected boolean unchecked=false;
 	
@@ -97,10 +98,10 @@ public class CaseManagementIssueTo1 {
 	public void setUpdate_date(Date update_date) {
 		this.update_date = update_date;
 	}
-	public Issue getIssue() {
+	public IssueTo1 getIssue() {
 		return issue;
 	}
-	public void setIssue(Issue issue) {
+	public void setIssue(IssueTo1 issue) {
 		this.issue = issue;
 	}
 	public Integer getProgram_id() {
@@ -116,6 +117,11 @@ public class CaseManagementIssueTo1 {
 		this.unchecked = unchecked;
 	}
 	
-	
+	public boolean isUnsaved() {
+		return unsaved;
+	}
+	public void setUnsaved(boolean unsaved) {
+		this.unsaved = unsaved;
+	}
 
 }
