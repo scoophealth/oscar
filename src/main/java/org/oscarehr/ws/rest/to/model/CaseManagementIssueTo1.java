@@ -25,8 +25,6 @@ package org.oscarehr.ws.rest.to.model;
 
 import java.util.Date;
 
-import org.oscarehr.casemgmt.model.Issue;
-
 public class CaseManagementIssueTo1 {
 
 	protected Long id;
