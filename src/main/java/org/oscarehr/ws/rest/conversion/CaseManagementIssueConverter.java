@@ -26,7 +26,6 @@ package org.oscarehr.ws.rest.conversion;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.rest.to.model.CaseManagementIssueTo1;
-import org.springframework.beans.BeanUtils;
 
 public class CaseManagementIssueConverter extends AbstractConverter<CaseManagementIssue, CaseManagementIssueTo1> {
 
@@ -38,8 +37,20 @@ public class CaseManagementIssueConverter extends AbstractConverter<CaseManageme
 
 	@Override
 	public CaseManagementIssueTo1 getAsTransferObject(LoggedInInfo loggedInInfo, CaseManagementIssue d) throws ConversionException {
-		CaseManagementIssueTo1 t = new CaseManagementIssueTo1();
-		BeanUtils.copyProperties(d, t);
+		CaseManagementIssueTo1 t = new CaseManagementIssueTo1();		
+		IssueConverter issueConverter = new IssueConverter();
+		t.setAcute(d.isAcute());
+		t.setCertain(d.isCertain());
+		t.setDemographic_no(""+d.getDemographic_no());
+		t.setId(d.getId());
+		t.setIssue(issueConverter.getAsTransferObject(loggedInInfo, d.getIssue()));
+		t.setIssue_id(d.getIssue_id());
+		t.setMajor(d.isMajor());
+		t.setProgram_id(d.getProgram_id());
+		t.setResolved(d.isResolved());
+		t.setType(d.getType());
+		// Not sure what this one links to t.setUnchecked(d.);
+		t.setUpdate_date(d.getUpdate_date());
 		return t;
 	}
 
