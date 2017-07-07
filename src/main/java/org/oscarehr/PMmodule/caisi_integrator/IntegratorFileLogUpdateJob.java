@@ -46,7 +46,7 @@ public class IntegratorFileLogUpdateJob implements OscarRunnable{
 	
 	@Override
 	public void run() {
-		
+	
 		FacilityDao facilityDao = SpringUtils.getBean(FacilityDao.class);
 		IntegratorFileLogDao integratorFileLogDao = SpringUtils.getBean(IntegratorFileLogDao.class);
 		

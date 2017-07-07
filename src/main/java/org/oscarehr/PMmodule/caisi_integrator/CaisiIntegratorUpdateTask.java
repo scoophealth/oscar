@@ -68,41 +68,41 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.SecUserRole;
-import org.oscarehr.caisi_integrator.ws.CachedAdmission;
-import org.oscarehr.caisi_integrator.ws.CachedAppointment;
-import org.oscarehr.caisi_integrator.ws.CachedBillingOnItem;
-import org.oscarehr.caisi_integrator.ws.CachedDemographicAllergy;
-import org.oscarehr.caisi_integrator.ws.CachedDemographicDocument;
-import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
-import org.oscarehr.caisi_integrator.ws.CachedDemographicForm;
-import org.oscarehr.caisi_integrator.ws.CachedDemographicIssue;
-import org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult;
-import org.oscarehr.caisi_integrator.ws.CachedDemographicNote;
-import org.oscarehr.caisi_integrator.ws.CachedDemographicNoteCompositePk;
-import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
-import org.oscarehr.caisi_integrator.ws.CachedDxresearch;
-import org.oscarehr.caisi_integrator.ws.CachedEformData;
-import org.oscarehr.caisi_integrator.ws.CachedEformValue;
-import org.oscarehr.caisi_integrator.ws.CachedFacility;
-import org.oscarehr.caisi_integrator.ws.CachedMeasurement;
-import org.oscarehr.caisi_integrator.ws.CachedMeasurementExt;
-import org.oscarehr.caisi_integrator.ws.CachedMeasurementMap;
-import org.oscarehr.caisi_integrator.ws.CachedMeasurementType;
-import org.oscarehr.caisi_integrator.ws.CachedProgram;
-import org.oscarehr.caisi_integrator.ws.CachedProvider;
-import org.oscarehr.caisi_integrator.ws.CodeType;
-import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
+import org.oscarehr.caisi_integrator.dao.CachedAdmission;
+import org.oscarehr.caisi_integrator.dao.CachedAppointment;
+import org.oscarehr.caisi_integrator.dao.CachedBillingOnItem;
+import org.oscarehr.caisi_integrator.dao.CachedDemographic.Gender;
+import org.oscarehr.caisi_integrator.dao.CachedDemographicAllergy;
+import org.oscarehr.caisi_integrator.dao.CachedDemographicDocument;
+import org.oscarehr.caisi_integrator.dao.CachedDemographicDrug;
+import org.oscarehr.caisi_integrator.dao.CachedDemographicForm;
+import org.oscarehr.caisi_integrator.dao.CachedDemographicIssue;
+import org.oscarehr.caisi_integrator.dao.CachedDemographicLabResult;
+import org.oscarehr.caisi_integrator.dao.CachedDemographicNote;
+import org.oscarehr.caisi_integrator.dao.CachedDemographicNoteCompositePk;
+import org.oscarehr.caisi_integrator.dao.CachedDemographicPrevention;
+import org.oscarehr.caisi_integrator.dao.CachedDxresearch;
+import org.oscarehr.caisi_integrator.dao.CachedEformData;
+import org.oscarehr.caisi_integrator.dao.CachedEformValue;
+import org.oscarehr.caisi_integrator.dao.CachedFacility;
+import org.oscarehr.caisi_integrator.dao.CachedMeasurement;
+import org.oscarehr.caisi_integrator.dao.CachedMeasurementExt;
+import org.oscarehr.caisi_integrator.dao.CachedMeasurementMap;
+import org.oscarehr.caisi_integrator.dao.CachedMeasurementType;
+import org.oscarehr.caisi_integrator.dao.CachedProgram;
+import org.oscarehr.caisi_integrator.dao.CachedProvider;
+import org.oscarehr.caisi_integrator.dao.FacilityIdDemographicIssueCompositePk;
+import org.oscarehr.caisi_integrator.dao.FacilityIdIntegerCompositePk;
+import org.oscarehr.caisi_integrator.dao.FacilityIdLabResultCompositePk;
+import org.oscarehr.caisi_integrator.dao.FacilityIdStringCompositePk;
+import org.oscarehr.caisi_integrator.dao.NoteIssue;
+import org.oscarehr.caisi_integrator.util.CodeType;
+import org.oscarehr.caisi_integrator.util.Role;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
-import org.oscarehr.caisi_integrator.ws.FacilityIdDemographicIssueCompositePk;
-import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
-import org.oscarehr.caisi_integrator.ws.FacilityIdLabResultCompositePk;
-import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityWs;
-import org.oscarehr.caisi_integrator.ws.Gender;
-import org.oscarehr.caisi_integrator.ws.NoteIssue;
-import org.oscarehr.caisi_integrator.ws.ProviderTransfer;
-import org.oscarehr.caisi_integrator.ws.Role;
-import org.oscarehr.caisi_integrator.ws.SetConsentTransfer;
+import org.oscarehr.caisi_integrator.ws.transfer.DemographicTransfer;
+import org.oscarehr.caisi_integrator.ws.transfer.ProviderTransfer;
+import org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
@@ -363,7 +363,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 		
 		FacilityWs service = CaisiIntegratorManager.getFacilityWs(loggedInInfo, facility);
-		CachedFacility cachedFacility = service.getMyFacility();
+		org.oscarehr.caisi_integrator.ws.CachedFacility cachedFacility = service.getMyFacility();
 
 
 		// this needs to be set now, before we do any sends, this will cause anything updated after now to be resent twice but it's better than items being missed that were updated after this started.
@@ -518,7 +518,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			Provider provider = providerDao.getProvider(providerId);
 			if (provider == null) continue;
 
+			
 			ProviderTransfer providerTransfer = new ProviderTransfer();
+			providerTransfer.setRoles(new ArrayList<Role>());
 			CachedProvider cachedProvider = new CachedProvider();
 
 			BeanUtils.copyProperties(provider, cachedProvider);
@@ -532,7 +534,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			// copy roles over
 			List<SecUserRole> roles = secUserRoleDao.getUserRoles(providerId);
 			for (SecUserRole role : roles) {
-				Role integratorRole = IntegratorRoleUtils.getIntegratorRole(role.getRoleName());
+				Role integratorRole = IntegratorRoleUtils.getIntegratorRole2(role.getRoleName());
 				if (integratorRole != null) providerTransfer.getRoles().add(integratorRole);
 			}
 
@@ -755,7 +757,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	}
 
 	protected int pushAllDemographics(String parentFilename, LoggedInInfo loggedInInfo, Facility facility,Date lastDataUpdated, 
-			CachedFacility cachedFacility, List<Program> programs) 
+			org.oscarehr.caisi_integrator.ws.CachedFacility cachedFacility, List<Program> programs) 
 			throws IOException {
 		
 		List<Integer> demographicIds = getDemographicIdsToPush(facility,lastDataUpdated, programs);
@@ -947,19 +949,19 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		BeanUtils.copyProperties(demographic, demographicTransfer, ignoreProperties);
 
 		demographicTransfer.setCaisiDemographicId(demographic.getDemographicNo());
-		demographicTransfer.setBirthDate(demographic.getBirthDay());
+		demographicTransfer.setBirthDate(demographic.getBirthDay().getTime());
 
 		demographicTransfer.setHinType(demographic.getHcType());
 		demographicTransfer.setHinVersion(demographic.getVer());
-		demographicTransfer.setHinValidEnd(DateUtils.toGregorianCalendar(demographic.getHcRenewDate()));
-		demographicTransfer.setHinValidStart(DateUtils.toGregorianCalendar(demographic.getEffDate()));
+		demographicTransfer.setHinValidEnd(demographic.getHcRenewDate());
+		demographicTransfer.setHinValidStart(demographic.getEffDate());
 		demographicTransfer.setCaisiProviderId(demographic.getProviderNo());
 
 		demographicTransfer.setStreetAddress(demographic.getAddress());
 		demographicTransfer.setPhone1(demographic.getPhone());
 		demographicTransfer.setPhone2(demographic.getPhone2());
 
-		demographicTransfer.setLastUpdateDate(DateUtils.toGregorianCalendar(demographic.getLastUpdateDate()));
+		demographicTransfer.setLastUpdateDate(demographic.getLastUpdateDate());
 
 		try {
 			demographicTransfer.setGender(Gender.valueOf(demographic.getSex().toUpperCase()));
@@ -971,7 +973,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		ClientImage clientImage = clientImageDAO.getClientImage(demographicId);
 		if (clientImage != null) {
 			demographicTransfer.setPhoto(clientImage.getImage_data());
-			demographicTransfer.setPhotoUpdateDate(DateUtils.toCalendar(clientImage.getUpdate_date()));
+			demographicTransfer.setPhotoUpdateDate(clientImage.getUpdate_date());
 		}
 
 		// set flag to remove demographic identity
@@ -1025,7 +1027,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushDemographicConsent(ObjectOutputStream out,List<IntegratorConsent> tempConsents ) throws IOException {
 		for (IntegratorConsent tempConsent : tempConsents) {
 			if (tempConsent.getClientConsentStatus() == ConsentStatus.GIVEN || tempConsent.getClientConsentStatus() == ConsentStatus.REVOKED) {
-				SetConsentTransfer consentTransfer = CaisiIntegratorManager.makeSetConsentTransfer(tempConsent);
+				SetConsentTransfer consentTransfer = CaisiIntegratorManager.makeSetConsentTransfer2(tempConsent);
 				out.writeUnshared(consentTransfer);
 				logger.debug("pushDemographicConsent:" + tempConsent.getId() + "," + tempConsent.getFacilityId() + "," + tempConsent.getDemographicId());
 				// return;
@@ -1034,7 +1036,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	}
 	
 
-	private void pushDemographicIssues(ObjectOutputStream out, Date lastDataUpdated, Facility facility, List<Program> programsInFacility, Integer demographicId, CachedFacility cachedFacility) throws IOException {
+	private void pushDemographicIssues(ObjectOutputStream out, Date lastDataUpdated, Facility facility, List<Program> programsInFacility, Integer demographicId, org.oscarehr.caisi_integrator.ws.CachedFacility cachedFacility) throws IOException {
 		logger.debug("pushing demographicIssues facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.issues.disabled", "false"))) {
@@ -1063,10 +1065,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				facilityDemographicIssuePrimaryKey.setCodeType(CodeType.SYSTEM);
 			}
 			else if( Issue.ICD_9.equalsIgnoreCase(issue.getType()) ) {
-				facilityDemographicIssuePrimaryKey.setCodeType(CodeType.ICD_9);
+				facilityDemographicIssuePrimaryKey.setCodeType(CodeType.ICD9);
 			}
 			else if( Issue.ICD_10.equalsIgnoreCase(issue.getType()) ) {
-				facilityDemographicIssuePrimaryKey.setCodeType(CodeType.ICD_10);
+				facilityDemographicIssuePrimaryKey.setCodeType(CodeType.ICD10);
 			}
 			else if( Issue.SNOMED.equalsIgnoreCase(issue.getType()) ) {
 				facilityDemographicIssuePrimaryKey.setCodeType(CodeType.SNOMED);
@@ -1084,7 +1086,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 			BeanUtils.copyProperties(caseManagementIssue, cachedDemographicIssue);
 			cachedDemographicIssue.setIssueDescription(issue.getDescription());
-			cachedDemographicIssue.setIssueRole(IntegratorRoleUtils.getIntegratorRole(issue.getRole()));
+			cachedDemographicIssue.setIssueRole(IntegratorRoleUtils.getIntegratorRole2(issue.getRole()));
 
 			ArrayList<CachedDemographicIssue> issues = new ArrayList<CachedDemographicIssue>();
 			issues.add(cachedDemographicIssue);
@@ -1128,11 +1130,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			facilityIdIntegerCompositePk.setCaisiItemId(admission.getId().intValue());
 			cachedAdmission.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
 
-			cachedAdmission.setAdmissionDate(DateUtils.toCalendar(admission.getAdmissionDate()));
+			cachedAdmission.setAdmissionDate(admission.getAdmissionDate());
 			cachedAdmission.setAdmissionNotes(admission.getAdmissionNotes());
 			cachedAdmission.setCaisiDemographicId(demographicId);
 			cachedAdmission.setCaisiProgramId(admission.getProgramId());
-			cachedAdmission.setDischargeDate(DateUtils.toCalendar(admission.getDischargeDate()));
+			cachedAdmission.setDischargeDate(admission.getDischargeDate());
 			cachedAdmission.setDischargeNotes(admission.getDischargeNotes());
 			//missing status from the whole transfer?
 			
@@ -1184,8 +1186,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedDemographicPrevention.setFacilityPreventionPk(pk);
 			
 
-			cachedDemographicPrevention.setNextDate(DateUtils.toCalendar(localPrevention.getNextDate()));
-			cachedDemographicPrevention.setPreventionDate(DateUtils.toCalendar(localPrevention.getPreventionDate()));
+			cachedDemographicPrevention.setNextDate(localPrevention.getNextDate());
+			cachedDemographicPrevention.setPreventionDate(localPrevention.getPreventionDate());
 			cachedDemographicPrevention.setPreventionType(localPrevention.getPreventionType());
 			cachedDemographicPrevention.setRefused(localPrevention.isRefused());
 			cachedDemographicPrevention.setNever(localPrevention.isNever());
@@ -1255,15 +1257,15 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		cachedDemographicDocument.setDocType(eDoc.getType());
 		cachedDemographicDocument.setDocXml(eDoc.getHtml());
 		cachedDemographicDocument.setNumberOfPages(eDoc.getNumberOfPages());
-		cachedDemographicDocument.setObservationDate(DateUtils.toGregorianCalendarDate(eDoc.getObservationDate()));
+		cachedDemographicDocument.setObservationDate(DateUtils.toGregorianCalendarDate(eDoc.getObservationDate()).getTime());
 		cachedDemographicDocument.setProgramId(eDoc.getProgramId());
 		cachedDemographicDocument.setPublic1(Integer.parseInt(eDoc.getDocPublic()));
 		cachedDemographicDocument.setResponsible(eDoc.getResponsibleId());
-		cachedDemographicDocument.setReviewDateTime(DateUtils.toGregorianCalendar(eDoc.getReviewDateTimeDate()));
+		cachedDemographicDocument.setReviewDateTime(eDoc.getReviewDateTimeDate());
 		cachedDemographicDocument.setReviewer(eDoc.getReviewerId());
 		cachedDemographicDocument.setSource(eDoc.getSource());
 		cachedDemographicDocument.setStatus("" + eDoc.getStatus());
-		cachedDemographicDocument.setUpdateDateTime(DateUtils.toGregorianCalendar(eDoc.getDateTimeStampAsDate()));
+		cachedDemographicDocument.setUpdateDateTime(eDoc.getDateTimeStampAsDate());
 		cachedDemographicDocument.setDescription(eDoc.getDescription());
 
 		byte[] contents = EDocUtil.getFile(OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + '/' + eDoc.getFileName());
@@ -1381,7 +1383,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 			cachedDemographicForm.setCaisiDemographicId(demographicId);
 			cachedDemographicForm.setCaisiProviderId(p.getProperty("provider_no"));
-			cachedDemographicForm.setEditDate(DateUtils.toGregorianCalendar(date));
+			cachedDemographicForm.setEditDate(date);
 			cachedDemographicForm.setFormName("formLabReq07");
 
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -1480,12 +1482,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		note.setEncounterType(localNote.getEncounter_type());
 		note.setNote(localNote.getNote());
 		note.setObservationCaisiProviderId(localNote.getProviderNo());
-		note.setObservationDate(DateUtils.toCalendar(localNote.getObservation_date()));
+		note.setObservationDate(localNote.getObservation_date());
 		note.setRole(localNote.getRoleName());
 		note.setSigningCaisiProviderId(localNote.getSigning_provider_no());
-		note.setUpdateDate(DateUtils.toCalendar(localNote.getUpdate_date()));
+		note.setUpdateDate(localNote.getUpdate_date());
 
-		List<NoteIssue> issues = note.getIssues();
+		Set<NoteIssue> issues = note.getIssues();
 		List<CaseManagementIssue> localIssues = caseManagementIssueNotesDao.getNoteIssues(localNote.getId().intValue());
 		String issueCodeType;
 		for (CaseManagementIssue caseManagementIssue : localIssues) {
@@ -1498,10 +1500,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				noteIssue.setCodeType(CodeType.CUSTOM_ISSUE);
 			}
 			else if( Issue.ICD_10.equalsIgnoreCase(issueCodeType) ) { 
-				noteIssue.setCodeType(CodeType.ICD_10);
+				noteIssue.setCodeType(CodeType.ICD10);
 			}
 			else if( Issue.ICD_9.equalsIgnoreCase(issueCodeType) ) {
-				noteIssue.setCodeType(CodeType.ICD_9);
+				noteIssue.setCodeType(CodeType.ICD9);
 			}
 			else if( Issue.SNOMED.equalsIgnoreCase(issueCodeType) ) {
 				noteIssue.setCodeType(CodeType.SNOMED);
@@ -1543,25 +1545,25 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 				cachedDemographicDrug.setArchived(drug.isArchived());
 				cachedDemographicDrug.setArchivedReason(drug.getArchivedReason());
-				cachedDemographicDrug.setArchivedDate(DateUtils.toCalendar(drug.getArchivedDate()));
+				cachedDemographicDrug.setArchivedDate(drug.getArchivedDate());
 				cachedDemographicDrug.setAtc(drug.getAtc());
 				cachedDemographicDrug.setBrandName(drug.getBrandName());
 				cachedDemographicDrug.setCaisiDemographicId(drug.getDemographicId());
 				cachedDemographicDrug.setCaisiProviderId(drug.getProviderNo());
-				cachedDemographicDrug.setCreateDate(DateUtils.toCalendar(drug.getCreateDate()));
+				cachedDemographicDrug.setCreateDate(drug.getCreateDate());
 				cachedDemographicDrug.setCustomInstructions(drug.isCustomInstructions());
 				cachedDemographicDrug.setCustomName(drug.getCustomName());
 				cachedDemographicDrug.setDosage(drug.getDosage());
 				cachedDemographicDrug.setDrugForm(drug.getDrugForm());
 				cachedDemographicDrug.setDuration(drug.getDuration());
 				cachedDemographicDrug.setDurUnit(drug.getDurUnit());
-				cachedDemographicDrug.setEndDate(DateUtils.toCalendar(drug.getEndDate()));
+				cachedDemographicDrug.setEndDate(drug.getEndDate());
 				FacilityIdIntegerCompositePk pk = new FacilityIdIntegerCompositePk();
 				pk.setCaisiItemId(drug.getId());
 				cachedDemographicDrug.setFacilityIdIntegerCompositePk(pk);
 				cachedDemographicDrug.setFreqCode(drug.getFreqCode());
 				cachedDemographicDrug.setGenericName(drug.getGenericName());
-				cachedDemographicDrug.setLastRefillDate(DateUtils.toCalendar(drug.getLastRefillDate()));
+				cachedDemographicDrug.setLastRefillDate(drug.getLastRefillDate());
 				cachedDemographicDrug.setLongTerm(drug.getLongTerm());
 				cachedDemographicDrug.setMethod(drug.getMethod());
 				cachedDemographicDrug.setNoSubs(drug.isNoSubs());
@@ -1572,7 +1574,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				cachedDemographicDrug.setRegionalIdentifier(drug.getRegionalIdentifier());
 				cachedDemographicDrug.setRepeats(drug.getRepeat());
 				cachedDemographicDrug.setRoute(drug.getRoute());
-				cachedDemographicDrug.setRxDate(DateUtils.toCalendar(drug.getRxDate()));
+				cachedDemographicDrug.setRxDate(drug.getRxDate());
 				if (drug.getScriptNo() != null) cachedDemographicDrug.setScriptNo(drug.getScriptNo());
 				cachedDemographicDrug.setSpecial(drug.getSpecial());
 				cachedDemographicDrug.setTakeMax(drug.getTakeMax());
@@ -1621,7 +1623,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedAllergy.setAgeOfOnset(allergy.getAgeOfOnset());
 			cachedAllergy.setCaisiDemographicId(demographicId);
 			cachedAllergy.setDescription(allergy.getDescription());
-			cachedAllergy.setEntryDate(DateUtils.toGregorianCalendar(allergy.getEntryDate()));
+			cachedAllergy.setEntryDate(allergy.getEntryDate());
 			
 			if(allergy.getHiclSeqno() != null){
 			   cachedAllergy.setHiclSeqNo(allergy.getHiclSeqno());
@@ -1636,7 +1638,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedAllergy.setReaction(allergy.getReaction());
 			cachedAllergy.setRegionalIdentifier(allergy.getRegionalIdentifier());
 			cachedAllergy.setSeverityCode(allergy.getSeverityOfReaction());
-			if (allergy.getStartDate() != null) cachedAllergy.setStartDate(DateUtils.toGregorianCalendar(allergy.getStartDate()));
+			if (allergy.getStartDate() != null) cachedAllergy.setStartDate(allergy.getStartDate());
 			cachedAllergy.setTypeCode(allergy.getTypeCode());
 
 			cachedAllergies.add(cachedAllergy);
@@ -1670,21 +1672,21 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			facilityIdIntegerCompositePk.setCaisiItemId(appointment.getId());
 			cachedAppointment.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
 
-			cachedAppointment.setAppointmentDate(DateUtils.toCalendar(appointment.getAppointmentDate()));
+			cachedAppointment.setAppointmentDate(appointment.getAppointmentDate());
 			cachedAppointment.setCaisiDemographicId(demographicId);
 			cachedAppointment.setCaisiProviderId(appointment.getProviderNo());
-			cachedAppointment.setCreateDatetime(DateUtils.toCalendar(appointment.getCreateDateTime()));
-			cachedAppointment.setEndTime(DateUtils.toCalendar(appointment.getEndTime()));
+			cachedAppointment.setCreateDatetime(appointment.getCreateDateTime());
+			cachedAppointment.setEndTime(appointment.getEndTime());
 			cachedAppointment.setLocation(appointment.getLocation());
 			cachedAppointment.setNotes(appointment.getNotes());
 			cachedAppointment.setReason(appointment.getReason());
 			cachedAppointment.setRemarks(appointment.getRemarks());
 			cachedAppointment.setResources(appointment.getResources());
-			cachedAppointment.setStartTime(DateUtils.toCalendar(appointment.getStartTime()));
+			cachedAppointment.setStartTime(appointment.getStartTime());
 			cachedAppointment.setStatus(appointment.getStatus());
 			cachedAppointment.setStyle(appointment.getStyle());
 			cachedAppointment.setType(appointment.getType());
-			cachedAppointment.setUpdateDatetime(DateUtils.toCalendar(appointment.getUpdateDateTime()));
+			cachedAppointment.setUpdateDatetime(appointment.getUpdateDateTime());
 
 			cachedAppointments.clear();
 			cachedAppointments.add(cachedAppointment);
@@ -1718,8 +1720,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedDxresearch.setCaisiDemographicId(demographicId);
 			cachedDxresearch.setDxresearchCode(dxresearch.getDxresearchCode());
 			cachedDxresearch.setCodingSystem(dxresearch.getCodingSystem());
-			cachedDxresearch.setStartDate(DateUtils.toCalendar(dxresearch.getStartDate()));
-			cachedDxresearch.setUpdateDate(DateUtils.toCalendar(dxresearch.getUpdateDate()));
+			cachedDxresearch.setStartDate(dxresearch.getStartDate());
+			cachedDxresearch.setUpdateDate(dxresearch.getUpdateDate());
 			cachedDxresearch.setStatus(String.valueOf(dxresearch.getStatus()));
 
 			cachedDxresearchs.add(cachedDxresearch);		
@@ -1766,7 +1768,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				cachedBillingONItem.setDx1(billingItem.getDx1());
 				cachedBillingONItem.setDx2(billingItem.getDx2());
 				cachedBillingONItem.setServiceCode(billingItem.getServiceCode());
-				cachedBillingONItem.setServiceDate(DateUtils.toCalendar(billingItem.getServiceDate()));
+				cachedBillingONItem.setServiceDate(billingItem.getServiceDate());
 				cachedBillingONItem.setStatus(billingItem.getStatus());
 
 				cachedBillingOnItems.add(cachedBillingONItem);
@@ -1799,8 +1801,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedEformData.setFacilityIdIntegerCompositePk(facilityIdIntegerCompositePk);
 
 			cachedEformData.setCaisiDemographicId(demographicId);
-			cachedEformData.setFormDate(DateUtils.toCalendar(eformData.getFormDate()));
-			cachedEformData.setFormTime(DateUtils.toCalendar(eformData.getFormTime()));
+			cachedEformData.setFormDate(eformData.getFormDate());
+			cachedEformData.setFormTime(eformData.getFormTime());
 			cachedEformData.setFormId(eformData.getFormId());
 			cachedEformData.setFormName(eformData.getFormName());
 			cachedEformData.setFormData(eformData.getFormData());
@@ -1885,8 +1887,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			cachedMeasurement.setCaisiProviderId(measurement.getProviderNo());
 			cachedMeasurement.setComments(measurement.getComments());
 			cachedMeasurement.setDataField(measurement.getDataField());
-			cachedMeasurement.setDateEntered(DateUtils.toCalendar(measurement.getCreateDate()));
-			cachedMeasurement.setDateObserved(DateUtils.toCalendar(measurement.getDateObserved()));
+			cachedMeasurement.setDateEntered(measurement.getCreateDate());
+			cachedMeasurement.setDateObserved(measurement.getDateObserved());
 			cachedMeasurement.setMeasuringInstruction(measurement.getMeasuringInstruction());
 			cachedMeasurement.setType(measurement.getType());
 

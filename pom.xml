@@ -429,7 +429,7 @@
 		<dependency>
 			<groupId>org.oscarehr.caisi_integrator</groupId>
 			<artifactId>caisi_integrator_client_stubs</artifactId>
-			<version>0.8</version>
+			<version>0.9</version>
 		</dependency>
 
 		<!-- macplus -->
@@ -1115,6 +1115,14 @@
 	    <groupId>org.jasypt</groupId>
 	    <artifactId>jasypt</artifactId>
 	    <version>1.8</version>
+	</dependency>
+
+
+	<dependency>
+  <groupId>org.oscarehr.caisi_integrator</groupId>
+  <artifactId>integrator-objects</artifactId>
+  <version>0.0.2</version>
+
 	</dependency>
 
 	</dependencies>
