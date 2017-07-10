@@ -151,7 +151,7 @@ public class CaseManagementPrint {
 		}
 		
 		//How should i filter out observation dates?
-		if(startDate != null && endDate != null){
+		if(!printAllNotes && (startDate != null && endDate != null)){
 			List<CaseManagementNote> dateFilteredList = new ArrayList<CaseManagementNote>();
 			logger.debug("start date "+startDate);
 			logger.debug("end date "+endDate);
