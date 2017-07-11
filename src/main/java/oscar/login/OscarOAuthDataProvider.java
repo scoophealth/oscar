@@ -188,7 +188,7 @@ public class OscarOAuthDataProvider implements OAuthDataProvider {
         sat.setClientId(sc.getId());
         sat.setDateCreated(new Date());
         sat.setIssued(issuedAt);
-        sat.setLifetime(3600);
+        sat.setLifetime(-1);
         sat.setTokenId(accessTokenString);
         sat.setTokenSecret(tokenSecretString);
         sat.setProviderNo(srt.getProviderNo());
