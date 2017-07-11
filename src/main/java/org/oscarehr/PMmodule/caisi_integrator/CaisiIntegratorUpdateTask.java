@@ -52,8 +52,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.RecursiveTask;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -678,83 +676,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 	
-	protected int pushAllDemographicsMultiThreaded(String parentFilename, LoggedInInfo loggedInInfo, Facility facility,Date lastDataUpdated, 
-			CachedFacility cachedFacility, List<Program> programs) {
-		
-		
-		String documentDir = OscarProperties.getInstance().getProperty("DOCUMENT_DIR").trim();
-		int currentFileNumber = 2;
-		
-		List<Integer> demographicIds = getDemographicIdsToPush(facility,lastDataUpdated, programs);
-		List<Program> programsInFacility = programDao.getProgramsByFacilityId(facility.getId());
-		List<String> providerIdsInFacility = providerDao.getProviderIds(facility.getId());
-		boolean rid = integratorControlDao.readRemoveDemographicIdentity(facility.getId());
-		
-		
-		int numOfThreads = Runtime.getRuntime().availableProcessors();
-		
-		int dim = (int) Math.ceil((double) demographicIds.size() / numOfThreads);
-	    logger.info("Block Dimension: " + dim);
-	        
-	    final ForkJoinPool pool = new ForkJoinPool(numOfThreads);
 
-	    final int n = demographicIds.size();
-        final int numOfOcc = pool.invoke(new PushDemographicSetToFile(0, n - 1, dim));
-        
-		
-		return 0;
-	}
-	
-	class PushDemographicSetToFile extends RecursiveTask<Integer> {
-		int start, end, dim;
-		
-		 public PushDemographicSetToFile(final int start, final int end, final int dim) {
-			 this.start = start;
-	            this.end = end;
-	            this.dim = dim;
-		 }
-		 
-		 public Integer compute() {
-			// if the number of elements is lower than the addressable size we process this range
-	            if ((this.end - this.start) < this.dim) {
-	                int ris = 0;
-	                
-	                // we show the partial result of the sub-problem and the name of the thread that has calculated it
-	                System.out.println("\t [" + Thread.currentThread().getName() + "]: " + ris + " occurrences of " 
-	                                   + " within the range from " + this.start + " to "
-	                                   + this.end);
-	                return ris;
-	            }
-
-	            // otherwise, if the range is still too big, we divide it again in half
-	            final int mid = (this.start + this.end) / 2;
-	            System.out.printf("Fork the computation in two ranges: "
-	                                      + "from %d to %d and from %d to %d %n",
-	                              this.start,
-	                              mid,
-	                              mid + 1,
-	                              this.end);
-
-	            // we assign the calculation of the first half to a task
-	            final PushDemographicSetToFile subTask1 = new PushDemographicSetToFile(this.start,
-	                                                                      mid,
-	                                                                      this.dim);
-	            // and we invoke it, forking a new process
-	            subTask1.fork();
-
-	            // we assign the calculation of the second half to another task
-	            final PushDemographicSetToFile subTask2 = new PushDemographicSetToFile(mid + 1,
-	                                                                       this.end,
-	                                                                       this.dim);
-	            // and we calculate it
-	            final int resultSecond = subTask2.compute();
-
-	            // we wait for termination of the forked thread and we put results together
-	            return subTask1.join() + resultSecond;
-
-	        }
-		 
-	}
 
 	protected int pushAllDemographics(String parentFilename, LoggedInInfo loggedInInfo, Facility facility,Date lastDataUpdated, 
 			org.oscarehr.caisi_integrator.ws.CachedFacility cachedFacility, List<Program> programs) 
