@@ -39,6 +39,7 @@ import org.oscarehr.common.dao.DocumentDao;
 import org.oscarehr.common.model.CtlDocument;
 import org.oscarehr.common.model.Document;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import oscar.OscarProperties;
@@ -56,42 +57,63 @@ public class DocumentManager {
 	@Autowired
 	private CtlDocumentDao ctlDocumentDao;
 	
-	public Document getDocument(LoggedInInfo loggedInInfo, Integer id)
-	{
-		Document result=documentDao.find(id);
+    @Autowired
+    protected SecurityInfoManager securityInfoManager;
+	
+	public Document getDocument(LoggedInInfo loggedInInfo, Integer id) {
+		
+		if ( ! securityInfoManager.hasPrivilege( loggedInInfo, "_edoc", "r", "" ) ) {
+            throw new RuntimeException("Read Access Denied _edoc for provider " + loggedInInfo.getLoggedInProviderNo() );
+        }
+		
+		Document result = documentDao.find(id);
 		
 		//--- log action ---
 		if (result != null) {
-			LogAction.addLogSynchronous(loggedInInfo, "DocumentManager.getDocument", "id=" + id);
+			LogAction.addLog(loggedInInfo, "DocumentManager.getDocument", "id=" + id, "","","");
 		}
 
 		return(result);
 	}
 	
-	public CtlDocument getCtlDocumentByDocumentId(LoggedInInfo loggedInInfo, Integer documentId)
-	{
+	public CtlDocument getCtlDocumentByDocumentId(LoggedInInfo loggedInInfo, Integer documentId) {
+		
+		if ( ! securityInfoManager.hasPrivilege( loggedInInfo, "_edoc", "r", "" ) ) {
+            throw new RuntimeException("Read Access Denied _edoc for provider " + loggedInInfo.getLoggedInProviderNo() );
+        }
+		
 		CtlDocument result=ctlDocumentDao.getCtrlDocument(documentId);
 		
 		//--- log action ---
 		if (result != null) {
-			LogAction.addLogSynchronous(loggedInInfo, "DocumentManager.getCtlDocumentByDocumentNoAndModule", "id=" + documentId);
+			LogAction.addLog(loggedInInfo, "DocumentManager.getCtlDocumentByDocumentNoAndModule", "id=" + documentId, "","","");
 		}
 
 		return(result);
 	}
 	
 	public List<Document> getDocumentsUpdateAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateExclusive, int itemsToReturn) {
+		
+		if ( ! securityInfoManager.hasPrivilege( loggedInInfo, "_edoc", "r", "" ) ) {
+            throw new RuntimeException("Read Access Denied _edoc for provider " + loggedInInfo.getLoggedInProviderNo() );
+        }
+		
 		List<Document> results = documentDao.findByUpdateDate(updatedAfterThisDateExclusive, itemsToReturn);
 
-		LogAction.addLogSynchronous(loggedInInfo, "DocumentManager.getUpdateAfterDate", "updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
+		LogAction.addLog(loggedInInfo, "DocumentManager.getUpdateAfterDate", "updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive, "", "", "Number items " + itemsToReturn);
 
 		return (results);
 	}
 
 	public List<Document> getDocumentsByProgramProviderDemographicDate(LoggedInInfo loggedInInfo, Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
+		
+		if ( ! securityInfoManager.hasPrivilege( loggedInInfo, "_edoc", "r", "" ) ) {
+            throw new RuntimeException("Read Access Denied _edoc for provider " + loggedInInfo.getLoggedInProviderNo() );
+        }
+		
 		List<Document> results = documentDao.findByProgramProviderDemographicUpdateDate(programId, providerNo, demographicId, updatedAfterThisDateExclusive.getTime(), itemsToReturn);
 
-		LogAction.addLogSynchronous(loggedInInfo, "DocumentManager.getDocumentsByProgramProviderDemographicDate", "programId=" + programId+", providerNo="+providerNo+", demographicId="+demographicId+", updatedAfterThisDateExclusive="+updatedAfterThisDateExclusive.getTime());
+		LogAction.addLog(loggedInInfo, "DocumentManager.getDocumentsByProgramProviderDemographicDate", "programId=" + programId, "providerNo="+providerNo, demographicId+"", "updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive.getTime() );
 
 		return (results);
 	}
@@ -102,6 +124,10 @@ public class DocumentManager {
 
 	public Integer saveDocument( LoggedInInfo loggedInInfo, Document document, CtlDocument ctlDocument ) {
 
+		if ( ! securityInfoManager.hasPrivilege( loggedInInfo, "_edoc", "w", "" ) ) {
+            throw new RuntimeException("Write Access Denied _edoc for provider " + loggedInInfo.getLoggedInProviderNo() );
+        }
+		
 		Integer savedId = null;
 	
 		if( document.getId() == null ) {
@@ -120,18 +146,24 @@ public class DocumentManager {
 	}
 	
 	private Integer addDocument( LoggedInInfo loggedInInfo, Document document ) {
+
 		documentDao.persist( document );
-		LogAction.addLogSynchronous(loggedInInfo, "DocumentManager.saveDocument", "Document saved " + document.getId() );
+		LogAction.addLog(loggedInInfo, "DocumentManager.saveDocument", "Document saved ", "Document No." + document.getDocumentNo(), "","");
 		return document.getId();
 	}
 	
 	private Integer updateDocument( LoggedInInfo loggedInInfo, Document document ) {
 		documentDao.merge( document );
-		LogAction.addLogSynchronous(loggedInInfo, "DocumentManager.saveDocument", "Document updated " + document.getId() );
+		LogAction.addLog(loggedInInfo, "DocumentManager.saveDocument", "Document updated ", "Document No." + document.getDocumentNo(), "","");
 		return document.getId();
 	}
 	
 	public void moveDocument( LoggedInInfo loggedInInfo, Document document, String fromPath, String toPath ) {
+		
+		if ( ! securityInfoManager.hasPrivilege( loggedInInfo, "_edoc", "x", "" ) ) {
+            throw new RuntimeException("Read and Write Access Denied _edoc for provider " + loggedInInfo.getLoggedInProviderNo() );
+        }
+		
 		// move the PDF from the temp location to Oscar's document directory.
 		try {
 			if( toPath == null ) {
@@ -140,10 +172,11 @@ public class DocumentManager {
 			Path from = FileSystems.getDefault().getPath( String.format("%1$s%2$s%3$s", fromPath, File.separator, document.getDocfilename() ) );
 			Path to = FileSystems.getDefault().getPath( String.format("%1$s%2$s%3$s", toPath, File.separator, document.getDocfilename() ) );
 			Files.move( from, to, StandardCopyOption.REPLACE_EXISTING );
-			LogAction.addLogSynchronous(loggedInInfo, "EformDataManager.moveDocument", "Document moved from : " + fromPath + " to " + toPath );
+			LogAction.addLog(loggedInInfo, "EformDataManager.moveDocument", "Document was moved", "Document No." + document.getDocumentNo(), "",fromPath + " to " + toPath);
 		
 		} catch (IOException e) {
-			LogAction.addLogSynchronous(loggedInInfo, "EformDataManager.moveDocument", "Document failed to move from : " + fromPath + " to " + toPath );
+			MiscUtils.getLogger().error("Document failed move. Id: " + document.getDocumentNo() + " From: " + fromPath + " To: " + toPath , e);
+			LogAction.addLog(loggedInInfo, "EformDataManager.moveDocument", "Document failed move ", "Document No." + document.getDocumentNo(), "",fromPath + " to " + toPath);
 		}
 	}
 	
