@@ -108,7 +108,7 @@
 		
 		ocanStaffFormDao.merge(cbiForm);	
 	}
-	response.sendRedirect(request.getContextPath()+"/PMmodule/ClientManager.do?id="+clientId);
+//	response.sendRedirect(request.getContextPath()+"/PMmodule/ClientManager.do?id="+clientId);
 %>
 
 <html>
@@ -121,5 +121,5 @@ function RefreshParent() {
 }
 </script>
 </head>
-<body load="return window.close();"></body>
+<body onLoad="window.close();"></body>
 </html>  
