@@ -22,6 +22,7 @@
  */
 
 package org.caisi.core.web;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -163,4 +164,37 @@ public class IssueAdminAction extends DispatchAction {
         saveMessages(request, messages);
         return list(mapping, form, request, response);
     }
+    
+    public ActionForward archiveIssues(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        if (log.isDebugEnabled()) {
+            log.debug("entering 'archive' method...");
+        }
+        
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
+        	throw new SecurityException("missing required security object (_admin)");
+        }
+        
+        log.info("entering 'archive' method...");
+       
+        List<Integer> ids = new ArrayList<Integer>();
+        
+        String idList = request.getParameter("ids");
+        
+        if(idList != null && idList.length()>0) {
+        	String[] vals = idList.split(",");
+        	for(String v:vals) {
+        		ids.add(Integer.parseInt(v));
+        	}
+        }
+       
+        mgr.archiveIssues(ids);
+        
+      
+        ActionMessages messages = new ActionMessages();
+        messages.add(ActionMessages.GLOBAL_MESSAGE,
+                     new ActionMessage("issueAdmin.archived"));
+        saveMessages(request, messages);
+        return list(mapping, form, request, response);
+    }
+    
 }

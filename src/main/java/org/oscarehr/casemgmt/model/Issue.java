@@ -47,6 +47,7 @@ public class Issue extends BaseObject {
 	private String priority;
     private String type;
     private Integer sortOrderId;
+    private boolean archived = false;
     
 	public Integer getSortOrderId() {
     	return sortOrderId;
@@ -136,5 +137,14 @@ public class Issue extends BaseObject {
             }catch(Exception e){ MiscUtils.getLogger().error("Invalid issue update date", e);}
         }
 
+	public boolean isArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
+	}
+
     
+   
 }

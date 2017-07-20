@@ -49,7 +49,7 @@ public class IssueDAO extends HibernateDaoSupport {
     }
 
     public List<Issue> getIssues() {
-        return this.getHibernateTemplate().find("from Issue");
+        return this.getHibernateTemplate().find("from Issue i WHERE i.archived = 0");
     }
 
     public List<Issue> findIssueByCode(String[] codes) {
@@ -86,7 +86,7 @@ public class IssueDAO extends HibernateDaoSupport {
     public List<Issue> findIssueBySearch(String search) {
         search = "%" + search + "%";
         search = search.toLowerCase();
-        String sql = "from Issue i where lower(i.code) like ? or lower(i.description) like ?";
+        String sql = "from Issue i where lower(i.code) like ? or lower(i.description) like ? and i.archived=0";
         return this.getHibernateTemplate().find(sql, new Object[] {search, search});
     }
     
@@ -126,7 +126,7 @@ public class IssueDAO extends HibernateDaoSupport {
 
         search = "%" + search + "%";
         search = search.toLowerCase();
-        final String sql = "from Issue i where (lower(i.code) like :term or lower(i.description) like :term  or lower(i.role) like :roles) and i.role in (" + roleList + ") order by sortOrderId";
+        final String sql = "from Issue i where (lower(i.code) like :term or lower(i.description) like :term  or lower(i.role) like :roles) and i.role in (" + roleList + ") and i.archived=0 order by sortOrderId ";
         logger.debug(sql);
         final String s = search;
         //return this.getHibernateTemplate().find(sql, new Object[] {search, search,roleList});
@@ -160,7 +160,7 @@ public class IssueDAO extends HibernateDaoSupport {
 
         search = "%" + search + "%";
         search = search.toLowerCase();
-        final String sql = "select count(i) from Issue i where (lower(i.code) like ? or lower(i.description) like ?  or lower(i.role) like ?) and i.role in (" + roleList + ") order by sortOrderId";
+        final String sql = "select count(i) from Issue i where (lower(i.code) like ? or lower(i.description) like ?  or lower(i.role) like ?) and i.role in (" + roleList + ") and i.archived=0 order by sortOrderId";
         logger.debug(sql);
         List<Long> result = this.getHibernateTemplate().find(sql, new Object[] {search, search,roleList});
 
@@ -175,7 +175,7 @@ public class IssueDAO extends HibernateDaoSupport {
     public List searchNoRolesConcerned(String search) {
         search = "%" + search + "%";
         search = search.toLowerCase();
-        String sql = "from Issue i where (lower(i.code) like ? or lower(i.description) like ?)";
+        String sql = "from Issue i where (lower(i.code) like ? or lower(i.description) like ?) and i.archived=0";
         logger.debug(sql);
         return this.getHibernateTemplate().find(sql, new Object[] {search, search});
     }

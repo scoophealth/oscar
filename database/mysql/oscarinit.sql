@@ -9108,6 +9108,7 @@ CREATE TABLE `issue` (
   `priority` CHAR(10) DEFAULT NULL,
   `type` VARCHAR(32) DEFAULT NULL,
   `sortOrderId` int NOT NULL,
+  `archived` tinyint(1) NOT NULL,
   PRIMARY KEY  (`issue_id`),
   KEY `description_index`(`description`(20)),
   KEY (`code`)
