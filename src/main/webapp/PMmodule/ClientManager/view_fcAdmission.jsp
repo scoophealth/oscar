@@ -88,6 +88,7 @@ function checkDates() {
 				return false;
 		} 
 	}
+	
 	return true;	
 	
 }
@@ -185,7 +186,7 @@ String str_referralDate = referralDate==null?"":formatter.format(referralDate);
 
 <link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
 <body>
-<form id="fcAdmissionForm" name="fcAdmissionForm" action="ClientManager/functionalCentreAdmissionAction.jsp" method="GET" onSubmit="RefreshParent(); window.close();">	
+<form id="fcAdmissionForm" name="fcAdmissionForm" action="ClientManager/functionalCentreAdmissionAction.jsp" method="GET" >	
 
 <table width="100%" border="0" cellspacing="1" cellpadding="1">
 
