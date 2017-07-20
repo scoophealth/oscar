@@ -57,6 +57,10 @@
 <%@page import="org.oscarehr.caisi_integrator.ws.DemographicTransfer"%>
 <%@page import="org.oscarehr.caisi_integrator.ws.MatchingDemographicTransferScore"%>
 <%@page import="org.oscarehr.casemgmt.service.CaseManagementManager"%>
+<%@page import="org.oscarehr.PMmodule.service.AdmissionManager"%>
+<%@page import="org.oscarehr.common.model.Admission"%>
+<%@page import="org.oscarehr.managers.ProgramManager2"%>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider"%>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -77,6 +81,7 @@
  	int curMonth = (now.get(Calendar.MONTH)+1);
  	int curDay = now.get(Calendar.DAY_OF_MONTH);
  	String curProvider_no = (String) session.getAttribute("user");
+ 	
  	
 
 %>
@@ -116,6 +121,10 @@
 		noteReason = "";
 	}
 
+	AdmissionManager admissionManager = SpringUtils.getBean(AdmissionManager.class);
+	ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+	List<ProgramProvider> ppList1 = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+	
 %>
 <html:html locale="true">
 <head>
@@ -407,6 +416,8 @@ jQuery(document).ready(function() {
 			href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=StringEscapeUtils.escapeHtml(request.getParameter("keyword"))%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=phone&limit1=0&limit2=<%=strLimit%>"><bean:message
 			key="demographic.demographicsearchresults.btnPhone" /></a>
                 </td>
+                <td class="program"><bean:message key="demographic.demographicsearchresults.btnProgram" />
+                </td>
 	</tr>
 	<%
 	DemographicDao demographicDao = (DemographicDao)SpringUtils.getBean("demographicDao");
@@ -566,6 +577,7 @@ jQuery(document).ready(function() {
 					<td class="rosterStatus"></td>
 					<td class="patientStatus"></td>
 					<td class="phone"><%=demographicTransfer.getPhone1()%></td>
+					<td></td>
 				</tr>
 		<%	  
 					toggleLine = !toggleLine;
@@ -653,6 +665,17 @@ jQuery(document).ready(function() {
 		<td class="rosterStatus"><%=demo.getRosterStatus()==null||demo.getRosterStatus().equals("")?"&nbsp;":demo.getRosterStatus()%></td>
 		<td class="patientStatus"><%=demo.getPatientStatus()==null||demo.getPatientStatus().equals("")?"&nbsp;":demo.getPatientStatus()%></td>
 		<td class="phone"><%=demo.getPhone()==null||demo.getPhone().equals("")?"&nbsp;":(demo.getPhone().length()==10?(demo.getPhone().substring(0,3)+"-"+demo.getPhone().substring(3)):demo.getPhone())%></td>
+		<td class="program">
+			<ul>
+			<%
+			for(Admission a: admissionManager.getCurrentAdmissions(demo.getDemographicNo())) {
+				if(isInList(ppList1,a.getProgramId())) {
+				%><li><%=a.getProgram().getName()%></li><%
+				}
+			}
+			%>
+			</ul>
+		</td>
 	</tr>
 	<%
 		
@@ -726,5 +749,15 @@ List<Demographic> doSearch(LoggedInInfo loggedInInfo, DemographicDao demographic
 	demoList = demographicManager.doMultiSearch(loggedInInfo, searchModes, keywords, limit, offset, providerNo, outOfDomain, active, inactive);
 
 	return demoList;
+}
+
+
+boolean isInList(List<ProgramProvider> l, Integer programNo) {
+	for(ProgramProvider pp:l) {
+		if(pp.getProgramId().intValue() == programNo.intValue()) {
+			return true;
+		}
+	}
+	return false;
 }
 %>
