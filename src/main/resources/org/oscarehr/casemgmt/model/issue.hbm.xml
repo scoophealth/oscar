@@ -31,5 +31,6 @@
 		<property name="priority" />
         <property name="type" />
         <property name="sortOrderId" />
+        <property name="archived" type="boolean"/>
 	</class>
 </hibernate-mapping>

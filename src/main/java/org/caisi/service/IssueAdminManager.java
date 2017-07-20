@@ -59,4 +59,12 @@ public class IssueAdminManager {
     public void removeIssueAdmin(String issueAdminId) {
         dao.delete(Long.valueOf(issueAdminId));
     }
+    
+    public void archiveIssues(List<Integer> ids) {
+    	for(Integer id:ids) {
+    		Issue i = dao.getIssue(new Long(id));
+    		i.setArchived(true);
+    		dao.saveIssue(i);
+    	}
+    }
 }
