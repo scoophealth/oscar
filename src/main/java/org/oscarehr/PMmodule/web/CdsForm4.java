@@ -205,7 +205,7 @@ public class CdsForm4 {
 			return (sb.toString());
 			
 		} else if(disabled){			
-			sb.append("<select " + (multiple ? "multiple=\"multiple\" " : "") + "id=\"" + question + "\" " + "name=\"" + question + "\" " + (!dropDown ? "style=\"height:8em\" " : "") + classStyle + "  >");
+			sb.append("<select disabled=\"disabled\" " + (multiple ? "multiple=\"multiple\" " : "") + "id=\"" + question + "\" " + "name=\"" + question + "\" " + (!dropDown ? "style=\"height:8em\" " : "") + classStyle + "  >");
 			sb.append(renderAsSelectOptions(cdsClientFormId, question, options));
 			sb.append("</select>");
 			return (sb.toString());
