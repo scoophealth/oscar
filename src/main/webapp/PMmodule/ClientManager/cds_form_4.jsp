@@ -114,6 +114,7 @@ $j("document").ready(function() {
 
 $j('document').ready(function() {
 	
+	
 	var demographicId='<%=currentDemographicId%>';	
 	var cdsFormId = '<%=cdsClientForm.getId()%>';
 	var programId = '<%=currentProgramId%>';
@@ -174,6 +175,14 @@ function submitCdsForm() {
 		alert('Validation failed. Please check all required fields highlighted');
 		return false;
 	} 
+	
+	
+	
+	$j("#cds_form :disabled").each(function(){
+		if($j(this).attr('name').indexOf('baseline') != -1) {
+			$j(this).attr('disabled',false);
+		}	
+	});
 	
 	return confirm("CDS Baseline data cannot be changed once the initial CDS form is signed and saved. Are you sure you want to sign it?");
 }
