@@ -75,6 +75,7 @@ public class PreventionItem {
 		this.never = ConversionUtils.toBoolString(pp.isNever()); 
 		this.nextDate = pp.getNextDate();
 		this.refused = pp.isRefused();
+		this.inelligible = pp.isIneligible();
     }
 	
 	public PreventionItem(CachedDemographicPrevention pp) {
