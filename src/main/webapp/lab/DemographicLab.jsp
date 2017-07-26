@@ -187,6 +187,12 @@ $(function() {
     $( document ).tooltip();
   });
 </script>
+
+<style>
+.visLink {
+	color : white; 
+}
+</style>
 </head>
 
 <body oldclass="BodyStyle" vlink="#0000FF">
@@ -395,20 +401,20 @@ $(function() {
 					class="smallButton" value="File" onclick="submitFile()" /> <% } %>
 				</td>
 				<td align="center" valign="middle" width="40%">
-				<div class="Nav">
+				<div class="Nav" >
 				<% if ( pageNum > 1 || labs.size() > endIndex ) {
-                                    if ( pageNum > 1 ) { %> <a
+                                    if ( pageNum > 1 ) { %> <a class="visLink"
 					href="DemographicLab.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum-1%>&startIndex=<%=startIndex-20%>"><
 				<bean:message key="oscarMDS.index.msgPrevious" /></a> <% } else { %>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<% } %> <%int count = 1;
                                       for( int i =0; i < labs.size(); i = i +20){%>
-				<a style="text-decoration: none;"
+				<a style="text-decoration: none;" class="visLink"
 					href="DemographicLab.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=count%>&startIndex=<%=i%>">[<%=count%>]</a>
 				<%count++;
                                       }%> <% if ( labs.size() > endIndex ) { %>
 				<a
-					href="DemographicLab.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum+1%>&startIndex=<%=startIndex+20%>"><bean:message
+					class="visLink" href="DemographicLab.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum+1%>&startIndex=<%=startIndex+20%>"><bean:message
 					key="oscarMDS.index.msgNext" /> ></a> <% } else { %>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<% }
