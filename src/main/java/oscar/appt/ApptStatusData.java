@@ -233,7 +233,7 @@ public final class ApptStatusData {
         }
             
 	    int i = 0;
-	    while(i < apptStatuses.size()) {
+	    while(i < apptStatuses.size() -1) {
 	    	AppointmentStatus s = apptStatuses.get(i); 
 	    	
 	        if (kind.equals("nextstatus")) {

@@ -78,6 +78,15 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 		return this.getSingleResultOrNull(query);
 	}
 	
+	//this is written for the clean()method to fix OSCAREMR-6161.
+	public List<ProviderLabRoutingModel> findByLabNoIncludingPotentialDuplicates(int labNo) {
+		Query query = entityManager.createQuery("select x from " + modelClass.getName() + " x where x.labNo=?");
+		query.setParameter(1, labNo);
+
+		return query.getResultList();
+	}
+	
+	
 	public ProviderLabRoutingModel findByLabNoAndLabType(int labNo, String labType) {
 		Query query = entityManager.createQuery("select x from " + modelClass.getName() + " x where x.labNo=? and x.labType = ?");
 		query.setParameter(1, labNo);

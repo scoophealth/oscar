@@ -711,6 +711,10 @@ pre {
 									<% } %>
 
 
+									<%
+										if(remoteLabKey == null || "".equals(remoteLabKey.length())) {
+									%>
+									
                                     <% if (!label.equals(null) && !label.equals("")) { %>
 										<button type="button" id="createLabel_<%=segmentID%>" value="Label" onclick="submitLabel(this, '<%=segmentID%>');">Label</button>
 										<%} else { %>
@@ -728,6 +732,7 @@ pre {
 						                 } %>
 					                 <span id="labelspan_<%=segmentID%>" class="Field2"><i>Label: <%=labelval %> </i></span>
 
+									<% } %>
                                     <span class="Field2"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span>
                                 </td>
                             </tr>
@@ -1305,11 +1310,11 @@ pre {
                                    	String obrName = handler.getOBRName(j);
                                    	b1 = !obrFlag && !obrName.equals("");
                                    	b2 = !(obxName.contains(obrName));
-                                   	b3 = obxCount < 2;
+                                   	b3 = !(obxCount < 2 && !isUnstructuredDoc);
                                        if( b1 && b2 && b3){
                                        %>
                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >
-                                               <td valign="top" align="left"><%=obrName%></td>
+                                               <td valign="top" align="left"><span style="font-size:16px;font-weight: bold;"><%=obrName%></span></td>
                                                <td colspan="6">&nbsp;</td>
                                            </tr>
                                            <%obrFlag = true;

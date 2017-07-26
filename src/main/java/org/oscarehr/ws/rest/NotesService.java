@@ -42,6 +42,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -596,7 +597,7 @@ public class NotesService extends AbstractServiceImpl {
 	@Path("/{demographicNo}/saveIssueNote")
 	@Consumes("application/json")
 	@Produces("application/json")
-	public NoteIssueTo1 saveIssueNote(@PathParam("demographicNo") Integer demographicNo ,NoteIssueTo1 noteIssue) throws Exception{
+	public Response saveIssueNote(@PathParam("demographicNo") Integer demographicNo ,NoteIssueTo1 noteIssue) throws Exception{
 		NoteTo1 note = noteIssue.getEncounterNote();
 		NoteExtTo1 noteExt = noteIssue.getGroupNoteExt();
 		IssueTo1 issue = noteIssue.getIssue();
@@ -721,7 +722,7 @@ public class NotesService extends AbstractServiceImpl {
 				if (cmi==null) {
 					//new one
 					cmi = new CaseManagementIssue();
-					Issue is = issueDao.getIssue(i.getIssue_id());
+					Issue is = issueDao.getIssue(i.getIssue().getId());
 					cmi.setIssue_id(is.getId());
 					cmi.setIssue(is);
 					cmi.setProgram_id(programManager2.getCurrentProgramInDomain(getLoggedInInfo(), getLoggedInInfo().getLoggedInProviderNo()).getProgramId().intValue());
@@ -1017,7 +1018,7 @@ public class NotesService extends AbstractServiceImpl {
 		noteIssue.setEncounterNote(note);	
 		noteIssue.setGroupNoteExt(noteExt);
 		
-		return noteIssue;
+		return Response.ok().build();
 	}
 	
 	

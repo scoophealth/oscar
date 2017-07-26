@@ -236,7 +236,7 @@ public class WaitingListNameDaoTest extends DaoTestFixtures {
 		List<MyGroup> myGroups = new ArrayList<MyGroup>(Arrays.asList(myGroup1, myGroup2, myGroup3, myGroup4));
 		
 		List<WaitingListName> expectedResult = new ArrayList<WaitingListName>(Arrays.asList(waitingListName4, waitingListName1));
-		List<WaitingListName> result = dao.findByMyGroups(myGroups);
+		List<WaitingListName> result = dao.findByMyGroups(providerNo1, myGroups);
 
 		Logger logger = MiscUtils.getLogger();
 		

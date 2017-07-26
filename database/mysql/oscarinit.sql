@@ -7723,7 +7723,7 @@ CREATE TABLE `log` (
   `dateTime` datetime not null,
   `provider_no` varchar(10),
   index datetime (`dateTime`, `provider_no`),
-  `action` varchar(64),
+  `action` varchar(100),
   INDEX `action` (`action`),
   `content` varchar(80),
   INDEX `content` (`content`),

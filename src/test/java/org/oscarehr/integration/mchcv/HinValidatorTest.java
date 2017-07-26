@@ -34,26 +34,26 @@ public class HinValidatorTest {
     private static HCValidator validator;
     
     @BeforeClass
-    public static void init() throws Exception {
+    public static void init() {
         validator = HCValidationFactory.getSimpleValidator();
     }
 
     @Test
-    public void testValidHin() throws Exception {
+    public void testValidHin() {
         HCValidationResult validationResult = validator.validate("9287170261", "DK");
         boolean isValid = validationResult.isValid();
         assertEquals(true, isValid);
     }
 
     @Test
-    public void testNonValidHin() throws Exception {
+    public void testNonValidHin() {
         HCValidationResult validationResult = validator.validate("1286844022", "YX");
         boolean isValid = validationResult.isValid();
         assertEquals(true, isValid);
     }
     
     @Test
-    public void testResponseCode() throws Exception {
+    public void testResponseCode() {
         HCValidationResult validationResult = validator.validate("1262643149", "CT");
         String actual = validationResult.getResponseCode();
         String expected = "51";
@@ -62,7 +62,7 @@ public class HinValidatorTest {
     
     @Test
     @Ignore("Valid only for online validation")
-    public void testResponseDescription() throws Exception {
+    public void testResponseDescription() {
         HCValidationResult validationResult = validator.validate("1108809904", "CW");
         String actual = validationResult.getResponseDescription();
         String expected = "Health card cancelled or voided";
@@ -71,7 +71,7 @@ public class HinValidatorTest {
     
     @Test
     @Ignore("Valid only for online validation")
-    public void testResponseAction() throws Exception {
+    public void testResponseAction() {
         HCValidationResult validationResult = validator.validate("1357557162", "");
         String actual = validationResult.getResponseAction();
         String expected = "Ask the cardholder to visit the local ServiceOntario office to maintain his/her future health care coverage.";
@@ -80,7 +80,7 @@ public class HinValidatorTest {
     
     @Test
     @Ignore("Valid only for online validation")
-    public void testFirstName() throws Exception {
+    public void testFirstName() {
         HCValidationResult validationResult = validator.validate("1023947722", "J");
         String actual = validationResult.getFirstName();
         String expected = "test first name4";
@@ -89,7 +89,7 @@ public class HinValidatorTest {
     
     @Test
     @Ignore("Valid only for online validation")
-    public void testLastName() throws Exception {
+    public void testLastName() {
         HCValidationResult validationResult = validator.validate("1023947722", "J");
         String actual = validationResult.getLastName();
         String expected = "test last name4";
@@ -98,7 +98,7 @@ public class HinValidatorTest {
 
     @Test
     @Ignore("Valid only for online validation")
-    public void testGender() throws Exception {
+    public void testGender() {
         HCValidationResult validationResult = validator.validate("1023947722", "J");
         String actual = validationResult.getGender();
         String expected = "M";
@@ -107,7 +107,7 @@ public class HinValidatorTest {
 
     @Test
     @Ignore("Valid only for online validation")
-    public void testBirthDate() throws Exception {
+    public void testBirthDate() {
         HCValidationResult validationResult = validator.validate("1023947722", "J");
         String actual = validationResult.getBirthDate();
         String expected = "19881112";

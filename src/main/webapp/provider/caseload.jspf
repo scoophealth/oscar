@@ -8,6 +8,7 @@
     and "gnu.org/licenses/gpl-2.0.html".
 
 --%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page import="oscar.*, org.oscarehr.util.*"%>
@@ -36,6 +37,9 @@
 	String caseloadCurUser_no = (String) session.getAttribute("user");
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	Integer facilityId = loggedInInfo.getCurrentFacility().getId();
+	
+	ProviderDao providerDao1 = SpringUtils.getBean(ProviderDao.class);
+	
 
 %>
 <tr><td colspan="3">
@@ -102,7 +106,7 @@ clH = ["<bean:message key="caseload.msgDemographic" />", "", "<bean:message key=
 						<option value='all'><bean:message key="caseload.msgAllProviders" /></option>
 					<%} %>
 		<%
-		List<Provider> providerList = providerDao.getProviders();
+		List<Provider> providerList = providerDao1.getProviders();
 		for (Provider provider : providerList) {
 			if (caseloadProv.equals(provider.getProviderNo()) && !bDefaultAllProviders) {
 		%>
