@@ -249,19 +249,20 @@ public class MeasurementMapConfig {
     		loinc_code = map.getLoincCode();
     		name = map.getName();
     		lab_type = map.getLabType();
-    	}
-       
-    	dao.remove(map.getId());
     	
-    	RecycleBin rb = new RecycleBin();
-        rb.setProviderNo(provider_no);
-        rb.setUpdateDateTime(new Date());
-        rb.setTableName("measurementMap");
-        rb.setKeyword(id);
-        rb.setTableContent("<id>" + id + "</id><ident_code>" + ident_code + "</ident_code><loinc_code>" + loinc_code + "</loinc_code><name>" + name + "</name><lab_type>" + lab_type + "</lab_type>");
-
-        RecycleBinDao recycleBinDao = SpringUtils.getBean(RecycleBinDao.class);
-        recycleBinDao.persist(rb);
+       
+	    	dao.remove(map.getId());
+	    	
+	    	RecycleBin rb = new RecycleBin();
+	        rb.setProviderNo(provider_no);
+	        rb.setUpdateDateTime(new Date());
+	        rb.setTableName("measurementMap");
+	        rb.setKeyword(id);
+	        rb.setTableContent("<id>" + id + "</id><ident_code>" + ident_code + "</ident_code><loinc_code>" + loinc_code + "</loinc_code><name>" + name + "</name><lab_type>" + lab_type + "</lab_type>");
+	
+	        RecycleBinDao recycleBinDao = SpringUtils.getBean(RecycleBinDao.class);
+	        recycleBinDao.persist(rb);
+    	}
     }
 
     /**
