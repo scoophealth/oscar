@@ -23,62 +23,27 @@
  */
 package oscar.oscarLab.ca.all.upload.handlers;
 
+// import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.log4j.Logger;
 import org.junit.Test;
-
-import org.xml.sax.SAXException;
 
 /**
  * This test case is used to generate a log analysis during development only.
  * No assertions are used.
- *
+ * 
  */
-public class IHAPOIHandlerTestChainedHL7 extends IHAPOIHandler {
-	
-	private static Logger logger = Logger.getLogger( IHAPOIHandlerTestChainedHL7.class );
+public class IHAHandlerTest extends IHAHandler {
+
+	private static Logger logger = Logger.getLogger( IHAHandlerTest.class );
 	private static String TEST_FILE = "LabUpload.AutoLabUpload1000170710.tmp.1499724434014";
 
-	// @Test
-	public void testParse() {
-		logger.info("#------------>>  Testing IHAPOIHHandler Uploader.");
-		URL url = Thread.currentThread().getContextClassLoader().getResource(TEST_FILE);
-		InputStream is = null;
-		
-		try {
-	    	is = url.openStream();
-	    	Map<String, String> messageList = parse(is);
-	    	Iterator<String> keySetIterator = messageList.keySet().iterator();
-	    	while( keySetIterator.hasNext() ) {
-	    		String messageId = keySetIterator.next();
-	        	logger.info( "MESSAGE ID " + messageId + " ------->> " + messageList.get( messageId ) );
-	        }
-        } catch (ParserConfigurationException e) {
-        	 logger.error("Test Failed ", e);
-        } catch (SAXException e) {
-        	 logger.error("Test Failed ", e);
-        } catch (IOException e) {
-        	 logger.error("Test Failed ", e);
-        }finally {
-        	try {
-				is.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        }
-	}
-	
 	@Test
-	public void testParseDirect() {
+	public void testParse() {
+		logger.info("#------------>>  Testing IHAHHandler Uploader.");
 		URL url = Thread.currentThread().getContextClassLoader().getResource(TEST_FILE);
 		InputStream is = null;
 		
@@ -87,7 +52,6 @@ public class IHAPOIHandlerTestChainedHL7 extends IHAPOIHandler {
 	    	// parse(LoggedInInfo loggedInInfo, String serviceName, String fileName, int fileId, String ipAddr);
 	    	String response = parse(null, "IHA", url.getPath(), 1, "127.0.0.1");
 	        logger.info("RESPONSE: " + response);
-	   		
 		}catch (IOException e) {
         	 logger.error("Test Failed ", e);
         }finally {

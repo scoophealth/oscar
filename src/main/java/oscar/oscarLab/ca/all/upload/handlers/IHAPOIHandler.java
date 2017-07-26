@@ -31,11 +31,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -46,6 +44,8 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -56,32 +56,47 @@ public class IHAPOIHandler implements MessageHandler {
 	public final String HL7_FORMAT = "IHAPOI";
 	
 	Logger logger = MiscUtils.getLogger();
-	private final String XML = "<(\\S+?)(.*?)>(.*?)</\\1>";
+	private final String XML_PATTERN = "<";
+	private final String MESSAGE_ID_NODE_NAME = "msgId";
+	private final String SUCCESS = "success:";
+	private final String FAILED = "fail:";
 	
 	@Override
 	public String parse(LoggedInInfo loggedInInfo, String serviceName, String fileName, int fileId, String ipAddr) {
 
 		FileInputStream is = null;
-		List<String> hl7BodyList = null;
-		String success = "success";
-
+		Map<String, String> hl7BodyMap = null;
+		String messageId = "0";
+		StringBuilder result = new StringBuilder( FAILED + messageId + "," );
+		
 		try {
 
 			is = new FileInputStream( fileName );	        
-			hl7BodyList = parse( is );	
-			int index = 0;
-			while ( "success".equals( success ) && index < hl7BodyList.size() ) {				
-				success = MessageUploader.routeReport(loggedInInfo, serviceName, HL7_FORMAT, hl7BodyList.get(index), fileId);				
-				index++;
-			}
+			hl7BodyMap = parse( is );	
+			Iterator<String> keySetIterator = null;
 			
-			if( success != null && success.isEmpty() ) {
-				success = null;
+			if( hl7BodyMap != null && hl7BodyMap.size() > 0 ) {
+				keySetIterator = hl7BodyMap.keySet().iterator();
+			} 
+			
+			if( keySetIterator != null ) {
+				result = new StringBuilder( "" );			
+				while ( keySetIterator.hasNext() ) {
+					messageId = keySetIterator.next();
+					if( ! MessageUploader.routeReport( loggedInInfo, serviceName, HL7_FORMAT, hl7BodyMap.get(messageId), fileId ).isEmpty() ) {
+						result.append( SUCCESS + messageId + "," );
+					} else {
+						result.append( FAILED + messageId + "," );
+					}
+				}
 			}
 
+		} catch (ExceptionInInitializerError e) {
+			result = new StringBuilder( FAILED + messageId + "," );
+			logger.error("There was an unknown internal error with file " + fileName + " message id " + messageId, e);
 		} catch (Exception e) {
-			success = null;
-			logger.error("Could not upload IHAPOI message " + fileName , e);
+			result = new StringBuilder( FAILED + messageId + "," );
+			logger.error("Could not upload IHAPOI message " + fileName + " due to an error with message id " + messageId, e);
 		} finally {
 			if( is != null ) {
 				try {
@@ -91,45 +106,41 @@ public class IHAPOIHandler implements MessageHandler {
 					logger.error("Failed to close IHAPOI InputStream ", e);
 				}
 			}
-			if( success == null ) {
+			if( FAILED.equals( result.toString().split(":")[0] + ":" ) ) {
 				logger.error( "Cleaning up MessageUploader file." );
 				MessageUploader.clean(fileId);
 			}
 		}
 
-		return success;
+		if( result.length() > 1) {
+			result = result.deleteCharAt( result.length() - 1 );
+		}
+		
+		return result.toString();
 
 	}
 
-	public List<String> parse(InputStream is) throws ParserConfigurationException, SAXException, IOException {
+	public Map<String, String> parse(InputStream is) throws ParserConfigurationException, SAXException, IOException {
 		return textOrXml(is);
 	}
 
-	private List<String> textOrXml(InputStream is) throws ParserConfigurationException, SAXException, IOException {
-
-		Pattern pattern;
-		Matcher matcher;
+	private Map<String, String> textOrXml(InputStream is) throws ParserConfigurationException, SAXException, IOException {
 
 		ByteArrayInputStream bais = null;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		org.apache.commons.io.IOUtils.copy(is, baos);
 		byte[] bytes = baos.toByteArray();
 		String hl7Body = new String( bytes, StandardCharsets.UTF_8 ).trim();
-
-		// String hl7Body = getString(bais.).trim();
-		List<String> hl7BodyList = null;
+		Map<String, String> hl7BodyMap = null;
 
 		if( hl7Body != null && hl7Body.length() > 0 ) {
 
-			pattern = Pattern.compile( XML, Pattern.CASE_INSENSITIVE | Pattern.DOTALL | Pattern.MULTILINE );
-			matcher = pattern.matcher( hl7Body );
-
-			if( matcher.matches() ) {
+			if( hl7Body.startsWith( XML_PATTERN ) ) {
 				bais = new ByteArrayInputStream( bytes );
 				bais.reset();
-				hl7BodyList = parseXml( bais );
+				hl7BodyMap = parseXml( bais );
 			} else {
-				hl7BodyList = parseText( hl7Body );
+				hl7BodyMap = parseText( hl7Body );
 			}
 
 		}
@@ -142,16 +153,16 @@ public class IHAPOIHandler implements MessageHandler {
 			bais.close();
 		}
 
-		return hl7BodyList;
+		return hl7BodyMap;
 	}
 
-	protected List<String> parseXml(InputStream is) throws ParserConfigurationException, SAXException, IOException {
+	protected Map<String, String> parseXml(InputStream is) throws ParserConfigurationException, SAXException, IOException {
 
 		Element messageSpec = null;
 		Element messagesElement = null;
 		NodeList messagesNode = null;
 
-		List<String> hl7BodyList = null;
+		Map<String, String> hl7BodyMap = null;
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		docFactory.setNamespaceAware(true);
 		docFactory.setValidating(false);
@@ -179,24 +190,46 @@ public class IHAPOIHandler implements MessageHandler {
 		
 		if( messagesNode.getLength() > 0 ) {
 			for( int i = 0; i < messagesNode.getLength(); i++ ) {
-				if( hl7BodyList == null ) {
-					hl7BodyList = new ArrayList<String>();
+
+				if( hl7BodyMap == null ) {
+					hl7BodyMap = new HashMap<String, String>();
 				}
-				if( messagesNode.item(i) instanceof Element ) {
-					hl7BodyList.add( ( (Element) messagesNode.item(i) ).getTextContent() );
+				
+				if( messagesNode.item(i) instanceof Element ) {					
+					Element messageNode = (Element) messagesNode.item(i);					
+					hl7BodyMap.put( getMessageId( messageNode ), messageNode.getTextContent() ); 
 				}
 			}		
 		}
 
-		return hl7BodyList;
+		return hl7BodyMap;
 	}
 
-	private List<String> parseText( String hl7Body ) {
+	private Map<String, String> parseText( String hl7Body ) {
 
 		// anymore division and pre-parsing should be done here. 
 		// so far, only one body per string is expected.		
-		String[] hl7BodyList = new String[]{ hl7Body };
-		return Arrays.asList( hl7BodyList );
+		HashMap<String, String> hl7BodyMap = new HashMap<String, String>();
+		hl7BodyMap.put("0", hl7Body);
+		return hl7BodyMap;
+	}
+	
+	private String getMessageId( Element element ) {
+		
+		NamedNodeMap nodeAttributes = element.getAttributes();
+		String messageId = "";
+		
+        if ( nodeAttributes != null ) {
+            for (int i = 0; i < nodeAttributes.getLength(); i++) {
+            	Node attribute = nodeAttributes.item(i);
+                String attributeName = attribute.getNodeName();
+                if( MESSAGE_ID_NODE_NAME.equalsIgnoreCase( attributeName ) ) {
+                	messageId = attribute.getNodeValue();
+                }
+            }
+        }
+        
+        return messageId;
 	}
 
 }
