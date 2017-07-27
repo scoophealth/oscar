@@ -50,7 +50,8 @@
 <%@page import="org.oscarehr.common.dao.FunctionalCentreDao" %>
 <%@page import="org.oscarehr.common.dao.CdsClientFormDao" %>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
-
+<%@page import="org.oscarehr.common.model.DemographicExt" %>
+<%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
 <%@include file="/layouts/caisi_html_top-jquery.jspf"%>
 <script type="text/javascript">
 var $j = jQuery.noConflict();
@@ -95,6 +96,20 @@ var $j = jQuery.noConflict();
 	boolean disabledStr = false;
 	if(cdsClientForm.isSigned())
 		disabledStr = true;
+	
+	String recipientLocation = "";
+	String lhinConsumerResides = "";
+	
+	DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+	DemographicExt de = demographicExtDao.getLatestDemographicExt(Integer.parseInt(request.getParameter("demographicId")), "lhinConsumerResides");
+	if(de != null) {
+		lhinConsumerResides = de.getValue();
+		lhinConsumerResides = residesTranslate(lhinConsumerResides);
+	}
+	de = demographicExtDao.getLatestDemographicExt(Integer.parseInt(request.getParameter("demographicId")), "recipientLocation");
+	if(de != null) {
+		recipientLocation = de.getValue();
+	}
 %>
 
 
@@ -186,6 +201,12 @@ function submitCdsForm() {
 	
 	return confirm("CDS Baseline data cannot be changed once the initial CDS form is signed and saved. Are you sure you want to sign it?");
 }
+</script>
+<script>
+$j(document).ready(function() {	
+	$j("#serviceRecipientLocation").val('<%=recipientLocation%>');	
+	$j("#serviceRecipientLhin").val('<%=lhinConsumerResides%>');	
+});
 </script>
 <style>
 .error {color:red;}
@@ -613,3 +634,47 @@ CDS form (CDS-MH v4.05)
 </form>
 
 <%@include file="/layouts/caisi_html_bottom2.jspf"%>
+<%!
+String residesTranslate(String v) {
+	if(v == null || v.isEmpty()) {
+		return "";
+	}
+	if("8".equals(v)) {
+		return "10a-01";
+	} else if("9".equals(v)) {
+		return "10a-02";
+	} else if("5".equals(v)) {
+		return "10a-03";
+	} else if("11".equals(v)) {
+		return "10a-04";
+	} else if("1".equals(v)) {
+		return "10a-05";
+	} else if("4".equals(v)) {
+		return "10a-06";
+	} else if("6".equals(v)) {
+		return "10a-07";
+	} else if("13".equals(v)) {
+		return "10a-08";
+	} else if("12".equals(v)) {
+		return "10a-09";
+	} else if("14".equals(v)) {
+		return "10a-10";
+	} else if("010-52".equals(v)) {
+		return "";
+	} else if("010-30".equals(v)) {
+		return "10a-15";
+	} else if("10".equals(v)) {
+		return "10a-11";
+	} else if("2".equals(v)) {
+		return "10a-12";
+	} else if("7".equals(v)) {
+		return "10a-13";
+	} else if("UNK".equals(v)) {
+		return "10a-16";
+	} else if("3".equals(v)) {
+		return "10a-14";
+	}
+	return "";
+	
+}
+%>
