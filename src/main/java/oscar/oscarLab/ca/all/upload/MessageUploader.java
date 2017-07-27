@@ -116,6 +116,9 @@ public final class MessageUploader {
 		try {
 			MessageHandler h = Factory.getHandler(type, hl7Body);
 
+			if(h == null) {
+				throw new Exception("Unabled to continue. No valid handler found.");
+			}
 			String firstName = h.getFirstName();
 			String lastName = h.getLastName();
 			String dob = h.getDOB();
@@ -415,8 +418,11 @@ public final class MessageUploader {
 				routing.route(labId, provider_no, conn, "HL7");
 			}
 		} else {
-			routing.route(labId, "0", conn, "HL7");
-			routing.route(labId, altProviderNo, conn, "HL7");
+			if(altProviderNo != null && !altProviderNo.equals("0")) {
+				routing.route(labId, altProviderNo, conn, "HL7");
+			} else {
+				routing.route(labId, "0", conn, "HL7");
+			}
 		}
 	}
 
@@ -582,8 +588,7 @@ public final class MessageUploader {
 			}
 			
 
-			ProviderLabRoutingModel plr = providerLabRoutingDao.findByLabNo(lab_id);
-			if(plr != null) {
+			for(ProviderLabRoutingModel plr: providerLabRoutingDao.findByLabNoIncludingPotentialDuplicates(lab_id)) {
 				RecycleBin rb = new RecycleBin();
 				rb.setProviderNo("0");
 				rb.setUpdateDateTime(new Date());

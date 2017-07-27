@@ -270,11 +270,11 @@
                     <td style="text-align:right"><input type="button" name="pasteMessage" onclick="pasteMessageText()" value="<bean:message key="tickler.ticklerEdit.pasteMessage"/>"/></td>
                     <td colspan="2">
                         <select name="priority">  
-                            <% if (t.getPriority().equals(prHigh)){selected="selected";}else{selected="";}%>
+                            <% if (t.getPriorityWeb().equals(prHigh)){selected="selected";}else{selected="";}%>
                             <option <%=selected%> value="<bean:message key="tickler.ticklerMain.priority.high"/>"><bean:message key="tickler.ticklerMain.priority.high"/></option>
-                            <% if (t.getPriority().equals(prNormal)){selected="selected";}else{selected="";}%>
+                            <% if (t.getPriorityWeb().equals(prNormal)){selected="selected";}else{selected="";}%>
                             <option <%=selected%> value="<bean:message key="tickler.ticklerMain.priority.normal"/>"><bean:message key="tickler.ticklerMain.priority.normal"/></option>
-                            <% if (t.getPriority().equals(prLow)){selected="selected";}else{selected="";}%>
+                            <% if (t.getPriorityWeb().equals(prLow)){selected="selected";}else{selected="";}%>
                             <option <%=selected%> value="<bean:message key="tickler.ticklerMain.priority.low"/>"><bean:message key="tickler.ticklerMain.priority.low"/></option>
                         </select>
                     </td>

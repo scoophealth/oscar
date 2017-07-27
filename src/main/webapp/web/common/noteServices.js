@@ -56,8 +56,8 @@ angular.module("noteServices", [])
        },
        saveIssueNote: function(demographicNo,notea){
        	var deferred = $q.defer();
-	 console.log("sending to server -------------------note" + notea);
-       	 $http.post(this.apiPath+'/'+demographicNo+'/saveIssueNote',JSON.stringify(notea)).success(function(data){
+       	console.log("sending to server -------------------note" + notea);
+       	$http.post(this.apiPath+'/'+demographicNo+'/saveIssueNote',notea).success(function(data){
            	console.log("returned from /save",data);
            	deferred.resolve(data);
            }).error(function(){

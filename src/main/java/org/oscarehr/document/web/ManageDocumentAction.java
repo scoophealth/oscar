@@ -879,7 +879,7 @@ public class ManageDocumentAction extends DispatchAction {
 			File file = new File(documentDir, d.getDocfilename());
 			filename = d.getDocfilename();
                         
-                        if (contentType != null && !contentType.trim().equals("text/html")) {
+                        if (contentType != null) {
                             if (file.exists()) {
                             	contentBytes = FileUtils.readFileToByteArray(file);
                             } else {
@@ -943,7 +943,14 @@ public class ManageDocumentAction extends DispatchAction {
 
 		response.setContentType(contentType);
 		response.setContentLength(contentBytes.length);
+		
+		
 		response.setHeader("Content-Disposition", "inline; filename=" + filename);
+        
+        if(contentType.equals("text/html")) {
+                response.setHeader("Content-Disposition","attachment; filename="+filename+";");
+        }
+
 		log.debug("about to Print to stream");
 		ServletOutputStream outs = response.getOutputStream();
 		outs.write(contentBytes);

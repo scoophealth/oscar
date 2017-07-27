@@ -66,10 +66,13 @@ public class WaitingListNameDao extends AbstractDao<WaitingListName> {
 	        return results;
 	    }
 
-    public List<WaitingListName> findByMyGroups(List<MyGroup> myGroups) {
+    public List<WaitingListName> findByMyGroups(String providerNo, List<MyGroup> myGroups) {
     	List<String> groupIds = new ArrayList<String>();
     	for(MyGroup mg:myGroups) {
     		groupIds.add(mg.getId().getMyGroupNo());
+    	}
+    	if (!groupIds.contains(providerNo)) {
+    		groupIds.add(providerNo);
     	}
     	groupIds.add(".default");
     	

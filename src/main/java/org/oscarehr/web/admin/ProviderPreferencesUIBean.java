@@ -103,13 +103,23 @@ public final class ProviderPreferencesUIBean {
 		temp = StringUtils.trimToNull(request.getParameter("dxCode"));
 		if (temp != null) providerPreference.setDefaultDxCode(temp);
 		
-		
+		try {
+			Integer startHour = Integer.parseInt(StringUtils.trimToNull(request.getParameter("start_hour")));
+			Integer endHour = Integer.parseInt(StringUtils.trimToNull(request.getParameter("end_hour")));
+			if(startHour < endHour) {
+				if(startHour >= 0 && startHour <=23) {
+					providerPreference.setStartHour(startHour);
+				}
+				if(endHour >= 0 && endHour <=23) {
+					providerPreference.setEndHour(endHour);
+				}
+			}
+			
+			
+		} catch(Exception e) {
+			MiscUtils.getLogger().warn("user entered invalid values");
+		}
 		// rest
-		temp = StringUtils.trimToNull(request.getParameter("start_hour"));
-		if (temp != null) providerPreference.setStartHour(Integer.parseInt(temp));
-
-		temp = StringUtils.trimToNull(request.getParameter("end_hour"));
-		if (temp != null) providerPreference.setEndHour(Integer.parseInt(temp));
 
 		temp = StringUtils.trimToNull(request.getParameter("every_min"));
 		if (temp != null) providerPreference.setEveryMin(Integer.parseInt(temp));

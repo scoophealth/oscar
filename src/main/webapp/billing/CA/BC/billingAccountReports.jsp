@@ -66,7 +66,7 @@ if(!authed) {
 	src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 <script type="text/javascript"
 	src="../../../share/calendar/calendar-setup.js"></script>
-<link rel="stylesheet" type="text/css" media="all" href="../share/css/extractedFromPages.css"  />
+<link rel="stylesheet" type="text/css" media="all" href="../../../share/css/extractedFromPages.css"  />
 <script language="JavaScript">
 <!--
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
@@ -195,7 +195,7 @@ function clearField(field){
                     	Provider p = (Provider)result[1];
                     	proFirst = p.getFirstName();
                     	proLast = p.getLastName();
-                    	proOHIP = p.getOhipNo();
+                    	proOHIP = p.getProviderNo();
                  
                 %>
 					<option value="<%=proOHIP%>"><%=proLast%> , <%=proFirst%>
@@ -221,7 +221,7 @@ function clearField(field){
                 	Provider p = (Provider)result[1];
                 	proFirst = p.getFirstName();
                 	proLast = p.getLastName();
-                	proOHIP = p.getOhipNo();
+                	proOHIP = p.getProviderNo();
             %>
 					<option value="<%=proOHIP%>"><%=proLast%> , <%=proFirst%>
 					</option>
@@ -246,7 +246,7 @@ function clearField(field){
               	Provider p = (Provider)result[1];
               	proFirst = p.getFirstName();
               	proLast = p.getLastName();
-              	proOHIP = p.getOhipNo();
+              	proOHIP = p.getProviderNo();
             %>
 					<option value="<%=proOHIP%>"><%=proLast%> , <%=proFirst%>
 					</option>

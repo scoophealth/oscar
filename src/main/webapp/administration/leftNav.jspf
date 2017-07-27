@@ -936,7 +936,9 @@ String curProvider_no = (String)session.getAttribute("user");
 				   <% if (OscarProperties.getInstance().getProperty("NEW_CONTACTS_UI","false").equals("true")) { %>
 		            	<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/demographic/migrate_demographic_contacts.jsp"><bean:message key="admin.admin.migrate_contacts"/></a></li>
 		            <% } %>
-						
+						<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/fixRolesOnNotes.jsp"><bean:message
+						key="admin.admin.btnFixNotes" /></a></li>
 				</ul>
 				</div>
 				</div>
@@ -1026,6 +1028,7 @@ String curProvider_no = (String)session.getAttribute("user");
 				<div class="accordion-inner">
 				<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/pregnancy/migrateToSplitOnArEnhancedForm.jsp"><bean:message key="admin.admin.updates.migrate_onarenhanced"/></a></li>
+						
 				</ul>
 				</div>
 				</div>
