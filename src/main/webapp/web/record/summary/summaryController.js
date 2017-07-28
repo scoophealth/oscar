@@ -819,11 +819,14 @@ RecordPrintCtrl = function($scope,$modal,$modalInstance,mod,action,$stateParams,
 		if($scope.pageOptions.cpp){
 			queryString = queryString + '&printCPP=true';
 		}
-		if($scope.pageOptions.cpp){
+		if($scope.pageOptions.rx){
 			queryString = queryString + '&printRx=true';
 		}
-		if($scope.pageOptions.cpp){
+		if($scope.pageOptions.labs){
 			queryString = queryString + '&printLabs=true';
+		}
+		if($scope.pageOptions.preventions){
+			queryString = queryString + '&printPreventions=true';
 		}
 		console.log("QS"+queryString);
 		

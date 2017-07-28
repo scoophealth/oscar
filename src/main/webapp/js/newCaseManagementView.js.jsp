@@ -3465,7 +3465,7 @@ function autoCompleteShowMenuCPP(element, update) {
             printAll();
         }
 
-        if( $F("notes2print").length == 0 && $F("printCPP") == "false" && $F("printRx") == "false" && $F("printLabs") == "false" ) {
+        if( $F("notes2print").length == 0 && $F("printCPP") == "false" && $F("printRx") == "false" && $F("printLabs") == "false" && $F("printPreventions") == "false" ) {
             alert(nothing2PrintMsg);
             return false;
         }
