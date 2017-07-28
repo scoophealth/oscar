@@ -296,6 +296,10 @@
             <form-property name="patientNameLength" type="org.oscarehr.common.model.UserProperty"/>
             <form-property name="displayDocumentAsProperty" type="org.oscarehr.common.model.UserProperty"/>
 			<form-property name="labAckCommentProperty" type="org.oscarehr.common.model.UserProperty" />
+			<form-property name="labRecallDelegate" type="org.oscarehr.common.model.UserProperty" />
+			<form-property name="labRecallMsgSubject" type="org.oscarehr.common.model.UserProperty" />
+			<form-property name="labRecallTicklerAssignee" type="org.oscarehr.common.model.UserProperty" />
+			<form-property name="labRecallTicklerPriority" type="org.oscarehr.common.model.UserProperty" />			
 			<form-property name="cobaltProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="hideOldEchartLinkInApptProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="bornPromptsProperty" type="org.oscarehr.common.model.UserProperty" />
@@ -1642,6 +1646,7 @@
             <forward name="genUseMyMeds"					path="/provider/setToUseMyMeds.jsp"/>
             <forward name="genCppSingleLine"				path="/provider/setCppSingleLine.jsp"/>
             <forward name="genAckCommentLab"				path="/provider/setLabAckComment.jsp"/>
+            <forward name="genLabRecallPrefs"			        path="/provider/setLabRecallPrefs.jsp"/>
             <forward name="genIntegrator"					path="/admin/setIntegratorProperties.jsp" />
             <forward name="genEncounterWindowSize"			path="/provider/setEncounterWindowSize.jsp"/>
             <forward name="genQuickChartSize"				path="/provider/setQuickChartSize.jsp"/>

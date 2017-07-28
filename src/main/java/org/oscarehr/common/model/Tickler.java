@@ -480,6 +480,13 @@ public class Tickler extends AbstractModel<Integer> {
 	}
     };
     
+    public static final Comparator<Tickler> StatusAscComparator = new Comparator<Tickler>() {
+        @Override
+	public int compare(Tickler t1, Tickler t2) {          
+            return (t1.getStatus().compareTo(t2.getStatus()));
+	}
+    };
+    
     public static final Comparator<Tickler> CreationDateDescComparator = new Comparator<Tickler>() {
         @Override
 	public int compare(Tickler t1, Tickler t2) {          

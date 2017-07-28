@@ -744,7 +744,10 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
       	</tr>
       	<tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewCommentLab');return false;"><bean:message key="provider.btnDisableAckCommentLab"/></a></td>
-      </tr>
+        </tr>
+        <tr>
+          <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewLabRecall');return false;"><bean:message key="provider.btnLabRecallSettings"/></a></td>
+        </tr>
        <tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewEncounterWindowSize');return false;"><bean:message key="provider.btnEditDefaultEncounterWindowSize"/></a></td>
       </tr>
