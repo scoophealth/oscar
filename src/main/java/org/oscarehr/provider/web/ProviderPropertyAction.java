@@ -1,4 +1,4 @@
-	/**
+/**
  *
  * Copyright (c) 2005-2012. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -31,9 +31,12 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
+import java.util.Collections;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.beanutils.BeanComparator;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -43,8 +46,10 @@ import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.common.dao.CtlBillingServiceDao;
 import org.oscarehr.common.dao.QueueDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -1782,6 +1787,191 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 		return actionmapping.findForward("genAckCommentLab");
 	}
 
+    @SuppressWarnings("unchecked")
+	public ActionForward viewLabRecall(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response) {
+
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
+		DynaActionForm frm = (DynaActionForm)actionform;
+		UserProperty delegate = this.userPropertyDAO.getProp(providerNo, UserProperty.LAB_RECALL_DELEGATE);
+		UserProperty subject = this.userPropertyDAO.getProp(providerNo, UserProperty.LAB_RECALL_MSG_SUBJECT);
+		UserProperty ticklerAssignee = this.userPropertyDAO.getProp(providerNo, UserProperty.LAB_RECALL_TICKLER_ASSIGNEE);
+		UserProperty priority = this.userPropertyDAO.getProp(providerNo, UserProperty.LAB_RECALL_TICKLER_PRIORITY);
+
+		if (delegate == null){
+			delegate = new UserProperty();
+		}
+
+		if (subject == null){
+			subject = new UserProperty();
+		}
+		
+		String defaultToDelegate = "";
+		if (ticklerAssignee == null){
+			ticklerAssignee = new UserProperty();
+		}else{
+			defaultToDelegate = ticklerAssignee.getValue();
+		}
+		
+		boolean checked;
+		if(defaultToDelegate.equalsIgnoreCase("yes")){
+            checked=true;
+		}else{
+            checked=false;
+		}
+		
+		if (priority == null){
+			priority = new UserProperty();
+		}
+
+        ArrayList<LabelValueBean> providerList = new ArrayList<LabelValueBean>();
+        providerList.add(new LabelValueBean("Select", "")); //key , value
+        
+		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
+		List<Provider> ps = dao.getProviders();
+		Collections.sort(ps, new BeanComparator("lastName"));
+		try {
+			
+			for (Provider p : ps) {
+				if(!p.getProviderNo().equals("-1")){
+				 providerList.add(new LabelValueBean(p.getLastName() + ", " + p.getFirstName(), p.getProviderNo()));
+				}
+			}
+			
+			
+			} catch (Exception e) {
+				MiscUtils.getLogger().error("Error", e);
+			}
+		request.setAttribute("providerSelect",providerList);
+		
+        ArrayList<LabelValueBean> priorityList = new ArrayList<LabelValueBean>();
+        priorityList.add(new LabelValueBean("Select", "")); //key , value
+        priorityList.add(new LabelValueBean("High", "High"));
+        priorityList.add(new LabelValueBean("Normal", "Normal"));
+        priorityList.add(new LabelValueBean("Low", "Low"));
+
+        request.setAttribute("prioritySelect",priorityList);
+		
+		request.setAttribute("labRecallDelegate", delegate);
+		request.setAttribute("labRecallMsgSubject", subject);
+		
+		ticklerAssignee.setChecked(checked);
+		request.setAttribute("labRecallTicklerAssignee", ticklerAssignee);
+		
+		request.setAttribute("labRecallTicklerPriority", priority);
+		
+		request.setAttribute("providertitle","provider.setLabRecall.title");
+		request.setAttribute("providermsgPrefs","provider.setLabRecall.msgPrefs");
+		request.setAttribute("providermsgProvider","provider.setLabRecall.msgProfileView");
+		request.setAttribute("providermsgEdit","provider.setLabRecall.msgEdit");
+		request.setAttribute("providerbtnSubmit","provider.setLabRecall.btnSubmit");
+		request.setAttribute("providermsgSuccess","provider.setLabRecall.msgSuccess");
+		request.setAttribute("method","saveLabRecallPrefs");
+
+		frm.set("labRecallDelegate", delegate);
+		frm.set("labRecallMsgSubject", subject);
+		frm.set("labRecallTicklerAssignee", ticklerAssignee);
+		frm.set("labRecallTicklerPriority", priority);
+
+		return actionmapping.findForward("genLabRecallPrefs");
+	}
+
+    public ActionForward saveLabRecallPrefs(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request,HttpServletResponse response){
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+
+		DynaActionForm frm=(DynaActionForm)actionform;
+    	UserProperty d=(UserProperty)frm.get("labRecallDelegate");
+    	UserProperty s=(UserProperty)frm.get("labRecallMsgSubject");
+    	UserProperty a=(UserProperty)frm.get("labRecallTicklerAssignee");   	
+    	UserProperty p=(UserProperty)frm.get("labRecallTicklerPriority");
+
+		String delegate = d != null ? d.getValue() : "";
+		String subject = s != null ? s.getValue() : "";
+		
+		boolean checked = a != null ? a.isChecked() : false;
+		
+		String priority = p != null ? p.getValue() : "";
+
+		boolean delete = false;
+		if(delegate.equals("")){delete=true;}
+   
+		UserProperty dProperty = this.userPropertyDAO.getProp(providerNo, UserProperty.LAB_RECALL_DELEGATE);
+		if( dProperty == null ) {
+			dProperty = new UserProperty();
+			dProperty.setProviderNo(providerNo);
+			dProperty.setName(UserProperty.LAB_RECALL_DELEGATE);
+		}
+
+		if(delete){
+		 userPropertyDAO.delete(dProperty);
+		}else{
+		 dProperty.setValue(delegate);
+		 userPropertyDAO.saveProp(dProperty);
+		}
+
+		UserProperty sProperty = this.userPropertyDAO.getProp(providerNo, UserProperty.LAB_RECALL_MSG_SUBJECT);
+		if( sProperty == null ) {
+			sProperty = new UserProperty();
+			sProperty.setProviderNo(providerNo);
+			sProperty.setName(UserProperty.LAB_RECALL_MSG_SUBJECT);
+		}
+		if(delete){
+		 userPropertyDAO.delete(sProperty);
+		}else{
+		 sProperty.setValue(subject);
+		 userPropertyDAO.saveProp(sProperty);
+		}
+		
+		String defaultToDelegate = "no";
+		UserProperty aProperty = this.userPropertyDAO.getProp(providerNo, UserProperty.LAB_RECALL_TICKLER_ASSIGNEE);
+		if( aProperty == null ) {
+			aProperty = new UserProperty();
+			aProperty.setProviderNo(providerNo);
+			aProperty.setName(UserProperty.LAB_RECALL_TICKLER_ASSIGNEE);
+		}
+		if(delete){
+		 userPropertyDAO.delete(aProperty);
+		}else{
+		 if(checked){
+			 defaultToDelegate="yes";
+		 }
+			
+		 aProperty.setValue(defaultToDelegate);
+		 userPropertyDAO.saveProp(aProperty);
+		}		
+		
+		UserProperty pProperty = this.userPropertyDAO.getProp(providerNo, UserProperty.LAB_RECALL_TICKLER_PRIORITY);
+		if( pProperty == null ) {
+			pProperty = new UserProperty();
+			pProperty.setProviderNo(providerNo);
+			pProperty.setName(UserProperty.LAB_RECALL_TICKLER_PRIORITY);
+		}
+		if(delete){
+		 userPropertyDAO.delete(pProperty);
+		}else{
+		 pProperty.setValue(priority);
+		 userPropertyDAO.saveProp(pProperty);
+		}	
+    	
+		request.setAttribute("status", "success");
+		request.setAttribute("providertitle","provider.setLabRecall.title");
+		request.setAttribute("providermsgPrefs","provider.setLabRecall.msgPrefs");
+		request.setAttribute("providermsgProvider","provider.setLabRecall.msgProfileView");
+		request.setAttribute("providermsgEdit","provider.setLabRecall.msgEdit");
+		request.setAttribute("providerbtnSubmit","provider.setLabRecall.btnSubmit");
+		
+		String msgSuccess = "provider.setLabRecall.msgSuccess";
+		if(delete){
+		 msgSuccess = "provider.setLabRecall.msgDeleted";
+		}
+		request.setAttribute("providermsgSuccess",msgSuccess);
+		
+		request.setAttribute("method","saveLabRecallPrefs");
+		
+		return actionmapping.findForward("genLabRecallPrefs");
+	}     
 
     public ActionForward viewEncounterWindowSize(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request, HttpServletResponse response) {
 
