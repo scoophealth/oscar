@@ -252,11 +252,7 @@ public class CaseManagementPrint {
 			// get the labs which fall into the date range which are attached to this patient
 			CommonLabResultData comLab = new CommonLabResultData();
 			ArrayList<LabResultData> labs = comLab.populateLabResultsData(loggedInInfo, "", demono, "", "", "", "U");
-			if (loggedInInfo.getCurrentFacility().isIntegratorEnabled())
-		    {
-		       ArrayList<LabResultData> remoteResults=CommonLabResultData.getRemoteLabs(loggedInInfo,Integer.parseInt(demographicNo));
-		       labs.addAll(remoteResults);
-		    }
+			
 			Collections.sort(labs);
 			
 			LinkedHashMap<String, LabResultData> accessionMap = new LinkedHashMap<String, LabResultData>();
