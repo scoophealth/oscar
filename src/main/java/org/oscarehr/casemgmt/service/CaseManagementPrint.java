@@ -262,6 +262,9 @@ public class CaseManagementPrint {
 			// get the labs which fall into the date range which are attached to this patient
 			CommonLabResultData comLab = new CommonLabResultData();
 			ArrayList<LabResultData> labs = comLab.populateLabResultsData(loggedInInfo, "", demono, "", "", "", "U");
+			
+			Collections.sort(labs);
+			
 			LinkedHashMap<String, LabResultData> accessionMap = new LinkedHashMap<String, LabResultData>();
 			for (int i = 0; i < labs.size(); i++) {
 				LabResultData result = labs.get(i);
@@ -273,6 +276,7 @@ public class CaseManagementPrint {
 					}
 				}
 			}
+			
 			for (LabResultData result : accessionMap.values()) {
 				//Date d = result.getDateObj();
 				// TODO:filter out the ones which aren't in our date range if there's a date range????
