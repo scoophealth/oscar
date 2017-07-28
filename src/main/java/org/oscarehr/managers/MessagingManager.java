@@ -79,12 +79,12 @@ public class MessagingManager {
 		String subject = "";
 		String providerNo = loggedInInfo.getLoggedInProviderNo();
 		
-    	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
-    	UserProperty prop = userPropertyDao.getProp(providerNo, UserProperty.LAB_RECALL_MSG_SUBJECT);
-    	
-    	if(prop!=null){
-    		subject = prop.getValue();
-    	}
+	    	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
+	    	UserProperty prop = userPropertyDao.getProp(providerNo, UserProperty.LAB_RECALL_MSG_SUBJECT);
+	    	
+	    	if(prop!=null){
+	    		subject = prop.getValue();
+	    	}
     	
 		return subject;
 	}
@@ -93,14 +93,14 @@ public class MessagingManager {
 	public String getLabRecallDelegatePref(LoggedInInfo loggedInInfo){
 		String delegate = "";
 		String providerNo = loggedInInfo.getLoggedInProviderNo();
-				
-    	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
-    	UserProperty prop = userPropertyDao.getProp(providerNo, UserProperty.LAB_RECALL_DELEGATE);
-    	
-    	if(prop!=null){
-    		delegate = prop.getValue();		
-    	}
-    			
+
+	    	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
+	    	UserProperty prop = userPropertyDao.getProp(providerNo, UserProperty.LAB_RECALL_DELEGATE);
+	    	
+	    	if(prop!=null){
+	    		delegate = prop.getValue();		
+	    	}
+
 		return delegate;
 	}
 	
@@ -110,7 +110,7 @@ public class MessagingManager {
 		ProviderData pd = dao.findByProviderNo(delegate);
 		
 		delegateName = pd.getLastName() + ", " + pd.getFirstName();
-				
+			
 		return delegateName;
 	}
 	

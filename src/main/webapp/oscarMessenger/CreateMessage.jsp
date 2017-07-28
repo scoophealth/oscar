@@ -95,7 +95,6 @@ if(recall){
 	subjectText = request.getParameter("subject");
 }
 
-
 if(subjectText == null) {
 	if (request.getAttribute("ReSubject") != null){
 		bean.setSubject((String)request.getAttribute("ReSubject"));
