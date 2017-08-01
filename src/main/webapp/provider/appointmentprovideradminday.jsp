@@ -990,9 +990,11 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 						<c:out value="${ dashboard.name }" />
 					</a>
 				</c:forEach>
-				<a href="javascript:void(0)" onclick="newWindow('<%=request.getContextPath()%>/web/dashboard/display/sharedOutcomesDashboard.jsp','shared_dashboard')"> 
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_dashboardCommonLink" rights="r">
+					<a href="javascript:void(0)" onclick="newWindow('<%=request.getContextPath()%>/web/dashboard/display/sharedOutcomesDashboard.jsp','shared_dashboard')"> 
 						Common Provider Dashboard
 					</a>
+				</security:oscarSec>
 			</div>
 			
 		</div>
