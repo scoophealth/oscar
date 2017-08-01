@@ -2864,3 +2864,10 @@ insert into scheduletemplatecode Values(null,'C','On Call Clinic','15','green','
 insert into OscarJobType Values(null,'OSCAR ON CALL CLINIC', 'Notifies MRP if patient seen during on-call clinic','org.oscarehr.jobs.OscarOnCallClinic',false,now());
 
 insert into OscarJob Values(null,'OSCAR On-Call Clinic',null,(select id from OscarJobType where name = 'OSCAR ON CALL CLINIC'),'0 0 4 * * *','999998',false,now());
+
+insert into `secObjectName` (`objectName`) values ('_dashboardCommonLink');
+insert into `secObjPrivilege` values('doctor','_dashboardCommonLink','o',0,'999998');
+insert into `secObjPrivilege` values('admin','_dashboardCommonLink','o',0,'999998');
+
+
+
