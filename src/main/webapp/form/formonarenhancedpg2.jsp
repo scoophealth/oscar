@@ -71,9 +71,13 @@
     //load eform groups
     List<LabelValueBean> cytologyForms = PregnancyAction.getEformsByGroup("Cytology");
     List<LabelValueBean> ultrasoundForms = PregnancyAction.getEformsByGroup("Ultrasound");
-    List<LabelValueBean> ipsForms = PregnancyAction.getEformsByGroup("IPS");
- 
     
+    String customEformGroup = oscar.OscarProperties.getInstance().getProperty("prenatal_screening_eform_group");
+    String prenatalScreenName = oscar.OscarProperties.getInstance().getProperty("prenatal_screening_name");
+    String prenatalScreen = oscar.OscarProperties.getInstance().getProperty("prenatal_screening_abbrv");
+
+    List<LabelValueBean> customForms = PregnancyAction.getEformsByGroup(customEformGroup);
+ 
     if(props.getProperty("rf_num", "0").equals("")) {props.setProperty("rf_num","0");}
     if(props.getProperty("sv_num", "0").equals("")) {props.setProperty("sv_num","0");}
     if(props.getProperty("us_num", "0").equals("")) {props.setProperty("us_num","0");}
@@ -237,23 +241,23 @@ width: 100%;
 		}
 		
 		
-	function loadIPSForms() {
-		<%
-			if(ipsForms != null) {
-				if(ipsForms.size()==0) {
-					%>
-						alert('No IPS Forms configured');
-					<%
-				} else if(ipsForms.size() == 1) {
-					%>
-					popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=ipsForms.get(0).getValue()%>&demographic_no=<%=demoNo%>&appointment=0','ipsform');			
-					<%
-				} else {
-					%>$( "#ips-eform-form" ).dialog( "open" );<%
-				}
+function loadCustomForms() {
+	<%
+		if(customForms != null) {
+			if(customForms.size()==0) {
+				%>
+					alert('No <%=customEformGroup%> Forms configured');
+				<%
+			} else if(customForms.size() == 1) {
+				%>
+				popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=customForms.get(0).getValue()%>&demographic_no=<%=demoNo%>&appointment=0','<%=customEformGroup%>form');			
+				<%
+			} else {
+				%>$( "#custom-eform-form" ).dialog( "open" );<%
 			}
-		%>
 		}
+	%>
+	}
 	
 	function validate() {
 		for(var x=1;x<=70;x++) {
@@ -1400,7 +1404,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$( "#ips-eform-form" ).dialog({
+	$( "#custom-eform-form" ).dialog({
 		autoOpen: false,
 		height: 300,
 		width: 450,
@@ -2792,7 +2796,7 @@ $(document).ready(function(){
 <div id="forms_menu_div" class="hidden">
 <ul>
 	<li><a href="javascript:void(0)" onclick="loadUltrasoundForms();">Ultrasound</a></li>
-	<li><a href="javascript:void(0)" onclick="loadIPSForms();">IPS</a></li></ul>
+	<li><a href="javascript:void(0)" onclick="loadCustomForms();"><%=customEformGroup%></a></li></ul>
 </div>
 
 <div id="ips-form" title="IPS Support Tool">
@@ -2865,19 +2869,17 @@ $(document).ready(function(){
 </div>
 
 
-
-
-<div id="ips-eform-form" title="IPS Forms">
+<div id="custom-eform-form" title="<%=customEformGroup%> Forms">
 	<form>
 		<fieldset>
 			<table>
 				<tbody>
 				<%
-					if(ipsForms != null) {
-						for(LabelValueBean bean:ipsForms) {
+					if(customForms != null) {
+						for(LabelValueBean bean:customForms) {
 							%>
 							<tr>
-								<td><button onClick="popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=bean.getValue()%>&demographic_no=<%=demoNo%>&appointment=0','ipsform');return false;">Open</button></td>
+								<td><button onClick="popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=bean.getValue()%>&demographic_no=<%=demoNo%>&appointment=0','<%=customEformGroup%>form');return false;">Open</button></td>
 								<td><%=bean.getLabel() %></td>
 							</tr>
 							<%

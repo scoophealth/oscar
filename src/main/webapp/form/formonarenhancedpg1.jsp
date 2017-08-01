@@ -71,8 +71,13 @@
     //load eform groups
     List<LabelValueBean> cytologyForms = PregnancyAction.getEformsByGroup("Cytology");
     List<LabelValueBean> ultrasoundForms = PregnancyAction.getEformsByGroup("Ultrasound");
-    List<LabelValueBean> ipsForms = PregnancyAction.getEformsByGroup("IPS");
-    
+
+    String customEformGroup = oscar.OscarProperties.getInstance().getProperty("prenatal_screening_eform_group");
+    String prenatalScreenName = oscar.OscarProperties.getInstance().getProperty("prenatal_screening_name");
+    String prenatalScreen =  oscar.OscarProperties.getInstance().getProperty("prenatal_screening_abbrv");
+
+    List<LabelValueBean> customForms = PregnancyAction.getEformsByGroup(customEformGroup);
+
     if(props.getProperty("obxhx_num", "0").equals("")) {props.setProperty("obxhx_num","0");}
     
     String labReqVer = oscar.OscarProperties.getInstance().getProperty("onare_labreqver","07");
@@ -159,19 +164,19 @@ function loadUltrasoundForms() {
 	}
 	
 	
-function loadIPSForms() {
+function loadCustomForms() {
 	<%
-		if(ipsForms != null) {
-			if(ipsForms.size()==0) {
+		if(customForms != null) {
+			if(customForms.size()==0) {
 				%>
-					alert('No IPS Forms configured');
+					alert('No <%=customEformGroup%> Forms configured');
 				<%
-			} else if(ipsForms.size() == 1) {
+			} else if(customForms.size() == 1) {
 				%>
-				popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=ipsForms.get(0).getValue()%>&demographic_no=<%=demoNo%>&appointment=0','ipsform');			
+				popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=customForms.get(0).getValue()%>&demographic_no=<%=demoNo%>&appointment=0','<%=customEformGroup%>form');			
 				<%
 			} else {
-				%>$( "#ips-eform-form" ).dialog( "open" );<%
+				%>$( "#custom-eform-form" ).dialog( "open" );<%
 			}
 		}
 	%>
@@ -1550,7 +1555,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$( "#ips-eform-form" ).dialog({
+	$( "#custom-eform-form" ).dialog({
 		autoOpen: false,
 		height: 300,
 		width: 450,
@@ -3663,7 +3668,7 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 <div id="forms_menu_div" class="hidden">
 <ul>
 	<li><a href="javascript:void(0)" onclick="loadUltrasoundForms();">Ultrasound</a></li>
-	<li><a href="javascript:void(0)" onclick="loadIPSForms();">IPS</a></li>
+	<li><a href="javascript:void(0)" onclick="loadCustomForms();"><%=customEformGroup%></a></li>
 </ul>
 </div>
 
@@ -3689,7 +3694,7 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 <ul>
 	<li><a href="http://www.sogc.org/guidelines/documents/gui217CPG0810.pdf" target="sogc">SOGC Guidelines</a></li>
 	<li><a href="<%=request.getContextPath()%>/pregnancy/genetics-provider-guide-e.pdf" target="sogc">Guide</a></li>	
-	<li><a href="javascript:void(0)" onclick="loadIPSForms();">IPS Forms</a></li>
+	<li><a href="javascript:void(0)" onclick="loadCustomForms();"><%=customEformGroup%> Forms</a></li>
 </ul>
 </div>
 
@@ -3791,8 +3796,8 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 					</tr>
 					<tr>
 						<td>
-							Order Integrated Prenatal Screening (IPS)
-							<a href="javascript:void(0);" onclick="return false;" title="Click on 'Forms' menu item under Prompts, and choose IPS"><img border="0" src="../images/icon_help_sml.gif"/></a>		
+							Order <%=prenatalScreenName%> (<%=prenatalScreen%>)
+							<a href="javascript:void(0);" onclick="return false;" title="Click on 'Forms' menu item under Prompts, and choose <%=customEformGroup%>"><img border="0" src="../images/icon_help_sml.gif"/></a>		
 						</td>
 					</tr>
 					<tr>
@@ -3884,17 +3889,17 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 
 
 
-<div id="ips-eform-form" title="IPS Forms">
+<div id="custom-eform-form" title="<%=customEformGroup%> Forms">
 	<form>
 		<fieldset>
 			<table>
 				<tbody>
 				<%
-					if(ipsForms != null) {
-						for(LabelValueBean bean:ipsForms) {
+					if(customForms != null) {
+						for(LabelValueBean bean:customForms) {
 							%>
 							<tr>
-								<td><button onClick="popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=bean.getValue()%>&demographic_no=<%=demoNo%>&appointment=0','ipsform');return false;">Open</button></td>
+								<td><button onClick="popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=bean.getValue()%>&demographic_no=<%=demoNo%>&appointment=0','<%=customEformGroup%>form');return false;">Open</button></td>
 								<td><%=bean.getLabel() %></td>
 							</tr>
 							<%
