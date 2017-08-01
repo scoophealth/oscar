@@ -83,7 +83,7 @@ public class JdbcBillingCodeImpl {
 		b.setDescription(description);
 		b.setValue(value);
 		b.setPercentage(percentage);
-		b.setGstFlag(Boolean.valueOf(gstFlag));
+		b.setGstFlag("1".equals(gstFlag));
 		b.setBillingserviceDate(ConversionUtils.fromDateString(billingservice_date));
 		b.setSliFlag(false);		
 		b.setTerminationDate(ConversionUtils.fromDateString("9999-12-31"));
