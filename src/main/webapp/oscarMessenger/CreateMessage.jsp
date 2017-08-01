@@ -24,13 +24,15 @@
 
 --%>
 
-<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@ page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page import="org.w3c.dom.*"%>
 <%@ page import="oscar.oscarMessenger.util.Msgxml"%>
 <%@ page import="oscar.oscarDemographic.data.*"%>
+<%@ page import="org.oscarehr.managers.MessagingManager" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 <%
@@ -70,11 +72,29 @@ theProviders = new String[] {};
 java.util.Vector locationVect = new java.util.Vector();
 oscar.oscarMessenger.data.MsgReplyMessageData reData = new oscar.oscarMessenger.data.MsgReplyMessageData();
 boolean bFirstDisp=true; //this is the first time to display the window
+
 if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
 
 String demographic_no = (String) request.getAttribute("demographic_no");
 
-String subjectText = request.getParameter("subject");
+MessagingManager messagingManager = SpringUtils.getBean(MessagingManager.class);
+
+String delegate = "";
+String delegateName = "";
+boolean recall=false;
+if(request.getParameter("recall")!=null){ recall=true; }
+
+String subjectText = "";
+if(recall){
+	subjectText = messagingManager.getLabRecallMsgSubjectPref(LoggedInInfo.getLoggedInInfoFromSession(request));
+	delegate = messagingManager.getLabRecallDelegatePref(LoggedInInfo.getLoggedInInfoFromSession(request));
+	if(delegate!=null || delegate != ""){
+	delegateName = messagingManager.getDelegateName(delegate);
+	}
+}else{
+	subjectText = request.getParameter("subject");
+}
+
 if(subjectText == null) {
 	if (request.getAttribute("ReSubject") != null){
 		bean.setSubject((String)request.getAttribute("ReSubject"));
@@ -251,8 +271,7 @@ height:100% !important;
                 nod.click();
             }
         }
-    }
-    
+    }    
 </script>
 
 
@@ -501,6 +520,10 @@ function popupAttachDemo(demographic){ // open a new popup window
 								<tr>
 									<td><!--list of the providers cell Start-->
 									<table>
+									
+									<%if(recall){ %>
+									<input name="provider" value="<%=delegate%>" type="checkbox" checked> <b><a title="default recall delegate: <%=delegateName%>">default: <%=delegateName%></a></b>
+									<%} %>
 										<%if (xmlVector.size() > 0){%><!--the remotes-->
 										<tr>
 											<td><span class="treeNode"
@@ -639,7 +662,8 @@ function popupAttachDemo(demographic){ // open a new popup window
 			<tr>
 				<td><script language="JavaScript">
                             document.forms[0].message.focus();
-                            </script></td>
+                    </script>
+                </td>
 			</tr>
 
 		</table>

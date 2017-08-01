@@ -25,20 +25,20 @@
 
 --%>
 
-<%@page import="org.oscarehr.util.LoggedInInfo"%>
-<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
-<%@page import="oscar.util.ConversionUtils"%>
-<%@page import="org.oscarehr.common.dao.PatientLabRoutingDao"%>
-<%@page import="org.oscarehr.common.model.PatientLabRouting"%>
-<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
-<%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
-<%@page import="java.net.URLEncoder"%>
-<%@page import="org.apache.commons.lang.builder.ReflectionToStringBuilder"%>
-<%@page import="org.oscarehr.util.MiscUtils"%>
-<%@page import="org.w3c.dom.Document"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult"%>
-<%@page import="oscar.oscarLab.ca.all.web.LabDisplayHelper"%>
-<%@page errorPage="../../../provider/errorpage.jsp" %>
+<%@ page import="org.oscarehr.util.LoggedInInfo"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@ page import="oscar.util.ConversionUtils"%>
+<%@ page import="org.oscarehr.common.dao.PatientLabRoutingDao"%>
+<%@ page import="org.oscarehr.common.model.PatientLabRouting"%>
+<%@ page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
+<%@ page import="org.oscarehr.phr.util.MyOscarUtils"%>
+<%@ page import="java.net.URLEncoder"%>
+<%@ page import="org.apache.commons.lang.builder.ReflectionToStringBuilder"%>
+<%@ page import="org.oscarehr.util.MiscUtils"%>
+<%@ page import="org.w3c.dom.Document"%>
+<%@ page import="org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult"%>
+<%@ page import="oscar.oscarLab.ca.all.web.LabDisplayHelper"%>
+<%@ page errorPage="../../../provider/errorpage.jsp" %>
 <%@ page import="java.util.*,
 		 java.sql.*,
 		 oscar.oscarDB.*, oscar.oscarLab.FileUploadCheck, oscar.util.UtilDateUtilities,
@@ -54,6 +54,8 @@
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty" %>
 <%@ page import="org.oscarehr.common.model.MeasurementMap, org.oscarehr.common.dao.MeasurementMapDao" %>
+<%@ page import="org.oscarehr.common.model.Tickler" %>
+<%@ page import="org.oscarehr.managers.TicklerManager" %>
 <%@ page import="org.apache.commons.lang.StringUtils" %>
 <%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager, org.oscarehr.common.dao.Hl7TextMessageDao, org.oscarehr.common.model.Hl7TextMessage,org.oscarehr.common.dao.Hl7TextInfoDao,org.oscarehr.common.model.Hl7TextInfo"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
@@ -103,6 +105,23 @@ UserProperty uProp = userPropertyDAO.getProp(providerNo, UserProperty.LAB_ACK_CO
 boolean skipComment = false;
 if( uProp != null && uProp.getValue().equalsIgnoreCase("yes")) {
 	skipComment = true;
+}
+
+UserProperty  getRecallDelegate = userPropertyDAO.getProp(providerNo, UserProperty.LAB_RECALL_DELEGATE);
+UserProperty  getRecallTicklerAssignee = userPropertyDAO.getProp(providerNo, UserProperty.LAB_RECALL_TICKLER_ASSIGNEE);
+UserProperty  getRecallTicklerPriority = userPropertyDAO.getProp(providerNo, UserProperty.LAB_RECALL_TICKLER_PRIORITY);
+boolean recall = false;
+String recallDelegate = "";
+String ticklerAssignee = "";
+String recallTicklerPriority = "";
+
+if(getRecallDelegate!=null){
+recall = true;
+recallDelegate = getRecallDelegate.getValue();
+recallTicklerPriority = getRecallTicklerPriority.getValue();
+if(getRecallTicklerAssignee.getValue().equals("yes")){
+	ticklerAssignee = "&taskTo="+recallDelegate;
+}
 }
 
 
@@ -379,6 +398,18 @@ pre {
     font-weight:600;
 } 
             -->
+            
+input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;padding:0px;}    
+#ticklerWrap{position:relative;top:0px;background-color:#FF6600;width:100%;}  
+
+.completedTickler{
+    opacity: 0.8;
+    filter: alpha(opacity=80); /* For IE8 and earlier */
+}
+
+@media print { 
+.DoNotPrint{display:none;}
+}      
         </style>
 
         <script language="JavaScript">
@@ -470,6 +501,11 @@ pre {
                                                                                 demoid=json.demoId;
                                                                                 if(demoid!=null && demoid.length>0)
                                                                                     window.popup(700,960,'../../../oscarMessenger/SendDemoMessage.do?demographic_no='+demoid,'msg');
+                                                                            }else if(action=='msgLabRecall'){
+                                                                                demoid=json.demoId;
+                                                                                if(demoid!=null && demoid.length>0)
+                                                                                    window.popup(700,980,'../../../oscarMessenger/SendDemoMessage.do?demographic_no='+demoid+"&recall",'msgRecall');
+                                                                                    window.popup(450,600,'../../../tickler/ForwardDemographicTickler.do?docType=HL7&docId='+labid+'&demographic_no='+demoid+'<%=ticklerAssignee%>&priority=<%=recallTicklerPriority%>&recall','ticklerRecall');
                                                                             }else if(action=='ticklerLab'){
                                                                                 demoid=json.demoId;
                                                                                 if(demoid!=null && demoid.length>0)
@@ -592,7 +628,7 @@ pre {
 
     </head>
 
-    <body onLoad="javascript:matchMe();">
+    <body onLoad="javascript:matchMe();">   
         <!-- form forwarding of the lab -->
         <%        
         	for( int idx = 0; idx < segmentIDs.length; ++idx ) {
@@ -710,7 +746,9 @@ pre {
 									<input type="button" value="<%=formName2Short%>" onClick="popupStart(700, 1024, '../../../form/forwardshortcutname.jsp?formname=<%=formName2%>&demographic_no=<%=demographicID%>', '<%=formName2Short%>')" />
 									<% } %>
 
-
+<% if(recall){%>
+<input type="button" value="Recall" onclick="handleLab('','<%=segmentID%>','msgLabRecall');">
+<%}%>
 									<%
 										if(remoteLabKey == null || "".equals(remoteLabKey.length())) {
 									%>
@@ -1047,7 +1085,59 @@ pre {
                                 </td>
                             </tr>
                             <tr>
-                                <td align="center" bgcolor="white" colspan="2">
+                                <td align="center" bgcolor="white" colspan="2" style="padding:0px;" cellspacing="0">
+							    <%
+							    TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+							    List<Tickler> LabTicklers = ticklerManager.getTicklerByLabId(loggedInInfo, Integer.valueOf(segmentID), Integer.valueOf(demographicID));
+							    
+							    if(LabTicklers!=null && LabTicklers.size()>0){
+							    %>
+							    <div id="ticklerWrap" class="DoNotPrint">
+							    <h3 style="color:#fff"><a href="javascript:void(0)" id="open-ticklers" onclick="showHideItem('ticklerDisplay')">View Ticklers</a> Linked to this Lab</h3><br>
+							    
+							           <div id="ticklerDisplay" style="display:none">
+							   <%
+							   String flag;
+							   String ticklerClass;
+							   String ticklerStatus;
+							   for(Tickler tickler:LabTicklers){
+							   
+							   ticklerStatus = tickler.getStatus().toString();
+							   if(!ticklerStatus.equals("C") && tickler.getPriority().toString().equals("High")){ 
+							   	flag="<span style='color:red'>&#9873;</span>";
+							   }else if(ticklerStatus.equals("C") && tickler.getPriority().toString().equals("High")){
+							   	flag="<span>&#9873;</span>";
+							   }else{	
+							   	flag="";
+							   }
+							   
+							   if(ticklerStatus.equals("C")){
+							  	 ticklerClass = "completedTickler";
+							   }else{
+							  	 ticklerClass="";
+							   }
+							   %>	
+							   <div style="text-align:left;background-color:#fff;padding:5px; width:600px;" class="<%=ticklerClass%>">
+							   	<table width="100%">
+							   	<tr>
+							   	<td><b>Priority:</b> <%=flag%> <%=tickler.getPriority()%></td>
+							   	<td><b>Service Date:</b> <%=tickler.getServiceDate()%></td>   	
+							   	<td><b>Assigned To:</b> <%=tickler.getAssignee() != null ? tickler.getAssignee().getLastName() + ", " + tickler.getAssignee().getFirstName() : "N/A"%></td>
+							   	<td width="90px"><b>Status:</b> <%=ticklerStatus.equals("C") ? "Completed" : "Active" %></td> 
+							   	</tr>
+							   	<tr>
+							   	<td colspan="4"><%=tickler.getMessage()%></td>
+							   	</tr>
+							   	</table>
+							   </div>	
+							   <br>
+							   <%
+							   }
+							   %>
+							   		</div><!-- end ticklerDisplay -->
+							   </div>   
+							   <%}//no ticklers to display %>                     
+                                
                                     <%String[] multiID = multiLabId.split(",");
                                     ReportStatus report;
                                     boolean startFlag = false;
@@ -1108,7 +1198,6 @@ pre {
                                 </td>
                             </tr>
                         </table>
-
 
                         <% int i=0;
                         int j=0;
