@@ -453,11 +453,14 @@
 	        		childDemographic.setDateOfBirth(dateParts[2]);
 	        	}
 	        	childDemographic.setTitle("");
-	        	childDemographic.setAddress("");
-	        	childDemographic.setCity("");
-	        	childDemographic.setProvince("");
-	        	childDemographic.setPostal("");
-	        	childDemographic.setPhone("");
+
+			childDemographic.setAddress(demographic.getAddress());
+                        childDemographic.setCity(demographic.getCity());
+                        childDemographic.setProvince(demographic.getProvince());
+                        childDemographic.setPostal(demographic.getPostal());
+                        childDemographic.setPhone(demographic.getPhone());
+
+
 	        	childDemographic.setPhone2("");
 	        	childDemographic.setEmail("");
 	        	childDemographic.setHin("");
