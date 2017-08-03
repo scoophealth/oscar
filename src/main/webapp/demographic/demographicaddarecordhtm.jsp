@@ -1540,9 +1540,8 @@ document.forms[1].r_doctor_ohip.value = refNo;
 		String[] enableChildRecordPrograms = tmp.split(",");
 
 	
-		boolean showChildRecordSection=true;
+		boolean showChildRecordSection=false;
 		if(!StringUtils.isEmpty(tmp) && enableChildRecordPrograms.length >0 ) {
-			showChildRecordSection=false;
 			 
 			if(pp3 != null) {
 				for(int x=0;x<enableChildRecordPrograms.length;x++) {
