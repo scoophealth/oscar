@@ -693,8 +693,9 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
                                 </td>
                             </tr>
                             <tr>
-                                <td align="center" bgcolor="white" colspan="2">
- 							    <%
+                                <td align="center" bgcolor="white" colspan="2"> 							   
+<% if(demographicID!=null && !demographicID.equals("")){
+
 							    TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
 							    List<Tickler> LabTicklers = ticklerManager.getTicklerByLabId(loggedInInfo, Integer.valueOf(segmentID), Integer.valueOf(demographicID));
 							    
@@ -744,7 +745,9 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
 							   %>
 							   		</div><!-- end ticklerDisplay -->
 							   </div>   
-							   <%}//no ticklers to display %>                                  
+							   <%}//no ticklers to display 
+
+}%>                                  
                                 
                                     <%String[] multiID = multiLabId.split(",");
                                     ReportStatus report;
