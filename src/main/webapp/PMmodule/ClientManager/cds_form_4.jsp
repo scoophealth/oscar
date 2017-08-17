@@ -101,12 +101,12 @@ var $j = jQuery.noConflict();
 	String lhinConsumerResides = "";
 	
 	DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
-	DemographicExt de = demographicExtDao.getLatestDemographicExt(Integer.parseInt(request.getParameter("demographicId")), "lhinConsumerResides");
+	DemographicExt de = demographicExtDao.getLatestDemographicExt(currentDemographicId, "lhinConsumerResides");
 	if(de != null) {
 		lhinConsumerResides = de.getValue();
 		lhinConsumerResides = residesTranslate(lhinConsumerResides);
 	}
-	de = demographicExtDao.getLatestDemographicExt(Integer.parseInt(request.getParameter("demographicId")), "recipientLocation");
+	de = demographicExtDao.getLatestDemographicExt(currentDemographicId, "recipientLocation");
 	if(de != null) {
 		recipientLocation = de.getValue();
 	}
