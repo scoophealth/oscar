@@ -51,13 +51,13 @@ public class IHAPOIHandler extends MEDITECHHandler implements MessageHandler  {
 	
 	public enum SENDING_APPLICATION {
 
-	    MB("Microbiology", 1), 
-	    BBK("Blood Bank", 2), 
-	    IHARAD("Radiology", 3), 
-	    OE("Health Record",4), 
-	    LAB("Laboratory", 5),
-	    PTH("Pathology", 6),
-	    RAD("Radiology", 7);
+	    MB("MB", 1), 
+	    BBK("BBK", 2), 
+	    IHARAD("RAD", 3), 
+	    OE("HR",4), 
+	    LAB("LAB", 5),
+	    PTH("PTH", 6),
+	    RAD("RAD", 7);
 
 	    private final String key;
 	    private final Integer value;
@@ -255,7 +255,7 @@ public class IHAPOIHandler extends MEDITECHHandler implements MessageHandler  {
 				break;
 				case PTH: discipline = SENDING_APPLICATION.PTH.getKey();
 				break;
-				default: discipline = "Lab";
+				default: discipline = "LAB";
 			}
 		}
 		return discipline + ": " + observation; 
