@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.managers.ProgramManager2;
@@ -225,10 +226,55 @@ public class CaseManagementPrintPdf {
         upperYcoord -= phrase.getLeading();
 
     }
+    
+    public void printPreventions(List<Prevention> preventions) throws DocumentException {
+    	if(preventions == null ) {
+    		return;
+    	}
+    	
+    	
+    	 if( newPage )
+             document.newPage();
+         else
+             newPage = true;
+    	 
+    	 Paragraph p = new Paragraph();
+         Font obsfont = new Font(bf, FONTSIZE, Font.UNDERLINE);
+         Phrase phrase = new Phrase(LEADING, "", obsfont);
+         p.setAlignment(Paragraph.ALIGN_CENTER);
+         phrase.add("Patient Preventions History");
+         p.add(phrase);
+         document.add(p);
+         
+         Font normal = new Font(bf, FONTSIZE, Font.NORMAL);
+         Font curFont;
+         for(int idx = 0; idx < preventions.size(); idx++ ) {
+        	 Prevention prevention = preventions.get(idx);
+        	 p = new Paragraph();
+             p.setAlignment(Paragraph.ALIGN_LEFT);
+             if(!prevention.isDeleted() ){
+                 curFont = normal;
+                 phrase = new Phrase(LEADING, "", curFont);
+                 String refused = prevention.isRefused()?" (Refused)":"";
+                 phrase.add(formatter.format(prevention.getPreventionDate()) + " - ");
+                 phrase.add(prevention.getPreventionType() + refused);
+                 p.add(phrase);
+                 document.add(p);
+             }
+         }
+         if(preventions.size() == 0) {
+        	 curFont = normal;
+             phrase = new Phrase(LEADING, "", curFont);
+             phrase.add("No preventions found");
+              p.add(phrase);
+             document.add(p);
+         }
+    }
 
     public void printRx(String demoNo) throws DocumentException {
         printRx(demoNo,null);
     }
+    
     public void printRx(String demoNo,List<CaseManagementNote> cpp) throws DocumentException {
         if( demoNo == null )
             return;

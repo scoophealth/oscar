@@ -420,7 +420,17 @@ boolean ajax = "true".equals(request.getParameter("ajax"));
 
 	}
 	
+	input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;padding:0px;}    
+	#ticklerWrap{position:relative;top:0px;background-color:#FF6600;width:100%;}  
 	
+	.completedTickler{
+	    opacity: 0.8;
+	    filter: alpha(opacity=80); /* For IE8 and earlier */
+	}
+	
+	@media print { 
+	.DoNotPrint{display:none;}
+	}  	
 
 	.TDISRes	{font-weight: bold; font-size: 10pt; color: black; font-family:
                Verdana, Arial, Helvetica}

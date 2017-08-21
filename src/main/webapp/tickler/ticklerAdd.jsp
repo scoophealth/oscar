@@ -72,6 +72,13 @@ if( request.getParameter("updateParent") != null )
 else
     updateParent = "true";  
 
+boolean recall = false;
+String taskTo = user_no; //default current user
+String priority = "Normal";
+if(request.getParameter("taskTo")!=null) taskTo = request.getParameter("taskTo");
+if(request.getParameter("priority")!=null) priority = request.getParameter("priority");
+if(request.getParameter("recall")!=null) recall = true;
+
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarEncounter.pageUtil.EctSessionBean" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
@@ -326,19 +333,19 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
       <td>&nbsp;</td>
     </tr>
     <tr> 
-      <td height="21" valign="top"><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerMain.Priority"/></strong></font></td>
+      <td height="21" valign="top"><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerMain.Priority"/>:</strong></font></td>
       <td valign="top"> 
 	<select name="priority" style="font-face:Verdana, Arial, Helvetica, sans-serif">
- 	<option value="<bean:message key="tickler.ticklerMain.priority.high"/>"><bean:message key="tickler.ticklerMain.priority.high"/>
-	<option value="<bean:message key="tickler.ticklerMain.priority.normal"/>" SELECTED><bean:message key="tickler.ticklerMain.priority.normal"/>
-	<option value="<bean:message key="tickler.ticklerMain.priority.low"/>"><bean:message key="tickler.ticklerMain.priority.low"/>	
+ 	<option value="<bean:message key="tickler.ticklerMain.priority.high"/>" <%=priority.equals("High")?"selected":""%>><bean:message key="tickler.ticklerMain.priority.high"/>
+	<option value="<bean:message key="tickler.ticklerMain.priority.normal"/>" <%=priority.equals("Normal")?"selected":""%>><bean:message key="tickler.ticklerMain.priority.normal"/>
+	<option value="<bean:message key="tickler.ticklerMain.priority.low"/>" <%=priority.equals("Low")?"selected":""%>><bean:message key="tickler.ticklerMain.priority.low"/>	
      	</select>
       </td>
       <td>&nbsp;</td>
     </tr>
 
     <tr> 
-      <td height="21" valign="top"><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerMain.taskAssignedTo"/></strong></font></td>
+      <td height="21" valign="top"><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerMain.taskAssignedTo"/>:</strong></font></td>
       <td valign="top"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333">
 <% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) 
 { // multisite start ==========================================
@@ -371,6 +378,7 @@ function changeSite(sel) {
 	sel.form.task_assigned_to.innerHTML=sel.value=="none"?"":_providers[sel.value];
 }
       </script>
+ 
       	<select id="site" name="site" onchange="changeSite(this)">
       		<option value="none">---select clinic---</option>
       	<%
@@ -387,7 +395,8 @@ function changeSite(sel) {
 <% // multisite end ==========================================
 } else {
 %>
-      <select name="task_assigned_to">           
+  
+      <select name="task_assigned_to">        
             <%  String proFirst="";
                 String proLast="";
                 String proOHIP="";
@@ -399,7 +408,7 @@ function changeSite(sel) {
                     proOHIP = p.getProviderNo();
 
             %> 
-            <option value="<%=proOHIP%>" <%=user_no.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
+            <option value="<%=proOHIP%>" <%=taskTo.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
             <%
                 }
             %>

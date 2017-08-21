@@ -328,7 +328,7 @@ Fee <small>(format: xx.xx, e.g. 18.20)</small><br>
 
 Issued Date <small>(effective date)</small><br>
 
-<div class="input-append date" id="billingservice_date" data-date="2014-02-04" data-date-format="yyyy-mm-dd">
+<div class="input-append date" id="billingservice_date" data-date="" data-date-format="yyyy-mm-dd">
 <input  style="width:90px" name="billingservice_date"  id="billingservice_date" size="16" type="text" value="" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" readonly>
 <span class="add-on"><i class="icon-calendar"></i></span>
 </div>

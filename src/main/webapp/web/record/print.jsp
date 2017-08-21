@@ -112,6 +112,12 @@
 						    <bean:message key="oscarEncounter.Labs.title" />
 						  </label>
 						</div>
+						<div class="checkbox">
+						  <label>
+						    <input type="checkbox" value="true" ng-model="pageOptions.preventions" alt="<bean:message key="oscarEncounter.togglePrintPreventions.title"/>" id="imgPrintPreventions"  >
+						    <bean:message key="oscarEncounter.Preventions.title" />
+						  </label>
+						</div>
 	        		</div>
 	        	</div>
 	        	

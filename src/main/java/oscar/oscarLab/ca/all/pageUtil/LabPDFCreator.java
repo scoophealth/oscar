@@ -49,7 +49,6 @@ import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.OscarProperties;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.all.parsers.CLSHandler;
 import oscar.oscarLab.ca.all.parsers.Factory;
@@ -967,20 +966,6 @@ public class LabPDFCreator extends PdfPageEventHelper{
 
             }
 
-            //add footer for every page
-            cb.beginText();
-            cb.setFontAndSize(bf, 8);
-            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, "-"+pageNum+"-", width/2, 30, 0);
-            cb.endText();
-
-
-            // add promotext as footer if it is enabled
-            if ( OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null){
-                cb.beginText();
-                cb.setFontAndSize(BaseFont.createFont(BaseFont.HELVETICA,BaseFont.CP1252,BaseFont.NOT_EMBEDDED), 6);
-                cb.showTextAligned(PdfContentByte.ALIGN_CENTER, OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"), width/2, 19, 0);
-                cb.endText();
-            }
 
         // throw any exceptions
         } catch (Exception e) {
