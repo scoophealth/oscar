@@ -258,7 +258,7 @@ public class IHAPOIHandler extends MEDITECHHandler implements MessageHandler  {
 				default: discipline = "LAB";
 			}
 		}
-		return discipline + ": " + observation; 
+		return discipline + ":" + observation; 
 	}
 	
 	
