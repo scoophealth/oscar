@@ -26,7 +26,7 @@ package org.oscarehr.PMmodule.caisi_integrator;
 import java.io.Serializable;
 import java.util.List;
 
-import org.oscarehr.caisi_integrator.ws.FacilityIdDemographicIssueCompositePk;
+import org.oscarehr.caisi_integrator.dao.FacilityIdDemographicIssueCompositePk;
 
 public class DeleteCachedDemographicIssuesWrapper implements Serializable {
 

@@ -1121,9 +1121,16 @@
 	<dependency>
   <groupId>org.oscarehr.caisi_integrator</groupId>
   <artifactId>integrator-objects</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
 
 	</dependency>
+
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-compress</artifactId>
+    <version>1.14</version>
+</dependency>
+
 
 	</dependencies>
 

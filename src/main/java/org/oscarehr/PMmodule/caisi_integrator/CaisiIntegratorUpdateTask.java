@@ -24,15 +24,18 @@
 package org.oscarehr.PMmodule.caisi_integrator;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.security.MessageDigest;
@@ -58,6 +61,9 @@ import java.util.zip.ZipOutputStream;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.ws.WebServiceException;
 
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.tika.io.IOUtils;
@@ -74,6 +80,7 @@ import org.oscarehr.caisi_integrator.dao.CachedDemographicAllergy;
 import org.oscarehr.caisi_integrator.dao.CachedDemographicDocument;
 import org.oscarehr.caisi_integrator.dao.CachedDemographicDrug;
 import org.oscarehr.caisi_integrator.dao.CachedDemographicForm;
+import org.oscarehr.caisi_integrator.dao.CachedDemographicHL7LabResult;
 import org.oscarehr.caisi_integrator.dao.CachedDemographicIssue;
 import org.oscarehr.caisi_integrator.dao.CachedDemographicLabResult;
 import org.oscarehr.caisi_integrator.dao.CachedDemographicNote;
@@ -121,6 +128,7 @@ import org.oscarehr.common.dao.EFormDataDao;
 import org.oscarehr.common.dao.EFormValueDao;
 import org.oscarehr.common.dao.FacilityDao;
 import org.oscarehr.common.dao.GroupNoteDao;
+import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.dao.IntegratorConsentDao;
 import org.oscarehr.common.dao.IntegratorControlDao;
 import org.oscarehr.common.dao.MeasurementDao;
@@ -147,6 +155,7 @@ import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.EFormValue;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.GroupNoteLink;
+import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.IntegratorConsent;
 import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.common.model.IntegratorFileLog;
@@ -195,6 +204,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	
 	ObjectOutputStream out = null;
 	
+	PrintWriter documentMetaWriter;
 	
 	private static Timer timer = new Timer("CaisiIntegratorUpdateTask Timer", true);
 
@@ -379,6 +389,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			//create the first file
 			out = new ObjectOutputStream(new FileOutputStream(new File(documentDir + File.separator + filename + ".1.ser")));
 		
+			File documentMetaFile = new File(documentDir + File.separator + "documentMeta.txt");
+			documentMetaWriter = new PrintWriter(new FileWriter(documentMetaFile));
+			
 			IntegratorFileHeader header = new IntegratorFileHeader();
 			header.setDate(currentUpdateDate);
 			header.setLastDate(lastDataUpdated);
@@ -417,6 +430,15 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			return;
 		} finally {
 			IOUtils.closeQuietly(out);
+			IOUtils.closeQuietly(documentMetaWriter);
+		}
+		
+		//create the DocumentZip
+		String docChecksum = null;
+		try {
+			docChecksum = completeDocumentFile(documentDir, filename);
+		} catch(Exception e) {
+			throw new IOException(e);
 		}
 		
 		//creates a zip (.zipTemp) and returns the checksum for th elog
@@ -700,7 +722,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		//we could parallelize this. basically we want X records per file. So we just assign each unit of work to be
 		//a set of demographicIds which will end up being a single file. so we need to know the file number and the ids for it
 		
+		
 		for (Integer demographicId : demographicIds) {
+		
+			
 			
 			demographicPushCount++;
 			//logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId + "  " + demographicPushCount + " of " + demographicIds.size());
@@ -773,6 +798,10 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				
 				pushLabResults(demoOut,lastDataUpdated, facility, demographicId);
 				benchTimer.tag("pushLabResults");
+				
+				pushHL7LabResults(demoOut,lastDataUpdated, facility, demographicId);
+				benchTimer.tag("pushHL7LabResults");
+				
 				
 				logger.debug(benchTimer.report());
 
@@ -1023,7 +1052,18 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 		
 		if(cachedFacility != null) {
-			DeleteCachedDemographicIssuesWrapper wrapper = new DeleteCachedDemographicIssuesWrapper(demographicId, caseManagementIssueDAO.getIssueIdsForIntegrator(cachedFacility.getIntegratorFacilityId(),demographicId));
+
+			List<FacilityIdDemographicIssueCompositePk> b = new ArrayList<FacilityIdDemographicIssueCompositePk>();
+			for(org.oscarehr.caisi_integrator.ws.FacilityIdDemographicIssueCompositePk c: caseManagementIssueDAO.getIssueIdsForIntegrator(cachedFacility.getIntegratorFacilityId(),demographicId)) {
+				FacilityIdDemographicIssueCompositePk n = new FacilityIdDemographicIssueCompositePk();
+				n.setCaisiDemographicId(c.getCaisiDemographicId());
+				n.setCodeType(CodeType.valueOf(c.getCodeType().value()));
+				n.setIntegratorFacilityId(c.getIntegratorFacilityId());
+				n.setIssueCode(c.getIssueCode());
+				
+				b.add(n);
+			}
+			DeleteCachedDemographicIssuesWrapper wrapper = new DeleteCachedDemographicIssuesWrapper(demographicId, b);
 			out.writeUnshared(wrapper);
 		}
 		conformanceTestLog(facility, "CaseManagementIssue", sentIds.toString());
@@ -1196,9 +1236,56 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			return;
 		}
 		out.writeUnshared(cachedDemographicDocument);
-		out.writeUnshared(new ByteWrapper(contents));
+
+		//TODO: fix here
+		//out.writeUnshared(new ByteWrapper(contents));
+		
+		documentMetaWriter.println( cachedDemographicDocument.getId().getCaisiItemId() + "," + cachedDemographicDocument.getCaisiDemographicId() + "," + cachedDemographicDocument.getDocFilename()  );
+		contents = null;
 	}
 
+	private void pushHL7LabResults(ObjectOutputStream out, Date lastDataUpdated, Facility facility, Integer demographicId) throws IOException {
+		logger.debug("pushing pushHL7LabResults facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.labs.disabled", "false"))) {
+			return;
+		}
+		
+		CommonLabResultData comLab = new CommonLabResultData();
+		
+		//TODO:we need to check the patient lab routing table on it's own too..the case where a lab is updated, but the link is done later
+		OscarProperties op = OscarProperties.getInstance();
+		String hl7text = op.getProperty("HL7TEXT_LABS","false");
+		
+		List<LabIdAndType> results = new ArrayList<LabIdAndType>();
+		
+		if("yes".equals(hl7text))
+			results.addAll(comLab.getHl7ResultsSince(demographicId, lastDataUpdated));
+		 
+		for(LabIdAndType id:results) {
+			logger.debug("id="+id.getLabId() + ",type=" + id.getLabType());
+		}
+	
+		StringBuilder sentIds = new StringBuilder();
+		
+		if (results.size() == 0) return;
+
+		
+		for (LabIdAndType labIdAndType : results) {
+			LabResultData lab = comLab.getLab(labIdAndType);
+			if(lab != null) {
+				CachedDemographicHL7LabResult cachedDemographicLabResult = makeCachedDemographicHL7LabResult(demographicId, lab);
+				out.writeUnshared(cachedDemographicLabResult);
+				sentIds.append("," + lab.getLabPatientId() + ":" + lab.labType + ":" + lab.segmentID);
+			} else {
+				logger.warn("Lab missing!!! " + labIdAndType.getLabType() + ":"+ labIdAndType.getLabId());
+			}
+		}
+		
+		conformanceTestLog(facility, "LabResultData", sentIds.toString());
+
+	}
+	
 	private void pushLabResults(ObjectOutputStream out, Date lastDataUpdated, Facility facility, Integer demographicId) throws IOException, ParserConfigurationException, UnsupportedEncodingException, ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		logger.debug("pushing pushLabResults facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
@@ -1213,7 +1300,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		String cml = op.getProperty("CML_LABS","false");
 		String mds = op.getProperty("MDS_LABS","false");
 		String pathnet = op.getProperty("PATHNET_LABS","false");
-		String hl7text = op.getProperty("HL7TEXT_LABS","false");
 		String epsilon = op.getProperty("Epsilon_LABS","false");
 		
 		List<LabIdAndType> results = new ArrayList<LabIdAndType>();
@@ -1223,8 +1309,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			results.addAll(comLab.getMdsLabResultsSince(demographicId, lastDataUpdated));
 		if("yes".equals(pathnet))
 			results.addAll(comLab.getPathnetResultsSince(demographicId, lastDataUpdated));
-		if("yes".equals(hl7text))
-			results.addAll(comLab.getHl7ResultsSince(demographicId, lastDataUpdated));
 		 
 		for(LabIdAndType id:results) {
 			logger.debug("id="+id.getLabId() + ",type=" + id.getLabType());
@@ -1266,6 +1350,31 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 		String data = XmlUtils.toString(doc, false);
 		cachedDemographicLabResult.setData(data);
+
+		return (cachedDemographicLabResult);
+	}
+	
+	private CachedDemographicHL7LabResult makeCachedDemographicHL7LabResult(Integer demographicId, LabResultData lab) 
+	{
+		CachedDemographicHL7LabResult cachedDemographicLabResult = new CachedDemographicHL7LabResult();
+
+		FacilityIdLabResultCompositePk pk = new FacilityIdLabResultCompositePk();
+		// our attempt at making a fake pk....
+		String key = LabDisplayHelper.makeLabKey(demographicId, lab.getSegmentID(), lab.labType, lab.getDateTime());
+		pk.setLabResultId(key);
+		cachedDemographicLabResult.setFacilityIdLabResultCompositePk(pk);
+
+		cachedDemographicLabResult.setCaisiDemographicId(demographicId);
+		cachedDemographicLabResult.setType(lab.labType);
+
+
+		Hl7TextMessageDao hl7TextMessageDao = SpringUtils.getBean(Hl7TextMessageDao.class);
+		Hl7TextMessage tMsg = hl7TextMessageDao.find(Integer.parseInt(lab.getSegmentID()));
+		
+		if(tMsg == null) {
+			return null;
+		}
+		cachedDemographicLabResult.setData(tMsg.getBase64EncodedeMessage());
 
 		return (cachedDemographicLabResult);
 	}
@@ -1971,44 +2080,55 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			if (ids != null) LogAction.addLogSynchronous(null, "Integrator Send", dataType, ids, facility.getIntegratorUrl());
 		}
 	}
+	
+
+	private String completeDocumentFile(String parentDir, final String parentFile)  {
+		logger.info("creating document zip file");
+		
+		try {
+			ProcessBuilder processBuilder = new ProcessBuilder(parentDir + File.separator + "build_doc_zip.sh",parentFile).inheritIO();
+			
+			Process process = processBuilder.start();
+			
+			process.waitFor();
+			
+			//BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		   //     String data = br.readLine();
+		   //     logger.debug(data);
+		}catch(Exception e) {
+			logger.error("Error",e);
+		} finally {
+			
+		}
+		
+		logger.info("done creating document zip file");
+		
+	
+		return null;
+	}
 
 	private String completeFile(String parentDir,final String parentFile) throws NoSuchAlgorithmException, IOException {
 		
 		String[] files = new File(parentDir).list(new FilenameFilter(){
 		    public boolean accept(File dir, String name) {
-		    	if(name.startsWith(parentFile)) {
+		    	if(name.startsWith(parentFile) && !name.equals(parentFile + "-Docs.zip")) {
+		    		return true;
+		    	}
+		    	if(name.indexOf("documentMeta.txt") != -1) {
 		    		return true;
 		    	}
 		    	return false;
 		    }
 		});
 		
-		ZipOutputStream out =null;
-		try {
-			out = new ZipOutputStream(new FileOutputStream(parentDir + File.separator + parentFile + ".zipTemp"));
-			 out.setMethod(ZipOutputStream.DEFLATED);
-			 byte data[] = new byte[1024];
-			 
-			for(int x=0;x<files.length;x++) {
-				//out.putNextEntry(new ZipEntry(files[x].getName()));
-			  FileInputStream fi = new FileInputStream(parentDir + File.separator + files[x]);
-				BufferedInputStream origin = new BufferedInputStream(fi, 1024);
-                ZipEntry entry = new ZipEntry(files[x].toString());
-                out.putNextEntry(entry);
-                int count;
-                while((count = origin.read(data, 0, 1024)) != -1) {
-                   out.write(data, 0, count);
-                }
-                origin.close(); 
-			}
-			
-			out.close();
-			
-		} catch(Exception e) {
-			logger.error("Error creating zip file",e);
-		} finally {
-			IOUtils.closeQuietly(out);
-		}
+		
+		
+		logger.info("CREATING ZIP FILE NOW");
+		createZipFile(parentDir,parentFile,files);
+		
+		
+		//createTarFile(parentDir,parentFile,files);
+		
 		
 		//delete those files since they are zipped
 		for(int x=0;x<files.length;x++) {
@@ -2028,6 +2148,62 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		
 	}
 	
+	protected void createTarFile(String parentDir, String parentFile, String[] files) {
+		 FileOutputStream fOut = null;
+		 BufferedOutputStream bOut = null;
+		 GzipCompressorOutputStream gzOut = null;
+		 TarArchiveOutputStream tOut = null;
+		 
+		 try {
+			 fOut = new FileOutputStream(new File(parentDir + File.separator + parentFile + ".tar"));
+		     bOut = new BufferedOutputStream(fOut);
+		     gzOut = new GzipCompressorOutputStream(bOut);
+		     tOut = new TarArchiveOutputStream(gzOut);
+		     
+			 for(int x=0;x<files.length;x++) {
+				 File f = new File(parentDir + File.separator + files[x]);
+				 TarArchiveEntry original = new TarArchiveEntry( f);
+				 tOut.putArchiveEntry(original);
+				 IOUtils.copy(new FileInputStream(f), tOut);
+				 tOut.closeArchiveEntry();
+			 }
+			 
+			 tOut.finish();
+		 }catch(Exception e) {
+			 logger.error("Error",e);
+		 } finally {
+			 IOUtils.closeQuietly(tOut);
+		 }
+	}
+	
+	protected void createZipFile(String parentDir, String parentFile, String[] files) {
+		ZipOutputStream out =null;
+		try {
+			logger.info("creating " + parentDir + File.separator + parentFile + ".zipTemp");
+			
+			out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(parentDir + File.separator + parentFile + ".zipTemp")));
+			 out.setMethod(ZipOutputStream.DEFLATED);
+			 byte data[] = new byte[1024];
+			 
+			for(int x=0;x<files.length;x++) {
+				//out.putNextEntry(new ZipEntry(files[x].getName()));
+			  FileInputStream fi = new FileInputStream(parentDir + File.separator + files[x]);
+				BufferedInputStream origin = new BufferedInputStream(fi, 1024);
+                ZipEntry entry = new ZipEntry(files[x].toString());
+                out.putNextEntry(entry);
+                int count;
+                while((count = origin.read(data, 0, 1024)) != -1) {
+                   out.write(data, 0, count);
+                }
+                origin.close(); 
+			}
+			
+		} catch(Exception e) {
+			logger.error("Error creating zip file",e);
+		} finally {
+			IOUtils.closeQuietly(out);
+		}
+	}
 	private static String getFileChecksum(MessageDigest digest, File file) throws IOException
 	{
 	    //Get file input stream for reading the file content

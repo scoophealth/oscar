@@ -61,7 +61,7 @@ public class OLISSchedulerJob extends TimerTask {
 
 			if (olisPrefs.getLastRun() != null) {
 				// check to see if we are past last run + frequency interval
-				int freqMins = olisPrefs.getPollFrequency();
+				int freqMins = (olisPrefs.getPollFrequency() != null)?olisPrefs.getPollFrequency():0;
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(olisPrefs.getLastRun());
 				cal.add(Calendar.MINUTE, freqMins);

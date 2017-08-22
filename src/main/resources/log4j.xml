@@ -29,7 +29,7 @@
 	</appender>
 	
 	<category name="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorUpdateTask" additivity="false">
-		<level value="DEBUG" />
+		<level value="INFO" />
 		<appender-ref ref="INTEGRATOR_FILE" />
 	</category>
 
