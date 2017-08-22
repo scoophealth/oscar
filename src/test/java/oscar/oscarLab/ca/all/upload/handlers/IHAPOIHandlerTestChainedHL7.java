@@ -33,19 +33,19 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
-import org.junit.Test;
 
 import org.xml.sax.SAXException;
 
 /**
  * This test case is used to generate a log analysis during development only.
  * No assertions are used.
+ * Uncomment the Test annotations to use.
  *
  */
 public class IHAPOIHandlerTestChainedHL7 extends IHAPOIHandler {
 	
 	private static Logger logger = Logger.getLogger( IHAPOIHandlerTestChainedHL7.class );
-	private static String TEST_FILE = "LabUpload.AutoLabUpload1000170710.tmp.1499724434014";
+	private static String TEST_FILE = "path to test file";
 
 	// @Test
 	public void testParse() {
@@ -77,7 +77,7 @@ public class IHAPOIHandlerTestChainedHL7 extends IHAPOIHandler {
         }
 	}
 	
-	@Test
+	// @Test
 	public void testParseDirect() {
 		URL url = Thread.currentThread().getContextClassLoader().getResource(TEST_FILE);
 		InputStream is = null;

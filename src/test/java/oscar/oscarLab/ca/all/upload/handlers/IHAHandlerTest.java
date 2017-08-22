@@ -29,19 +29,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import org.apache.log4j.Logger;
-import org.junit.Test;
+// import org.junit.Test;
 
 /**
  * This test case is used to generate a log analysis during development only.
  * No assertions are used.
- * 
+ * Uncomment the Test annotations to use.
+ *
  */
 public class IHAHandlerTest extends IHAHandler {
 
 	private static Logger logger = Logger.getLogger( IHAHandlerTest.class );
-	private static String TEST_FILE = "LabUpload.AutoLabUpload1000170710.tmp.1499724434014";
+	private static String TEST_FILE = "Path to test file";
 
-	@Test
+	// @Test
 	public void testParse() {
 		logger.info("#------------>>  Testing IHAHHandler Uploader.");
 		URL url = Thread.currentThread().getContextClassLoader().getResource(TEST_FILE);
