@@ -1088,7 +1088,10 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                 <td align="center" bgcolor="white" colspan="2" style="padding:0px;" cellspacing="0">
 							    <%
 							    TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
-							    List<Tickler> LabTicklers = ticklerManager.getTicklerByLabId(loggedInInfo, Integer.valueOf(segmentID), Integer.valueOf(demographicID));
+							    List<Tickler> LabTicklers = null;
+							    if(demographicID != null) {
+							    	LabTicklers = ticklerManager.getTicklerByLabId(loggedInInfo, Integer.valueOf(segmentID), Integer.valueOf(demographicID));
+							    }
 							    
 							    if(LabTicklers!=null && LabTicklers.size()>0){
 							    %>
