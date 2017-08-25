@@ -30,10 +30,14 @@
 
 package oscar.oscarSurveillance;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.SurveyDataDao;
@@ -43,6 +47,10 @@ import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.XmlUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 import oscar.util.ConversionUtils;
 
@@ -223,7 +231,7 @@ public class Survey {
 
 	public void setAnswer(String surveyDataId, String answer) {
 		Answer a = getAnswerByString(answer);
-		log.debug("Answer a :" + a.answerString + " answer " + answer);
+		log.debug("Answer a :" + a.answerString + " answer " + answer+ " stat "+a.answerStatus+" val "+ a.answerValue);
 		SurveyData s = this.surveyDataDao.find(Integer.parseInt(surveyDataId));
 		if (s != null) {
 			s.setStatus(a.answerStatus);
@@ -487,6 +495,70 @@ public class Survey {
 	public void setExportQuery(java.lang.String exportQuery) {
 		this.exportQuery = exportQuery;
 	}
+	                                                                                    
+		private static Survey fromDocument(Document doc){
+		Survey returnSurvey = new Survey();
+		Node rootNode = doc.getFirstChild();
+		Node survey = XmlUtils.getChildNode(rootNode, "survey");
+		
+		
+		returnSurvey.surveyTitle = XmlUtils.getAttributeValue(survey, "surveyTitle");
+		returnSurvey.surveyQuestion = XmlUtils.getChildNodeTextContents(survey, "surveyQuestion");
+		returnSurvey.surveyId = XmlUtils.getAttributeValue(survey, "surveyId");
+		returnSurvey.exportString = XmlUtils.getChildNodeTextContents(survey, "exportString");
+		returnSurvey.exportQuery = XmlUtils.getChildNodeTextContents(survey, "exportQuery");
+		//JG:I think patientCriteria was a working element before but it looks like it has been not implemented or taken out
+		/*
+		 ie:
+         <patientCriteria>
+         	FROM demographic , demographicstudy where demographicstudy.study_no = '3' and demographic.demographic_no = demographicstudy.demographic_no
+         </patientCriteria>
+		I found this in a old config file that was used for a study.  It could be used to make sure a demographic met certain requirements
+		before being randomized.
+		 */
+		try{
+			returnSurvey.randomness= Integer.parseInt(XmlUtils.getAttributeValue(survey, "randomness"));
+		}catch(Exception e){
+			log.error("randomness was not a int value");
+		}
+		try{
+			returnSurvey.period = Integer.parseInt(XmlUtils.getAttributeValue(survey, "period"));
+		}catch(Exception e){
+			log.error("randomness was not a int value");
+		}
+		
+		for(Node answerNode : XmlUtils.getChildNodes(survey, "answer")){
+			String answerString = answerNode.getTextContent();
+			String answerValue = XmlUtils.getAttributeValue(answerNode, "value");
+			String answerStatus = XmlUtils.getAttributeValue(answerNode, "status");
+			returnSurvey.addAnswer(answerString, answerValue, answerStatus);
+		}
+		
+		for(Node providerNode : XmlUtils.getChildNodes(survey, "provider")){
+			returnSurvey.addProvider(providerNode.getTextContent());
+		}
+		
+		log.debug("title "+returnSurvey.surveyTitle+" q "+returnSurvey.surveyQuestion+" id "+returnSurvey.surveyId+" exString "+returnSurvey.exportString+" exQry "+returnSurvey.exportQuery+" rand "+returnSurvey.randomness+ " period "+returnSurvey.period );
+		
+		
+		
+		return returnSurvey;
+	}
+
+	
+	public static Survey createSurvey(byte[] bArray) throws IOException, SAXException, ParserConfigurationException{
+		Document doc = XmlUtils.toDocument(bArray);
+		return fromDocument(doc);
+	}
+	
+	public static Survey fromStream(InputStream is) throws Exception {
+		Document doc = XmlUtils.toDocument(is);
+		return fromDocument(doc);
+	}
+	
+	
+	
+	
 
 	class Answer {
 		public String answerString = "";

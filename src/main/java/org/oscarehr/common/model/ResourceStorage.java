@@ -34,6 +34,8 @@ public class ResourceStorage extends AbstractModel<Integer> {
 
 	public static final String LU_CODES = "LU_CODES";
 	
+	public static final String SURVEILLANCE_CONFIGURATION = "SURVEILLANCE_CONFIGURATION";
+	
 	/*create table ResourceStorage (
 			id int(10)  NOT NULL auto_increment primary key,
 			resourceType varchar(100),
