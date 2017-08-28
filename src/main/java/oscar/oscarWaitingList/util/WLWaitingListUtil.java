@@ -62,7 +62,7 @@ public class WLWaitingListUtil {
 		int maxPosition = dao.getMaxPosition(ConversionUtils.fromIntString(waitingListID));
 
 		WaitingList list = new WaitingList();
-		list.setListId(maxPosition);
+		list.setListId(ConversionUtils.fromIntString(waitingListID));
 		list.setDemographicNo(ConversionUtils.fromIntString(demographicNo));
 		list.setNote(waitingListNote);
 		if (onListSince == null || onListSince.length() <= 0) {
