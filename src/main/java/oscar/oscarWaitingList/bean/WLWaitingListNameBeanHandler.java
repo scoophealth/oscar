@@ -48,7 +48,7 @@ public class WLWaitingListNameBeanHandler {
     }
 
     public boolean init(String groupNo, String providerNo) {
-        List<WaitingListName> wlNames = waitingListNameDao.findByMyGroups(myGroupDao.getProviderGroups(providerNo));
+        List<WaitingListName> wlNames = waitingListNameDao.findByMyGroups(providerNo, myGroupDao.getProviderGroups(providerNo));
     	for(WaitingListName tmp:wlNames) {
     		WLWaitingListNameBean wLBean =
     				new WLWaitingListNameBean(String.valueOf(tmp.getId()), tmp.getName(), tmp.getGroupNo(), tmp.getProviderNo(), formatter.format(tmp.getCreateDate()));                   
