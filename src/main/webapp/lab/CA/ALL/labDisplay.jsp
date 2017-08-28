@@ -1,4 +1,3 @@
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -1085,8 +1084,8 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                 </td>
                             </tr>
                             <tr>
-                                <td align="center" bgcolor="white" colspan="2" style="padding:0px;" cellspacing="0">
-							    <%
+                                <td align="center" bgcolor="white" colspan="2" style="padding:0px;" cellspacing="0">							    
+<% if(demographicID!=null && !demographicID.equals("")){
 							    TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
 							    List<Tickler> LabTicklers = null;
 							    if(demographicID != null) {
@@ -1139,7 +1138,8 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 							   %>
 							   		</div><!-- end ticklerDisplay -->
 							   </div>   
-							   <%}//no ticklers to display %>                     
+							   <%}//no ticklers to display 
+}%>                     
                                 
                                     <%String[] multiID = multiLabId.split(",");
                                     ReportStatus report;
