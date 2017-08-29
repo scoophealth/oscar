@@ -63,8 +63,10 @@ public class HtmlUploadAction extends Action {
             boolean showLatestFormOnly = fm.isShowLatestFormOnly();
             boolean patientIndependent = fm.isPatientIndependent();
             boolean restrictByProgram = fm.isRestrictByProgram();
+            boolean disableUpdate = fm.isDisableUpdate();
+            
             String fileName = formHtml.getFileName();
-            EFormUtil.saveEForm(formName, subject, fileName, formHtmlStr, showLatestFormOnly, patientIndependent, roleType, programNo, restrictByProgram);
+            EFormUtil.saveEForm(formName, subject, fileName, formHtmlStr, showLatestFormOnly, patientIndependent, roleType, programNo, restrictByProgram,disableUpdate);
             request.setAttribute("status", "success");
             return(mapping.findForward("success"));
         } catch (Exception e) {

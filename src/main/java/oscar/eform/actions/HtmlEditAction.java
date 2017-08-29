@@ -66,6 +66,7 @@ public class HtmlEditAction extends Action {
             boolean showLatestFormOnly = WebUtils.isChecked(request, "showLatestFormOnly");
             boolean patientIndependent = WebUtils.isChecked(request, "patientIndependent");
             boolean restrictByProgram = WebUtils.isChecked(request, "restrictByProgram");
+            boolean disableUpdate= WebUtils.isChecked(request, "disableUpdate");
             
             String roleType = fm.getRoleType();
             String programNo = fm.getProgramNo();
@@ -80,7 +81,7 @@ public class HtmlEditAction extends Action {
                 errors.put("formNameExists", "eform.errors.form_name.exists.regular");
             }
             if ((fid.length() == 0) && (errors.size() == 0)) {
-                fid = EFormUtil.saveEForm(formName, formSubject, formFileName, formHtml, showLatestFormOnly, patientIndependent, roleType,programNo,restrictByProgram);
+                fid = EFormUtil.saveEForm(formName, formSubject, formFileName, formHtml, showLatestFormOnly, patientIndependent, roleType,programNo,restrictByProgram, disableUpdate);
                 request.setAttribute("success", "true");
             } else if (errors.size() == 0) {
                 EFormUtil.updateEForm(updatedform);

@@ -133,18 +133,18 @@ public class EFormUtil {
 	}
 
 	public static String saveEForm(EForm eForm) {
-		return saveEForm(eForm.getFormName(), eForm.getFormSubject(), eForm.getFormFileName(), eForm.getFormHtml(), eForm.getFormCreator(), eForm.isShowLatestFormOnly(), eForm.isPatientIndependent(), eForm.getRoleType(), eForm.getProgramNo(), eForm.isRestrictByProgram());
+		return saveEForm(eForm.getFormName(), eForm.getFormSubject(), eForm.getFormFileName(), eForm.getFormHtml(), eForm.getFormCreator(), eForm.isShowLatestFormOnly(), eForm.isPatientIndependent(), eForm.getRoleType(), eForm.getProgramNo(), eForm.isRestrictByProgram(), eForm.getDisableUpdate());
 	}
 
-	public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr, String programNo, boolean restrictByProgram) {
-		return saveEForm(formName, formSubject, fileName, htmlStr, false, false, null, programNo, restrictByProgram);
+	public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr, String programNo, boolean restrictByProgram, boolean disableUpdate) {
+		return saveEForm(formName, formSubject, fileName, htmlStr, false, false, null, programNo, restrictByProgram,disableUpdate);
 	}
 
-	public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr, boolean showLatestFormOnly, boolean patientIndependent, String roleType, String programNo, boolean restrictByProgram) {
-		return saveEForm(formName, formSubject, fileName, htmlStr, null, showLatestFormOnly, patientIndependent, roleType, programNo, restrictByProgram);
+	public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr, boolean showLatestFormOnly, boolean patientIndependent, String roleType, String programNo, boolean restrictByProgram,  boolean disableUpdate) {
+		return saveEForm(formName, formSubject, fileName, htmlStr, null, showLatestFormOnly, patientIndependent, roleType, programNo, restrictByProgram,disableUpdate);
 	}
 
-	public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr, String creator, boolean showLatestFormOnly, boolean patientIndependent, String roleType, String programNo, boolean restrictByProgram) {
+	public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr, String creator, boolean showLatestFormOnly, boolean patientIndependent, String roleType, String programNo, boolean restrictByProgram,  boolean disableUpdate) {
 		// called by the upload action, puts the uploaded form into DB		
 
 		org.oscarehr.common.model.EForm eform = new org.oscarehr.common.model.EForm();
@@ -161,6 +161,7 @@ public class EFormUtil {
 			eform.setProgramNo(Integer.parseInt(programNo));
 			eform.setRestrictToProgram(restrictByProgram);
 		}
+		eform.setDisableUpdate(disableUpdate);
 		EFormDao dao = SpringUtils.getBean(EFormDao.class);
 		dao.persist(eform);
 
@@ -592,6 +593,7 @@ public class EFormUtil {
 		curht.put("roleType", eform.getRoleType());
 		curht.put("programNo", eform.getProgramNo()!=null?eform.getProgramNo().toString():"");
 		curht.put("restrictByProgram",eform.isRestrictToProgram());
+		curht.put("disableUpdate", eform.isDisableUpdate());
 		return (curht);
 	}
 
@@ -616,6 +618,7 @@ public class EFormUtil {
 		eform.setRoleType(updatedForm.getRoleType());
 		eform.setProgramNo((!StringUtils.isEmpty(updatedForm.getProgramNo()))?Integer.parseInt(updatedForm.getProgramNo()):null);
 		eform.setRestrictToProgram(updatedForm.isRestrictByProgram());
+		eform.setDisableUpdate(updatedForm.getDisableUpdate());
 		
 		dao.merge(eform);
 	}
@@ -1816,4 +1819,11 @@ public class EFormUtil {
 		return(eFormData);
 	}
 	
+	public static boolean shouldDisableUpdateForEForm(Integer fid) {
+		org.oscarehr.common.model.EForm eform = eFormDao.find(fid);
+		if(eform != null) {
+			return eform.isDisableUpdate();
+		}
+		return false;
+	}
 }

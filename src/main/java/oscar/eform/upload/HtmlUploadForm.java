@@ -43,6 +43,7 @@ public class HtmlUploadForm extends ActionForm {
     private boolean showLatestFormOnly = false;
     private boolean patientIndependent = false;
     private boolean restrictByProgram = false;
+    private boolean disableUpdate = false;
     
     private String roleType;
     
@@ -112,6 +113,16 @@ public class HtmlUploadForm extends ActionForm {
 
 	public void setRestrictByProgram(boolean restrictByProgram) {
 		this.restrictByProgram = restrictByProgram;
+	}
+	
+	
+
+	public boolean isDisableUpdate() {
+		return disableUpdate;
+	}
+
+	public void setDisableUpdate(boolean disableUpdate) {
+		this.disableUpdate = disableUpdate;
 	}
 
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {

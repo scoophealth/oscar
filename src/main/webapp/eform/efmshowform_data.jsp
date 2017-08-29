@@ -56,14 +56,24 @@
 
       String parentAjaxId = request.getParameter("parentAjaxId");
       if( parentAjaxId != null ) eForm.setAction(parentAjaxId);
-      out.print(eForm.getFormHtml());
+      
+      String html = eForm.getFormHtml();     
+      if(oscar.eform.EFormUtil.shouldDisableUpdateForEForm(Integer.parseInt(eForm.getFid() )) ) {
+    	  html = html.replaceAll("type=\"submit\"", "type=\"submit\" disabled=\"disabled\" title=\"Updates to existing eForm are disabled. Please create a new eform (here)\"");
+      }
+      out.print(html);
   } else {  //if form is viewed from admin screen
       EForm eForm = new EForm(id, "-1"); //form cannot be submitted, demographic_no "-1" indicate this specialty
       eForm.setContextPath(request.getContextPath());
       eForm.setupInputFields();
       eForm.setOscarOPEN(request.getRequestURI());
       eForm.setImagePath();
-      out.print(eForm.getFormHtml());
+      
+      String html = eForm.getFormHtml();     
+      if(oscar.eform.EFormUtil.shouldDisableUpdateForEForm(Integer.parseInt(eForm.getFid() )) ) {
+    	  html = html.replaceAll("type=\"submit\"", "type=\"submit\" disabled=\"disabled\" title=\"Updates to existing eForm are disabled. Please create a new eform (here)\"");
+      }
+      out.print(html);
   }
 %>
 <%
