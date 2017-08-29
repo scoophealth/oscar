@@ -94,6 +94,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
     private BaseFont bf;
     private Font font;
     private Font boldFont;
+    private Font monospace;
     private String dateLabReceived;
 
 	public static byte[] getPdfBytes(String segmentId, String providerNo) throws IOException, DocumentException
@@ -191,7 +192,8 @@ public class LabPDFCreator extends PdfPageEventHelper{
         bf = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         font = new Font(bf, 9, Font.NORMAL);
         boldFont = new Font(bf, 10, Font.BOLD);
-      //  redFont = new Font(bf, 9, Font.NORMAL, Color.RED);
+        monospace = new Font(BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED), 9, Font.NORMAL);
+      	// redFont = new Font(bf, 9, Font.NORMAL, Color.RED);
 
         // add the header table containing the patient and lab info to the document
         createInfoTable();
@@ -465,11 +467,16 @@ public class LabPDFCreator extends PdfPageEventHelper{
 									cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 									table.addCell(cell);}
 							}else{
-							cell.setPhrase(new Phrase(handler
-									.getOBXResult(j, k).replaceAll(
-											"<br\\s*/*>", "\n"), lineFont));
-							cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-							table.addCell(cell);}
+								if( handler.getMsgType().equals("ALPHA") && handler.getOBXValueType(j, k).equals("FT") ){					
+									cell.setPhrase(new Phrase("", lineFont)); //set empty column for display
+									cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+									table.addCell(cell);
+								}else{
+									cell.setPhrase(new Phrase(handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n"), lineFont));
+									cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+									table.addCell(cell);
+								}
+							}
 							cell.setColspan(1);
 							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
 							
@@ -508,6 +515,20 @@ public class LabPDFCreator extends PdfPageEventHelper{
 							cell.setPhrase(new Phrase(handler
 									.getOBXResultStatus(j, k), lineFont));
 							table.addCell(cell);}
+
+							//for alpha rich text results
+							if( handler.getMsgType().equals("ALPHA") && handler.getOBXValueType(j, k).equals("FT") ){
+							linenum++;	
+							cell.setBorder(15);
+							cell.setBorderColor(Color.BLACK);
+							cell.setPaddingLeft(100);
+							cell.setColspan(7);
+							cell.setHorizontalAlignment(Element.ALIGN_LEFT);								
+							cell.setPhrase( new Phrase("       " + handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n"), monospace) ); //TODO: jw
+							table.addCell(cell);
+							cell.setPadding(3);
+							cell.setColspan(1);
+							}
 							
 						if(!handler.getMsgType().equals("PFHT")) {
 							// add obx comments
@@ -517,14 +538,9 @@ public class LabPDFCreator extends PdfPageEventHelper{
 								cell.setPaddingLeft(100);
 								cell.setColspan(7);
 								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-								for (int l = 0; l < handler.getOBXCommentCount(
-										j, k); l++) {
-
-									cell.setPhrase(new Phrase(handler
-											.getOBXComment(j, k, l).replaceAll(
-													"<br\\s*/*>", "\n"), font));
+								for (int l = 0; l < handler.getOBXCommentCount(j, k); l++) {
+									cell.setPhrase(new Phrase(handler.getOBXComment(j, k, l).replaceAll("<br\\s*/*>", "\n"), font));
 									table.addCell(cell);
-
 								}
 								cell.setPadding(3);
 								cell.setColspan(1);

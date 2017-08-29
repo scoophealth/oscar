@@ -627,7 +627,7 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 
     </head>
 
-    <body onLoad="javascript:matchMe();">   
+    <body onLoad="javascript:matchMe();">
         <!-- form forwarding of the lab -->
         <%        
         	for( int idx = 0; idx < segmentIDs.length; ++idx ) {
@@ -1657,7 +1657,7 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                            
                                            
                                            <% if(handler instanceof AlphaHandler && "FT".equals(handler.getOBXValueType(j, k))) { %>
-                                           		<td colspan="4"><%= handler.getOBXResult( j, k) %></td>
+                                           		<td colspan="4"><pre style="font-family:Courier New, monospace;">       <%= handler.getOBXResult( j, k) %></pre></td>
                                            <%
                                        			lastObxSetId = ((AlphaHandler)handler).getObxSetId(j,k);
                                     	  
