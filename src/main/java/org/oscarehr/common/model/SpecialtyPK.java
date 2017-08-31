@@ -58,8 +58,24 @@ public class SpecialtyPK implements Serializable{
 		this.specialty = specialty;
 	}
 	
+	@Override
 	public String toString() {
 		return getRegion()+getSpecialty();
+	}
+	
+	@Override
+	public int hashCode() {
+		return (toString().hashCode());
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		try {
+			SpecialtyPK o1 = (SpecialtyPK) o;
+			return ((region.equals(o1.region)) && (specialty.equals(o1.specialty)));
+		} catch (RuntimeException e) {
+			return (false);
+		}
 	}
 }
 
