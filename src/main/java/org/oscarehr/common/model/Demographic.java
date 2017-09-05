@@ -44,7 +44,7 @@ import org.oscarehr.util.MiscUtils;
 /**
  * This is the object class that relates to the demographic table. Any customizations belong here.
  */
-public class Demographic implements Serializable {
+public class Demographic extends AbstractModel<Integer> implements Serializable {
 
 	private static final String DEFAULT_MONTH = "01";
 	private static final String DEFAULT_DATE = "01";
@@ -1241,6 +1241,11 @@ public class Demographic implements Serializable {
 			sb.append("</b>");
 		}
 		return sb.toString();
+	}
+
+	@Override
+	public Integer getId() {
+		return this.getDemographicNo();
 	}
 	
 }
