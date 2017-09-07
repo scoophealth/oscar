@@ -124,7 +124,7 @@
 	AdmissionManager admissionManager = SpringUtils.getBean(AdmissionManager.class);
 	ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
 	List<ProgramProvider> ppList1 = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
-	
+	ProgramProvider currentProgramInDomain = programManager2.getCurrentProgramInDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
 %>
 <html:html locale="true">
 <head>
@@ -216,6 +216,55 @@
 	function popupEChart(vheight,vwidth,varpage) { //open a new popup window
 		  var page = "" + varpage;
 		  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
+		  var popup=window.open(page, "encounter", windowprops);
+		  if (popup != null) {
+		    if (popup.opener == null) {
+		      popup.opener = self;
+		    }
+		    popup.focus();
+		  }
+		}
+	
+	
+	/* OSCAREMR-6243 */
+	function popup9(vheight, vwidth, varpage,flag) {
+		alert(flag);
+		var page = varpage;
+		windowprops = "height="
+				+ vheight
+				+ ",width="
+				+ vwidth
+				+ ",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+		
+		if(flag) {
+			var confirmed = confirm('The demographic does not match the program you are currently set to (<%=currentProgramInDomain.getProgram().getName()%>). Are you sure you want to access this file?')
+			if(!confirmed) {
+				return false;
+			}
+		}
+		
+	
+		
+		var popup = window.open(varpage, "<bean:message key="global.oscarRx"/>_________________$tag________________________________demosearch",	windowprops);
+		if (popup != null) {
+			if (popup.opener == null) {
+				popup.opener = self;
+			}
+			popup.focus();
+		}
+	}
+
+	function popupEChart9(vheight,vwidth,varpage,flag) { //open a new popup window
+		  var page = "" + varpage;
+		  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
+		  
+		  if(flag) {
+				var confirmed = confirm('The demographic does not match the program you are currently set to (<%=currentProgramInDomain.getProgram().getName()%>). Are you sure you want to access this file?')
+				if(!confirmed) {
+					return false;
+				}
+			}
+		  
 		  var popup=window.open(page, "encounter", windowprops);
 		  if (popup != null) {
 		    if (popup.opener == null) {
@@ -600,11 +649,26 @@ jQuery(document).ready(function() {
 				//skip non head records
 				continue;
 			}
+			
+			
+			//OSCAREMR-6243
+			//we have the variable ppList1 which is the program domain for the user.
+			//currentProgramInDomain
+			List<Admission> currentAdmissions = admissionManager.getCurrentAdmissions(demo.getDemographicNo());
+			
+			//the rule is that if my current program is not a program this patient is in, then give a warning
+			boolean showProgramWarning = true;
+			for(Admission a:currentAdmissions) {
+				if(a.getProgramId().equals(currentProgramInDomain.getProgramId().intValue())) {
+					showProgramWarning = false;
+					break;
+				}
+			}
+			
 
 %>
 	<tr class="<%=toggleLine?"even":"odd"%>">
 	<td class="demoIdSearch">
-
 	<%
 
 		if (fromMessenger) {
@@ -613,23 +677,23 @@ jQuery(document).ready(function() {
 	<%	
 		} else { 
 	%>
-		<a title="Master Demographic File" href="#"  onclick="popup(700,1027,'demographiccontrol.jsp?demographic_no=<%=head%>&displaymode=edit&dboperation=search_detail')" ><%=dem_no%></a></td>
+		<a title="Master Demographic File" href="#"  onclick="popup9(700,1027,'demographiccontrol.jsp?demographic_no=<%=head%>&displaymode=edit&dboperation=search_detail',<%=showProgramWarning %>)" ><%=dem_no%></a></td>
 	
 		<!-- Rights -->
 		<td class="links"><security:oscarSec roleName="<%=roleName$%>"
 			objectName="_eChart" rights="r">
 			<a class="encounterBtn" title="Encounter" href="#"
-				onclick="popupEChart(710,1024,'<c:out value="${ctx}"/>/oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=dem_no%>&curProviderNo=&reason=<%=URLEncoder.encode(noteReason)%>&encType=&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=');return false;">E</a>
+				onclick="popupEChart9(710,1024,'<c:out value="${ctx}"/>/oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=dem_no%>&curProviderNo=&reason=<%=URLEncoder.encode(noteReason)%>&encType=&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=','<%=showProgramWarning %>');return false;">E</a>
 		</security:oscarSec> <!-- Rights --> <security:oscarSec roleName="<%=roleName$%>"
 			objectName="_rx" rights="r">
-			<a class="rxBtn" title="Prescriptions" href="#" onclick="popup(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=demo.getProviderNo()%>&demographicNo=<%=dem_no%>')">Rx</a>
+			<a class="rxBtn" title="Prescriptions" href="#" onclick="popup9(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=demo.getProviderNo()%>&demographicNo=<%=dem_no%>',<%=showProgramWarning %>)">Rx</a>
 		</security:oscarSec>
 		
 		<security:oscarSec roleName="<%=roleName$%>"
 			objectName="_tickler" rights="r">
 			<span>
 			<abbr title="<%=dem_no%>">
-				<a class="rxBtn" href="#" onclick="popup(700,1027,'../Tickler.do?filter.demographicNo=<%=dem_no%>')">T</a>
+				<a class="rxBtn" href="#" onclick="popup9(700,1027,'../Tickler.do?filter.demographicNo=<%=dem_no%>',<%=showProgramWarning%>)">T</a>
 			</abbr>
 			</span>
 		</security:oscarSec>
@@ -668,7 +732,7 @@ jQuery(document).ready(function() {
 		<td class="program">
 			<ul>
 			<%
-			for(Admission a: admissionManager.getCurrentAdmissions(demo.getDemographicNo())) {
+			for(Admission a: currentAdmissions) {
 				if(isInList(ppList1,a.getProgramId())) {
 				%><li><%=a.getProgram().getName()%></li><%
 				}
