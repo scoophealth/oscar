@@ -483,7 +483,7 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 			note.setUuid(uuid.toString());
 		}
 		note.setUpdate_date(new Date());
-		this.getHibernateTemplate().saveOrUpdate(note);
+		this.getHibernateTemplate().save(note);
 	}
 
 	public Object saveAndReturn(CaseManagementNote note) {
