@@ -112,8 +112,8 @@ window.top.location.href = "<%=request.getContextPath()%>/administration/?show=F
                                         <div class='uploadEformTitle'>
                                         <input type="checkbox" name="showLatestFormOnly" value="true"/><bean:message key="eform.uploadhtml.showLatestFormOnly"/><br>
                                         <input type="checkbox" name="patientIndependent" value="true"/><bean:message key="eform.uploadhtml.patientIndependent"/><br/>
-                                        <input type="checkbox" name="restrictByProgram" value="true"/><bean:message key="eform.uploadhtml.restrictByProgram"/>
-                                        
+                                        <input type="checkbox" name="restrictByProgram" value="true"/><bean:message key="eform.uploadhtml.restrictByProgram"/><br/>
+                                        <input type="checkbox" name="disableUpdate" value="true"/><bean:message key="eform.uploadhtml.disableUpdate"/>
                                         </div>
                                         
                                       

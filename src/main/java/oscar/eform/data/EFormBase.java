@@ -53,7 +53,8 @@ public class EFormBase {
     protected String roleType;
     protected String programNo;
     protected boolean restrictByProgram = false;
-
+    protected Boolean disableUpdate = false;
+    
     protected ArrayList<String> updateFields = new ArrayList<String>();
 
     public EFormBase() {
@@ -211,6 +212,14 @@ public class EFormBase {
 
 	public void setRestrictByProgram(boolean restrictByProgram) {
 		this.restrictByProgram = restrictByProgram;
+	}
+
+	public Boolean getDisableUpdate() {
+		return disableUpdate;
+	}
+
+	public void setDisableUpdate(Boolean disableUpdate) {
+		this.disableUpdate = disableUpdate;
 	}
     
 }

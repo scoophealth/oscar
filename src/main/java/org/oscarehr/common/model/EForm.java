@@ -92,6 +92,8 @@ public class EForm extends AbstractModel<Integer> implements Serializable {
 	
 	private boolean restrictToProgram = false;
 	
+	//enabling this means that when the form is displayed, the submit button should not be active
+	private Boolean disableUpdate;
 	
 	@Override
 	public Integer getId() {
@@ -200,6 +202,16 @@ public class EForm extends AbstractModel<Integer> implements Serializable {
 
 	public void setRestrictToProgram(boolean restrictToProgram) {
 		this.restrictToProgram = restrictToProgram;
+	}
+	
+	
+
+	public Boolean isDisableUpdate() {
+		return disableUpdate;
+	}
+
+	public void setDisableUpdate(Boolean disableUpdate) {
+		this.disableUpdate = disableUpdate;
 	}
 
 	@PreRemove

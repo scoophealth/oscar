@@ -841,6 +841,7 @@ CREATE TABLE eform (
   roleType varchar(50) default NULL,
   programNo int(10),
   restrictToProgram tinyint(1) NOT NULL,
+  disableUpdate tinyint(1) ,
   PRIMARY KEY  (fid),
   UNIQUE KEY id (fid)
 ) ;

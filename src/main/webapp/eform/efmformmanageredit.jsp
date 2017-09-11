@@ -73,6 +73,7 @@ if (request.getAttribute("submitted") != null) {
    if (curform.get("showLatestFormOnly") ==null) curform.put("showLatestFormOnly", false);
    if (curform.get("patientIndependent") ==null) curform.put("patientIndependent", false);
    if (curform.get("restrictByProgram") ==null) curform.put("restrictByProgram", false);
+   if (curform.get("disabledUpdate") ==null) curform.put("disabledUpdate", false);
    
    String formHtml = StringEscapeUtils.escapeHtml((String) curform.get("formHtml"));
 	if(formHtml==null){formHtml="";}	
@@ -223,7 +224,8 @@ window.opener.location.href = '<%=request.getContextPath()%>/administration/?sho
 				<br/>
 			<bean:message key="eform.uploadhtml.patientIndependent" /> <input type="checkbox" name="patientIndependent" value="true" <%= (Boolean)curform.get("patientIndependent")?"checked":"" %> /><br />
 			<bean:message key="eform.uploadhtml.restrictByProgram" /> <input type="checkbox" name="restrictByProgram" value="true" <%= (Boolean)curform.get("restrictByProgram")?"checked":"" %> /><br />
-			
+			<bean:message key="eform.uploadhtml.disableUpdate" /> <input type="checkbox" name="disableUpdate" value="true" <%= (Boolean)curform.get("disableUpdate")?"checked":"" %> /><br />
+						
 			</div>
 
 			<br />			
