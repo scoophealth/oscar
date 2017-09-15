@@ -1,4 +1,3 @@
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -628,7 +627,7 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 
     </head>
 
-    <body onLoad="javascript:matchMe();">   
+    <body onLoad="javascript:matchMe();">
         <!-- form forwarding of the lab -->
         <%        
         	for( int idx = 0; idx < segmentIDs.length; ++idx ) {
@@ -1085,10 +1084,13 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                 </td>
                             </tr>
                             <tr>
-                                <td align="center" bgcolor="white" colspan="2" style="padding:0px;" cellspacing="0">
-							    <%
+                                <td align="center" bgcolor="white" colspan="2" style="padding:0px;" cellspacing="0">							    
+<% if(demographicID!=null && !demographicID.equals("")){
 							    TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
-							    List<Tickler> LabTicklers = ticklerManager.getTicklerByLabId(loggedInInfo, Integer.valueOf(segmentID), Integer.valueOf(demographicID));
+							    List<Tickler> LabTicklers = null;
+							    if(demographicID != null) {
+							    	LabTicklers = ticklerManager.getTicklerByLabId(loggedInInfo, Integer.valueOf(segmentID), Integer.valueOf(demographicID));
+							    }
 							    
 							    if(LabTicklers!=null && LabTicklers.size()>0){
 							    %>
@@ -1136,7 +1138,8 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 							   %>
 							   		</div><!-- end ticklerDisplay -->
 							   </div>   
-							   <%}//no ticklers to display %>                     
+							   <%}//no ticklers to display 
+}%>                     
                                 
                                     <%String[] multiID = multiLabId.split(",");
                                     ReportStatus report;
@@ -1628,7 +1631,7 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                            
                                            
                                            <% if(handler instanceof AlphaHandler && "FT".equals(handler.getOBXValueType(j, k))) { %>
-                                           		<td colspan="4"><%= handler.getOBXResult( j, k) %></td>
+                                           		<td colspan="4"><pre style="font-family:Courier New, monospace;">       <%= handler.getOBXResult( j, k) %></pre></td>
                                            <%
                                        			lastObxSetId = ((AlphaHandler)handler).getObxSetId(j,k);
                                     	  

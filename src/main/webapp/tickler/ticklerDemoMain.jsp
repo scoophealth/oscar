@@ -511,6 +511,8 @@ function generateRenalLabReq(demographicNo) {
 			<TR bgcolor=#666699>
 				<TD width="3%" class="noprint"><FONT FACE="verdana,arial,helvetica"
 					COLOR="#FFFFFF" SIZE="-2"><B></B></FONT></TD>
+				<TD width="3%" class="noprint"><FONT FACE="verdana,arial,helvetica"
+					COLOR="#FFFFFF" SIZE="-2"><B></B></FONT></TD>
 				<TD width="17%"><FONT FACE="verdana,arial,helvetica"
 					COLOR="#FFFFFF" SIZE="-2"><B><bean:message
 					key="tickler.ticklerMain.msgDemographicName" /></B></FONT></TD>
@@ -613,6 +615,9 @@ function generateRenalLabReq(demographicNo) {
 				<TD ROWSPAN="1" class="<%=cellColour%> noprint"><input
 					type="checkbox" name="checkbox"
 					value="<%=t.getId()%>"></TD>
+					<TD ROWSPAN="1" class="<%=cellColour%>">
+					<a href=#  onClick="popupPage(600,800, '../tickler/ticklerEdit.jsp?tickler_no=<%=t.getId()%>')"><bean:message key="tickler.ticklerMain.editTickler"/></a>
+					</TD>
 				<TD ROWSPAN="1" class="<%=cellColour%>"><a
 					href=#
 					onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=t.getDemographicNo()%>&displaymode=edit&dboperation=search_detail')"><%=d.getLastName()%>,<%=d.getFirstName()%></a></TD>
