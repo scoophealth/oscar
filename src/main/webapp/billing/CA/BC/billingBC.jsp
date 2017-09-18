@@ -135,6 +135,15 @@ if(!authed) {
 </title>
 <html:base/>
 <link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1"/>
+<link rel="stylesheet" type="text/css" media="all" href="../../../library/bootstrap/3.0.0/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" media="all" href="../../../css/bootstrap-datetimepicker-standalone.css" />
+<link rel="stylesheet" type="text/css" media="all" href="../../../css/bootstrap-datetimepicker.min.css" />
+
+<script type="text/javascript" src="../../../library/moment.js"></script>
+<script type="text/javascript" src="../../../js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="../../../library/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../library/bootstrap-datetimepicker.min.js" ></script>
+
 <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
 <script type="text/javascript" src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
@@ -146,6 +155,11 @@ if(!authed) {
     A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,Verdana, Arial, Helvetica,sans-serif; font-size:10px;}
   -->
 
+body {
+	margin:0px;
+	padding:0px;
+	border:none;
+}
   .popUp{
   visibility: hidden;
   background-color:#ffffcc;
@@ -162,8 +176,62 @@ if(!authed) {
   background-color:#ccccff;
   font-size:10pt;
   }
+  
+   div.container{
+  	padding: 0 !important;
+  }
+  
+  .form-control {
+	  font-size: 10px !important;
+	}
+	
+	#patientIdRow span, #patientIdRow a {
+	  margin:10px;
+	}
+	
+	h3 {
+	  font-size:small;
+	  width:100%;
+	  border-top: red thin solid;
+	  border-bottom: red thin solid;
+	  margin:0px;
+	  margin-top:5px;
+	  padding-left:20px;
+	}
+	
+  #billingFormTable table {
+	  border:black thin solid;
+		width:100%;
+		margin-bottom: 5px;
+		background-color: #f5f5f5;
+		border: 1px solid #ccc;
+	}
+
+	.serviceCodesTable tr:nth-child(even) {background: #f5f5f5}
+	.serviceCodesTable tr:nth-child(odd) {background: #FFF}
+
+	* table td {
+	  padding:0px;
+	  margin:0px;
+	}
+
+	  #billingFormTable table table {
+		border:grey thin solid;
+		background-color:black;
+		margin:3px auto;
+	  }
+	
+	#billingFormTable table tr td {
+	  padding:1px 5px !important;
+	}
+	
+	tr#buttonRow td {
+		border-bottom: #ccc thin solid;
+		padding-bottom: 5px !important;
+	}
+	
 </style>
-<script language="JavaScript">
+<script type="text/javascript">
 
 //creates a javaspt array of associated dx codes
 <%=createAssociationJS(assocCodeMap,"jsAssocCodes")%>
@@ -416,12 +484,6 @@ function checkTextLimit(textField, maximumlength) {
    }
 }
 
-
-function setfocus() {
-		  //document.serviceform.xml_diagnostic_code.focus();
-		  //document.serviceform.xml_diagnostic_code.select();
-		}
-
 function RecordAttachments(Files, File0, File1, File2) {
   window.document.serviceform.elements["File0Data"].value = File0;
   window.document.serviceform.elements["File1Data"].value = File1;
@@ -508,7 +570,7 @@ function grabEnter(event,callb){
 }
 
 </SCRIPT>
-<script language="JavaScript">
+<script type="text/javascript">
 <!--
 <!--
 function reloadPage(init) {  //reloads the window if Nav4 resized
@@ -627,10 +689,62 @@ function checkifSet(icd9,feeitem,extrafeeitem){
    oscarLog("extra feeitem did put"+codeEntered(extrafeeitem));
 }
 
-
-
+jQuery(document).ready(function(){
+	
+	/* for setting times */
+    jQuery(function () {
+        jQuery('.datetimepicker').datetimepicker({
+            format: 'HH:mm'
+        });
+    });
+    
+	/* New billing form selection method*/
+    jQuery("#selectBillingForm").on('change',function() {
+      	window.location.replace("../../../" + this.value);
+    });
+	
+	/*  For dynamically setting the hours and minutes required for the start and end times.
+	<input type='text' id="serviceStartTime" class="form-control" />
+  	<input type=hidden id="xml_starttime_hr" name="xml_starttime_hr" />
+    <input type=hidden id="xml_starttime_min" name="xml_starttime_min" /> */
+    
+	jQuery("#serviceStartTime").on('blur', function() {
+	    var time = this.value;
+	    if(time) {
+	        var hour = time.split(":")[0];
+	        var minute = time.split(":")[1];
+	        var endtime = jQuery("#serviceEndTime").val();
+	       if(endtime) {
+	        	timeCompare( hour+minute, endtime.replace(":", "") );
+	       }
+			jQuery("#xml_starttime_hr").val(hour);
+			jQuery("#xml_starttime_min").val(minute);
+	    }
+	 })
+	 
+	 
+	 jQuery("#serviceEndTime").on('blur', function() {
+	    var time = this.value;
+	    
+	    if(time) {    	
+	        var hour = time.split(":")[0];
+	        var minute = time.split(":")[1];
+	        var starttime = jQuery("#serviceStartTime").val();
+	        timeCompare( starttime.replace(":", ""), hour+minute );
+			jQuery("#xml_endtime_hr").val(hour);
+			jQuery("#xml_endtime_min").val(minute);
+	    }
+	 })
+	 
+	 function timeCompare( start, end ) {
+	    if( !start || start > end ) {
+	    	alert("Warning: the start time is greater than the end time.");
+	    }	
+	 }
+   
+})
 </script>
-<link rel="stylesheet" href="../billing/billing.css" type="text/css">
+<link rel="stylesheet" href="../billing/billing.css" type="text/css" />
 </head>
 <%!
   /**
@@ -652,7 +766,7 @@ function checkifSet(icd9,feeitem,extrafeeitem){
     return buff.toString();
   }
 %>
-<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0" onLoad="setfocus();CheckType();correspondenceNote();">
+<body style="background-color:#FFFFFF;" onLoad="CheckType();correspondenceNote();">
 <iframe id="DivShim" src="javascript:false;" scrolling="no" frameborder="0" style="position:absolute; top:0px; left:0px; display:none;"></iframe>
 <div id="Layer2" class="popUp" style="position:absolute; left:298px; top:26px; width:332px; height:600px;">
   <table width="100%">
@@ -671,55 +785,37 @@ function checkifSet(icd9,feeitem,extrafeeitem){
   %>
     <tr class="<%=rowClass%>">
       <td>
-        <b>
+        <strong>
           <a href="#" onClick="quickPickDiagnostic('<%=diaglist[i].getDiagnosticCode()%>');formPopupHide();return false;return false;"><%=diaglist[i].getDiagnosticCode()%>          </a>
-        </b>
+        </strong>
       </td>
       <td colspan="2"><%=diaglist[i].getDescription()%>      </td>
     </tr>
   <%}  %>
   </table>
 </div>
+
+<!--  end popout layer  -->
+
+
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr bgcolor="#000000">
+  <tr style="background-color:#000000;">
     <td height="40" width="10%">    </td>
     <td width="90%" align="left">
       <p>
         <font color="#FFFFFF" size="4">
-          <b>oscar<bean:message key="billing.bc.title"/></b>
+          <strong>oscar<bean:message key="billing.bc.title"/></strong>
         </font>
       </p>
     </td>
   </tr>
 </table>
-<div id="Layer1" class="popUp" style="position:absolute; left:1px; top:159px; width:410px; height:300px;">
-  <table width="100%">
-    <tr class="popupHeader">
-      <th>
-        Billing
-        Form
-</th>
-      <th>
-        <a href="#" onClick="formPopupHide();return false;">x</a>
-      </th>
-    </tr>
-  <%
-    flag = false;
-    for (int i = 0; i < billformlist.length; i++) {
-      flag = !flag;
-      String rowClass = flag ? "odd" : "even";
-  %>
-    <tr class="<%=rowClass%>">
-      <td colspan="2">
-        <a href="../../../billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=<%=billformlist[i].getFormCode()%>&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=<%=bean.getBillForm()%>" onClick="showHideLayers('Layer1','','hide')"><%=billformlist[i].getDescription()%>        </a>
-      </td>
-    </tr>
-  <%}  %>
-  </table>
-</div>
-<h3>
+
+
 <html:errors/>
-<!-- above here -->
+
+<!-- end error row -->
+
 <%
 List<String> wcbneeds = (List) request.getAttribute("WCBFormNeeds");
 if(wcbneeds != null){%>
@@ -732,7 +828,9 @@ if(wcbneeds != null){%>
     </ul>
 </div>
 <%}%>
-</h1><html:form action="/billing/CA/BC/CreateBilling" onsubmit="toggleWCB();return checkUnits();">
+
+<div class="container">
+<html:form action="/billing/CA/BC/CreateBilling" onsubmit="toggleWCB();return checkUnits();">
   <input type="hidden" name="fromBilling" value=""/>
 
 <%
@@ -786,85 +884,111 @@ if(wcbneeds != null){%>
     }
   }
 %>
-  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+<!-- end ??? row -->
+
+
+  <table width="100%" >
     <tr>
-      <td valign="top" height="221">
-        <table width="107%" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td>
-                <b><bean:message key="billing.patient"/></b>:
-            </td>
-            <td>
-                <u><%=demo.getLastName()%>,<%=demo.getFirstName()%></u>
-                <a href="javascript: void();" onclick="popup(800, 1000, 'billStatus.jsp?lastName=<%=demo.getLastName()%>&firstName=<%=demo.getFirstName()%>&filterPatient=true&demographicNo=<%=demo.getDemographicNo()%>','InvoiceList');return false;">
-				<bean:message key="demographic.demographiceditdemographic.msgInvoiceList"/></a>
-            </td>
-            <td>
-                <b><bean:message key="billing.patient.status"/>:<%=demo.getPatientStatus()%></b>    &nbsp;&nbsp;&nbsp;&nbsp;
-                <b><bean:message key="billing.patient.roster"/>:<%=demo.getRosterStatus()%></b>
-            </td>
-            <td width="14%">
-              <font size="1" face="Verdana, Arial, Helvetica, sans-serif">
-                <strong>
-                  <bean:message key="billing.provider.assignedProvider"/>
-                </strong>
-              </font>
-            </td>
-            <td width="29%"><%=billform.getProviderName(demo.getProviderNo())%>            </td>
+      <td>
+        <table width="100%" id="billingPatientInfo">
+          <tr id="patientIdRow" >
+            <td colspan="5">
+          
+                <span class="badge badge-primary"><bean:message key="billing.patient"/></span>
+                <strong><%=demo.getLastName()%>, <%=demo.getFirstName()%></strong>
+            	
+            	<span class="badge badge-primary"><bean:message key="billing.patient.age"/></span>  
+            	<strong><%=demo.getAge()%></strong>
+            	
+            	<a class="badge badge-primary" href="javascript: void();" onclick="popup(800, 1000, 'billStatus.jsp?lastName=<%=demo.getLastName()%>&firstName=<%=demo.getFirstName()%>&filterPatient=true&demographicNo=<%=demo.getDemographicNo()%>','InvoiceList');return false;">
+				<bean:message key="demographic.demographiceditdemographic.msgInvoiceList"/>
+				</a>
+ 			
+				<span class="badge badge-primary"><bean:message key="billing.patient.status"/></span> 
+				<strong><%=demo.getPatientStatus()%></strong>
+
+                <span class="badge badge-primary"><bean:message key="billing.patient.roster"/></span> 
+                <strong><%=demo.getRosterStatus()%></strong>
+         
+                <span class="badge badge-primary"><bean:message key="billing.provider.assignedProvider"/></span>
+                <strong><%=billform.getProviderName(demo.getProviderNo())%></strong>  
+	
           </tr>
+
           <tr>
-            <td>
-                <b><bean:message key="billing.patient.age"/>:</b>
-            </td>
-            <td>
-             <%=demo.getAge()%> 
-            </td>
-            <td  >
-                <a href="#" id="pop1" onClick="formPopup(this.id,'Layer1');return false;"><b><bean:message key="billing.billingform"/></b></a>:<%=billform.getBillingFormDesc(billformlist, bean.getBillForm())%>              
-            </td>
-            <td width="14%" >  
-                  <b><bean:message key="billing.provider.billProvider"/></b>
-            </td>
-            <td width="29%">
-                <html:select property="xml_provider" value="<%=sxml_provider%>">
+          	<td>
+
+	          	<div class="form-group" > 
+			      <div class='input-group select'> 
+			        <strong><bean:message key="billing.billingform"/></strong>
+          		    <select class="form-control" id="selectBillingForm">
+          		      <% for (int i = 0; i < billformlist.length; i++) { %>
+          		       <option <% if( bean.getBillForm().equalsIgnoreCase( billformlist[i].getFormCode() ) ) {%> selected <% } %> 
+          		      		value="billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=<%=billformlist[i].getFormCode()%>&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=<%=bean.getBillForm()%>" >
+          		      		<%= billformlist[i].getDescription() %>
+          		      	</option>          		      
+          		      <%} %>
+          		    </select>
+          		   </div>
+          		</div>
+          	</td>
+          
+             <td>
+              <div class="form-group" > 
+		      <div class='input-group select'>
+		      
+		        <strong><bean:message key="billing.provider.billProvider"/></strong>
+                <html:select styleClass="form-control" property="xml_provider" value="<%=sxml_provider%>">
                   <html:option value="000000">
-                    <b>Select Provider</b>
+                    Select Provider
                   </html:option>
                 <%for (int j = 0; j < billphysician.length; j++) {                %>
                   <html:option value="<%=billphysician[j].getProviderNo()%>"><%=billphysician[j].getProviderName()%>                  </html:option>
                 <%}                %>
                 </html:select>
+                
+                </div>
+                </div>
             </td>
-          </tr>
-          <tr>
+
             <td>
-                  <bean:message key="billing.billingtype"/>
-            </td>
-            <td width="12%">
-                <html:select property="xml_billtype" onchange="CheckType();gotoPrivate();">
+                         <div class="form-group" > 
+		      <div class='input-group select'>
+           		 <bean:message key="billing.billingtype"/>
+                <html:select styleClass="form-control" property="xml_billtype" onchange="CheckType();gotoPrivate();">
                   <html:option value="MSP">Bill MSP</html:option>
                   <html:option value="WCB">Bill WCB</html:option>
                   <html:option value="ICBC">Bill ICBC</html:option>
                   <html:option value="Pri">Private</html:option>
                   <html:option value="DONOTBILL">Do Not Bill</html:option>
                 </html:select>
+                
+                </div>
+                </div>
             </td>
-            <td width="33%">
-                <b>Clarification Code:</b>
-                <html:select property="xml_location">
+            <td>
+               <div class="form-group" > 
+		      <div class='input-group select'>
+                <strong>Clarification Code</strong>
+                <html:select styleClass="form-control" property="xml_location">
                 <%
                   for (int i = 0; i < billlocation.length; i++) {
                     String locationDescription = billlocation[i].getBillingLocation() + "|" + billlocation[i].getDescription();
                 %>
                   <html:option value="<%=locationDescription%>"><%=billlocation[i].getDescription()%>                  </html:option>
                 <%}                %>
-                </html:select>            
+                </html:select> 
+                </div>
+                </div>           
             </td>
-            <td width="14%">
-                <b>Service Location</b>
-            </td>
-            <td width="29%">
-                <html:select property="xml_visittype">
+
+            <td>
+             <div class="form-group" > 
+		      <div class='input-group select'>
+		      
+		      <strong>Service Location</strong>
+                <html:select styleClass="form-control" property="xml_visittype">
                 <%
                   for (int i = 0; i < billvisit.length; i++) {
                     String visitTypeDescription = billvisit[i].getVisitType() + "|" + billvisit[i].getDescription();
@@ -872,81 +996,110 @@ if(wcbneeds != null){%>
                   <html:option value="<%=visitTypeDescription%>"><%=visitTypeDescription%>                  </html:option>
                 <%}                %>
                 </html:select>
+                
+                </div>
+                </div>
             </td>
           </tr>
         </table>
-        <!--
-          <table>
-          <tr>
-          <td>Service Date:</td>    <td>	 Service to date: </td>  <td> 	 After Hours: </td>  <td>	 Time Call (HHMM 24hr): </td>  <td> 	 Start (HHMM 24hr): </td>  <td> 	 End (HHMM 24hr): </td>   <td>	 Dependent: </td>  <td>	 Sub Code: </td>  <td>	 Alt. Payment:</td>
-          </tr>
-          </table>
-        -->
-        <table width="100%" border=0>
+</td>
+</tr>
+<tr>
+<td>
+        <table width="100%" >
           <tr>
             <td>
+				<div class="form-group" > 
+		      <div class='input-group select'>
               <a href="javascript: function myFunction() {return false; }" id="hlSDate">
-                  <strong><bean:message key="billing.servicedate"/>:</strong>
+                  <strong><bean:message key="billing.servicedate"/></strong>
               </a>
-              <html:text property="xml_appointment_date" size="10" readonly="true" styleId="xml_appointment_date"/>
-              <!--<a id="hlSDate"><img title="Calendar" src="../../../images/cal.gif" alt="Calendar" border="0" /></a>-->
+              <html:text styleClass="form-control" property="xml_appointment_date" size="10" readonly="true" styleId="xml_appointment_date"/>
+              </div>
+              </div>
             </td>
-            <td>
+            <td nowrap>
+			<div class="form-group" > 
+		      <div class='input-group text'>
               <a href="javascript: function myFunction() {return false; }" id="serviceToDate">
-                  <strong>Service to date:</strong>
+                  <strong>Service to date</strong>
               </a>
-              <html:text property="service_to_date" size="2" maxlength="2" styleId="service_to_date"/>
+              <br />
+              <html:text styleClass="form-control" property="service_to_date" size="2" maxlength="2" styleId="service_to_date"/>
+              </div>
+              </div>
             </td>
-            <td>              After Hours:
-              <html:select property="afterHours">
+            <td>              
+            <div class="form-group" > 
+		      <div class='input-group select'>
+            After Hours
+              <html:select styleClass="form-control" property="afterHours">
                 <html:option value="0">No</html:option>
                 <html:option value="E">Evening</html:option>
                 <html:option value="N">Night</html:option>
                 <html:option value="W">Weekend</html:option>
               </html:select>
+              </div>
+              </div>
             </td>
             <td title="(HHMM 24hr):">
-                <strong>Time Call:</strong>
-              <html:text property="timeCall" size="4" maxlength="4"/>
+            <div class="form-group">
+		         <div class='input-group date datetimepicker'>
+                <strong>Time Call</strong>
+              <html:text styleClass="form-control" property="timeCall" size="4" maxlength="4"/>
+              </div>
+              </div>
             </td>
-            <td>
-                <strong>
+            
+			<td>
+			    <strong>
                   <bean:message key="billing.servicedate.starttime"/>
                 </strong>
-              <table cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                  <td>
-                    <select name="xml_starttime_hr"><%=generateNumericOptionList(24, bean.getStartTimeHr())%>                    </select>
-                  </td>
-                  <td>
-                    <select name="xml_starttime_min"><%=generateNumericOptionList(61,bean.getStartTimeMin())%>                    </select>
-                  </td>
-                </tr>
-              </table>
-            </td>
-            <td>
-                <strong>
+		            <div class="form-group">
+		                <div class='input-group date datetimepicker'> 
+		                    <input type='text' id="serviceStartTime" class="form-control" />
+		                  	<input type=hidden id="xml_starttime_hr" name="xml_starttime_hr" />
+		                    <input type=hidden id="xml_starttime_min" name="xml_starttime_min" />
+		                    <span class="input-group-addon">
+		                        <span class="glyphicon glyphicon-time"></span>
+		                    </span>
+		                </div>
+		            </div>
+			</td>
+			
+			<td>			
+			    <strong>
                   <bean:message key="billing.servicedate.endtime"/>
                 </strong>
-              <table cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                  <td>
-                    <select name="xml_endtime_hr"><%=generateNumericOptionList(24,bean.getEndTimeHr())%>                    </select>
-                  </td>
-                  <td>
-                    <select name="xml_endtime_min"><%=generateNumericOptionList(61,bean.getEndTimeMin())%>                    </select>
-                  </td>
-                </tr>
-              </table>
-            </td>
-            <td>              Dependent:
-              <html:select property="dependent">
+		            <div class="form-group">
+		                <div class='input-group date datetimepicker'>
+		                    <input type='text' id="serviceEndTime" class="form-control" />
+		                    <input type=hidden id="xml_endtime_hr" name="xml_endtime_hr" />
+		                    <input type=hidden id="xml_endtime_min" name="xml_endtime_min" />
+		                    <span class="input-group-addon">
+		                        <span class="glyphicon glyphicon-time"></span>
+		                    </span>
+		                </div>
+		            </div>
+
+			</td>
+                        
+            <td>
+               <div class="form-group" > 
+		      <div class='input-group select'>            
+                         Dependent
+              <html:select styleClass="form-control"  property="dependent">
                 <html:option value="00">No</html:option>
                 <html:option value="66">Yes</html:option>
               </html:select>
+              </div>
+              </div>
             </td>
-            <td title="Submission Code">              Sub Code:
-              <html:select property="submissionCode">
+            <td title="Submission Code">              
+             <div class="form-group" > 
+		      <div class='input-group select'>
+            Sub Code
+              <html:select styleClass="form-control" property="submissionCode">
                 <html:option value="0">O - Normal</html:option>
                 <html:option value="D">D - Duplicate</html:option>
                 <html:option value="E">E - Debit</html:option>
@@ -957,9 +1110,13 @@ if(wcbneeds != null){%>
                 <html:option value="W">W - WCB Rejected Claim</html:option>
                 <html:option value="X">X - Resubmitting Refused / Partially Paid Claim</html:option>
               </html:select>
+              </div>
+              </div>
             </td>
             <td>
-                <b>Payment Method:</b>
+            <div class="form-group" > 
+		      <div class='input-group select'>
+                <strong>Payment Method</strong>
             <%
               ArrayList types = billform.getPaymentTypes();
               if ("Pri".equalsIgnoreCase(thisForm.getXml_billtype())) {
@@ -982,94 +1139,128 @@ if(wcbneeds != null){%>
               }
               request.setAttribute("paymentMethodList", types);
             %>
-              <html:select property="xml_encounter">
+              <html:select styleClass="form-control" property="xml_encounter">
                 <html:options collection="paymentMethodList" property="id" labelProperty="paymentType"/>
               </html:select>
+              </div>
+              </div>
             </td>
             <td nowrap>
               <a href="javascript: function myFunction() {return false; }" onClick="checkFACILITY();">
                   <strong>Facility</strong>
               </a>
-              <span style="display: none;" id="FACILITY">  <table>  <tr>   <td title="Facilty Num">  Fac Num <html:text property="facilityNum" size="5" maxlength="5"/>  </td>   <td title="Facilty Sub Num">  Fac Sub Num <html:text property="facilitySubNum" size="5" maxlength="5"/>  </td>  </tr>  </table>  </span>
+  			<div class="form-group" style="display: none;" id="FACILITY" > 
+		      <div class='input-group text'>
+              	<table>  
+              		<tr>   
+              		<td title="Facilty Num">  
+              			Fac Num <html:text styleClass="form-control"  property="facilityNum" size="5" maxlength="5"/> 
+              		</td>   
+              		<td title="Facilty Sub Num">  
+              			Fac Sub Num <html:text styleClass="form-control"  property="facilitySubNum" size="5" maxlength="5"/> 
+              		</td>  
+              	</tr>  
+              	</table>
+              	</div>
+              	</div>  
+
             </td>
           </tr>
         </table>
+</td>
+</tr>
+<tr>
+<td>
         <div style="display: none">
           <table>
             <tr>
               <td>
+                            <div class="form-group" > 
+		      <div class='input-group select'>
                 <bean:message key="billing.admissiondate"/>
                 :
                 <html:text property="xml_vdate" readonly="true" value="" size="10" styleId="xml_vdate"/>
                 <a id="hlADate">
                   <img title="Calendar" src="../../../images/cal.gif" alt="Calendar" border="0"/>
                 </a>
+                </div>
+                </div>
               </td>
             </tr>
           </table>
         </div>
-<script language='javascript'>
+		<script type="text/javascript">
            Calendar.setup({inputField:"xml_appointment_date",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlSDate",singleClick:true,step:1});
            //Calendar.setup({inputField:"xml_appointment_date", ifFormat:""%d/%m/%Y",",button:"hlSDate", align:"Bl", singleClick:true});
            Calendar.setup({inputField:"xml_vdate",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlADate",singleClick:true,step:1});
            Calendar.setup({inputField:"service_to_date", ifFormat:"%d",button:"serviceToDate", align:"Bl", singleClick:true});
-
         </script>
-        <div align="left">        </div>
+
         <div id="ICBC">
-          <table width="100%">
+          <table>
             <tr>
-              <td>                ICBC Claim No:
-                <html:text property="icbc_claim_no" maxlength="8"/>
+              <td>
+              <div class="form-group" > 
+		      <div class='input-group text'>
+                              ICBC Claim No:
+                <html:text styleClass="form-control" property="icbc_claim_no" maxlength="8"/>
+                </div>
+                </div>
+              </td>
+               <td>
+                            <div class="form-group" > 
+		      <div class='input-group select'>  
                 MVA:
-                <html:select property="mva_claim_code">
+                <html:select styleClass="form-control" property="mva_claim_code">
                   <html:option value="N">No</html:option>
                   <html:option value="Y">Yes</html:option>
                 </html:select>
+                </div>
+                </div>
               </td>
             </tr>
           </table>
         </div>
-        <table width="100%" border="2" cellspacing="0" cellpadding="0" height="137">
+</td>
+</tr>
+<tr>
+<td>
+        <table width="100%" id="billingFormTable">
           <tr>
-            <td valign="top" width="33%">
-              <table width="100%" border="1" cellspacing="0" cellpadding="0" height="0">
-                <tr bgcolor="#CCCCFF">
+            <td valign="top" style="width:32%; padding-right:5px;" >
+              <table width="100%" border="1" class="serviceCodesTable" >
+                <tr style="background-color:#CCCCFF;">
                   <td width="25%">
-                    <b>                    </b>
                     <div align="left">
-                        <b>
-                          <font size="1" color="#000000"><%=group1Header%>                          </font>
-                        </b>
+                        <strong>
+                          <%=group1Header%>
+                        </strong>
                     </div>
                   </td>
-                  <td width="61%" bgcolor="#CCCCFF">
-                    <b>
-                      <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">
+                  <td width="61%" style="background-color:#CCCCFF;">
+                    <strong>
                         <bean:message key="billing.service.desc"/>
-                      </font>
-                    </b>
+                    </strong>
                   </td>
                   <td width="14%">
                     <div align="right">
-                      <b>$ <bean:message key="billing.service.fee"/></b>
+                      <strong>&dollar;<bean:message key="billing.service.fee"/></strong>
                     </div>
                   </td>
                 </tr>
               <%for (int i = 0; i < billlist1.length; i++) {              %>
-                <tr bgcolor>
+                <tr >
                 <%String svcCall = "addSvcCode('" + billlist1[i].getServiceCode() + "')";                %>
-                  <td width="25%" height="14">
-                    <b>                    </b>
-                    <font face="Verdana, Arial, Helvetica, sans-serif">
+                  <td width="25%" valign="middle">
+                    <label>
                       <html:multibox property="service" value="<%=billlist1[i].getServiceCode()%>" onclick="<%=svcCall%>"/>
-                      <font size="1"><%=billlist1[i].getServiceCode()%>                      </font>
-                    </font>
+                      <%=billlist1[i].getServiceCode()%>
+                    </label>
                   </td>
-                  <td width="61%" height="14">
+                  <td width="61%">
                     <%=billlist1[i].getDescription()%> 
                   </td>
-                  <td width="14%" height="14">
+                  <td width="14%">
                     <div align="right">
                       <%=billlist1[i].getPrice()%>                 
                     </div>
@@ -1077,22 +1268,22 @@ if(wcbneeds != null){%>
                 </tr>
               <%}              %>
               </table>
-              <table width="100%" border="0" cellpadding="2" cellspacing="2" bgcolor="#CC0000">
+              <table width="100%" style="background-color:#CC0000;">
                 <tr>
                   <td width="91%" valign="top">
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
+                    <table width="100%" style="background-color:#EEEEFF;">
                       <tr>
                         <td>
-                          <b>
+                          <strong>
                            
                               <bean:message key="billing.referral.doctor"/>
                            
-                          </b>
+                          </strong>
                         </td>
                         <td>
-                          <b>
+                          <strong>
                               <bean:message key="billing.referral.type"/>
-                          </b>
+                          </strong>
                         </td>
                       </tr>
                       <tr>
@@ -1136,43 +1327,40 @@ if(wcbneeds != null){%>
                     </table>
                   </td>
                   <td width="9%">
-                   
+                   &nbsp;
                   </td>
                 </tr>
               </table>
               
             </td>
-            <td valign="top" width="31%">
-              <table width="100%" border="1" cellspacing="0" cellpadding="0">
-                <tr bgcolor="#CCCCFF">
+            <td valign="top" style="width:32%; padding-right:5px;">
+              <table width="100%" border="1" class="serviceCodesTable">
+                <tr style="background-color:#CCCCFF;">
                   <td width="21%">
-                    <b>                    </b>
-                    <div align="left">
-                        <b>
-                          <font size="1" color="#000000"><%=group2Header%>                          </font>
-                        </b>
-                    </div>
+                        <strong>
+                          <%=group2Header%>
+                        </strong>
                   </td>
-                  <td width="60%" bgcolor="#CCCCFF">
-                    <b><bean:message key="billing.service.desc"/></b>
+                  <td width="60%" style="background-color:#CCCCFF;">
+                    <strong><bean:message key="billing.service.desc"/></strong>
                   </td>
-                  <td width="19%">
-                    <div align="right">
-                      <b>$<bean:message key="billing.service.fee"/></b>
-                    </div>
+                  <td width="19%" align="right" >
+                      <strong>&dollar;<bean:message key="billing.service.fee"/></strong>
                   </td>
                 </tr>
               <%for (int i = 0; i < billlist2.length; i++) {              %>
-                <tr bgcolor>
+                <tr >
                 <%String svcCall = "addSvcCode('" + billlist2[i].getServiceCode() + "')";                %>
-                  <td width="21%" height="14">  d
+                  <td width="21%">
+                  <label>
                       <html:multibox property="service" value="<%=billlist2[i].getServiceCode()%>" onclick="<%=svcCall%>"/>
                       <%=billlist2[i].getServiceCode()%>
+                  </label>
                   </td>
-                  <td width="60%" height="14">
+                  <td width="60%">
                    <%=billlist2[i].getDescription()%>
                   </td>
-                  <td width="19%" height="14">
+                  <td width="19%">
                     <div align="right">
                      <%=billlist2[i].getPrice()%> 
                     </div>
@@ -1180,16 +1368,16 @@ if(wcbneeds != null){%>
                 </tr>
               <%}              %>
               </table>
-              <table width="100%" height="105" border="0" cellpadding="2" cellspacing="2" bgcolor="#999900">
+              <table style="background-color:#999900;">
                 <tr>
                   <td width="91%" valign="top">
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
+                    <table width="100%" style="background-color:#EEEEFF;">
                       <tr>
                         <td width="85%">
-                          <b><bean:message key="billing.service.otherservice"/></b>
+                          <strong><bean:message key="billing.service.otherservice"/></strong>
                         </td>
                         <td width="15%">
-                          <b><bean:message key="billing.service.unit"/></b>
+                          <strong><bean:message key="billing.service.unit"/></strong>
                         </td>
                       </tr>
                       <tr>
@@ -1229,51 +1417,47 @@ if(wcbneeds != null){%>
                     </table>
                   </td>
                   <td width="9%">
-                 &nbsp;
+                 	&nbsp;
                   </td>
                 </tr>
               </table>
             </td>
-            <td valign="top" width="36%" rowspan="2">
-              <table width="100%" border="1" cellspacing="0" cellpadding="0" height="0">
-                <tr bgcolor="#CCCCFF">
-                  <td width="25%">
-                    <div align="left">
-                        <b><%=group3Header%></b>
-                    </div>
+            <td valign="top" style="width:32%;" >
+              <table width="100%" border="1" class="serviceCodesTable">
+                <tr style="background-color:#CCCCFF;">
+                  <td width="25%" align="left" valign="middle">
+                        <strong><%=group3Header%></strong>
                   </td>
-                  <td width="61%" bgcolor="#CCCCFF">
-                    <b><bean:message key="billing.service.desc"/></b>
+                  <td width="61%" style="background-color:#CCCCFF;">
+                    <strong><bean:message key="billing.service.desc"/></strong>
                   </td>
-                  <td width="14%">
-                    <div align="right">
-                      <b><bean:message key="billing.service.fee"/></b>
-                    </div>
+                  <td width="14%" align="right">      
+                      <strong>&dollar;<bean:message key="billing.service.fee"/></strong>
                   </td>
                 </tr>
               <%for (int i = 0; i < billlist3.length; i++) {              %>
-                <tr bgcolor>
+                <tr >
                 <%String svcCall = "addSvcCode('" + billlist3[i].getServiceCode() + "')";                %>
-                  <td width="25%" height="14">
+                  <td width="25%" >
+                  	<label>
                       <html:multibox property="service" value="<%=billlist3[i].getServiceCode()%>" onclick="<%=svcCall%>"/>
                       <%=billlist3[i].getServiceCode()%>
+                      </label>
                   </td>
-                  <td width="61%" height="14">
+                  <td width="61%" >
                     <%=billlist3[i].getDescription()%>
                   </td>
-                  <td width="14%" height="14">
-                    <div align="right">
+                  <td width="14%" align="right">
                       <%=billlist3[i].getPrice()%>
-                    </div>
                   </td>
                 </tr>
               <%}              %>
               </table>
               <!-- ONSCREEN DX CODE DISPLAY -->
-              <table width="100%" border="3" cellpadding="2" cellspacing="2" bgcolor="#CCCCFF">
+              <table width="100%" style="background-color:#CCCCFF;">
                 <tr>
-                  <td  height="103" valign="top" width="10">
-                    <table border="2" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
+                  <td valign="top" width="10%">
+                    <table style="background-color:#EEEEFF;">
                       <tr>
                         <th align="left">
                               <a href="#" id="pop2" onClick="formPopup(this.id,'Layer2');return false;">
@@ -1303,7 +1487,7 @@ if(wcbneeds != null){%>
                       </tr>
                     </table>
                   </td>
-                  <td align="left" width="*" valign="top">
+                  <td align="left" valign="top">
                       <div id="DX_REFERENCE"></div>
                        <oscar:oscarPropertiesCheck property="BILLING_DX_REFERENCE" value="yes">
                          <script type="text/javascript">
@@ -1324,23 +1508,22 @@ if(wcbneeds != null){%>
               </table>
               <!-- ONSCREEN DX CODE DISPLAY END-->
               
-              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <table width="100%">
                 <tr>
-                  <td >
-                    <font size="-2">
-                      <strong>                        Short Claim Note:
-                        &nbsp;
-                      </strong>
-                    </font>
+                  <td>
+                      <strong>Short Claim Note</strong>
                     <html:text property="shortClaimNote" size="23" maxlength="20"/>
                   </td>
-                  <td align="right">
-                        <input type="checkbox" name="ignoreWarn"/> Ignore Warnings &nbsp;
+                  <td align="left">
+                  	<label>
+                        <input type="checkbox" name="ignoreWarn" /> 
+                        Ignore Warnings
+                    </label>
                   </td>
                 </tr>
                 
                 <tr>
-                  <td align="left">
+                  <td align="left" colspan="2" >
                     <html:select property="correspondenceCode" onchange="correspondenceNote();">
                       <html:option value="0">No Correspondence</html:option>
                       <html:option value="N">Electronic Correspondence</html:option>
@@ -1348,42 +1531,43 @@ if(wcbneeds != null){%>
                       <html:option value="B">Both</html:option>
                     </html:select>
                   </td>
-                  <td align="right">
-                    <input type="submit" name="Submit" value="Continue">
-                    <input type="button" name="Button" value="Cancel" onClick="window.close();">                 
-                  </td>
                 </tr>
                 <tr>
                   <td colspan="2" valign="top">
-                    <div id="CORRESPONDENCENOTE">                      &nbsp;
-                      <html:textarea cols="60" rows="5" property="notes" onkeyup="checkTextLimit(this.form.notes,400);">                      </html:textarea>
-                      <br>
-                      &nbsp;
+                    <div id="CORRESPONDENCENOTE">
+                      <html:textarea cols="60" rows="5" property="notes" onkeyup="checkTextLimit(this.form.notes,400);"></html:textarea>
                       400 characters max.
                     </div>
-                    <br/>
-                    <hr/>
-                    <!-- br/>
-                    <br/ -->
                     <div style="background-color: #CCCCFF;">
-                      <div style="background-color : #EEEEFF;">Billing Notes (Notes are for internal use and will not be sent to MSP)</div>
-                      &nbsp;
-                      <html:textarea cols="60" rows="5" property="messageNotes">                      </html:textarea>
+                      <div style="background-color : #EEEEFF;">
+                      <strong>Billing Notes</strong> 
+                      <span style="font-size:smaller;">(Notes are for internal use and will not be sent to MSP)</span>
+                      </div>
+                      <html:textarea cols="60" rows="5" property="messageNotes"></html:textarea>
                     </div>
                   </td>
                 </tr>
+                
               </table>
             </td>
           </tr>
+          <tr id="buttonRow" >
+           <td align="right" colspan="3">
+              <input class="btn btn-md btn-primary" type="submit" name="Submit" value="Continue">
+              <input class="btn btn-md btn-danger" type="button" name="Button" value="Cancel" onClick="window.close();">                 
+            </td>
+          </tr>
           <tr valign="top">
-              <td colspan="2"><div id="wcbForms" style="float:left;"/></td>
+              <td colspan="3">
+              	<div id="wcbForms" style="float:left;"></div>
+              </td>
           </tr>
         </table>
       </td>
     </tr>
   </table>
-</html:form>
-<p>&nbsp;</p>
 
+</html:form>
+ </div>
 </body>
 </html>
