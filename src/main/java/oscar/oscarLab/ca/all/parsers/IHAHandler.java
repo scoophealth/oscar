@@ -44,6 +44,12 @@ import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.util.Terser;
 import ca.uhn.hl7v2.validation.impl.NoValidation;
 
+@Deprecated
+/**
+ * @Deprecated
+ * Use IHAPOIHandler
+ *
+ */
 public class IHAHandler implements MessageHandler {
     
     Logger logger = Logger.getLogger(IHAHandler.class);
