@@ -127,7 +127,8 @@
 
     LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
     LookupList reasonCodes = lookupListManager.findLookupListByName(loggedInInfo, "reasonCode");
-
+	pageContext.setAttribute("reasonCodes", reasonCodes);
+	
     ApptData apptObj = ApptUtil.getAppointmentFromSession(request);
 
  List<BillingONCHeader1> cheader1s = null;
@@ -466,7 +467,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
 
 	if (bFirstDisp) {
 		appt = appointmentDao.find(Integer.parseInt(appointment_no));
-		
+		pageContext.setAttribute("appointment", appt);
 
 		if (appt == null) {
 %>
@@ -728,22 +729,21 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
         <li class="row weak">
             <div class="label"><bean:message key="Appointment.formReason" />:</div>
             <div class="input">
-				<select name="reasonCode">
-					<%
-					Integer apptReasonCode = bFirstDisp ? (appt.getReasonCode() == null ? 0 : appt.getReasonCode()) : Integer.parseInt(request.getParameter("reasonCode"));
-					if(reasonCodes != null) {
-						for(LookupListItem reasonCode : reasonCodes.getItems()) {
-							if(reasonCode.isActive() || (apptReasonCode.equals(reasonCode.getId()) && !reasonCode.isActive())) {
-					%>
-						<option value="<%=reasonCode.getId()%>" <%=apptReasonCode.equals(reasonCode.getId()) ? "selected=\"selected\"" : "" %>><%=StringEscapeUtils.escapeHtml(reasonCode.getValue())%></option>
-					<%
-							} } //end of for loop
-					} else {
-					%>
-						<option value="-1">Other</option>
-					<%
-					}
-					%>
+				<select name="reasonCode">				
+					<c:choose>
+	                	<c:when test="${ not empty reasonCodes  }">
+	                		<c:forEach items="${ reasonCodes.items }" var="reason" >
+	                		<c:if test="${ reason.active }">
+	                			<option value="${ reason.id }" id="${ reason.value }" ${ appointment.reasonCode eq reason.id ? 'selected="selected"' : '' } >
+	                				<c:out value="${ reason.label }" />
+	                			</option>
+	                		</c:if>
+	                		</c:forEach>     
+	                	</c:when>
+	                	<c:otherwise>
+	                		<option value="-1">Other</option>
+	                	</c:otherwise>
+	                </c:choose>
 				</select>
  				</br>
 				<textarea id="reason" name="reason" tabindex="2" rows="2" wrap="virtual"
