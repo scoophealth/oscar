@@ -31,38 +31,49 @@ import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.oscarehr.common.model.ImmunizationInterface;
+// import org.oscarehr.common.model.ImmunizationInterface;
 import org.oscarehr.common.model.Prevention;
+// import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.util.MiscUtils;
 
 public class ImmunizationTest {
 	private static Logger logger = MiscUtils.getLogger();
-	private static Prevention prevention;
+	private static ImmunizationInterface<Prevention> immunization;
 	private static OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, Prevention> oscarFhirResource;
 	private static final String testJSON = "";
 	private static final String testXML = "";
 	private static Date date = new Date(System.currentTimeMillis());
+	// private static String fhirJson = "{\"resourceType\":\"Immunization\",\"status\":\"completed\",\"notGiven\":false,\"vaccineCode\":{\"coding\":[{\"system\":\"http://hl7.org/fhir/sid/cvx\",\"code\":\"HPV\",\"display\":\"Pfizer HPV Vaccine\"}]},\"patient\":{\"display\":\"null\"},\"date\":\"2017-09-17T18:21:26-07:00\",\"lotNumber\":\"123456\",\"site\":{\"coding\":[{\"system\":\"http://hl7.org/fhir/v3/ActSite\",\"code\":\"LD\",\"display\":\"LD\"}]},\"route\":{\"coding\":[{\"system\":\"http://hl7.org/fhir/v3/RouteOfAdministration\",\"code\":\"IM\",\"display\":\"IM\"}]},\"doseQuantity\":{\"value\":20.0,\"unit\":\"cc\"},\"note\":[{\"text\":\"Didnt want it.\"},{\"text\":\"This is a comment\"}]}";
 	
 	@BeforeClass
 	public static void setUpBeforeClass() {
-		prevention = new Prevention();
-		prevention.setPreventionDate(date);
-		prevention.setNever(Boolean.FALSE);
-		prevention.setRefused(Boolean.FALSE);
-		prevention.setPreventionType("HPV");
-
-		oscarFhirResource = new Immunization( prevention );		
+		immunization = new Prevention();
+		immunization.setImmunizationDate(date);
+		immunization.setImmunizationRefused(Boolean.FALSE);
+		immunization.setImmunizationRefusedReason("Didnt want it.");
+		immunization.setComment("This is a comment");
+		immunization.setDose("20cc");
+		immunization.setImmunizationType("HPV");
+		immunization.setSite("LD");
+		immunization.setRoute("IM");
+		immunization.setLotNo("123456");
+		immunization.setManufacture("Pfizer");
+		immunization.setName("HPV Vaccine");
+	
+		oscarFhirResource = new org.oscarehr.integration.fhir.model.Immunization( immunization );		
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() {
-		prevention = null;
+		immunization = null;
 		oscarFhirResource = null;
 	}
-
+	
 	@Test
 	public void testGetPrevention() {
 		logger.info( "testGetPrevention" );
-		assertEquals( date, oscarFhirResource.getOscarResource().getCreationDate() );
+		assertEquals( date, oscarFhirResource.getOscarResource().getPreventionDate() );
 	}
 
 	@Test
@@ -71,7 +82,7 @@ public class ImmunizationTest {
 		assertEquals( date, oscarFhirResource.getFhirResource().getDate() );
 	}
 
-	// @Test
+	@Test
 	public void testGetFhirImmunizationJSONDstu3() {
 		logger.info( "testGetFhirImmunizationJSONDstu3" );
 		logger.info( oscarFhirResource.getFhirJSON() );

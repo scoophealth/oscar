@@ -26,6 +26,8 @@ package org.oscarehr.common.model.enumerator;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import org.oscarehr.common.model.AbstractModel;
+
 
 /**
  * Model class for the lst_gender database table. 
@@ -34,10 +36,11 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="lst_gender")
-@NamedQuery(name="LstGender.findAll", query="SELECT l FROM LstGender l")
-public class Gender implements Serializable {
+@NamedQuery(name="Gender.findAll", query="SELECT g FROM Gender g")
+public class Gender extends AbstractModel<String> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
 	@Enumerated(EnumType.STRING)
 	private String code;
 
@@ -49,6 +52,11 @@ public class Gender implements Serializable {
 
 	public Gender() {
 		// default
+	}
+	
+	@Override
+	public String getId() {
+		return this.code;
 	}
 
 	public String getCode() {

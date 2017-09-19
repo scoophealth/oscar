@@ -143,7 +143,7 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 	}
 	
 	public String getFhirJSON() {
-		return fhirContext.newJsonParser().setPrettyPrint(true).encodeResourceToString( getFhirResource() );
+		return fhirContext.newJsonParser().setPrettyPrint(false).encodeResourceToString( getFhirResource() );
 	}
 	
 	public String getFhirXML() {

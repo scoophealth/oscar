@@ -22,19 +22,24 @@
  * Ontario, Canada
  */
 
-
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "preventionsExt")
+@NamedQuery(name="PreventionExt.findAll", query="SELECT p FROM PreventionExt p")
 public class PreventionExt extends AbstractModel<Integer> implements Serializable {
 
 	@Id
@@ -45,8 +50,17 @@ public class PreventionExt extends AbstractModel<Integer> implements Serializabl
 	private Integer preventionId = null;
 
 	private String keyval = null;
+	
+	@Lob
 	private String val = null;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="prevention_id", insertable = false, updatable = false )
+	private Prevention prevention;
 
+	public PreventionExt() {
+		//Default constructor
+	}
 	
 	public Integer getPreventionId() {
 		return preventionId;
@@ -75,5 +89,13 @@ public class PreventionExt extends AbstractModel<Integer> implements Serializabl
 	@Override
     public Integer getId() {
 		return id;
+	}
+
+	public Prevention getPrevention() {
+		return this.prevention;
+	}
+
+	public void setPrevention(Prevention prevention) {
+		this.prevention = prevention;
 	}
 }
