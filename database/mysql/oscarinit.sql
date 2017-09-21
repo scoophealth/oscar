@@ -6897,7 +6897,7 @@ CREATE TABLE measurementsDeleted(
   type varchar(4) NOT NULL,
   demographicNo int(10) NOT NULL default '0',
   providerNo varchar(6) NOT NULL default '',
-  dataField  varchar(10) NOT NULL,
+  dataField  varchar(255) NOT NULL,
   measuringInstruction varchar(255) NOT NULL,
   comments varchar(255) NOT NULL,
   dateObserved datetime NOT NULL,

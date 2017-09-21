@@ -183,7 +183,7 @@ $(document).ready(function() {
 			   var path = "<c:out value="${ oscar_context_path }" />/quickBillingBC.do";
 			   var data = JSON.stringify($(document.quickBillingForm).serializeObject()); 
 			   
-			   $("#quickBillingForm").attr("action", path + "?data=" + data);
+			   $("#quickBillingForm").attr("action", path + "?data=" + encodeURIComponent(data));
 			   $("#quickBillingForm").submit();
 
 		   }

@@ -199,14 +199,14 @@ if (message != null){
 					<option value="PATHL7"
 					<oscar:oscarPropertiesCheck property="PATHNET_LABS" value="yes">
 					selected
-					</oscar:oscarPropertiesCheck> 
-					>EXCELLERIS</option>
+					</oscar:oscarPropertiesCheck>>EXCELLERIS</option>
 
 					<option value="GDML">GDML</option>
 					<option value="HHSEMR">HHSEMR</option>
 					<option value="HRMXML">HRM XML</option>
 					<option value="ICL">ICL</option>
 					<option value="IHA">IHA</option>
+					<option value="IHAPOI">IHAPOI</option>
 					<option value="MDS">MDS/Lifelabs</option>
 					<option value="MEDVUE">MEDVUE</option>
 					<!-- <option value="HL7">HL7</option> -->
