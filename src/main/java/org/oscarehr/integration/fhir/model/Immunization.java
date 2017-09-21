@@ -30,7 +30,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.hl7.fhir.dstu3.model.Extension;
-import org.hl7.fhir.dstu3.model.IdType;
 import org.hl7.fhir.dstu3.model.Immunization.ImmunizationStatus;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
@@ -181,8 +180,7 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 
 	@Override
 	protected void setId( org.hl7.fhir.dstu3.model.Immunization immunization ) {
-		IdType id = new IdType();
-		id.applyTo( immunization );
+		
 	}
 
 	/**

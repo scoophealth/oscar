@@ -40,7 +40,7 @@ public interface ImmunizationInterface<T> {
 	/**
 	 * Get an immunization data value by ImmunizationProperty key
 	 */
-	public String getImmunizationProperty(ImmunizationProperty immunizationProperty);
+	public String getImmunizationProperty( ImmunizationProperty immunizationProperty );
 		
 	public String getLotNo();
 	public void setLotNo(String lotNo);

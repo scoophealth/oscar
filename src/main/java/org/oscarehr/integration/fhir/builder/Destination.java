@@ -1,7 +1,10 @@
 package org.oscarehr.integration.fhir.builder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.hl7.fhir.dstu3.model.MessageHeader.MessageDestinationComponent;
 
@@ -40,35 +43,64 @@ import org.hl7.fhir.dstu3.model.MessageHeader.MessageDestinationComponent;
  * A class that references a message destination header information.
  * This Object builds a FHIR MessageDestinationComponent.
  * 
- * Future intentions of this class is for it to auto populate specific data 
+ * The ultimate intention of this class is to auto populate and translate specific data 
  * according to its environment.
  *
  */
 public final class Destination {
 	
 	private List<MessageDestinationComponent> messageDestinationComponents;
+	private Map<String, String> destinations;
+	
+	public Destination(String name, String endpoint) {
+		addDestination( name, endpoint );
+	}
 	
 	public Destination() {
-		setMessageDestinationComponents(new ArrayList<MessageDestinationComponent>());
+		// default constructor.
 	}
 
 	public List<MessageDestinationComponent> getMessageDestinationComponents() {
+		if( messageDestinationComponents == null ) {
+			 messageDestinationComponents = new ArrayList<MessageDestinationComponent>();
+		}		
 		return messageDestinationComponents;
 	}
 
-	private void setMessageDestinationComponents(List<MessageDestinationComponent> messageDestinationComponents) {
-		this.messageDestinationComponents = messageDestinationComponents;
+	public void setMessageDestinationComponents(List<MessageDestinationComponent> messageDestinationComponents) {
+		for( MessageDestinationComponent messageDestinationComponent : messageDestinationComponents ) {
+			addMessageDestinationComponent( messageDestinationComponent );
+		}
 	}
 	
 	/**
 	 * Add a new destination Name and its associated endpoint. 
 	 * Multiple destinations can be added. 
 	 */
-	public void addMessageDestination( String name, String endpoint ){
+	public void addMessageDestinationComponent( MessageDestinationComponent messageDestinationComponent ){
+		getDestinations().put( messageDestinationComponent.getName(), messageDestinationComponent.getEndpoint() );
+		getMessageDestinationComponents().add( messageDestinationComponent );
+	}
+
+	public Map<String, String> getDestinations() {
+		if( destinations == null ) {
+			destinations = new HashMap<String, String>();
+		}
+		return destinations;
+	}
+
+	public void setDestinations( Map<String, String> destinations ) {
+		Set<String> destinationKeys = destinations.keySet();
+		for( String destinationKey : destinationKeys ) {
+			addDestination( destinationKey, destinations.get( destinationKey ) );			
+		}
+	}
+
+	public void addDestination( String name, String endpoint ) {		
+		getDestinations().put( name, endpoint );
 		MessageDestinationComponent messageDestinationComponent = new MessageDestinationComponent();
 		messageDestinationComponent.setName(name);
 		messageDestinationComponent.setEndpoint(endpoint);
-		getMessageDestinationComponents().add(messageDestinationComponent);
+		getMessageDestinationComponents().add( messageDestinationComponent );
 	}
-
 }

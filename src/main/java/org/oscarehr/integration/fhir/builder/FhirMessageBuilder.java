@@ -24,11 +24,19 @@ package org.oscarehr.integration.fhir.builder;
  */
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Communication;
-import org.hl7.fhir.dstu3.model.IdType;
+import org.hl7.fhir.dstu3.model.Communication.CommunicationStatus;
+import org.hl7.fhir.dstu3.model.Immunization;
 import org.hl7.fhir.dstu3.model.MessageHeader;
+import org.hl7.fhir.dstu3.model.Resource;
+import org.oscarehr.integration.fhir.model.OscarFhirResource;
+
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.model.primitive.IdDt;
 
 
 /*
@@ -177,12 +185,14 @@ import org.hl7.fhir.dstu3.model.MessageHeader;
 public class FhirMessageBuilder {
 
 	//private static Logger logger = MiscUtils.getLogger();
-	
+	private static FhirContext fhirContext = FhirContext.forDstu3();
 	private MessageHeader messageHeader;
 	private Communication communication;
 	private Sender sender;
 	private Destination destination; 
-	private List<org.hl7.fhir.dstu3.model.BaseResource> resources;
+	private List<OscarFhirResource< ?, ? > > resources;
+	private String reason;
+	private CommunicationStatus communicationStatus;
 	
 	/**
 	 * Constructor to add a MessageHeader to the message using the Sender and Destination 
@@ -208,20 +218,24 @@ public class FhirMessageBuilder {
 	public MessageHeader getMessageHeader() {
 		return messageHeader;
 	}
+	
+	public String getMessageHeaderJson() {
+		return resourceToJson( messageHeader );
+	}
 
+	/**
+	 * This method is constrained to availability of the Sender and Destination Objects.
+	 */
 	private void setMessageHeader(MessageHeader messageHeader) {	
-		
-		messageHeader.setId( new IdType() );
+		messageHeader.setId( IdDt.newRandomUuid() );
 		messageHeader.getEvent()
 			.setSystem("http://hl7.org/fhir/message-type")
 			.setCode("MedicationAdministration-Recording");
-		
+		//TODO: these cannot be hard coded.
 		messageHeader.setTimestamp( new Date(System.currentTimeMillis() ) );
 		messageHeader.setSource( getSender().getMessageSourceComponent() );
 		messageHeader.setDestination( getDestination().getMessageDestinationComponents() );
-	
-		// set data references as they are added to this object. 
-		
+
 		this.messageHeader = messageHeader;
 
 	}
@@ -229,10 +243,31 @@ public class FhirMessageBuilder {
 	public Communication getCommunication() {
 		return communication;
 	}
+	
+	public String getCommunicationJson() {
+		return resourceToJson( this.communication );
+	}
 
 	private void setCommunication( Communication communication ) {
-		communication.getMeta().addTag( "lastUpdated", new Date(System.currentTimeMillis()).toString(), "" );
-		communication.setId( new IdType() );
+		Date timestamp = new Date(System.currentTimeMillis());
+		
+		// last updated Meta tag
+		communication.getMeta().setVersionId( fhirContext.getVersion().getVersion().getFhirVersionString() );
+
+		// Identifier 
+		//communication.setIdentifier(theIdentifier)
+		//TODO: need to find out what the Identifier is and how to set it.
+		
+		// Status
+
+		
+		// Timestamp Sent
+		communication.setSent( timestamp );
+		
+		// Timestamp Recieved
+
+		// Subject : The patient reference id for whom the data is related to.
+		
 		this.communication = communication;
 	}
 
@@ -252,12 +287,70 @@ public class FhirMessageBuilder {
 		this.destination = destination;
 	}
 
-	public List<org.hl7.fhir.dstu3.model.BaseResource> getResources() {
+	public List< OscarFhirResource< ?, ? > > getResources() {
+		if( this.resources == null ) {
+			resources = new ArrayList<OscarFhirResource< ?, ? > >();
+		}
 		return resources;
 	}
 
-	public void setResources(List<org.hl7.fhir.dstu3.model.BaseResource> resources) {
-		this.resources = resources;
+	public void addResources( List< OscarFhirResource< ?, ? > > oscarFhirResources ) {
+		for( OscarFhirResource<?,?> oscarFhirResource :  oscarFhirResources ) {
+			addResource( oscarFhirResource );
+		}
+	}
+	
+	private void setResource( OscarFhirResource< ?, ? > oscarFhirResource ) {
+		System.out.println( "Resource Id " + oscarFhirResource.getFhirResource().getId() );
+		communication.getContained().add( (Immunization) oscarFhirResource.getFhirResource() );
+		communication.setSenderTarget( (Resource) oscarFhirResource.getFhirResource() );
+		// Sender : Related Person (Patient) 
+		// Recipient : Entity sending to
+		// Payload : the attached resources
 	}
 
+	public void addResource( OscarFhirResource< ?, ? > oscarFhirResource ) {
+		setResource( oscarFhirResource );
+		getResources().add( oscarFhirResource );
+	}
+	
+	private static final String resourceToJson( org.hl7.fhir.dstu3.model.BaseResource resource ) {
+		if( resource == null ) {
+			return "";
+		}
+		return fhirContext.newJsonParser().setPrettyPrint(true).encodeResourceToString( resource );
+	}
+
+	public String getReason() {
+		List<CodeableConcept> reasons = communication.getReasonCode();
+		StringBuilder reasonBuilder = null;
+		for( CodeableConcept reason : reasons ) {
+			if( reasonBuilder == null ) {
+				reasonBuilder = new StringBuilder("");
+			}
+			reasonBuilder.append( reason.getText() );
+			reasonBuilder.append( "\n" );
+		}
+		if( reasonBuilder != null ) {
+			reason = reasonBuilder.toString();
+		}
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		communication.getReasonCodeFirstRep().setText(reason);
+		this.reason = reason;
+	}
+
+	public CommunicationStatus getCommunicationStatus() {
+		this.communicationStatus = communication.getStatus();
+		return this.communicationStatus; 
+	}
+
+	public void setCommunicationStatus(CommunicationStatus communicationStatus) {
+		communication.setStatus( communicationStatus );
+		this.communicationStatus = communicationStatus;
+	}
+	
+	
 }
