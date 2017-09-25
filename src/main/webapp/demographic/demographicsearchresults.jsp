@@ -428,7 +428,7 @@
 
 		if (fromMessenger) {
 	%>
-		<a href="demographiccontrol.jsp?keyword=<%=StringEscapeUtils.escapeJavaScript(Misc.toUpperLowerCase(demo.getLastName()+", "+demo.getFirstName()))%>&demographic_no=<%= dem_no %>&displaymode=linkMsg2Demo&dboperation=search_detail" ><%=demo.getDemographicNo()%></a></td>
+		<a href="demographiccontrol.jsp?keyword=<%=URLEncoder.encode(Misc.toUpperLowerCase(demo.getLastName()+", "+demo.getFirstName()))%>&demographic_no=<%= dem_no %>&displaymode=linkMsg2Demo&dboperation=search_detail" ><%=demo.getDemographicNo()%></a></td>
 	<%	
 		} else { 
 	%>
