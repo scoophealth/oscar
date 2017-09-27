@@ -3651,6 +3651,7 @@ function limitCharacters( el, mlength, lbl, disableNewLine ){
 
 <div id="lab_menu_div" class="hidden">
 <ul>
+	<li><a href="javascript:void(0)" onclick="popPage('formlabreq<%=labReqVer%>.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=eFTS','LabReq')">MOH&amp;LTC eFTS</a></li>
 	<li><a href="javascript:void(0)" onclick="popPage('formlabreq<%=labReqVer %>.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq')">Routine Prenatal</a></li>
 	<li><a href="javascript:void(0)" onclick="loadCytologyForms();">Cytology</a></li>
 </ul>
