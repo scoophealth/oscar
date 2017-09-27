@@ -1,7 +1,5 @@
 package org.oscarehr.integration.fhir.builder;
 
-import org.hl7.fhir.dstu3.model.MessageHeader.MessageSourceComponent;
-
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -26,6 +24,12 @@ import org.hl7.fhir.dstu3.model.MessageHeader.MessageSourceComponent;
  * Ontario, Canada
  */
 
+
+import org.hl7.fhir.dstu3.model.MessageHeader.MessageSourceComponent;
+import org.hl7.fhir.dstu3.model.Organization;
+import org.oscarehr.common.model.Contact;
+import org.oscarehr.integration.fhir.model.OscarFhirResource;
+
 /*
 "source": {
 	    "name": "Some EMR",
@@ -35,6 +39,22 @@ import org.hl7.fhir.dstu3.model.MessageHeader.MessageSourceComponent;
 	  }
  */
 
+/*
+
+    {
+      "resourceType": "Organization",
+      "id": "Clinic1",
+      "identifier": [
+        {
+          "system": "urn:ietf:rfc:3986",
+          "value": "CLINICTEST"
+        }
+      ],
+      "name": "Family Health Team"
+    }
+
+*/
+
 /**
  * A class that references a message senders header information.
  * This Object builds a FHIR MessageSourceComponent
@@ -43,13 +63,18 @@ import org.hl7.fhir.dstu3.model.MessageHeader.MessageSourceComponent;
  * according to its environment. For instance grabbing data from the OscarProperties settings.
  *
  */
-public final class Sender {
+public class Sender {
 
 	private MessageSourceComponent messageSourceComponent;
 	private String vendorName;
 	private String softwareName;
 	private String versionSignature;
 	private String endpoint;
+	private OscarFhirResource<Organization, Contact> oscarFhirResource;
+	
+	public Sender() {
+		setMessageSourceComponent( new MessageSourceComponent() );
+	}
 	
 	public Sender( String vendorName, String softwareName, String versionSignature, String endpoint ) {
 		this();
@@ -57,10 +82,6 @@ public final class Sender {
 		setSoftwareName(softwareName);
 		setVersionSignature(versionSignature);
 		setEndpoint(endpoint);
-	}
-	
-	public Sender() {
-		setMessageSourceComponent( new MessageSourceComponent() );
 	}
 
 	public MessageSourceComponent getMessageSourceComponent() {
@@ -70,7 +91,7 @@ public final class Sender {
 	/**
 	 * Returns a component object that can be used inside FHIR resources.
 	 */
-	private void setMessageSourceComponent(MessageSourceComponent messageSourceComponent) {
+	private void setMessageSourceComponent( MessageSourceComponent messageSourceComponent ) {
 		this.messageSourceComponent = messageSourceComponent;
 	}
 
@@ -83,7 +104,7 @@ public final class Sender {
 	 * ie: Oscar EMR or Oscar Service Provider name.
 	 */
 	public void setVendorName(String vendorName) {
-		getMessageSourceComponent().setName(vendorName);
+		getMessageSourceComponent().setName( vendorName );
 		this.vendorName = vendorName;
 	}
 
@@ -125,6 +146,56 @@ public final class Sender {
 		getMessageSourceComponent().setEndpoint(endpoint);
 		this.endpoint = endpoint;
 	}
+
+	public org.hl7.fhir.dstu3.model.Organization getFhirOrganization() {
+		org.hl7.fhir.dstu3.model.Organization organization = null; 
+		if( getOscarFhirResource() != null ) {
+			organization = getOscarFhirResource().getFhirResource();
+		}
+		return organization;
+	}
+
+	public void setFhirOrganization( org.hl7.fhir.dstu3.model.Organization fhirOrganizationResource) {
+		if( oscarFhirResource == null ) {
+			setOscarFhirResource( new org.oscarehr.integration.fhir.model.Organization( fhirOrganizationResource ) );
+		}
+	}
 	
+	public org.oscarehr.common.model.Contact getContact() {
+		org.oscarehr.common.model.Contact contact = null;	
+		if( getOscarFhirResource() != null ) {
+			contact = getOscarFhirResource().getOscarResource();
+		}
+		return contact;
+	}
 	
+	public void addContact( org.oscarehr.common.model.Contact contact ) {	
+		if( oscarFhirResource == null ) {
+			setOscarFhirResource( new org.oscarehr.integration.fhir.model.Organization( contact ) );
+		}
+	}
+
+	public org.oscarehr.common.model.Clinic getClinic() {
+		org.oscarehr.common.model.Clinic oscarClinicModel = null;	
+		if( getOscarFhirResource() != null ) {
+			org.oscarehr.integration.fhir.model.Organization organization = (org.oscarehr.integration.fhir.model.Organization) getOscarFhirResource(); 
+			oscarClinicModel = organization.castToClinic();
+		}
+		return oscarClinicModel;
+	}
+
+	public void addClinic( org.oscarehr.common.model.Clinic clinic ) {	
+		if( oscarFhirResource == null ) {
+			setOscarFhirResource( new org.oscarehr.integration.fhir.model.Organization( clinic ) );
+		}
+	}
+	
+	public OscarFhirResource<Organization, Contact> getOscarFhirResource() {
+		return oscarFhirResource;
+	}
+
+	public void setOscarFhirResource(OscarFhirResource<Organization, Contact> oscarFhirResource) {
+		this.oscarFhirResource = oscarFhirResource;
+	}
+
 }

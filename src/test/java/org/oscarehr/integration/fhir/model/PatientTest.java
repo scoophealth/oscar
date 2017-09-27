@@ -33,13 +33,14 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.Provider;
 //import org.oscarehr.managers.DemographicManager;
 //import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 public class PatientTest {
 
-	private static OscarFhirResource<org.hl7.fhir.dstu3.model.Patient, Demographic> patient;
+	private static Patient patient;
 	private static Demographic demographic;
 	private static final String testJSON = "{\"resourceType\":\"Patient\",\"identifier\":[{\"system\":\"urn:fake:mrns\",\"value\":\"122343\"}],\"name\":[{\"family\":[\"Warren\"],\"given\":[\"Dennis\"],\"suffix\":[\"Mr\"]}],\"gender\":{\"coding\":[{\"system\":\"http://hl7.org/fhir/v3/AdministrativeGender\",\"code\":\"M\"}]}}";
 	private static final String testXML = "<Patient xmlns=\"http://hl7.org/fhir\"><identifier><system value=\"urn:fake:mrns\"/><value value=\"122343\"/></identifier><name><family value=\"Warren\"/><given value=\"Dennis\"/><suffix value=\"Mr\"/></name><gender><coding><system value=\"http://hl7.org/fhir/v3/AdministrativeGender\"/><code value=\"M\"/></coding></gender></Patient>";
@@ -58,8 +59,16 @@ public class PatientTest {
 		birthdate.set(1969, 6, 18);
 		demographic.setBirthDay(birthdate);
 		
-		patient = new Patient( demographic );
-		// patient.setAlertNote("This is an alert note");
+		//PRACTITIONER
+		Provider provider = new Provider();
+		provider.setProviderNo("8879");
+		provider.setFirstName( "Doug" );
+		provider.setLastName( "Ross" );
+		provider.setHsoNo( "12342" );
+		provider.setOhipNo( "12342" );
+
+		patient = new Patient( demographic );		
+		patient.addCareProvider( provider );
 	}
 
 	@AfterClass
@@ -80,7 +89,7 @@ public class PatientTest {
 		assertEquals( AdministrativeGender.MALE, patient.getFhirResource().getGender() );
 	}
 
-	//@Test
+	@Test
 	public void testGetFhirpatientJSONDstu3() {
 		logger.info( "testGetFhirpatientJSONDstu3" );
 		logger.info( patient.getFhirJSON() );

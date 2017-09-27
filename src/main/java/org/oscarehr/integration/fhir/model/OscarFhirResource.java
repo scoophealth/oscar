@@ -50,14 +50,18 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 	public abstract List<Resource> getContainedFhirResources();
 	
 	protected OscarFhirResource() {
-		// default constructor. Use at own risk.
+		// default is always DSTU3
+		// Can be overridden by extended class.
+		setFhirContext( FhirContext.forDstu3() );
 	}
 	
 	protected OscarFhirResource( OSCAR to, FHIR from ){
+		setFhirContext( FhirContext.forDstu3() );
 		setResource( to, from );
 	}
 	
 	protected OscarFhirResource( FHIR to, OSCAR from ) {
+		setFhirContext( FhirContext.forDstu3() );
 		setResource( to, from );
 	}
 	
@@ -143,7 +147,7 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 	}
 	
 	public String getFhirJSON() {
-		return fhirContext.newJsonParser().setPrettyPrint(false).encodeResourceToString( getFhirResource() );
+		return fhirContext.newJsonParser().setPrettyPrint(true).encodeResourceToString( getFhirResource() );
 	}
 	
 	public String getFhirXML() {

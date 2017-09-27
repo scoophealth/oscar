@@ -58,18 +58,20 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 
 	@Override
 	protected void setId(org.hl7.fhir.dstu3.model.Practitioner fhirResource) {
-		// TODO Auto-generated method stub
+		fhirResource.setId( "#Practitioner_" + getOscarResource().getProviderNo() );
 		
 	}
 
 	@Override
 	protected void setId(Provider oscarResource) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 	@Override
-	protected void mapAttributes(org.hl7.fhir.dstu3.model.Practitioner fhirResource) {
+	protected void mapAttributes( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+		
+		setId( fhirResource );
+		
 		fhirResource.addName()
 			.setFamily( getOscarResource().getLastName() )
 			.addGiven( getOscarResource().getFirstName() );

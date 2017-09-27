@@ -66,20 +66,45 @@ import org.oscarehr.integration.fhir.utils.MiscUtils;
 	}
 */
 
+/*
+    {
+      "resourceType": "Organization",
+      "id": "Clinic1",
+      "identifier": [
+        {
+          "system": "urn:ietf:rfc:3986",
+          "value": "CLINICTEST"
+        }
+      ],
+      "name": "Family Health Team"
+    }
+
+ */
+
+/**
+ * Any Organizational unit that has compiled and is in stewardship of patient data.
+ * 
+ * Maps data from DSTU3 Organization to Oscar Contact/ProfessionalContact and visa versa 
+ *
+ * An Oscar Model Clinic class can be consumed by a unique constructor. This class 
+ * can also cast any model to an Oscar Model Clinic class through the castToClinic method.
+ *
+ */
 public class Organization 
 	extends OscarFhirResource< org.hl7.fhir.dstu3.model.Organization, org.oscarehr.common.model.Contact > {
 
 	private org.oscarehr.common.model.Clinic clinic;
-	
+
 	public Organization( org.oscarehr.common.model.Contact contact ) {
 		super( new org.hl7.fhir.dstu3.model.Organization(), contact );
 	}
 	
 	public Organization( org.hl7.fhir.dstu3.model.Organization organization ) {
-		super( new ProfessionalContact(), organization);
+		super( new ProfessionalContact(), organization );
 	}
 	
 	public Organization( org.oscarehr.common.model.Clinic clinic ) {
+		super();
 		setClinic( clinic );
 	}
 
@@ -107,35 +132,39 @@ public class Organization
 
 	private void setClinic( org.oscarehr.common.model.Clinic clinic ) {
 
-		this.clinic = clinic;
+		ProfessionalContact professionalContact =  new ProfessionalContact();
+		professionalContact.setId( null );
+		professionalContact.setAddress( clinic.getClinicName() );
+		professionalContact.setAddress2( clinic.getClinicAddress() );
+		professionalContact.setCity( clinic.getClinicCity() );
+		professionalContact.setProvince( clinic.getClinicProvince() );
+		professionalContact.setPostal( clinic.getClinicPostal() );
+		professionalContact.setFax( clinic.getClinicFax() );
+		professionalContact.setWorkPhone( clinic.getClinicPhone() );
+		professionalContact.setCpso( clinic.getClinicLocationCode() );
 		
-		ProfessionalContact contact = new ProfessionalContact();
-		contact.setAddress( clinic.getClinicName() );
-		contact.setAddress2( clinic.getClinicAddress() );
-		contact.setCity( clinic.getClinicCity() );
-		contact.setProvince( clinic.getClinicProvince() );
-		contact.setPostal( clinic.getClinicPostal() );
-		contact.setFax( clinic.getClinicFax() );
-		contact.setWorkPhone( clinic.getClinicPhone() );
-		contact.setCpso( clinic.getClinicLocationCode() );
+		setResource( new org.hl7.fhir.dstu3.model.Organization(), professionalContact );
 
-		setResource( new org.hl7.fhir.dstu3.model.Organization(), contact );
+		this.clinic = clinic;
 	}
 
 	@Override
-	protected void setId(org.hl7.fhir.dstu3.model.Organization resource) {
-		// TODO Auto-generated method stub
-		
+	protected void setId( org.hl7.fhir.dstu3.model.Organization fhirResource ) {
+		Integer id = getOscarResource().getId();
+		if( id == null ) {
+			id = 1;
+		}
+		fhirResource.setId( "#Organization_" + id );	
 	}
 
 	@Override
 	protected void setId(Contact model) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
 
 	@Override
 	protected void mapAttributes(org.hl7.fhir.dstu3.model.Organization fhirResource ) {
+		setId( fhirResource );
 		setOranizationName( fhirResource );		
 		setAddress( fhirResource );
 		setTelecom( fhirResource );
@@ -143,7 +172,7 @@ public class Organization
 	}
 
 	@Override
-	protected void mapAttributes(Contact oscarResource ) {
+	protected void mapAttributes( Contact oscarResource ) {
 		setOranizationName( oscarResource );		
 		setAddress( oscarResource );
 		setTelecom( oscarResource );
@@ -205,8 +234,8 @@ public class Organization
 		if( getOscarResource() instanceof ProfessionalContact ) {
 			fhirResource.addIdentifier()
 				.setUse( IdentifierUse.OFFICIAL )
-				.setSystem( "[id-system-local-base]/ca-on-panorama-phu-id" )
-				.setValue( ( (ProfessionalContact) getOscarResource() ).getCpso() );
+				.setSystem( "urn:ietf:rfc:3986" )
+				.setValue( "Test Clinic's Official Registry ID" );
 		}
 	}
 	

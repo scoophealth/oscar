@@ -27,12 +27,16 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hl7.fhir.dstu3.model.Attachment;
+import org.hl7.fhir.dstu3.model.BaseResource;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Communication;
+import org.hl7.fhir.dstu3.model.Communication.CommunicationPayloadComponent;
 import org.hl7.fhir.dstu3.model.Communication.CommunicationStatus;
-import org.hl7.fhir.dstu3.model.Immunization;
+import org.hl7.fhir.dstu3.model.IdType;
+import org.hl7.fhir.dstu3.model.Identifier.IdentifierUse;
 import org.hl7.fhir.dstu3.model.MessageHeader;
-import org.hl7.fhir.dstu3.model.Resource;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.oscarehr.integration.fhir.model.OscarFhirResource;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -74,107 +78,152 @@ import ca.uhn.fhir.model.primitive.IdDt;
 
 /*
 {
-	  "resourceType": "Communication",
-	  "id": "Communication1”,
-	  "meta": {
-	    "lastUpdated": "2016-06-13T07:39:34.000-04:00"
-	  },
-	  "contained": [
-	    {
-	      "resourceType": "RelatedPerson",
-	      "id": "RelatedPerson1",
-	      "patient": {
-	        "reference": "Patient/Patient1"
-	      },
-	      "relationship": {
-	        "coding": [
-	          {
-	            "system": "http://hl7.org/fhir/v3/RoleCode",
-	            "code": "PRNGUARD"
-	          }
-	        ]
-	      },
-	      "name": {
-	        "family": [
-	          "Doe"
-	        ],
-	        "given": [
-	          "Jane"
-	        ]
-	      },
-	      "telecom": [
-	        {
-	          "system": "email",
-	          "value": "mom@parent.com"
-	        },
-	        {
-	          "system": "phone",
-	          "value": "416-555-5555",
-	          "use": "mobile"
-	        },
-	        {
-	          "system": "phone",
-	          "value": "416-444-4444",
-	          "use": "home"
-	        }
-	      ]
-	    },
-	    {
-	      "resourceType": "Organization",
-	      "id": "OrgPHU1",
-	      "identifier": [
-	        {
-	          "system": "[id-system-local-base]/ca-on-panorama-phu-id",
-	          "value": "55"
-	        }
-	      ],
-	      "name": "Toronto Public Health"
-	    }
-	  ],
-	  "identifier": [
-	    {
-	      "system": "[id-system-local-base]/ca-on-panorama-imm-submission-id",
-	      "value": "1000212"
-	    }
-	  ],
-	  "sender": {
-	    "reference": "#RelatedPerson1"
-	  },
-	  "recipient": [
-	    {
-	      "reference": "#OrgPHU1"
-	    }
-	  ],
-	  "payload": [
-	    {
-	      "contentAttachment": {
-	        "contentType": "application/zip",
-	        "data": "…"
-	      }
-	    },
-	    {
-	      "contentReference":  {
-	        "reference": "Immunization/Immunization01"
-	      }
-	    },
-	    {
-	      "contentReference":  {
-	        "reference": "Immunization/Immunization02"
-	      }
-	    }
-	  ],
-	  "status": "completed",
-	  "sent": "2016-06-13T14:10:50-04:00",
-	  "received": "2016-06-13T14:10:50-04:00",
-	  "reason": [
-	    {
-	      "text": "Letter From PHU"
-	    }
-	  ],
-	  "subject": {
-	    "reference": "Patient/Patient1"
-	  }
-	}
+  "resourceType": "Communication",
+  "meta": {
+    "lastUpdated": "2016-06-13T07:39:34.000-04:00"
+  },
+  "contained": [
+    {
+      "resourceType": "Patient",
+      "id": "Patient1",
+      "identifier": [
+        {
+          "use": "official",
+          "system": "[id-system-global-base]/ca-on-patient-hcn",
+          "value": "9393881587"
+        },
+        {
+          "use": "secondary",
+          "system": "[code-system-global-base]/v2/0203",
+	   "code": "MR",
+          "value": "10000123"
+        }
+      ],
+      "name": [
+        {
+          "use": "official",
+          "family": [
+            "Doe"
+          ],
+          "given": [
+      		"John", {
+        "value": "Jacob",
+       	 "extension": {
+          "url": "http://hl7.org/fhir/StructureDefinition/iso21090-EN-qualifier",
+       	   "valueCode": "MID" 
+        }
+      		}
+    ]
+        }
+      ],
+      "gender": "male",
+      "birthDate": "2012-02-14",
+      "telecom": [
+        {
+          "system": "phone",
+          "value": "416-444-4444",
+          "use": "home"
+        }
+      ],
+"address": [
+        {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber",
+              "valueString": "535"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetName",
+              "valueString": "Sheppard"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetNameType",
+              "valueString": "Avenue"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-direction",
+              "valueString": "West"
+            },
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-unitID",
+              "valueString": "1907"
+            }
+          ],
+          "use": "home",
+          "line": [
+            "Second address line"
+          ],
+          "city": "Toronto",
+          "state": "ON",
+          "postalCode": "M3H4X8"
+        }
+      ],
+"communication": [
+        {
+          "language": "en-US"
+        }
+      ],
+"managingOrganization": [
+        {
+          "reference": "#Clinic1"
+        }
+      ]
+    },
+    {
+      "resourceType": "Organization",
+      "id": "Clinic1",
+      "identifier": [
+        {
+          "system": "urn:ietf:rfc:3986",
+          "value": "CLINICTEST"
+        }
+      ],
+      "name": "Family Health Team"
+    },
+    {
+	"resourceType": "Practioner",
+	"id": " Practioner1",
+	"identifier": [
+        {
+          "system": "https://www.hl7.org/FHIR/valueset-identifier-type.html",
+	   "type": "PRN",
+          "value": "123456"
+        }
+      ] ,
+      "name": [
+	 {
+	   "family": "Welby",
+	   "given": "Marcus"
+	 }
+]
+    }
+  ],
+  "identifier": [
+    {
+      "system": "http://hl7.org/fhir/v2/0203",
+      "code": "XX",
+      "value": "2345678901"
+    }
+  ],
+  "sender": {
+    "reference": "#Clinic1"
+  },
+  "payload": [
+    {
+      "contentAttachment": {
+        "contentType": "text/plain",
+        "data": "UGF5bG9hZCBEYXRhIEdvZXMgSGVyZQ==",
+	 "title": "Well Baby"
+      }
+    }
+  ],
+  "status": "completed",
+  "sent": "2016-06-13T14:10:50-04:00",
+  "received": "2016-06-13T14:10:50-04:00",
+  "subject": {
+    "reference": "#Patient1"
+  }
+
 */
 
 
@@ -199,20 +248,14 @@ public class FhirMessageBuilder {
 	 * information
 	 */
 	public FhirMessageBuilder( Sender sender, Destination destination ) {
-		this();
-		
+
 		if( sender != null && destination != null ) {
-			setSender(sender);
-			setDestination(destination);		
+			setSender( sender );
+			setDestination( destination );		
 			setMessageHeader( new MessageHeader() );
 		}
-	}
-	
-	/**
-	 * Constructor for a regular message using the FHIR Communication resource.
-	 */
-	public FhirMessageBuilder() {
-		setCommunication( new Communication() );	
+		
+		setCommunication( new Communication() );
 	}
 
 	public MessageHeader getMessageHeader() {
@@ -251,23 +294,23 @@ public class FhirMessageBuilder {
 	private void setCommunication( Communication communication ) {
 		Date timestamp = new Date(System.currentTimeMillis());
 		
-		// last updated Meta tag
+		// Sender : The Sender Organization (Organization)
+		communication.getSender().setResource( this.getSender().getFhirOrganization() );
+		
+		// Communication version Meta tag
 		communication.getMeta().setVersionId( fhirContext.getVersion().getVersion().getFhirVersionString() );
 
-		// Identifier 
-		//communication.setIdentifier(theIdentifier)
-		//TODO: need to find out what the Identifier is and how to set it.
+		//TODO: need to find out what the Identifier is and how to set it in Oscar for tracking 
+		// for now it is set to random
+		communication.addIdentifier().setUse(IdentifierUse.OFFICIAL)
+			.setSystem("[oscar URI]")
+			.setValue( IdType.newRandomUuid().toString() ); 
 		
-		// Status
-
+		// TODO: is there a status for sent communications. ie: in progress??
 		
 		// Timestamp Sent
 		communication.setSent( timestamp );
-		
-		// Timestamp Recieved
 
-		// Subject : The patient reference id for whom the data is related to.
-		
 		this.communication = communication;
 	}
 
@@ -300,18 +343,40 @@ public class FhirMessageBuilder {
 		}
 	}
 	
-	private void setResource( OscarFhirResource< ?, ? > oscarFhirResource ) {
-		System.out.println( "Resource Id " + oscarFhirResource.getFhirResource().getId() );
-		communication.getContained().add( (Immunization) oscarFhirResource.getFhirResource() );
-		communication.setSenderTarget( (Resource) oscarFhirResource.getFhirResource() );
-		// Sender : Related Person (Patient) 
+	private void setResource( BaseResource resource ) {
+
 		// Recipient : Entity sending to
-		// Payload : the attached resources
+
+		// Subject : Patient this communication is related to. (Patient)
+		if( resource instanceof org.hl7.fhir.dstu3.model.Patient ) {
+			
+			communication.getSubject().setResource( resource );
+
+		// Sender : the RelatedPerson is put here.  ie: mother of child.
+		} else if( resource instanceof org.hl7.fhir.dstu3.model.RelatedPerson ) {
+		
+			communication.getSender().setResource( resource );
+		
+		// all other Resources.  Attachment, Immunization, Notes etc... 
+		} else {
+			
+			addPayloadResource( resource );
+			
+		}
+
 	}
 
-	public void addResource( OscarFhirResource< ?, ? > oscarFhirResource ) {
-		setResource( oscarFhirResource );
-		getResources().add( oscarFhirResource );
+	public void addResource( OscarFhirResource< ?, ? > oscarFhirResource ) { 
+		if( oscarFhirResource != null ) {
+			addResource( oscarFhirResource.getFhirResource() );
+			getResources().add( oscarFhirResource );
+		}
+	}
+	
+	public void addResource( BaseResource resource ) {
+		if( resource != null ) {
+			setResource( resource );
+		}
 	}
 	
 	private static final String resourceToJson( org.hl7.fhir.dstu3.model.BaseResource resource ) {
@@ -351,6 +416,51 @@ public class FhirMessageBuilder {
 		communication.setStatus( communicationStatus );
 		this.communicationStatus = communicationStatus;
 	}
+
+	/**
+	 * Add any resource to the communication payload.
+	 */
+	public void addPayloadResource( BaseResource resource ) {
+		CommunicationPayloadComponent communicationPayloadComponent = new CommunicationPayloadComponent();
+		Reference reference = new Reference();
+		reference.setId( resource.getId() );
+		reference.setResource( resource );
+		communicationPayloadComponent.setContent( reference );
+		communication.addPayload( communicationPayloadComponent );
+	}
 	
+	/**
+	 * Add any variety of attachments to the Communication Payload.
+	 */
+	public void addAttachment( Attachment attachment ) {
+		communication.addPayload().setContent( attachment );
+	}
+
+	public void attachPDF( String pdf ) {
+		attachPDF( pdf.getBytes() );
+	}
 	
+	public void attachPDF( byte[] bytes ) {
+		Attachment attachment = new Attachment();
+		attachment.setTitle("PDF Attachment");
+		attachment.setContentType( "application/pdf" );
+		attachment.setData( bytes );
+		addAttachment( attachment );
+	}
+	
+	public void attachRichText( String rtf ) {
+		Attachment attachment = new Attachment();
+		attachment.setTitle("Rich Text Attachment");
+		attachment.setContentType( "text/rtf" );
+		attachment.setData( rtf.getBytes() );
+		addAttachment( attachment );
+	}
+	
+	public void attachText( String text ) {
+		Attachment attachment = new Attachment();
+		attachment.setTitle("Text Attachment");
+		attachment.setContentType( "text/plain" );
+		attachment.setData( text.getBytes() );
+		addAttachment( attachment );
+	}
 }

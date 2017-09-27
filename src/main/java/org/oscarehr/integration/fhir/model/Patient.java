@@ -36,15 +36,12 @@ import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
 import org.hl7.fhir.dstu3.model.Extension;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.HumanName.NameUse;
-import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Identifier.IdentifierUse;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.integration.fhir.utils.EnumUtil;
 import org.oscarehr.integration.fhir.utils.MiscUtils;
-
-import ca.uhn.fhir.context.FhirContext;
 
 /*
  *{
@@ -199,7 +196,6 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 
 	public Patient( org.oscarehr.common.model.Demographic from ) {
 		super( new org.hl7.fhir.dstu3.model.Patient(), from );
-		setFhirContext( FhirContext.forDstu3() );
 	}
 
 	public Patient( org.hl7.fhir.dstu3.model.Patient from ) {
@@ -218,7 +214,7 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 
 	@Override
 	protected void mapAttributes( Demographic demographic ) {
-		setId( demographic );
+		// setId( demographic );
 		setName( demographic );		
 		setGender( demographic );
 		setAddress( demographic );
@@ -243,6 +239,8 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 		patient.addIdentifier().setUse(IdentifierUse.SECONDARY)
 			.setSystem("[oscar URI]")
 			.setValue( getOscarResource().getDemographicNo() + "" );
+		
+		patient.setId( "#Patient_" + getOscarResource().getDemographicNo() + "" );
 	}
 	
 	@Override
@@ -336,57 +334,43 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 	}
 	
 	private void setHIN( Demographic demographic ) {
-		List<Identifier> identifiers = getFhirResource().getIdentifier();
-		
-		for( Identifier identifier : identifiers ) {
-			if( NameUse.OFFICIAL.equals( identifier.getUse() ) ) {
-				
-			}
-		}
+		String hin = MiscUtils.getFhirOfficialIdentifier( getFhirResource().getIdentifier() );
+		demographic.setHin( hin );
 	}
 	
 	/**
-	 * Only for embedded (or contained) CareProvider resources.
+	 * Only for embedded (or contained) CareProvider resources. Some FHIR Implementers discourage this.
 	 */
-//	public void addCareProvider( org.oscarehr.common.model.Provider careProvider ) {	
-//		org.oscarehr.integration.fhir.model.Practitioner practitioner = new org.oscarehr.integration.fhir.model.Practitioner( careProvider );
-//		addCareProvider( practitioner.getPractitioner() );
-//		
-//		if( provider == null ) {
-//			provider = new HashSet<Provider>();
-//		}
-//		
-//		this.provider.add( careProvider );
-//	}
-//
-//	public void addCareProvider( org.hl7.fhir.dstu3.model.Practitioner careProvider ) {
-//		getFhirResource().addContained( careProvider );
-//	}
-//
-//	public Set<Provider> getProviders() {
-//		return provider;
-//	}
-//
-//	public void addOrganization( org.hl7.fhir.dstu3.model.Organization organization ) {
-//		if( organization != null ) {
-//			getFhirResource().addContained( organization );
-//		}
-//	}
-//	
-//	public void addOrganization( Clinic clinic ) {
-//		if( clinic != null ) {
-//			Organization contactHandler = new Organization( clinic );
-//			getFhirResource().addContact( contactHandler );
-//		}
-//	}
-//
-//	public void setAlertNote(String alertNote) {
-//		Narrative narrative = new Narrative();
-//		narrative.setStatus( NarrativeStatus.GENERATED )
-//			.setDivAsString(alertNote);
-//		
-//		getFhirResource().setText( narrative );
-//	}
+	public void addCareProvider( org.oscarehr.common.model.Provider careProvider ) {	
+		addCareProvider( new org.oscarehr.integration.fhir.model.Practitioner( careProvider ) );
+	}
 
+	public void addCareProvider( org.hl7.fhir.dstu3.model.Practitioner careProvider ) {
+		getFhirResource().addGeneralPractitioner().setResource( careProvider );
+	}
+
+	public void addCareProvider( org.oscarehr.integration.fhir.model.Practitioner careProvider ) {
+		addCareProvider( careProvider.getFhirResource() );
+	}
+	
+	/**
+	 * Only for contained Organization resources. ie: clinic
+	 */
+	public void addOrganization( org.hl7.fhir.dstu3.model.Organization organization ) {
+		getFhirResource().addGeneralPractitioner().setResource( organization  );
+	}
+	
+	public void addOrganization( org.oscarehr.integration.fhir.model.Organization organization ) {
+		addOrganization( organization.getFhirResource() );
+	}
+	
+
+	public void addOrganization( org.oscarehr.common.model.Clinic clinic ) {
+		addOrganization( new Organization( clinic ) );
+	}
+	
+	public void addOrganization( org.oscarehr.common.model.Contact clinic ) {
+		addOrganization( new Organization( clinic ) );
+	}
 
 }

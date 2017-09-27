@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.hl7.fhir.dstu3.model.Communication.CommunicationStatus;
@@ -11,9 +12,15 @@ import org.hl7.fhir.dstu3.model.Immunization;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.oscarehr.common.model.Clinic;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ImmunizationInterface;
 import org.oscarehr.common.model.Prevention;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.integration.fhir.model.OscarFhirResource;
+import org.oscarehr.integration.fhir.model.Patient;
+
+import ca.uhn.fhir.context.FhirContext;
 
 public class FhirMessageBuilderTest {
 
@@ -30,9 +37,19 @@ public class FhirMessageBuilderTest {
 	@BeforeClass
 	public static void setUpBeforeClass() {
 		
-		// Sender data can be added through the constructor or by individual modifiers.
+		// SENDER
+		Clinic clinic = new Clinic();
+		clinic.setClinicAddress("123 Clinic Street");
+		clinic.setClinicCity("Vancouver");
+		clinic.setClinicProvince("BC");
+		clinic.setClinicPhone("778-567-3445");
+		clinic.setClinicFax("778-343-3453");
+		clinic.setClinicName("Test Medical Clinic");
+
 		Sender sender = new Sender(vendorName,softwareName,buildName,senderEndpoint);
+		sender.addClinic( clinic );
 		
+		// DESTINATION
 		// if there is only one destination it can be added through the constructor
 		// Use the addMessageDestination to add more.
 		Destination destination = new Destination(destinationName,destinationEndpoint);
@@ -43,13 +60,16 @@ public class FhirMessageBuilderTest {
 		fhirMessageBuilder = new FhirMessageBuilder( sender, destination );
 		
 		// set the reason for the message
-		fhirMessageBuilder.setReason( "The reason for this message is to text the FHIR builder operations." );
+		fhirMessageBuilder.setReason( "The reason for this message is to test the FHIR builder operation." );
 		
 		// communication status
 		fhirMessageBuilder.setCommunicationStatus(CommunicationStatus.COMPLETED);
 		
-		// build new Oscar resource to send
+		List<OscarFhirResource<?, ?>> resourceList = new ArrayList<OscarFhirResource<?, ?>>();
+		
+		// IMMUNIZATION
 		ImmunizationInterface<Prevention> immunization = new Prevention();
+		
 		immunization.setImmunizationDate( new Date(System.currentTimeMillis() ) );
 		immunization.setImmunizationRefused(Boolean.FALSE);
 		immunization.setImmunizationRefusedReason("Didnt want it.");
@@ -61,14 +81,52 @@ public class FhirMessageBuilderTest {
 		immunization.setLotNo("123456");
 		immunization.setManufacture("Pfizer");
 		immunization.setName("HPV Vaccine");
-	
+		
 		// convert the Oscar Model into a FHIR Resource.
-		OscarFhirResource<Immunization, Prevention> oscarFhirResource = new org.oscarehr.integration.fhir.model.Immunization( immunization );
-		List<OscarFhirResource<?, ?>> resourceList = new ArrayList<OscarFhirResource<?, ?>>();
-		resourceList.add(oscarFhirResource);
+		OscarFhirResource<Immunization, Prevention> oscarFhirResource = new org.oscarehr.integration.fhir.model.Immunization( immunization );	
+		
+		
+		// PATIENT
+		Demographic demographic = new Demographic();
+		demographic.setDemographicNo( 122343 );
+		demographic.setTitle( "Mr" );
+		demographic.setSex( "M" );
+		demographic.setFirstName( "Dennis" );
+		demographic.setLastName( "Warren" );
+		demographic.setAddress( "123 Abc Street");
+		demographic.setCitizenship( "Vancouver" );
+		demographic.setProvince( "BC" );
+		demographic.setPhone( "604-555-1212" );
+		demographic.setPhone2( "604-555-5555" );
+		demographic.setHin("9876446854");
+		demographic.setSpokenLanguage("English");
+		Calendar birthdate = Calendar.getInstance();
+		birthdate.set(1969, 6, 18);
+		demographic.setBirthDay(birthdate);
+		
+		Patient patient = new Patient( demographic );		
+		
+		//PRACTITIONER
+		Provider provider = new Provider();
+		provider.setProviderNo("8879");
+		provider.setFirstName( "Doug" );
+		provider.setLastName( "Ross" );
+		provider.setHsoNo( "12342" );
+		provider.setOhipNo( "12342" );
+		
+		// Practitioner practitioner = new Practitioner( provider );
+		
+		// Even though this is discouraged. The Practitioner Resource can be contained by the Patient Resource
+		patient.addCareProvider( provider );
+		
+		resourceList.add( oscarFhirResource );
+		resourceList.add( patient );
 		
 		// add the resource to the message.
 		fhirMessageBuilder.addResources( resourceList );
+		fhirMessageBuilder.attachPDF("Attaching a PDF document");
+		fhirMessageBuilder.attachRichText( "This is some rich text \n" );
+		fhirMessageBuilder.attachText( "This is a bit of plain text" );
 
 	}
 
@@ -77,17 +135,17 @@ public class FhirMessageBuilderTest {
 		fhirMessageBuilder = null;
 	}
 
-	@Test
+	// @Test
 	public void testGetMessageHeader() {		
 		System.out.println( fhirMessageBuilder.getMessageHeader().getSource().getEndpoint() );
 	}
 	
-	@Test
+	// @Test
 	public void testGetMessageHeaderJson() {		
 		System.out.println( fhirMessageBuilder.getMessageHeaderJson() );
 	}
 
-	@Test
+	// @Test
 	public void testGetCommunication() {
 		System.out.println( fhirMessageBuilder.getCommunication().getContained() );
 	}
@@ -97,7 +155,7 @@ public class FhirMessageBuilderTest {
 		System.out.println( fhirMessageBuilder.getCommunicationJson() );
 	}
 
-	@Test
+	// @Test
 	public void testGetSender() {	
 		assertEquals( vendorName, fhirMessageBuilder.getSender().getVendorName() );
 		assertEquals( softwareName, fhirMessageBuilder.getSender().getSoftwareName() );
@@ -105,16 +163,17 @@ public class FhirMessageBuilderTest {
 		assertEquals( senderEndpoint, fhirMessageBuilder.getSender().getEndpoint() );		
 	}
 
-	@Test
+	// @Test
 	public void testGetDestination() {		
 		System.out.println( fhirMessageBuilder.getDestination() );
 		assertEquals( destinationEndpoint2, fhirMessageBuilder.getDestination().getDestinations().get( destinationName2 ) );
 		assertEquals( destinationEndpoint, fhirMessageBuilder.getDestination().getDestinations().get( destinationName ) );
 	}
 
-	@Test
+	// @Test
 	public void testGetResources() {		
-		System.out.println( fhirMessageBuilder.getResources() );
+		System.out.println( fhirMessageBuilder.getCommunication().getContained() );
+		System.out.println( FhirContext.forDstu3().newJsonParser().setPrettyPrint(true).encodeResourceToString( fhirMessageBuilder.getCommunication().getContained().get(0) ) );
 	}
 
 }

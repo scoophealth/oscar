@@ -35,8 +35,6 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.oscarehr.common.model.Prevention;
 
-import ca.uhn.fhir.context.FhirContext;
-
 /*
  * 
  * PUBLIC SUBMISSION
@@ -120,7 +118,6 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 
 	public Immunization( org.oscarehr.common.model.ImmunizationInterface<?> from ){
 		super( new org.hl7.fhir.dstu3.model.Immunization(), (Prevention) from );
-		setFhirContext( FhirContext.forDstu3() );
 	}
 
 	public Immunization( org.hl7.fhir.dstu3.model.Immunization from ) {
@@ -180,7 +177,13 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 
 	@Override
 	protected void setId( org.hl7.fhir.dstu3.model.Immunization immunization ) {
-		
+		Integer immunizationId = getOscarResource().getId();
+		String id = "";
+		//TODO: runtime exception if this is null.
+		if( immunizationId != null ) {
+			id = "_" + immunizationId;
+		}
+		immunization.setId( "#Immunization" + id );
 	}
 
 	/**
