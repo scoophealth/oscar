@@ -1851,6 +1851,8 @@ insert into `secObjectName` (`objectName`) values ('_dashboardManager');
 insert into `secObjectName` (`objectName`) values ('_dashboardDisplay');
 insert into `secObjectName` (`objectName`) values ('_dashboardDrilldown');
 
+insert into `secObjectName` (`objectName`) values ('_admin.demographic');
+
 insert into `secObjPrivilege` values('receptionist', '_appointment', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', 'x', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_billing', 'x', 0, '999998');
@@ -1964,6 +1966,7 @@ insert into `secObjPrivilege` values('doctor','_eyeform','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_phr','x',0,'999998');
 insert into `secObjPrivilege` values('doctor','_admin.document','x',0,'999998');
 
+
 insert into `secObjPrivilege` values('admin', '_admin', 'x', 0, '999998');
 insert into `secObjPrivilege` values('admin','_masterLink','x',0,999998);
 insert into `secObjPrivilege` values('admin', '_casemgmt.issues', 'x', 0, '999998');
@@ -2035,12 +2038,13 @@ insert into `secObjPrivilege` values('admin','_pmm_agencyList','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_newCasemgmt.apptHistory','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_newCasemgmt.doctorName','x',0,'999998');
 
+
 insert into `secObjPrivilege` values('doctor','_admin.traceability','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_admin.traceability','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_appDefinition','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_demographicExport','x',0,'999998');
 insert into `secObjPrivilege` values('admin','_admin.document','x',0,'999998');
-
+insert into `secObjPrivilege` values('admin','_admin.demographic','u',0,'999998');
 
 
 

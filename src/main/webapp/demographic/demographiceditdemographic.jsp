@@ -2900,7 +2900,10 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 									<% }
                                     
                                    // end while %>
-								</select> <input type="button" onClick="newStatus1();" value="<bean:message key="demographic.demographiceditdemographic.btnAddNew"/>">
+								</select>
+                                                                <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.demographic" rights="r" reverse="<%=false%>">
+                                                                    <input type="button" onClick="newStatus1();" value="<bean:message key="demographic.demographiceditdemographic.btnAddNew"/>">
+                                                                </security:oscarSec>
 								</td>
                                                                     <%
                                                              // Put 0 on the left on dates
@@ -3008,8 +3011,10 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 									<% }
                                  
                                    // end while %>
-								</select> <input type="button" onClick="newStatus();" value="<bean:message key="demographic.demographiceditdemographic.btnAddNew"/>">
-								
+								</select>
+                                                                <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.demographic" rights="r" reverse="<%=false%>">
+                                                                    <input type="button" onClick="newStatus();" value="<bean:message key="demographic.demographiceditdemographic.btnAddNew"/>">
+								</security:oscarSec>
 								</td>
 								<%--
 								<td align="right" nowrap><b><bean:message
