@@ -883,9 +883,7 @@ public class ManageDocumentAction extends DispatchAction {
                             if (file.exists()) {
                             	contentBytes = FileUtils.readFileToByteArray(file);
                             } else {
-                            	if(!"text/html".equals(contentType)) {
-                            		throw new IllegalStateException("Local document doesn't exist for eDoc (ID " + d.getId() + "): " + file.getAbsolutePath());
-                            	}
+                            	throw new IllegalStateException("Local document doesn't exist for eDoc (ID " + d.getId() + "): " + file.getAbsolutePath());
                             }
                         }
 		} else // remote document
