@@ -43,6 +43,8 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
+
 public class EctConAddSpecialistAction extends Action {
 
 	private static final Logger logger=MiscUtils.getLogger();
@@ -121,8 +123,11 @@ public class EctConAddSpecialistAction extends Action {
 	}
 
 	private boolean referralNoValid(String referralNo) {
+		
+		String pattern = OscarProperties.getInstance().getProperty("referral_no.pattern", "\\d{6}");
+		
 		try {
-			if (referralNo.length() == 6 &&	referralNo.matches("\\d*"))
+			if (referralNo.matches(pattern))
 				return true;
 		} catch (Exception e) {
 			MiscUtils.getLogger().info("Specified referral number invalid (" + referralNo + ")", e);

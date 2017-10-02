@@ -67,6 +67,9 @@ if(!authed) {
     
     List<EForm> eforms = eformDao.findAll(true);
     pageContext.setAttribute("eforms", eforms);
+    
+    String referralNoMsg = oscar.OscarProperties.getInstance().getProperty("referral_no.msg");
+    
 %>
 
 <html:html locale="true">
@@ -286,9 +289,9 @@ function BackToOscar() {
 										key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.referralNoInUse" /></span><br />
 								<% } else if (request.getAttribute("refnoinvalid") != null) { %>
 									<span style="color: red;"><bean:message
-										key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.referralNoInvalid" /></span><br />
+										key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.referralNoInvalid" arg0="<%=referralNoMsg %>" /></span><br />
 								<% } %>
-								<html:text name="EctConAddSpecialistForm" property="referralNo" maxlength="6" />
+								<html:text name="EctConAddSpecialistForm" property="referralNo" />
 							</td>
 						</tr>
 						<tr>
