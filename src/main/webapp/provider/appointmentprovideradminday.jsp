@@ -575,7 +575,13 @@ function review(key) {
 
 
 </script>
-
+<style type="text/css">
+.ds-btn{
+	background-color: #f4ead7;
+    border: 1px solid #0097cf;
+    font-size: 11px;
+}
+</style>
 
 <%
 	if (OscarProperties.getInstance().getBooleanProperty("indivica_hc_read_enabled", "true")) {
@@ -1512,6 +1518,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 				<c:set value="true" var="hideReason" />
 		</oscar:oscarPropertiesCheck>	
 </b>
+          <button class="ds-btn" type="button" data-provider_no="<%=curProvider_no[nProvider]%>">DS</button>
       <% } %>
 
           <%
@@ -2120,6 +2127,7 @@ start_time += iSm + ":00";
           <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=StringEscapeUtils.escapeJavaScript(curProviderName[nProvider])%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>" >
           <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperation=searchappointmentday" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>"-->
           <%=curProviderName[nProvider]%></a></b>
+          <button class="ds-btn" type="button" data-provider_no="<%=curProvider_no[nProvider]%>">DS</button>		  
       <% } %>
 
           <% if(!userAvail) { %>
@@ -2257,6 +2265,24 @@ document.onkeydown=function(e){
         }
 }
 
+</script>
+<script>
+jQuery(document).ready(function(){
+	jQuery('.ds-btn').click(function(){
+		//var provider_no = '<%=curUser_no%>';
+		var provider_no = jQuery(this).attr('data-provider_no');
+		var y = '<%=request.getParameter("year")%>';
+		var m = '<%=request.getParameter("month")%>';
+		var d = '<%=request.getParameter("day")%>';
+		var sTime = 8;
+		var eTime = 20;
+		var dateStr = y + '-' + m + '-' + d;
+		var url = '<%=request.getContextPath()%>/report/reportdaysheet.jsp?dsmode=all&provider_no=' + provider_no
+				+ '&sdate=' + dateStr + '&edate=' + dateStr + '&sTime=' + sTime + '&eTime=' + eTime;
+		popupPage(600,750, url);
+		return false;
+	});
+});
 </script>
 <!-- end of keycode block -->
 <% if (OscarProperties.getInstance().getBooleanProperty("indivica_hc_read_enabled", "true")) { %>
