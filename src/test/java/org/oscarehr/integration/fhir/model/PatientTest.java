@@ -89,7 +89,7 @@ public class PatientTest {
 		assertEquals( AdministrativeGender.MALE, patient.getFhirResource().getGender() );
 	}
 
-	@Test
+	// @Test
 	public void testGetFhirpatientJSONDstu3() {
 		logger.info( "testGetFhirpatientJSONDstu3" );
 		logger.info( patient.getFhirJSON() );

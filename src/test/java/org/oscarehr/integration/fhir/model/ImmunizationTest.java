@@ -82,7 +82,7 @@ public class ImmunizationTest {
 		assertEquals( date, oscarFhirResource.getFhirResource().getDate() );
 	}
 
-	@Test
+	// @Test
 	public void testGetFhirImmunizationJSONDstu3() {
 		logger.info( "testGetFhirImmunizationJSONDstu3" );
 		logger.info( oscarFhirResource.getFhirJSON() );
