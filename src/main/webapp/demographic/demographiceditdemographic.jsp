@@ -742,6 +742,22 @@ function updatePaperArchive(paperArchiveSel) {
 	}
 }
 
+function updatePatientStatusDate() { 
+    var d = new Date(); 
+    document.updatedelete.patientstatus_date_year.value = d.getFullYear(); 
+    var mth = "" + (d.getMonth() + 1);
+    if(mth.length == 1) {
+    	mth = "0" + mth;
+    }
+    document.updatedelete.patientstatus_date_month.value = mth; 
+    var day = "" + d.getDate();
+    if(day.length == 1) {
+    	day = "0" + day;
+    }
+    document.updatedelete.patientstatus_date_day.value = day; 
+} 
+
+
 jQuery(document).ready(function() {
 	var addresses;
 	
@@ -2936,17 +2952,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                                              }
                                                              rosterTerminationReason = demographic.getRosterTerminationReason();
 
-                                                             String patientStatusDateYear="";
-                                                             String patientStatusDateMonth="";
-                                                             String patientStatusDateDay="";
-                                                             if (demographic.getPatientStatusDate()!=null){
-                                                                dateCal.setTime(demographic.getPatientStatusDate());
-                                                                patientStatusDateYear = decF.format(dateCal.get(GregorianCalendar.YEAR));
-                                                                // Month and Day
-                                                                decF.applyPattern("00");
-                                                                patientStatusDateMonth = decF.format(dateCal.get(GregorianCalendar.MONTH)+1);
-                                                                patientStatusDateDay   = decF.format(dateCal.get(GregorianCalendar.DAY_OF_MONTH));
-                                                             }
+                                                             
                                                                     %>
 
 								<td align="right" nowrap><b><bean:message
@@ -2987,7 +2993,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                 String patientStatus = demographic.getPatientStatus();
                                  if(patientStatus==null) patientStatus="";%>
                                 <input type="hidden" name="initial_patientstatus" value="<%=patientStatus%>">
-								<select name="patient_status" style="width: 120" <%=getDisabled("patient_status")%>>
+								<select name="patient_status" style="width: 120" <%=getDisabled("patient_status")%> onChange="updatePatientStatusDate()">
 									<option value="AC"
 										<%="AC".equals(patientStatus)?" selected":""%>>
 									<bean:message key="demographic.demographiceditdemographic.optActive"/></option>
@@ -3016,10 +3022,26 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                                                     <input type="button" onClick="newStatus();" value="<bean:message key="demographic.demographiceditdemographic.btnAddNew"/>">
 								</security:oscarSec>
 								</td>
-								<%--
+								
 								<td align="right" nowrap><b><bean:message
 									key="demographic.demographiceditdemographic.PatientStatusDate" />: </b></td>
 								<td align="left">
+									<%
+									 decF.applyPattern("0000");
+
+                                    GregorianCalendar dateCal=new GregorianCalendar();
+									String patientStatusDateYear="";
+                                    String patientStatusDateMonth="";
+                                    String patientStatusDateDay="";
+                                    if (demographic.getPatientStatusDate()!=null){
+                                       dateCal.setTime(demographic.getPatientStatusDate());
+                                       patientStatusDateYear = decF.format(dateCal.get(GregorianCalendar.YEAR));
+                                       // Month and Day
+                                       decF.applyPattern("00");
+                                       patientStatusDateMonth = decF.format(dateCal.get(GregorianCalendar.MONTH)+1);
+                                       patientStatusDateDay   = decF.format(dateCal.get(GregorianCalendar.DAY_OF_MONTH));
+                                    }
+									%>
                                                                     <input  type="text" name="patientstatus_date_year" size="4" maxlength="4" value="<%=patientStatusDateYear%>">
                                                                     <input  type="text" name="patientstatus_date_month" size="2" maxlength="2" value="<%=patientStatusDateMonth%>">
                                                                     <input  type="text" name="patientstatus_date_day" size="2" maxlength="2" value="<%=patientStatusDateDay%>">
@@ -3027,7 +3049,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                                         </tr>
                                                         <tr>
                                                                 <td>&nbsp;</td>
-                                                                --%>
+                                                                
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formChartNo" />:</b></td>
 								<td align="left"><input type="text" name="chart_no"
