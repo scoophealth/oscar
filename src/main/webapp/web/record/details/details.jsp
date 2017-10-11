@@ -351,7 +351,9 @@
 			<select class="form-control form-control-details" title="<bean:message key="demographic.demographiceditdemographic.formRosterStatus"/>" ng-model="page.demo.rosterStatus" ng-options="rs.value as rs.label for rs in page.demo.rosterStatusList" style="width:150px">
 				<option value="">--</option>
 			</select>
-			<button type="button" class="btn btn-sm" title="Add new roster status" ng-click="showAddNewRosterStatus()"><bean:message key="global.btnAdd"/></button>
+
+			<button type="button" class="btn btn-sm" title="Add new roster status" ng-click="showAddNewRosterStatus()" ng-hide="page.hideAddStatus"><bean:message key="global.btnAdd"/></button>
+
 			<button type="button" class="btn flat-btn" ng-click="showEnrollmentHistory()"><bean:message key="demographic.demographiceditdemographic.msgEnrollmentHistory"/></button>			<div style="position: absolute; right: 55px; top: 0px; z-index: 1; background-color: #EEEEEE; padding: 5px;" ng-show="page.showAddNewRosterStatus">
 				<input type="text" class="form-control" placeholder="New Roster Status" ng-model="page.newRosterStatus"/>
 				<button type="button" class="btn" ng-click="addNewRosterStatus()"><bean:message key="web.record.details.addStatus"/></button>
@@ -377,7 +379,9 @@
 			<select class="form-control form-control-details" title="Patient Status" ng-model="page.demo.patientStatus" ng-options="ps.value as ps.label for ps in page.demo.patientStatusList" ng-blur="checkPatientStatus()" style="width:150px">
 				<option value="">--</option>
 			</select>
-			<button type="button" class="btn btn-sm" title="Add new patient status" ng-click="showAddNewPatientStatus()">Add</button>
+
+			<button type="button" class="btn btn-sm" title="Add new patient status" ng-click="showAddNewPatientStatus()" ng-hide="page.hideAddStatus"><bean:message key="global.btnAdd"/></button>
+
 			<div style="position: absolute; right: 55px; top: 0px; z-index: 1; background-color: #EEEEEE; padding: 5px;" ng-show="page.showAddNewPatientStatus">
 				<input type="text" class="form-control" placeholder="New Patient Status" ng-model="page.newPatientStatus"/>
 				<button type="button" class="btn" ng-click="addNewPatientStatus()">Add Status</button>

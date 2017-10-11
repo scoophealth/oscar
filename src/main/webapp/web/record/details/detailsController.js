@@ -37,7 +37,11 @@ oscarApp.controller('DetailsCtrl', function ($scope,$http,$location,$stateParams
 	securityService.hasRight("_demographic", "u", demo.demographicNo).then(function(data){
 		page.cannotChange = !data;
 	});
-	
+
+        securityService.hasRight("_admin.demographic", "u").then(function(data){
+           page.hideAddStatus = !data;
+        });
+
 	//disable click and keypress if user only has read-access
 	$scope.checkAction = function(event){
 		if (page.cannotChange) {

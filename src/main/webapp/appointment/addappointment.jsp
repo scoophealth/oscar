@@ -137,7 +137,8 @@
 
 	LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
 	LookupList reasonCodes = lookupListManager.findLookupListByName(loggedInInfo, "reasonCode");
-
+	pageContext.setAttribute("reasonCodes", reasonCodes);
+	
     int iPageSize=5;
 
     ApptData apptObj = ApptUtil.getAppointmentFromSession(request);
@@ -925,24 +926,21 @@ function pasteAppt(multipleSameDayGroupAppt) {
         <li class="row deep">
             <div class="label"><bean:message key="Appointment.formReason" />:</div>
             <div class="input">
-                <select name="reasonCode">
-				    <%
-				    if(reasonCodes != null) {
-				    	for(LookupListItem reasonCode : reasonCodes.getItems()) {
-				    		if(reasonCode.isActive()) {
-				    %>
-				    <option value="<%=reasonCode.getId()%>"
-				    				<%=reasonCode.getValue().equals("Others")?"selected":""%>>
-				    	<%=StringEscapeUtils.escapeHtml(reasonCode.getValue())%>
-				    </option>
-				    <%
-				    		} }
-				    } else {
-					%>
-						<option value="-1">Other</option>
-					<%
-					}
-					%>
+                <select name="reasonCode">                
+	                <c:choose>
+	                	<c:when test="${ not empty reasonCodes  }">
+	                		<c:forEach items="${ reasonCodes.items }" var="reason" >
+	                		<c:if test="${ reason.active }">
+	                			<option value="${ reason.id }" id="${ reason.value }" >
+	                				<c:out value="${ reason.label }" />
+	                			</option>
+	                		</c:if>
+	                		</c:forEach>     
+	                	</c:when>
+	                	<c:otherwise>
+	                		<option value="-1">Other</option>
+	                	</c:otherwise>
+	                </c:choose>
 				</select>
 				</br>
 				<textarea id="reason" name="reason" tabindex="2" rows="2" wrap="virtual" cols="18"><%=bFirstDisp?"":request.getParameter("reason").equals("")?"":request.getParameter("reason")%></textarea>
