@@ -565,13 +565,31 @@ function changeGroup(s) {
 		popupPage(600,650,"../appointment/appointmentsearch.jsp?provider_no="+s);
 	}
 	function review(key) {
-		  if(self.location.href.lastIndexOf("?") > 0) {
-		    if(self.location.href.lastIndexOf("&viewall=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&viewall="));
-		    else a = self.location.href;
-		  } else {
-		    a="providercontrol.jsp?year="+document.jumptodate.year.value+"&month="+document.jumptodate.month.value+"&day="+document.jumptodate.day.value+"&view=0&displaymode=day&dboperation=searchappointmentday&site=" + "<%=(selectedSite==null? "none" : selectedSite)%>";
-		  }
-		  self.location.href = a + "&viewall="+key ;
+		var searchKey = null; 
+	
+		if(key == '0') {
+			searchKey = '1';
+		} else {
+			searchKey = '0';
+		}
+		
+		var newUrl = null;
+		
+		var searchStr = 'viewall=' + searchKey;
+		if(self.location.href.search(searchStr) > -1) {
+			//first case, viewall=searchKey -> switch to key
+			newUrl = self.location.href;
+			newUrl = newUrl.replace(searchStr,'viewall=' + key);
+		} else {
+			//do we already have it
+			searchStr = 'viewall=';
+			if(self.location.href.search(searchStr) == -1) {
+				newUrl = self.location.href + "&viewall=" + key;
+			}
+		}
+		
+		  self.location.href = newUrl;
+		  
 		}
 
 </script>
