@@ -44,6 +44,7 @@ import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.ClinicDAO;
@@ -54,6 +55,7 @@ import org.oscarehr.common.dao.TicklerDao;
 import org.oscarehr.common.dao.TicklerTextSuggestDao;
 import org.oscarehr.common.dao.TicklerUpdateDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.CustomFilter;
 import org.oscarehr.common.model.Provider;
@@ -130,6 +132,9 @@ public class TicklerManager {
 	
 	@Autowired
 	private TicklerCategoryDao ticklerCategoryDao;
+	
+	@Autowired
+	private AdmissionManager admissionManager;
 	
 	public List<TicklerCategory> getActiveTicklerCategories( LoggedInInfo loggedInInfo ) {
 		checkPrivilege(loggedInInfo, PRIVILEGE_READ);
@@ -280,11 +285,12 @@ public class TicklerManager {
           
         if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {        	
         	//filter based on facility
-        	results = ticklerFacilityFiltering(loggedInInfo,results);
-        	
-        	//filter based on caisi role access
-            results = filterTicklersByAccess(results,providerNo,programId);
-        }    
+        	results = ticklerFacilityFiltering(loggedInInfo,results);	
+        }
+        
+        
+    	//filter based on caisi role access
+        results = filterTicklersByAccess(loggedInInfo, results,providerNo,programId);
         
         //--- log action ---
         for(Tickler tickler:results) {
@@ -334,12 +340,69 @@ public class TicklerManager {
         return results;
     }
     
-    protected List<Tickler> filterTicklersByAccess(List<Tickler> ticklers, String providerNo, String programNo) {
+    private  boolean admissionInProgramDomain(List<ProgramProvider> ppList, List<Admission> admissions) {
+    	for(ProgramProvider pp:ppList) {
+    		for(Admission admission: admissions) {
+    			if(admission.getProgramId().intValue() == pp.getProgramId().intValue()) {
+    				return true;
+    			}
+    		}
+    	}
+    	return false;
+    }
+    
+    //new method - common sense filtering for program stuff - not role based though
+    protected List<Tickler> filterTicklersByAccess(LoggedInInfo loggedInInfo, List<Tickler> ticklers, String providerNo, String programNo) {
     	List<Tickler> filteredTicklers = new ArrayList<Tickler>();
 
     	if (ticklers.isEmpty()) {
     		return ticklers;
     	}    	
+    	
+    	List<ProgramProvider> ppList = programProviderDAO.getProgramProviderByProviderNo(loggedInInfo.getLoggedInProviderNo());
+    	
+    
+		 for (Iterator<Tickler> iter = ticklers.iterator(); iter.hasNext();) {
+		    Tickler tickler =iter.next();
+		 
+		    String programId =  String.valueOf(tickler.getProgramId());
+		    
+		    if(programId==null || "".equals(programId) || "null".equals(programId)) {
+	        	filteredTicklers.add(tickler);
+	        	continue;
+	        }
+	        
+		    if(loggedInInfo.getLoggedInProviderNo().equals(tickler.getTaskAssignedTo())) {
+		    	filteredTicklers.add(tickler);
+		    	continue;
+		    }
+		    
+		    if(loggedInInfo.getLoggedInProviderNo().equals(tickler.getCreator())) {
+		    	filteredTicklers.add(tickler);
+		    	continue;
+		    }
+		    
+		    List<Admission> admissions = admissionManager.getCurrentAdmissions(tickler.getDemographicNo());
+		    
+		    if(admissionInProgramDomain(ppList, admissions)) {
+		    	filteredTicklers.add(tickler);
+		    	continue;
+		    }
+		    
+		 }   	 
+    	
+		 return filteredTicklers;
+    }
+    
+    
+    //original method - role based filtering
+    protected List<Tickler> filterTicklersByAccess2(LoggedInInfo loggedInInfo, List<Tickler> ticklers, String providerNo, String programNo) {
+    	   
+    	List<Tickler> filteredTicklers = new ArrayList<Tickler>();
+
+    	if (ticklers.isEmpty()) {
+    		return ticklers;
+    	}   
     	
 	    String programId = "";
 	    //iterate through the tickler list
