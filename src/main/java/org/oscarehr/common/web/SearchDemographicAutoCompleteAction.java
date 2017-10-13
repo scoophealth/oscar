@@ -26,15 +26,11 @@
 package org.oscarehr.common.web;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -46,11 +42,14 @@ import org.oscarehr.common.dao.DemographicCustDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicCust;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.AppointmentUtil;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
 import oscar.OscarProperties;
 import oscar.oscarRx.data.RxProviderData;
 import oscar.oscarRx.data.RxProviderData.Provider;
@@ -93,8 +92,22 @@ public class SearchDemographicAutoCompleteAction extends Action {
         
 
         List<Demographic> list = null;
-
-        if (searchStr.length() == 8 && searchStr.matches("([0-9]*)")) {
+        
+        
+        
+        
+    	DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+    	
+    	List<String> searchTypes = new ArrayList<String>(); searchTypes.add("search_name");
+    	List<String> searchTerms = new ArrayList<String>(); searchTerms.add(searchStr);
+    	
+    	if (searchStr.length() == 8 && searchStr.matches("([0-9]*)")) {
+            list = demographicDao.searchMergedDemographicByDOB(searchStr.substring(0,4)+"-"+searchStr.substring(4,6)+"-"+searchStr.substring(6,8), 100, 0,providerNo,outOfDomain);
+        } else {
+        	list = demographicManager.doMultiSearch(LoggedInInfo.getLoggedInInfoFromSession(request), searchTypes, searchTerms, 100, 0, providerNo, outOfDomain, activeOnly, !activeOnly);
+        }
+/*
+    	if (searchStr.length() == 8 && searchStr.matches("([0-9]*)")) {
             list = demographicDao.searchMergedDemographicByDOB(searchStr.substring(0,4)+"-"+searchStr.substring(4,6)+"-"+searchStr.substring(6,8), 100, 0,providerNo,outOfDomain);
         } 
         else if( activeOnly ) {
@@ -114,7 +127,7 @@ public class SearchDemographicAutoCompleteAction extends Action {
         		MiscUtils.getLogger().warn("More results exists than returned");
         	}
         }
-        
+*/
         
         
         List<HashMap<String, String>> secondList= new ArrayList<HashMap<String,String>>();
