@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. 
+	All Rights Reserved. This software is published under the GPL GNU General 
+	Public License. This program is free software; you can redistribute it and/or 
+	modify it under the terms of the GNU General Public License as published 
+	by the Free Software Foundation; either version 2 of the License, or (at 
+	your option) any later version. This program is distributed in the hope that 
+	it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty 
+	of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General 
+	Public License for more details. * * You should have received a copy of the 
+	GNU General Public License along with this program; if not, write to the 
+	Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, 
+	USA. Document : hivFlowsheet.xml Created on : December 14, 2006, 11:00 AM 
+	Author : Jay Gallagher Description: Define hiv flowsheet icd code is 406 
+	but i could not find a reference for that -->
+<flowsheet name="hepc" display_name="Hepatitis C Flowsheet"
+	dxcode_triggers="icd9:0705" warning_colour="#E00000"
+	recommendation_colour="yellow">
+
+	<indicator key="LOW" colour="#9999FF" />
+	<indicator key="HIGH" colour="orange" />
+	<indicator key="HIGH 1" colour="#E00000" />
+
+	<item measurement_type="HCVA" display_name="HCV Antibody" guideline="" graphable="yes" value_name="Postive">
+	</item>
+	<measurement type="HCVA" typeDesc="HCV Antibody"
+		typeDisplayName="HCV Antibody" measuringInstrc="Positive">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+	
+	
+	<item measurement_type="HPCP" display_name="PCR" guideline="" graphable="yes" value_name="Postive">
+	</item>
+	
+	<item measurement_type="HPCG" display_name="Geno Type" guideline="numeric (1-6)" graphable="yes" value_name="Geno Type Number">
+	</item>
+	
+	<item measurement_type="HCGA" display_name="Geno Sub Type" guideline="A B C" graphable="yes" value_name="Geno Sub Type">
+	</item>
+	
+	<measurement type="HCGA" typeDesc="Geno Sub Type"
+		typeDisplayName="Geno Sub Type" measuringInstrc="A,B,C">
+		<validationRule name="ABC" regularExp="A|B|C" />
+	</measurement>
+
+
+    <item measurement_type="CIRR" display_name="Cirrhosis" guideline="" graphable="yes" value_name="Present">
+	</item>
+	<measurement type="CIRR" typeDesc="Cirrhosis"
+		typeDisplayName="Cirrhosis" measuringInstrc="Present">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+
+
+	<item measurement_type="FIBM" display_name="Fibrosis stage" guideline="0 to 100 kpa" graphable="yes" value_name="Fibrosis stage">	
+		<ruleset>
+          <rule indicationColor="HIGH">
+            <condition type="getDataAsDouble" param="FIBS" value="&gt;1" />
+          </rule>
+        </ruleset>
+	</item>
+	<measurement type="FIBM" typeDesc="Fibrosis stage"
+		typeDisplayName="Fibrosis stage" measuringInstrc="">
+		<validationRule name="Numeric Value: 0 to 100" maxValue="100" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+
+	<item measurement_type="FIBS" display_name="Fibroscan Score" guideline="0 to 4, repeat annually" graphable="yes" value_name="Fibroscan Score">	
+		<rules>
+			<recommendation strength="warning">
+				<condition type="monthrange" value="&gt;12" />
+			</recommendation>
+			<recommendation strength="recommendation">
+				<condition type="monthrange" value="10-12" />
+			</recommendation>
+			<recommendation strength="warning">
+				<condition type="monthrange" value="-1" />
+			</recommendation>
+		</rules>
+	</item>
+	<measurement type="FIBS" typeDesc="Fibroscan Score"
+		typeDisplayName="Fibroscan Score" measuringInstrc="">
+		<validationRule name="Numeric Value: 0 to 4" maxValue="4" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	
+
+	<item measurement_type="APRI" display_name="APRI score &lt;a target=_new href='http://www.hepatitisc.uw.edu/page/clinical-calculators/apri'&gt;-calculator-&lt;/a&gt;" guideline="0-20" graphable="yes" value_name="APRI score">	
+		<ruleset>
+          <rule indicationColor="HIGH">
+            <condition type="getDataAsDouble" param="FIBS" value="&gt;0.7" />
+          </rule>
+        </ruleset>
+	</item>
+	<measurement type="APRI" typeDesc="APRI score"
+		typeDisplayName="APRI score" measuringInstrc="">
+		<validationRule name="Numeric Value: 0 to 20" maxValue="20" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	 
+	<item measurement_type="FIB4" display_name="FIB4 &lt;a target=_new href='http://www.hepatitisc.uw.edu/page/clinical-calculators/fib-4'&gt;-calculator-&lt;/a&gt;" guideline="0 to 20" graphable="yes" value_name="FIB4">	
+		<ruleset>
+          <rule indicationColor="HIGH">
+            <condition type="getDataAsDouble" param="FIB4" value="&gt;1.44" />
+          </rule>
+        </ruleset>
+	</item>
+	<measurement type="FIB4" typeDesc="FIB4"
+		typeDisplayName="FIB4" measuringInstrc="">
+		<validationRule name="Numeric Value: 0 to 10" maxValue="10" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+
+		
+
+	<item measurement_type="USND" display_name="Ultrasound" guideline="at baseline and q 6 months if cirrhotic" graphable="no" value_name="Completed">
+		<rules>
+			<recommendation strength="warning">
+				<condition type="monthrange" value="&gt;6" />
+			</recommendation>
+			<recommendation strength="recommendation">
+				<condition type="monthrange" value="5-6" />
+			</recommendation>
+			<recommendation strength="warning">
+				<condition type="monthrange" value="-1" />
+			</recommendation>
+		</rules>
+	</item>
+	<measurement type="USND" typeDesc="Ultrasound" typeDisplayName="Ultrasound" measuringInstrc="Completed">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+	
+	<item measurement_type="TXHX" display_name="Tx Hx" guideline="" graphable="no" value_name="Tx Hx">
+	</item>
+	<measurement type="TXHX" typeDesc="Tx Hx" typeDisplayName="Tx Hx" measuringInstrc="">
+	  <validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+	
+	<item measurement_type="HCPC" display_name="Hep C Pharmacare Criteria" guideline="" graphable="yes" value_name="Criteria Met">
+	</item>
+	<measurement type="HCPC" typeDesc="Hep C Pharmacare Criteria"
+		typeDisplayName="Hep C Pharmacare Criteria" measuringInstrc="Criteria Met">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+	<!--  
+	<item measurement_type="HCRR" display_name="HEP C Rx Referral" guideline="" graphable="yes" value_name="Has Referral">
+	</item>
+	<measurement type="HCRR" typeDesc="HEP C Rx Referral" typeDisplayName="HEP C Rx Referral" measuringInstrc="Has Referral">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+	
+	<item measurement_type="HCTI" display_name="Hep C Treatment Initiated" guideline="" graphable="yes" value_name="Criteria Met">
+	</item>
+	<measurement type="HCTI" typeDesc="Hep C Treatment Initiated" typeDisplayName="Hep C Treatment Initiated" measuringInstrc="Treatment Initiated">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+	
+	<item measurement_type="HAHB" display_name="HAV, HBV immunization" guideline="" graphable="yes" value_name="Reviewed">
+	</item>
+	<measurement type="HAHB" typeDesc="HAV, HBV immunization" typeDisplayName="HAV, HBV immunization" measuringInstrc="Reviewed">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+	-->
+	<item measurement_type="HAIM" display_name="Hepatitis A immunity" guideline="" graphable="yes" value_name="Immune">
+	</item>
+	<measurement type="HAIM" typeDesc="Hepatitis A immunity" typeDisplayName="Hepatitis A immunity" measuringInstrc="Immune">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>		
+			
+	<item measurement_type="HBIM" display_name="Hepatitis B immunity" guideline="" graphable="yes" value_name="Immune">
+	</item>
+	<measurement type="HBIM" typeDesc="Hepatitis B immunity" typeDisplayName="Hepatitis B immunity" measuringInstrc="Immune">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>	
+	
+	<item measurement_type="AST" display_name="AST" guideline="" graphable="yes" value_name="AST">
+	</item>
+	
+	<item measurement_type="ALT" display_name="ALT" guideline="" graphable="yes" value_name="ALT">
+	</item>
+	
+	<item measurement_type="ALP" display_name="ALP" guideline="" graphable="yes" value_name="ALP">
+	</item>
+	
+	<item measurement_type="Hb" display_name="Hb" guideline="" graphable="yes" value_name="Hb">
+	</item>
+	
+	<item measurement_type="PLT" display_name="PLT" guideline="" graphable="yes" value_name="PLT">
+	</item>
+	<measurement type="PLT" typeDesc="Platelets" typeDisplayName="Platelets" measuringInstrc="x10 9/L Range 150-400">
+		<validationRule name="Numeric Value greater than or equal to 0" minValue="0" isNumeric="1" />
+	</measurement>
+
+
+	<item measurement_type="WBC" display_name="WBC" guideline="" graphable="yes" value_name="WBC">
+	</item>
+	<measurement type="WBC" typeDesc="WBC" typeDisplayName="White Cell Count" measuringInstrc="x10 9/L Range 4-11">
+		<validationRule name="Numeric Value greater than or equal to 0" minValue="0" isNumeric="1" />
+	</measurement>
+
+	<item measurement_type="NEUT" display_name="Neutrophils" guideline="" graphable="yes" value_name="Neutrophils">
+	</item>
+	<measurement type="NEUT" typeDesc="Neutrophils" typeDisplayName="Neutrophils" measuringInstrc="">
+		<validationRule name="Numeric Value greater than or equal to 0" minValue="0" isNumeric="1" />
+	</measurement>
+
+	<item measurement_type="INR" display_name="INR" guideline="" graphable="yes" value_name="INR">
+	</item>
+
+	<item measurement_type="EGFR" display_name="EGFR" guideline="" graphable="yes" value_name="GFR">
+	</item>
+
+	<item measurement_type="TSH" display_name="TSH" guideline="" graphable="yes" value_name="TSH">
+	</item>
+	
+	
+						
+	<item measurement_type="HIV" display_name="HIV" guideline="" graphable="yes" value_name="Present">
+	</item>
+	<measurement type="HIV" typeDesc="HIV" typeDisplayName="HIV" measuringInstrc="Yes/No">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>	
+	
+	<item measurement_type="HEPB" display_name="Hepatitis B" guideline="" graphable="yes" value_name="Present">
+	</item>
+	<measurement type="HEPB" typeDesc="Hepatitis B" typeDisplayName="Hepatitis B" measuringInstrc="Yes/No">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>	
+	  
+	<item measurement_type="DEPR" display_name="Psych/Depression" guideline="" graphable="yes" value_name="Present">
+	</item>
+	
+	<!-- 			
+	<item measurement_type="CVD" display_name="CVD" guideline="" graphable="yes" value_name="Present">
+	</item>		
+	<item measurement_type="HTN" display_name="HTN" guideline="" graphable="yes" value_name="Present">
+	</item>
+	<item measurement_type="DM" display_name="DM" guideline="" graphable="yes" value_name="Present">
+	</item>
+	
+	
+	  
+	<item measurement_type="RENA" display_name="Renal Disease" guideline="" graphable="yes" value_name="Present">
+	</item>
+	<measurement type="RENA" typeDesc="Renal Disease" typeDisplayName="Renal Disease" measuringInstrc="Yes/No">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>	
+	  -->
+	  
+	<item measurement_type="AUDI" display_name="Alcohol Use Disorder" guideline="" graphable="yes" value_name="Present">
+	</item>
+	<measurement type="AUDI" typeDesc="Alcohol Use Disorder" typeDisplayName="Alcohol Use Disorder" measuringInstrc="Yes/No">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>	
+	 
+	<item measurement_type="OUDI" display_name="Opioid Use Disorder" guideline="" graphable="yes" value_name="Present">
+	</item>
+	<measurement type="OUDI" typeDesc="Opioid Use Disorder" typeDisplayName="Opioid Use Disorder" measuringInstrc="Yes/No">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>	
+	
+	 
+	<item measurement_type="SUDI" display_name="Substance Use Disorder" guideline="" graphable="yes" value_name="Present">
+	</item>
+	<measurement type="SUDI" typeDesc="Substance Use Disorder" typeDisplayName="Substance Use Disorder" measuringInstrc="Yes/No">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>	
+	
+	<item measurement_type="STDI" display_name="Stimulant Use Disorder" guideline="" graphable="yes" value_name="Present">
+	</item>
+	<measurement type="STDI" typeDesc="Stimulant Use Disorder" typeDisplayName="Stimulant Use Disorder" measuringInstrc="Yes/No">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>	
+	 
+	<item measurement_type="TUDI" display_name="Tobacco Use Disorder" guideline="" graphable="yes" value_name="Present">
+	</item>
+	<measurement type="TUDI" typeDesc="Tobacco Use Disorder" typeDisplayName="Tobacco Use Disorder" measuringInstrc="Yes/No">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>	
+	
+	
+	
+	<!-- 		
+	<item measurement_type="OINV" display_name="Other Investigations" guideline="" graphable="yes" value_name="Reviewed">
+	</item>
+	<measurement type="OINV" typeDesc="Other Investigations" typeDisplayName="Other Investigations" measuringInstrc="Yes/No">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+	
+	<item measurement_type="LIBX" display_name="Liver Bx" guideline="" graphable="yes" value_name="Completed">
+	</item>
+	<measurement type="LIBX" typeDesc="Liver Bx" typeDisplayName="Liver Bx" measuringInstrc="Yes/No">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+						
+	<item measurement_type="CTAB" display_name="CT Abdo" guideline="" graphable="yes" value_name="Completed">
+	</item>
+	<measurement type="CTAB" typeDesc="CT Abdo" typeDisplayName="CT Abdo" measuringInstrc="Yes/No">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+		
+	<item measurement_type="REFT" display_name="Referral for treatment" guideline="" graphable="yes" value_name="Reviewed">
+	</item>
+	<measurement type="REFT" typeDesc="Referral for treatment" typeDisplayName="Referral for treatment" measuringInstrc="Yes/No">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+ -->
+ 
+	<item measurement_type="PSUP" display_name="Peer Support" guideline="" graphable="yes" value_name="Reviewed">
+	</item>
+	<measurement type="PSUP" typeDesc="Peer Support" typeDisplayName="Peer Support" measuringInstrc="Yes/No">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+			
+	<item measurement_type="BARR" display_name="Barriers to care" guideline="" graphable="yes" value_name="Reviewed">
+	</item>
+	<measurement type="BARR" typeDesc="Barriers to care" typeDisplayName="Barriers to care" measuringInstrc="Yes/No">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+		
+	<item measurement_type="DINC" display_name="Drug Interaction Check" guideline="" graphable="yes" value_name="Reviewed">
+	</item>
+	<measurement type="DINC" typeDesc="Drug Interaction Check" typeDisplayName="Drug Interaction Check" measuringInstrc="Yes/No">
+		<validationRule name="Yes/No" regularExp="YES|yes|Yes|Y|NO|no|No|N" />
+	</measurement>
+
+
+</flowsheet>
