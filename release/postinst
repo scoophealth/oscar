@@ -108,6 +108,15 @@ progress() {
 
 ### END COMMON FUNCTIONS ####
 
+# Cleanup the passwords on any condition (error or success).
+trap cleanup HUP TERM ABRT KILL INT QUIT EXIT
+cleanup()
+{
+	echo "Cleaning up sensitive data"
+	db_get oscar-emr/password
+	db_stop
+}
+
 # --- log the running of the script appending as necessary
 echo "#########" `date` "#########"  >>$LOG_FILE
 echo VERSION=${VERSION}-${REVISION}>>$LOG_FILE
@@ -606,7 +615,6 @@ else
 	fi
 fi
 
-db_stop
 	;;
 
 	abort-upgrade|abort-remove|abort-deconfigure)

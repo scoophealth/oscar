@@ -198,7 +198,15 @@ MDS_LABS=yes
 CML_LABS=yes
 HL7TEXT_LABS=yes
 
-
+# Only cleanup the passwords on error because we may need the passwords
+# in the post install script. The post install must handle the cleanup
+# for all error conditions and successful exit.
+trap cleanupOnError HUP TERM ABRT KILL INT QUIT 
+cleanupOnError()
+{
+	echo "Cleaning up sensitive data"
+	db_get oscar-emr/password
+}
 
 # --- log the running of the script appending as necessary
 echo "#########" `date` "#########" 1>> $LOG_FILE
@@ -271,11 +279,11 @@ fi
 if [ "${UPGRADE}" = "false" ] ; then
 echo "For a new install from console so probe for some settings" >>$LOG_FILE
 	db_set oscar-emr/upgrade false
-	db_reset oscar-emr/password || true
 	db_input high oscar-emr/password || true
 	db_go || true
 	db_get oscar-emr/password
 	db_password=$RET
+
 	#echo ${db_password} >>$LOG_FILE
 	db_reset oscar-emr/billregion || true
 	# use probed state and configure for BC if required
@@ -315,7 +323,6 @@ echo "For a new install from console so probe for some settings" >>$LOG_FILE
 	db_reset oscar-emr/triumvirate || true
 	db_set oscar-emr/triumvirate  true  || true
 		
-	db_reset oscar-emr/demo || true
 	db_input high oscar-emr/demo || true
 
 	db_reset oscar-emr/eyeform || true
@@ -371,7 +378,6 @@ if [ "${UPGRADE}" = "true" ] ; then
 
 		echo "grep the password from the properties file" >> $LOG_FILE
 		db_password=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'db_password'  | tail -n 1 | cut -d "=" -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
-		db_set oscar-emr/password ${db_password}
 		echo "grep the previous db_name from the properties file" >> $LOG_FILE
 		## you want oscar_15=oscar_15 but trim off the switches that we might be sending
 		existing=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'db_name'  | tail -n 1 | cut -d "=" -f2 | cut -d "?" -f1 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
@@ -614,7 +620,6 @@ if [ "${UPGRADE}" = "true" ] ; then
 	# drop lines that start with a comment, then grep the property, just take the last instance of that, cut on the = delimiter, and trim whitespace
 	echo "grep the password from the properties file" >> $LOG_FILE
 	db_password=$(sed '/^\#/d' ${PROGRAM}.tmp | grep 'db_password'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
-	db_set oscar-emr/password ${db_password}
 	echo "grep the province from the properties file" >> $LOG_FILE
 	billregion=$(sed '/^\#/d' ${PROGRAM}.tmp | grep 'billregion'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
 	echo "billregion=${billregion}" 1>> $LOG_FILE
