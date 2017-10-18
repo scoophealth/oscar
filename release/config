@@ -271,7 +271,6 @@ fi
 if [ "${UPGRADE}" = "false" ] ; then
 echo "For a new install from console so probe for some settings" >>$LOG_FILE
 	db_set oscar-emr/upgrade false
-	db_reset oscar-emr/password || true
 	db_input high oscar-emr/password || true
 	db_go || true
 	db_get oscar-emr/password
@@ -315,7 +314,6 @@ echo "For a new install from console so probe for some settings" >>$LOG_FILE
 	db_reset oscar-emr/triumvirate || true
 	db_set oscar-emr/triumvirate  true  || true
 		
-	db_reset oscar-emr/demo || true
 	db_input high oscar-emr/demo || true
 
 	db_reset oscar-emr/eyeform || true
