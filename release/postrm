@@ -2,7 +2,7 @@
 # postrm
 # a script file for OSCAR that uninstalls and tweaks the necessary files
 #=================================================================
-# Copyright Peter Hutten-Czapski 2012-14 released under the GPL v2
+# Copyright Peter Hutten-Czapski 2012-17 released under the GPL v2
 #=================================================================
 
 # Source debconf library.
@@ -11,74 +11,98 @@
 # PROGRAM matches the war and properties name
 PROGRAM=oscar
 PACKAGE=oscar-emr
-db_name=oscar_14
-VERSION=14
+db_name=oscar_15
+VERSION=15
 PREVIOUS=12_1
-REVISION=0.2
-TOMCAT="tomcat7"
+REVISION=71~691
+if [ -f /usr/share/tomcat8/bin/version.sh ] ; then
+        TOMCAT=tomcat8
+    else
+    if [ -f /usr/share/tomcat7/bin/version.sh ] ; then
+        TOMCAT=tomcat7
+    fi
+fi
 C_HOME=/usr/share/${TOMCAT}/
 C_BASE=/var/lib/${TOMCAT}/
 SRC=/usr/share/${PACKAGE}/
 db_password=liyi
-DOCS=OscarDocument
+DOCS=${SRC}/OscarDocument/
 
 LOG_FILE=${SRC}Oscar${VERSION}install.log
-LOG_ERR=${SRC}Oscar.err
 
 # --- log the running of the script appending as necessary
 echo "#########" `date` "#########" 1>> $LOG_FILE
 echo PostRemoval script triggered with $1>>$LOG_FILE
 echo VERSION=${VERSION}-${REVISION}>>$LOG_FILE
-echo "#########" `date` "#########" 1>> $LOG_ERR
-echo PostRemoval script triggered with $1>>$LOG_ERR
-echo VERSION=${VERSION}-${REVISION}>>$LOG_ERR
 
 case "$1" in
     purge)
         # ignore errors and remove patient data in doing purge
         set +e
+
+    #delete symlinks test for link file with -L (or -e as long as the link is not broken)
+    echo "Removing symlinks"
+	if [ -L "/var/lib/${TOMCAT}/drugref2.properties" ]; then
+	    rm -f /var/lib/${TOMCAT}/drugref2.properties 2>>$LOG_FILE 
+    fi
+	if [ -L "/var/lib/${TOMCAT}/${PROGRAM}.properties" ]; then
+	    rm -f /var/lib/${TOMCAT}/${PROGRAM}.properties 2>>$LOG_FILE 
+    fi 
+
 	# remove property files but extract the password first
 	if [ -f "${C_HOME}${PROGRAM}.properties" ]; then
 		#first grep the password
-		echo "grep the password from the properties file" 2>>$LOG_ERR
+		echo "grep the password from the properties file" 2>>$LOG_FILE
 		db_password=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'db_password'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 1>>$LOG_FILE
 		echo "Deleting ${PROGRAM}.properties"
-		rm -f ${C_HOME}${PROGRAM}.properties 2>>$LOG_ERR
+		rm -f ${C_HOME}${PROGRAM}.properties 2>>$LOG_FILE
 	fi
 
 	# remove drugref explicitly
 	if [ -f "${C_BASE}webapps/drugref.war" ]; then
 		echo "Purging drugref.war"
-		rm -f ${C_BASE}webapps/drugref.war 2>>$LOG_ERR
+		rm -f ${C_BASE}webapps/drugref.war 2>>$LOG_FILE
 	fi
 	echo "Dropping drugref"
-	mysql -u root -p${db_password} --execute="drop database if exists drugref;"  2>>$LOG_ERR
+	mysql -u root -p${db_password} --execute="drop database if exists drugref;"  2>>$LOG_FILE
 
 	# remove oscar web app regardless
 	if [ -f "${C_BASE}webapps/${PROGRAM}.war" ]; then
 		echo "Purging ${PROGRAM}.war"
-		rm -f ${C_BASE}webapps/${PROGRAM}.war 2>>$LOG_ERR
+		rm -f ${C_BASE}webapps/${PROGRAM}.war 2>>$LOG_FILE
 	fi
 
 	#...and its database WHICH CONTAINS PATIENT DATA
 	echo "Dropping ${db_name}"
-	mysql -u root -p${db_password} --execute="drop database if exists ${db_name};"  2>>$LOG_ERR
+	mysql -u root -p${db_password} --execute="drop database if exists ${db_name};"  2>>$LOG_FILE
+
+    # reverse the changes to Tomcat and keystore
+    echo "Reversing Changes to ${TOMCAT} configuration"
+	if [ -f "/etc/default/${TOMCAT}.old" ]; then
+	    echo "Restoring ${TOMCAT} configuration"
+        mv /etc/default/${TOMCAT}.old /etc/default/${TOMCAT} 2>>$LOG_FILE
+    fi
+	if [ -f "/var/lib/${TOMCAT}/conf/server.old" ]; then
+	    echo "Restoring server.xml configuration"
+        mv /var/lib/${TOMCAT}/conf/server.old /var/lib/${TOMCAT}/conf/server.xml 2>>$LOG_FILE
+    fi
+	if [ -f "/var/lib/${TOMCAT}/conf/context.old" ]; then
+	    echo "Restoring context.xml configuration"
+        mv /var/lib/${TOMCAT}/conf/context.old /var/lib/${TOMCAT}/conf/context.xml 2>>$LOG_FILE
+    fi
+	if [ -f "/etc/${TOMCAT}/.keystore" ]; then
+	    echo "Deleting tomcat keystore"
+        rm -f /etc/${TOMCAT}/.keystore  2>>$LOG_FILE
+    fi   
+
       
-	# remove OscarDocument.war as that will have Tomcat delete its directory WHICH CONTAINS PATIENT DATA
-	if [ -f "${C_BASE}webapps/OscarDocument.war" ]; then
-		echo "Purging OscarDocument.war"
-		rm -f ${C_BASE}webapps/OscarDocument.war 2>>$LOG_ERR
-	else
-		# if no OscarDocument war there still may be a directory WHICH CONTAINS PATIENT DATA
-		if [ -d "${C_BASE}webapps/OscarDocument/" ]; then
-			echo "Deleting OscarDocument directory"
-			rm -f -R ${C_BASE}webapps/OscarDocument/ 2>>$LOG_ERR
-		fi
-	fi
-	
-	#remove the shared directory and its contents
-	echo "Deleting ${SRC}"
-	rm -f -R ${SRC}
+	#remove the shared directory and its contents WHICH CONTAINS DOCS and BACKUPS
+
+	if [ -f "${SRC}" ]; then
+	    echo "Deleting ${SRC}"
+	    rm -Rfv ${SRC}
+    fi 
+
 
     ;;
 
@@ -90,6 +114,9 @@ case "$1" in
         echo "$0 called with unknown argument \`$1'" >&2
         exit 1
     ;;
+
+
 esac
 
 exit 0
+
