@@ -102,7 +102,7 @@ public class PreventionManager {
 
                 } catch(Exception e) {
                     ret = "";
-                    MiscUtils.getLogger().error("Error", e);
+                    logger.error("Error", e);
                 }
             
         }
