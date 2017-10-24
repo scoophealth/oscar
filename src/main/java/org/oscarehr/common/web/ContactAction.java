@@ -163,8 +163,9 @@ public class ContactAction extends DispatchAction {
         	throw new SecurityException("missing required security object (_demographic)");
         }
     	
-    	if( "ajax".equalsIgnoreCase( postMethod ) ) {
+    	if( "ajax".equalsIgnoreCase( postMethod ) || "ajax2".equalsIgnoreCase( postMethod ) ) {
     		forward = postMethod;
+    		request.setAttribute("ajax", true);
     	}
     	
     	for(int x=1;x<=maxContact;x++) {
@@ -179,7 +180,12 @@ public class ContactAction extends DispatchAction {
     			if(id.length()>0 && Integer.parseInt(id)>0) {
     				c = demographicContactDao.find(Integer.parseInt(id));
     			}
-
+    			
+    			String strContactTypeId = request.getParameter("contact_"+x+".contactTypeId");
+    			if(StringUtils.isNotEmpty(strContactTypeId)) {
+    				c.setContactTypeId(Integer.parseInt(strContactTypeId));
+    			}
+    		
 				c.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
     			c.setRole(request.getParameter("contact_"+x+".role"));
     			
@@ -188,7 +194,8 @@ public class ContactAction extends DispatchAction {
     			}
     			c.setNote(request.getParameter("contact_"+x+".note"));
     			c.setContactId(otherId);
-    			c.setCategory(DemographicContact.CATEGORY_PERSONAL);
+    			
+    			c.setCategory(request.getParameter("contact_"+x+".category"));
     			if(request.getParameter("contact_"+x+".sdm") != null) {
     				c.setSdm("true");
     			} else {
@@ -366,8 +373,9 @@ public class ContactAction extends DispatchAction {
         	throw new SecurityException("missing required security object (_demographic)");
         }
 		
-    	if( "ajax".equalsIgnoreCase( postMethod ) ) {
+    	if( "ajax".equalsIgnoreCase( postMethod ) || "ajax2".equalsIgnoreCase( postMethod ) ) {
     		actionForward = mapping.findForward( postMethod );
+    		request.setAttribute("ajax", true);
     	}
     	
     	if(removeSingleId != null) {
@@ -981,7 +989,7 @@ public class ContactAction extends DispatchAction {
 
 		String programId = request.getParameter("programId");
 		
-		List<ProgramContactType> results = contactManager.getContactTypesForProgram(LoggedInInfo.getLoggedInInfoFromSession(request),Integer.parseInt(programId));
+		List<ProgramContactType> results = contactManager.getContactTypesForProgramAndCategory(LoggedInInfo.getLoggedInInfoFromSession(request),Integer.parseInt(programId),null);
 		
 		JSONArray arr = JSONArray.fromObject(results);
 		

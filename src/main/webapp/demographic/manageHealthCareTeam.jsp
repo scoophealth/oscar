@@ -48,17 +48,32 @@
 	ContactSpecialtyDao contactSpecialtyDao = null;
 	List<ContactSpecialty> specialty = null;
 	String demographicNoString = request.getParameter("demographicNo");
-	
+	String type = request.getParameter("type");
+	if(type == null) {
+		type = DemographicContact.CATEGORY_PROFESSIONAL;	
+	}
 	if ( ! StringUtils.isBlank( demographicNoString ) ) {		
 		providerDao = SpringUtils.getBean(ProviderDao.class);
 		providerList = providerDao.getActiveProviders();
 		demographicDao = SpringUtils.getBean(DemographicDao.class);
 		demographic = demographicDao.getClientByDemographicNo( Integer.parseInt(demographicNoString) );
-		demographicContacts = ContactAction.getDemographicContacts(demographic);
+		demographicContacts = ContactAction.getDemographicContacts(demographic,type);
 		contactSpecialtyDao = SpringUtils.getBean(ContactSpecialtyDao.class);
 		specialty = contactSpecialtyDao.findAll();
 	}	
 	
+	String headerTitle = "";
+	if(type.equals(DemographicContact.CATEGORY_PROFESSIONAL)) {
+		headerTitle = "Health Care Team";
+	}
+	if(type.equals(DemographicContact.CATEGORY_PERSONAL)) {
+		headerTitle = "Personal Contacts";
+	}
+	if(type.equals(DemographicContact.CATEGORY_OTHER)) {
+		headerTitle = "Other Contacts";
+	}
+	
+	pageContext.setAttribute("headerTitle", headerTitle);
 	pageContext.setAttribute("professionalSpecialistType", DemographicContact.TYPE_PROFESSIONALSPECIALIST);
 	pageContext.setAttribute("providerType", DemographicContact.TYPE_PROVIDER);
 	pageContext.setAttribute("professionalContactType", DemographicContact.TYPE_CONTACT);
@@ -139,6 +154,7 @@ function popUpData( data ){
 
 		var param = 'postMethod=ajax&method=' + method + 
 					'&demographic_no=' + demographic_no +
+					'&demographicNo=' + demographic_no +
 					'&procontact_num=' + procontact_num +
 					'&contact_num=' + contact_num +
 					'&' + contactObject + 'id=' + id +
@@ -171,7 +187,7 @@ function sendData(path, param, target) {
 				      close();
 			    	}
  		    	} else {
- 					renderResponse(jQuery(data), target);
+ 		    		renderResponse(data, target);
  		    	}
  		    	success = true;
  		    }
@@ -187,7 +203,7 @@ function renderResponse(html, id) {
 			jQuery(val).replaceWith( jQuery(val, html) );
 		});			
 	} else {			
-		jQuery(id).replaceWith( jQuery(id, html) );
+		jQuery(id).replaceWith( html );
 	}
 	
 	jQuery().bindFunctions();
@@ -388,7 +404,7 @@ jQuery(document).ready( function($) {
 		<c:set value="${ demographicContacts }" var="demographicContactList" scope="page" />
 
 		<tr id="tableTitle" >
-			<th colspan="6" class="alignLeft" >Health Care Team</th>
+			<th colspan="6" class="alignLeft" >${headerTitle}</th>
 		</tr>
 
 		<c:if test="${ not empty demographicContactList }" >

@@ -31,8 +31,6 @@
 <%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%@ page import="org.oscarehr.common.model.DemographicContact" %>
 <%@ page import="org.oscarehr.common.model.Demographic" %>
-<%@ page import="org.oscarehr.common.dao.ContactSpecialtyDao" %>
-<%@ page import="org.oscarehr.common.model.ContactSpecialty" %>
 <%@ page import="org.oscarehr.managers.DemographicManager" %>
 <%@ page import="org.oscarehr.util.LoggedInInfo" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -44,41 +42,20 @@
 <% 
 	List<DemographicContact> demographicContacts = null;
 	Demographic demographic = null;
-	ContactSpecialtyDao specialtyDao = null;
-	List<ContactSpecialty> specialty = null;
 	String demographicNoString = request.getParameter("demographicNo");
+	DemographicManager demographicManager = null;
 	String type = request.getParameter("type");
 	if(type == null) {
-		type = DemographicContact.CATEGORY_PROFESSIONAL;
+		type = DemographicContact.CATEGORY_PERSONAL;
 	}
-	DemographicManager demographicManager = null;
-	
 	if ( ! StringUtils.isBlank( demographicNoString ) ) {		
-/* 		demographicDao = SpringUtils.getBean(DemographicDao.class);
-		demographic = demographicDao.getClientByDemographicNo( Integer.parseInt(demographicNoString) );
-		demographicContacts = ContactAction.getDemographicContacts(demographic,"professional"); */
-		specialtyDao = SpringUtils.getBean(ContactSpecialtyDao.class);
-		specialty = specialtyDao.findAll();		
 		demographicManager = SpringUtils.getBean(DemographicManager.class);
-		demographicContacts = demographicManager.getHealthCareTeam(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.parseInt(demographicNoString), type);
+		demographicContacts = demographicManager.getHealthCareTeam(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.parseInt(demographicNoString),type);
 		demographic = demographicManager.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNoString);
 	}
 	
-	String headerTitle = "";
-	if(type.equals(DemographicContact.CATEGORY_PROFESSIONAL)) {
-		headerTitle = "Health Care Team";
-	}
-	if(type.equals(DemographicContact.CATEGORY_PERSONAL)) {
-		headerTitle = "Personal Contacts";
-	}
-	if(type.equals(DemographicContact.CATEGORY_OTHER)) {
-		headerTitle = "Other Contacts";
-	}
-	
-	pageContext.setAttribute("headerTitle", headerTitle);
 	pageContext.setAttribute("demographic", demographic);
 	pageContext.setAttribute("demographicContacts", demographicContacts);
-	pageContext.setAttribute("specialty", specialty);
 %>
 
 <%-- DETACHED VIEW ENABLED  --%>
@@ -99,8 +76,8 @@
 	<script type="text/javascript" >
 		jQuery(document).ready( function($) {		
 			//--> Popup effects
-			jQuery(".hovereffect").bind( "mouseover", function(){
-				nhpup.popup( jQuery('#healthCareTeamMemberDetail_' + this.id).html(), { 'width':250 } );			
+			jQuery(".hovereffect1").bind( "mouseover", function(){
+				nhpup.popup( jQuery('#<%=type%>TeamMemberDetail_' + this.id).html(), { 'width':250 } );			
 			});
 		})
 	</script>
@@ -112,12 +89,12 @@
 	<script type="text/javascript">
 		jQuery(document).ready( function($) {		
 			//--> Popup effects
-			$(".hovereffect").mouseover(function(){
-				$('#healthCareTeamMemberDetail_' + this.id).toggle();
+			$(".hovereffect1").mouseover(function(){
+				$('#<%=type%>TeamMemberDetail_' + this.id).toggle();
 				$(this).css("fontWeight", "bold");
 			});
-			$(".hovereffect").mouseout(function(){
-				$('#healthCareTeamMemberDetail_' + this.id).toggle();
+			$(".hovereffect1").mouseout(function(){
+				$('#<%=type%>TeamMemberDetail_' + this.id).toggle();
 				$(this).css("fontWeight", "inherit");
 			});
 		})
@@ -159,7 +136,17 @@
 
 <%-- DETACHED VIEW ENABLED  --%>
 
-	<h3 id="tableTitle">${headerTitle}</h3>
+<%
+	String header = null;
+	if(type.equals( DemographicContact.CATEGORY_PERSONAL)) {
+		header = "Personal Contacts";
+	} else if(type.equals( DemographicContact.CATEGORY_OTHER)) {
+		header = "Other Contacts";
+	}
+
+%>
+
+	<h3 id="tableTitle"><%=header %></h3>
 	
 <%-- END DETACHED VIEW ENABLED  --%>
 
@@ -173,7 +160,7 @@
 				<c:set value="odd" var="rowclass" scope="page" />
 			</c:if>
 			
-			<li id="${ dContact.id }" class="hovereffect ${ rowclass }" >
+			<li id="${ dContact.id }" class="hovereffect1 ${ rowclass }" >
 			
 				<span class="label"> 
 					<c:out value="${ dContact.role }" />					
@@ -190,7 +177,7 @@
 				</span>
 			</li>
 			
-			<table class="healthCareTeamMemberDetailTable" id="healthCareTeamMemberDetail_${ dContact.id }" style="display:none;" >
+			<table class="healthCareTeamMemberDetailTable" id="<%=type%>TeamMemberDetail_${ dContact.id }" style="display:none;" >
 				<tr><th class="alignLeft contactName" colspan="2"><c:out value="${ dContact.contactName }" /></th></tr>
 				<tr>
 					<td class="alignRight alignTop smallText role" >Role:</td>
@@ -216,10 +203,7 @@
 					<td class="alignRight alignTop smallText">Fax: </td>
 					<td class="alignLeft alignTop smallText"><c:out value="${ not empty dContact.details.fax ? dContact.details.fax : unknown }" /></td>
 				</tr>
-				<tr>
-					<td class="alignRight alignTop smallText">CPSO: </td>
-					<td><c:out value="${ dContact.details.cpso }" /></td>
-				</tr>
+				
 			</table>
 			
 		</c:forEach>

@@ -72,18 +72,18 @@ div#healthCareTeam li:hover {
 }
 
 /* MANAGE HEALTH CARE TEAM */
-table#listHealthCareTeam {
+table#listHealthCareTeam , table#listpersonalTeam, table#listotherTeam {
   width:100%;
   border-collapse: collapse;
 }
 
-table#listHealthCareTeam .alignRight {
+table#listHealthCareTeam .alignRight, table#listpersonalTeam .alignRight, table#listotherTeam .alignRight{
   font-weight: 600;
   padding-right: 5px;
 
 }
 
-table#listHealthCareTeam th {
+table#listHealthCareTeam th, table#listpersonalTeam th, table#listotherTeam th {
   padding-left: 5px;
   background-color: #CCCCFF;
    font-size: 7.5pt;  
@@ -98,11 +98,17 @@ table#addEditHealthCareTeam td {
   vertical-align: top;
 }
 
-table#listHealthCareTeam {
+table#listHealthCareTeam, table#listpersonalTeam, table#listotherTeam   {
   background-color: white;
 }
 
 table#listHealthCareTeam tr:hover td {
+  background-color:yellow;
+}
+table#listpersonalTeam tr:hover td {
+  background-color:yellow;
+}
+table#listotherTeam tr:hover td {
   background-color:yellow;
 }
 
@@ -221,7 +227,7 @@ body#detachedView table.healthCareTeamMemberDetailTable .contactName {
 
 /* TOGGLE VIEWS INSIDE manageHealthCareTeam.jsp */
 
-table#listHealthCareTeam.toolsView  {
+table#listHealthCareTeam.toolsView, table#listpersonalTeam.toolsView, table#listotherTeam.toolsView  {
   display:none;
 }
 
@@ -235,13 +241,13 @@ table#addEditHealthCareTeam.toolsView td {
   border:none;
 } 
 
-table#listHealthCareTeam.listView  {
+table#listHealthCareTeam.listView , table#listpersonalTeam.listView , table#listotherTeam.listView  {
   display: inherit;
   border:none;
   background-color: inherit;
 }
 
-table#listHealthCareTeam.listView  {
+table#listHealthCareTeam.listView , table#listpersonalTeam.listView , table#listotherTeam.listView  {
   border:none;
 }
 

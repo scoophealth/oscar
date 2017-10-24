@@ -2447,7 +2447,8 @@
 			<forward name="cForm" path="/demographic/addEditContact.jsp" />
 			<forward name="manage" path="/demographic/ManageContacts.jsp" />
 			<forward name="windowClose" path="/demographic/close.jsp" />
-			<forward name="ajax" path="/demographic/demographiceditdemographic.jsp" />
+			<forward name="ajax" path="/demographic/manageHealthCareTeam.jsp" />
+			<forward name="ajax2" path="/demographic/manageContacts.jsp" />
 		</action>
 
 		<action path="/oscarMDS/SubmitLab" type="oscar.oscarLab.ca.all.web.SubmitLabByFormAction" parameter="method" scope="request" validate="false">

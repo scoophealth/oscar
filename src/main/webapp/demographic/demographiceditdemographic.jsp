@@ -1052,7 +1052,7 @@ if(oscarProps.getProperty("new_label_print") != null && oscarProps.getProperty("
 
 
 <%-- TOGGLE NEW CONTACTS UI --%>
-<%if(!oscarProps.isPropertyActive("NEW_CONTACTS_UI")) { %>
+<%if(oscarProps.isPropertyActive("RELATIONSHIP_CONTACTS_UI")) { %>
 					
 						
 
@@ -1085,8 +1085,9 @@ if(oscarProps.getProperty("new_label_print") != null && oscarProps.getProperty("
 						</ul>
 						</div>
 
-						<% } else { %>
-
+						<% }  %>
+<%if(oscarProps.isPropertyActive("NEW_CONTACTS_UI")) { %>
+	
 						<div class="demographicSection" id="otherContacts2">
 						<h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.msgOtherContacts"/>: <b><a
 							href="javascript: function myFunction() {return false; }"
@@ -1769,11 +1770,25 @@ if ( Dead.equals(PatStat) ) {%>
 <%-- END TOGGLE WORKFLOW_ENHANCE --%>
 
 <%-- AUTHOR DENNIS WARREN O/A COLCAMEX RESOURCES --%>
+
+<oscar:oscarPropertiesCheck property="DEMOGRAPHIC_CONTACT_PERSONAL" value="true">
+	<jsp:include page="/demographic/displayContacts.jsp?type=personal"> 	    		
+		<jsp:param name="demographicNo" value="<%= demographic_no %>" />
+	</jsp:include>
+</oscar:oscarPropertiesCheck>
+
 <oscar:oscarPropertiesCheck property="DEMOGRAPHIC_PATIENT_HEALTH_CARE_TEAM" value="true">
 	<jsp:include page="/demographic/displayHealthCareTeam.jsp"> 	    		
 		<jsp:param name="demographicNo" value="<%= demographic_no %>" />
 	</jsp:include>
 </oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="DEMOGRAPHIC_CONTACT_OTHER" value="true">
+	<jsp:include page="/demographic/displayContacts.jsp?type=other"> 	    		
+		<jsp:param name="demographicNo" value="<%= demographic_no %>" />
+	</jsp:include>
+</oscar:oscarPropertiesCheck>
+
 	<%-- TOGGLE OFF PATIENT CLINIC STATUS --%>
 <oscar:oscarPropertiesCheck property="DEMOGRAPHIC_PATIENT_CLINIC_STATUS" value="true">
 						
@@ -3127,6 +3142,14 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 
 
 <%-- AUTHOR DENNIS WARREN O/A COLCAMEX RESOURCES --%>
+<oscar:oscarPropertiesCheck property="DEMOGRAPHIC_CONTACT_PERSONAL" value="true">
+	<tr><td colspan="4" >
+		<jsp:include page="manageContacts.jsp">
+			<jsp:param name="demographicNo" value="<%= demographic_no %>" />
+			<jsp:param name="type" value="personal" />
+		</jsp:include>
+	</td></tr>	
+</oscar:oscarPropertiesCheck>
 <oscar:oscarPropertiesCheck property="DEMOGRAPHIC_PATIENT_HEALTH_CARE_TEAM" value="true">
 	<tr><td colspan="4" >
 		<jsp:include page="manageHealthCareTeam.jsp">
@@ -3134,6 +3157,17 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 		</jsp:include>
 	</td></tr>	
 </oscar:oscarPropertiesCheck>
+
+<oscar:oscarPropertiesCheck property="DEMOGRAPHIC_CONTACT_OTHER" value="true">
+	<tr><td colspan="4" >
+		<jsp:include page="manageContacts.jsp">
+			<jsp:param name="demographicNo" value="<%= demographic_no %>" />
+			<jsp:param name="type" value="other" />
+		</jsp:include>
+	</td></tr>	
+</oscar:oscarPropertiesCheck>
+
+
 <%-- END AUTHOR DENNIS WARREN O/A COLCAMEX RESOURCES --%>
 
 <%-- TOGGLED OFF PROGRAM ADMISSIONS --%>

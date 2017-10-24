@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.common.dao.AbstractDao;
 import org.oscarehr.common.dao.ContactTypeDao;
 import org.oscarehr.common.dao.ProgramContactTypeDao;
@@ -135,17 +136,40 @@ public class ContactManager {
 		
 		List<Program> programs = programManager.getAllPrograms(loggedInInfo);
 		for(Program program:programs) {
-			List<ProgramContactType> types = getContactTypesForProgram(loggedInInfo,program.getId());
+			List<ProgramContactType> types = getContactTypesForProgramAndCategory(loggedInInfo,program.getId(),null);
 			results.put(String.valueOf(program.getId()), types);
 		}
 		
 		return results;
 	}
 	
+	public List<ProgramContactType> getContactTypesForCurrentProgram(LoggedInInfo loggedInInfo) {
+		return getContactTypesForCurrentProgramAndCategory(loggedInInfo,null);
+	}
 	
-	public List<ProgramContactType> getContactTypesForProgram(LoggedInInfo loggedInInfo, Integer programId) {
-		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_admin", SecurityInfoManager.WRITE, null ) ) {	
-			LogAction.addLog(loggedInInfo, "ContactManager.getContactTypesForProgram", null, null, null, "User missing _admin role with write access");
+	public List<ProgramContactType> getContactTypesForCurrentProgramAndCategory(LoggedInInfo loggedInInfo, String category) {
+		ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+		List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+		ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+		ProgramProvider currentProgram = null;
+		
+		if(pp != null) {
+			currentProgram = pp;
+		} else {
+			if(ppList != null && ppList.size()>0) {
+				currentProgram = ppList.get(0);
+			}
+		}
+		
+		if(currentProgram == null) {
+			return new ArrayList<ProgramContactType>();
+		}
+		return getContactTypesForProgramAndCategory(loggedInInfo,currentProgram.getProgramId().intValue(),category);
+	}
+	
+	public List<ProgramContactType> getContactTypesForProgramAndCategory(LoggedInInfo loggedInInfo, Integer programId, String category) {
+		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_demographic", SecurityInfoManager.READ, null ) ) {	
+			LogAction.addLog(loggedInInfo, "ContactManager.getContactTypesForProgram", null, null, null, "User missing _demographic role with read access");
 			return null;
         }
 		
@@ -157,8 +181,16 @@ public class ContactManager {
 			ContactType ct = contactTypeDao.find(pct.getId().getContactTypeId());
 			if(ct != null) {
 				if(ct.isActive()) {
-					pct.setContactType(ct);
-					results2.add(pct);
+					
+					if(category == null) {
+						pct.setContactType(ct);
+						results2.add(pct);
+					} else {
+						if(pct.getId().getCategory().equalsIgnoreCase(category)) {
+							pct.setContactType(ct);
+							results2.add(pct);
+						}
+					}
 				}
 			}
 		}

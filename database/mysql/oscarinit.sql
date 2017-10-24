@@ -9187,6 +9187,7 @@ create table DemographicContact (
 	active tinyint(1),
 	mrp tinyint(1),
 	programNo int(10),
+	contactTypeId int,
 	KEY (`demographicNo`)
 );
 
