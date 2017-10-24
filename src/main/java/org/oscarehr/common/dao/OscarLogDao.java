@@ -145,6 +145,29 @@ public class OscarLogDao extends AbstractDao<OscarLog> {
 		return(results);
 	}
 
+
+	/**
+	 *
+	 * @param providerNo
+	 * @param startPosition
+	 * @param itemsToReturn
+	 * @return List of Object array [demographicId (Integer), lastDateViewed Date]
+	 */
+	public List<Object[]> getRecentDemographicsViewedByProviderAfterDateIncluded(String providerNo, Date date, int startPosition, int itemsToReturn) {
+		String sqlCommand="select l.demographicId,MAX(l.created) as dt from "+modelClass.getSimpleName()+" l where l.providerNo = :providerNo and l.created >= :date and l.demographicId is not null and l.demographicId != '-1' group by l.demographicId order by MAX(l.created) desc";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter("providerNo", providerNo);
+		query.setParameter("date", date);
+		query.setFirstResult(startPosition);
+		setLimit(query,itemsToReturn);
+
+		@SuppressWarnings("unchecked")
+		List<Object[]> results=query.getResultList();
+
+		return(results);
+	}
+
 	@Override
     public void remove(AbstractModel<?> o) {
 	    throw new SecurityException("Cannot remove audit log entries!");
