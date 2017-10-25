@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.velocity.tools.ConversionUtils;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.billing.CA.BC.dao.BillingStatusTypesDao;
 import org.oscarehr.billing.CA.BC.model.BillingStatusTypes;
@@ -47,7 +48,6 @@ import org.oscarehr.common.model.DiagnosticCode;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-
 import oscar.entities.BillingStatusType;
 import oscar.entities.PaymentType;
 import oscar.util.UtilDateUtilities;
@@ -434,7 +434,7 @@ public class BillingFormData {
 	}
 
 	/**
-	 * Returns a Properties instance that contains the followign key/value pair
+	 * Returns a Properties instance that contains the following key/value pair
 	 * * key = A Billing Status Type Code
 	 * * value =  A Billing Status Type Extended Description
 	 * @param statusType List
@@ -450,4 +450,34 @@ public class BillingFormData {
 		return p;
 	}
 
+	
+	public ArrayList<String> getRecentReferralDoctorsList() {
+		ArrayList<String> recentList = new ArrayList<String>();
+		
+		BillingmasterDAO dao = SpringUtils.getBean(BillingmasterDAO.class);
+		List<Object[]> results = dao.getRecentReferralDoctors();
+
+		if(!results.isEmpty()){
+		String one;
+		String two;
+			
+			for(int i = 0; i < results.size(); i++){
+				
+				one = ConversionUtils.toString((results.get(i))[0]);
+				two = ConversionUtils.toString((results.get(i))[1]);
+				
+				if( one != null && !one.equals("")){	
+					recentList.add(ConversionUtils.toString( one ));
+				}
+				
+				if( two != null && !two.equals("")){
+					recentList.add(ConversionUtils.toString( two ));
+				}
+			}
+		
+		}
+		
+		return recentList;
+	}
+	
 }

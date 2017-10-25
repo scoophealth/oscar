@@ -300,5 +300,9 @@ public class BillingmasterDAO {
 		return query.getResultList();
     }
 
+	public List<Object[]> getRecentReferralDoctors() {
+		Query query = entityManager.createQuery("SELECT referralNo1, referralNo2 FROM Billingmaster WHERE referralNo1!='' OR referralNo2!='' ORDER BY billingmasterNo DESC LIMIT 3");
+		return query.getResultList();
+	}
 
 }
