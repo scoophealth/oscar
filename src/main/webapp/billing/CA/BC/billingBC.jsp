@@ -50,6 +50,7 @@ if(!authed) {
 <%@page import="oscar.oscarDemographic.data.*"%>
 <%@page import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.*,oscar.entities.*"%>
 <%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
 <%!
   public void fillDxcodeList(BillingFormData.BillingService[] servicelist, Map dxcodeList) {
     for (int i = 0; i < servicelist.length; i++) {
@@ -126,7 +127,21 @@ if(!authed) {
     request.getSession().removeAttribute("BillingCreateBillingForm");
   }
 
+  BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+  
   String newWCBClaim = (String)request.getAttribute("newWCBClaim");
+  
+  String mRecRefDoctor = "";
+  String mRecRefDoctorNum = "";
+
+  if(!demo.getFamilyDoctorNumber().equals("")){
+   mRecRefDoctor = demo.getFamilyDoctorLastName() + ", " + demo.getFamilyDoctorFirstName();
+   mRecRefDoctorNum = demo.getFamilyDoctorNumber();
+  }else{
+   mRecRefDoctor = "none";
+  }
+
+  ArrayList<String> recentList = billform.getRecentReferralDoctorsList();
 %>
 <html>
 <head>
@@ -741,7 +756,25 @@ jQuery(document).ready(function(){
 	    	alert("Warning: the start time is greater than the end time.");
 	    }	
 	 }
-   
+  
+ 
+ jQuery(".referral-doctor").on('click', function() {
+  mRecordRefDocNum = jQuery(this).attr('data-num');  
+  mRecordRefDoc= jQuery(this).attr('data-doc');  
+  
+  one = jQuery('[name="xml_refer1"]');
+  two = jQuery('[name="xml_refer2"]');
+  
+  if(one.val().length>0){
+	  two.val(mRecordRefDocNum);
+	  two.attr("title", mRecordRefDoc );
+  }else{
+	  one.val(mRecordRefDocNum);
+	  one.attr("title", mRecordRefDoc );
+  }
+ });
+	 
+	 
 })
 </script>
 <link rel="stylesheet" href="../billing/billing.css" type="text/css" />
@@ -1275,9 +1308,7 @@ if(wcbneeds != null){%>
                       <tr>
                         <td>
                           <strong>
-                           
                               <bean:message key="billing.referral.doctor"/>
-                           
                           </strong>
                         </td>
                         <td>
@@ -1329,6 +1360,48 @@ if(wcbneeds != null){%>
                   <td width="9%">
                    &nbsp;
                   </td>
+                </tr>
+                <tr>
+                <td colspan="3" valign="top" >
+
+                <table style="background-color:#fff;width:97%;" align="left">
+                <tr><td width="50%" valign="top">
+                
+                <table style="background-color:#fff;width:100%;border:0">
+                <tr><th colspan="2">Recent Referral Doctors Used</th></tr>
+                  <%
+                  String bgColor="#fff";
+                  String rProvider = "";
+
+		  if(recentList.size()>0){
+                  for (String r : recentList){ 
+                  rProvider = billingReferralDao.getReferralDocName(r);
+                  %>
+                	  <tr bgcolor="<%=bgColor%>"><td width="20%"><a href="javascript:void(0)" class="referral-doctor" data-num="<%=r%>" data-doc="<%=rProvider%>"><%=r%></a></td><td><%=rProvider%></td></tr> 
+                  <%
+                  if(bgColor=="#fff"){bgColor="#ccc";}else{bgColor="#fff";}
+                  
+                  }
+		  }else{
+		  %>
+                	  <tr><td width="20%"></td><td>none</td></tr> 
+		  <%
+		  }
+                  %>
+                 </table> 
+                 
+                 </td>
+                 <td width="50%" valign="top">
+                 
+                <table style="background-color:#fff;width:100%;border:0">
+                <tr><th colspan="2">Referral Doctor on Master Record</th></tr>
+                <tr><td width="20%"><a href="javascript:void(0)" title="Populate referral doctor from master record" class="referral-doctor" data-num="<%=mRecRefDoctorNum%>" data-doc="<%=mRecRefDoctor%>"><%=mRecRefDoctorNum%></a></td><td><%=mRecRefDoctor%></td></tr> 
+                </table>
+                
+                </td></tr>
+                 </table>
+                 
+                </td>
                 </tr>
               </table>
               
