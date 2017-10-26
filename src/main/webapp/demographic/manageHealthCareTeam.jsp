@@ -24,7 +24,14 @@
 
 --%>
 
+<%@page import="oscar.OscarProperties"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider"%>
+<%@page import="org.oscarehr.managers.ProgramManager2"%>
+<%@page import="org.oscarehr.managers.ContactManager"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.common.dao.ProgramContactTypeDao"%>
+<%@ page import="org.oscarehr.common.model.ProgramContactType" %>
 <%@ page import="java.util.List, org.apache.commons.lang.StringUtils" %>
 <%@ page import="org.oscarehr.common.web.ContactAction" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
@@ -73,6 +80,14 @@
 		headerTitle = "Other Contacts";
 	}
 	
+	ContactManager contactManager = SpringUtils.getBean(ContactManager.class);
+	ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+	
+	List<ProgramContactType> pctList = contactManager.getContactTypesForCurrentProgramAndCategory(LoggedInInfo.getLoggedInInfoFromSession(request),"Health Care Provider");
+	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+	List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+	
+	
 	pageContext.setAttribute("headerTitle", headerTitle);
 	pageContext.setAttribute("professionalSpecialistType", DemographicContact.TYPE_PROFESSIONALSPECIALIST);
 	pageContext.setAttribute("providerType", DemographicContact.TYPE_PROVIDER);
@@ -83,6 +98,7 @@
 	pageContext.setAttribute("specialty", specialty);
 	pageContext.setAttribute("providerList", providerList);
 	
+	OscarProperties op = OscarProperties.getInstance();
 %>
 
 <%-- DETACHED VIEW ENABLED  --%>
@@ -111,7 +127,7 @@ function popUpData( data ){
 
 		jQuery('#searchHealthCareTeamInput').attr('value', null);
 		var path = "${ oscar_context_path }/demographic/Contact.do";
-		var target = '#listHealthCareTeam';
+		var target = '#fullHealthCareTeam';
 		var json = JSON.parse(data);
 		
 		var role = json.contactRole.toUpperCase(); // type of doctor - user determined
@@ -151,20 +167,27 @@ function popUpData( data ){
 		if( ! role.trim() ) {
 			role = jQuery('#selectHealthCareTeamRoleType option:selected').val(); 
 		}
+		
+		var programId = jQuery('#selectTeamProgramId option:selected').val();
+		
 
 		var param = 'postMethod=ajax&method=' + method + 
 					'&demographic_no=' + demographic_no +
 					'&demographicNo=' + demographic_no +
 					'&procontact_num=' + procontact_num +
 					'&contact_num=' + contact_num +
+					'&type=<%=type%>' + 
 					'&' + contactObject + 'id=' + id +
 					'&' + contactObject + 'contactId=' + contactId +
 					'&' + contactObject + 'contactName=' + contactName +
 					'&' + contactObject + 'type=' + type + 
 					'&' + contactObject + 'role=' + role +
 					'&' + contactObject + 'active=' + active +
+					'&' + contactObject + 'contactTypeId=' + jQuery('#selectTeamRoleType option:selected').val() +
+					'&' + contactObject + "programId=" + programId +
 					'&' + contactObject + 'consentToContact=' + consentToContact;
 		
+		//alert(param);
 		//this.window.focus();
 		return sendData(path, param, target);	
 	}	
@@ -239,22 +262,7 @@ jQuery.fn.resetFields = function() {
 //--> Remove/Edit contact action. Wrapped in a function to re-bind after postback
 jQuery.fn.bindFunctions = function() {
 	
-	jQuery('.actionlink').bind("click", function(event){			
-		 var id = this.id.split("_")[1].trim();
-		 var param = '{"contactId":"' + id + 
-			'","contactName":"' +  
-			'","contactRole":"' +
-			'","demographicContactId":"0' +
-			'","contactType":"';				
-		 
-		 if( this.value == "remove") {	 
-			param += '","method":"removeContact"}'; 		 
-		 } else if( this.value == "edit") {	 
-			 param += '","method":"editHealthCareTeam"}'; 				 
-		 }
-		 
-		 popUpData(param);
-	})
+	
 }
 		
 //--> Search external providers	function
@@ -263,12 +271,15 @@ function searchExternalProviders(action) {
 	var contactRole = jQuery('#selectHealthCareTeamRoleType option:selected').val();
 	var searchfield = jQuery('#searchHealthCareTeamInput').val();
 	var windowspecs = "width=500,height=600,left=100,top=100, scrollbars=yes, resizable=yes";
+	var programId = jQuery('#selectTeamProgramId option:selected').val();
+	
 	
 	popupWindow = window.open(
 		'procontactSearch.jsp?form=updatedelete' +
 		'&elementName=contactName' +
 		'&elementId=contactId' +
 		'&keyword='+ searchfield +
+		'&programId=' + programId + 
 		'&contactRole=' + contactRole + 
 		'&submit=' + action +
 		'&list=all',
@@ -287,12 +298,32 @@ window.onunload = function() {
 //--> Document Ready Methods 
 jQuery(document).ready( function($) {
 
+	//console.log('binding');
+	jQuery('.actionlink').bind("click", function(event){			
+		 var id = this.id.split("_")[1].trim();
+		 var param = '{"contactId":"' + id + 
+			'","contactName":"' +  
+			'","contactRole":"' +
+			'","demographicContactId":"0' +
+			'","contactType":"';				
+		 
+		 if( this.value == "remove") {	 
+			param += '","method":"removeContact"}'; 		 
+		 } else if( this.value == "edit") {	 
+			 param += '","method":"editHealthCareTeam"}'; 				 
+		 }
+	
+		//alert(param);
+		 
+		 popUpData(param);
+	});
+	
 	//--> Change MRP Status
 	jQuery("input[id*='mostResponsibleProviderCheckbox']").bind("change", function(){
 		var contactId = jQuery("#" + this.id).val();
 		var path = "${ oscar_context_path }/demographic/Contact.do"; 
 		var param = "method=setMRP&contactId=" + contactId;
-		var target = '#listHealthCareTeam';
+		var target = '#fullHealthCareTeam';
 		sendData(path, param, target);
 	})
 
@@ -360,6 +391,20 @@ jQuery(document).ready( function($) {
 	jQuery().resetFields();	
 	jQuery().bindFunctions();
 	
+	//jQuery('#searchInternalExternal').trigger("change");
+	
+	<%
+		if("false".equals(op.getProperty("DEMOGRAPHIC_CONTACT.AllowInternalHCP", "true"))) {
+	%>
+	jQuery(".internal").hide();	
+	jQuery(".external").show();	
+	
+	jQuery("#searchInternalExternal option:contains('internal')").attr("disabled","disabled");
+	jQuery("#searchInternalExternal").val("external");
+	<% } %>
+	
+
+	
 })
 				
 </script>
@@ -395,6 +440,8 @@ jQuery(document).ready( function($) {
 </c:if>
 
 <%-- END DETACHED VIEW ENABLED  --%>
+
+<div id="fullHealthCareTeam">
 
 
 <table id="listHealthCareTeam" class="${ param.view }View" >
@@ -466,7 +513,9 @@ jQuery(document).ready( function($) {
 			<td class="alignLeft"><strong>add a provider:</strong></td>		
 			<td class="alignLeft">
 				<select name="searchInternalExternal" id="searchInternalExternal" >
+					
 					<option value="${ providerType }" >internal</option>
+					
 		            <option value="${ professionalContactType }" >external</option>
 				</select>
 			</td>
@@ -501,6 +550,35 @@ jQuery(document).ready( function($) {
 			</td>
 			
 			<td class="external" >
+				<select id="selectTeamRoleType" name="selectTeamRoleType" >					
+					<%
+					for(ProgramContactType pct:pctList) {
+					%>
+							<option value="<%=pct.getContactType().getId()%>"><%= pct.getContactType().getName() %></option>
+					<% } %>
+				</select>
+			</td>
+			
+			
+			<%
+				if("true".equals(op.getProperty("DEMOGRAPHIC_CONTACT.ShowProgramRestriction", "true"))) {
+			%>
+			<td class="external" >
+			 	<select name="selectTeamProgramId" id="selectTeamProgramId" title="Restrict to Program">
+	            		<option value="0"></option>
+	            		<%
+	            			for(ProgramProvider pp:ppList) {
+	            		%>
+							<option value="<%=pp.getProgramId()%>"><%=pp.getProgram().getName() %></option>
+						<%
+	            			}
+						%>
+	            	</select>
+			 </td>
+			 
+			 <% } %>
+			 
+			<td class="external" >
 				<input type="text" id="searchHealthCareTeamInput" 
 					name="searchHealthCareTeamInput" 
 					value="" />
@@ -514,6 +592,8 @@ jQuery(document).ready( function($) {
 		
 	<%-- END MANAGE PATIENTS HEALTH CARE TEAM  --%>
 </table>
+
+</div>
 
 <%-- DETACHED VIEW ENABLED  --%>
 <c:if test="${ param.view eq 'detached' }">

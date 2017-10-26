@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="oscar.OscarProperties"%>
 <%@page import="org.oscarehr.PMmodule.model.ProgramProvider"%>
 <%@page import="org.oscarehr.managers.ProgramManager2"%>
 <%@page import="org.oscarehr.managers.ContactManager"%>
@@ -92,6 +93,7 @@
 	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 	List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
 	
+	OscarProperties op = OscarProperties.getInstance();
 %>
 
 <%-- DETACHED VIEW ENABLED  --%>
@@ -521,30 +523,24 @@ jQuery(document).ready( function($) {
 
 		<c:if test="${ not empty demographicContactList }" >
 			<tr id="healthCareTeamSubHeading" >
-				<td></td><td>Name</td><td>Phone</td><td>Fax</td><td></td><td></td>
+				<td></td><td>Name</td><td></td><td></td>
 			</tr>
 		</c:if>
 		<c:forEach items="${ demographicContactList }" var="demographicContact" >
 			<c:set value="internal" var="internal" scope="page" />
 			<c:set value="${ demographicContact.details.workPhone }" var="workPhone" scope="page" />
 			
-			<tr>					
-				<td class="alignRight" >	
+			<tr>	
+								
+				<td class="alignRight" >
+						
 					<c:out value="${ demographicContact.role }" />				 					
 				</td>
                 <td class="alignLeft" >
                 		<c:out value="${ demographicContact.contactName }" />
                 </td>
                 
-                 	<c:if test="${ workPhone eq internal }" > 
-						<td>&#40;<c:out value="${ internal }" />&#41;</td>
-						<td>&nbsp;</td>
-					</c:if>	
-					                 	
-               		<c:if test="${ workPhone ne internal }" >	                 		
-                 		<td><c:out value="${ workPhone }" /></td>
-                 		<td><c:out value="${ demographicContact.details.fax }" /></td>
-               		</c:if>
+                	
                	 	
 	            <td class="alignRight">
 	            	<input type="button" 
@@ -599,6 +595,9 @@ jQuery(document).ready( function($) {
 				</select>
 			</td>
 			
+			<%
+				if("true".equals(op.getProperty("DEMOGRAPHIC_CONTACT.ShowProgramRestriction", "false"))) {
+			%>
 			<td class="Internal<%=type %>" >
 			 	<select name="select<%=type%>TeamProgramId" id="select<%=type%>TeamProgramId" title="Restrict to Program">
 	            		<option value="0"></option>
@@ -611,7 +610,7 @@ jQuery(document).ready( function($) {
 						%>
 	            	</select>
 			 </td>
-			 
+			 <% } %>
 			 
 			 <td class="Internal<%=type %>" >
 			 	<input id="ptName<%=type %>"  name="ptName<%=type %>" type="text" size="30" maxlength="60" />

@@ -286,6 +286,11 @@ public class ContactAction extends DispatchAction {
     			if (request.getParameter("procontact_"+x+".type") != null) {
     			    c.setType(Integer.parseInt(request.getParameter("procontact_"+x+".type")));
     			}
+    			
+    			String strContactTypeId = request.getParameter("procontact_"+x+".contactTypeId");
+    			if(StringUtils.isNotEmpty(strContactTypeId)) {
+    				c.setContactTypeId(Integer.parseInt(strContactTypeId));
+    			}
     			c.setContactId(otherId);
     			c.setCategory(DemographicContact.CATEGORY_PROFESSIONAL);
     			c.setFacilityId(loggedInInfo.getCurrentFacility().getId());
