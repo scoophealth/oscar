@@ -203,6 +203,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private static boolean ISACTIVE_PATIENT_CONSENT_MODULE = Boolean.FALSE; 
 	
 	ObjectOutputStream out = null;
+
+	private static String outputDirectory = OscarProperties.getInstance().getProperty("DOCUMENT_DIR").trim();
 	
 	PrintWriter documentMetaWriter;
 	
@@ -380,7 +382,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		//setup this list once for this facility
 		List<Program> programs = programDao.getProgramsByFacilityId(facility.getId());
 	
-		String documentDir = OscarProperties.getInstance().getProperty("DOCUMENT_DIR").trim();
+		String documentDir = getOutputDirectory();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 		String dateOnFile = formatter.format(currentUpdateDate);
 		String filename = "IntegratorPush_" + facility.getId() + "_" + dateOnFile;
@@ -713,7 +715,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		long startTime = System.currentTimeMillis();
 		int demographicPushCount = 0;
 		
-		String documentDir = OscarProperties.getInstance().getProperty("DOCUMENT_DIR").trim();
+		String documentDir = getOutputDirectory();
 		int currentFileNumber = 2;
 		
 		boolean rid = integratorControlDao.readRemoveDemographicIdentity(facility.getId());
@@ -2235,4 +2237,20 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	    //return complete hash
 	   return sb.toString();
 	}
+
+	public static String getOutputDirectory() {
+		String integratorOutputDirectory = OscarProperties.getInstance().getProperty("INTEGRATOR_OUTPUT_DIR");
+		if(StringUtils.isNotEmpty(integratorOutputDirectory)) {
+			return integratorOutputDirectory;
+		}
+		//default to DOCUMENT_DIR
+		return outputDirectory;
+	}
+
+	public static void setOutputDirectory(String outputDirectory) {
+		CaisiIntegratorUpdateTask.outputDirectory = outputDirectory;
+	}
+	
+	
 }
+
