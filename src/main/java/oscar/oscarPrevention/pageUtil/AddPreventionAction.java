@@ -90,6 +90,8 @@ public class AddPreventionAction  extends Action {
         	 refused = "1";
          }else if (given != null && given.equals("ineligible")){
         	 refused = "2";
+         }else if (given != null && given.equals("given_ext")){
+        	 refused = "3";
          }else if (given != null && given.equals("never")){
         	 refused = "1";
          }else if (given != null && given.equals("previous")){

@@ -122,6 +122,10 @@ public class Prevention extends AbstractModel<Integer> implements Serializable {
 	public boolean isIneligible(){
 		return refused == '2';
 	}
+	
+	public boolean isCompletedExternally() {
+		return refused == '3';
+	}
 
 	public void setRefused(boolean refused) {
 		this.refused = refused ? '1' : '0';
@@ -129,6 +133,10 @@ public class Prevention extends AbstractModel<Integer> implements Serializable {
 	
 	public void setIneligible(boolean ineligible){
 		this.refused = ineligible ? '2' : '0';
+	}
+	
+	public void setCompletedExternally(boolean completedExternally) {
+		this.refused = completedExternally ? '3' : '0';
 	}
 
 	public Date getNextDate() {
