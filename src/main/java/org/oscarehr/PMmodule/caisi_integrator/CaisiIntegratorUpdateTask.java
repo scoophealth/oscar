@@ -398,6 +398,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			header.setDate(currentUpdateDate);
 			header.setLastDate(lastDataUpdated);
 			header.setDependsOn(lastFile!=null?lastFile.getChecksum():null);
+			header.setCachedFacilityId(cachedFacility!=null?cachedFacility.getIntegratorFacilityId():null);
+			header.setCachedFacilityName(cachedFacility!=null?cachedFacility.getName():null);
+			header.setUsername(facility.getIntegratorUser());
 			out.writeUnshared(header);
 			
 			pushFacility(out,facility, lastDataUpdated);

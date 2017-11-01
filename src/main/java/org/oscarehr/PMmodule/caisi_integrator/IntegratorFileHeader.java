@@ -33,7 +33,14 @@ public class IntegratorFileHeader  implements Serializable{
 	private Date date;
 
 	private String dependsOn;
+
+	private Integer cachedFacilityId;
+
+	private String cachedFacilityName;
 	
+	private String username;
+	
+
 	public static final int VERSION = 1;
 	
 	public Date getDate() {
@@ -63,4 +70,35 @@ public class IntegratorFileHeader  implements Serializable{
 	public int getVersion() {
 		return VERSION;
 	}
+
+	public Integer getCachedFacilityId()
+	{
+		return cachedFacilityId;
+	}
+
+	public void setCachedFacilityId(Integer cachedFacilityId)
+	{
+		this.cachedFacilityId = cachedFacilityId;
+	}
+
+	public String getCachedFacilityName()
+	{
+		return cachedFacilityName;
+	}
+
+	public void setCachedFacilityName(String cachedFacilityName)
+	{
+		this.cachedFacilityName = cachedFacilityName;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	
+
 }
