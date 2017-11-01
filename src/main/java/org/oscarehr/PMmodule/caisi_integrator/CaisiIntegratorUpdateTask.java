@@ -652,6 +652,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			//Make a list of all ids that have a change in one of the subtypes...it's a bunch of queries
 			//but it's still a much much faster than looping through all demographics in a Facility, and
 			//running the push logic on all it's subtypes.
+			
 			Set<Integer> uniqueDemographicIdsWithSomethingNew = new HashSet<Integer>();
 			uniqueDemographicIdsWithSomethingNew.addAll(demographicDao.getDemographicIdsAddedSince(lastDataUpdated));
 			uniqueDemographicIdsWithSomethingNew.addAll(integratorConsentDao.findDemographicIdsByFacilitySince(facility.getId(),lastDataUpdated));
@@ -682,7 +683,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			//handle deletes - backup.
 			//so if a issue or something else that uses hard deletes gets deleted, the audit should have picked it up.
 			uniqueDemographicIdsWithSomethingNew.addAll(DemographicDao.getDemographicIdsAlteredSinceTime(lastDataUpdated));
-
 			Iterator<Integer> demoIterator = uniqueDemographicIdsWithSomethingNew.iterator();
 			
 	        while(demoIterator.hasNext()){ //Verify that the demographic is in the Facility
@@ -702,7 +702,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			
 		}
 	}
-	
 
 
 	protected int pushAllDemographics(String parentFilename, LoggedInInfo loggedInInfo, Facility facility,Date lastDataUpdated, 

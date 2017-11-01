@@ -126,7 +126,9 @@ public class CaseManagementIssueDAO extends HibernateDaoSupport {
     			sb.append(",");
     		sb.append(p.getId());
     	}
-        return this.getHibernateTemplate().find("select cmi.demographic_no from CaseManagementIssue cmi where cmi.update_date > ? and program_id in ("+sb.toString()+")", new Object[] {date});
+        List<Integer> results =  this.getHibernateTemplate().find("select distinct cmi.demographic_no from CaseManagementIssue cmi where cmi.update_date > ? and program_id in ("+sb.toString()+")", new Object[] {date});
+        
+        return results;
     }
 
     @SuppressWarnings("unchecked")
