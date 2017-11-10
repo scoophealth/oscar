@@ -84,7 +84,7 @@ if(!authed) {
 		</jsp:include>
 		</td>
 		<td class="MainTableRightColumn" valign="top">
-		<%ArrayList templates = (new ReportManager()).getReportTemplatesNoParam();
+		<%ArrayList templates = (new ReportManager()).getReportTemplatesNoParam(roleName$);
             String templateViewId = request.getParameter("templateviewid");
             if (templateViewId == null) templateViewId = "";
             %>

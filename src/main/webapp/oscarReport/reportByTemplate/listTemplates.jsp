@@ -25,8 +25,12 @@
 --%>
 
 <%@ page import="java.util.*, oscar.oscarReport.reportByTemplate.*"%>
+     
 <%
-ArrayList rawTemplates = (new ReportManager()).getReportTemplatesNoParam();
+String roleName2$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+
+    		
+ArrayList rawTemplates = (new ReportManager()).getReportTemplatesNoParam(roleName2$);
 String templateViewId = request.getParameter("templateviewid");
 if (templateViewId == null) templateViewId = "";
 

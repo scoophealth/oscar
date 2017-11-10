@@ -45,6 +45,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.log.LogAction;
+import oscar.oscarReport.reportByTemplate.actions.GenerateReportAction;
 import oscar.util.ConversionUtils;
 import oscar.util.UtilXML;
 
@@ -61,12 +62,17 @@ public class ReportManager {
 	public ReportManager() {
 	}
 
-	public ArrayList<ReportObjectGeneric> getReportTemplatesNoParam() {
+	public ArrayList<ReportObjectGeneric> getReportTemplatesNoParam(String roles) {
 		ReportTemplatesDao dao = SpringUtils.getBean(ReportTemplatesDao.class);
 		ArrayList<ReportObjectGeneric> reports = new ArrayList<ReportObjectGeneric>();
 		for (ReportTemplates r : dao.findActive()) {
-			ReportObjectGeneric curReport = new ReportObjectGeneric(r.getId().toString(), r.getTemplateTitle(), r.getTemplateDescription(),r.getCategory());
-			reports.add(curReport);
+			try {
+				GenerateReportAction.checkSecurity(r.getId().toString(), roles);
+				ReportObjectGeneric curReport = new ReportObjectGeneric(r.getId().toString(), r.getTemplateTitle(), r.getTemplateDescription(),r.getCategory());
+				reports.add(curReport);
+			}catch(SecurityException e) {
+				LogAction.addLogSynchronous(LoggedInInfo.getLoggedInInfoAsCurrentClassAndMethod(), "ReportManager.getReportTemplatesNoParam", "access denied for =" + r.getId());
+			}
 		}
 		return reports;
 	}
