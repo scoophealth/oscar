@@ -27,6 +27,9 @@
 
 package oscar.oscarReport.reportByTemplate.actions;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -34,6 +37,10 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.util.SpringUtils;
+
+import com.quatro.dao.security.SecobjprivilegeDao;
+import com.quatro.model.security.Secobjprivilege;
 
 import oscar.oscarReport.reportByTemplate.ReportFactory;
 import oscar.oscarReport.reportByTemplate.Reporter;
@@ -43,6 +50,9 @@ import oscar.oscarReport.reportByTemplate.Reporter;
  * @author apavel (Paul)
  */
 public class GenerateReportAction extends Action {
+	
+	static SecobjprivilegeDao secobjprivilegeDao = SpringUtils.getBean(SecobjprivilegeDao.class);
+	
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                  HttpServletRequest request, HttpServletResponse response) {
        
@@ -50,6 +60,10 @@ public class GenerateReportAction extends Action {
     	if(!com.quatro.service.security.SecurityManager.hasPrivilege("_admin", roleName$)  && !com.quatro.service.security.SecurityManager.hasPrivilege("_report", roleName$)) {
     		throw new SecurityException("Insufficient Privileges");
     	}
+    	
+    	////
+    	String templateId = request.getParameter("templateId");	
+    	checkSecurity(templateId,roleName$);
     	
         Reporter reporter = ReportFactory.getReporter(request.getParameter("type"));
         
@@ -60,6 +74,33 @@ public class GenerateReportAction extends Action {
         return mapping.findForward("fail");
         
         
+    }
+    
+    
+    public static void checkSecurity(String templateId, String roles) {
+    	//does the user have access to run this report?
+    	String securityObjectName = "_rbt.execute$" + templateId;
+    	List<Secobjprivilege> entries = secobjprivilegeDao.getByObjectNameAndRoles(securityObjectName,Arrays.asList(roles.split("\\s*,\\s*")));
+    	
+    	if(!entries.isEmpty()) {
+    		boolean deny=false;
+        	for(Secobjprivilege entry: entries) {
+        		if(entry.getPrivilege_code().equals("r") || entry.getPrivilege_code().equals("w") || entry.getPrivilege_code().equals("x")) {
+        			deny=false;
+        			break;
+        		}
+        		
+        		if(entry.getPrivilege_code().equals("o")) {
+        			deny=true;
+        			break;
+        		}
+        	}
+        	
+        	if(deny) {
+        		throw new SecurityException("Insufficient Privileges");
+        	}
+    	}
+
     }
     
 }
