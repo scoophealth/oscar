@@ -290,7 +290,7 @@ public class DSDemographicAccess {
     	logger.debug("HAS DX CODES CALLED");
         List<dxResearchBean> dxCodes = this.getDxCodes();
         for (dxResearchBean dxCode: dxCodes) {
-            if (dxCode.getDxSearchCode().equals(code) && dxCode.getType().equalsIgnoreCase(codeType)) {
+            if (dxCode.getDxSearchCode().equals(code) && dxCode.getType().equalsIgnoreCase(codeType) && dxCode.getStatus().equals("A")) {
                 return true;
         }
         }
