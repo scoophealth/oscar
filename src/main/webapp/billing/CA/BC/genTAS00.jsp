@@ -239,17 +239,27 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
 		    ret = "-" + val.substring(0,val.length()-1);
 		
 		    String lastChar = val.charAt(val.length()-1)+"";
-		    switch(lastChar) {
-					case "}": ret += "0"; break;
-					case "J": ret += "1"; break;
-					case "K": ret += "2"; break;
-					case "L": ret += "3"; break;
-					case "M": ret += "4"; break;
-					case "N": ret += "5"; break;
-					case "O": ret += "6"; break;
-		    		case "P": ret += "7"; break;
-				    case "Q": ret += "8"; break;
-				    case "R": ret += "9"; break;
+		    
+		    if("}".equals(lastChar)) {
+		    	ret += "0";
+		    } else if("J".equals(lastChar)) {
+		    	ret += "1";
+		    } else if("K".equals(lastChar)) {
+		    	ret += "2";
+		    } else if("L".equals(lastChar)) {
+		    	ret += "3";
+		    } else if("M".equals(lastChar)) {
+		    	ret += "4";
+		    } else if("N".equals(lastChar)) {
+		    	ret += "5";
+		    } else if("O".equals(lastChar)) {
+		    	ret += "6";
+		    } else if("P".equals(lastChar)) {
+		    	ret += "7";
+		    } else if("Q".equals(lastChar)) {
+		    	ret += "8";
+		    } else if("R".equals(lastChar)) {
+		    	ret += "9";
 		    }
 		
 		}
