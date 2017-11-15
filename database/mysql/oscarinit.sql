@@ -1,12 +1,15 @@
 CREATE TABLE `surveyData` (
   surveyDataId int(10) NOT NULL auto_increment,
-  surveyId varchar(5) default NULL,
+  surveyId varchar(40) default NULL,
   demographic_no int(10) default NULL,
   provider_no varchar(6) default NULL,
   status char(2) default NULL,
   survey_date date default NULL,
   answer varchar(10) default NULL,
   processed int(10) default NULL,
+  period int(10),
+  randomness int(10),
+  version int(10),
   INDEX `surveyId_index` (surveyId(5)),
   INDEX `demographic_no_index` (demographic_no),
   INDEX `provider_no_index` (provider_no(6)),
@@ -12060,9 +12063,12 @@ CREATE TABLE `ResourceStorage` (
   `uuid` varchar(40),
   `fileContents` mediumblob,
   `uploadDate` datetime,
+  `update_date` datetime,
+  `reference_date` datetime,
   `active` tinyint(1),
   PRIMARY KEY (`id`),
-  KEY `ResourceStorage_resourceType_active` (`resourceType`(10),`active`)
+  KEY `ResourceStorage_resourceType_active` (`resourceType`(10),`active`),
+  KEY `ResourceStorage_resourceType_uuid` (`uuid`)
 );
 
 
@@ -12172,3 +12178,12 @@ CREATE TABLE `onCallClinicDates` (
   PRIMARY KEY (`id`)
 );
 
+create table SurveillanceData (
+	id int(10)  NOT NULL auto_increment primary key,
+	surveyId varchar(50),
+	data mediumblob,
+	createDate datetime,
+	lastUpdateDate datetime,
+	transmissionDate datetime,
+	sent boolean
+);

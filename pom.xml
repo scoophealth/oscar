@@ -1071,6 +1071,12 @@
             <artifactId>tika-core</artifactId>
             <version>1.5</version>
         </dependency>
+        
+        <dependency>
+    			<groupId>com.atlassian.commonmark</groupId>
+    			<artifactId>commonmark</artifactId>
+    			<version>0.10.0</version>
+		</dependency>
 		
 		<!--tagsoup-->
 		<dependency>

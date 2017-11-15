@@ -55,7 +55,31 @@ public class ResourceStorage extends AbstractModel<Integer> {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date uploadDate;
+	
+	@Column(name="update_date")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date updateDate = new Date();
 
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public Date getReferenceDate() {
+		return referenceDate;
+	}
+
+	public void setReferenceDate(Date referenceDate) {
+		this.referenceDate = referenceDate;
+	}
+
+	@Column(name="reference_date")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date referenceDate;
+	
 	private String resourceType = null; 
 	private String resourceName = null;
 	private String uuid = null;

@@ -35,7 +35,6 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import org.apache.commons.digester.Digester;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.ResourceStorageDao;
 import org.oscarehr.common.model.ResourceStorage;
@@ -69,6 +68,13 @@ public   class SurveillanceMaster {
          isLoaded = false;
       }
       return isLoaded;
+   }
+   
+   public static SurveillanceMaster reInit() {
+	   loaded = false;
+	   surveyList = null;
+	   surveyTable = null;
+	   return getInstance();
    }
 
    /**
@@ -194,24 +200,6 @@ public   class SurveillanceMaster {
     *   value........Short form of the question answer.  Used to run queries on results.
     */
    public static void initSurvey(){
-      Digester digester = new Digester();
-      digester.push(surveillanceMaster); // Push controller servlet onto the stack
-      digester.setValidating(false);
-
-      digester.addObjectCreate("surveillance-config/survey",Survey.class);
-      digester.addSetProperties("surveillance-config/survey");
-      digester.addBeanPropertySetter("surveillance-config/survey/surveyQuestion","surveyQuestion");
-      digester.addBeanPropertySetter("surveillance-config/survey/patientCriteria","patientCriteria");
-      digester.addBeanPropertySetter("surveillance-config/survey/exportQuery","exportQuery");
-      digester.addBeanPropertySetter("surveillance-config/survey/exportString","exportString");
-      digester.addCallMethod("surveillance-config/survey/provider","addProvider",0);
-      digester.addCallMethod("surveillance-config/survey/answer","addAnswer",3);
-      digester.addCallParam("surveillance-config/survey/answer",0);
-      digester.addCallParam("surveillance-config/survey/answer",1,"value");
-      digester.addCallParam("surveillance-config/survey/answer",2,"status");
-      digester.addSetNext("surveillance-config/survey","addSurvey");
-
-
 
       String filename = OscarProperties.getInstance().getProperty("surveillance_config_file");
       if (filename != null){
@@ -226,14 +214,6 @@ public   class SurveillanceMaster {
             }
             surveyList = null;
          }
-/*
-         try {
-            digester.parse(input);
-            input.close();
-         }
-         catch (SAXException e) { log.error("filename :"+filename,e); }
-         catch(Exception eio2){ log.error("filename :"+filename,eio2); }
-*/
 
          if(surveyList == null){
             log.error("OSCAR SURVEILLANCE ERROR: could not load from file "+filename);
@@ -249,8 +229,6 @@ public   class SurveillanceMaster {
       			Survey survey =  Survey.createSurvey(resourceStorage.getFileContents());
       			addSurvey(survey);
       		
-                //digester.parse(is);
-                //is.close();
              }
              catch (SAXException e) { log.error("resource name :"+resourceStorage.getResourceName(),e); }
              catch(Exception eio2){ log.error("resource name :"+resourceStorage.getResourceName(),eio2); }

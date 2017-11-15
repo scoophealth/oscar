@@ -32,23 +32,26 @@ package oscar.oscarSurveillance;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Random;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.SurveyDataDao;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.SurveyData;
-import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.XmlUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
@@ -69,9 +72,15 @@ public class Survey {
 	String surveyId;
 	String exportString = null;
 	String exportQuery = null;
+	String patientCriteria =null;
+	
+	String exportDomain = null;
+	String exportMethod = null;
+	String exportPort = null;
+	
 	int randomness;
 	int period;// num days
-	ArrayList providersParticipating = null;
+	List<String> providersParticipating = null;
 	private ArrayList answers = null;
 	private Hashtable answerTable = null;
 	String surveyStatus = "";
@@ -88,7 +97,11 @@ public class Survey {
 	}
 
 	private boolean hasPatientCriteria() {
-		return false;
+		log.debug("patientCriteria "+patientCriteria);
+		if(patientCriteria == null) {
+			return false;
+		}
+		return true;		
 	}
 
 	private void initRandom() {
@@ -131,14 +144,20 @@ public class Survey {
 	}
 
 	public boolean isDemographicSelected(LoggedInInfo loggedInInfo, String demographicNo) {
-		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
-		Demographic demo = demographicManager.getDemographic(loggedInInfo, demographicNo);
-		return demo != null;
+		try {
+			PreparedStatement ps = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(patientCriteria);
+			ps.setString(1, demographicNo);
+			ResultSet result = ps.executeQuery();
+			if(result.next()) {
+				return true;
+			}
+			
+		}catch(Exception e) {
+			log.error("error executing patientCriteria query "+patientCriteria,e);
+		}
+		return false;
 	}
 
-	boolean isPatientSelected(String demograpic_no) {
-		return true; //TODO
-	}
 
 	boolean isPatientRandomlySelected() {
 		boolean isPatientSelect = false;
@@ -198,6 +217,8 @@ public class Survey {
 		sd.setProviderNo(provider_no);
 		sd.setStatus(status);
 		sd.setAnswer(answer);
+		sd.setPeriod(this.period);
+		sd.setRandomness(this.randomness);
 		sd.setSurveyDate(new java.util.Date());
 
 		surveyDataDao.persist(sd);
@@ -306,6 +327,16 @@ public class Survey {
 		if (!providersParticipating.contains(p)) {
 			providersParticipating.add(p);
 		}
+	}
+	
+	public List<String> getProviderList(){
+		
+		return providersParticipating;
+	}
+	
+	public void setProviderList( List<String> list){
+		providersParticipating = list;
+		
 	}
 
 	public boolean isProviderInSurvey(String p) {
@@ -495,7 +526,69 @@ public class Survey {
 	public void setExportQuery(java.lang.String exportQuery) {
 		this.exportQuery = exportQuery;
 	}
+	
+
+	public static byte[] toBytes(Survey survey) throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException, ParserConfigurationException{
+		Document doc = toDocument(survey);
+		return XmlUtils.toBytes(doc, true);
+	}
+	public static String toXmlString(Survey survey) throws ParserConfigurationException, ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		Document doc = toDocument(survey);
+		return XmlUtils.toString(doc, true);
+	}
+	
+	private static Document toDocument(Survey survey) throws ParserConfigurationException {
+		Document doc = XmlUtils.newDocument("surveillance-config");
+		Element surveyElement = doc.createElement("survey");
+		//doc.appendChild(surveyElement);
+		doc.getFirstChild().appendChild(surveyElement);
+		
+		surveyElement.setAttribute("surveyTitle", survey.getSurveyTitle());
+		surveyElement.setAttribute("randomness", ""+survey.getRandomness());
+		surveyElement.setAttribute("period", ""+survey.getPeriod());
+		surveyElement.setAttribute("surveyId", survey.getSurveyId());
+		log.error("is there white space here? "+survey.getSurveyQuestion());
+		XmlUtils.appendChild(doc, surveyElement, "surveyQuestion", survey.getSurveyQuestion());
+		
+		List<String> providerList = survey.getProviderList();
+		if(providerList != null) {
+			for(String provider: providerList) {
+				XmlUtils.appendChild(doc, surveyElement, "provider", provider);
+			}
+		}
+		List<Answer> sanswers = survey.getAnswersList();
+		if(sanswers != null){
+			for(Answer a: sanswers) {
+				Element answerEle = doc.createElement("answer");
+				answerEle.setAttribute("status", a.answerStatus);
+				answerEle.setAttribute("value", a.answerValue);
+				answerEle.setTextContent(a.answerString);
+				surveyElement.appendChild(answerEle);
+			}
+		}
+		if(survey.getPatientCriteria() != null) {
+			XmlUtils.appendChild(doc, surveyElement, "patientCriteria", survey.getPatientCriteria());
+		}
+		XmlUtils.appendChild(doc, surveyElement, "exportQuery", survey.getExportQuery());
+		XmlUtils.appendChild(doc, surveyElement, "exportString", survey.getExportString());
+		
+		
+		if(survey.getExportDomain() != null && survey.getExportMethod() != null && survey.getExportPort() != null) {
+			//<export domain="dc.cnphi-rcrsp.ca" method="FTPS" port="21"/>
+			Element exportElement = doc.createElement("export");
+			exportElement.setAttribute("domain", survey.getExportDomain());
+			exportElement.setAttribute("method", survey.getExportMethod());
+			exportElement.setAttribute("port", survey.getExportPort());
+			surveyElement.appendChild(exportElement);
+		}
+		return doc;
+		
+	}
 	                                                                                    
+		public String getPatientCriteria() {
+		return patientCriteria;
+	}
+
 		private static Survey fromDocument(Document doc){
 		Survey returnSurvey = new Survey();
 		Node rootNode = doc.getFirstChild();
@@ -507,15 +600,8 @@ public class Survey {
 		returnSurvey.surveyId = XmlUtils.getAttributeValue(survey, "surveyId");
 		returnSurvey.exportString = XmlUtils.getChildNodeTextContents(survey, "exportString");
 		returnSurvey.exportQuery = XmlUtils.getChildNodeTextContents(survey, "exportQuery");
-		//JG:I think patientCriteria was a working element before but it looks like it has been not implemented or taken out
-		/*
-		 ie:
-         <patientCriteria>
-         	FROM demographic , demographicstudy where demographicstudy.study_no = '3' and demographic.demographic_no = demographicstudy.demographic_no
-         </patientCriteria>
-		I found this in a old config file that was used for a study.  It could be used to make sure a demographic met certain requirements
-		before being randomized.
-		 */
+		returnSurvey.patientCriteria = XmlUtils.getChildNodeTextContents(survey, "patientCriteria");
+		
 		try{
 			returnSurvey.randomness= Integer.parseInt(XmlUtils.getAttributeValue(survey, "randomness"));
 		}catch(Exception e){
@@ -534,6 +620,14 @@ public class Survey {
 			returnSurvey.addAnswer(answerString, answerValue, answerStatus);
 		}
 		
+		for(Node exportNode : XmlUtils.getChildNodes(survey, "export")){
+			returnSurvey.exportDomain = XmlUtils.getAttributeValue(exportNode, "domain");
+			returnSurvey.exportMethod = XmlUtils.getAttributeValue(exportNode, "method");
+			returnSurvey.exportPort = XmlUtils.getAttributeValue(exportNode, "port");
+		}
+		
+		
+		
 		for(Node providerNode : XmlUtils.getChildNodes(survey, "provider")){
 			returnSurvey.addProvider(providerNode.getTextContent());
 		}
@@ -548,6 +642,11 @@ public class Survey {
 	
 	public static Survey createSurvey(byte[] bArray) throws IOException, SAXException, ParserConfigurationException{
 		Document doc = XmlUtils.toDocument(bArray);
+		return fromDocument(doc);
+	}
+	
+	public static Survey createSurvey(String str) throws IOException, SAXException, ParserConfigurationException{
+		Document doc = XmlUtils.toDocument(str);
 		return fromDocument(doc);
 	}
 	
@@ -571,6 +670,22 @@ public class Survey {
 			this.answerStatus = answerStatus;
 
 		}
+	}
+
+
+
+
+
+	public String getExportDomain() {
+		return exportDomain;
+	}
+
+	public String getExportMethod() {
+		return exportMethod;
+	}
+
+	public String getExportPort() {
+		return exportPort;
 	}
 
 }

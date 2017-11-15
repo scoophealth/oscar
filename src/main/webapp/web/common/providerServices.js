@@ -112,6 +112,20 @@ angular.module("providerServices", [])
              });
 
           return deferred.promise;
+        },
+        getAllActiveProviders: function(){
+        		var deferred = $q.defer();
+            
+            $http({
+                url: this.apiPath+'/providers_json',
+                method: "GET"
+             }).success(function (data, status, headers, config) {
+            	 	deferred.resolve(data.content);
+             }).error(function (data, status, headers, config) {
+            	 	deferred.reject("An error occured while fetching provider teams");
+             });
+
+            return deferred.promise;
         }
     };
 });
