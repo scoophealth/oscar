@@ -404,7 +404,7 @@ public class PhsStarHandler extends BasePhsStarHandler {
 		admission.setProgram(p);
 		admission.setProgramId(p.getId());
 		admission.setProviderNo(providerNo);
-		admission.setClientStatusId(0);
+		admission.setClientStatusId(null);
 		admission.setTeamId(0);
 		admission.setRadioDischargeReason("0");
 		admissionDao.saveAdmission(admission);
