@@ -51,6 +51,7 @@ import org.oscarehr.util.SpringUtils;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import oscar.OscarProperties;
+import oscar.oscarDemographic.data.DemographicMerged;
 import oscar.oscarRx.data.RxProviderData;
 import oscar.oscarRx.data.RxProviderData.Provider;
 
@@ -93,6 +94,7 @@ public class SearchDemographicAutoCompleteAction extends Action {
 
         List<Demographic> list = null;
         
+        List<Demographic> finalList = new ArrayList<Demographic>();
         
         
         
@@ -106,6 +108,20 @@ public class SearchDemographicAutoCompleteAction extends Action {
         } else {
         	list = demographicManager.doMultiSearch(LoggedInInfo.getLoggedInInfoFromSession(request), searchTypes, searchTerms, 100, 0, providerNo, outOfDomain, activeOnly, !activeOnly);
         }
+    	
+		DemographicMerged dmDAO = new DemographicMerged();
+
+		for(Demographic demo : list) {
+			String dem_no = demo.getDemographicNo().toString();
+			String head = dmDAO.getHead(dem_no);
+
+			if (head != null && !head.equals(dem_no)) {
+				//skip non head records
+				continue;
+			}
+			finalList.add(demo);
+		}
+		
 /*
     	if (searchStr.length() == 8 && searchStr.matches("([0-9]*)")) {
             list = demographicDao.searchMergedDemographicByDOB(searchStr.substring(0,4)+"-"+searchStr.substring(4,6)+"-"+searchStr.substring(6,8), 100, 0,providerNo,outOfDomain);
