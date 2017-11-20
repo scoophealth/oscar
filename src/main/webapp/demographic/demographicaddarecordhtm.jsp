@@ -168,6 +168,10 @@
             if( !ignoreDuplicates() ) return false;
             //document.getElementById("adddemographic").submit();
 
+             <% if("false".equals(OscarProperties.getInstance().getProperty("skip_postal_code_validation","false"))) { %>
+  				if ( !isPostalCode() ) return false;
+  			<% } %>
+  
             return true;
         }        
         
@@ -534,7 +538,33 @@ function ignoreDuplicates() {
 	return ret;
 }
 
+function isPostalCode()
+{
+    if(isCanadian()){
+         e = document.adddemographic.postal;
+         postalcode = e.value;
+        	
+         rePC = new RegExp(/(^s*([a-z](\s)?\d(\s)?){3}$)s*/i);
+    
+         if (!rePC.test(postalcode)) {
+              e.focus();
+              alert("The entered Postal Code is not valid");
+              return false;
+         }
+    }//end cdn check
 
+return true;
+}
+
+function isCanadian(){
+	e = document.adddemographic.province;
+    var province = e.options[e.selectedIndex].value;
+    
+    if ( province.indexOf("US")>-1 || province=="OT"){ //if not canadian
+            return false;
+    }
+    return true;
+}
 </script>
 </head>
 <!-- Databases have alias for today. It is not necessary give the current date -->
@@ -781,6 +811,10 @@ function ignoreDuplicates() {
 				</td>
 				<td id="postalLbl" align="right"><b> <% if(oscarProps.getProperty("demographicLabelPostal") == null) { %>
 				<bean:message key="demographic.demographicaddrecordhtm.formPostal" />
+				 <% if("false".equals(OscarProperties.getInstance().getProperty("skip_postal_code_validation","false"))) { %>
+ 					<span style="color:red">*</span>				
+ 				 <% } %>
+  
 				<% } else {
           out.print(oscarProps.getProperty("demographicLabelPostal"));
       	 } %> : </b></td>
