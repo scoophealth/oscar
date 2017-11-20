@@ -511,8 +511,13 @@ String curProvider_no = (String)session.getAttribute("user");
 					<li><a href="javascript:void(0);"
 						class="xlink" rel="${ctx}/admin/groupnoacl.jsp"><bean:message
 						key="admin.admin.btnGroupNoAcl" /></a></li>
-		                        <li><a href='javascript:void(0);'
+		            <oscar:oscarPropertiesCheck property="billregion" value="ON">
+		           
+		            <li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/groupPreferences.jsp"><bean:message key="admin.admin.btnGroupPreference" /></a></li>
+						
+					</oscar:oscarPropertiesCheck>
+					
 					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/oscarPrevention/PreventionManager.jsp" title="Customize prevention notifications."><bean:message key="admin.admin.preventionNotification.title" /></a></li>
 				</ul>
 				</div>
