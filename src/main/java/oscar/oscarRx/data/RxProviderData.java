@@ -103,17 +103,17 @@ public class RxProviderData {
         	UserProperty prop = null;
         
         	prop = userPropertyDao.getProp(providerNo, "faxnumber");
-        	if(prop != null && prop.getValue().length()>0) {
+        	if(prop != null && prop.getValue() != null &&  prop.getValue().length()>0) {
         		clinicFax = prop.getValue();
         	}
         
         	prop = userPropertyDao.getProp(providerNo, "rxPhone");
-        	if(prop != null && prop.getValue().length()>0) {
+        	if(prop != null &&  prop.getValue() != null && prop.getValue().length()>0) {
         		clinicPhone = prop.getValue();
         	}
         
         	prop = userPropertyDao.getProp(providerNo, "rxAddress");
-        	if(prop != null && prop.getValue().length()>0) {
+        	if(prop != null &&  prop.getValue() != null && prop.getValue().length()>0) {
         		//we're going to override with the preference address
         		clinicAddress = prop.getValue();
         		clinicCity = readProperty(providerNo,"rxCity");
