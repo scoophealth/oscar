@@ -502,11 +502,13 @@
 </a>
 </div>
 
+<caisi:isModuleLoad moduleName="caisi">
 <div class="goBackToSchedule">
 <a href="../provider/providercontrol.jsp" title="<bean:message key="demographic.search.btnReturnToSchedule" />">
 <bean:message key="demographic.search.btnReturnToSchedule" />
 </a>
 </div>
+</caisi:isModuleLoad>
 
 
 </div>
