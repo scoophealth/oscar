@@ -49,9 +49,10 @@ public class ProEditFaxNumAction extends Action {
               return mapping.findForward("eject");
 
         DynaActionForm frm = (DynaActionForm)form;
-                
+        
+        String faxNumber = (String)frm.get("faxNumber");
         ProviderFaxUpdater faxUpdater = new ProviderFaxUpdater(providerNo);
-        if( faxUpdater.setFax((String)frm.get("faxNumber"))) {
+        if(faxNumber != null && !faxNumber.isEmpty() && faxUpdater.setFax(faxNumber)) {
             request.setAttribute("status",new String("complete"));
             forward = new String("success");
         }
