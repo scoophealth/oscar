@@ -2703,7 +2703,7 @@
             <action path="/BillingONReview" scope="request" type="org.oscarehr.common.web.BillingONReviewAction" parameter="method" />
                  
                  <action path="/admin/GroupPreference" name="groupPreference" scope="request" type="org.oscarehr.common.web.GroupPreferenceAction" parameter="method">
-                    <forward name="saved" path="/close.html"/>
+                    <forward name="saved" path="/admin/groupPreferences.jsp"/>
                     <forward name="changedForm" path="/admin/groupPreferences.jsp"/>
                  </action>
 		
