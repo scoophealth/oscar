@@ -55,10 +55,12 @@
 	  String list = request.getParameter("list");
 	  List<Contact> contacts;
 	  
+	  String programNo = request.getParameter("programNo");
+	  
 	  if( "all".equalsIgnoreCase(list) ) {
-		  contacts = ContactAction.searchAllContacts(search_mode, orderBy, keyword);
+		  contacts = ContactAction.searchAllContacts(search_mode, orderBy, keyword, programNo);
 	  } else {
-		  contacts = ContactAction.searchContacts(search_mode, orderBy, keyword);
+		  contacts = ContactAction.searchContacts(search_mode, orderBy, keyword, programNo);
 	  }
 	   
 	  nItems = contacts.size();

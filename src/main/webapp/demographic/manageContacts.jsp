@@ -271,7 +271,7 @@ function searchExternalProviders<%=type%>(action) {
 		'contactSearch.jsp?form=updatedelete' +
 		'&elementName=search<%=type%>TeamInput' +
 		'&elementId=search<%=type %>TeamInputId' +
-		'&programId=' + programId + 
+		'&programNo=' + programId + 
 		'&keyword='+ searchfield +
 		'&contactRole=' + contactRole + 
 		'&submit=' + action ,

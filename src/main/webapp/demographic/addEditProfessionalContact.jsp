@@ -31,7 +31,17 @@
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.oscarehr.common.dao.ContactSpecialtyDao" %>
 <%@ page import="org.oscarehr.common.model.ContactSpecialty" %>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider"%>
+<%@page import="org.oscarehr.managers.ProgramManager2"%>
+<%@page import="org.oscarehr.managers.ContactManager"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 
+
+<%
+ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+%>
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -344,6 +354,21 @@
 			<input type="text" name="pcontact.note" value="<c:out value="${pcontact.note}"/>" size="30">
 		</td>
 	</tr>	
+	<tr>
+		<td align="right"><b>Restrict to program</b></td>
+			<td>
+			 	<select name="pcontact.programNo" id="pcontact.programNo" title="Restrict to Program">
+	            		<option value="0"></option>
+	            		<%
+	            			for(ProgramProvider pp:ppList) {
+	            		%>
+							<option value="<%=pp.getProgramId()%>"><%=pp.getProgram().getName() %></option>
+						<%
+	            			}
+						%>
+	            	</select>
+			 </td>
+	</tr>
 	<tr>
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>

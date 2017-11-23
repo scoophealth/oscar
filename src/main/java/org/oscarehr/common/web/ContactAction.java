@@ -215,7 +215,7 @@ public class ContactAction extends DispatchAction {
     				c.setConsentToContact(false);
     			}
     			
-    			if(request.getParameter("contact_"+x+".programId") != null && !request.getParameter("contact_"+x+".programId").equals("0")) {
+    			if(request.getParameter("contact_"+x+".programId") != null && !request.getParameter("contact_"+x+".programId").equals("0") && !request.getParameter("contact_"+x+".programId").equals("undefined")) {
     				c.setProgramNo(Integer.parseInt(request.getParameter("contact_"+x+".programId")));
     			} else {
     				c.setProgramNo(null);
@@ -302,7 +302,7 @@ public class ContactAction extends DispatchAction {
     				c.setConsentToContact(false);
     			}
     			
-    			if(request.getParameter("procontact_"+x+".programId") != null && !request.getParameter("procontact_"+x+".programId").equals("0")) {
+    			if(request.getParameter("procontact_"+x+".programId") != null && !request.getParameter("procontact_"+x+".programId").equals("0") && !request.getParameter("procontact_"+x+".programId").equals("undefined")) {
     				c.setProgramNo(Integer.parseInt(request.getParameter("procontact_"+x+".programId")));
     			} else {
     				c.setProgramNo(null);
@@ -559,11 +559,17 @@ public class ContactAction extends DispatchAction {
 			Contact savedContact = contactDao.find(Integer.parseInt(id));
 			if(savedContact != null) {
 				BeanUtils.copyProperties(contact, savedContact, new String[]{"id"});
+				if(savedContact.getProgramNo() != null && savedContact.getProgramNo().intValue() == 0) {
+					savedContact.setProgramNo(null);
+				}
 				contactDao.merge(savedContact);
 			}
 		}
 		else {
 			contact.setId(null);
+			if(contact.getProgramNo() != null && contact.getProgramNo().intValue() == 0) {
+				contact.setProgramNo(null);
+			}
 			contactDao.persist(contact);
 		}
 	   return mapping.findForward("cForm");
@@ -623,6 +629,11 @@ public class ContactAction extends DispatchAction {
 				if(savedContact != null) {
 					
 					BeanUtils.copyProperties( contact, savedContact, new String[]{"id"} );
+					
+					if(savedContact.getProgramNo() != null && savedContact.getProgramNo().intValue() == 0) {
+						savedContact.setProgramNo(null);
+					}
+					
 					proContactDao.merge( savedContact );
 					contactRole = savedContact.getSpecialty();
 				}
@@ -632,6 +643,10 @@ public class ContactAction extends DispatchAction {
 		} else {
 			
 			logger.info("Saving a new Professional Contact with id " + contact.getId());
+			
+			if(contact.getProgramNo() != null && contact.getProgramNo().intValue() == 0) {
+				contact.setProgramNo(null);
+			}
 			
 			proContactDao.persist(contact);
 			
@@ -697,13 +712,13 @@ public class ContactAction extends DispatchAction {
 	 * @param keyword
 	 * @return
 	 */
-	public static List<Contact> searchAllContacts(String searchMode, String orderBy, String keyword) {
+	public static List<Contact> searchAllContacts(String searchMode, String orderBy, String keyword, String programNo) {
 		List<Contact> contacts = new ArrayList<Contact>();
 		List<ProfessionalSpecialist> professionalSpecialistContact = professionalSpecialistDao.search(keyword);		
 		
 		// if there is a future in adding personal contacts.
 		// contacts.addAll( contactDao.search(searchMode, orderBy, keyword) );		
-		contacts.addAll( proContactDao.search(searchMode, orderBy, keyword) );		
+		contacts.addAll( proContactDao.search(searchMode, orderBy, keyword, programNo) );		
 		contacts.addAll( HealthCareTeamCreator.buildContact( professionalSpecialistContact ) );
 		
 		Collections.sort(contacts, HealthCareTeamCreator.byLastName);
@@ -712,13 +727,13 @@ public class ContactAction extends DispatchAction {
 	}
 
 
-	public static List<Contact> searchContacts(String searchMode, String orderBy, String keyword) {
-		List<Contact> contacts = contactDao.search(searchMode, orderBy, keyword);
+	public static List<Contact> searchContacts(String searchMode, String orderBy, String keyword, String programNo) {
+		List<Contact> contacts = contactDao.search(searchMode, orderBy, keyword, programNo);
 		return contacts;
 	}
 
-	public static List<ProfessionalContact> searchProContacts(String searchMode, String orderBy, String keyword) {
-		List<ProfessionalContact> contacts = proContactDao.search(searchMode, orderBy, keyword);
+	public static List<ProfessionalContact> searchProContacts(String searchMode, String orderBy, String keyword, String programNo) {
+		List<ProfessionalContact> contacts = proContactDao.search(searchMode, orderBy, keyword, programNo);
 		return contacts;
 	}
 	

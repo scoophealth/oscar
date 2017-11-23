@@ -78,11 +78,13 @@
 	  String list = request.getParameter("list");
 	  List<?> contacts;
 
+	  String programNo = request.getParameter("programNo");
+	  
 	  if( "all".equalsIgnoreCase(list) ) {
-		  contacts = ContactAction.searchAllContacts(search_mode, orderBy, keyword);
+		  contacts = ContactAction.searchAllContacts(search_mode, orderBy, keyword,programNo);
 		  pageContext.setAttribute("toggleSearchTool", list);
 	  } else {
-		  contacts = ContactAction.searchProContacts(search_mode, orderBy, keyword);
+		  contacts = ContactAction.searchProContacts(search_mode, orderBy, keyword,programNo);
 	  }
 	  
 	  nItems = contacts.size();

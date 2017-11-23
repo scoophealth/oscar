@@ -42,16 +42,18 @@ public class ContactDao extends AbstractDao<Contact> {
 		super(Contact.class);
 	}
 	
-	public List<Contact> search(String searchMode, String orderBy, String keyword) {
+	public List<Contact> search(String searchMode, String orderBy, String keyword, String programNo) {
 		StringBuilder where = new StringBuilder();
-		List<String> paramList = new ArrayList<String>();
-	    
+		List<Object> paramList = new ArrayList<Object>();
+		int maxIDUsed =1;
+		
 		if(searchMode.equals("search_name")) {
 			String[] temp = keyword.split("\\,\\p{Space}*");
 			if(temp.length>1) {
 		      where.append("c.lastName like ?1 and c.firstName like ?2");
 		      paramList.add(temp[0]+"%");
 		      paramList.add(temp[1]+"%");
+		      maxIDUsed=2;
 		    } else {
 		      where.append("c.lastName like ?1");
 		      paramList.add(temp[0]+"%");
@@ -60,6 +62,11 @@ public class ContactDao extends AbstractDao<Contact> {
 			where.append("c." + StringEscapeUtils.escapeSql(searchMode) + " like ?1");
 			paramList.add(keyword+"%");
 		}			
+		
+		if(programNo != null && !programNo.equals("0")) {
+			where.append(" AND c.programNo = ?" + (maxIDUsed+1));
+			paramList.add(Integer.parseInt(programNo));
+		}
 		String sql = "SELECT c from Contact c where " + where.toString() + " order by " + orderBy;
 		MiscUtils.getLogger().debug(sql);
 		Query query = entityManager.createQuery(sql);

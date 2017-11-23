@@ -47,11 +47,21 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="java.util.Properties"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider"%>
+<%@page import="org.oscarehr.managers.ProgramManager2"%>
+<%@page import="org.oscarehr.managers.ContactManager"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="java.util.List"%>
 <%
   
   String msg = "Enter contact details.";
   Properties	prop  = new Properties();
   
+  ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+  LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+  List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+	
 %>
 <html:html locale="true">
 <head>
@@ -236,6 +246,21 @@
 			<input type="text" name="contact.note" value="<c:out value="${contact.note}"/>" size="30">
 		</td>
 	</tr>	
+	<tr>
+		<td align="right"><b>Restrict to program</b></td>
+			<td>
+			 	<select name="contact.programNo" id="contact.programNo" title="Restrict to Program">
+	            		<option value="0"></option>
+	            		<%
+	            			for(ProgramProvider pp:ppList) {
+	            		%>
+							<option value="<%=pp.getProgramId()%>"><%=pp.getProgram().getName() %></option>
+						<%
+	            			}
+						%>
+	            	</select>
+			 </td>
+	</tr>
 	<tr>
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>

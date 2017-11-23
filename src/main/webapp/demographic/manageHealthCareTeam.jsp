@@ -278,6 +278,7 @@ function searchExternalProviders(action) {
 		'procontactSearch.jsp?form=updatedelete' +
 		'&elementName=contactName' +
 		'&elementId=contactId' +
+		'&programNo=' + programId + 
 		'&keyword='+ searchfield +
 		'&programId=' + programId + 
 		'&contactRole=' + contactRole + 
