@@ -34,6 +34,7 @@ import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.util.Terser;
 import ca.uhn.hl7v2.validation.impl.NoValidation;
 
+
 /**
  * 
  * Authored by Colcamex Resources Inc.
@@ -85,7 +86,7 @@ public class IHAPOIHandler extends MEDITECHHandler implements MessageHandler  {
 	public void init(String hl7Body) throws HL7Exception {
 		Parser parser = new PipeParser();
 		parser.setValidationContext(new NoValidation());
-		Message message = parser.parse( hl7Body.replaceAll( "\n", "\r\n" ) );
+		Message message = parser.parse( hl7Body.replaceAll("\n", "\n\r") );
 
 		if( message instanceof ca.uhn.hl7v2.model.v23.message.ORU_R01 ) {
 			msg = ( ca.uhn.hl7v2.model.v23.message.ORU_R01 ) message;
@@ -103,12 +104,19 @@ public class IHAPOIHandler extends MEDITECHHandler implements MessageHandler  {
 	}
 	
 	/**
-	 * Not applicable. Override with FALSE.
+	 * If the first OBX segment is presenting a textual report and the lab type is 
+	 * not in the unstructured (PATH or ITS) lab types.  
 	 * 
 	 */
 	@Override
-	public boolean isReportData() {			
-		return Boolean.FALSE;
+	public boolean isReportData() {	
+		if( OBX_DATA_TYPES.TX.name().equals( getOBXValueType(0, 0) ) 
+				|| OBX_DATA_TYPES.FT.name().equals( getOBXValueType(0, 0) ) 
+				|| SENDING_APPLICATION.IHARAD.name().equals(getDiagnosticServiceId())
+				|| SENDING_APPLICATION.OE.name().equals(getDiagnosticServiceId()) ) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -118,7 +126,7 @@ public class IHAPOIHandler extends MEDITECHHandler implements MessageHandler  {
 	 * Only some of the LAB sending applications are unstructured. Such as BBK and MB
 	 */
 	@Override
-	public boolean isUnstructured() {	
+	public boolean isUnstructured() {
 		return ( ! STRUCTURED.LAB.name().equalsIgnoreCase( getDiagnosticServiceId() ) );				
 	}
 	
