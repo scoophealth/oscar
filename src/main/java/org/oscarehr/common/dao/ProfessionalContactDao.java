@@ -76,7 +76,9 @@ public class ProfessionalContactDao extends AbstractDao<ProfessionalContact> {
 			paramList.add(Integer.parseInt(programNo));
 		}*/
 		
-		where.append(" AND c.programNo IN (select pp.ProgramId from ProgramProvider pp where pp.ProviderNo = '"+providerNo+"') ");
+		if(providerNo != null && !providerNo.equals("") && !providerNo.equals("0")) {
+			where.append(" AND c.programNo IN (select pp.ProgramId from ProgramProvider pp where pp.ProviderNo = '"+providerNo+"') ");
+		}
 		String sql = "SELECT c from ProfessionalContact c where " + where.toString() + " order by " + orderBy;
 		
 		Query query = entityManager.createQuery(sql);
