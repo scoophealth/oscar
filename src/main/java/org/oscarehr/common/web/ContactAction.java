@@ -712,13 +712,13 @@ public class ContactAction extends DispatchAction {
 	 * @param keyword
 	 * @return
 	 */
-	public static List<Contact> searchAllContacts(String searchMode, String orderBy, String keyword, String programNo) {
+	public static List<Contact> searchAllContacts(String searchMode, String orderBy, String keyword, String programNo, String providerNo) {
 		List<Contact> contacts = new ArrayList<Contact>();
 		List<ProfessionalSpecialist> professionalSpecialistContact = professionalSpecialistDao.search(keyword);		
 		
 		// if there is a future in adding personal contacts.
 		// contacts.addAll( contactDao.search(searchMode, orderBy, keyword) );		
-		contacts.addAll( proContactDao.search(searchMode, orderBy, keyword, programNo) );		
+		contacts.addAll( proContactDao.search(searchMode, orderBy, keyword, programNo, providerNo) );		
 		contacts.addAll( HealthCareTeamCreator.buildContact( professionalSpecialistContact ) );
 		
 		Collections.sort(contacts, HealthCareTeamCreator.byLastName);
@@ -727,13 +727,13 @@ public class ContactAction extends DispatchAction {
 	}
 
 
-	public static List<Contact> searchContacts(String searchMode, String orderBy, String keyword, String programNo) {
-		List<Contact> contacts = contactDao.search(searchMode, orderBy, keyword, programNo);
+	public static List<Contact> searchContacts(String searchMode, String orderBy, String keyword, String programNo, String providerNo) {
+		List<Contact> contacts = contactDao.search(searchMode, orderBy, keyword, programNo, providerNo);
 		return contacts;
 	}
 
-	public static List<ProfessionalContact> searchProContacts(String searchMode, String orderBy, String keyword, String programNo) {
-		List<ProfessionalContact> contacts = proContactDao.search(searchMode, orderBy, keyword, programNo);
+	public static List<ProfessionalContact> searchProContacts(String searchMode, String orderBy, String keyword, String programNo, String providerNo) {
+		List<ProfessionalContact> contacts = proContactDao.search(searchMode, orderBy, keyword, programNo, providerNo);
 		return contacts;
 	}
 	

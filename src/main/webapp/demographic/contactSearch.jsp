@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="java.util.*,java.sql.*, java.net.*"%>
 <%@ page import="org.oscarehr.common.web.ContactAction"%>
 <%@ page import="org.oscarehr.common.model.Contact"%>
@@ -33,6 +34,8 @@
 <%@ include file="/taglibs.jsp"%>
 
 <%
+  LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+    		
   String strLimit1="0";
   String strLimit2="10";
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
@@ -58,9 +61,9 @@
 	  String programNo = request.getParameter("programNo");
 	  
 	  if( "all".equalsIgnoreCase(list) ) {
-		  contacts = ContactAction.searchAllContacts(search_mode, orderBy, keyword, programNo);
+		  contacts = ContactAction.searchAllContacts(search_mode, orderBy, keyword, programNo,loggedInInfo.getLoggedInProviderNo());
 	  } else {
-		  contacts = ContactAction.searchContacts(search_mode, orderBy, keyword, programNo);
+		  contacts = ContactAction.searchContacts(search_mode, orderBy, keyword, programNo, loggedInInfo.getLoggedInProviderNo());
 	  }
 	   
 	  nItems = contacts.size();
@@ -163,7 +166,7 @@
 		<tr bgcolor="<%=bgColor%>"
 		onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';"
 		onMouseout="this.style.backgroundColor='<%=bgColor%>';" onClick="<%=strOnClick%>">
-			<td><c:catch var="err"><c:out value="${contact.specialty }" /><</c:catch></td>
+			<td><c:catch var="err"><c:out value="${contact.specialty }" /></c:catch></td>
 			<td><c:out value="${contact.lastName}"/></td>
 			<td><c:out value="${contact.firstName}"/></td>
 			<td><c:out value="${contact.residencePhone}"/></td>

@@ -42,7 +42,7 @@ public class ContactDao extends AbstractDao<Contact> {
 		super(Contact.class);
 	}
 	
-	public List<Contact> search(String searchMode, String orderBy, String keyword, String programNo) {
+	public List<Contact> search(String searchMode, String orderBy, String keyword, String programNo, String providerNo) {
 		StringBuilder where = new StringBuilder();
 		List<Object> paramList = new ArrayList<Object>();
 		int maxIDUsed =1;
@@ -62,11 +62,14 @@ public class ContactDao extends AbstractDao<Contact> {
 			where.append("c." + StringEscapeUtils.escapeSql(searchMode) + " like ?1");
 			paramList.add(keyword+"%");
 		}			
-		
+		/*
 		if(programNo != null && !programNo.equals("0")) {
 			where.append(" AND c.programNo = ?" + (maxIDUsed+1));
 			paramList.add(Integer.parseInt(programNo));
-		}
+		}*/
+		
+		where.append(" AND c.programNo IN (select pp.ProgramId from ProgramProvider pp where pp.ProviderNo = '"+providerNo+"') ");
+		
 		String sql = "SELECT c from Contact c where " + where.toString() + " order by " + orderBy;
 		MiscUtils.getLogger().debug(sql);
 		Query query = entityManager.createQuery(sql);
