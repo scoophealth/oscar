@@ -328,8 +328,7 @@ $scope.$on('$destroy', function () { clearInterval(myVar); });
 			
 			var dt = new Date($scope.page.appointment.appointmentDate);
 			apptDate = dt.getFullYear()+"-"+zero(dt.getMonth()+1)+"-"+zero(dt.getDate());
-			dt = new Date($scope.page.appointment.startTime);
-			apptStartTime = zero(dt.getHours())+":"+zero(dt.getMinutes())+":"+zero(dt.getSeconds());
+			apptStartTime = $scope.page.appointment.startTime;
 		}
 		
 		var url = "../billing.do?billRegion="+encodeURIComponent($scope.page.billregion);
