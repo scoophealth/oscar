@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.managers.SecurityInfoManager"%>
 <%@page import="org.oscarehr.common.IsPropertiesOn"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
@@ -228,7 +229,6 @@
 	
 	/* OSCAREMR-6243 */
 	function popup9(vheight, vwidth, varpage,flag) {
-		alert(flag);
 		var page = varpage;
 		windowprops = "height="
 				+ vheight
@@ -255,6 +255,7 @@
 	}
 
 	function popupEChart9(vheight,vwidth,varpage,flag) { //open a new popup window
+		
 		  var page = "" + varpage;
 		  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
 		  
@@ -657,11 +658,20 @@ jQuery(document).ready(function() {
 			List<Admission> currentAdmissions = admissionManager.getCurrentAdmissions(demo.getDemographicNo());
 			
 			//the rule is that if my current program is not a program this patient is in, then give a warning
-			boolean showProgramWarning = true;
-			for(Admission a:currentAdmissions) {
-				if(a.getProgramId().equals(currentProgramInDomain.getProgramId().intValue())) {
-					showProgramWarning = false;
-					break;
+			
+			//do they have _caisi.documentationWarning" permission set to something other than none
+
+			SecurityInfoManager secManager = SpringUtils.getBean(SecurityInfoManager.class);
+			boolean showProgramWarning = false;
+			
+			if(secManager.hasPrivilege(loggedInInfo, "_caisi.documentationWarning", "r", null)) {
+				showProgramWarning = true;
+				
+				for(Admission a:currentAdmissions) {
+					if(a.getProgramId().equals(currentProgramInDomain.getProgramId().intValue())) {
+						showProgramWarning = false;
+						break;
+					}
 				}
 			}
 			
@@ -683,7 +693,7 @@ jQuery(document).ready(function() {
 		<td class="links"><security:oscarSec roleName="<%=roleName$%>"
 			objectName="_eChart" rights="r">
 			<a class="encounterBtn" title="Encounter" href="#"
-				onclick="popupEChart9(710,1024,'<c:out value="${ctx}"/>/oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=dem_no%>&curProviderNo=&reason=<%=URLEncoder.encode(noteReason)%>&encType=&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=','<%=showProgramWarning %>');return false;">E</a>
+				onclick="popupEChart9(710,1024,'<c:out value="${ctx}"/>/oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=dem_no%>&curProviderNo=&reason=<%=URLEncoder.encode(noteReason)%>&encType=&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=',<%=showProgramWarning %>);return false;">E</a>
 		</security:oscarSec> <!-- Rights --> <security:oscarSec roleName="<%=roleName$%>"
 			objectName="_rx" rights="r">
 			<a class="rxBtn" title="Prescriptions" href="#" onclick="popup9(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=demo.getProviderNo()%>&demographicNo=<%=dem_no%>',<%=showProgramWarning %>)">Rx</a>

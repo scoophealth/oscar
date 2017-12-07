@@ -2886,3 +2886,7 @@ insert into OscarJob Values(null,'OSCAR On-Call Clinic',null,(select id from Osc
 
 INSERT INTO `OscarJobType` VALUES (null,'OSCAR MSG REVIEW','Sends OSCAR Messages to Residents Supervisors when charts need to be reviewed','org.oscarehr.jobs.OscarMsgReviewSender',0,now());
 INSERT INTO `OscarJob` VALUES (null,'OSCAR Message Review','',(select id from OscarJobType where name = 'OSCAR MSG REVIEW') ,'0 0/30 * * * *','999998',0,now());
+
+INSERT INTO  `secObjectName` (`objectName`) VALUES ('_caisi.documentationWarning ') ON DUPLICATE KEY UPDATE objectName='_caisi.documentationWarning ' ;
+
+
