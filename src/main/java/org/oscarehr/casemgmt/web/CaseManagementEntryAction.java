@@ -3200,7 +3200,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String reason = request.getParameter("reason");
 		String appointmentNo = request.getParameter("appointmentNo");
 		
-		if(appointmentNo != null && !appointmentNo.isEmpty()) {
+		if(appointmentNo != null && !appointmentNo.isEmpty() && !"null".equals(appointmentNo)) {
 			OscarAppointmentDao apptDao = SpringUtils.getBean(OscarAppointmentDao.class);
 			Appointment appt = apptDao.find(Integer.parseInt(appointmentNo));
 			if(appt != null) {
