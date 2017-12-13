@@ -944,6 +944,10 @@ String curProvider_no = (String)session.getAttribute("user");
 						<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/fixRolesOnNotes.jsp"><bean:message
 						key="admin.admin.btnFixNotes" /></a></li>
+						
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/auditLogPurge.jsp"><bean:message
+						key="admin.admin.btnAuditLogPurge" /></a></li>
 				</ul>
 				</div>
 				</div>
