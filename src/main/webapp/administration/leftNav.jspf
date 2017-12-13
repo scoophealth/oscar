@@ -952,7 +952,13 @@ String pageToShow=request.getParameter("load");
 				   <% if (OscarProperties.getInstance().getProperty("NEW_CONTACTS_UI","false").equals("true")) { %>
 		            	<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/demographic/migrate_demographic_contacts.jsp"><bean:message key="admin.admin.migrate_contacts"/></a></li>
 		            <% } %>
+						<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/fixRolesOnNotes.jsp"><bean:message
+						key="admin.admin.btnFixNotes" /></a></li>
 						
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/auditLogPurge.jsp"><bean:message
+						key="admin.admin.btnAuditLogPurge" /></a></li>
 				</ul>
 				</div>
 				</div>
