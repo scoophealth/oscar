@@ -82,6 +82,8 @@
 <%@ page import="org.oscarehr.common.dao.*,org.oscarehr.common.model.*" %>
 <%@page import="org.oscarehr.PMmodule.web.OcanForm"%>
 
+<%@page import="org.apache.commons.net.util.Base64"%>
+<%@page import="net.sf.json.JSONArray"%>
 
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
@@ -164,7 +166,29 @@
 	showOhiss = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("Ohiss_id","").split(","),pp3);
 	showEpiInfo = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("EpiInfo_id","").split(","),pp3);
 	showHedgehog = shouldShowForThisProvider(OscarProperties.getInstance().getProperty("Hedgehog_id","").split(","),pp3);
-		
+	
+	JSONArray searchModesArray = null;
+	JSONArray keywordsArray = null;
+	if(request.getParameter("searchModes") != null) {
+		searchModesArray = JSONArray.fromObject(new String(Base64.decodeBase64(request.getParameter("searchModes"))));
+	}
+	if(request.getParameter("keywords") != null) {
+		keywordsArray = JSONArray.fromObject(new String(Base64.decodeBase64(request.getParameter("keywords"))));
+	}
+	
+	Map<String,String> keywordMap = new HashMap<String,String>();
+	if(searchModesArray != null && searchModesArray.size() > 0 && keywordsArray != null && keywordsArray.size() == searchModesArray.size()) {
+		for(int x=0;x<searchModesArray.size();x++) {
+			String searchMode = (String)searchModesArray.get(x);
+			String keywd = (String)keywordsArray.get(x);
+			
+			keywordMap.put(searchMode, keywd);
+		}
+	}
+	
+	
+	
+	
 %>
 <html:html locale="true">
 <head>
@@ -693,6 +717,13 @@ function removeChildRecord(index) {
    String lastNameVal = "";
    String firstNameVal = "";
    String chartNoVal = "";
+   String phoneVal = props.getProperty("phoneprefix", "905-");
+   String dobYearVal = "";
+   String dobMonthVal = "";
+   String dobDayVal = "yyyy";
+   String addressVal = "";
+   String hinVal = "";
+   
 
    if (searchMode != null) {
       if (searchMode.equals("search_name")) {
@@ -709,6 +740,57 @@ function removeChildRecord(index) {
 	chartNoVal = keyWord;
    }
   }
+   
+  if(keywordMap.get("search_name") != null) {
+	  String tmp = keywordMap.get("search_name");
+	  int commaIdx = tmp.indexOf(",");
+      if (commaIdx == -1) {
+	     lastNameVal = tmp.trim();
+      } else if (commaIdx == (tmp.length()-1)) {
+         lastNameVal = tmp.substring(0,tmp.length()-1).trim();
+      } else {
+         lastNameVal = tmp.substring(0,commaIdx).trim();
+	     firstNameVal = tmp.substring(commaIdx+1).trim();
+      }
+  }
+  
+  if(keywordMap.get("search_phone") != null) {
+	  phoneVal = keywordMap.get("search_phone");
+  }
+  
+  if(keywordMap.get("search_dob") != null) {
+	  String tmp = keywordMap.get("search_dob");
+	 String[] parts = tmp.split("-");
+	  if(parts.length == 3) {
+		  dobDayVal = parts[2];
+		  dobMonthVal = parts[1];
+		  dobYearVal = parts[0];
+	  }
+	  if(parts.length == 2) {
+		  dobMonthVal = parts[1];
+		  dobYearVal = parts[0];
+	  }
+	  if(parts.length == 1) {
+		  dobYearVal = parts[0];  
+	  }
+  } else {
+	  dobMonthVal = "06";
+	  dobDayVal = "15";
+  
+  }
+
+if(keywordMap.get("search_address") != null) {
+	  addressVal = keywordMap.get("search_address");
+}
+
+if(keywordMap.get("search_hin") != null) {
+	  hinVal = keywordMap.get("search_hin");
+}
+
+if(keywordMap.get("search_chart_no") != null) {
+	  chartNoVal = keywordMap.get("search_chart_no");
+}
+   
 %>
 
     <tr id="rowWithLastName" >
@@ -809,7 +891,7 @@ function removeChildRecord(index) {
 			<tr valign="top">
 				<td id="addrLbl" align="right"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formAddress" />: </b></td>
-				<td id="addressCell" align="left"><input id="address" type="text" name="address" size=40 />
+				<td id="addressCell" align="left"><input id="address" type="text" name="address" size=40 value="<%=addressVal%>"/>
 
 				</td>
 				<td id="cityLbl" align="right"><b><bean:message
@@ -924,7 +1006,7 @@ function removeChildRecord(index) {
 					key="demographic.demographicaddrecordhtm.formPhoneHome" />: </b></td>
 				<td id="phoneCell" align="left"><input type="text" id="phone" name="phone"
 					onBlur="formatPhoneNum()"
-					value="<%=props.getProperty("phoneprefix", "905-")%>"> <bean:message
+					value="<%=phoneVal%>"> <bean:message
 					key="demographic.demographicaddrecordhtm.Ext" />:<input
 					type="text" id="hPhoneExt" name="hPhoneExt" value="" size="4" /></td>
 				<td id="phoneWorkLbl" align="right"><b><bean:message
@@ -985,59 +1067,60 @@ function removeChildRecord(index) {
 				<table border="0" cellpadding="0" cellspacing="0">
 					<tr>
 						<td><input type="text" name="year_of_birth" size="4" id="year_of_birth"
-							maxlength="4" value="yyyy"
+							maxlength="4"
 							onFocus="if(this.value=='yyyy')this.value='';"
-							onBlur="if(this.value=='')this.value='yyyy';"></td>
+							onBlur="if(this.value=='')this.value='yyyy';"
+							value="<%=dobYearVal%>"></td>
 						<td>-</td>
 						<td><!--input type="text" name="month_of_birth" size="2" maxlength="2"-->
                                                     <select name="month_of_birth" id="month_of_birth">
-							<option value="01">01
-							<option value="02">02
-							<option value="03">03
-							<option value="04">04
-							<option value="05">05
-							<option selected value="06">06
-							<option value="07">07
-							<option value="08">08
-							<option value="09">09
-							<option value="10">10
-							<option value="11">11
-							<option value="12">12
+							<option value="01" <%="01".equals(dobMonthVal)?"selected=\"selected\"":"" %>>01
+							<option value="02" <%="02".equals(dobMonthVal)?"selected=\"selected\"":"" %>>02
+							<option value="03" <%="03".equals(dobMonthVal)?"selected=\"selected\"":"" %>>03
+							<option value="04" <%="04".equals(dobMonthVal)?"selected=\"selected\"":"" %>>04
+							<option value="05" <%="05".equals(dobMonthVal)?"selected=\"selected\"":"" %>>05
+							<option value="06" <%="06".equals(dobMonthVal)?"selected=\"selected\"":"" %>>06
+							<option value="07" <%="07".equals(dobMonthVal)?"selected=\"selected\"":"" %>>07
+							<option value="08" <%="08".equals(dobMonthVal)?"selected=\"selected\"":"" %>>08
+							<option value="09" <%="09".equals(dobMonthVal)?"selected=\"selected\"":"" %>>09
+							<option value="10" <%="10".equals(dobMonthVal)?"selected=\"selected\"":"" %>>10
+							<option value="11" <%="11".equals(dobMonthVal)?"selected=\"selected\"":"" %>>11
+							<option value="12" <%="12".equals(dobMonthVal)?"selected=\"selected\"":"" %>>12
 						</select></td>
 						<td>-</td>
 						<td><!--input type="text" name="date_of_birth" size="2" maxlength="2"-->
 						<select name="date_of_birth" id="date_of_birth">
-							<option value="01">01
-							<option value="02">02
-							<option value="03">03
-							<option value="04">04
-							<option value="05">05
-							<option value="06">06
-							<option value="07">07
-							<option value="08">08
-							<option value="09">09
-							<option value="10">10
-							<option value="11">11
-							<option value="12">12
-							<option value="13">13
-							<option value="14">14
-							<option selected value="15">15
-							<option value="16">16
-							<option value="17">17
-							<option value="18">18
-							<option value="19">19
-							<option value="20">20
-							<option value="21">21
-							<option value="22">22
-							<option value="23">23
-							<option value="24">24
-							<option value="25">25
-							<option value="26">26
-							<option value="27">27
-							<option value="28">28
-							<option value="29">29
-							<option value="30">30
-							<option value="31">31
+							<option value="01" <%="01".equals(dobDayVal)?"selected=\"selected\"":"" %>>01
+							<option value="02" <%="02".equals(dobDayVal)?"selected=\"selected\"":"" %>>02
+							<option value="03" <%="03".equals(dobDayVal)?"selected=\"selected\"":"" %>>03
+							<option value="04" <%="04".equals(dobDayVal)?"selected=\"selected\"":"" %>>04
+							<option value="05" <%="05".equals(dobDayVal)?"selected=\"selected\"":"" %>>05
+							<option value="06" <%="06".equals(dobDayVal)?"selected=\"selected\"":"" %>>06
+							<option value="07" <%="07".equals(dobDayVal)?"selected=\"selected\"":"" %>>07
+							<option value="08" <%="08".equals(dobDayVal)?"selected=\"selected\"":"" %>>08
+							<option value="09" <%="09".equals(dobDayVal)?"selected=\"selected\"":"" %>>09
+							<option value="10" <%="10".equals(dobDayVal)?"selected=\"selected\"":"" %>>10
+							<option value="11" <%="11".equals(dobDayVal)?"selected=\"selected\"":"" %>>11
+							<option value="12" <%="12".equals(dobDayVal)?"selected=\"selected\"":"" %>>12
+							<option value="13" <%="13".equals(dobDayVal)?"selected=\"selected\"":"" %>>13
+							<option value="14" <%="14".equals(dobDayVal)?"selected=\"selected\"":"" %>>14
+							<option value="15" <%="15".equals(dobDayVal)?"selected=\"selected\"":"" %>>15
+							<option value="16" <%="16".equals(dobDayVal)?"selected=\"selected\"":"" %>>16
+							<option value="17" <%="17".equals(dobDayVal)?"selected=\"selected\"":"" %>>17
+							<option value="18" <%="18".equals(dobDayVal)?"selected=\"selected\"":"" %>>18
+							<option value="19" <%="19".equals(dobDayVal)?"selected=\"selected\"":"" %>>19
+							<option value="20" <%="20".equals(dobDayVal)?"selected=\"selected\"":"" %>>20
+							<option value="21" <%="21".equals(dobDayVal)?"selected=\"selected\"":"" %>>21
+							<option value="22" <%="22".equals(dobDayVal)?"selected=\"selected\"":"" %>>22
+							<option value="23" <%="23".equals(dobDayVal)?"selected=\"selected\"":"" %>>23
+							<option value="24" <%="24".equals(dobDayVal)?"selected=\"selected\"":"" %>>24
+							<option value="25" <%="25".equals(dobDayVal)?"selected=\"selected\"":"" %>>25
+							<option value="26" <%="26".equals(dobDayVal)?"selected=\"selected\"":"" %>>26
+							<option value="27" <%="27".equals(dobDayVal)?"selected=\"selected\"":"" %>>27
+							<option value="28" <%="28".equals(dobDayVal)?"selected=\"selected\"":"" %>>28
+							<option value="29" <%="29".equals(dobDayVal)?"selected=\"selected\"":"" %>>29
+							<option value="30" <%="30".equals(dobDayVal)?"selected=\"selected\"":"" %>>30
+							<option value="31" <%="31".equals(dobDayVal)?"selected=\"selected\"":"" %>>31
 						</select></td>
 						<td><b></b></td>
 						<td>&nbsp;</td>
@@ -1079,7 +1162,7 @@ function removeChildRecord(index) {
 				<td align="right" id="hinLbl"><b><bean:message
 					key="demographic.demographicaddrecordhtm.formHIN" />: </b></td>
 				<td align="left" id="hinVer" nowrap><input type="text" name="hin" id="hin"
-                                                               size="15" onfocus="autoFillHin()" > <b><bean:message
+                                                               size="15" onfocus="autoFillHin()" value="<%=hinVal%>"> <b><bean:message
 					key="demographic.demographicaddrecordhtm.formVer" />: <input
 					type="text" id="ver" name="ver" value="" size="3" onBlur="upCaseCtrl(this)">
 				</b></td>
