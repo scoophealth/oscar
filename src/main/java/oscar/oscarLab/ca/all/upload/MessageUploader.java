@@ -168,15 +168,8 @@ public final class MessageUploader {
 
 			try {
 				// reformat date
-				// The obrDate can be either date or date with time
-                int dateLength = obrDate.length();
-                if (dateLength < 19) {
-                    String format = "yyyy-MM-dd".substring(0, obrDate.length() - 1);
-                    obrDate = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(obrDate, format), "yyyy-MM-dd");
-                    }
-                else {
-                    String format = "yyyy-MM-dd HH:mm:ss".substring(0, obrDate.length() - 1);
-                    obrDate = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(obrDate, format), "yyyy-MM-dd HH:mm:ss");}
+				String format = "yyyy-MM-dd HH:mm:ss".substring(0, obrDate.length() - 1);
+				obrDate = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(obrDate, format), "yyyy-MM-dd HH:mm:ss");
 			} catch (Exception e) {				
 				logger.error("Error parsing obr date : ", e);
 				throw e;
