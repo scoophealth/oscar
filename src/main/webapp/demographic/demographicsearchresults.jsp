@@ -23,6 +23,8 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.apache.commons.net.util.Base64"%>
+<%@page import="net.sf.json.JSONArray"%>
 <%@page import="org.oscarehr.managers.SecurityInfoManager"%>
 <%@page import="org.oscarehr.common.IsPropertiesOn"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -62,7 +64,6 @@
 <%@page import="org.oscarehr.common.model.Admission"%>
 <%@page import="org.oscarehr.managers.ProgramManager2"%>
 <%@page import="org.oscarehr.PMmodule.model.ProgramProvider"%>
-
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -491,6 +492,9 @@ jQuery(document).ready(function() {
 	if (orderBy == null)
 		orderBy = "last_name";
 	
+	List<String> searchModes = new ArrayList<String>();
+	List<String> keywords = new ArrayList<String>();
+	
 	
 	List<Demographic> demoList = null;
       if(request.getParameter("keyword")!=null && request.getParameter("keyword").length()==0) {
@@ -503,8 +507,6 @@ jQuery(document).ready(function() {
         } else {
 
         	//there's a list of searchMode/keyword doubles
-        	List<String> searchModes = new ArrayList<String>();
-        	List<String> keywords = new ArrayList<String>();
         	searchModes.add(searchMode);
 			keywords.add(keyword);
 			
@@ -780,7 +782,18 @@ jQuery(document).ready(function() {
 %>
 <br> 
 <div class="createNew">
-<a href="demographicaddarecordhtm.jsp?search_mode=<%=searchMode%>&keyword=<%=StringEscapeUtils.escapeHtml(keyWord)%>" title="<bean:message key="demographic.search.btnCreateNewTitle" />">
+<%
+	
+	JSONArray a = new JSONArray();
+	a.addAll(searchModes);
+	String b = Base64.encodeBase64String(a.toString().getBytes());
+	
+	JSONArray c = new JSONArray();
+	c.addAll(keywords);
+	String d = Base64.encodeBase64String(c.toString().getBytes());
+	
+%>
+<a href="demographicaddarecordhtm.jsp?searchModes=<%=b%>&keywords=<%=d %>&search_mode=<%=searchMode%>&keyword=<%=StringEscapeUtils.escapeHtml(keyWord)%>" title="<bean:message key="demographic.search.btnCreateNewTitle" />">
 <bean:message key="demographic.search.btnCreateNew" />
 </a>
 </div>
