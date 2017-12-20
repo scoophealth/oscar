@@ -2874,4 +2874,4 @@ insert into `secObjPrivilege` values('doctor','_dashboardCommonLink','o',0,'9999
 insert into `secObjPrivilege` values('admin','_dashboardCommonLink','o',0,'999998');
 
 
-
+insert into `secObjectName` (`objectName`) values ('_admin.auditLogPurge');
