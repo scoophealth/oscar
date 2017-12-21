@@ -232,15 +232,15 @@ if(!authed) {
 			
 			var total = xml.total;
 			
-		//	console.log(xml.toSource());
+			
 			$("#productFilterMessage").empty();
 			
-			if(xml.drugProduct) {
+			if(xml.content) {
 				var arr = new Array();
-				if(xml.drugProduct instanceof Array) {
-					arr = xml.drugProduct;
+				if(xml.content instanceof Array) {
+					arr = xml.content;
 				} else {
-					arr[0] =xml.drugProduct;
+					arr[0] =xml.content;
 				}
 				
 				
