@@ -643,7 +643,18 @@ function removeChildRecord(index) {
 	jQuery("#child_record"+index).remove();
 }
 
+function updateDOBFromCal(cal) {
+	var selectedDate = document.getElementById('dob_date').value;
+	var parts = selectedDate.split("-");
+	if(parts.length == 3) {
+		document.getElementById('year_of_birth').value = parts[0];
+		document.getElementById('month_of_birth').value = parts[1];
+		document.getElementById('date_of_birth').value = parts[2];
+	} else {
+		alert('Error updating DOB, enter manually');
+	}
 
+}
 </script>
 </head>
 <!-- Databases have alias for today. It is not necessary give the current date -->
@@ -1122,7 +1133,14 @@ if(keywordMap.get("search_chart_no") != null) {
 							<option value="30" <%="30".equals(dobDayVal)?"selected=\"selected\"":"" %>>30
 							<option value="31" <%="31".equals(dobDayVal)?"selected=\"selected\"":"" %>>31
 						</select></td>
-						<td><b></b></td>
+						<td><b>
+						
+						<input type="hidden"
+							name="dob_date" id="dob_date"
+							value="" > <img
+							src="../images/cal.gif" id="dob_date_cal">
+							
+						</b></td>
 						<td>&nbsp;</td>
 					</tr>
 				</table>
@@ -2042,6 +2060,9 @@ if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 
 <script type="text/javascript">
 Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "dob_date", ifFormat : "%Y-%m-%d", showsTime :false,showsOtherMonths: false,showYearsCombo:true, button : "dob_date_cal", singleClick : true, step : 1 , onClose: function(cal){updateDOBFromCal(cal);cal.hide();}});
+
+
 </script>
 
 
