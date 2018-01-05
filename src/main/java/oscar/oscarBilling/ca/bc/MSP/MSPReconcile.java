@@ -1067,9 +1067,8 @@ public class MSPReconcile {
 				if (b != null) {
 					b.setBillingstatus(newStat);
 					billingmasterDao.update(b);
+					dao.createBillingHistoryArchive(billingNo);
 				}
-
-				dao.createBillingHistoryArchive(billingNo);
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Error", e);
 			}
