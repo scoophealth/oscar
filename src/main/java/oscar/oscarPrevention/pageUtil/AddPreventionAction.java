@@ -82,6 +82,8 @@ public class AddPreventionAction  extends Action {
          String nextDate = request.getParameter("nextDate");
          String neverWarn = request.getParameter("neverWarn");
          
+         //generic
+         String snomedId = request.getParameter("snomedId");
          
          MiscUtils.getLogger().debug("nextDate "+nextDate+" neverWarn "+neverWarn);
          
@@ -140,14 +142,18 @@ public class AddPreventionAction  extends Action {
          addHashtoArray(extraData,request.getParameter("poultryworker"),"poultryworker");
          addHashtoArray(extraData,request.getParameter("firstnations"),"firstnations");
          addHashtoArray(extraData,request.getParameter("name"),"name");
+         addHashtoArray(extraData,request.getParameter("expiryDate"),"expiryDate");
+         if(request.getParameter("cvcName") != null && !request.getParameter("cvcName").equals("-1") ) {
+        	 addHashtoArray(extraData,request.getParameter("cvcName"),"brandSnomedId");
+         }
                                                                                                                            
          if (id == null || id.equals("null")){ //New                                             
-        	 PreventionData.insertPreventionData(sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData);            
+        	 PreventionData.insertPreventionData(sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData,snomedId);            
          }else if (id != null &&  delete != null  ){  // Delete
         	 PreventionData.deletePreventionData(id);               
          }else if (id != null && delete == null ){ //Update
             addHashtoArray(extraData,id,"previousId"); 
-            PreventionData.updatetPreventionData(id,sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData);
+            PreventionData.updatetPreventionData(id,sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData,snomedId);
          }
 
          PreventionManager prvMgr = (PreventionManager) SpringUtils.getBean("preventionMgr");
