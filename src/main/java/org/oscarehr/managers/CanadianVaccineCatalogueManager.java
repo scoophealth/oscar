@@ -58,7 +58,7 @@ import oscar.log.LogAction;
 @Service
 public class CanadianVaccineCatalogueManager {
 
-	protected static final String serverBase = OscarProperties.getInstance().getProperty("cvc.url","https://fhirtest.uhn.ca/baseDstu3");
+	protected static final String serverBase = OscarProperties.getInstance().getProperty("cvc.url");
 
 	protected static FhirContext ctx = FhirContext.forDstu3();
 	Logger logger = MiscUtils.getLogger();

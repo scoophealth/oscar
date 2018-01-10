@@ -12210,8 +12210,6 @@ CREATE TABLE CVCImmunization (
   `picklistName` varchar(255),
   `prevalence` int,
   `parentConceptId` varchar(255),
-  `prevalence` int,
-  `parentConceptId` varchar(255),
 
   PRIMARY KEY  (`id`)
 );
