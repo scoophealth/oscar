@@ -84,6 +84,9 @@ public class AddPreventionAction  extends Action {
          
          //generic
          String snomedId = request.getParameter("snomedId");
+         if(prevDate != null && prevDate.length() == 10) {
+        	 prevDate += " 00:00";
+         }
          
          MiscUtils.getLogger().debug("nextDate "+nextDate+" neverWarn "+neverWarn);
          

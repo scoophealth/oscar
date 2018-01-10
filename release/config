@@ -1,6 +1,6 @@
 #!/bin/sh
 #=================================================================
-# Copyright Peter Hutten-Czapski 2012-15 released under the GPL v2
+# Copyright Peter Hutten-Czapski 2012-17 released under the GPL v2
 #=================================================================
 set -e
 
@@ -10,10 +10,17 @@ set -e
 # Script Constants
 PROGRAM=oscar
 PACKAGE=oscar-emr
-VERSION=14
+VERSION=15
 PREVIOUS=12_1
-REVISION=0.5RC20
-TOMCAT="tomcat6"
+REVISION=71~691
+if [ -f /usr/share/tomcat8/bin/version.sh ] ; then
+        TOMCAT=tomcat8
+    else
+    if [ -f /usr/share/tomcat7/bin/version.sh ] ; then
+        TOMCAT=tomcat7
+    fi
+fi
+tomcat_path=/usr/share/${TOMCAT}/
 C_HOME=/usr/share/${TOMCAT}/
 C_BASE=/var/lib/${TOMCAT}/
 SRC=/usr/share/${PACKAGE}/
@@ -30,7 +37,7 @@ INSTALL_BACKUP=true
 
 # Property file default settings
 db_name=oscar_15
-db_switch=
+db_switch='?characterEncoding=UTF-8&zeroDateTimeBehavior=round&useOldAliasMetadataBehavior=true&jdbcCompliantTruncation=false'
 priorschema=none
 db_password=liyi
 login_local_ip=192.168
@@ -42,9 +49,8 @@ ENABLE_EDIT_APPT_STATUS=yes
 appt_intake_form=off
 new_flowsheet_enabled=true
 NEW_CONTACTS_UI=false
-indivica_rx_enhance=false
 enableFax=false
-buildDateTime="Sep 12, 2012 3:10:33 PM"
+buildDateTime="Oct 6, 2017 11:29:01 AM"
 logintext="OSCAR EMR"
 faxEnable=false
 rx_fax_enabled=false
@@ -52,25 +58,24 @@ consultation_fax_enabled=false
 eform_fax_enabled=false
 eform_generator_indivica_fax_enabled=false
 consultation_dynamic_labelling_enabled=false
-rx_enhance=true
+rx_enhance=false
 rx_signature_enabled=true
 consultation_signature_enabled=true
 consultation_indivica_attachment_enabled=true
 moh_file_management_enabled=true
-ONEDT_INBOX=${C_BASE}webapps/OscarDocument/oscar_mcmaster/onEDTDocs/inbox/
-ONEDT_OUTBOX=${C_BASE}webapps/OscarDocument/oscar_mcmaster/onEDTDocs/outbox/
-ONEDT_SENT=${C_BASE}webapps/OscarDocument/oscar_mcmaster/onEDTDocs/sent/
-ONEDT_ARCHIVE=${C_BASE}webapps/OscarDocument/oscar_mcmaster/onEDTDocs/archive/
-HOME_DIR=${C_BASE}webapps/OscarDocument/oscar_mcmaster/billing/download/
+ONEDT_INBOX=${SRC}OscarDocument/${PROGRAM}/onEDTDocs/inbox/
+ONEDT_OUTBOX=${SRC}OscarDocument/${PROGRAM}/onEDTDocs/outbox/
+ONEDT_SENT=${SRC}OscarDocument/${PROGRAM}/onEDTDocs/sent/
+ONEDT_ARCHIVE=${SRC}OscarDocument/${PROGRAM}/onEDTDocs/archive/
+BASE_DOCUMENT_DIR=${SRC}OscarDocument
 workflow_enhance=true
 indivica_hc_read_enabled=true
 eform_signature_enabled=true
 eform_generator_indivica_signature_enabled=true
 eform_generator_indivica_print_enabled=true
 indivica_rich_text_letter_enabled=true
-DOCUMENT_DIR=${C_BASE}webapps/OscarDocument/oscar_mcmaster/document/
-HL7_COMPLETED_DIR=${C_BASE}webapps/OscarDocument/oscar_mcmaster/document/
-tomcat_path=/usr/share/${TOMCAT}/
+#DOCUMENT_DIR=${SRC}OscarDocument/${PROGRAM}/document/
+HL7_COMPLETED_DIR=${SRC}OscarDocument/${PROGRAM}/document/
 backup_path=${SRC}/backup/
 tickler_warn_period=1
 seconds_till_considered_stale=-1
@@ -88,10 +93,10 @@ logintitle="OSCAR EMR ${VERSION}"
 ## OSCAR 14 additions  TO DO CHANGE THE RESOURCE BASE
 resource_base_url=http://www.oscarmanual.org/oscar_emr_12/
 moh_file_management_enabled=false
-ONEDT_INBOX=${C_BASE}webapps/OscarDocument/oscar_mcmaster/onEDTDocs/inbox/
-ONEDT_OUTBOX=${C_BASE}webapps/OscarDocument/oscar_mcmaster/onEDTDocs/outbox/
-ONEDT_SENT=${C_BASE}webapps/OscarDocument/oscar_mcmaster/onEDTDocs/sent/
-ONEDT_ARCHIVE=/${C_BASE}webapps/OscarDocument/oscar_mcmaster/onEDTDocs/archive/
+ONEDT_INBOX=${SRC}OscarDocument/${PROGRAM}/onEDTDocs/inbox/
+ONEDT_OUTBOX=${SRC}OscarDocument/${PROGRAM}/onEDTDocs/outbox/
+ONEDT_SENT=${SRC}OscarDocument/${PROGRAM}/onEDTDocs/sent/
+ONEDT_ARCHIVE=/${SRC}OscarDocument/${PROGRAM}/onEDTDocs/archive/
 
 ModuleNames=REST
 onare_labreqver=10
@@ -144,7 +149,7 @@ warnOnDeleteBill=false
 lab_req_include_chartno=true
 use_lab_clientreference=true
 useDemoClinicInfoOnInvoice=true
-INVOICE_DIR=${C_BASE}webapps/OscarDocument/oscar_mcmaster/billing/invoices
+INVOICE_DIR=${SRC}OscarDocument/${PROGRAM}/billing/invoices
 NEW_CONTACTS_UI_EXTERNAL_CONTACT=false
 ckd_notification_scheme=tickler
 ORN_PILOT=no
@@ -153,7 +158,7 @@ orn_labreqver=10
 health_tracker=true
 wl_default_issue=false
 encounter_hide_invoices=false
-INCOMINGDOCUMENT_DIR=${C_BASE}webapps/OscarDocument/oscar_mcmaster/incomingdocs
+INCOMINGDOCUMENT_DIR=${SRC}OscarDocument/${PROGRAM}/incomingdocs
 INCOMINGDOCUMENT_RECYCLEBIN= true
 ALLOW_UPDATE_DOCUMENT_CONTENT= true
 displayNotesOnScheduleScreen=true
@@ -189,20 +194,59 @@ mcedt_service_id=id
 cobalt=no
 showSexualHealthLabel=false
 
+MDS_LABS=yes
+CML_LABS=yes
+HL7TEXT_LABS=yes
 
+# Only cleanup the passwords on error because we may need the passwords
+# in the post install script. The post install must handle the cleanup
+# for all error conditions and successful exit.
+trap cleanupOnError HUP TERM ABRT KILL INT QUIT 
+cleanupOnError()
+{
+	echo "Cleaning up sensitive data"
+	db_get oscar-emr/password
+}
 
 # --- log the running of the script appending as necessary
 echo "#########" `date` "#########" 1>> $LOG_FILE
 echo Configuration of VERSION=${VERSION}-${REVISION}>>$LOG_FILE
-echo "#########" `date` "#########" 1>> $LOG_ERR
-echo Configuration of VERSION=${VERSION}-${REVISION}>>$LOG_ERR
 
-GEOIP=$(curl --silent -f http://freegeoip.net/csv/ |  tr -d '"')
-echo $GEOIP >>$LOG_FILE
-IP=$(echo $GEOIP | awk -F "," '{print $1;}')
-COUNTRY=$(echo $GEOIP | awk -F "," '{print $2;}')
-STATE=$(echo $GEOIP | awk -F "," '{print $4;}')
-LOCALITY=$(echo $GEOIP | awk -F "," '{print $6;}')
+
+# dpkg -l |grep " tomcat"
+#/usr/share/tomcat7/bin/version.sh
+
+# log versions for troubleshooting
+/usr/share/${TOMCAT}/bin/version.sh >> $LOG_FILE
+mysql -V  >> $LOG_FILE
+echo "" >>$LOG_FILE
+
+invoke-rc.d ${TOMCAT} stop 2>>$LOG_FILE
+
+if [ -f ${C_BASE}/${PACKAGE}/WEB-INF/classes/clientKeystore.properties ] ; then
+        echo "retrieve existing clientKeystore.properties" >> $LOG_FILE
+        cp ${C_BASE}/${PACKAGE}/WEB-INF/classes/clientKeystore.properties ${C_BASE}/${PACKAGE}/ck.properties 1>> $LOG_FILE
+fi
+
+# if tomcat8 then need to move the wars from the DEB installed directories to the tomcat8 directory
+if [ -f /usr/share/tomcat8/bin/version.sh ] ; then
+        mv /var/lib/tomcat7/webapps/oscar.war /var/lib/tomcat8/webapps/oscar.war
+        mv /var/lib/tomcat7/webapps/drugref.war /var/lib/tomcat8/webapps/drugref.war
+fi
+
+#GEOIP=$(curl --silent -f http://freegeoip.net/csv/ |  tr -d '"')
+#echo GEOIP=$GEOIP >>$LOG_FILE
+#IP=$(echo $GEOIP | awk -F "," '{print $1;}')
+#COUNTRY=$(echo $GEOIP | awk -F "," '{print $2;}')
+#STATE=$(echo $GEOIP | awk -F "," '{print $4;}')
+#LOCALITY=$(echo $GEOIP | awk -F "," '{print $6;}')
+
+GEOIP2=$(curl --silent -f http://ip-api.com/csv/ |  tr -d '"' | tr ' ' '+')
+echo GEOIP2=$GEOIP2 >>$LOG_FILE
+IP=$(echo $GEOIP2 | awk -F "," '{print $14;}')
+COUNTRY=$(echo $GEOIP2 | awk -F "," '{print $3;}')
+STATE=$(echo $GEOIP2 | awk -F "," '{print $4;}')
+LOCALITY=$(echo $GEOIP2 | awk -F "," '{print $6;}')
 echo State=${STATE} >>$LOG_FILE
 
 #if [ "${STATE}" = "QC" ]; then
@@ -214,13 +258,20 @@ echo State=${STATE} >>$LOG_FILE
 #fi
 
 
-echo "If upgrade possible, ask about upgrade" >>$LOG_FILE
-if [ -f /usr/share/tomcat7/oscar.properties ] ; then
-	echo "Previous Oscar 15 Installation Detected" >> $LOG_FILE
-    	db_input high oscar-emr/upgrade || true
-	db_go ||true
-	db_get oscar-emr/upgrade
-	UPGRADE=$RET
+#echo "If upgrade possible, ask about upgrade" >>$LOG_FILE
+#if [ -f /usr/share/tomcat7/oscar.properties ] ; then
+#	echo "Previous Oscar 15 Installation Detected" >> $LOG_FILE
+#    	db_input high oscar-emr/upgrade || true
+#	db_go ||true
+#	db_get oscar-emr/upgrade
+#	UPGRADE=$RET
+#	echo "UPGRADE=${UPGRADE}" 1>> $LOG_FILE
+#fi
+
+echo "Checking for Upgrade possibility" >>$LOG_FILE
+if [ -f /usr/share/${TOMCAT}/oscar.properties ] ; then
+	echo "Previous OSCAR Installation Detected" >> $LOG_FILE
+	UPGRADE=true
 	echo "UPGRADE=${UPGRADE}" 1>> $LOG_FILE
 fi
 
@@ -228,11 +279,11 @@ fi
 if [ "${UPGRADE}" = "false" ] ; then
 echo "For a new install from console so probe for some settings" >>$LOG_FILE
 	db_set oscar-emr/upgrade false
-	db_reset oscar-emr/password || true
 	db_input high oscar-emr/password || true
 	db_go || true
 	db_get oscar-emr/password
 	db_password=$RET
+
 	#echo ${db_password} >>$LOG_FILE
 	db_reset oscar-emr/billregion || true
 	# use probed state and configure for BC if required
@@ -243,7 +294,8 @@ echo "For a new install from console so probe for some settings" >>$LOG_FILE
 	db_set oscar-emr/billregion $billregion || true
 	db_reset oscar-emr/phoneprefix || true
 	# probe for local area code
-	phoneprefix=$(curl --silent -f http://www.zip-codes.com/canadian/city.asp?city=$LOCALITY\&province=$STATE |  grep '<a href="/canadian/area-code.asp?areacode='| sed "s/.*areacode=\([0-9]*\).*/\1/;s/^[[:space:]]*//;s/[[:space:]]*$//" )
+	phoneprefix=$(curl --silent -f https://www.zip-codes.com/canadian/city.asp?city=$LOCALITY\&province=$STATE |  grep '<a href="/canadian/area-code.asp?areacode='| sed "s/.*areacode=\([0-9]*\).*/\1/;s/^[[:space:]]*//;s/[[:space:]]*$//" )
+## curl --silent -f 'https://www.zip-codes.com/canadian/city.asp?city=Timmins&province=ON' |  grep '<a href="/canadian/area-code.asp?areacode='| sed "s/.*areacode=\([0-9]*\).*/\1/;s/^[[:space:]]*//;s/[[:space:]]*$//"
 	echo "area code aka phone prefix=*${phoneprefix}*" 1>> $LOG_FILE
 
 	# the area code may hint the billingcenter
@@ -271,7 +323,6 @@ echo "For a new install from console so probe for some settings" >>$LOG_FILE
 	db_reset oscar-emr/triumvirate || true
 	db_set oscar-emr/triumvirate  true  || true
 		
-	db_reset oscar-emr/demo || true
 	db_input high oscar-emr/demo || true
 
 	db_reset oscar-emr/eyeform || true
@@ -292,8 +343,7 @@ fi
 
 if [ "${triumvirate}" = "true" ] ; then
 	echo "set properties for signatures, fax and pdf printing" >>$LOG_FILE
-	indivica_rx_enhance=true
-	rx_enhance=true
+	rx_enhance=false
 	workflow_enhance=true
 
 	# Consult: fax and signature capability for consultation requests requires flags:
@@ -327,25 +377,225 @@ if [ "${UPGRADE}" = "true" ] ; then
 	if [ -f ${C_HOME}${PROGRAM}.properties ] ; then
 
 		echo "grep the password from the properties file" >> $LOG_FILE
-		db_password=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'db_password'  | tail -n 1 | cut -d "=" -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_ERR
-		db_set oscar-emr/password ${db_password}
+		db_password=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'db_password'  | tail -n 1 | cut -d "=" -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
 		echo "grep the previous db_name from the properties file" >> $LOG_FILE
-		## you want oscar_14=oscar_14 but trim off the switches that we might be sending
-		existing=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'db_name'  | tail -n 1 | cut -d "=" -f2 | cut -d "?" -f1 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_ERR
+		## you want oscar_15=oscar_15 but trim off the switches that we might be sending
+		existing=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'db_name'  | tail -n 1 | cut -d "=" -f2 | cut -d "?" -f1 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
 		if [ "${db_name}" = "${existing}" ] ; then
+
+            # UPDATE late breaking property key values here
+	        echo "adding new properties file key values"  >>$LOG_FILE
+
+		    CONSULTATION_APPOINTMENT_INSTRUCTIONS_LOOKUP=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'CONSULTATION_APPOINTMENT_INSTRUCTIONS_LOOKUP'  | tail -n 1 | cut -d "=" -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
+            if [ "${CONSULTATION_APPOINTMENT_INSTRUCTIONS_LOOKUP}" = "" ]; then
+                echo "adding consult key value block"  >>$LOG_FILE
+
+                echo "# True to enable the use of the customizable Appointment Instructions look up list" >> ${C_HOME}${PROGRAM}.properties 
+                echo "# in the consultation module.  It is suggested to toggle CONSULTATION_PATIENT_WILL_BOOK" >> ${C_HOME}${PROGRAM}.properties 
+                echo "# to false." >> ${C_HOME}${PROGRAM}.properties 
+                echo "CONSULTATION_APPOINTMENT_INSTRUCTIONS_LOOKUP=true" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+                echo "# True to enable the Patient will book checkbox in the consultation request form." >> ${C_HOME}${PROGRAM}.properties 
+                echo "CONSULTATION_PATIENT_WILL_BOOK=false" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+                echo "# False to allow changes to the consultation referral date. Otherwise it will be" >> ${C_HOME}${PROGRAM}.properties 
+                echo "# locked to the date the referral was created." >> ${C_HOME}${PROGRAM}.properties 
+                echo "CONSULTATION_LOCK_REFERRAL_DATE=false" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+                echo "# Set to true to allow all active patient allergies to auto-populate into a " >> ${C_HOME}${PROGRAM}.properties 
+                echo "# consultation request when opened." >> ${C_HOME}${PROGRAM}.properties 
+                echo "# buttons are available in the form to manually populate Medications" >> ${C_HOME}${PROGRAM}.properties 
+                echo "CONSULTATION_AUTO_INCLUDE_ALLERGIES=true" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+                echo "# Set to true to allow all active patient Medications to auto-populate" >> ${C_HOME}${PROGRAM}.properties 
+                echo "# into a consultation request when opened." >> ${C_HOME}${PROGRAM}.properties 
+                echo "# buttons are available in the form to manually populate Medications" >> ${C_HOME}${PROGRAM}.properties 
+                echo "CONSULTATION_AUTO_INCLUDE_MEDICATIONS=true" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+            fi
+
+            BILLING_REVIEW_AUTO_PAYMENT=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'BILLING_REVIEW_AUTO_PAYMENT'  | tail -n 1 | cut -d "=" -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
+            if [ "${BILLING_REVIEW_AUTO_PAYMENT}" = "" ]; then
+                echo "adding billing and invoice block"  >>$LOG_FILE 
+                echo "#Enable auto populating of payment field on billing review" >> ${C_HOME}${PROGRAM}.properties 
+                echo "BILLING_REVIEW_AUTO_PAYMENT=no" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+                echo "#Private billing letterhead logo image document type" >> ${C_HOME}${PROGRAM}.properties 
+                echo "invoice_head_logo_doctype=invoice letterhead" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+            fi
+            new_label_print=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'new_label_print'  | tail -n 1 | cut -d "=" -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
+            if [ "${new_label_print}" = "" ]; then
+                echo "adding new label print key"  >>$LOG_FILE
+                echo "#set to true to enable" >> ${C_HOME}${PROGRAM}.properties 
+                echo "new_label_print = false" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+            fi
+
+            tickler_default_assigned_provider=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'tickler_default_assigned_provider'  | tail -n 1 | cut -d "=" -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
+            if [ "${tickler_default_assigned_provider}" = "" ]; then
+                echo "adding new tickler assignment default key"  >>$LOG_FILE 
+                echo "# Default ticklers to the assigned provider" >> ${C_HOME}${PROGRAM}.properties 
+                echo "# True: Set the default report for Ticklers main interface to be set to the current provider" >> ${C_HOME}${PROGRAM}.properties 
+                echo "# False: Ticklers main interface always default to report ALL providers" >> ${C_HOME}${PROGRAM}.properties 
+                echo "tickler_default_assigned_provider=false" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+             fi
+
+            DEMOGRAPHIC_PATIENT_HEALTH_CARE_TEAM=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'DEMOGRAPHIC_PATIENT_HEALTH_CARE_TEAM'  | tail -n 1 | cut -d "=" -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
+            if [ "${DEMOGRAPHIC_PATIENT_HEALTH_CARE_TEAM}" = "" ]; then
+                echo "adding DEMOGRAPHIC options block"  >>$LOG_FILE 
+                echo "DEMOGRAPHIC_PATIENT_HEALTH_CARE_TEAM=true"  >> ${C_HOME}${PROGRAM}.properties 
+                echo "DEMOGRAPHIC_PATIENT_CLINIC_STATUS=true"  >> ${C_HOME}${PROGRAM}.properties 
+                echo "DEMOGRAPHIC_PATIENT_ROSTERING=true"  >> ${C_HOME}${PROGRAM}.properties 
+                echo "DEMOGRAPHIC_WAITING_LIST=true"  >> ${C_HOME}${PROGRAM}.properties
+                echo "" >> ${C_HOME}${PROGRAM}.properties
+            fi
+
+            referral_menu=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'referral_menu'  | tail -n 1 | cut -d "=" -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
+            if [ "${referral_menu}" = "" ]; then
+                echo "adding referral menue options block"  >>$LOG_FILE 
+                echo "#hide the drug of choice button from rx3 interface"  >> ${C_HOME}${PROGRAM}.properties
+                echo "#rx.drugofchoice.hide=true"  >> ${C_HOME}${PROGRAM}.properties
+                echo ""  >> ${C_HOME}${PROGRAM}.properties
+                echo "#ONTARIO_MD_INCOMINGREQUESTOR=yes"  >> ${C_HOME}${PROGRAM}.properties
+                echo ""  >> ${C_HOME}${PROGRAM}.properties 
+                echo "#show a menu in the main bar on schedule page to search professional specialists"  >> ${C_HOME}${PROGRAM}.properties 
+                echo "referral_menu=no"  >> ${C_HOME}${PROGRAM}.properties 
+                echo ""  >> ${C_HOME}${PROGRAM}.properties 
+                echo "#by default, when using the caisi registration intake, saving it causes the provider to become the MRP."  >> ${C_HOME}${PROGRAM}.properties 
+                echo "#set this to false to avoid that from happening."  >> ${C_HOME}${PROGRAM}.properties 
+                echo "caisi.registration_intake.updateMRPOnSave=true"  >> ${C_HOME}${PROGRAM}.properties
+                echo "" >> ${C_HOME}${PROGRAM}.properties
+            fi
+
+            born_orgcode=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'born_orgcode'  | tail -n 1 | cut -d "=" -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
+            if [ "${born_orgcode}" = "" ]; then
+                echo "adding kidconnect block"  >>$LOG_FILE 
+                echo "#for kidconnect 0-5 program"  >> ${C_HOME}${PROGRAM}.properties
+                echo "#unique identifier provided by BORN"  >> ${C_HOME}${PROGRAM}.properties
+                echo "born_orgcode=mcmaster"  >> ${C_HOME}${PROGRAM}.properties
+                echo "#names of all the forms used in the project"  >> ${C_HOME}${PROGRAM}.properties
+                echo "born_eform_rourke=Rourke Baby Record"  >> ${C_HOME}${PROGRAM}.properties 
+                echo "born_eform_sumrptmarkers=Summary Report: Well Baby Visit"  >> ${C_HOME}${PROGRAM}.properties 
+                echo "born_eform_ndds1m2m=NDDS 1&2 Months"  >> ${C_HOME}${PROGRAM}.properties 
+                echo "born_eform_ndds4m=NDDS 4 Months"  >> ${C_HOME}${PROGRAM}.properties 
+                echo "born_eform_ndds6m=NDDS 6 Months"  >> ${C_HOME}${PROGRAM}.properties 
+                echo "born_eform_ndds9m=NDDS 9 Months"  >> ${C_HOME}${PROGRAM}.properties 
+                echo "born_eform_ndds12m=NDDS 12 Months"  >> ${C_HOME}${PROGRAM}.properties
+                echo "born_eform_ndds15m=NDDS 15 Months" >> ${C_HOME}${PROGRAM}.properties
+                echo "born_eform_ndds18m=NDDS 18 Months"  >> ${C_HOME}${PROGRAM}.properties 
+                echo "born_eform_ndds24m=NDDS 24 Months"  >> ${C_HOME}${PROGRAM}.properties 
+                echo "born_eform_ndds30m=NDDS 30 Months"  >> ${C_HOME}${PROGRAM}.properties 
+                echo "born_eform_ndds3y=NDDS 3 Years"  >> ${C_HOME}${PROGRAM}.properties
+                echo "born_eform_ndds4y=NDDS 4 Years" >> ${C_HOME}${PROGRAM}.properties
+                echo "born_eform_ndds5y=NDDS 5 Years"  >> ${C_HOME}${PROGRAM}.properties
+                echo "born_eform_ndds6y=NDDS 6 Years" >> ${C_HOME}${PROGRAM}.properties
+                echo ""  >> ${C_HOME}${PROGRAM}.properties
+            fi
+
+            ENCOUNTER_TIME_MANDATORY=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'ENCOUNTER_TIME_MANDATORY'  | tail -n 1 | cut -d "=" -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
+            if [ "${ENCOUNTER_TIME_MANDATORY}" = "" ]; then
+                echo "adding end block"  >>$LOG_FILE
+                echo "ENCOUNTER_TIME_MANDATORY=false" >> ${C_HOME}${PROGRAM}.properties 
+                echo "TRANSPORTATION_TIME_MANDATORY=false" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+                echo "#this will make patient search have a wildcard at front of it" >> ${C_HOME}${PROGRAM}.properties 
+                echo "search.searchName.addLeadingWildcard=false" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+                echo "## A new patient consent module in a nice versatile and compact package. " >> ${C_HOME}${PROGRAM}.properties 
+                echo "## View instruction documentation." >> ${C_HOME}${PROGRAM}.properties 
+                echo "USE_NEW_PATIENT_CONSENT_MODULE=true" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+                echo "#in the master demo" >> ${C_HOME}${PROGRAM}.properties 
+                echo "skip_postal_code_validation=false" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+                echo "#don't include MRP in print report by setting to false" >> ${C_HOME}${PROGRAM}.properties 
+                echo "print.includeMRP=true" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+                echo " #if true, it will use the provider's current program instead of clinic contact info" >> ${C_HOME}${PROGRAM}.properties 
+                echo "print.useCurrentProgramInfoInHeader=false" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+                echo "#Turn on resident review workflow" >> ${C_HOME}${PROGRAM}.properties 
+                echo "#resident_review=true" >> ${C_HOME}${PROGRAM}.properties 
+                echo "#custom methodone and suboxone" >> ${C_HOME}${PROGRAM}.properties 
+                echo "enable_rx_custom_methodone_suboxone=false" >> ${C_HOME}${PROGRAM}.properties 
+                echo "#add watermark in rx prescription" >> ${C_HOME}${PROGRAM}.properties 
+                echo "enable_rx_watermark=false" >> ${C_HOME}${PROGRAM}.properties 
+                echo "#Rx watermark png file name is in oscar images folder" >> ${C_HOME}${PROGRAM}.properties 
+                echo "# If no this file name, the default one would be oscar service watermark." >> ${C_HOME}${PROGRAM}.properties 
+                echo "#rx_watermark_file_name=north_toronto_eye_care_watermark.png" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+                echo "#Control enable or disable prevention billing " >> ${C_HOME}${PROGRAM}.properties 
+                echo "ENABLE_PREVENTION_BILLING=false" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+                echo "#showPrimaryCarePhysicianCheck=yes" >> ${C_HOME}${PROGRAM}.properties 
+                echo "#showEmploymentStatus=yes" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+                echo "#do not allow user to change password to ones previously used" >> ${C_HOME}${PROGRAM}.properties 
+                echo "password.pastPasswordsToNotUse=0" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+            fi
+
+            enable_create_child_record=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'enable_create_child_record'  | tail -n 1 | cut -d "=" -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
+            if [ "${enable_create_child_record}" = "" ]; then
+                echo "adding ad hoc"  >>$LOG_FILE  
+                echo "enable_create_child_record=true" >> ${C_HOME}${PROGRAM}.properties 
+                echo "rx.enable_internal_dispensing=false" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+                echo "#show hamilton public health items in admin menu" >> ${C_HOME}${PROGRAM}.properties 
+                echo "admin.hph=false" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties
+            fi
+
+            OnCallClinic=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'OnCallClinic'  | tail -n 1 | cut -d "=" -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
+            if [ "${OnCallClinic}" = "" ]; then
+                echo "adding OnCallClinic key value"  >>$LOG_FILE  
+                echo "#Turn on OSCAR ON CALL Clinic interface yes|no" >> ${C_HOME}${PROGRAM}.properties 
+                echo "OnCallClinic=yes" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+            fi
+
+            shared_outcomes_dashboard_host=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'shared_outcomes_dashboard_host'  | tail -n 1 | cut -d "=" -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
+            if [ "${shared_outcomes_dashboard_host}" = "" ]; then
+                echo "adding shared_outcomes_dashboard_host"  >>$LOG_FILE  
+                echo "shared_outcomes_dashboard_host=true" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+            fi
+            
+            # rx_strict_med_term added March 14th, 2017
+            rx_strict_med_term=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'rx_strict_med_term'  | tail -n 1 | cut -d "=" -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
+            if [ "${rx_strict_med_term}" = "" ]; then
+                echo "adding rx_strict_med_term"  >>$LOG_FILE 
+                echo "#validate medication term in rx prescription" >> ${C_HOME}${PROGRAM}.properties
+                echo "rx_strict_med_term=false" >> ${C_HOME}${PROGRAM}.properties 
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+            fi
+
+            # on ar changes to allow for label for prenatal screening added July 4, 2017
+            prenatal_screening_eform_group=$(sed '/^\#/d' ${C_HOME}${PROGRAM}.properties | grep 'prenatal_screening_eform_group'  | tail -n 1 | cut -d "=" -f2 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
+            if [ "${prenatal_screening_eform_group}" = "" ]; then
+                echo "adding prenatal_screening_eform_group"  >>$LOG_FILE 
+                echo "#ONAR label for IPS/FTS" >> ${C_HOME}${PROGRAM}.properties
+                echo "prenatal_screening_eform_group=FTS" >> ${C_HOME}${PROGRAM}.properties 
+                echo "prenatal_screening_name=First Trimester Screening" >> ${C_HOME}${PROGRAM}.properties
+                echo "prenatal_screening_abbrv=FTS" >> ${C_HOME}${PROGRAM}.properties
+                echo "" >> ${C_HOME}${PROGRAM}.properties 
+            fi
+
 			echo "${PROGRAM}.war file updated so exiting config normally" >> $LOG_FILE
 			exit 0
 		else
-			echo "${PROGRAM}.war is not deb installed OSCAR_15 and cannot be deb updated so exiting config" 1>> $LOG_ERR
+			echo "${PROGRAM}.war is not deb installed OSCAR_15 and cannot be deb updated so exiting config" 1>> $LOG_FILE
 			exit 1		
 		fi
 
 	fi
 
 	echo "save a copy of the previous properties file"  >>$LOG_FILE
-	if [ -f /usr/share/tomcat7/Oscar${PREVIOUS}.properties ] ; then
+	if [ -f /usr/share/${TOMCAT}/Oscar${PREVIOUS}.properties ] ; then
 		echo Oscar${PREVIOUS}.properties found 1>> $LOG_FILE
-		cp /usr/share/tomcat6/Oscar${PREVIOUS}.properties ${PROGRAM}.tmp
+		cp /usr/share/${TOMCAT}/Oscar${PREVIOUS}.properties ${PROGRAM}.tmp
 		skip12=true
 		skip121=true
 	else
@@ -361,7 +611,7 @@ if [ "${UPGRADE}" = "true" ] ; then
 					cp ${C_HOME}Oscar10_12.properties ${PROGRAM}.tmp
 					PREVIOUS=10_12
 				else
-					echo "no previous properties file found to upgrade"  1>>$LOG_ERR
+					echo "no previous properties file found to upgrade"  1>>$LOG_FILE
 					exit 1
 				fi
 			fi
@@ -369,17 +619,16 @@ if [ "${UPGRADE}" = "true" ] ; then
 	fi
 	# drop lines that start with a comment, then grep the property, just take the last instance of that, cut on the = delimiter, and trim whitespace
 	echo "grep the password from the properties file" >> $LOG_FILE
-	db_password=$(sed '/^\#/d' ${PROGRAM}.tmp | grep 'db_password'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_ERR
-	db_set oscar-emr/password ${db_password}
+	db_password=$(sed '/^\#/d' ${PROGRAM}.tmp | grep 'db_password'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
 	echo "grep the province from the properties file" >> $LOG_FILE
-	billregion=$(sed '/^\#/d' ${PROGRAM}.tmp | grep 'billregion'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_ERR
+	billregion=$(sed '/^\#/d' ${PROGRAM}.tmp | grep 'billregion'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
 	echo "billregion=${billregion}" 1>> $LOG_FILE
 	echo "grep the phone prefix from the properties file" >> $LOG_FILE
-	phoneprefix=$(sed '/^\#/d' ${PROGRAM}.tmp | grep 'phoneprefix'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_ERR
+	phoneprefix=$(sed '/^\#/d' ${PROGRAM}.tmp | grep 'phoneprefix'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
 	echo "phoneprefix=${phoneprefix}" >> $LOG_FILE
 	db_set oscar-emr/phoneprefix ${phoneprefix}
 	echo "grep the previous db_name from the properties file" >> $LOG_FILE
-	priorschema=$(sed '/^\#/d' ${PROGRAM}.tmp | grep 'db_name'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_ERR
+	priorschema=$(sed '/^\#/d' ${PROGRAM}.tmp | grep 'db_name'  | tail -n 1 | cut -d "=" -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//') 2>>$LOG_FILE
 	echo "priorschema=${priorschema}" >> $LOG_FILE
 	db_set oscar-emr/priorschema ${priorschema} 
 else
@@ -389,7 +638,7 @@ else
 	echo "and comment out all of the properties that will be set below" >>$LOG_FILE
 	#-e 's/\(^backup_path\)/#\1/' \  ## the backup moves to the new spot
 	sed \
-	-e 's/\/usr\/local\/tomcat/\/var\/lib\/tomcat7/' \
+	-e 's/\/usr\/local\/tomcat/\/var\/lib\/${TOMCAT}/' \
 	-e 's/\(^project_home\)/#\1/' \
 	-e 's/\(^tomcat_path\)/#\1/' \
 	-e 's/\(^login_local_ip\)/#\1/' \
@@ -402,10 +651,10 @@ else
 	-e 's/\(^billregion=\)/#\1/' \
 	-e 's/\(^phoneprefix =\)/#\1/' \
 	-e 's/\(^billcenter =\)/#\1/' \
+	-e 's/\(^SINGLE_PAGE_CHART\)/#\1/' \
 	-e 's/\(^signature_tablet\)/#\1/' \
 	-e 's/\(^appt_intake_form\)/#\1/' \
 	-e 's/\(^new_flowsheet_enabled\)/#\1/' \
-	-e 's/\(^indivica_rx_enhance\)/#\1/' \
 	-e 's/\(^enableFax\)/#\1/' \
 	-e 's/\(^DOCUMENT_DIR\)/#\1/' \
 	-e 's/\(^HL7_COMPLETED_DIR\)/#\1/' \
@@ -441,592 +690,510 @@ else
 	-e 's/\(^consultation_indivica_attachment_enabled\)/#\1/' \
 	-e 's/\(^consultation_dynamic_labelling_enabled\)/#\1/' \
 	-e 's/\(^WKHTMLTOPDF_COMMAND\)/#\1/' \
+	-e 's/\(^oscar_port\)/#\1/' \
 	-e 's/\(^logintitle\)/#\1/' \
 	-e 's/\(^logintext\)/#\1/' \
 	-e 's/\(^loginlogo\)/#\1/' \
 	-e 's/\(^onare_labreqver\)/#\1/' \
 	-e 's/\(^health_tracker\)/#\1/' \
-	${SRC}oscar_mcmaster.properties > ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo "## ------------------------------------------------------------------------------- ##">> ${PROGRAM}.tmp 2>>$LOG_ERR	
-	echo "## | The following values generated by ${PROGRAM}.deb will override any set above | ##">> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo "## ------------------------------------------------------------------------------- ##">> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo logintext=${logintext}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo loginlogo=${loginlogo}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo drugref_url=${drugref_url}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo project_home=${PROGRAM}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo tomcat_path=${tomcat_path}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo backup_path=${backup_path}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo billcenter=${billcenter}>> ${PROGRAM}.tmp 2>>$LOG_ERR
+	-e 's/\(^myOSCAR.url\)/#\1/' \
+	-e 's/\(^myoscar_server_base_url\)/#\1/' \
+	-e 's/\(^HL7TEXT_LABS\)/#\1/' \
+	-e 's:usr/local/OscarDocument:usr/share/oscar\-emr/OscarDocument:' \
+	-e 's:usr/local/tomcat/OscarDocument:usr/share/oscar\-emr/OscarDocument:' \
+	-e 's:usr/local/tomcat/webapps/OscarDocument:usr/share/oscar\-emr/OscarDocument:' \
+	-e 's:var/lib/OscarDocument:usr/share/oscar\-emr/OscarDocument:' \
+	-e 's:var/lib/tomcat6/webapps/OscarDocument:usr/share/oscar\-emr/OscarDocument:' \
+	-e 's/oscar_mcmaster/oscar/' \
+	${SRC}oscar_mcmaster.properties > ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo "## ------------------------------------------------------------------------------- ##">> ${PROGRAM}.tmp 2>>$LOG_FILE	
+	echo "## | The following values generated by ${PROGRAM}.deb will override any set above | ##">> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo "## ------------------------------------------------------------------------------- ##">> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo logintext=${logintext}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo loginlogo=${loginlogo}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo drugref_url=${drugref_url}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo project_home=${PROGRAM}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo tomcat_path=${tomcat_path}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo backup_path=${backup_path}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo billcenter=${billcenter}>> ${PROGRAM}.tmp 2>>$LOG_FILE
 
 	# probe for the local ip and set it
-	login_local_ip=`ip -f inet addr show dev eth0 | sed -n 's/^ *inet *\([.0-9/]*\)\..*/\1/p'`;
-	echo login_local_ip=${login_local_ip}>> ${PROGRAM}.tmp 2>>$LOG_ERR
+	#login_local_ip=`ip -f inet addr show dev eth1 | sed -n 's/^ *inet *\([.0-9/]*\)\..*/\1/p'`;
+    login_local_ip=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
+	echo login_local_ip=${login_local_ip}>> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-	echo hibernate.dialect=org.oscarehr.util.persistence.OscarMySQL5Dialect>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo HOME_DIR=${HOME_DIR}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo "eform_image=${C_BASE}webapps/OscarDocument/oscar_mcmaster/eform/images/">> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo "TMP_DIR: ${C_BASE}webapps/OscarDocument/oscar_mcmaster/export/">> ${PROGRAM}.tmp 2>>$LOG_ERR
-	chown -R ${TOMCAT}:${TOMCAT} ${C_BASE}webapps/OscarDocument
+	echo hibernate.dialect=org.oscarehr.util.persistence.OscarMySQL5Dialect>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	# The following directories are set to their defaults by BASE_DOCUMENT_DIR
+	# If this property is set it replaces all of the other properties with absolute file paths to the OscarDocument directory.
+	# The needed directories will be created from this directory
+	# ie. for BASE_DOCUMENT_DIR=/usr/share/oscar-emr/OscarDocument
+	#
+	# DOCUMENT_DIR will be create as /usr/share/oscar-emr/OscarDocument/<Context>/document
+	# with context for oscar.war being oscar
+
+	# "HOME_DIR", "/billing/download/"
+	# "DOCUMENT_DIR", "/document/" 
+	# "eform_image", "/eform/images/" 
+	# "oscarMeasurement_css_upload_path", "/oscarEncounter/oscarMeasurements/styles/"
+	# "TMP_DIR", "/export/"
+	# "form_record_path", "/form/records/"
+	# "OMD_hrm","/hrm/"
+	# "OMD_directory" , "/hrm/OMD/"
+	# "OMD_log_directory" , "/hrm/logs/"
+	# "OMD_stored", "/hrm/stored/"
+	# "OMD_downloads","/hrm/sftp_downloads/"
+
+	echo BASE_DOCUMENT_DIR=${BASE_DOCUMENT_DIR}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	#echo "eform_image=${SRC}OscarDocument/${PROGRAM}/eform/images/">> ${PROGRAM}.tmp 2>>$LOG_FILE
+	#echo "TMP_DIR: ${SRC}OscarDocument/${PROGRAM}/export/">> ${PROGRAM}.tmp 2>>$LOG_FILE
+	chown -R ${TOMCAT}:${TOMCAT} ${SRC}OscarDocument
 
 fi
 
 echo "add the required changes to the property file" >>$LOG_FILE
 echo "# Creating  Custom ${PROGRAM} Property file" >> $LOG_FILE
 
-echo buildDateTime=$buildDateTime>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo buildtag="${VERSION}.${REVISION}">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo debInstall=true >> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo buildDateTime=$buildDateTime>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo buildtag="${VERSION}.${REVISION}">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo debInstall=true >> ${PROGRAM}.tmp 2>>$LOG_FILE
 	
-echo logintitle=${logintitle}>> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo logintitle=${logintitle}>> ${PROGRAM}.tmp 2>>$LOG_FILE
 
 #processor=$(uname -m)
 #if [ "$processor" = "x86_64" ]; then
 #	echo "linking in 64 bit wkhtmltopdf" >>$LOG_FILE
-#	echo WKHTMLTOPDF_COMMAND=${C_BASE}webapps/OscarDocument/wkhtmltopdf>> ${PROGRAM}.tmp 2>>$LOG_ERR
+#	echo WKHTMLTOPDF_COMMAND=${SRC}OscarDocument/wkhtmltopdf>> ${PROGRAM}.tmp 2>>$LOG_FILE
 #else
-#	echo WKHTMLTOPDF_COMMAND=${C_BASE}webapps/OscarDocument/wkhtmltopdf-i386>> ${PROGRAM}.tmp 2>>$LOG_ERR
+#	echo WKHTMLTOPDF_COMMAND=${SRC}OscarDocument/wkhtmltopdf-i386>> ${PROGRAM}.tmp 2>>$LOG_FILE
 #fi
-#echo WKHTMLTOPDF_COMMAND=/usr/local/bin/OscarDocument/wkhtmltopdf>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo WKHTMLTOPDF_COMMAND=wkhtmltopdf>> ${PROGRAM}.tmp 2>>$LOG_ERR
+#echo WKHTMLTOPDF_COMMAND=/usr/local/bin/OscarDocument/wkhtmltopdf>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo WKHTMLTOPDF_COMMAND=wkhtmltopdf>> ${PROGRAM}.tmp 2>>$LOG_FILE
 # Letter page size, margins as indicated, use print media stylesheet
-echo WKHTMLTOPDF_ARGS=-s Letter -T 10mm -L 8mm -R 8mm --print-media-type>> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo WKHTMLTOPDF_ARGS=-s Letter -T 10mm -L 8mm -R 8mm --print-media-type>> ${PROGRAM}.tmp 2>>$LOG_FILE
 # This deb will install a server.xml that directs Tomcat 7 for port 8443 for https connections
-echo oscar_port=8443>> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo oscar_port=8443>> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo priorschema=${priorschema}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo db_name=${db_name}${db_switch}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo db_password=${db_password}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo billregion=${billregion}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo phoneprefix=${phoneprefix}>> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo priorschema=${priorschema}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo db_name=${db_name}${db_switch}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo db_password=${db_password}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo billregion=${billregion}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo phoneprefix=${phoneprefix}>> ${PROGRAM}.tmp 2>>$LOG_FILE
 
 
 if [ "${skip12}" = "false" ] ; then
 	echo "properties introduced for 12 " >>$LOG_FILE
 	# skip if upgrading from 12 
 	# as you have already copied them to ${PROGRAM}.tmp
-	echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo "## The following are new for Oscar 12">> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo signature_tablet=${signature_tablet}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo appt_intake_form=${appt_intake_form}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo new_flowsheet_enabled=${new_flowsheet_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo indivica_rx_enhance=${indivica_rx_enhance}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo enableFax=${enableFax}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo DOCUMENT_DIR=${DOCUMENT_DIR}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo HL7_COMPLETED_DIR=${HL7_COMPLETED_DIR}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo ENABLE_EDIT_APPT_STATUS=${ENABLE_EDIT_APPT_STATUS}>> ${PROGRAM}.tmp 2>>$LOG_ERR
+	echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo "## The following are new for Oscar 12">> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo signature_tablet=${signature_tablet}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo appt_intake_form=${appt_intake_form}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo new_flowsheet_enabled=${new_flowsheet_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo enableFax=${enableFax}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	#echo DOCUMENT_DIR=${DOCUMENT_DIR}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo HL7_COMPLETED_DIR=${HL7_COMPLETED_DIR}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo ENABLE_EDIT_APPT_STATUS=${ENABLE_EDIT_APPT_STATUS}>> ${PROGRAM}.tmp 2>>$LOG_FILE
 fi
 
 if [ "${skip121}" = "false" ] ; then
 	echo "properties introduced for 12.1"  >>$LOG_FILE
-	echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo "## The following are new for Oscar 12.1">> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo rx_enhance=${rx_enhance}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo rx_signature_enabled=${rx_signature_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo moh_file_management_enabled=${moh_file_management_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo ONEDT_INBOX=${ONEDT_INBOX}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo ONEDT_OUTBOX=${ONEDT_OUTBOX}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo ONEDT_SENT=${ONEDT_SENT}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo ONEDT_ARCHIVE=${ONEDT_ARCHIVE}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo workflow_enhance=${workflow_enhance}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo indivica_hc_read_enabled=${indivica_hc_read_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo eform_signature_enabled=${eform_signature_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo eform_generator_indivica_signature_enabled=${eform_generator_indivica_signature_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo eform_generator_indivica_print_enabled=${eform_generator_indivica_print_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo indivica_rich_text_letter_enabled=${indivica_rich_text_letter_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo tickler_warn_period=${tickler_warn_period}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo seconds_till_considered_stale=$seconds_till_considered_stale>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo enable_wait_list_email_notifications=${enable_wait_list_email_notifications}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo wait_list_email_notification_period=${wait_list_email_notification_period}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo wait_list_email_notification_program_ids=${wait_list_email_notification_program_ids}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo tickler_edit_enabled=${tickler_edit_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo tickler_email_enabled=${tickler_email_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo tickler_email_from_address=${tickler_email_from_address}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo tickler_email_subject=${tickler_email_subject}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo "# Fax related">> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo enableFax=${enableFax}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo faxEnable=${faxEnable}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo rx_fax_enabled=${rx_fax_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo consultation_fax_enabled=${consultation_fax_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo consultation_signature_enabled=${consultation_signature_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo consultation_indivica_attachment_enabled=${consultation_indivica_attachment_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo eform_fax_enabled=${eform_fax_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo eform_generator_indivica_fax_enabled=${eform_generator_indivica_fax_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo consultation_dynamic_labelling_enabled=${consultation_dynamic_labelling_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
+	echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo "## The following are new for Oscar 12.1">> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo rx_enhance=${rx_enhance}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo rx_signature_enabled=${rx_signature_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo moh_file_management_enabled=${moh_file_management_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo ONEDT_INBOX=${ONEDT_INBOX}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo ONEDT_OUTBOX=${ONEDT_OUTBOX}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo ONEDT_SENT=${ONEDT_SENT}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo ONEDT_ARCHIVE=${ONEDT_ARCHIVE}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo workflow_enhance=${workflow_enhance}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo indivica_hc_read_enabled=${indivica_hc_read_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo eform_signature_enabled=${eform_signature_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo eform_generator_indivica_signature_enabled=${eform_generator_indivica_signature_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo eform_generator_indivica_print_enabled=${eform_generator_indivica_print_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo indivica_rich_text_letter_enabled=${indivica_rich_text_letter_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo tickler_warn_period=${tickler_warn_period}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo seconds_till_considered_stale=$seconds_till_considered_stale>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo enable_wait_list_email_notifications=${enable_wait_list_email_notifications}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo wait_list_email_notification_period=${wait_list_email_notification_period}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo wait_list_email_notification_program_ids=${wait_list_email_notification_program_ids}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo tickler_edit_enabled=${tickler_edit_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo tickler_email_enabled=${tickler_email_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo tickler_email_from_address=${tickler_email_from_address}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo tickler_email_subject=${tickler_email_subject}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo "# Fax related">> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo enableFax=${enableFax}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo faxEnable=${faxEnable}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo rx_fax_enabled=${rx_fax_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo consultation_fax_enabled=${consultation_fax_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo consultation_signature_enabled=${consultation_signature_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo consultation_indivica_attachment_enabled=${consultation_indivica_attachment_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo eform_fax_enabled=${eform_fax_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo eform_generator_indivica_fax_enabled=${eform_generator_indivica_fax_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo consultation_dynamic_labelling_enabled=${consultation_dynamic_labelling_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
 fi
 
 if [ "${eyeform}" = "true" ] ; then
-	echo cme_js=eyeform>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo encounter.hide_cpp_notes=true>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo encounter.hide_document_notes=true>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo encounter.hide_eform_notes=true>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo encounter.hide_metadata_editor=true>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo encounter.hide_metadata_issues=true>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo encounter.hide_metadata_date=true>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo encounter.hide_metadata_revision=true>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo encounter.hide_metadata_enctype=true>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo encounter.empty_new_note=true>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo encounter.hide_notes_with_issue=Misc,PatientLog>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo encounter.custom_cpp_issues=Misc,PatientLog>> ${PROGRAM}.tmp 2>>$LOG_ERR
-	echo NEW_CONTACTS_UI=true>> ${PROGRAM}.tmp 2>>$LOG_ERR
+	echo cme_js=eyeform>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo encounter.hide_cpp_notes=true>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo encounter.hide_document_notes=true>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo encounter.hide_eform_notes=true>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo encounter.hide_metadata_editor=true>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo encounter.hide_metadata_issues=true>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo encounter.hide_metadata_date=true>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo encounter.hide_metadata_revision=true>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo encounter.hide_metadata_enctype=true>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo encounter.empty_new_note=true>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo encounter.hide_notes_with_issue=Misc,PatientLog>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo encounter.custom_cpp_issues=Misc,PatientLog>> ${PROGRAM}.tmp 2>>$LOG_FILE
+	echo NEW_CONTACTS_UI=true>> ${PROGRAM}.tmp 2>>$LOG_FILE
 	# indivica 
-	echo new_eyeform_enabled=true>> ${PROGRAM}.tmp 2>>$LOG_ERR
+	echo new_eyeform_enabled=true>> ${PROGRAM}.tmp 2>>$LOG_FILE
 else
-	echo NEW_CONTACTS_UI=${NEW_CONTACTS_UI}>> ${PROGRAM}.tmp 2>>$LOG_ERR
+	echo NEW_CONTACTS_UI=${NEW_CONTACTS_UI}>> ${PROGRAM}.tmp 2>>$LOG_FILE
 fi
 
 echo "properties introduced for 14"  >>$LOG_FILE
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "## The following are new for Oscar 14">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "## The following are new for Oscar 14">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "#Show link to single page chart in classic appointment screen">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "SINGLE_PAGE_CHART=true">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "#Show link to single page chart in classic appointment screen">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "SINGLE_PAGE_CHART=true">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo resource_base_url=${resource_base_url}>> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo resource_base_url=${resource_base_url}>> ${PROGRAM}.tmp 2>>$LOG_FILE
 
 echo "ONEDT"  >>$LOG_FILE
-echo "### MOH File Management : start ###">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo moh_file_management_enabled=${moh_file_management_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo ONEDT_INBOX=${ONEDT_INBOX}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo ONEDT_OUTBOX=${ONEDT_OUTBOX}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo ONEDT_SENT=${ONEDT_SENT}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo ONEDT_ARCHIVE=${ONEDT_ARCHIVE}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "### MOH File Management : end ###">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "### MOH File Management : start ###">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo moh_file_management_enabled=${moh_file_management_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo ONEDT_INBOX=${ONEDT_INBOX}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo ONEDT_OUTBOX=${ONEDT_OUTBOX}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo ONEDT_SENT=${ONEDT_SENT}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo ONEDT_ARCHIVE=${ONEDT_ARCHIVE}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "### MOH File Management : end ###">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
 echo "ONAR"  >>$LOG_FILE
-echo "### Antenatal Enhanced form and BORN integration : start ###">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo onare_labreqver=${onare_labreqver}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "### Antenatal Enhanced form and BORN integration : start ###">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo onare_labreqver=${onare_labreqver}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo born_env=${born_env}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_sftp_host=${born_sftp_host}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_sftp_port=${born_sftp_port}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_sftp_username=${born_sftp_username}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_sftp_password=${born_sftp_password}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "born_sftp_remote_dir=/">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo born_env=${born_env}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo born_sftp_host=${born_sftp_host}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo born_sftp_port=${born_sftp_port}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo born_sftp_username=${born_sftp_username}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo born_sftp_password=${born_sftp_password}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "born_sftp_remote_dir=/">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "born18m_env=T">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "born18m_orgcode=mcmaster">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "born18m_sftp_host=ftp.test.com">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "born18m_sftp_port=22">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "born18m_sftp_username=test">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "born18m_sftp_password=test">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born18m_sftp_remote_dir=${born18m_sftp_remote_dir}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "born18m_job_provider=999998">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "born18m_env=T">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "born18m_orgcode=mcmaster">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "born18m_sftp_host=ftp.test.com">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "born18m_sftp_port=22">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "born18m_sftp_username=test">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "born18m_sftp_password=test">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo born18m_sftp_remote_dir=${born18m_sftp_remote_dir}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "born18m_job_provider=999998">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo born18m_eform_rourke=${born18m_eform_rourke}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born18m_eform_ndds=${born18m_eform_ndds}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born18m_eform_report18m=${born18m_eform_report18m}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo born18m_eform_rourke=${born18m_eform_rourke}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo born18m_eform_ndds=${born18m_eform_ndds}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo born18m_eform_report18m=${born18m_eform_report18m}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo born18m_upload_hour=${born18m_upload_hour}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo born18m_upload_hour=${born18m_upload_hour}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "#ModuleNames=BORN,BORN18M">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "#ModuleNames=BORN,BORN18M">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "# Override so all lab reqs come out with one name">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#lab_req_override=true">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#lab_req_provider=Dr Clinic Head">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#lab_req_billing_no=654321">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "### Antenal Enhanced form and BORN integration : end ###">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "# Override so all lab reqs come out with one name">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "#lab_req_override=true">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "#lab_req_provider=Dr Clinic Head">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "#lab_req_billing_no=654321">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "### Antenal Enhanced form and BORN integration : end ###">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
 echo "Zoommed"  >>$LOG_FILE
-echo "### Rx and external perscriber : start ###">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo util.erx.enabled=${util_erx_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo util.erx.vendor=${util_erx_vendor}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo util.erx.software=${util_erx_software}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo util.erx.version=${util_erx_version}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo util.erx.synchronize_interval=${util_erx_synchronize_interval}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo util.erx.clinic_username=${util_erx_clinic_username}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo util.erx.clinic_password=${util_erx_clinic_password}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo util.erx.clinic_facility_id=${util_erx_clinic_facility_id}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo util.erx.clinic_training_mode=${util_erx_clinic_training_mode}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo util.erx.clinic_locale=${util_erx_clinic_locale}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo util.erx.webservice_url=${util_erx_webservice_url}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo util.erx.oscarerx_sso_url=${util_erx_oscarerx_sso_url}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "### Rx and external perscriber : end ###">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo showRxChartNo=${showRxChartNo}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "### Rx and external perscriber : start ###">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo util.erx.enabled=${util_erx_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo util.erx.vendor=${util_erx_vendor}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo util.erx.software=${util_erx_software}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo util.erx.version=${util_erx_version}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo util.erx.synchronize_interval=${util_erx_synchronize_interval}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo util.erx.clinic_username=${util_erx_clinic_username}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo util.erx.clinic_password=${util_erx_clinic_password}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo util.erx.clinic_facility_id=${util_erx_clinic_facility_id}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo util.erx.clinic_training_mode=${util_erx_clinic_training_mode}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo util.erx.clinic_locale=${util_erx_clinic_locale}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo util.erx.webservice_url=${util_erx_webservice_url}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo util.erx.oscarerx_sso_url=${util_erx_oscarerx_sso_url}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "### Rx and external perscriber : end ###">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo showRxChartNo=${showRxChartNo}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "### Misc properties : start ###">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo redirectstudysite_default_baseURL=${redirectstudysite_default_baseURL}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo redirectstudysite_default_username=${redirectstudysite_default_username}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo redirectstudysite_default_password=${redirectstudysite_default_password}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "### Misc properties : start ###">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo redirectstudysite_default_baseURL=${redirectstudysite_default_baseURL}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo redirectstudysite_default_username=${redirectstudysite_default_username}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo redirectstudysite_default_password=${redirectstudysite_default_password}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo web_service_client.connection_timeout_ms=${web_service_client_connection_timeout_ms}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo web_service_client.received_timeout_ms=${web_service_client_received_timeout_ms}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo web_service_client.connection_timeout_ms=${web_service_client_connection_timeout_ms}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo web_service_client.received_timeout_ms=${web_service_client_received_timeout_ms}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo default_bill_center=${default_bill_center}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo default_search_mode=${default_search_mode}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo default_bill_center=${default_bill_center}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo default_search_mode=${default_search_mode}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "#Clinic model isn't based on MRP but Provider per appointment if no">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo mrp_model=${mrp_model}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "#Clinic model isn't based on MRP but Provider per appointment if no">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo mrp_model=${mrp_model}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "# pdf label options">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# to set Dr on PDF label to be appt provider when known MRP otherwise">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#pdfLabelApptProvider=/path/to/label-appt.xml">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# also can look for default MRP label.xml ">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#pdfLabelMRP=/path/to/label.xml">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "# pdf label options">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "# to set Dr on PDF label to be appt provider when known MRP otherwise">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "#pdfLabelApptProvider=/path/to/label-appt.xml">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "# also can look for default MRP label.xml ">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "#pdfLabelMRP=/path/to/label.xml">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "#The amount of time an appointment timeslot will be reserved to a provider as viewing and/or locked,">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo appointment_locking_timeout=${appointment_locking_timeout}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "#The amount of time an appointment timeslot will be reserved to a provider as viewing and/or locked,">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo appointment_locking_timeout=${appointment_locking_timeout}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "#Show prevention item comments on Prevention Print PDF">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo prevention_show_comments=${prevention_show_comments}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "#Show prevention item comments on Prevention Print PDF">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo prevention_show_comments=${prevention_show_comments}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "#Show a due date on Ontario third party invoice printouts.  Number of days">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo invoice_due_date=${invoice_due_date}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "#Show a due date on Ontario third party invoice printouts.  Number of days">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo invoice_due_date=${invoice_due_date}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo form_intake_program_access_service_id=${form_intake_program_access_service_id}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo form_intake_program_access_fid=${form_intake_program_access_fid}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo form_intake_program_cash_service_id=${form_intake_program_cash_service_id}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo form_intake_program_cash_fid=${form_intake_program_cash_fid}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo form_intake_program_access_service_id=${form_intake_program_access_service_id}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo form_intake_program_access_fid=${form_intake_program_access_fid}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo form_intake_program_cash_service_id=${form_intake_program_cash_service_id}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo form_intake_program_cash_fid=${form_intake_program_cash_fid}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo warnOnDeleteBill=${warnOnDeleteBill}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo warnOnDeleteBill=${warnOnDeleteBill}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo lab_req_include_chartno=${lab_req_include_chartno}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo lab_req_include_chartno=${lab_req_include_chartno}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo use_lab_clientreference=${use_lab_clientreference}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo use_lab_clientreference=${use_lab_clientreference}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "#The identifier to add as part of the temp consult fax filenames (pdf/txt) put in the jvm tmp directory">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#e.g. CRF-OSCAREMR<reqId><systemTime>.pdf">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#fax_clinic_id=OSCAREMR">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "#The identifier to add as part of the temp consult fax filenames (pdf/txt) put in the jvm tmp directory">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "#e.g. CRF-OSCAREMR<reqId><systemTime>.pdf">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "#fax_clinic_id=OSCAREMR">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "#Pick up latest demographic and clinic contact info to populate BillTo and RemitTo fields on 3rd Party Invoice Report">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo useDemoClinicInfoOnInvoice=${useDemoClinicInfoOnInvoice}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "#Pick up latest demographic and clinic contact info to populate BillTo and RemitTo fields on 3rd Party Invoice Report">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo useDemoClinicInfoOnInvoice=${useDemoClinicInfoOnInvoice}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "#clinic_billing_phone=">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "#clinic_billing_phone=">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo INVOICE_DIR=${INVOICE_DIR}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo INVOICE_DIR=${INVOICE_DIR}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo " ">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "DEMOGRAPHIC_PATIENT_HEALTH_CARE_TEAM=true" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "DEMOGRAPHIC_PATIENT_CLINIC_STATUS=true">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "DEMOGRAPHIC_PATIENT_ROSTERING=true">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "DEMOGRAPHIC_WAITING_LIST=true">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "DEMOGRAPHIC_PATIENT_HEALTH_CARE_TEAM=true" >> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "DEMOGRAPHIC_PATIENT_CLINIC_STATUS=true">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "DEMOGRAPHIC_PATIENT_ROSTERING=true">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "DEMOGRAPHIC_WAITING_LIST=true">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo " ">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo NEW_CONTACTS_UI_EXTERNAL_CONTACT=${NEW_CONTACTS_UI_EXTERNAL_CONTACT}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo NEW_CONTACTS_UI_EXTERNAL_CONTACT=${NEW_CONTACTS_UI_EXTERNAL_CONTACT}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo " ">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "#tickler, dsa">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo ckd_notification_scheme=${ckd_notification_scheme}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#ckd_notification_receiver=1">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#ckd_flowsheet=diabetes">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo ORN_PILOT=${ORN_PILOT}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo orn_labreqver=${orn_labreqver}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#ModuleNames=ORN">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "#tickler, dsa">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo ckd_notification_scheme=${ckd_notification_scheme}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "#ckd_notification_receiver=1">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "#ckd_flowsheet=diabetes">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo ORN_PILOT=${ORN_PILOT}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo orn_labreqver=${orn_labreqver}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "#ModuleNames=ORN">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo " ">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo health_tracker=${health_tracker}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo health_tracker=${health_tracker}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo " ">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo wl_default_issue=${wl_default_issue}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo wl_default_issue=${wl_default_issue}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo " ">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "#Where to find the additional/external billing rule XML files">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#decision_support_dir=">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#The XML filenames (e.g. ONA003A.xml) containing the billing rules, comma seperated list">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#decision_support_files=">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "#Where to find the additional/external billing rule XML files">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "#decision_support_dir=">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "#The XML filenames (e.g. ONA003A.xml) containing the billing rules, comma seperated list">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "#decision_support_files=">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo " ">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "#encounter.hide_invoices=true">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "#encounter.hide_invoices=true">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo " ">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo INCOMINGDOCUMENT_DIR=${INCOMINGDOCUMENT_DIR}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo INCOMINGDOCUMENT_RECYCLEBIN=${INCOMINGDOCUMENT_RECYCLEBIN}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#true = can split, rotate, remove pages or replace content with a new file once the document has been assigned to a patient">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo ALLOW_UPDATE_DOCUMENT_CONTENT=${ALLOW_UPDATE_DOCUMENT_CONTENT}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo INCOMINGDOCUMENT_DIR=${INCOMINGDOCUMENT_DIR}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo INCOMINGDOCUMENT_RECYCLEBIN=${INCOMINGDOCUMENT_RECYCLEBIN}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "#true = can split, rotate, remove pages or replace content with a new file once the document has been assigned to a patient">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo ALLOW_UPDATE_DOCUMENT_CONTENT=${ALLOW_UPDATE_DOCUMENT_CONTENT}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo " ">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo displayNotesOnScheduleScreen=${displayNotesOnScheduleScreen}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo displayAlertsOnScheduleScreen=${displayAlertsOnScheduleScreen}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo displayNotesOnScheduleScreen=${displayNotesOnScheduleScreen}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo displayAlertsOnScheduleScreen=${displayAlertsOnScheduleScreen}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo " ">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo privateConsentEnabled=${privateConsentEnabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# to set site selection feature true/false">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo useProgramLocation=${useProgramLocation}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo privateConsentEnabled=${privateConsentEnabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "# to set site selection feature true/false">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo useProgramLocation=${useProgramLocation}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo " ">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "### Misc properties : end ###">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "### Misc properties : end ###">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
 echo "clinicaid"  >>$LOG_FILE
-echo "### clinicaid : start ###">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo clinicaid_domain=${clinicaid_domain}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo clinicaid_api_key=${clinicaid_api_key}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo clinicaid_instance_name=${clinicaid_instance_name}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "### clinicaid : end ###">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "### clinicaid : start ###">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo clinicaid_domain=${clinicaid_domain}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo clinicaid_api_key=${clinicaid_api_key}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo clinicaid_instance_name=${clinicaid_instance_name}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "### clinicaid : end ###">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo mandatory_password_reset=${mandatory_password_reset}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo mandatory_password_reset=${mandatory_password_reset}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
 echo "CBI"  >>$LOG_FILE
-echo "### CBI data submission : start ###" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#to start the scheduler for data submission uncomment this" >> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "### CBI data submission : start ###" >> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "#to start the scheduler for data submission uncomment this" >> ${PROGRAM}.tmp 2>>$LOG_FILE
 ## TODO logic to handle module heterogenity and BC that won't want CBI
-echo "#ModuleNames=CBI" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo ModuleNames=${ModuleNames}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo CBI_JOB_INTERVAL=${CBI_JOB_INTERVAL}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo CBI_WS_URL=${CBI_WS_URL}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo CBI_WS_USERNAME=${CBI_WS_USERNAME}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo CBI_WS_PASSWORD=${CBI_WS_PASSWORD}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo CBI_WS_CLIENT_QNAME=${CBI_WS_CLIENT_QNAME}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo CBI_WS_CLIENT_QNAME_URL=${CBI_WS_CLIENT_QNAME_URL}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo CBI_REMINDER_WINDOW=${CBI_REMINDER_WINDOW}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo CBI_REMIND_ON_UPDATE_DEMOGRAPHIC=${CBI_REMIND_ON_UPDATE_DEMOGRAPHIC}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "### CBI data submission : end ###">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "#ModuleNames=CBI" >> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo ModuleNames=${ModuleNames}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo CBI_JOB_INTERVAL=${CBI_JOB_INTERVAL}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo CBI_WS_URL=${CBI_WS_URL}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo CBI_WS_USERNAME=${CBI_WS_USERNAME}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo CBI_WS_PASSWORD=${CBI_WS_PASSWORD}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo CBI_WS_CLIENT_QNAME=${CBI_WS_CLIENT_QNAME}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo CBI_WS_CLIENT_QNAME_URL=${CBI_WS_CLIENT_QNAME_URL}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo CBI_REMINDER_WINDOW=${CBI_REMINDER_WINDOW}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo CBI_REMIND_ON_UPDATE_DEMOGRAPHIC=${CBI_REMIND_ON_UPDATE_DEMOGRAPHIC}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "### CBI data submission : end ###">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "### Sharing Center : start ###">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo sharingcenter.enabled=${sharingcenter_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "## Sharing Center (IHE Keystore & Truststore locations)">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo TOMCAT_KEYSTORE_FILE=${TOMCAT_KEYSTORE_FILE}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo TOMCAT_KEYSTORE_PASSWORD=${TOMCAT_KEYSTORE_PASSWORD}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo TOMCAT_TRUSTSTORE_FILE=${TOMCAT_TRUSTSTORE_FILE}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo TOMCAT_TRUSTSTORE_PASSWORD=${TOMCAT_TRUSTSTORE_PASSWORD}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "### Sharing Center : end ###">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "### Sharing Center : start ###">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo sharingcenter.enabled=${sharingcenter_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "## Sharing Center (IHE Keystore & Truststore locations)">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo TOMCAT_KEYSTORE_FILE=${TOMCAT_KEYSTORE_FILE}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo TOMCAT_KEYSTORE_PASSWORD=${TOMCAT_KEYSTORE_PASSWORD}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo TOMCAT_TRUSTSTORE_FILE=${TOMCAT_TRUSTSTORE_FILE}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo TOMCAT_TRUSTSTORE_PASSWORD=${TOMCAT_TRUSTSTORE_PASSWORD}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "### Sharing Center : end ###">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
 echo "MCEDT"  >>$LOG_FILE
 ## TODO note that MCEDT has been backported to 12.1.2 so this section may need some logic not to overwrite
-echo "## MCEDT Settings : start ##">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo mcedt.enabled=${mcedt_enabled}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# boolean flag that represents if the SOAP call details are logged">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo mcedt.logging.skip=${mcedt_logging_skip}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# username used for reading keystore content">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo mcedt.keystore.user=${mcedt_keystore_user}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# password used for reading keystore content">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo mcedt.keystore.pass=${mcedt_keystore_pass}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# username placed into the user name token (i.e. service user name)">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo mcedt.service.user=${mcedt_service_user}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# password placed into the user name token (i.e. service pass)">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo mcedt.service.pass=${mcedt_service_pass}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# MCEDT web service URL">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo mcedt.service.url=${mcedt_service_url}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# MCEDT service conformance key (provided when registering for MCEDT) ">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo mcedt.service.conformanceKey=${mcedt_service_conformanceKey}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# MCEDT service ID (provided when registering for MCEDT)">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo mcedt.service.id=${mcedt_service_id}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "## MCEDT Settings : end ##">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "## MCEDT Settings : start ##">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo mcedt.enabled=${mcedt_enabled}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "# boolean flag that represents if the SOAP call details are logged">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo mcedt.logging.skip=${mcedt_logging_skip}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "# username used for reading keystore content">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo mcedt.keystore.user=${mcedt_keystore_user}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "# password used for reading keystore content">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo mcedt.keystore.pass=${mcedt_keystore_pass}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "# username placed into the user name token (i.e. service user name)">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo mcedt.service.user=${mcedt_service_user}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "# password placed into the user name token (i.e. service pass)">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo mcedt.service.pass=${mcedt_service_pass}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "# MCEDT web service URL">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo mcedt.service.url=${mcedt_service_url}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "# MCEDT service conformance key (provided when registering for MCEDT) ">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo mcedt.service.conformanceKey=${mcedt_service_conformanceKey}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "# MCEDT service ID (provided when registering for MCEDT)">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo mcedt.service.id=${mcedt_service_id}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "## MCEDT Settings : end ##">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo " ">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "#custom label">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo showSexualHealthLabel=${showSexualHealthLabel}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
+echo "#custom label">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo showSexualHealthLabel=${showSexualHealthLabel}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo " ">> ${PROGRAM}.tmp 2>>$LOG_FILE
 
-echo "HCV"  >>$LOG_FILE
-echo "# HCV Settings">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# validation type(simple, online)">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# simple - old variant, only checks not null and hin size ">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo hcv.type=simple>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# boolean flag that represents if the SOAP call details are logged">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo hcv.logging.skip=true>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# username used for reading keystore content">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo hcv.keystore.user=signatureAlias>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# password used for reading keystore content">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo hcv.keystore.pass=aliasPassword>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# username placed into the user name token (i.e. service user name)">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo hcv.service.user=confsu61@outlook.com>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# password placed into the user name token (i.e. service pass)">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo hcv.service.pass=Password0!>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# HCV web service URL">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo hcv.service.url=https://ws.conf.ebs.health.gov.on.ca:1440/HCVService/HCValidationService>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# hcv service conformance key (provided when registering for HCV)">> ${PROGRAM}.tmp 2>>$LOG_ERR 
-echo hcv.service.conformanceKey=844b6fcf-07e1-4b30-963d-d15b30a61bad>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "# HCV service ID (provided when registering for HCV)">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo hcv.service.id=010637>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "# Enable GZIP encoding and compression">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo INTEGRATOR_COMPRESSION_ENABLED=false>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#show the SOAP messages for integrator">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo INTEGRATOR_LOGGING_ENABLED=false>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "#Experimental UI for OSCAR 14/15">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo cobalt=${cobalt}>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo invoice_reports.print.hide_name=false>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "#enable to have better demographic relationship support. acceptable values are true and false">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo NEW_CONTACTS_UI=false>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#@deprecate after OSCAR 15" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#defaulted to false. keep this way unless you need some time to migrate some process over." >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#program_domain.show_echart=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "#show hamilton public health items in admin menu" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo admin.hph=false>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " " >> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "#in the caisi client manager summary page, only see the CDSs for your program domain" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo caisi.cds.restrict_by_program_domain=false>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " " >> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "#when enabled, you can set drugs to internally dispensed, and access" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#the dispensing screen.backed by a simple inventory/product manager" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo rx.enable_internal_dispensing=false>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " " >> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "#override the odb_formulary file" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#odb_formulary_file=" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " " >> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "#hide the drug of choice button from rx3 interface" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#rx.drugofchoice.hide=true" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " " >> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "#ONTARIO_MD_INCOMINGREQUESTOR=yes" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " " >> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "#show a menu in the main bar on schedule page to search professional specialists" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo referral_menu=no >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " " >> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "#by default, when using the caisi registration intake, saving it causes the provider to become the MRP." >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#set this to false to avoid that from happening." >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo caisi.registration_intake.updateMRPOnSave=true>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " " >> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "kidconnect"  >>$LOG_FILE
-echo "#for kidconnect 0-5 program" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#unique identifier provided by BORN" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_orgcode=mcmaster>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#names of all the forms used in the project" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_eform_rourke=Rourke Baby Record>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_eform_sumrptmarkers=BORN Summary Report Markers>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "born_eform_ndds1m2m=NDDS 1&2 Months" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_eform_ndds4m=NDDS 4 Months>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_eform_ndds6m=NDDS 6 Months>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_eform_ndds9m=NDDS 9 Months>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_eform_ndds12m=NDDS 12 Months>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_eform_ndds15m=NDDS 15 Months>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_eform_ndds18m=NDDS 18 Months>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_eform_ndds24m=NDDS 24 Months>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_eform_ndds3y=NDDS 3 Years>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_eform_ndds4y=NDDS 4 Years>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_eform_ndds5y=NDDS 5 Years>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_eform_ndds6y=NDDS 6 Years>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "#by default, a measurement group is ordered by typeDisplayName." >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#if you order by ID, you can set up data to show up in any order." >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo oscarMeasurements.orderGroupById=false >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " " >> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "#eaaps was research project" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo eaaps.enabled=false>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " " >> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "#default provider for BORNSchedulerJob (not HIAL)" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo born_scheduler_job_run_as_provider=999998>> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " " >> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "#default provider for HSFO jobs" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "hsfo_job_run_as_provider=999998" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "#alternative Patient Details screen" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "ALT_PATIENT_DETAILS_UI=no" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-# updated to Oct 10, 2015 with the following
-echo "##default provider for MyMeds job (MyMedsStudy.java)" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "mymeds_job_run_as_provider=999998" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "#enabling this gives the user the ability to create a child's record at same time as parent and" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "#setup the demographic relationship" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "enable_create_child_record=true" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "SHOW_PREVENTION_STOP_SIGNS=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "PREVENTION_CLASSIC_VIEW=no" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "#enableCreateChildRecordPrograms=" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-echo "labhandler"  >>$LOG_FILE
-echo "lab.handler.AlphaHL7.enabled=true" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.CML.enabled=true" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.EPSILON.enabled=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.PATHL7.enabled=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.GDML.enabled=true" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.HHSEMR.enabled=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.HRMXML.enabled=true" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.ICL.enabled=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.IHA.enabled=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.MDS.enabled=true" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.MEDVUE.enabled=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.OLIS_HL7.enabled=true" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.OSCAR_TO_OSCAR_HL7_V2.enabled=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.PDFDOC.enabled=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.PFHT.enabled=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.SIOUX.enabled=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.TDIS.enabled=true" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.Spire.enabled=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.OUL_R21.enabled=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.ORU_R01.enabled=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.BIOTEST.enabled=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.CLS.enabled=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.TRUENORTH.enabled=false" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo "lab.handler.OTHER.enabled=true" >> ${PROGRAM}.tmp 2>>$LOG_ERR
-echo " ">> ${PROGRAM}.tmp 2>>$LOG_ERR
-
-
-echo "additional properties added post hoc by PHC">> ${PROGRAM}.tmp 2>>$LOG_ERR
-
+echo " ">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "additional properties changed and added post hoc by PHC">> ${PROGRAM}.tmp 2>>$LOG_FILE
+## we don't deprecate keys often so keep oscar_mcmaster.properties at recentish from master
+## if you need to change any comment out the key in the sed above
+## then add the varible at the top and echo the key value here
+echo MDS_LABS=${MDS_LABS}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo CML_LABS=${CML_LABS}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo HL7TEXT_LABS=${HL7TEXT_LABS}>> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo " " >> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo "#Experimental UI for OSCAR 14/15">> ${PROGRAM}.tmp 2>>$LOG_FILE
+echo cobalt=${cobalt}>> ${PROGRAM}.tmp 2>>$LOG_FILE
 
 
 echo "install the properties file" >>$LOG_FILE
-mv ${PROGRAM}.tmp ${C_HOME}${PROGRAM}.properties 2>>$LOG_ERR
+mv ${PROGRAM}.tmp ${C_HOME}${PROGRAM}.properties 2>>$LOG_FILE
+
+
+
 rm -f ${PROGRAM}.tmp
 echo  ${C_HOME}${PROGRAM}.properties created >>$LOG_FILE
+echo "the oscar properties file contains a plaintext password..." >>$LOG_FILE
+echo "so let only tomcat read it" >>$LOG_FILE
+chown ${TOMCAT}:${TOMCAT} ${C_HOME}${PROGRAM}.properties 2>>$LOG_FILE
+chmod 640 ${C_HOME}${PROGRAM}.properties 2>>$LOG_FILE
 
-if [ "${INSTALL_BACKUP}" = "true" ] ; then
-	echo "configure the backup" >>$LOG_FILE
+# some people look for /var/lib/tomcat8/drugref2.properties
+# so create a symlink
+ln -s /usr/share/${TOMCAT}/${PROGRAM}.properties /var/lib/${TOMCAT}/${PROGRAM}.properties
 
-	chmod 7111 ${SRC}oscar_backup.sh  2>>$LOG_ERR
+echo "configure crontab" >>$LOG_FILE
 
-	if [ -f /var/spool/cron/crontabs/root ] ; then
-		echo "write out current crontab" >>$LOG_FILE
-		crontab -l > c.temp 2>>$LOG_ERR
-		echo "Commenting out previous oscar backup jobs" >>$LOG_FILE
-		sed -e 's/\(.*oscar_backup\)/#\1/' c.temp > tempcron 2>>$LOG_ERR
-		rm c.temp 2>>$LOG_ERR
-	fi
-	echo "Append the backup job to a new cron file" >>$LOG_FILE
-	echo "01 23 * * * ${SRC}oscar_backup.sh" >> tempcron 2>>$LOG_ERR
-	echo "install new cron file" >>$LOG_FILE
-	crontab tempcron 2>>$LOG_ERR
-	rm tempcron 2>>$LOG_ERR
+chmod 711 ${SRC}oscar_backup.sh  2>>$LOG_FILE
+chmod 711 ${SRC}reOscar.sh  2>>$LOG_FILE
+chmod 711 ${SRC}gateway.cron  2>>$LOG_FILE
 
+if [ -f /var/spool/cron/crontabs/root ] ; then
+	# "checking existing crontab" >>$LOG_FILE
+	echo "write out current crontab" >>$LOG_FILE
+	crontab -l > c.temp 2>>$LOG_FILE
+else
+	touch c.temp 2>>$LOG_FILE
 fi
+
+if grep -Fq "01 23 * * * ${SRC}oscar_backup.sh" c.temp ; then
+    	echo "entry for oscar_backup already present" >>$LOG_FILE
+else
+	echo "append the backup job to a new cron file" >>$LOG_FILE
+    	echo "01 23 * * * ${SRC}oscar_backup.sh" >> c.temp 2>>$LOG_FILE
+fi 
+if grep -Fq "* * * * * ${SRC}reOscar.sh" c.temp ; then
+    	echo "entry for reOscar already present" >>$LOG_FILE
+else
+	echo "append the reOscar job to a new cron file" >>$LOG_FILE
+    	echo "* * * * * ${SRC}reOscar.sh" >> c.temp 2>>$LOG_FILE
+fi 
+if grep -Fq "*/3 * * * * ${SRC}gateway.cron" c.temp ; then
+    	echo "entry for gateway fax already present" >>$LOG_FILE
+else
+	echo "append the gateway fax job to a new cron file" >>$LOG_FILE
+    	echo "* * * * * ${SRC}gateway.cron" >> c.temp 2>>$LOG_FILE
+fi 
+if grep -Fq "00 23 * * Fri touch /tmp/${TOMCAT}-${TOMCAT}-tmp/restartOscar.action" c.temp ; then
+    	echo "entry for restart OSCAR weekly already present" >>$LOG_FILE
+else
+	echo "append restart OSCAR weekly job to a new cron file" >>$LOG_FILE
+    	echo "00 23 * * Fri touch /tmp/${TOMCAT}-${TOMCAT}-tmp/restartOscar.action" >> c.temp 2>>$LOG_FILE
+fi
+
+
+#	echo "Commenting out previous oscar backup jobs" >>$LOG_FILE
+#	sed -e 's/\(^[^#].*oscar_backup\)/#\1/' c.temp > tempcron 2>>$LOG_FILE
+
+
+echo "install new cron file" >>$LOG_FILE
+crontab c.temp 2>>$LOG_FILE
+rm c.temp 2>>$LOG_FILE
+
+
+
 

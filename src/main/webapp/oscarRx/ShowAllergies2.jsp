@@ -92,6 +92,11 @@ com.quatro.service.security.SecurityManager securityManager = new com.quatro.ser
 </style>
 <script type="text/javascript">
 
+function submitSearchForm() {
+	$("#searchStringButton").click();
+	return false;
+}
+
 $(document).ready( function() {
 
 	$.fn.bindActionEvents = function() {
@@ -631,7 +636,7 @@ if (hasDrugAllergy) iNKDA = 0;
 
 		<tr id="addAllergyInterface" >
 			<td>
-				<form action="/oscarRx/searchAllergy2.do" focus="searchString" id="searchAllergy2" >
+				<form action="/oscarRx/searchAllergy2.do" focus="searchString" id="searchAllergy2" onSubmit="return submitSearchForm()">
 
 					<input type="hidden" name="iNKDA" value="<%=iNKDA%>"/>
 					<input type="hidden" name="hasDrugAllergy" value="<%=hasDrugAllergy%>"/>

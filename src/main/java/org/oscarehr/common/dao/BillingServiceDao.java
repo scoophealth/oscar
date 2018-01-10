@@ -103,7 +103,7 @@ public class BillingServiceDao extends AbstractDao<BillingService> {
 	
 	
 	public List<BillingService> findByServiceCodes(List<String> codes) {
-		Query query = entityManager.createQuery("select bs  from BillingService bs where bs.serviceCode IN (:codes)");
+		Query query = entityManager.createQuery("select bs  from BillingService bs where bs.serviceCode IN (:codes) order by bs.billingserviceDate desc");
 		query.setParameter("codes", codes);
 
 		

@@ -23,6 +23,7 @@
  */
 package org.oscarehr.managers;
 
+import java.util.Date;
 import java.util.List;
 
 import org.oscarehr.common.dao.OscarLogDao;
@@ -45,6 +46,12 @@ public class OscarLogManager {
 		
 		return results;
 			
+	}
+
+	public List<Object[]> getRecentDemographicsViewedByProviderAfterDateIncluded(LoggedInInfo loggedInInfo, String providerNo, Date date, int startPosition, int itemsToReturn) {
+		List<Object[]> results = oscarLogDao.getRecentDemographicsViewedByProviderAfterDateIncluded(providerNo, date, startPosition, itemsToReturn);
+		LogAction.addLogSynchronous(loggedInInfo,"OscarLogManager.getRecentDemographicsViewedByProviderAfterDateIncluded", "providerNo"+providerNo);
+		return results;
 	}
 	
 }
