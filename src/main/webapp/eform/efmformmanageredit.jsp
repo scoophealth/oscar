@@ -224,7 +224,7 @@ window.opener.location.href = '<%=request.getContextPath()%>/administration/?sho
 				<br/>
 			<bean:message key="eform.uploadhtml.patientIndependent" /> <input type="checkbox" name="patientIndependent" value="true" <%= (Boolean)curform.get("patientIndependent")?"checked":"" %> /><br />
 			<bean:message key="eform.uploadhtml.restrictByProgram" /> <input type="checkbox" name="restrictByProgram" value="true" <%= (Boolean)curform.get("restrictByProgram")?"checked":"" %> /><br />
-			<bean:message key="eform.uploadhtml.disableUpdate" /> <input type="checkbox" name="disableUpdate" value="true" <%= (Boolean)curform.get("disableUpdate")?"checked":"" %> /><br />
+			<bean:message key="eform.uploadhtml.disableUpdate" /> <input type="checkbox" name="disableUpdate" value="true" <%= curform.get("disableUpdate") != null?"checked":"" %> /><br />
 						
 			</div>
 

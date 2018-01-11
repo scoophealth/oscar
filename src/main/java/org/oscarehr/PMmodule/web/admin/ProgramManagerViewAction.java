@@ -504,6 +504,9 @@ public class ProgramManagerViewAction extends DispatchAction {
 
 		ad.setClientStatusId(Integer.valueOf(statusId));
 
+		if(statusId != null && "0".equals(statusId)) {
+			ad.setClientStatusId(null);
+		} 
 		admissionManager.saveAdmission(ad);
 
 		ActionMessages messages = new ActionMessages();

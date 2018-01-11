@@ -742,6 +742,25 @@ function updatePaperArchive() {
 	}
 }
 
+
+function updateDOBFromCal(cal) {
+	var selectedDate = document.getElementById('dob_date1').value;
+	var parts = selectedDate.split("-");
+	if(parts.length == 3) {
+		document.getElementById('year_of_birth').value = parts[0];
+		document.getElementById('month_of_birth').value = parts[1];
+		document.getElementById('date_of_birth').value = parts[2];
+	} else {
+		alert('Error updating DOB, enter manually');
+	}
+}
+
+
+function updateDOBFromCalField() {
+	var dt = document.getElementById('year_of_birth').value + "-" + document.getElementById('month_of_birth').value + "-" + document.getElementById('date_of_birth').value;
+	document.getElementById('dob_date1').value = dt;
+}
+
 jQuery(document).ready(function() {
 	var addresses;
 	
@@ -764,4 +783,8 @@ jQuery(document).ready(function() {
                 workPhoneHistory = generateMarkup(addresses,'phone2','Phone #');
                 cellPhoneHistory = generateMarkup(addresses,'cell','Phone #');
        });
+       
+       updateDOBFromCalField();
 });
+
+

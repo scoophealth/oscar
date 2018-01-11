@@ -23,6 +23,9 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.apache.commons.net.util.Base64"%>
+<%@page import="net.sf.json.JSONArray"%>
+<%@page import="org.oscarehr.managers.SecurityInfoManager"%>
 <%@page import="org.oscarehr.common.IsPropertiesOn"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
@@ -61,7 +64,6 @@
 <%@page import="org.oscarehr.common.model.Admission"%>
 <%@page import="org.oscarehr.managers.ProgramManager2"%>
 <%@page import="org.oscarehr.PMmodule.model.ProgramProvider"%>
-
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
@@ -228,7 +230,6 @@
 	
 	/* OSCAREMR-6243 */
 	function popup9(vheight, vwidth, varpage,flag) {
-		alert(flag);
 		var page = varpage;
 		windowprops = "height="
 				+ vheight
@@ -255,6 +256,7 @@
 	}
 
 	function popupEChart9(vheight,vwidth,varpage,flag) { //open a new popup window
+		
 		  var page = "" + varpage;
 		  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=20,left=20";
 		  
@@ -490,6 +492,9 @@ jQuery(document).ready(function() {
 	if (orderBy == null)
 		orderBy = "last_name";
 	
+	List<String> searchModes = new ArrayList<String>();
+	List<String> keywords = new ArrayList<String>();
+	
 	
 	List<Demographic> demoList = null;
       if(request.getParameter("keyword")!=null && request.getParameter("keyword").length()==0) {
@@ -502,8 +507,6 @@ jQuery(document).ready(function() {
         } else {
 
         	//there's a list of searchMode/keyword doubles
-        	List<String> searchModes = new ArrayList<String>();
-        	List<String> keywords = new ArrayList<String>();
         	searchModes.add(searchMode);
 			keywords.add(keyword);
 			
@@ -657,11 +660,20 @@ jQuery(document).ready(function() {
 			List<Admission> currentAdmissions = admissionManager.getCurrentAdmissions(demo.getDemographicNo());
 			
 			//the rule is that if my current program is not a program this patient is in, then give a warning
-			boolean showProgramWarning = true;
-			for(Admission a:currentAdmissions) {
-				if(a.getProgramId().equals(currentProgramInDomain.getProgramId().intValue())) {
-					showProgramWarning = false;
-					break;
+			
+			//do they have _caisi.documentationWarning" permission set to something other than none
+
+			SecurityInfoManager secManager = SpringUtils.getBean(SecurityInfoManager.class);
+			boolean showProgramWarning = false;
+			
+			if(secManager.hasPrivilege(loggedInInfo, "_caisi.documentationWarning", "r", null)) {
+				showProgramWarning = true;
+				
+				for(Admission a:currentAdmissions) {
+					if(a.getProgramId().equals(currentProgramInDomain.getProgramId().intValue())) {
+						showProgramWarning = false;
+						break;
+					}
 				}
 			}
 			
@@ -683,7 +695,7 @@ jQuery(document).ready(function() {
 		<td class="links"><security:oscarSec roleName="<%=roleName$%>"
 			objectName="_eChart" rights="r">
 			<a class="encounterBtn" title="Encounter" href="#"
-				onclick="popupEChart9(710,1024,'<c:out value="${ctx}"/>/oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=dem_no%>&curProviderNo=&reason=<%=URLEncoder.encode(noteReason)%>&encType=&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=','<%=showProgramWarning %>');return false;">E</a>
+				onclick="popupEChart9(710,1024,'<c:out value="${ctx}"/>/oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=dem_no%>&curProviderNo=&reason=<%=URLEncoder.encode(noteReason)%>&encType=&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=',<%=showProgramWarning %>);return false;">E</a>
 		</security:oscarSec> <!-- Rights --> <security:oscarSec roleName="<%=roleName$%>"
 			objectName="_rx" rights="r">
 			<a class="rxBtn" title="Prescriptions" href="#" onclick="popup9(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=demo.getProviderNo()%>&demographicNo=<%=dem_no%>',<%=showProgramWarning %>)">Rx</a>
@@ -770,7 +782,18 @@ jQuery(document).ready(function() {
 %>
 <br> 
 <div class="createNew">
-<a href="demographicaddarecordhtm.jsp?search_mode=<%=searchMode%>&keyword=<%=StringEscapeUtils.escapeHtml(keyWord)%>" title="<bean:message key="demographic.search.btnCreateNewTitle" />">
+<%
+	
+	JSONArray a = new JSONArray();
+	a.addAll(searchModes);
+	String b = Base64.encodeBase64String(a.toString().getBytes());
+	
+	JSONArray c = new JSONArray();
+	c.addAll(keywords);
+	String d = Base64.encodeBase64String(c.toString().getBytes());
+	
+%>
+<a href="demographicaddarecordhtm.jsp?searchModes=<%=b%>&keywords=<%=d %>&search_mode=<%=searchMode%>&keyword=<%=StringEscapeUtils.escapeHtml(keyWord)%>" title="<bean:message key="demographic.search.btnCreateNewTitle" />">
 <bean:message key="demographic.search.btnCreateNew" />
 </a>
 </div>

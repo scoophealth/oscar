@@ -2250,29 +2250,32 @@ if ( Dead.equals(PatStat) ) {%>
 									key="demographic.demographiceditdemographic.formDOBDetais" /><b>:</b>
 								</td>
 								<td align="left" nowrap><input type="text"
-									name="year_of_birth" <%=getDisabled("year_of_birth")%>
+									name="year_of_birth" id="year_of_birth" <%=getDisabled("year_of_birth")%>
 									value="<%=birthYear%>"
-									size="3" maxlength="4"> 
+									size="3" maxlength="4" onBlur="updateDOBFromCalField()"> 
 
 									<% 
 									String sbMonth;
 									String sbDay;
 									DecimalFormat dFormat = new DecimalFormat("00");
 									%>
-			                        <select name="month_of_birth" id="month_of_birth">
+			                        <select name="month_of_birth" id="month_of_birth" onChange="updateDOBFromCalField()">
 									<% for(int i=1; i<=12; i++) {
 										sbMonth = dFormat.format(i); %>
 										<option value="<%=sbMonth%>"<%=birthMonth.equals(sbMonth)?" selected":""%>><%=sbMonth%></option>
 									<%} %>
 									</select>
 									
-			                         <select name="date_of_birth" id="date_of_birth">
+			                         <select name="date_of_birth" id="date_of_birth" onChange="updateDOBFromCalField()">
 									<% for(int i=1; i<=31; i++) {
 										sbDay = dFormat.format(i); %>
 										<option value="<%=sbDay%>"<%=birthDate.equals(sbDay)?" selected":""%>><%=sbDay%></option>
 									<%} %>
 									</select>			
-									
+									<b><input type="hidden"
+							name="dob_date1" id="dob_date1"
+							value="" > <img
+							src="../images/cal.gif" id="dob_date_cal"></b>
 									<b>Age: <input type="text"
 									name="age" readonly value="<%=age%>" size="3"> </b></td>
 								<td align="right" nowrap><b><bean:message
@@ -3624,6 +3627,8 @@ Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d
 
 
 Calendar.setup({ inputField : "paper_chart_archived_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "archive_date_cal", singleClick : true, step : 1 });
+
+Calendar.setup({ inputField : "dob_date1", ifFormat : "%Y-%m-%d", showsTime :false,showsOtherMonths: false,showYearsCombo:true, button : "dob_date_cal", singleClick : true, step : 1 , onClose: function(cal){updateDOBFromCal(cal);cal.hide();}});
 
 
 function callEligibilityWebService(url,id){

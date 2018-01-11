@@ -1463,7 +1463,11 @@ public class ProgramManagerAction extends DispatchAction {
 
 		Admission ad = admissionManager.getAdmission(admission.getId());
 
-		ad.setClientStatusId(admission.getClientStatusId());
+		if(admission.getClientStatusId() != null && admission.getClientStatusId().intValue() == 0) {
+			ad.setClientStatusId(null);
+		} else {
+			ad.setClientStatusId(admission.getClientStatusId());
+		}
 
 		admissionManager.saveAdmission(ad);
 
