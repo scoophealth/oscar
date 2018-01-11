@@ -273,6 +273,5 @@ public class DemographicContact extends AbstractModel<Integer> {
 	public void setContactTypeId(Integer contactTypeId) {
 		this.contactTypeId = contactTypeId;
 	}
-
 	
 }

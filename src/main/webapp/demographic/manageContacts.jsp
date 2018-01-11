@@ -24,6 +24,8 @@
 
 --%>
 
+<%@page import="org.oscarehr.PMmodule.dao.ProgramDao"%>
+<%@page import="org.oscarehr.PMmodule.model.Program"%>
 <%@page import="oscar.OscarProperties"%>
 <%@page import="org.oscarehr.PMmodule.model.ProgramProvider"%>
 <%@page import="org.oscarehr.managers.ProgramManager2"%>
@@ -94,6 +96,8 @@
 	List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
 	
 	OscarProperties op = OscarProperties.getInstance();
+	
+	ProgramDao programDao = SpringUtils.getBean(ProgramDao.class);
 %>
 
 <%-- DETACHED VIEW ENABLED  --%>
@@ -160,14 +164,18 @@ function popUpData<%=type%>( data ){
 			type = jQuery('#searchInternalExternal<%=type%>').val().trim();
 		}
 		
-		if( ! role.trim() ) {
-			role = jQuery('#select<%=type%>TeamRoleType option:selected').val(); 
+		
+		var t = 'External';
+		if(type == 1 || type == 0) {
+			t = 'Internal';
 		}
-		
-		var programId = jQuery('#select<%=type%>TeamProgramId option:selected').val();
-		
-		
+		if( ! role.trim() ) {
+			role = jQuery('#select'+t+'<%=type%>TeamRoleType option:selected').val(); 
+		}
 
+		
+		var programId = json.programId;
+		
 		var param = 'postMethod=ajax2&method=' + method + 
 					'&demographic_no=' + demographic_no +
 					'&demographicNo=' + demographic_no +
@@ -178,10 +186,10 @@ function popUpData<%=type%>( data ){
 					'&' + contactObject + 'contactId=' + contactId +
 					'&' + contactObject + 'contactName=' + contactName +
 					'&' + contactObject + 'type=' + type + 
-					'&' + contactObject + 'role=' + jQuery('#select<%=type%>TeamRoleType option:selected').text() +
+					'&' + contactObject + 'role=' + jQuery('#select'+t+'<%=type%>TeamRoleType option:selected').text() +
 					'&' + contactObject + 'active=' + active +
 					'&' + contactObject + 'category=<%=type%>' +
-					'&' + contactObject + 'contactTypeId=' + jQuery('#select<%=type%>TeamRoleType option:selected').val() +
+					'&' + contactObject + 'contactTypeId=' + jQuery('#select'+t+'<%=type%>TeamRoleType option:selected').val() +
 					'&' + contactObject + "programId=" + programId +
 					'&' + contactObject + 'consentToContact=' + consentToContact;
 		
@@ -261,10 +269,10 @@ jQuery.fn.bindFunctions = function() {
 //--> Search external providers	function
 function searchExternalProviders<%=type%>(action) {
 	
-	var contactRole = jQuery('#select<%=type%>TeamRoleType option:selected').val();
+	var contactRole = jQuery('#selectExternal<%=type%>TeamRoleType option:selected').val();
 	var searchfield = jQuery('#search<%=type%>TeamInput').val();
 	var windowspecs = "width=500,height=600,left=100,top=100, scrollbars=yes, resizable=yes";
-	var programId = jQuery('#select<%=type%>TeamProgramId option:selected').val();
+	var programId = jQuery('#selectExternal<%=type%>TeamProgramId option:selected').val();
 	
 	
 	popupWindow<%=type%> = window.open(
@@ -335,9 +343,9 @@ jQuery(document).ready( function($) {
 			demoName = jQuery("#ptName<%=type %>").val();
 		}
 		
-		var role = jQuery('#select<%=type%>TeamRoleType option:selected').val();
+		var role = jQuery('#selectInternal<%=type%>TeamRoleType option:selected').val();
 		
-		var programId = jQuery('#select<%=type%>TeamProgramId option:selected').val();
+		var programId = jQuery('#selectInternal<%=type%>TeamProgramId option:selected').val();
 		
 		
 		var param = '{"contactId":'  + demographicNo + 
@@ -367,11 +375,10 @@ jQuery(document).ready( function($) {
 		contactName = jQuery("#search<%=type %>TeamInput").val();
 		
 		
-		var role = jQuery('#select<%=type%>TeamRoleType option:selected').val();
+		var role = jQuery('#selectExternal<%=type%>TeamRoleType option:selected').val();
 		
-		var programId = jQuery('#select<%=type%>TeamProgramId option:selected').val();
-		
-		
+		var programId = jQuery('#selectExternal<%=type%>TeamProgramId option:selected').val();
+			
 		var param = '{"contactId":'  + contactId + 
 			',"contactName":"' + contactName + 
 			'","contactRole":"' + role + 
@@ -518,12 +525,13 @@ jQuery(document).ready( function($) {
 		<c:set value="${ demographicContacts }" var="demographicContactList" scope="page" />
 
 		<tr id="tableTitle" >
-			<th colspan="6" class="alignLeft" >${headerTitle}</th>
+			<th colspan="<%=("true".equals(op.getProperty("DEMOGRAPHIC_CONTACT.ShowProgramRestriction", "true"))) ? 6:5 %>" class="alignLeft" >${headerTitle}</th>
 		</tr>
 
 		<c:if test="${ not empty demographicContactList }" >
 			<tr id="healthCareTeamSubHeading" >
-				<td></td><td>Name</td><td></td><td></td>
+				<%=("true".equals(op.getProperty("DEMOGRAPHIC_CONTACT.ShowProgramRestriction", "true"))) ? "<td></td>":"" %>
+				<td></td><td>Name</td><td>Home Phone</td><td></td><td></td>
 			</tr>
 		</c:if>
 		<c:forEach items="${ demographicContactList }" var="demographicContact" >
@@ -531,16 +539,52 @@ jQuery(document).ready( function($) {
 			<c:set value="${ demographicContact.details.workPhone }" var="workPhone" scope="page" />
 			
 			<tr>	
-								
-				<td class="alignRight" >
+				<%if("true".equals(op.getProperty("DEMOGRAPHIC_CONTACT.ShowProgramRestriction", "true"))) { %>
+				<td class="alignRight" >	
+				<%
+						pageContext.setAttribute("programName", "");
+						DemographicContact dc = (DemographicContact) pageContext.getAttribute("demographicContact");
+						Integer programNo = dc.getProgramNo();
 						
+						String programName = "";
+						if(programNo != null && programNo > 0) {
+							Program program = programDao.getProgram(programNo);
+							if(program != null) {
+								programName = program.getName();
+								pageContext.setAttribute("programName", programName);
+							}
+						}
+						
+					%>
+					
+					<b></b><c:out value="${programName }" /></b>				 					
+				</td>
+			<% } %>
+			
+				<td class="alignLeft" >
 					<c:out value="${ demographicContact.role }" />				 					
 				</td>
                 <td class="alignLeft" >
                 		<c:out value="${ demographicContact.contactName }" />
                 </td>
                 
-                	
+                 <td class="alignLeft" >
+                 		<%
+                 		String phone = "";
+                 		DemographicContact dc = (DemographicContact) pageContext.getAttribute("demographicContact");
+						if(dc.getType() == DemographicContact.TYPE_DEMOGRAPHIC) {
+							Demographic d = demographicDao.getDemographic(dc.getContactId());
+							if(d != null) {
+								phone = d.getPhone();
+							}
+						} else if(dc.getType() == DemographicContact.TYPE_CONTACT)  {
+							phone = dc.getDetails().getResidencePhone();
+						}
+						pageContext.setAttribute("phone", phone);
+                 		%>
+                		<c:out value="${ phone}" />
+                </td>
+    		            	
                	 	
 	            <td class="alignRight">
 	            	<input type="button" 
@@ -586,7 +630,7 @@ jQuery(document).ready( function($) {
 			 External, then display the external search options -->
 
 			<td class="Internal<%=type %>" >
-				<select id="select<%=type %>TeamRoleType" name="select<%=type %>TeamRoleType" >					
+				<select id="selectInternal<%=type %>TeamRoleType" name="selectInternal<%=type %>TeamRoleType" >					
 					<%
 					for(ProgramContactType pct:pctList) {
 					%>
@@ -599,7 +643,7 @@ jQuery(document).ready( function($) {
 				if("true".equals(op.getProperty("DEMOGRAPHIC_CONTACT.ShowProgramRestriction", "false"))) {
 			%>
 			<td class="Internal<%=type %>" >
-			 	<select name="select<%=type%>TeamProgramId" id="select<%=type%>TeamProgramId" title="Restrict to Program">
+			 	<select name="selectInternal<%=type%>TeamProgramId" id="selectInternal<%=type%>TeamProgramId" title="Restrict to Program">
 	            		<option value="0"></option>
 	            		<%
 	            			for(ProgramProvider pp:ppList) {
@@ -623,7 +667,7 @@ jQuery(document).ready( function($) {
 			</td>
 			
 			<td class="External<%=type%>" >
-				<select id="select<%=type %>TeamRoleType" name="select<%=type %>TeamRoleType" >					
+				<select id="selectExternal<%=type %>TeamRoleType" name="selectExternal<%=type %>TeamRoleType" >					
 					<%
 					for(ProgramContactType pct:pctList) {
 					%>
@@ -633,7 +677,7 @@ jQuery(document).ready( function($) {
 			</td>
 			
 			<td class="External<%=type %>" >
-			 	<select name="select<%=type%>TeamProgramId" id="select<%=type%>TeamProgramId" title="Restrict to Program">
+			 	<select name="selectExternal<%=type%>TeamProgramId" id="selectExternal<%=type%>TeamProgramId" title="Restrict to Program">
 	            		<option value="0"></option>
 	            		<%
 	            			for(ProgramProvider pp:ppList) {

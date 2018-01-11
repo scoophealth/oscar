@@ -185,6 +185,7 @@ if(!authed) {
 	}
 	
 	function showProgramEditData(contactTypes,data) {
+		//(JSON.stringify(contactTypes));
 		var tblData = '';
 		
 		tblData += '<input type="button" value="View" onClick="setViewMode()" /><br/>';
@@ -197,6 +198,7 @@ if(!authed) {
 		var others =  [];
 		
 		for(var x=0;x<data.length;x++) {
+			//console.log(JSON.stringify(data[x]));
 			if(data[x].id.category == 'Personal') {
 				personals.push(data[x]);
 			}

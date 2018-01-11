@@ -938,6 +938,14 @@ public class ContactAction extends DispatchAction {
 
 		List<ContactType> contactTypes = contactManager.getContactTypes(LoggedInInfo.getLoggedInInfoFromSession(request));
 
+		Collections.sort(contactTypes, new Comparator<ContactType>() {
+			 public int compare(ContactType o1, ContactType o2) {
+                
+
+                 return o1.getName().toUpperCase().compareTo(o2.getName().toUpperCase());
+         }
+
+		});
 		JSONArray arr = JSONArray.fromObject(contactTypes);
 		
 		arr.write(response.getWriter());

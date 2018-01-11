@@ -24,6 +24,10 @@
 
 --%>
 
+<%@page import="org.oscarehr.PMmodule.model.Program"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProgramDao"%>
+<%@page import="org.oscarehr.common.model.ContactType"%>
+<%@page import="org.oscarehr.common.dao.ContactTypeDao"%>
 <%@page import="oscar.OscarProperties"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page import="org.oscarehr.PMmodule.model.ProgramProvider"%>
@@ -99,6 +103,10 @@
 	pageContext.setAttribute("providerList", providerList);
 	
 	OscarProperties op = OscarProperties.getInstance();
+	
+	ContactTypeDao contactTypeDao = SpringUtils.getBean(ContactTypeDao.class);
+	ProgramDao programDao = SpringUtils.getBean(ProgramDao.class);
+	
 %>
 
 <%-- DETACHED VIEW ENABLED  --%>
@@ -452,12 +460,13 @@ jQuery(document).ready( function($) {
 		<c:set value="${ demographicContacts }" var="demographicContactList" scope="page" />
 
 		<tr id="tableTitle" >
-			<th colspan="6" class="alignLeft" >${headerTitle}</th>
+			<th colspan="<%=("true".equals(op.getProperty("DEMOGRAPHIC_CONTACT.ShowProgramRestriction", "true"))) ? 8:7 %>" class="alignLeft" >${headerTitle}</th>
 		</tr>
 
 		<c:if test="${ not empty demographicContactList }" >
 			<tr id="healthCareTeamSubHeading" >
-				<td></td><td>Name</td><td>Phone</td><td>Fax</td><td></td><td></td>
+				<%=("true".equals(op.getProperty("DEMOGRAPHIC_CONTACT.ShowProgramRestriction", "true"))) ? "<td></td>":"" %>
+				<td></td><td></td><td>Name</td><td>Phone</td><td>Fax</td><td></td><td></td>
 			</tr>
 		</c:if>
 		<c:forEach items="${ demographicContactList }" var="demographicContact" >
@@ -465,8 +474,48 @@ jQuery(document).ready( function($) {
 			<c:set value="${ demographicContact.details.workPhone }" var="workPhone" scope="page" />
 			
 			<tr>					
+			
+			<%if("true".equals(op.getProperty("DEMOGRAPHIC_CONTACT.ShowProgramRestriction", "true"))) { %>
 				<td class="alignRight" >	
+				<%
+						pageContext.setAttribute("programName", "");
+						DemographicContact dc = (DemographicContact) pageContext.getAttribute("demographicContact");
+						Integer programNo = dc.getProgramNo();
+						
+						String programName = "";
+						if(programNo != null && programNo > 0) {
+							Program program = programDao.getProgram(programNo);
+							if(program != null) {
+								programName = program.getName();
+								pageContext.setAttribute("programName", programName);
+							}
+						}
+						
+					%>
+					
+					<c:out value="${programName }" />				 					
+				</td>
+			<% } %>
+				<td class="alignLeft" >	
 					<c:out value="${ demographicContact.role }" />				 					
+				</td>
+				<td class="alignLeft" >	
+					<%
+						pageContext.setAttribute("contactTypeName", "");
+						DemographicContact dc = (DemographicContact) pageContext.getAttribute("demographicContact");
+						Integer ctId = dc.getContactTypeId();
+						
+						String contactTypeName = "";
+						if(ctId != null && ctId > 0) {
+							ContactType ct = contactTypeDao.find(ctId);
+							if(ct != null) {
+								contactTypeName = ct.getName();
+								pageContext.setAttribute("contactTypeName", contactTypeName);
+							}
+						}
+						
+					%>
+					<c:out value="${ contactTypeName }" />				 					
 				</td>
                 <td class="alignLeft" >
                 		<c:out value="${ demographicContact.contactName }" />

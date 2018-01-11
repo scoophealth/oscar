@@ -66,8 +66,16 @@
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.12.3.js"></script>
+
 <title>Add/Edit Contact</title>
 <script language="JavaScript">
+
+<% if("saveContact".equals(request.getParameter("method"))) { %>
+       $(document).ready(function(){
+               window.close();
+       });
+<% } %>
 
       <!--
 		function setfocus() {

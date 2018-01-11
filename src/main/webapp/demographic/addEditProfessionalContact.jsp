@@ -45,9 +45,15 @@ List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, lo
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.12.3.js"></script>
 <title>Add/Edit Professional Contact</title>
 <script type="text/javascript">
 
+<% if("saveProContact".equals(request.getParameter("method"))) { %>
+	$(document).ready(function(){
+		window.close();
+	});
+<% } %>
 //<!--
 		function setfocus() {
 			this.window.focus();
