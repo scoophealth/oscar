@@ -12208,6 +12208,7 @@ CREATE TABLE CVCImmunization (
   `snomedCode` varchar(255),
   `displayName` varchar(255),
   `picklistName` varchar(255),
+  `generic` tinyint(1),
   `prevalence` int,
   `parentConceptId` varchar(255),
 
