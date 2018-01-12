@@ -30,7 +30,7 @@ CREATE TABLE CVCMedicationLotNumber (
 CREATE TABLE CVCImmunization (
   `id` int(11) NOT NULL auto_increment,
   `versionId` integer,
-  `snomedCode` varchar(255),
+  `snomedConceptId` varchar(255),
   `displayName` varchar(255),
   `picklistName` varchar(255),
   `generic` tinyint(1),
