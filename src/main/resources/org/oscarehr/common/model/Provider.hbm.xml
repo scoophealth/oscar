@@ -34,6 +34,7 @@
 		<property column="signed_confidentiality" name="SignedConfidentiality" not-null="false" type="java.util.Date" />
 		<property name="email" />
 		<property column="practitionerNo" length="20" name="practitionerNo" not-null="false" type="string" />
+		<property column="practitionerNoType" length="255" name="practitionerNoType" not-null="false" type="string" />
 		<property name="title" />
 		<property name="lastUpdateUser" type="string"/>
 		<property name="lastUpdateDate" type="timestamp" />

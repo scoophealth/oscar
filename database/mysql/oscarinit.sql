@@ -7193,6 +7193,7 @@ CREATE TABLE provider (
   `lastUpdateUser` varchar(6) default NULL,
   `lastUpdateDate` datetime not null,
   `signed_confidentiality` datetime,
+  `practitionerNoType` varchar(255),
   PRIMARY KEY  (provider_no)
 );
 
@@ -8927,7 +8928,8 @@ CREATE TABLE providerArchive (
   `title` varchar(20),
   `lastUpdateUser` varchar(6),
   `lastUpdateDate` date,
-  `signed_confidentiality` date
+  `signed_confidentiality` date,
+  `practitionerNoType` varchar(255)
 );
 
 CREATE TABLE appointmentArchive (
