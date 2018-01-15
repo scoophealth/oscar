@@ -37,9 +37,9 @@ angular.module("ticklerServices", [])
                 method: "POST",
                 data: JSON.stringify({"ticklers":ticklerIds}),
                 headers: {'Content-Type': 'application/json'}
-              }).success(function (data, status, headers, config) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers, config) {
+              }).then(function (response) {
+            	  deferred.resolve(response.data);
+                },function (data, status, headers, config) {
                 	deferred.reject("An error occured while setting ticklers to completed status");
                 });
            return deferred.promise;
@@ -51,9 +51,9 @@ angular.module("ticklerServices", [])
                 method: "POST",
                 data: JSON.stringify({"ticklers":ticklerIds}),
                 headers: {'Content-Type': 'application/json'}
-              }).success(function (data, status, headers, config) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers, config) {
+              }).then(function (data) {
+            	  deferred.resolve(data.data);
+                },function (data, status, headers, config) {
                 	deferred.reject("An error occured while setting ticklers to deleted status");
                 });
            return deferred.promise;
@@ -65,9 +65,9 @@ angular.module("ticklerServices", [])
                 method: "POST",
                 data: JSON.stringify(filter),
                 headers: {'Content-Type': 'application/json'}
-              }).success(function (data, status, headers, config) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers, config) {
+              }).then(function (data) {
+            	  deferred.resolve(data.data);
+                },function (data, status, headers, config) {
                 	deferred.reject("An error occured while searching ticklers");
                 });
            return deferred.promise;
@@ -79,9 +79,9 @@ angular.module("ticklerServices", [])
                 method: "POST",
                 data: JSON.stringify(tickler),
                 headers: {'Content-Type': 'application/json'}
-              }).success(function (data, status, headers, config) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers, config) {
+              }).then(function (data) {
+            	  deferred.resolve(data.data);
+                },function (data, status, headers, config) {
                 	deferred.reject("An error occured while updating tickler");
                 });
            return deferred.promise;
@@ -90,9 +90,9 @@ angular.module("ticklerServices", [])
         	$http({
                 url: this.apiPath+'/textSuggestions',
                 method: "GET"
-              }).success(function (data, status, headers, config) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers, config) {
+              }).then(function (response) {
+            	  deferred.resolve(response.data);
+                },function (data, status, headers, config) {
                 	deferred.reject("An error occured while getting tickler text suggestions");
                 });
            return deferred.promise;
@@ -104,9 +104,9 @@ angular.module("ticklerServices", [])
                 method: "POST",
                 data: JSON.stringify(tickler),
                 headers: {'Content-Type': 'application/json'}
-              }).success(function (data, status, headers, config) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers, config) {
+              }).then(function (response) {
+            	  deferred.resolve(response.data);
+                },function (data, status, headers, config) {
                 	deferred.reject("An error occured while saving tickler");
                 });
            return deferred.promise;
@@ -117,9 +117,9 @@ angular.module("ticklerServices", [])
                 url: this.apiPath+'/'+demographicNo+'/count/overdue',
                 method: "GET",
                 headers: this.configHeaders,
-              }).success(function (data) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers) {
+              }).then(function (response) {
+            	  deferred.resolve(response.data);
+                },function (data, status, headers) {
                 	deferred.reject("An error occured while getting tickler overdue count");
                 });
            return deferred.promise;

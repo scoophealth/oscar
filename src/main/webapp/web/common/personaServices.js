@@ -36,9 +36,9 @@ angular.module("personaServices", [])
                 url: this.apiPath+'/dashboardMenu',
                 method: "GET",
                 headers: this.configHeaders,
-              }).success(function (data) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers) {
+              }).then(function(response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers) {
                 	deferred.reject("An error occured while getting the dashboard menu from persona");
                 });
            return deferred.promise;
@@ -49,9 +49,9 @@ angular.module("personaServices", [])
                 url: this.apiPath+'/navbar',
                 method: "GET",
                 headers: this.configHeaders,
-              }).success(function (data) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers) {
+              }).then(function(response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers) {
                 	deferred.reject("An error occured while getting navbar from persona");
                 });
            return deferred.promise;
@@ -62,9 +62,9 @@ angular.module("personaServices", [])
                 url: this.apiPath+'/patientLists',
                 method: "GET",
                 headers: this.configHeaders,
-              }).success(function (data) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers) {
+              }).then(function(response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers) {
                 	deferred.reject("An error occured while getting patient lists from persona");
                 });
            return deferred.promise;
@@ -75,9 +75,9 @@ angular.module("personaServices", [])
                 url: this.apiPath+'/patientList/config',
                 method: "GET",
                 headers: this.configHeaders,
-              }).success(function (data) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers) {
+              }).then(function(response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers) {
                 	deferred.reject("An error occured while getting getPatientListConfig from persona");
                 });
            return deferred.promise;
@@ -89,9 +89,9 @@ angular.module("personaServices", [])
                 method: "POST",
                 data: patientListConfig,
                 headers: this.configHeaders,
-              }).success(function (data) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers) {
+              }).then(function(response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers) {
                 	deferred.reject("An error occured while setting setPatientListConfig from persona");
                 });
            return deferred.promise;
@@ -102,9 +102,9 @@ angular.module("personaServices", [])
                 url: this.apiPath + '/setDefaultProgramInDomain?programId='+programId,
                 method: "GET",
                 headers: this.configHeaders,
-              }).success(function (data) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers) {
+              }).then(function(response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers) {
                 	deferred.reject("An error occured while setting current");
                 });
            return deferred.promise;
@@ -116,9 +116,9 @@ angular.module("personaServices", [])
                 method: "POST",
                 data: {type:'dashboard'},
                 headers: this.configHeaders,
-              }).success(function (data) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers) {
+              }).then(function(response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers) {
                 	deferred.reject("An error occured while getting preferences from persona");
                 });
            return deferred.promise;
@@ -130,9 +130,9 @@ angular.module("personaServices", [])
                 method: "POST",
                 data: JSON.stringify(prefs),
                 headers: {'Content-Type': 'application/json'}
-              }).success(function (data, status, headers, config) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers, config) {
+              }).then(function(response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers, config) {
                 	deferred.reject("An error occured while updating preferences");
                 });
            return deferred.promise;

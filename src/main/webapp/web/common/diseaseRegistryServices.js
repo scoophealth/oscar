@@ -32,10 +32,10 @@ angular.module("diseaseRegistryServices", [])
 		
         getQuickLists: function () {
             var deferred = $q.defer();
-            $http.get(this.apiPath+'quickLists/',this.configHeadersWithCache).success(function(data){
-            	console.log(data);
-            	deferred.resolve(data);
-            }).error(function(){
+            $http.get(this.apiPath+'quickLists/',this.configHeadersWithCache).then(function (response){
+            	console.log(response.data);
+            	deferred.resolve(response.data);
+            },function(){
             	console.log("error fetching demographic");
             	deferred.reject("An error occured while fetching items");
             });
@@ -52,12 +52,12 @@ angular.module("diseaseRegistryServices", [])
         	issueToSend.code = disease.code;
         	issueToSend.description = disease.description;
         	
-            $http.post(this.apiPath+demgraphicNo+'/add',issueToSend).success(function(data){
-            	console.log(data);
-            	deferred.resolve(data);
-          }).error(function(){
-        	  console.log("error fetching items");
-        	  deferred.reject("An error occured while fetching items");
+            $http.post(this.apiPath+demgraphicNo+'/add',issueToSend).then(function (response){
+            	console.log(response.data);
+            	deferred.resolve(response.data);
+          },function(){
+        	  	console.log("error fetching items");
+        	  	deferred.reject("An error occured while fetching items");
           });
      
           return deferred.promise;
@@ -65,10 +65,10 @@ angular.module("diseaseRegistryServices", [])
         
         findLikeIssue: function(diagnosis){
         	var deferred = $q.defer();
-        	$http.post(this.apiPath+'findLikeIssue',diagnosis).success(function(data){
-            	console.log(data);
-                deferred.resolve(data);
-            }).error(function(){
+        	$http.post(this.apiPath+'findLikeIssue',diagnosis).then(function (response){
+            	console.log(response.data);
+                deferred.resolve(response.data);
+            },function(){
           	  console.log("error fetching items");
               deferred.reject("An error occured while fetching items");
             });
