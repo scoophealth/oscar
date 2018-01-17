@@ -1530,7 +1530,7 @@ insert into ProviderPreference (providerNo, startHour, endHour, everyMin, myGrou
 -- Dumping data for table 'provider'
 --
 
-INSERT INTO provider VALUES ('999998','oscardoc','doctor','doctor',null,'','','','0001-01-01','','','','','','','','1','','','','','','','','',now(),'0001-01-01');
+INSERT INTO provider VALUES ('999998','oscardoc','doctor','doctor',null,'','','','0001-01-01','','','','','','','','1','','','','','','','','',now(),'0001-01-01','');
 
 --
 -- Dumping data for table 'quickList'

@@ -15214,3 +15214,9 @@ insert into frm_labreq_preset (lab_type,prop_name,prop_value,status) values ("Pr
 insert into frm_labreq_preset (lab_type,prop_name,prop_value,status) values ("PreLithium","h_cbc","checked",'1');
 insert into frm_labreq_preset (lab_type,prop_name,prop_value,status) values ("PreLithium","o_otherTests1","GGT",'1');
 insert into frm_labreq_preset (lab_type,prop_name,prop_value,status) values ("PreLithium","o_otherTests2","ECG",'1');
+
+
+INSERT INTO `LookupList` VALUES (\N,'practitionerNoType','Practitioner No Type List','Select list for disambiguating practitionerNo in provider record',NULL,1,'oscar',now());
+SET @lid = LAST_INSERT_ID();
+INSERT INTO `LookupListItem` VALUES (\N,@lid,'CPSO','College of Physicians and Surgeons of Ontario',3,1,'oscar',now()),(\N,@lid,'CNO','College of Nurses of Ontario (CNO)',3,1,'oscar',now());
+

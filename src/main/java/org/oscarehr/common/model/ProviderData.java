@@ -79,6 +79,8 @@ public class ProviderData extends AbstractModel<String> implements Serializable 
 	private String comments = null;
 	@Column(name = "provider_activity")
 	private String providerActivity = null;
+	@Column(name = "practitionerNoType")
+	private String practitionerNoType = null;
 	@Column(name = "practitionerNo")
 	private String practitionerNo = null;
 	@Column(name = "init")
@@ -286,7 +288,16 @@ public class ProviderData extends AbstractModel<String> implements Serializable 
 		signedConfidentiality = d;
 	}
 	 
-        public String getSupervisor() {
+	
+    public String getPractitionerNoType() {
+		return practitionerNoType;
+	}
+
+	public void setPractitionerNoType(String practitionerNoType) {
+		this.practitionerNoType = practitionerNoType;
+	}
+
+		public String getSupervisor() {
             return supervisor;
         }
         
