@@ -265,33 +265,6 @@ public class PersonaService extends AbstractServiceImpl {
 			
 			//.add(0,"K2A",null,"#/k2a")
 			.add(idCounter++,bundle.getString("navbar.menu.admin"),null,"../administration/","admin");
-		
-		
-		///// Uncomment for separate dashboard menu.
-		/*
-		List<Dashboard> dashboards = dashboardManager.getDashboards( getLoggedInInfo() );
-		
-		if( dashboards != null ) {
-			
-			if( ! dashboards.isEmpty() ) {
-				
-				MenuItemTo1 dashboardDropdownMenu = new MenuItemTo1( null, bundle.getString("navbar.menu.dashboard"), null );	
-				dashboardDropdownMenu.setDropdown( Boolean.TRUE );
-				
-				MenuTo1 dashboardDropdownList = new MenuTo1();
-				for( Dashboard dashboard : dashboards ) {
-					dashboardDropdownList.add( dashboard.getId(), dashboard.getName(), null,  "dashboard/display/DashboardDisplay.do?method=getDashboard&dashboardId="+dashboard.getId(),"dashboard"+dashboard.getId());
-				}
-				
-				dashboardDropdownMenu.setDropdownItems( dashboardDropdownList.getItems() );
-				menu.getItems().add(dashboardDropdownMenu);
-				
-			}
-			
-		}
-		*/	
-		/////
-		
 
 		MenuItemTo1 moreMenu = new MenuItemTo1(idCounter++, bundle.getString("navbar.menu.more"), null);
 		moreMenu.setDropdown(true);
