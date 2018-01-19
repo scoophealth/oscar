@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.managers.LookupListManager"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -1305,6 +1306,36 @@ document.forms[1].r_doctor_ohip.value = refNo;
 				<td id="chartNo" align="left"><input type="text" id="chart_no" name="chart_no" value="<%=StringEscapeUtils.escapeHtml(chartNoVal)%>">
 				</td>
 			</tr>
+			
+			<tr valign="top">
+                            <td id="phuLbl" align="right"><b><bean:message
+					key="demographic.demographicaddrecordhtm.formPHU" />:</b></td>
+				<td id="phuLblCell" align="left">
+				<select id="PHU" name="PHU" >
+					<option value="">Select Below</option>
+					<%
+						String defaultPhu = OscarProperties.getInstance().getProperty("default_phu");
+						
+						LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
+						LookupList ll = lookupListManager.findLookupListByName(LoggedInInfo.getLoggedInInfoFromSession(request), "phu");
+						
+						for(LookupListItem llItem : ll.getItems()) {
+							String selected = "";
+							if(llItem.getValue().equals(defaultPhu)) {
+								selected = " selected=\"selected\" ";	
+							}
+							%>
+								<option value="<%=llItem.getValue()%>" <%=selected%>><%=llItem.getLabel()%></option>
+							<%
+						}
+					
+					%>
+				</select>
+				</td>
+				<td align="right">&nbsp;
+				</td>
+			</tr>
+			
 
 			<%if (oscarProps.getProperty("EXTRA_DEMO_FIELDS") !=null){
       String fieldJSP = oscarProps.getProperty("EXTRA_DEMO_FIELDS");
