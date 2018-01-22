@@ -958,7 +958,7 @@ function updateCPPNote() {
                                                     $(div).update(request.responseText);
 												}
                                                  if( $("issueChange").value == "true" ) {
-                                                 	  ajaxUpdateIssues("edit",sigId);
+                                                 	ajaxUpdateIssues("edit",sigId);
                                                       $("issueChange").value = false;
                                                  }
 
@@ -1886,7 +1886,7 @@ function NoteisLocked(nId) {
 var sigCache = "";
 //place Note text in textarea for editing and add save, sign etc buttons for this note
 function editNote(e) {
-    var divHeight = 14;
+	var divHeight = 14;
     var normalFont = 12;
     var lineHeight = 1.2;
     var noteHeight;
@@ -2846,8 +2846,9 @@ function saveIssueId(txtField, listItem) {
 var pickIssueMsg;
 var assignIssueMsg;
 function updateIssues(e) {
-    var args = $A(arguments);
+	var args = $A(arguments);
     args.shift();
+
 
     if( $("newIssueId").value.length == 0 || $("issueAutocomplete").value != $("newIssueName").value )
         alert(pickIssueMsg);
@@ -2866,13 +2867,15 @@ function updateIssues(e) {
 var ajaxRequest;
 var updateIssueError;
 function ajaxUpdateIssues(method, div) {
-    var frm = document.forms["caseManagementEntryForm"];
+	var frm = document.forms["caseManagementEntryForm"];
     frm.method.value = method;
     frm.ajax.value = true;
 
     var url = ctx + "/CaseManagementEntry.do";
+	var p = Form.serialize(frm);
+	p.note_edit = '';
     ajaxRequest = new Ajax.Updater( {success:div}, url, {
-                                        evalScripts: true, parameters: Form.serialize(frm), onSuccess: onIssueUpdate,
+                                        evalScripts: true, parameters: p, onSuccess: onIssueUpdate,
                                         onFailure: function(response) {
                                                         alert( response.status + " " + updateIssueError);
                                                     }
