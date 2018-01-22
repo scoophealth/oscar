@@ -1,5 +1,4 @@
-package org.oscarehr.integration.fhir.builder;
-
+package org.oscarehr.integration.fhir.model;
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -25,6 +24,7 @@ package org.oscarehr.integration.fhir.builder;
  */
 
 
+import org.hl7.fhir.dstu3.model.BaseResource;
 import org.hl7.fhir.dstu3.model.MessageHeader.MessageSourceComponent;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.oscarehr.common.model.Contact;
@@ -71,6 +71,7 @@ public class Sender {
 	private String versionSignature;
 	private String endpoint;
 	private OscarFhirResource<Organization, Contact> oscarFhirResource;
+	private RelatedPerson relatedPerson;
 	
 	public Sender() {
 		setMessageSourceComponent( new MessageSourceComponent() );
@@ -196,6 +197,18 @@ public class Sender {
 
 	public void setOscarFhirResource(OscarFhirResource<Organization, Contact> oscarFhirResource) {
 		this.oscarFhirResource = oscarFhirResource;
+	}
+	
+	public BaseResource getFhirResource() {
+		return getOscarFhirResource().getFhirResource();
+	}
+
+	public RelatedPerson getRelatedPerson() {
+		return relatedPerson;
+	}
+
+	public void setRelatedPerson(RelatedPerson relatedPerson) {
+		this.relatedPerson = relatedPerson;
 	}
 
 }

@@ -1,9 +1,4 @@
 package org.oscarehr.integration.fhir.model;
-
-import java.sql.Date;
-import java.util.Calendar;
-import java.util.List;
-
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -28,19 +23,24 @@ import java.util.List;
  * Ontario, Canada
  */
 
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.List;
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.Address.AddressUse;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
-import org.hl7.fhir.dstu3.model.Extension;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.HumanName.NameUse;
 import org.hl7.fhir.dstu3.model.Identifier.IdentifierUse;
+import org.hl7.fhir.dstu3.model.Patient.PatientCommunicationComponent;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.integration.fhir.utils.EnumUtil;
+import org.oscarehr.integration.fhir.interfaces.ResourceModifierFilterInterface;
+import org.oscarehr.integration.fhir.utils.EnumMappingUtil;
 import org.oscarehr.integration.fhir.utils.MiscUtils;
 
 /*
@@ -201,11 +201,6 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 	public Patient( org.hl7.fhir.dstu3.model.Patient from ) {
 		super( new Demographic(), from );
 	}
-	
-	@Override
-	public List<Extension> getFhirExtensions() {
-		return getFhirResource().getExtension();
-	}
 
 	@Override
 	public List<Resource> getContainedFhirResources() {
@@ -214,7 +209,6 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 
 	@Override
 	protected void mapAttributes( Demographic demographic ) {
-		// setId( demographic );
 		setName( demographic );		
 		setGender( demographic );
 		setAddress( demographic );
@@ -224,35 +218,30 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 	}
 	
 	@Override
-	protected void mapAttributes( org.hl7.fhir.dstu3.model.Patient patient ) {
-		setId( patient );
+	protected void mapAttributes( org.hl7.fhir.dstu3.model.Patient patient, ResourceModifierFilterInterface filter ) {
+		
+		System.out.println( filter.getMessage() );
+		
 		setName( patient );		
 		setGender( patient );
 		setAddress( patient );
 		setTelecom( patient );
 		setBirthdate( patient );
-		setHIN( patient ); 
+		setIdentifier( patient ); // ie: HIN and demographic_no
+		setLanguage( patient );
 	}
 	
 	@Override
-	protected void setId( org.hl7.fhir.dstu3.model.Patient patient ) {
-		patient.addIdentifier().setUse(IdentifierUse.SECONDARY)
-			.setSystem("[oscar URI]")
-			.setValue( getOscarResource().getDemographicNo() + "" );
-		
-		patient.setId( "#Patient_" + getOscarResource().getDemographicNo() + "" );
-	}
-	
-	@Override
-	protected void setId( Demographic demographic ) {
-		//not sure this is required for incoming messages.
+	protected void setId( org.hl7.fhir.dstu3.model.Patient patient ) {	
+		patient.setId( getOscarResource().getDemographicNo() + "" );
 	}
 
 	private void setName( org.hl7.fhir.dstu3.model.Patient patient ) {
 		patient.addName().setUse( NameUse.OFFICIAL )
 			.setFamily( getOscarResource().getLastName() )
 			.addGiven( getOscarResource().getFirstName() )
-			.addPrefix( getOscarResource().getTitle() );
+			.addPrefix( getOscarResource().getTitle() )
+			.getExtensionFirstRep().setUrl("http://hl7.org/fhir/StructureDefinition/iso21090-EN-qualifier");
 	}
 	
 	private void setName( Demographic demographic ) {
@@ -267,16 +256,15 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 
 	private void setGender( org.hl7.fhir.dstu3.model.Patient patient ) {
 		Gender gender = Gender.valueOf( getOscarResource().getSex().toUpperCase() );
-		patient.setGender( EnumUtil.genderToAdministrativeGender( gender ) );
+		patient.setGender( EnumMappingUtil.genderToAdministrativeGender( gender ) );
 	}
 	
 	private void setGender( Demographic demographic ) {
 		org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender gender = getFhirResource().getGender();
-		demographic.setSex( EnumUtil.administrativeGenderToGender( gender ).name() );
+		demographic.setSex( EnumMappingUtil.administrativeGenderToGender( gender ).name() );
 	}
 	
 	private void setAddress( org.hl7.fhir.dstu3.model.Patient patient ) {
-		// the custom street extension does not translate well from Oscar.
 		patient.addAddress()
 				.setUse( AddressUse.HOME )				
 				.addLine( getOscarResource().getAddress() )
@@ -325,17 +313,28 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 		birthdate.setTime( getFhirResource().getBirthDate() );
 		demographic.setBirthDay( birthdate );
 	}
-
-	private void setHIN( org.hl7.fhir.dstu3.model.Patient patient ) {
+	
+	private void setIdentifier( org.hl7.fhir.dstu3.model.Patient patient ) {		
 		//TODO: ensure that the system identifier is region specific.
 		patient.addIdentifier().setUse( IdentifierUse.OFFICIAL )
 			.setSystem( "http://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-patient-hcn" )
 			.setValue( getOscarResource().getHin() );
+		
+		patient.addIdentifier().setUse( IdentifierUse.SECONDARY )
+		.setSystem("[oscar URI]")
+		.setValue( getOscarResource().getDemographicNo() + "" );
 	}
-	
+
 	private void setHIN( Demographic demographic ) {
 		String hin = MiscUtils.getFhirOfficialIdentifier( getFhirResource().getIdentifier() );
 		demographic.setHin( hin );
+	}
+	
+	private void setLanguage(  org.hl7.fhir.dstu3.model.Patient patient ) {
+		PatientCommunicationComponent communication = new PatientCommunicationComponent();
+		//TODO: this should translate the languages contained in the Demographic
+		communication.getLanguage().setText("en-US");
+		patient.addCommunication(communication);
 	}
 	
 	/**
@@ -371,6 +370,14 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 	
 	public void addOrganization( org.oscarehr.common.model.Contact clinic ) {
 		addOrganization( new Organization( clinic ) );
+	}
+	
+	public void addManagingOrganizationReference( Reference reference ) {
+		addManagingOrganizationReference( reference.getReference() );
+	}
+	
+	public void addManagingOrganizationReference( String reference ) {
+		getFhirResource().getManagingOrganization().setReference( reference );
 	}
 
 }

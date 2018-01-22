@@ -25,293 +25,195 @@ package org.oscarehr.integration.fhir.builder;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Attachment;
+
 import org.hl7.fhir.dstu3.model.BaseResource;
-import org.hl7.fhir.dstu3.model.CodeableConcept;
-import org.hl7.fhir.dstu3.model.Communication;
-import org.hl7.fhir.dstu3.model.Communication.CommunicationPayloadComponent;
-import org.hl7.fhir.dstu3.model.Communication.CommunicationStatus;
-import org.hl7.fhir.dstu3.model.IdType;
-import org.hl7.fhir.dstu3.model.Identifier.IdentifierUse;
 import org.hl7.fhir.dstu3.model.MessageHeader;
 import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.Resource;
+import org.oscarehr.integration.fhir.model.Destination;
 import org.oscarehr.integration.fhir.model.OscarFhirResource;
+import org.oscarehr.integration.fhir.model.Sender;
+import org.oscarehr.util.MiscUtils;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.model.primitive.IdDt;
-
-
-/*
-{
-	  "resourceType": "MessageHeader",
-	  "id": "1cbdfb97-5859-48a4-8301-d54eab818d68",
-	  "timestamp": "2017-01-04T07:39:34.000-04:00",
-	  "event": {
-	    "system": "http://hl7.org/fhir/message-type",
-	    "code": "MedicationAdministration-Recording"
-	  },
-	  "source": {
-	    "name": "Some EMR",
-	    "software": "EMR1",
-	    "version": "3.1.45.AABB",
-	    "endpoint": "https://www.someemr1.com/api/fhir"
-	  },
-	  "destination": [
-	    {
-	      "name": "DHIR",
-	      "endpoint": "https://wsgateway.prod.ehealthontario.ca/API/FHIR/Immunizations/v1/"
-	    }
-	  ],
-	  "data": [
-	    {
-	      "reference": "Communication/Communication1",
-	      "reference": "Patient/Patient1",
-	      "reference": "Immunization/Immunization01",
-	      "reference": "Immunization/Immunization02"
-	    }
-	  ]
-	}
-*/
-
-
-/*
-{
-  "resourceType": "Communication",
-  "meta": {
-    "lastUpdated": "2016-06-13T07:39:34.000-04:00"
-  },
-  "contained": [
-    {
-      "resourceType": "Patient",
-      "id": "Patient1",
-      "identifier": [
-        {
-          "use": "official",
-          "system": "[id-system-global-base]/ca-on-patient-hcn",
-          "value": "9393881587"
-        },
-        {
-          "use": "secondary",
-          "system": "[code-system-global-base]/v2/0203",
-	   "code": "MR",
-          "value": "10000123"
-        }
-      ],
-      "name": [
-        {
-          "use": "official",
-          "family": [
-            "Doe"
-          ],
-          "given": [
-      		"John", {
-        "value": "Jacob",
-       	 "extension": {
-          "url": "http://hl7.org/fhir/StructureDefinition/iso21090-EN-qualifier",
-       	   "valueCode": "MID" 
-        }
-      		}
-    ]
-        }
-      ],
-      "gender": "male",
-      "birthDate": "2012-02-14",
-      "telecom": [
-        {
-          "system": "phone",
-          "value": "416-444-4444",
-          "use": "home"
-        }
-      ],
-"address": [
-        {
-          "extension": [
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber",
-              "valueString": "535"
-            },
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetName",
-              "valueString": "Sheppard"
-            },
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetNameType",
-              "valueString": "Avenue"
-            },
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-direction",
-              "valueString": "West"
-            },
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-unitID",
-              "valueString": "1907"
-            }
-          ],
-          "use": "home",
-          "line": [
-            "Second address line"
-          ],
-          "city": "Toronto",
-          "state": "ON",
-          "postalCode": "M3H4X8"
-        }
-      ],
-"communication": [
-        {
-          "language": "en-US"
-        }
-      ],
-"managingOrganization": [
-        {
-          "reference": "#Clinic1"
-        }
-      ]
-    },
-    {
-      "resourceType": "Organization",
-      "id": "Clinic1",
-      "identifier": [
-        {
-          "system": "urn:ietf:rfc:3986",
-          "value": "CLINICTEST"
-        }
-      ],
-      "name": "Family Health Team"
-    },
-    {
-	"resourceType": "Practioner",
-	"id": " Practioner1",
-	"identifier": [
-        {
-          "system": "https://www.hl7.org/FHIR/valueset-identifier-type.html",
-	   "type": "PRN",
-          "value": "123456"
-        }
-      ] ,
-      "name": [
-	 {
-	   "family": "Welby",
-	   "given": "Marcus"
-	 }
-]
-    }
-  ],
-  "identifier": [
-    {
-      "system": "http://hl7.org/fhir/v2/0203",
-      "code": "XX",
-      "value": "2345678901"
-    }
-  ],
-  "sender": {
-    "reference": "#Clinic1"
-  },
-  "payload": [
-    {
-      "contentAttachment": {
-        "contentType": "text/plain",
-        "data": "UGF5bG9hZCBEYXRhIEdvZXMgSGVyZQ==",
-	 "title": "Well Baby"
-      }
-    }
-  ],
-  "status": "completed",
-  "sent": "2016-06-13T14:10:50-04:00",
-  "received": "2016-06-13T14:10:50-04:00",
-  "subject": {
-    "reference": "#Patient1"
-  }
-
-*/
-
 
 
 /**
  * Builds a FHIR message with the given OscarFhirResources.
  */
-public class FhirMessageBuilder {
+public abstract class FhirMessageBuilder {
 
-	//private static Logger logger = MiscUtils.getLogger();
+	private static Logger logger = MiscUtils.getLogger();
 	private static FhirContext fhirContext = FhirContext.forDstu3();
 	private MessageHeader messageHeader;
-	private Communication communication;
 	private Sender sender;
 	private Destination destination; 
-	private List<OscarFhirResource< ?, ? > > resources;
-	private String reason;
-	private CommunicationStatus communicationStatus;
-	
+	private List<OscarFhirResource< ?,? > > resources;
+	private BaseResource wrapper;
+	private HashMap< ReferenceKey, Reference > references;
+
+	protected abstract void addResource( BaseResource resource );	
+	protected abstract void addAttachment( Attachment attachment );
+
 	/**
 	 * Constructor to add a MessageHeader to the message using the Sender and Destination 
 	 * information
+	 * @throws Exception 
 	 */
-	public FhirMessageBuilder( Sender sender, Destination destination ) {
+	protected FhirMessageBuilder( Sender sender, Destination destination ) {
 
 		if( sender != null && destination != null ) {
 			setSender( sender );
 			setDestination( destination );		
-			setMessageHeader( new MessageHeader() );
+			createMessageHeader( new MessageHeader() );
+		} else {
+			try {
+				throw new Exception("Init parameters cannot be null");
+			} catch (Exception e) {
+				logger.error( "Error instantiating " + this.getClass().getName(), e );
+			}
 		}
 		
-		setCommunication( new Communication() );
 	}
 
-	public MessageHeader getMessageHeader() {
-		return messageHeader;
+	/**
+	 * The MessageHeader is a requirement because there are often some reference 
+	 * links that need to be added after they are created. 
+	 */
+	protected FhirMessageBuilder( MessageHeader messageHeader ) {
+		setMessageHeader( messageHeader );
+	}
+
+	protected BaseResource getWrapper() {
+		return wrapper;
 	}
 	
+	protected void setWrapper(BaseResource wrapper) {
+		this.wrapper = wrapper;
+	}
+	
+	/**
+	 * Creates the MessageHeader auto-magically from the provided Sender and 
+	 * Destination Objects. 
+	 */
+	private void createMessageHeader( MessageHeader messageHeader ) {
+		messageHeader.setId( UUID.randomUUID().toString() );
+		messageHeader.getEvent()
+			.setSystem("http://hl7.org/fhir/message-type")
+			.setCode("MedicationAdministration-Recording");
+		//TODO: these resource links cannot be hard coded.
+		messageHeader.setTimestamp( new Date(System.currentTimeMillis() ) );
+		messageHeader.setSource( getSender().getMessageSourceComponent() );
+		messageHeader.setDestination( getDestination().getMessageDestinationComponents() );
+		setMessageHeader( messageHeader );
+	}
+	
+	/**
+	 * Set a Resource reference link that will be identified as the Sender
+	 * Resource in the MessageHeader.
+	 */
+	public void setMessageHeaderSender( Reference reference ) {
+		if( getMessageHeader() != null ) {
+			messageHeader.setSender( reference );
+		}
+	}
+	
+	/**
+	 * Set a contained Resource inside the MessageHeader that will be 
+	 * identified as the message sender details. 
+	 * Usually an Organization resource.
+	 */
+	public void setMessageHeaderSender( Resource resource ) {
+		if( getMessageHeader() != null ) {
+			messageHeader.getSender().setResource( resource );
+		}
+	}
+	
+	/**
+	 * Set the sender attribute as a text (display) value only. 
+	 */
+	public void setMessageHeaderSender( String value ) {
+		if( getMessageHeader() != null ) {
+			messageHeader.getSender().setDisplay(value);
+		}
+	}
+
+	/**
+	 * Set a Resource reference link that will be identified as the Receiver
+	 * Resource in the MessageHeader.
+	 */
+	public void setMessageHeaderReciever( Reference reference ) {
+		if( getMessageHeader() != null ) {
+			messageHeader.setReceiver( reference );
+		}
+	}
+	
+	/**
+	 * Add a Resource reference link that will be identified as the Focus
+	 * Resource in the MessageHeader. Multiple Resources can be identified as the 
+	 * Focus
+	 */
+	public void addMessageHeaderFocus( Reference reference ) {
+		if( getMessageHeader() != null ) {
+			messageHeader.addFocus( reference );
+		}
+	}
+
+	/**
+	 * Add a Resource reference link that will be identified as the Responsible
+	 * Resource in the MessageHeader. Usually the sender of the message in an Organization
+	 * Resource.
+	 */
+	public void setMessageHeaderResponsible( Reference reference ) {
+		if( getMessageHeader() != null ) {
+			messageHeader.setResponsible( reference );
+		}
+	}
+	
+	/**
+	 * Add a Resource reference link that will be identified as the Author 
+	 * Resource in the MessageHeader. Usually the practitioner resource.
+	 */
+	public void setMessageHeaderAuthor( Reference reference ) {
+		if( getMessageHeader() != null ) {
+			messageHeader.setAuthor( reference );
+		}
+	}
+
+	/**
+	 * Get the MessageHeader Resource.
+	 */
+	public MessageHeader getMessageHeader() {
+		return this.messageHeader;
+	}
+	
+	/**
+	 * Get the MessageHeader Resource printed into a JSON string. 
+	 */
 	public String getMessageHeaderJson() {
 		return resourceToJson( messageHeader );
 	}
 
 	/**
-	 * This method is constrained to availability of the Sender and Destination Objects.
+	 * If the sender and destination objects are set, this will be set automatically
+	 * Otherwise setting this will override any previously set MessageHeaders.
 	 */
-	private void setMessageHeader(MessageHeader messageHeader) {	
-		messageHeader.setId( IdDt.newRandomUuid() );
-		messageHeader.getEvent()
-			.setSystem("http://hl7.org/fhir/message-type")
-			.setCode("MedicationAdministration-Recording");
-		//TODO: these cannot be hard coded.
-		messageHeader.setTimestamp( new Date(System.currentTimeMillis() ) );
-		messageHeader.setSource( getSender().getMessageSourceComponent() );
-		messageHeader.setDestination( getDestination().getMessageDestinationComponents() );
-
+	private void setMessageHeader( MessageHeader messageHeader ) {	
 		this.messageHeader = messageHeader;
-
-	}
-
-	public Communication getCommunication() {
-		return communication;
 	}
 	
-	public String getCommunicationJson() {
-		return resourceToJson( this.communication );
-	}
-
-	private void setCommunication( Communication communication ) {
-		Date timestamp = new Date(System.currentTimeMillis());
-		
-		// Sender : The Sender Organization (Organization)
-		communication.getSender().setResource( this.getSender().getFhirOrganization() );
-		
-		// Communication version Meta tag
-		communication.getMeta().setVersionId( fhirContext.getVersion().getVersion().getFhirVersionString() );
-
-		//TODO: need to find out what the Identifier is and how to set it in Oscar for tracking 
-		// for now it is set to random
-		communication.addIdentifier().setUse(IdentifierUse.OFFICIAL)
-			.setSystem("[oscar URI]")
-			.setValue( IdType.newRandomUuid().toString() ); 
-		
-		// TODO: is there a status for sent communications. ie: in progress??
-		
-		// Timestamp Sent
-		communication.setSent( timestamp );
-
-		this.communication = communication;
+	/**
+	 * Get this entire message in JSON format in a String.
+	 */
+	public String getMessageJson() {
+		return resourceToJson( getWrapper() );
 	}
 
 	public Sender getSender() {
@@ -330,110 +232,35 @@ public class FhirMessageBuilder {
 		this.destination = destination;
 	}
 
-	public List< OscarFhirResource< ?, ? > > getResources() {
+	/**
+	 * Get a List of Resources that were contained in this message bundle.
+	 */
+	public List< OscarFhirResource< ?,? > > getResources() {
 		if( this.resources == null ) {
-			resources = new ArrayList<OscarFhirResource< ?, ? > >();
+			resources = new ArrayList<OscarFhirResource< ?,? > >();
 		}
 		return resources;
 	}
 
-	public void addResources( List< OscarFhirResource< ?, ? > > oscarFhirResources ) {
-		for( OscarFhirResource<?,?> oscarFhirResource :  oscarFhirResources ) {
+	
+	public void addResources( List< OscarFhirResource< ?,? > > oscarFhirResources ) {
+		for( OscarFhirResource< ?,? > oscarFhirResource :  oscarFhirResources ) {
 			addResource( oscarFhirResource );
 		}
 	}
 	
-	private void setResource( BaseResource resource ) {
-
-		// Recipient : Entity sending to
-
-		// Subject : Patient this communication is related to. (Patient)
-		if( resource instanceof org.hl7.fhir.dstu3.model.Patient ) {
-			
-			communication.getSubject().setResource( resource );
-
-		// Sender : the RelatedPerson is put here.  ie: mother of child.
-		} else if( resource instanceof org.hl7.fhir.dstu3.model.RelatedPerson ) {
-		
-			communication.getSender().setResource( resource );
-		
-		// all other Resources.  Attachment, Immunization, Notes etc... 
-		} else {
-			
-			addPayloadResource( resource );
-			
-		}
-
+	public void addResource( OscarFhirResource< ?,? > oscarFhirResource ) {
+		getResources().add( oscarFhirResource );		
+		BaseResource resource = oscarFhirResource.getFhirResource();
+		addResource( resource );
+		addReference( oscarFhirResource );
 	}
 
-	public void addResource( OscarFhirResource< ?, ? > oscarFhirResource ) { 
-		if( oscarFhirResource != null ) {
-			addResource( oscarFhirResource.getFhirResource() );
-			getResources().add( oscarFhirResource );
-		}
-	}
-	
-	public void addResource( BaseResource resource ) {
-		if( resource != null ) {
-			setResource( resource );
-		}
-	}
-	
-	private static final String resourceToJson( org.hl7.fhir.dstu3.model.BaseResource resource ) {
+	protected static final String resourceToJson( org.hl7.fhir.dstu3.model.BaseResource resource ) {
 		if( resource == null ) {
 			return "";
 		}
 		return fhirContext.newJsonParser().setPrettyPrint(true).encodeResourceToString( resource );
-	}
-
-	public String getReason() {
-		List<CodeableConcept> reasons = communication.getReasonCode();
-		StringBuilder reasonBuilder = null;
-		for( CodeableConcept reason : reasons ) {
-			if( reasonBuilder == null ) {
-				reasonBuilder = new StringBuilder("");
-			}
-			reasonBuilder.append( reason.getText() );
-			reasonBuilder.append( "\n" );
-		}
-		if( reasonBuilder != null ) {
-			reason = reasonBuilder.toString();
-		}
-		return reason;
-	}
-
-	public void setReason(String reason) {
-		communication.getReasonCodeFirstRep().setText(reason);
-		this.reason = reason;
-	}
-
-	public CommunicationStatus getCommunicationStatus() {
-		this.communicationStatus = communication.getStatus();
-		return this.communicationStatus; 
-	}
-
-	public void setCommunicationStatus(CommunicationStatus communicationStatus) {
-		communication.setStatus( communicationStatus );
-		this.communicationStatus = communicationStatus;
-	}
-
-	/**
-	 * Add any resource to the communication payload.
-	 */
-	public void addPayloadResource( BaseResource resource ) {
-		CommunicationPayloadComponent communicationPayloadComponent = new CommunicationPayloadComponent();
-		Reference reference = new Reference();
-		reference.setId( resource.getId() );
-		reference.setResource( resource );
-		communicationPayloadComponent.setContent( reference );
-		communication.addPayload( communicationPayloadComponent );
-	}
-	
-	/**
-	 * Add any variety of attachments to the Communication Payload.
-	 */
-	public void addAttachment( Attachment attachment ) {
-		communication.addPayload().setContent( attachment );
 	}
 
 	public void attachPDF( String pdf ) {
@@ -463,4 +290,92 @@ public class FhirMessageBuilder {
 		attachment.setData( text.getBytes() );
 		addAttachment( attachment );
 	}
+	
+	public HashMap< ReferenceKey, Reference> getReferences() {
+		if( references == null ) {
+			setReferences( new HashMap< ReferenceKey, Reference >() );
+		}
+		return references;
+	}
+	
+	private void setReferences( HashMap< ReferenceKey, Reference> references) {
+		this.references = references;
+	}
+	
+	private void addReference( Reference reference ) {		
+		addReference( new ReferenceKey( reference.getDisplay(), ( (BaseResource) reference.getResource() ).getId() ), reference );		
+	}
+	
+	private void addReference( ReferenceKey referenceKey, Reference reference ) {
+		getReferences().put( referenceKey, reference );		
+	}
+	
+	private void addReference( OscarFhirResource< ?,? > oscarFhirResource ) {		
+//		Reference reference = new Reference();		
+//		reference.setDisplay( oscarFhirResource.getFhirResource().getClass().getSimpleName() );
+//		reference.setResource( oscarFhirResource.getFhirResource() );
+//		reference.setReference( oscarFhirResource.getReferenceLink() );
+		addReference( oscarFhirResource.getReference() );		
+	}
+	
+//	private void addReference( BaseResource resource ) {		
+//		Reference reference = new Reference();
+//		reference.setDisplay( resource.getClass().getSimpleName() );
+//		reference.setResource( resource );
+//		addReference( reference );		
+//	}
+	
+//	private void addReference( ReferenceKey referenceKey, String referenceLink ) {
+//		addReference( referenceKey, new Reference( referenceLink ) );	
+//	}
+
+}
+
+final class ReferenceKey {
+	
+	private String className;
+	private String id;
+	
+	public ReferenceKey(String className, String id ) {
+		setClassName(className);
+		setId(id);
+	}
+
+    @Override
+    public boolean equals( Object object ) {
+        if( object != null && object instanceof ReferenceKey ) {
+        	ReferenceKey referenceKey = (ReferenceKey) object;
+            return className.equals(referenceKey.className) 
+            		&& id.equals(referenceKey.id);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return (className + id).hashCode();
+    }
+
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this);		
+	}
+
 }

@@ -29,7 +29,6 @@ package org.oscarehr.integration.fhir.model;
 import java.util.List;
 
 import org.hl7.fhir.dstu3.model.Address;
-import org.hl7.fhir.dstu3.model.Extension;
 import org.hl7.fhir.dstu3.model.Identifier.IdentifierUse;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.Address.AddressUse;
@@ -132,8 +131,8 @@ public class Organization
 
 	private void setClinic( org.oscarehr.common.model.Clinic clinic ) {
 
-		ProfessionalContact professionalContact =  new ProfessionalContact();
-		professionalContact.setId( null );
+		ProfessionalContact professionalContact = new ProfessionalContact();
+		professionalContact.setId( clinic.getId() );
 		professionalContact.setAddress( clinic.getClinicName() );
 		professionalContact.setAddress2( clinic.getClinicAddress() );
 		professionalContact.setCity( clinic.getClinicCity() );
@@ -150,21 +149,16 @@ public class Organization
 
 	@Override
 	protected void setId( org.hl7.fhir.dstu3.model.Organization fhirResource ) {
-		Integer id = getOscarResource().getId();
-		if( id == null ) {
-			id = 1;
+		Integer intId = getOscarResource().getId();
+		if( intId != null ) {
+			fhirResource.setId( intId + "" );
+		} else {
+			super.setId(fhirResource);
 		}
-		fhirResource.setId( "#Organization_" + id );	
-	}
-
-	@Override
-	protected void setId(Contact model) {
-		// TODO Auto-generated method stub	
 	}
 
 	@Override
 	protected void mapAttributes(org.hl7.fhir.dstu3.model.Organization fhirResource ) {
-		setId( fhirResource );
 		setOranizationName( fhirResource );		
 		setAddress( fhirResource );
 		setTelecom( fhirResource );
@@ -177,11 +171,6 @@ public class Organization
 		setAddress( oscarResource );
 		setTelecom( oscarResource );
 		setIdentifier( oscarResource );
-	}
-
-	@Override
-	public List<Extension> getFhirExtensions() {
-		return getFhirResource().getExtension();
 	}
 
 	@Override

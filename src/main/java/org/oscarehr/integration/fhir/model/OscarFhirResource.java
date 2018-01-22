@@ -1,5 +1,4 @@
 package org.oscarehr.integration.fhir.model;
-
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -24,34 +23,45 @@ package org.oscarehr.integration.fhir.model;
  * Ontario, Canada
  */
 
-
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.UUID;
 import org.hl7.fhir.dstu3.model.Enumerations.ResourceType;
-import org.hl7.fhir.dstu3.model.Extension;
-import org.hl7.fhir.dstu3.model.Resource;
 import org.oscarehr.common.model.AbstractModel;
-
+import org.oscarehr.integration.fhir.interfaces.ResourceModifierFilterInterface;
+import org.oscarehr.integration.fhir.resources.ResourceModifierFilter;
+import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.Resource;
 import ca.uhn.fhir.context.FhirContext;
 
 
-public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.BaseResource, OSCAR extends AbstractModel<?> > {
+public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.BaseResource, OSCAR extends AbstractModel<?> > 
+	implements ResourceModifierFilterInterface {
 
 	private FhirContext fhirContext;
 	private FHIR fhirResource;
 	private OSCAR oscarResource;
-		
-	protected abstract void setId( FHIR fhirResource );
-	protected abstract void setId( OSCAR oscarResource );
-	protected abstract void mapAttributes( FHIR fhirResource );
+	private ResourceModifierFilterInterface filter;
+
+	/**
+	 * Map attributes from an Oscar resource into a FHIR Resource. 
+	 */
+	protected abstract void mapAttributes( FHIR fhirResource, ResourceModifierFilterInterface filter );
+	
+	/**
+	 * Map attributes from a FHIR resource into an Oscar Resource. 
+	 */
 	protected abstract void mapAttributes( OSCAR oscarResource );
-	public abstract List<Extension> getFhirExtensions();
+	
+	/**
+	 * Pulls a list of resources that are contained (or embedded) inside the root resource.
+	 * For instance a Most Responsible Practitioner may be contained inside a Patient resource
+	 * 
+	 * There shouldn't be a need to use this too often as contained resources are discouraged in FHIR.
+	 */
 	public abstract List<Resource> getContainedFhirResources();
 	
 	protected OscarFhirResource() {
-		// default is always DSTU3
-		// Can be overridden by extended class.
 		setFhirContext( FhirContext.forDstu3() );
 	}
 	
@@ -63,6 +73,16 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 	protected OscarFhirResource( FHIR to, OSCAR from ) {
 		setFhirContext( FhirContext.forDstu3() );
 		setResource( to, from );
+	}
+	
+	/**
+	 * Set the reference id of the FHIR Resource.  
+	 * This can be set with the unique id of the Oscar Resource (ie: demographic_no) or can be 
+	 * generated uniquely. 
+	 * In any case, the id is a requirement. 
+	 */
+	protected void setId( FHIR fhirResource ) {
+		fhirResource.setId( UUID.randomUUID().toString() );
 	}
 	
 	public final List<Resource> getContainedFhirResources( ResourceType resourceType ) {
@@ -106,6 +126,7 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 	
 	protected void setResource( FHIR to, OSCAR from ) {
 		this.oscarResource = from;
+		this.filter = getFilter( to.getClass() );
 		setFhirResource( to );
 	}
 		
@@ -120,9 +141,9 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 	
 	protected void setFhirResource( FHIR fhirResource ) {		
 		if( this.oscarResource != null ) {
-			mapAttributes( fhirResource );
+			mapAttributes( fhirResource, filter );
 		}
-
+		setId( fhirResource );
 		this.fhirResource = fhirResource;
 	}
 
@@ -152,5 +173,27 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 	
 	public String getFhirXML() {
 		return fhirContext.newXmlParser().encodeResourceToString( getFhirResource() );
+	}
+	
+	public Reference getReference() {
+		Reference reference = new Reference();
+		reference.setDisplay( ( (Resource) getFhirResource() ).getResourceType().name() );
+		reference.setReference( getReferenceLink() );
+		reference.setResource( getFhirResource() );
+		return reference;
+	}
+	
+	public String getReferenceLink() {
+		return String.format( "%s/%s", ((Resource) getFhirResource()).getResourceType(), getFhirResource().getId());
+	}
+
+	@Override
+	public ResourceModifierFilter getFilter(Class<?> clazz) {
+		return getFilter( clazz );
+	}
+	
+	@Override
+	public String getMessage() {
+		return getMessage();
 	}
 }

@@ -1,4 +1,4 @@
-package org.oscarehr.common.model;
+package org.oscarehr.integration.fhir.interfaces;
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -24,6 +24,7 @@ package org.oscarehr.common.model;
  */
 
 import java.util.Date;
+
 
 /**
  * An interface to be used with any object model that references data for an immunization.

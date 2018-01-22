@@ -43,6 +43,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
+
 @Entity
 @Table(name = "preventions")
 @NamedQuery(name="Prevention.findAll", query="SELECT p FROM Prevention p")

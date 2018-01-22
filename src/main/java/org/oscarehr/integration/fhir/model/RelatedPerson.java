@@ -29,12 +29,14 @@ import java.util.List;
 
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
-import org.hl7.fhir.dstu3.model.Extension;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.Address.AddressUse;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem;
+import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
 import org.hl7.fhir.dstu3.model.Identifier.IdentifierUse;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.oscarehr.common.model.Contact;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalContact;
 import org.oscarehr.integration.fhir.utils.MiscUtils;
 
@@ -91,114 +93,172 @@ public class RelatedPerson extends OscarFhirResource< org.hl7.fhir.dstu3.model.R
 	public RelatedPerson( org.hl7.fhir.dstu3.model.RelatedPerson relatedPerson ) {
 		super( new Contact(), relatedPerson );
 	}
-
-	@Override
-	protected void setId(org.hl7.fhir.dstu3.model.RelatedPerson fhirResource) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void setId(Contact oscarResource) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void mapAttributes(org.hl7.fhir.dstu3.model.RelatedPerson fhirResource) {
-		setName( fhirResource );		
-		setAddress( fhirResource );
-		setTelecom( fhirResource );
-		setIdentifier( fhirResource );
-		// setRelationship( fhirResource );
-	}
-
-	@Override
-	protected void mapAttributes(Contact oscarResource) {
-		setName( oscarResource );		
-		setAddress( oscarResource );
-		setTelecom( oscarResource );
-		setIdentifier( oscarResource );
-		setRelationship( oscarResource );
-	}
-
-
-	@Override
-	public List<Extension> getFhirExtensions() {
-		return getFhirResource().getExtension();
-	}
-
-	@Override
-	public List<Resource> getContainedFhirResources() {
-		return getFhirResource().getContained();
+	
+	public RelatedPerson( org.oscarehr.common.model.Demographic demographic ) {
+		this( new Patient( demographic ) );
 	}
 	
-	private void setName(org.hl7.fhir.dstu3.model.RelatedPerson fhirResource ) {
-		fhirResource.addName()
+	public RelatedPerson( Patient patient ) {
+		super();
+		setPatient( patient );
+	}
+
+
+	/**
+	 * This patient is represents a relationship to another (or the same) patient
+	 * in focus.
+	 * 
+	 * Example: if a child's immunization record is being sent to a health authority. 
+	 * 
+	 * The child's responsible parent would be inserted here. The child would be 
+	 * the patient in focus. aka: the patient that this patient refers to. 
+	 * 
+	 * If there is no relationship, then the patient would be inserted here with a
+	 * relationship to ONESELF and a reference to the data contained within. 
+	 * 
+	 */
+	private void setPatient( Patient patient ) {
+		
+		Contact contact =  new Contact();
+		Demographic demographic = patient.getOscarResource();
+		
+		contact.setId( null );
+		contact.setFirstName( demographic.getFirstName() );
+		contact.setLastName( demographic.getLastName() );
+		contact.setAddress( demographic.getAddress() );
+		contact.setCity( demographic.getCity() );
+		contact.setProvince( demographic.getProvince() );
+		contact.setPostal( demographic.getPostal() );
+		contact.setResidencePhone( demographic.getPhone() );
+		contact.setWorkPhone( demographic.getPhone2() );
+		
+		setResource( new org.hl7.fhir.dstu3.model.RelatedPerson(), contact );
+		
+		Reference reference = new Reference();
+		reference.setResource( patient.getFhirResource() );
+		getFhirResource().setPatient( reference );
+		
+		getFhirResource().setPatientTarget( patient.getFhirResource() );
+		
+		getFhirResource().getRelationship()
+			.addCoding()
+			.setSystem("http://hl7.org/fhir/v3/RoleCode")
+			.setCode( "ONESELF" );
+	}
+
+	@Override
+	protected void mapAttributes(org.hl7.fhir.dstu3.model.RelatedPerson relatedPerson) {
+		setName( relatedPerson );		
+		setAddress( relatedPerson );
+		setTelecom( relatedPerson );
+		setIdentifier( relatedPerson );
+		// setRelationship( relatedPerson );
+	}
+	
+	@Override
+	protected void mapAttributes( Contact contact ) {
+		setName( contact );		
+		setAddress( contact );
+		setTelecom( contact );
+		setIdentifier( contact );
+		setRelationship( contact );
+	}
+	
+	private void setName(org.hl7.fhir.dstu3.model.RelatedPerson relatedPerson ) {
+		relatedPerson.addName()
 			.setFamily( getOscarResource().getLastName() )
 			.addGiven( getOscarResource().getFirstName() );
 	}
 	
-	private void setName( Contact oscarResource ) {
-		oscarResource.setFirstName( getFhirResource().getNameFirstRep().getGivenAsSingleString() );
-		oscarResource.setLastName( getFhirResource().getNameFirstRep().getFamily() );
+	private void setName( Contact contact ) {
+		contact.setFirstName( getFhirResource().getNameFirstRep().getGivenAsSingleString() );
+		contact.setLastName( getFhirResource().getNameFirstRep().getFamily() );
 	}
 	
-	private void setAddress( org.hl7.fhir.dstu3.model.RelatedPerson fhirResource ) {
-		fhirResource.addAddress()
+	private void setAddress( org.hl7.fhir.dstu3.model.RelatedPerson relatedPerson ) {
+		relatedPerson.addAddress()
 			.setUse(AddressUse.NULL)
+			.addLine( getOscarResource().getAddress() )
 			.addLine( getOscarResource().getAddress2() )
 			.setCity( getOscarResource().getCity() )
 			.setState( getOscarResource().getProvince())
 			.setPostalCode( getOscarResource().getPostal() );
 	}
 	
-	private void setAddress( Contact oscarResource ) {
+	private void setAddress( Contact contact ) {
 		Address address = getFhirResource().getAddressFirstRep();
-		oscarResource.setAddress( MiscUtils.fhirAddressLineToString( address ) );
-		oscarResource.setCity( address.getCity() );
-		oscarResource.setProvince( address.getState() );
-		oscarResource.setPostal( address.getPostalCode() );
+		contact.setAddress( MiscUtils.fhirAddressLineToString( address ) );
+		contact.setCity( address.getCity() );
+		contact.setProvince( address.getState() );
+		contact.setPostal( address.getPostalCode() );
 	}
 	
-	private void setTelecom( org.hl7.fhir.dstu3.model.RelatedPerson fhirResource ) {
-		fhirResource.addTelecom()
-			.setSystem( ContactPointSystem.PHONE )
-			.setValue( getOscarResource().getWorkPhone() );
+	private void setTelecom( org.hl7.fhir.dstu3.model.RelatedPerson relatedPerson ) {
+		String home = getOscarResource().getResidencePhone();
+		String work = getOscarResource().getWorkPhone();
+		String fax = getOscarResource().getFax();
+		String email = getOscarResource().getEmail();
 		
-		fhirResource.addTelecom()
-			.setSystem( ContactPointSystem.FAX )
-			.setValue( getOscarResource().getFax() );
+		if( home != null ) {
+			relatedPerson.addTelecom()
+				.setSystem( ContactPointSystem.PHONE )
+				.setUse( ContactPointUse.HOME )
+				.setValue( home );
+		}
+		if( work != null ) {
+			relatedPerson.addTelecom()
+				.setSystem( ContactPointSystem.PHONE )
+				.setUse( ContactPointUse.WORK )
+				.setValue( work );
+		}
+		if( fax != null ) {
+			relatedPerson.addTelecom()
+				.setSystem( ContactPointSystem.FAX )
+				.setUse( ContactPointUse.WORK )
+				.setValue( fax );
+		}
+		
+		if( email != null ) {
+			relatedPerson.addTelecom()
+				.setSystem( ContactPointSystem.EMAIL )
+				.setValue( email );
+		}
 	}
 	
-	private void setTelecom( Contact oscarResource ) {		
+	private void setTelecom( Contact contact ) {		
 		List<ContactPoint> contactPointList = getFhirResource().getTelecom();
-		oscarResource.setWorkPhone( MiscUtils.getFhirPhone( contactPointList ) );
-		oscarResource.setFax( MiscUtils.getFhirFax( contactPointList ) );
+		contact.setWorkPhone( MiscUtils.getFhirPhone( contactPointList ) );
+		contact.setFax( MiscUtils.getFhirFax( contactPointList ) );
 	}
 
-	private void setIdentifier( org.hl7.fhir.dstu3.model.RelatedPerson fhirResource ) {
+	private void setIdentifier( org.hl7.fhir.dstu3.model.RelatedPerson relatedPerson ) {
 		if( getOscarResource() instanceof ProfessionalContact ) {
-			fhirResource.addIdentifier()
+			relatedPerson.addIdentifier()
 				.setUse( IdentifierUse.OFFICIAL )
 				.setSystem( "[id-system-local-base]/ca-on-panorama-phu-id" )
 				.setValue( ( (ProfessionalContact) getOscarResource() ).getCpso() );
 		}
 	}
 	
-	private void setIdentifier( Contact oscarResource ) {
-		( (ProfessionalContact) oscarResource).setCpso( MiscUtils.getFhirOfficialIdentifier( getFhirResource().getIdentifier() ));
+	private void setIdentifier( Contact contact ) {
+		( (ProfessionalContact) contact).setCpso( MiscUtils.getFhirOfficialIdentifier( getFhirResource().getIdentifier() ));
 	}
 	
-	public void setRelationship( org.hl7.fhir.dstu3.model.RelatedPerson fhirResource ) {
+	public void setRelationship( org.hl7.fhir.dstu3.model.RelatedPerson relatedPerson ) {
 		//TODO: how to set a relationship here.
-		fhirResource.getRelationship()
+		relatedPerson.getRelationship()
 			.addCoding()
 			.setSystem("http://hl7.org/fhir/v3/RoleCode")
 			.setCode( "RoleCode" );
 	}
 	
-	private void setRelationship(  Contact oscarResource ) {
+	private void setRelationship(  Contact contact ) {
 			//TODO: how to set a relationship here.
 	}
+
+	@Override
+	public List<Resource> getContainedFhirResources() {
+		return getFhirResource().getContained();
+	}
+
 }

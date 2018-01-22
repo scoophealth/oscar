@@ -1,13 +1,4 @@
-package org.oscarehr.integration.fhir.builder;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.hl7.fhir.dstu3.model.MessageHeader.MessageDestinationComponent;
-
+package org.oscarehr.integration.fhir.model;
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -39,6 +30,18 @@ import org.hl7.fhir.dstu3.model.MessageHeader.MessageDestinationComponent;
 }
 */
 
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.hl7.fhir.dstu3.model.BaseResource;
+import org.hl7.fhir.dstu3.model.MessageHeader.MessageDestinationComponent;
+import org.oscarehr.common.model.Contact;
+
+
 /**
  * A class that references a message destination header information.
  * This Object builds a FHIR MessageDestinationComponent.
@@ -50,7 +53,9 @@ import org.hl7.fhir.dstu3.model.MessageHeader.MessageDestinationComponent;
 public final class Destination {
 	
 	private List<MessageDestinationComponent> messageDestinationComponents;
+	private List<OscarFhirResource<?,?>> oscarFhirResource;
 	private Map<String, String> destinations;
+	private List<BaseResource> fhirResources;
 	
 	public Destination(String name, String endpoint) {
 		addDestination( name, endpoint );
@@ -79,6 +84,7 @@ public final class Destination {
 	 */
 	public void addMessageDestinationComponent( MessageDestinationComponent messageDestinationComponent ){
 		getDestinations().put( messageDestinationComponent.getName(), messageDestinationComponent.getEndpoint() );
+		toOrganization( messageDestinationComponent );
 		getMessageDestinationComponents().add( messageDestinationComponent );
 	}
 
@@ -97,10 +103,54 @@ public final class Destination {
 	}
 
 	public void addDestination( String name, String endpoint ) {		
-		getDestinations().put( name, endpoint );
 		MessageDestinationComponent messageDestinationComponent = new MessageDestinationComponent();
 		messageDestinationComponent.setName(name);
 		messageDestinationComponent.setEndpoint(endpoint);
-		getMessageDestinationComponents().add( messageDestinationComponent );
+		addMessageDestinationComponent( messageDestinationComponent );
+	}
+	
+	public void addContacts( List<Contact> contacts ) {
+		for( Contact contact : contacts ) {
+			addOrganization( new org.oscarehr.integration.fhir.model.Organization( contact ) );
+		}
+	}
+	
+	public void addContact( Contact contact ) {
+		addOrganization( new org.oscarehr.integration.fhir.model.Organization( contact ) );
+	}
+	
+	private void toOrganization( MessageDestinationComponent messageDestinationComponent ) {
+		org.hl7.fhir.dstu3.model.Organization organization = new org.hl7.fhir.dstu3.model.Organization();
+		organization.setName( messageDestinationComponent.getName() );
+		organization.addEndpoint().setDisplay( messageDestinationComponent.getEndpoint() );
+		addFhirResource( organization );
+	}
+	
+	public void addOrganization( org.oscarehr.integration.fhir.model.Organization organization ) {		
+		addOscarFhirResource( organization );
+	}
+	
+	public void addOscarFhirResource( org.oscarehr.integration.fhir.model.Organization organization ) {
+		addFhirResource( organization.getFhirResource() );
+		getOscarFhirResources().add( organization );
+	}
+	
+	public List<OscarFhirResource<?,?>> getOscarFhirResources() {
+		if( oscarFhirResource == null ) {
+			oscarFhirResource = new ArrayList<OscarFhirResource<?,?>>();
+		}
+		return oscarFhirResource;
+	}
+	
+	public List<BaseResource> getFhirResources() {
+		if( fhirResources == null ) {
+			fhirResources = new ArrayList<BaseResource>();
+		}
+		return fhirResources;
+
+	}
+	
+	public void addFhirResource( BaseResource fhirResource ) {
+		getFhirResources().add( fhirResource );
 	}
 }

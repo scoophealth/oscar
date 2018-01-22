@@ -27,7 +27,7 @@ package org.oscarehr.integration.fhir.utils;
 import org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender;
 import org.oscarehr.common.Gender;
 
-public final class EnumUtil {
+public final class EnumMappingUtil {
 
 	public static final AdministrativeGender genderToAdministrativeGender( final Gender gender ) {
 		AdministrativeGender genderCode = AdministrativeGender.UNKNOWN;

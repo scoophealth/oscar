@@ -29,9 +29,11 @@ import org.oscarehr.common.model.Provider;
 import java.util.List;
 
 import org.hl7.fhir.dstu3.model.Address;
-import org.hl7.fhir.dstu3.model.Extension;
 import org.hl7.fhir.dstu3.model.Identifier.IdentifierUse;
+
 import org.hl7.fhir.dstu3.model.Resource;
+import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem;
+import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
 
 public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Practitioner, org.oscarehr.common.model.Provider> {
 
@@ -46,11 +48,6 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 	}
 
 	@Override
-	public List<Extension> getFhirExtensions() {
-		return getFhirResource().getExtension();
-	}
-
-	@Override
 	public List<Resource> getContainedFhirResources() {
 		return getFhirResource().getContained();
 	}
@@ -58,49 +55,79 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 
 	@Override
 	protected void setId(org.hl7.fhir.dstu3.model.Practitioner fhirResource) {
-		fhirResource.setId( "#Practitioner_" + getOscarResource().getProviderNo() );		
-	}
-
-	@Override
-	protected void setId(Provider oscarResource) {
-		// TODO Auto-generated method stub		
+		fhirResource.setId( getOscarResource().getProviderNo() );		
 	}
 
 	@Override
 	protected void mapAttributes( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
-		
-		setId( fhirResource );
-		
-		fhirResource.addName()
-			.setFamily( getOscarResource().getLastName() )
-			.addGiven( getOscarResource().getFirstName() );
-		
-		//TODO: need a slick and easy way to handle all the system links and types.
-		
-		fhirResource.addIdentifier()
-			.setUse(IdentifierUse.OFFICIAL)
-			.setSystem("https://www.hl7.org/FHIR/valueset-identifier-type.html")
-			.setValue( getOscarResource().getPractitionerNo())
-			.getType().setText("PRN");	
+		setName( fhirResource );
+		setIdentifier( fhirResource );
+		setQualification( fhirResource );
+		setWorkPhone( fhirResource );
 	}
 
 	@Override
 	protected void mapAttributes( Provider oscarResource ) {
+		oscarResource.setProviderNo( getFhirResource().getId() );
 		oscarResource.setFirstName( getFhirResource().getNameFirstRep().getGivenAsSingleString() );
-		oscarResource.setLastName( getFhirResource().getNameFirstRep().getFamily() );		
+		oscarResource.setLastName( getFhirResource().getNameFirstRep().getFamily() );
 	}
-		
 
 	public Clinic getLocation() {
 		return location;
 	}
 
+	/**
+	 * This is a contained resource.
+	 */
 	public void setLocation( Clinic location ) {
 		Organization organization = new Organization( location );
 		List<Address> address = organization.getFhirResource().getAddress();	
 		getFhirResource().setAddress( address );
 
 		this.location = location;
+	}
+	
+	private void setName( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+		fhirResource.addName()
+		.setFamily( getOscarResource().getLastName() )
+		.addGiven( getOscarResource().getFirstName() );
+	}
+	
+	private void setIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+		
+		//TODO: need to identify the type of provider. ie: nurse or md.
+		
+		String practitionerNumber = getOscarResource().getPractitionerNo();
+		
+		if( practitionerNumber == null || practitionerNumber.isEmpty() ) {
+			practitionerNumber = getOscarResource().getHsoNo();
+		}
+		
+		if( practitionerNumber == null || practitionerNumber.isEmpty() ) {
+			practitionerNumber = getOscarResource().getOhipNo();
+		}
+
+		if( practitionerNumber != null ) {
+			fhirResource.addIdentifier()
+				.setUse( IdentifierUse.OFFICIAL )
+				.setSystem("http://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-physician")
+				.setValue( practitionerNumber );
+		}
+	}
+	
+	private void setQualification( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+		fhirResource.addQualification().getCode().addCoding()
+			.setSystem("[code-system-local-base]/ca-on-immunizations-practitioner-designation")
+			.setCode("")
+			.setDisplay("Still need to determine how to do.");
+	}
+	
+	private void setWorkPhone( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+		fhirResource.addTelecom()
+			.setUse( ContactPointUse.WORK )
+			.setSystem( ContactPointSystem.PHONE )
+			.setValue( getOscarResource().getWorkPhone() );
 	}
 
 }
