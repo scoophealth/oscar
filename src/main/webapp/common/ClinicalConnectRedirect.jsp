@@ -22,7 +22,8 @@
     Hamilton
     Ontario, Canada
 
---%><%@page import="org.oscarehr.ws.rest.util.ClinicalConnectUtil,org.oscarehr.util.LoggedInInfo" %><%
+--%>
+<%@page import="org.oscarehr.ws.rest.util.ClinicalConnectUtil,org.oscarehr.util.LoggedInInfo" %><%
 
 LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 
