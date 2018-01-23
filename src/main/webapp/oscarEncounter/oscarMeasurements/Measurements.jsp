@@ -199,7 +199,7 @@ function check() {
 										<%
 											for( int idx = 0; idx < options.length; ++idx ) {
 										%>	
-										<html:radio property='<%= "value(inputValue-" + ctr + ")" %>' value="<%=options[idx]%>"></html:radio><%=options[idx]%>&nbsp;										
+										<html:radio property='<%= "value(inputValue-" + ctr + ")" %>' value="<%=options[idx].trim()%>"></html:radio><%=options[idx]%>&nbsp;										
 									
 										<%}%>
 										</td>

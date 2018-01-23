@@ -64,8 +64,12 @@ public class PATHL7Handler implements MessageHandler {
     Logger logger = Logger.getLogger(PATHL7Handler.class);
     ORU_R01 msg = null;
 
-	private static List<String> labDocuments = Arrays.asList("BCCACSP","BCCASMP","BLOODBANKT","CELLPATH","CELLPATHR","DIAG IMAGE","MICRO3T", "MICROGCMT","MICROGRT", "MICROBCT","TRANSCRIP", "NOTIF");
+	private static List<String> labDocuments = Arrays.asList("BCCACSP","BCCASMP","BLOODBANKT",
+			"CELLPATH","CELLPATHR","DIAG IMAGE","MICRO3T", 
+			"MICROGCMT","MICROGRT", "MICROBCT","TRANSCRIP", "NOTIF");
+	
 	public static final String VIHARTF = "CELLPATHR";
+	public static enum OBX_DATA_TYPES {NM,ST,CE,TX,FT} // Numeric, String, Coded Element, Text, String
 
     /** Creates a new instance of CMLHandler */
     public PATHL7Handler(){
@@ -444,6 +448,17 @@ public class PATHL7Handler implements MessageHandler {
             return("");
         }
     }
+    
+    /**
+     * Get the sub id for this obx line
+     */
+    public String getOBXSubId( int i, int j ) {
+        try{
+            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObx4_ObservationSubID().getValue() ) );
+        }catch(Exception e){
+            return(null);
+        }
+    }
 
     public String getOBXReferenceRange(int i, int j){
         try{
@@ -665,4 +680,15 @@ public class PATHL7Handler implements MessageHandler {
     	
     	return "";
     }
+    
+	/**
+	 * If the first OBX segment is presenting a textual report and the lab type is 
+	 * not in the unstructured (PATH or ITS) lab types.  
+	 * 
+	 */
+	public boolean isReportData() {		
+		return ( OBX_DATA_TYPES.TX.name().equals( getOBXValueType(0, 0) ) 
+				|| OBX_DATA_TYPES.FT.name().equals( getOBXValueType(0, 0) )  );		
+	}
+    
 }

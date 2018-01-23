@@ -126,6 +126,14 @@ public class LookupListManager {
 
 		return lookupListItems;
 	}
+	
+	public LookupListItem findLookupListItemByLookupListIdAndValue(LoggedInInfo loggedInInfo, int lookupListId, String value)  {
+		
+		LookupListItem item = lookupListItemDao.findByLookupListIdAndValue(lookupListId, value);
+		
+		return item;
+	}
+	
 
 	/**
 	 * Retrieve all the active select list option items by the lookupList.name

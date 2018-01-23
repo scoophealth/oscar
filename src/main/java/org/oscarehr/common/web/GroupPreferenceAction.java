@@ -67,6 +67,7 @@ public class GroupPreferenceAction extends DispatchAction {
 	            }
             }
         }
+        request.setAttribute("saved", true);
         return  mapping.findForward("saved");
     }
     

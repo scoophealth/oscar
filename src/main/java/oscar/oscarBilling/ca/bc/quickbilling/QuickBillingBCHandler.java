@@ -94,7 +94,7 @@ public class QuickBillingBCHandler {
 	public static final String BILLING_UNIT = "1";
 	public static final String HALF_BILLING = "0.5";
 	
-	public final SimpleDateFormat dateformat = new SimpleDateFormat("ddmmyyyy");
+	public final SimpleDateFormat dateformat = new SimpleDateFormat("ddMMyyyy");
 	
 	private Date today;
 	private QuickBillingBCFormBean quickBillingBCFormBean;
@@ -303,7 +303,7 @@ public class QuickBillingBCHandler {
 		bean.setPatientLastName(demographic.getLastName());
 		bean.setPatientFirstName(demographic.getFirstName());
 		bean.setPatientName(demographic.getLastName()+", "+demographic.getFirstName());
-		bean.setPatientDoB(convertDate8Char(demographic.getFormattedDob()));
+		bean.setPatientDoB(convertDDMMYYYY(demographic.getFormattedDob()));
 		bean.setPatientAddress1(demographic.getAddress());
 		bean.setPatientAddress2(demographic.getCity());
 		bean.setPatientPostal(demographic.getPostal());
@@ -321,7 +321,8 @@ public class QuickBillingBCHandler {
 		// visit information
 		bean.setVisitType(quickBillingBCFormBean.getVisitLocation());
 		bean.setVisitLocation(oscarProperties.getProperty("visitlocation")); //global location also sets the clarification code.
-		bean.setServiceDate(convertDate8Char(quickBillingBCFormBean.getServiceDate()));
+		bean.setServiceDate(convertDDMMYYYY(quickBillingBCFormBean.getServiceDate()));
+		
 		//bean.setStartTimeHr(null);
 		//bean.setStartTimeMin(null);
 		//bean.setEndTimeHr(null);
@@ -358,6 +359,18 @@ public class QuickBillingBCHandler {
 		bean.setMessageNotes(INTERNAL_COMMENT);	
 
 		return (this.quickBillingBCFormBean.getBillingData()).add(bean);
+	}
+	
+	private String convertDDMMYYYY(String dt) {
+		if(dt.indexOf("-")==-1) {
+			return dt;
+		}
+		String[] parts = dt.split("-");
+		if(parts[1].length()==1) {
+			parts[1] = "0" + parts[1];
+		}
+		String tempVal = parts[0] + parts[1] +  parts[2];
+		return tempVal;
 	}
 	
 	/**
@@ -511,7 +524,7 @@ public class QuickBillingBCHandler {
         
         bill.setPaymentMode(paymentMode);
         
-        bill.setServiceDate(convertDate8Char(bean.getServiceDate()));
+        bill.setServiceDate(convertDDMMYYYY(bean.getServiceDate()));
         bill.setServiceToDay(bean.getService_to_date());
         
         bill.setSubmissionCode(bean.getSubmissionCode());
@@ -530,7 +543,7 @@ public class QuickBillingBCHandler {
         bill.setTimeCall(bean.getTimeCall());
         bill.setServiceStartTime(bean.getStartTime());
         bill.setServiceEndTime(bean.getEndTime());
-        bill.setBirthDate(convertDate8Char(bean.getPatientDoB()));
+        bill.setBirthDate(convertDDMMYYYY(bean.getPatientDoB()));
         bill.setOfficeNumber("");
         bill.setCorrespondenceCode(bean.getCorrespondenceCode());
         bill.setClaimComment(bean.getShortClaimNote());
@@ -545,7 +558,7 @@ public class QuickBillingBCHandler {
 
             bill.setOinInsurerCode(bean.getPatientHCType());
             bill.setOinRegistrationNo(bean.getPatientPHN());
-            bill.setOinBirthdate(convertDate8Char(bean.getPatientDoB()));
+            bill.setOinBirthdate(convertDDMMYYYY(bean.getPatientDoB()));
             bill.setOinFirstName(bean.getPatientFirstName());
             bill.setOinSecondName(" ");
             bill.setOinSurname(bean.getPatientLastName());
@@ -565,46 +578,5 @@ public class QuickBillingBCHandler {
 
         return bill;
     }
-    
-    
-    /**
-     * UTILITY METHOD -REALLY SHOULDN'T BE IN HERE...
-     * But I made it static - unlike others.
-     * @param s
-     * @return
-     */
-    public static String convertDate8Char(String s) {
-        String  sdate = "00000000", syear = "", smonth = "", sday = "";
-       log.debug("s=" + s);
-       if (s != null) {
-
-           if (s.indexOf("-") != -1) {
-
-               syear = s.substring(0, s.indexOf("-"));
-               s = s.substring(s.indexOf("-") + 1);
-               smonth = s.substring(0, s.indexOf("-"));
-               if (smonth.length() == 1) {
-                   smonth = "0" + smonth;
-               }
-               s = s.substring(s.indexOf("-") + 1);
-               sday = s;
-               if (sday.length() == 1) {
-                   sday = "0" + sday;
-               }
-
-               log.debug("Year" + syear + " Month" + smonth + " Day" + sday);
-               sdate = syear + smonth + sday;
-
-           } else {
-               sdate = s;
-           }
-           log.debug("sdate:" + sdate);
-       } else {
-           sdate = "00000000";
-
-       }
-       return sdate;
-   }
-	
 	
 }

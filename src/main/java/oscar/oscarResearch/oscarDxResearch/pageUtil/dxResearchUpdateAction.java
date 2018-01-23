@@ -25,6 +25,8 @@
 package oscar.oscarResearch.oscarDxResearch.pageUtil;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -62,17 +64,27 @@ public class dxResearchUpdateAction extends Action {
 		String demographicNo = request.getParameter("demographicNo");
 		String providerNo = request.getParameter("providerNo");
 		String startDate = request.getParameter("startdate");
-
+		
+		
 		partialDateDao.setPartialDate(startDate, PartialDate.DXRESEARCH, Integer.valueOf(did), PartialDate.DXRESEARCH_STARTDATE);
 		startDate = partialDateDao.getFullDate(startDate);
+		
 
 		DxresearchDAO dao = SpringUtils.getBean(DxresearchDAO.class);
 		Dxresearch research = dao.find(ConversionUtils.fromIntString(did));
 		if (research != null) {
-			if (status.equals("C") || status.equals("D")) {
+			if (status != null && (status.equals("C") || status.equals("D"))) {
 				research.setStatus(status.charAt(0));
-			} else if (status.equals("A") && startDate != null) {
-				research.setStartDate(new Date());
+			} 
+			if (startDate != null) {
+				if(research.getStatus() == 'A') {
+					try {
+						SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+						research.setStartDate(fmt.parse(startDate));
+					}catch(ParseException e) {
+						
+					}
+				}
 			}
 			research.setUpdateDate(new Date());
 			

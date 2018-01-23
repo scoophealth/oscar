@@ -58,6 +58,7 @@ public class RxProviderData {
     
     public Provider convertProvider(org.oscarehr.common.model.Provider p) {
     	String surname=null, firstName=null,  clinicName=null, clinicAddress=null, clinicCity=null, clinicPostal=null, clinicPhone=null, clinicFax=null, clinicProvince=null, practitionerNo=null;
+    	String practitionerNoType=null;
     	boolean useFullAddress=true;
         //Get Provider from database
 
@@ -79,6 +80,7 @@ public class RxProviderData {
         	surname = p.getLastName();
         	firstName = p.getFirstName();
         	practitionerNo = p.getPractitionerNo();
+        	practitionerNoType = p.getPractitionerNoType();
         	if(firstName.indexOf("Dr.")<0) {
                 firstName = "Dr. " + firstName;
             }
@@ -103,17 +105,17 @@ public class RxProviderData {
         	UserProperty prop = null;
         
         	prop = userPropertyDao.getProp(providerNo, "faxnumber");
-        	if(prop != null && prop.getValue().length()>0) {
+        	if(prop != null && prop.getValue() != null &&  prop.getValue().length()>0) {
         		clinicFax = prop.getValue();
         	}
         
         	prop = userPropertyDao.getProp(providerNo, "rxPhone");
-        	if(prop != null && prop.getValue().length()>0) {
+        	if(prop != null &&  prop.getValue() != null && prop.getValue().length()>0) {
         		clinicPhone = prop.getValue();
         	}
         
         	prop = userPropertyDao.getProp(providerNo, "rxAddress");
-        	if(prop != null && prop.getValue().length()>0) {
+        	if(prop != null &&  prop.getValue() != null && prop.getValue().length()>0) {
         		//we're going to override with the preference address
         		clinicAddress = prop.getValue();
         		clinicCity = readProperty(providerNo,"rxCity");
@@ -125,7 +127,7 @@ public class RxProviderData {
         }
         
         prov =  new Provider(providerNo, surname, firstName, clinicName, clinicAddress,
-                clinicCity, clinicPostal, clinicPhone, clinicFax, clinicProvince, practitionerNo);
+                clinicCity, clinicPostal, clinicPhone, clinicFax, clinicProvince, practitionerNo,practitionerNoType);
         
         if(!useFullAddress) {
         	prov.fullAddress=false;
@@ -156,10 +158,11 @@ public class RxProviderData {
         String clinicFax;
         String clinicProvince;
         String practitionerNo;
+        String practitionerNoType;
 
         public Provider(String providerNo, String surname, String firstName,
         String clinicName, String clinicAddress, String clinicCity,
-        String clinicPostal, String clinicPhone, String clinicFax, String practitionerNo){
+        String clinicPostal, String clinicPhone, String clinicFax, String practitionerNo, String practitionerNoType){
             this.providerNo = providerNo;
             this.surname = surname;
             this.firstName = firstName;
@@ -169,13 +172,14 @@ public class RxProviderData {
             this.clinicPostal = clinicPostal;
             this.clinicPhone = clinicPhone;
             this.clinicFax = clinicFax;
-	    this.practitionerNo = practitionerNo;
+            this.practitionerNo = practitionerNo;
+            this.practitionerNoType = practitionerNoType;
         }
 
         public Provider(String providerNo, String surname, String firstName,
         String clinicName, String clinicAddress, String clinicCity,
-        String clinicPostal, String clinicPhone, String clinicFax,String clinicProvince, String practitionerNo){
-        	this(providerNo,surname,firstName,clinicName,clinicAddress,clinicCity,clinicPostal,clinicPhone,clinicFax,practitionerNo);
+        String clinicPostal, String clinicPhone, String clinicFax,String clinicProvince, String practitionerNo, String practitionerNoType){
+        	this(providerNo,surname,firstName,clinicName,clinicAddress,clinicCity,clinicPostal,clinicPhone,clinicFax,practitionerNo,practitionerNoType);
             this.clinicProvince = clinicProvince;
         }
 
@@ -222,6 +226,10 @@ public class RxProviderData {
 
 		public String getPractitionerNo() {
 		   return this.practitionerNo;
+		}
+		
+		public String getPractitionerNoType() {
+			return this.practitionerNoType;
 		}
 		
 		public String getFullAddress() {

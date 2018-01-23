@@ -129,7 +129,7 @@ public class dxResearchAction extends Action {
 					AbstractCodeSystemModel<?> codingSystemEntity = csDao.findByCodingSystem(codingSystem);
 					boolean isCodingSystemAvailable = codingSystemEntity == null;
 
-					if (!isCodingSystemAvailable) {
+					if(csDao.findByCode(xml_research[i]) == null) {
 						valid = false;
 						errors.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.codeNotFound", xml_research[i], codingSystem));
 						saveErrors(request, errors);

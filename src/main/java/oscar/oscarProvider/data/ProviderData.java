@@ -106,6 +106,7 @@ public class ProviderData {
 	String comments;
 	String provider_activity;
 	String practitionerNo;
+	String practitionerNoType;
 	String init;
 	String job_title;
 	String email;
@@ -154,6 +155,7 @@ public class ProviderData {
 		result.setComments(comments);
 		result.setProviderActivity(provider_activity);
 		result.setPractitionerNo(practitionerNo);
+		result.setPractitionerNoType(practitionerNoType);
 		result.setInit(init);
 		result.setJobTitle(job_title);
 		result.setEmail(email);
@@ -184,6 +186,7 @@ public class ProviderData {
 		comments = p.getComments();
 		provider_activity = p.getProviderActivity();
 		practitionerNo = p.getPractitionerNo();
+		practitionerNoType = p.getPractitionerNoType();
 		init = p.getInit();
 		job_title = p.getJobTitle();
 		email = p.getEmail();
@@ -510,6 +513,15 @@ public class ProviderData {
 
 	public void setPractitionerNo(java.lang.String practitionerNo) {
 		this.practitionerNo = practitionerNo;
+	}
+	
+
+	public String getPractitionerNoType() {
+		return practitionerNoType;
+	}
+
+	public void setPractitionerNoType(String practitionerNoType) {
+		this.practitionerNoType = practitionerNoType;
 	}
 
 	public java.lang.String getInit() {

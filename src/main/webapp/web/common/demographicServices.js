@@ -33,10 +33,10 @@ angular.module("demographicServices", [])
         getDemographic: function (demographicNo) {
             //$log.error("2Debug: calling getDemographic");
             var deferred = $q.defer();
-            $http.get(this.apiPath+'demographics/'+demographicNo,this.configHeadersWithCache).success(function(data){
-            	console.log(data);
-            	deferred.resolve(data);
-            }).error(function(){
+            $http.get(this.apiPath+'demographics/'+demographicNo,this.configHeadersWithCache).then(function (response){
+            	console.log(response.data);
+            	deferred.resolve(response.data);
+            },function(){
             	console.log("error fetching demographic");
             	deferred.reject("An error occured while fetching items");
             });
@@ -47,10 +47,10 @@ angular.module("demographicServices", [])
         
         saveDemographic: function (demographic) {
         	var deferred = $q.defer();
-        	$http.post(this.apiPath+'demographics',demographic).success(function(data){
-            	console.log(data);
-            	deferred.resolve(data);
-          }).error(function(){
+        	$http.post(this.apiPath+'demographics',demographic).then(function (response){
+            	console.log(response.data);
+            	deferred.resolve(response.data);
+          },function(){
         	  console.log("error fetching items");
         	  deferred.reject("An error occured while fetching items");
           });
@@ -60,10 +60,10 @@ angular.module("demographicServices", [])
         
         updateDemographic: function(demographic){
         	var deferred = $q.defer();
-        	$http.put(this.apiPath+'demographics',demographic).success(function(data){
-            	console.log(data);
-                deferred.resolve(data.demographicTo1);
-            }).error(function(){
+        	$http.put(this.apiPath+'demographics',demographic).then(function (response){
+            	console.log(response.data);
+                deferred.resolve(response.data.demographicTo1);
+            },function(){
           	  console.log("error fetching items");
               deferred.reject("An error occured while fetching items");
             });
@@ -74,9 +74,9 @@ angular.module("demographicServices", [])
         
         search: function(search,startIndex,itemsToReturn){
         	var deferred = $q.defer();
-        	$http.post(this.apiPath+'demographics/search?startIndex='+startIndex + "&itemsToReturn="+itemsToReturn,search).success(function(data){
-        		deferred.resolve(data);
-            }).error(function(){
+        	$http.post(this.apiPath+'demographics/search?startIndex='+startIndex + "&itemsToReturn="+itemsToReturn,search).then(function (response){
+        		deferred.resolve(response.data);
+            },function(){
           	  console.log("error fetching items");
               deferred.reject("An error occured while fetching items");
             });
@@ -86,9 +86,9 @@ angular.module("demographicServices", [])
         
         searchIntegrator: function(search,itemsToReturn){
         	var deferred = $q.defer();
-        	$http.post(this.apiPath+'demographics/searchIntegrator?itemsToReturn='+itemsToReturn,search).success(function(data){
-        		deferred.resolve(data);
-            }).error(function(){
+        	$http.post(this.apiPath+'demographics/searchIntegrator?itemsToReturn='+itemsToReturn,search).then(function (response){
+        		deferred.resolve(response.data);
+            },function(){
           	  console.log("error fetching integrator items");
               deferred.reject("An error occured while fetching items");
             });
