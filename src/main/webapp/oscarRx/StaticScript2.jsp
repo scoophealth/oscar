@@ -71,15 +71,19 @@
 LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
 %>
-<logic:notPresent name="RxSessionBean" scope="session">
-	<%rxBean = new oscar.oscarRx.pageUtil.RxSessionBean();
+<%if(request.getParameter("demographicNo") != null) { 
+	rxBean = new oscar.oscarRx.pageUtil.RxSessionBean();
 
 	rxBean.setProviderNo((String)session.getAttribute("user"));
 	rxBean.setDemographicNo(Integer.parseInt(request.getParameter("demographicNo")));
 
-	request.getSession().setAttribute("RxSessionBean", rxBean); %>
-	<!--  logic:redirect href="error.html" /-->
+	request.getSession().setAttribute("RxSessionBean", rxBean); 
+ } %>
+
+<logic:notPresent name="RxSessionBean" scope="session">
+	<logic:redirect href="error.html" />
 </logic:notPresent>
+
 <logic:present name="RxSessionBean" scope="session">
 	<bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean" name="RxSessionBean" scope="session" />
 	<logic:equal name="bean" property="valid" value="false">

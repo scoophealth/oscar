@@ -177,6 +177,7 @@ if(!authed) {
 		  p.setComments(SxmlMisc.createXmlDataString(request,"xml_p"));
 		  p.setProviderActivity(request.getParameter("provider_activity"));
 		  p.setPractitionerNo(request.getParameter("practitionerNo"));
+		  p.setPractitionerNoType(request.getParameter("practitionerNoType"));
 		  p.setLastUpdateUser((String)session.getAttribute("user"));
 		  p.setLastUpdateDate(new java.util.Date());
                   String supervisor = request.getParameter("supervisor");

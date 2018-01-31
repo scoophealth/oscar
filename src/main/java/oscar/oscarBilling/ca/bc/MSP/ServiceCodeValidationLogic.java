@@ -134,11 +134,20 @@ public class ServiceCodeValidationLogic {
 	 * @return int
 	 */
 	public int daysSinceCodeLastBilled(String demoNo, String code) {
+		int result = -1;
+		
 		BillingmasterDAO dao = SpringUtils.getBean(BillingmasterDAO.class);
 		for (Billingmaster bm : dao.findByDemoNoCodeAndStatuses(ConversionUtils.fromIntString(demoNo), code, Arrays.asList(new String[] { "D", "R", "F" }))) {
-			return ConversionUtils.toDays(System.currentTimeMillis() - bm.getServiceDateAsDate().getTime());
+			int days =  ConversionUtils.toDays(System.currentTimeMillis() - bm.getServiceDateAsDate().getTime());
+			if(result == -1) {
+				result = days;
+			} else {
+				if(days < result) {
+					result = days;
+				}
+			}
 		}
-		return -1;
+		return result;
 	}
 
 	/**

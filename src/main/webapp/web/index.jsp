@@ -280,23 +280,8 @@ font-size:20px
 					<%--New Dashboard Menu --%>
 					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-home hand-hover" ui-sref="dashboard" title="<bean:message key="navbar.dashboard" bundle="ui"/>"></span></li>
 
-					<li style="margin-right:5px">
-						<a href="javascript:void(0)" ng-if="!dashboardMenu.dropdown" ng-click="transition(dashboardMenu)" >
-							<bean:message key="navbar.menu.dashboard" bundle="ui" />
 
-						</a>
-						<a href="javascript:void(0)" ng-if="dashboardMenu.dropdown"  class="dropdown-toggle" data-toggle="dropdown">
-							<bean:message key="navbar.menu.dashboard" bundle="ui" />
-							<span class="caret more"></span>
-						</a>
-						<ul ng-if="dashboardMenu.dropdown" class="dropdown-menu" role="menu">
-							<li class="navbar-text hand-hover" ui-sref="dashboard" 
-									title="<bean:message key="navbar.dashboard" bundle="ui" />" >Home</li>
-							<li ng-repeat="dashboardMenuItem in dashboardMenu.dropdownItems" >
-								<a href="javascript:void(0)" ng-click="transition(dashboardMenuItem)" >{{dashboardMenuItem.label}}</a>
-							</li>
-						</ul>
-					</li>
+					
 				
 					<li ng-repeat="item in menuItems" ng-class="isActive(item)">
 						<a href="javascript:void(0)" ng-if="!item.dropdown" ng-click="transition(item)" >{{item.label}} 
@@ -316,30 +301,7 @@ font-size:20px
 				<!-- more condensed version -->
 				<ul class="nav navbar-nav hidden-lg visible-md visible-sm visible-xs">	
 					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-chevron-right hand-hover" ng-show="showPtList === false" ng-click="showPatientList()" title="<bean:message key="navbar.showPatientList" bundle="ui"/>"></span></li>
-
-					<%-- 
-					New Dashboard Menu
-					<li style="margin-right:5px"><span class="navbar-text glyphicon glyphicon-home hand-hover" ui-sref="dashboard" title="<bean:message key="navbar.dashboard" bundle="ui"/>"></span></li> --%>
-					
-					<li style="margin-right:5px">
-						<a href="javascript:void(0)" ng-if="!item.dropdown" ng-click="transition(item)" >
-							Dashboard
-							<span ng-if="item.label=='Inbox' && unAckLabDocTotal>0" class="badge badge-danger">{{unAckLabDocTotal}}</span>
-						</a>
-						<a href="javascript:void(0)" ng-if="item.dropdown"  class="dropdown-toggle" data-toggle="dropdown">
-							Dashboard
-							<span class="caret more"></span>
-						</a>
-						<ul ng-if="item.dropdown" class="dropdown-menu" role="menu">
-							<li>
-								<span class="navbar-text hand-hover" ui-sref="dashboard" 
-									title="<bean:message key="navbar.dashboard" bundle="ui" />" >Home</span>
-							</li>
-							<li ng-repeat="dropdownItem in " >
-							
-							</li>
-						</ul>
-					</li>
+				
 						
 					<li class="dropdown hand-hover"><a href="void()" class="dropdown-toggle"><bean:message key="navbar.modules" bundle="ui"/><b class="caret"></b></a>
 						<ul class="dropdown-menu">

@@ -193,11 +193,24 @@ public class ProviderService extends AbstractServiceImpl {
 	public PatientListApptBean getRecentDemographicsViewed(@QueryParam("startIndex") Integer startIndex,@QueryParam("itemsToReturn") Integer itemsToReturn ) {	
 		List<Object[]> results = oscarLogManager.getRecentDemographicsViewedByProvider(getLoggedInInfo(), getLoggedInInfo().getLoggedInProviderNo(), startIndex, itemsToReturn);
 		
+		return convertRecentViewedDemographicsResults(results);
+	}
+
+	@GET
+	@Path("/getRecentDemographicsViewedAfterDateIncluded")
+	@Produces("application/json")
+	public PatientListApptBean getRecentDemographicsViewed(@QueryParam("startIndex") Integer startIndex,@QueryParam("itemsToReturn") Integer itemsToReturn, @QueryParam("date") String dateStr ) {
+		Date date = new Date(Long.parseLong(dateStr));
+		List<Object[]> results = oscarLogManager.getRecentDemographicsViewedByProviderAfterDateIncluded(getLoggedInInfo(), getLoggedInInfo().getLoggedInProviderNo(), date, startIndex, itemsToReturn);
+
+		return convertRecentViewedDemographicsResults(results);
+	}
+
+	private PatientListApptBean convertRecentViewedDemographicsResults(List<Object[]> results) {
 		PatientListApptBean response = new PatientListApptBean();
-		
+
 		for(Object[] r:results) {
 			Demographic d = demographicManager.getDemographic(getLoggedInInfo(), (Integer)r[0]);
-			
 			if(d != null) {
 				PatientListApptItemBean item = new PatientListApptItemBean();
 				item.setDemographicNo((Integer)r[0]);
@@ -205,8 +218,8 @@ public class ProviderService extends AbstractServiceImpl {
 				item.setName(d.getFormattedName());
 				response.getPatients().add(item);
 			}
-
 		}
+
 		return response;
 	}
 	
