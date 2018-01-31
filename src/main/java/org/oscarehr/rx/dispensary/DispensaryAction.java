@@ -92,7 +92,7 @@ public class DispensaryAction extends DispatchAction {
 			}
 		}
 		
-		request.setAttribute("products", drugProductDao.findAllUnique());
+		request.setAttribute("products", drugProductDao.findAllAvailableUnique());
 		
 		//try to find a direct mapping, from the drug's regional_idenifier (DIN) and special (the instructions)
 		DrugDispensingMapping ddm = drugDispensingMappingDao.findMapping(drug.getRegionalIdentifier(), drug.getDuration(),
