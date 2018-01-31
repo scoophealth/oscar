@@ -24,10 +24,20 @@
 
 package org.oscarehr.ws.rest;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.interactive.action.type.PDActionJavaScript;
 import org.oscarehr.common.exception.AccessDeniedException;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Favorite;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.RxManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
@@ -39,12 +49,21 @@ import org.oscarehr.ws.rest.conversion.PrescriptionConverter;
 import org.oscarehr.ws.rest.to.*;
 import org.oscarehr.ws.rest.to.model.DrugTo1;
 import org.oscarehr.ws.rest.to.model.FavoriteTo1;
+import org.oscarehr.ws.rest.to.model.PrintPointTo1;
+import org.oscarehr.ws.rest.to.model.PrintRxTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import oscar.log.LogAction;
+
 import javax.naming.OperationNotSupportedException;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.StreamingOutput;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +88,10 @@ public class RxWebService extends AbstractServiceImpl {
 
     @Autowired
     protected FavoriteConverter favoriteConverter;
+    
+    @Autowired
+    protected DemographicManager demographicManager;
+    
 
     /**
      * Gets drugs for the demographic and filter based on their status.
@@ -332,7 +355,7 @@ public class RxWebService extends AbstractServiceImpl {
         } catch (ConversionException ce) {
 
             logger.info("Failed to convert from transfer object to domain object: " + ce.getMessage());
-            logger.error(ce);
+            logger.error("ERROR",ce);
             resp.setMessage("Could not convert provided drugs to domain object, prescribe failed.");
             resp.setSuccess(false);
 
@@ -446,6 +469,118 @@ public class RxWebService extends AbstractServiceImpl {
         return resp;
 
     }
+    
+    
+    
+    @POST
+	@Path("/{demographicNo}/print/{rxNo}")
+	@Produces("application/pdf")
+    @Consumes(MediaType.APPLICATION_JSON)
+	public StreamingOutput print(@PathParam("demographicNo") Integer demographicNo,@PathParam("rxNo") Integer rxNo  ,@Context HttpServletRequest request,PrintRxTo1 transferObject){
+    	
+    		LoggedInInfo loggedInInfo = getLoggedInInfo();
+    		Demographic demographic = demographicManager.getDemographic(getLoggedInInfo(), demographicNo);
+    		
+    		LogAction.addLog(loggedInInfo, "PRINT", "drug", ""+transferObject.getDrugId(), ""+demographicNo, transferObject.toString());
+    		
+    		for(PrintPointTo1 point : transferObject.getPrintPoints()) {
+			
+			if(point.getText().startsWith("@@")) {
+				switch (point.getText()) {
+					case "@@HIN":
+						point.setText(demographic.getHin());
+						break;
+					case "@@DEMO.FIRSTNAME":
+						point.setText(demographic.getFirstName());
+						break;
+					case "@@DEMO.LASTNAME":
+						point.setText(demographic.getLastName());
+						break;
+					case "@@ADDRESS.STREET":
+						point.setText(demographic.getAddress());
+						break;
+					case "@@ADDRESS.CITY":
+						point.setText(demographic.getCity());
+						break;
+					case "@@ADDRESS.PROV":
+						point.setText(demographic.getProvince());
+						break;
+					
+					case "@@DEMO.DOB.DAY":
+						point.setText(demographic.getDateOfBirth());
+						break;
+					case "@@DEMO.DOB.MONTH":
+						point.setText(demographic.getMonthOfBirth());
+						break;
+					case "@@DEMO.DOB.YEAR":
+						point.setText(demographic.getYearOfBirth());
+						break;
+				}
+				
+				
+				
+			}
+			
+			
+			
+			
+		}
+    		
+    		final PrintRxTo1 rxToPrint = transferObject;
+    	
+    		return new StreamingOutput() {
+			@Override
+			public void write(java.io.OutputStream os)
+					throws IOException, WebApplicationException {
+				try{
+					PDDocument document = new PDDocument();
+					
+				    //Embedding javascript to print dialog
+					if(rxToPrint.isAutoPrint()) {
+						PDActionJavaScript PDAjavascript = new PDActionJavaScript("this.print();");
+						document.getDocumentCatalog().setOpenAction(PDAjavascript);
+					}
+							
+				    PDRectangle rect = new PDRectangle(rxToPrint.getWidth(),rxToPrint.getHeight());
+					PDPage page = new PDPage(rect);// PDPage.PAGE_SIZE_A5);
+					document.addPage( page );
+
+					// Create a new font object selecting one of the PDF base fonts
+					PDFont font = PDType1Font.HELVETICA_BOLD;
+
+					// Start a new content stream which will "hold" the to be created content
+					PDPageContentStream contentStream = new PDPageContentStream(document, page);
+					
+					for(PrintPointTo1 point : rxToPrint.getPrintPoints()) {
+						contentStream.beginText();
+						contentStream.setFont( font, point.getFontSize() );
+						contentStream.moveTextPositionByAmount( point.getX(), point.getY() );
+						contentStream.drawString( point.getText() );
+						contentStream.endText();
+						
+					}
+					
+					float[] x = rxToPrint.getxPolygonCoords();
+					float[] y = rxToPrint.getyPolygonCoords();
+					if(x !=null && y != null && x.length > 1 && y.length > 1) {
+						contentStream.drawPolygon(x,y);
+					}
+					
+					contentStream.close();
+
+					
+					document.save( os);
+					document.close();
+		        }catch(Exception e){
+		        		logger.error("error streaming",e);
+		        }finally{
+		        		IOUtils.closeQuietly(os);
+		        }
+				
+			}  
+	    };
+    }
+	
 
 
 }

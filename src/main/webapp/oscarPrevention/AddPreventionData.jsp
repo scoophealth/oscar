@@ -481,7 +481,7 @@ function displayCloseWarning(){
                    </fieldset>
                    <fieldset >
                       <legend >Result</legend>
-             			 <label for="name">Name:</label> <input type="text" name="name" value="<%=str((extraData.get("name")),"")%>"/> <br/>
+             			 <label for="name">Name:</label> <input type="text" name="name" value="<%=str((extraData.get("name")),prevention)%>"/> <br/>
                          <label for="location">Location:</label> <input type="text" name="location" value="<%=str((extraData.get("location")),"")%>"/> <br/>
                          <label for="route">Route:</label> <input type="text" name="route"   value="<%=str((extraData.get("route")),"")%>"/><br/>
                          <label for="dose">Dose:</label> <input type="text" name="dose"  value="<%=str((extraData.get("dose")),"")%>"/><br/>
