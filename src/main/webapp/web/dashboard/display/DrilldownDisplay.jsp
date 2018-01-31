@@ -87,6 +87,7 @@
  
 	<h3> 
 		<c:out value="${ drilldown.name }" />
+		<c:out value="${ drilldown.metricLabel }" />
 	</h3>
 	<hr />
 	
@@ -278,6 +279,10 @@
 				<h4>Sub Category</h4>
 				<p>
 					<c:out value="${ drilldown.subCategory }" />
+				</p>
+				<h4>Metric Label</h4>
+				<p>
+					<c:out value="${ drilldown.metricLabel }" />
 				</p>
 				<h4>Definition</h4>
 				<p>

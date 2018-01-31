@@ -225,6 +225,8 @@ public class IndicatorTemplateHandler{
 			indicatorTemplate.setLocked( Boolean.FALSE );
 			indicatorTemplate.setCategory(indicatorTemplateXML.getCategory());
 			indicatorTemplate.setSubCategory(indicatorTemplateXML.getSubCategory());
+			indicatorTemplate.setMetricSetName(indicatorTemplateXML.getMetricSetName());
+			indicatorTemplate.setMetricLabel(indicatorTemplateXML.getMetricLabel());
 			indicatorTemplate.setName(indicatorTemplateXML.getName());
 			indicatorTemplate.setDefinition(indicatorTemplateXML.getDefinition());
 			indicatorTemplate.setFramework(indicatorTemplateXML.getFramework());

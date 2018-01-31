@@ -12153,6 +12153,9 @@ CREATE TABLE `indicatorTemplate` (
   `active` bit(1),
   `locked` bit(1),
   `shared` tinyint(1),
+  `metricSetName` varchar(255);
+  `metricLabel` varchar(255);
+
   PRIMARY KEY (`id`)
 );
 
