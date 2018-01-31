@@ -240,7 +240,7 @@ public class PersonaService extends AbstractServiceImpl {
 		
 		MenuTo1 menu = new MenuTo1()
 		        .add(idCounter++,bundle.getString("navbar.menu.schedule"),null,"../provider/providercontrol.jsp")
-				.addWithState(idCounter++,bundle.getString("navbar.menu.inbox"),null,"inbox");
+				.add(idCounter++,bundle.getString("navbar.menu.inbox"),null,"../dms/inboxManage.do?method=prepareForIndexPage","inbox");
 
 		if (!consultationManager.isConsultResponseEnabled()) {
 			menu.addWithState(idCounter++,bundle.getString("navbar.menu.consults"),null,"consultRequests");
@@ -259,23 +259,37 @@ public class PersonaService extends AbstractServiceImpl {
 			consultMenu.setDropdownItems(consultMenuList.getItems());
 			menu.getItems().add(consultMenu);
 		}
-		
-		menu.addWithState(idCounter++,bundle.getString("navbar.menu.billing"),null,"billing")
+		String billingRegion = OscarProperties.getInstance().getProperty("billregion","");
+		menu.add(idCounter++,bundle.getString("navbar.menu.billing"),null,"../billing/CA/"+billingRegion + "/billingReportCenter.jsp?displaymode=billreport","billing")
 			.addWithState(idCounter++,bundle.getString("navbar.menu.tickler"),null,"ticklers")
 			
 			//.add(0,"K2A",null,"#/k2a")
-			.addWithState(idCounter++,bundle.getString("navbar.menu.admin"),null,"admin");
+			.add(idCounter++,bundle.getString("navbar.menu.admin"),null,"../administration/","admin");
 
 		MenuItemTo1 moreMenu = new MenuItemTo1(idCounter++, bundle.getString("navbar.menu.more"), null);
 		moreMenu.setDropdown(true);
 		
 		MenuTo1 moreMenuList = new MenuTo1()
 		.addWithState(idCounter++,bundle.getString("navbar.menu.reports"),null,"reports")
-		.addWithState(idCounter++,bundle.getString("navbar.menu.documents"),null,"documents");
+		.add(idCounter++,bundle.getString("navbar.menu.documents"),null,"../dms/documentReport.jsp?function=provider&functionid="+provider.getPractitionerNo(),"edocView");
+		
 		
 		if (ClinicalConnectUtil.isReady(provider.getProviderNo())) {
-			moreMenuList.addWithState(idCounter++,bundle.getString("navbar.menu.clinicalconnect"),null,"clinicalconnect");
+			moreMenuList.add(idCounter++,bundle.getString("navbar.menu.clinicalconnect"),null,"../common/ClinicalConnectRedirect.jsp","clinicalconnect");
 		}
+		
+		
+		List<Dashboard> dashboards = dashboardManager.getDashboards( getLoggedInInfo() );
+	
+		if( dashboards != null ) {
+			if( ! dashboards.isEmpty() ) {
+				for( Dashboard dashboard : dashboards ) {
+					moreMenuList.add( dashboard.getId(), "Dashboard - "+dashboard.getName(), null,  "dashboard/display/DashboardDisplay.do?method=getDashboard&dashboardId="+dashboard.getId(),"dashboard"+dashboard.getId());
+				}
+			}
+			
+		}
+			
 		moreMenu.setDropdownItems(moreMenuList.getItems());
 		menu.getItems().add(moreMenu);
 		navBarMenu.setMenu(menu);
