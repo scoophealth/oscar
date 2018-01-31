@@ -334,7 +334,10 @@ public class RxManager {
     public PrescriptionDrugs prescribe(LoggedInInfo info, List<Drug> drugs, Integer demoNo) {
 
         // sanity check on inputs
-        if(info == null || drugs == null || drugs.size() < 1 || demoNo < 0 ) return null;
+        if(info == null || drugs == null || drugs.size() < 1 || demoNo < 0 ) {
+        		logger.error("Sanity Check Failed");
+        		return null;
+        }
 
         // Check if we are allowed to write to this patient's chart.
         this.writeCheck(info, demoNo);
@@ -342,6 +345,7 @@ public class RxManager {
         // Check to ensure that the drugs can be prescribed
         for(Drug d : drugs){
             if(!canPrescribe(d)) {
+            		logger.error("Can't prescribe drug returning null");
                 return null;
             }
         }
