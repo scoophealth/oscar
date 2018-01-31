@@ -51,6 +51,7 @@ public class ProviderTo1 implements Serializable {
 	private String rmaNo;
 	private Date signedConfidentiality;
 	private String practitionerNo;
+	private String practitionerNoType;
 	private String email;
 	private String title;
 	private String lastUpdateUser;
@@ -255,4 +256,13 @@ public class ProviderTo1 implements Serializable {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+
+	public String getPractitionerNoType() {
+		return practitionerNoType;
+	}
+
+	public void setPractitionerNoType(String practitionerNoType) {
+		this.practitionerNoType = practitionerNoType;
+	}
+	
 }

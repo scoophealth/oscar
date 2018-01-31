@@ -36,9 +36,9 @@ angular.module("appServices", [])
                 url: this.apiPath+'/app/getApps',
                 method: "GET",
                 headers: this.configHeaders,
-              }).success(function (data) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers) {
+              }).then(function(response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers) {
                 	deferred.reject("An error occured while getting app content");
                 });
            return deferred.promise;
@@ -49,9 +49,9 @@ angular.module("appServices", [])
                 url: this.apiPath+'/resources/clinicalconnect',
                 method: "GET",
                 headers: this.configHeaders,
-              }).success(function (data) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers) {
+              }).then(function(response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers) {
                 	deferred.reject("An error occured while getting clinicalconnect url");
                 });
            return deferred.promise;

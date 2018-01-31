@@ -41,10 +41,10 @@ angular.module("securityServices", [])
         
         hasRight: function (objectName, privilege, demographicNo) {
             var deferred = $q.defer();
-            $http.get(this.apiPath+'persona/hasRight?objectName='+objectName+'&privilege='+privilege+'&demographicNo='+demographicNo,this.configHeadersWithCache).success(function(data){
-            	console.log(data);
-            	deferred.resolve(data.success);
-            }).error(function(){
+            $http.get(this.apiPath+'persona/hasRight?objectName='+objectName+'&privilege='+privilege+'&demographicNo='+demographicNo,this.configHeadersWithCache).then(function(response){
+            	console.log(response.data);
+            	deferred.resolve(response.data.success);
+            },function(){
             	console.log("error fetching rights");
             	deferred.reject("An error occured while fetching access right");
             });
@@ -60,9 +60,9 @@ angular.module("securityServices", [])
                 method: "POST",
                 data: JSON.stringify(listOfItems),
                 headers: {'Content-Type': 'application/json'}
-             }).success(function (data, status, headers, config) {
-            	 deferred.resolve(data);
-             }).error(function (data, status, headers, config) {
+             }).then(function(response){
+            	 deferred.resolve(response.data);
+             },function (data, status, headers, config) {
             	 deferred.reject("An error occured while fetching access rights");
              });
 
@@ -77,9 +77,9 @@ angular.module("securityServices", [])
                 method: "POST",
                 data: JSON.stringify({"demographicNo":demographicNo}),   
                 headers: {'Content-Type': 'application/json'}
-             }).success(function (data, status, headers, config) {
-            	 deferred.resolve(data);
-             }).error(function (data, status, headers, config) {
+             }).then(function(response){
+            	 deferred.resolve(response.data);
+             },function (data, status, headers, config) {
             	 deferred.reject("An error occured while fetching access rights");
              });
 

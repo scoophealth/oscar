@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.managers.LookupListManager"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -1611,6 +1612,27 @@ if ( Dead.equals(PatStat) ) {%>
                                                             key="demographic.demographiceditdemographic.formEndDate" />:</span>
                                                         <span class="info"><%=MyDateFormat.getMyStandardDate(demographic.getEndDate())%></span>
 							</li>
+							
+							<li><span class="label">
+								<bean:message key="demographic.demographiceditdemographic.formPHU" />:</span>
+								<%
+									String phuName = null;
+									String phu = demoExt.get("PHU");
+									
+									LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
+									LookupList ll = lookupListManager.findLookupListByName(LoggedInInfo.getLoggedInInfoFromSession(request), "phu");
+									if(ll != null) {
+										LookupListItem phuItem =  lookupListManager.findLookupListItemByLookupListIdAndValue(loggedInInfo, ll.getId(), phu);
+										
+										if(phuItem != null) {
+											phuName = phuItem.getLabel();	
+										}
+									}
+									
+								%>
+                                <span class="info"><%=StringUtils.trimToEmpty(phuName)%></span>
+                            </li>
+                                                        
 						</ul>
 						</div>
 
@@ -3048,8 +3070,26 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								</td>
                                                         </tr>
                                                         <tr>
-                                                                <td>&nbsp;</td>
-                                                                
+                                <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formPHU" />:</b></td>
+                                <td align="left">
+		                                <select id="PHU" name="PHU" >
+										<option value="">Select Below</option>
+										<%
+											if(ll != null) {
+												for(LookupListItem llItem : ll.getItems()) {
+													String selected = "";
+													if(llItem.getValue().equals(StringUtils.trimToEmpty(demoExt.get("PHU")))) {
+														selected = " selected=\"selected\" ";	
+													}
+													%>
+														<option value="<%=llItem.getValue()%>" <%=selected%>><%=llItem.getLabel()%></option>
+													<%
+												}
+											}
+										
+										%>
+									</select>
+                                </td>                                
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formChartNo" />:</b></td>
 								<td align="left"><input type="text" name="chart_no"

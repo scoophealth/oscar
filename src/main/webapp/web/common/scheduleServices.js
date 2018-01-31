@@ -31,10 +31,10 @@ angular.module("scheduleServices", [])
 		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
         getStatuses: function () {
             var deferred = $q.defer();
-            $http.get(this.apiPath+'schedule/statuses',this.configHeadersWithCache).success(function(data){
-            	console.log(data);
-            	deferred.resolve(data);
-            }).error(function(){
+            $http.get(this.apiPath+'schedule/statuses',this.configHeadersWithCache).then(function (response){
+            	console.log(response.data);
+            	deferred.resolve(response.data);
+            },function(){
             	console.log("error fetching statuses");
             	deferred.reject("An error occured while fetching statuses");
             });
@@ -44,10 +44,10 @@ angular.module("scheduleServices", [])
         },
         getTypes: function () {
             var deferred = $q.defer();
-            $http.get(this.apiPath+'schedule/types',this.configHeadersWithCache).success(function(data){
-            	console.log(data);
-            	deferred.resolve(data);
-            }).error(function(){
+            $http.get(this.apiPath+'schedule/types',this.configHeadersWithCache).then(function (response){
+            	console.log(response.data);
+            	deferred.resolve(response.data);
+            },function(){
             	console.log("error fetching types");
             	deferred.reject("An error occured while fetching types");
             });
@@ -57,10 +57,10 @@ angular.module("scheduleServices", [])
         },
         getAppointments: function (day){
 	        deferred = $q.defer();	
-	        $http.get(this.apiPath+'schedule/day/'+day).success(function(data){	
-	        	console.log(data);
-	        	deferred.resolve(data);
-	        }).error(function(){
+	        $http.get(this.apiPath+'schedule/day/'+day).then(function (response){	
+	        	console.log(response.data);
+	        	deferred.resolve(response.data);
+	        },function(){
 	        	console.log("error getting appointments");
 	        	deferred.reject("An error occured while getting appointments");
 	        });
@@ -74,9 +74,9 @@ angular.module("scheduleServices", [])
                 method: "POST",
                 data: JSON.stringify(appointment),
                 headers: {'Content-Type': 'application/json'}
-              }).success(function (data, status, headers, config) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers, config) {
+              }).then(function (response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers, config) {
                 	deferred.reject("An error occured while saving appointment");
                 });
            return deferred.promise;
@@ -88,9 +88,9 @@ angular.module("scheduleServices", [])
                 method: "POST",
                 data: {'id':apptNo},
                 headers: {'Content-Type': 'application/json'}
-              }).success(function (data, status, headers, config) {
-            	  deferred.resolve(data.appointment);
-                }).error(function (data, status, headers, config) {
+              }).then(function (response){
+            	  deferred.resolve(response.data.appointment);
+                },function (data, status, headers, config) {
                 	deferred.reject("An error occured while getting appointment");
                 });
            return deferred.promise;
@@ -102,9 +102,9 @@ angular.module("scheduleServices", [])
                 method: "POST",
                 data: {'id':apptNo},
                 headers: {'Content-Type': 'application/json'}
-              }).success(function (data, status, headers, config) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers, config) {
+              }).then(function (response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers, config) {
                 	deferred.reject("An error occured while deleting appointment");
                 });
            return deferred.promise;
@@ -115,9 +115,9 @@ angular.module("scheduleServices", [])
                 url: this.apiPath+'schedule/' + demoNo + "/appointmentHistory",
                 method: "POST",
                 headers: {'Content-Type': 'application/json'}
-              }).success(function (data, status, headers, config) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers, config) {
+              }).then(function (response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers, config) {
                 	deferred.reject("An error occured while getting appointment history");
                 });
            return deferred.promise;
@@ -129,9 +129,9 @@ angular.module("scheduleServices", [])
                 method: "POST",
                 data: {status:'C'},
                 headers: {'Content-Type': 'application/json'}
-              }).success(function (data, status, headers, config) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers, config) {
+              }).then(function (response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers, config) {
                 	deferred.reject("An error occured while getting appointment history");
                 });
            return deferred.promise;
@@ -143,9 +143,9 @@ angular.module("scheduleServices", [])
                 method: "POST",
                 data: {status:'N'},
                 headers: {'Content-Type': 'application/json'}
-              }).success(function (data, status, headers, config) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers, config) {
+              }).then(function (response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers, config) {
                 	deferred.reject("An error occured while getting appointment history");
                 });
            return deferred.promise;
