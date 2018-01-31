@@ -36,9 +36,9 @@ angular.module("reportByTemplateServices", [])
                 url: this.apiPath+'/reportByTemplate/K2AActive',
                 method: "GET",
                 headers: this.configHeaders,
-              }).success(function (data) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers) {
+              }).then(function (response) {
+            	  deferred.resolve(response.data);
+                },function (data, status, headers) {
                 	deferred.reject("An error occured while getting k2a content");
                 });
            return deferred.promise;
@@ -49,9 +49,9 @@ angular.module("reportByTemplateServices", [])
 		url: this.apiPath+'/reportByTemplate/allReports',
 		method: "GET",
 		headers: this.configHeaders,
-	      }).success(function(data) {
-		  deferred.resolve(data);
-	        }).error(function(data, status, headers) {
+	      }).then(function (response) {
+		  deferred.resolve(response.data);
+	        },function(data, status, headers) {
 			deferred.reject("An error occured while getting k2a content");
 		});
 	    return deferred.promise;
@@ -62,9 +62,9 @@ angular.module("reportByTemplateServices", [])
 		url: this.apiPath+'/reportByTemplate/getReportById/'+id,
 		method: "POST",
 		headers: this.configHeaders,
-	      }).success(function(data) {
-		  deferred.resolve(data);
-	        }).error(function(data, status, headers) {
+	      }).then(function (response) {
+		  deferred.resolve(response.data);
+	        },function(data, status, headers) {
 			deferred.reject("An error occured while getting k2a content");
 		});
 	    return deferred.promise;
@@ -75,9 +75,9 @@ angular.module("reportByTemplateServices", [])
 		url: this.apiPath+'/reportByTemplate/K2AUrl/',
 		method: "GET",
 		headers: this.configHeaders,
-	      }).success(function(data) {
-		  deferred.resolve(data);
-	        }).error(function(data, status, headers) {
+	      }).then(function (response) {
+		  deferred.resolve(response.data);
+	        },function(data, status, headers) {
 			deferred.reject("An error occured while getting k2a url");
 		});
 	    return deferred.promise;

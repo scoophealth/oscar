@@ -1,4 +1,4 @@
-/*
+<%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
     This software is published under the GPL GNU General Public License.
@@ -22,26 +22,15 @@
     Hamilton
     Ontario, Canada
 
-*/
-angular.module("messageServices", [])
-	.service("messageService", function ($http,$q,$log) {
-		return {
-		apiPath:'../ws/rs/messaging',
-		configHeaders: {headers: {"Content-Type": "application/json","Accept":"application/json"}},
-		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
-	      
-        getUnread: function (limit) {
-        	var deferred = $q.defer();
-        	$http({
-                url: this.apiPath+'/unread?startIndex=0&limit='+limit,
-                method: "GET",
-                headers: this.configHeaders,
-              }).then(function (response){
-            	  deferred.resolve(response.data);
-                },function (data, status, headers) {
-                	deferred.reject("An error occured while getting messages");
-                });
-           return deferred.promise;
-        }
-    };
-});
+--%>
+<%@page import="org.oscarehr.ws.rest.util.ClinicalConnectUtil,org.oscarehr.util.LoggedInInfo" %><%
+
+LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+
+if (ClinicalConnectUtil.isReady(loggedInInfo.getLoggedInProviderNo())){
+	String location = ClinicalConnectUtil.getLaunchURL(loggedInInfo, null);
+	response.sendRedirect(location);	
+	return;
+}
+%>
+NO ACCESS TO CLINICAL CONNECT
