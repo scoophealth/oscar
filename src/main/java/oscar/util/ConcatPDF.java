@@ -120,7 +120,7 @@ public class ConcatPDF {
                         encryptionField.setAccessible(true);
                         encryptionField.set(reader, false);
                     } catch (Exception e) {
-                        e.printStackTrace();
+			MiscUtils.getLogger().error("Error",e);
                     }
     			}
 
