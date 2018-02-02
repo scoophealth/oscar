@@ -80,6 +80,21 @@ public class SecurityDao  extends AbstractDao<Security> {
     	
     	return secList;
     }
+    
+    public List<Security> findByOneIdKey(String ssoKey) {
+    	Query query = entityManager.createQuery("SELECT x FROM Security x WHERE x.oneIdKey = ?");
+    	query.setParameter(1, ssoKey);
+    	
+    	@SuppressWarnings("unchecked")
+    	List<Security> securityList = query.getResultList();
+    	
+    	return securityList;
+    }
+    
+    public void updateOneIdKey(Security securityRecord) {
+    	//Updates the record in the database
+    	merge(securityRecord);
+    }
 	
     public List<Security> findByLikeUserName(String userName) {
     	Query query = entityManager.createQuery("select x from Security x where x.userName like ?");
