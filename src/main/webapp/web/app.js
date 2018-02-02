@@ -3,7 +3,7 @@ var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResourc
 														  'ticklerServices','scheduleServices','billingServices','securityServices','staticDataServices',
 														  'patientDetailStatusServices','formServices','providerServices','noteServices','infinite-scroll',
 														  'uxServices','ngTable','oscarFilters','messageServices','inboxServices','k2aServices', 'personaServices'
-														  ,'consultServices','appServices','diseaseRegistryServices','angular-loading-bar']);
+														  ,'consultServices','appServices','diseaseRegistryServices','rxServices','angular-loading-bar']);
 
 
 oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {
@@ -185,10 +185,13 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 			templateUrl: 'record/phr/phr.jsp',
 			controller: 'PHRCtrl'
 		})
-	   
+	    .state('record.rx', {
+			url: '/rx', 
+			component: 'rxComponent',
+		})
 		
 		
-}]);
+}]).component('rxComponent',RxComponent);
 
 // For debugging purposes
 /*

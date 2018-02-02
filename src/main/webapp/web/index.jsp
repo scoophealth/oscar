@@ -468,7 +468,10 @@ font-size:20px
 	<script src="common/consultServices.js"></script>
 	<script src="common/appServices.js"></script>
 	<script src="common/diseaseRegistryServices.js"></script>
+	<script src="common/rxServices.js"></script>
 	<script src="filters.js"></script>
+	
+	<script src="record/rx/rx.component.js"></script>
 	<script src="app.js"></script>
 	
 	<script src="oscarController.js"></script>
