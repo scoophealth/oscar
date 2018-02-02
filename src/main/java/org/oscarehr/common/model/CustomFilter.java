@@ -51,6 +51,8 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.oscarehr.PMmodule.model.Program;
 
+import oscar.OscarProperties;
+
 @Entity
 @Table(name="custom_filter")
 public class CustomFilter extends AbstractModel<Integer> {
@@ -123,6 +125,7 @@ public class CustomFilter extends AbstractModel<Integer> {
 	private String mrp;
 	@Transient
 	private String sort_order = "asc";
+	
 	@Transient
 	private String demographic_webName;
 	
@@ -157,7 +160,7 @@ public class CustomFilter extends AbstractModel<Integer> {
 		}
 		providers = new HashSet<Provider>();
 		assignees = new HashSet<Provider>();
-		setSort_order("asc");	
+		setSort_order(OscarProperties.getInstance().getProperty("tickler.default_sort_order","asc"));	
 	}
 	
 	
