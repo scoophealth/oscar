@@ -7500,6 +7500,9 @@ CREATE TABLE security (
   pinUpdateDate datetime,
   lastUpdateUser varchar(20),
   lastUpdateDate timestamp,
+  oneIdKey VARCHAR(255);
+  oneIdEmail VARCHAR(255),
+  delegateOneIdEmail VARCHAR(255),
   PRIMARY KEY  (security_no),
   UNIQUE user_name (user_name)
 ) ;
@@ -12171,6 +12174,14 @@ CREATE TABLE `onCallClinicDates` (
    `name` varchar(256),
    `location` varchar(256),
    `color` varchar(7),
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `tickler_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category` varchar(55),
+  `description` varchar(255),
+  `active` bit(1),
   PRIMARY KEY (`id`)
 );
 

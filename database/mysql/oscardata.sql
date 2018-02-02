@@ -2875,3 +2875,6 @@ insert into `secObjPrivilege` values('admin','_dashboardCommonLink','o',0,'99999
 
 
 insert into `secObjectName` (`objectName`) values ('_admin.auditLogPurge');
+
+INSERT INTO `tickler_category` VALUES ('1', 'To Call In', 'Call this patient in for a follow-up visit', b'1'), ('2', 'Reminder Note', 'Send a reminder note to this patient', b'1'), ('3', 'Follow-up Billing', 'Follow-up Additional Billing', b'1');
+
