@@ -47,17 +47,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.oscarehr.util.MiscUtils;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.pdf.PRAcroForm;
-import com.lowagie.text.pdf.PdfCopy;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.SimpleBookmark;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.pdf.PRAcroForm;
+import com.itextpdf.text.pdf.PdfCopy;
+import com.itextpdf.text.pdf.PdfImportedPage;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.SimpleBookmark;
 
 public class ConcatPDF {
 
@@ -83,15 +84,14 @@ public class ConcatPDF {
      * (This was an example known as PdfCopy.java)
      */
     public static void concat(List<Object> alist,OutputStream out) {
-
+        Document document = null;
+        PdfReader reader = null;
+        PdfCopy writer = null;
         try {
             int pageOffset = 0;
             ArrayList master = new ArrayList();
             int f =0;
-            Document document = null;
-            PdfCopy  writer = null;
             boolean fileAsStream = false;
-			PdfReader reader = null;
 			String name = "";
 
             MiscUtils.getLogger().debug("Size of list = "+alist.size());
@@ -112,6 +112,16 @@ public class ConcatPDF {
     				reader = new PdfReader((InputStream) alist.get(f));
     			} else {
     				reader = new PdfReader(name);
+    			}
+
+                if (reader.isEncrypted()){
+                    try {
+                        Field encryptionField = reader.getClass().getDeclaredField("encrypted");
+                        encryptionField.setAccessible(true);
+                        encryptionField.set(reader, false);
+                    } catch (Exception e) {
+			MiscUtils.getLogger().error("Error",e);
+                    }
     			}
 
                 reader.consolidateNamedDestinations();
@@ -149,11 +159,23 @@ public class ConcatPDF {
             }
             if (master.size() > 0)
                 writer.setOutlines(master);
-            // step 5: we close the document
-            document.close();
         }
         catch(Exception e) {
             MiscUtils.getLogger().error("Error", e);
+        }
+        finally {
+            if (document != null) {
+                document.close();
+            }
+
+            if (reader != null) {
+                reader.close();
+            }
+
+            if (writer != null) {
+                writer.flush();
+                writer.close();
+            }
         }
     }
 
