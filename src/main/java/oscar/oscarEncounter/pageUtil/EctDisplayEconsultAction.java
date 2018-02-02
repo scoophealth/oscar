@@ -28,10 +28,12 @@ package oscar.oscarEncounter.pageUtil;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.security.*;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.servlet.http.Cookie;
@@ -56,7 +58,9 @@ import org.codehaus.jettison.json.JSONObject;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.util.*;
+import org.oscarehr.util.CxfClientUtils;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 
@@ -197,8 +201,11 @@ public class EctDisplayEconsultAction extends EctDisplayAction {
                 catch (IOException e) {
                     logger.error("Failed to retrieve eConsults for the OneID account " + providerEmail, e);
                 }
-                catch (NoSuchAlgorithmException | KeyManagementException e) {
+                catch (NoSuchAlgorithmException e) {
                     logger.error("Failed to create an HttpClient that allows all SSL", e);
+                }
+                catch (KeyManagementException e) {
+                	 logger.error("Failed to create an HttpClient that allows all SSL", e);
                 }
                 catch (JSONException e) {
                     logger.error("Failed to convert the response entity to a JSON Object", e);
