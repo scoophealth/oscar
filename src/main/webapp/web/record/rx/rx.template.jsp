@@ -67,38 +67,7 @@
     
     <div class="col-sm-6" id="middleSpace" ng-click="checkAction($event)" ng-keypress="checkAction($event)" >
     
-        <div class="row" style="margin-bottom:3px;">
-        		
-			<div class="btn-group">
-			<%--
-				<div class="btn-group">
-				
-					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-						<bean:message key="demographic.demographicprintdemographic.btnPrint"/> <span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu">
-						<li><a href="../report/GenerateEnvelopes.do?demos={{page.demo.demographicNo}}">PDF Envelope</a></li>
-						<li><a class="hand-hover" ng-click="printLabel('PDFLabel')"><bean:message key="demographic.demographiceditdemographic.btnCreatePDFLabel"/></a></li>
-						<li><a class="hand-hover" ng-click="printLabel('PDFAddress')"><bean:message key="demographic.demographiceditdemographic.btnCreatePDFAddressLabel"/></a></li>
-						<li><a class="hand-hover" ng-click="printLabel('PDFChart')"><bean:message key="demographic.demographiceditdemographic.btnCreatePDFChartLabel"/></a></li>
-						<li><a class="hand-hover" ng-click="printLabel('PrintLabel')"><bean:message key="demographic.demographiceditdemographic.btnPrintLabel"/></a></li>
-						<li><a class="hand-hover" ng-click="printLabel('ClientLab')"><bean:message key="demographic.demographiceditdemographic.btnClientLabLabel"/></a></li>
-					</ul>
-				</div>
-				
-				
-				 --%>
-				<div class="btn-group">
-					<button type="button" class="btn btn-default" ng-click="exportDemographic()">Print</button>
-				</div>
-				<div class="btn-group">
-					<button type="button" class="btn btn-default" ng-click="exportDemographic()">Reprint</button>
-				</div>
-				<div class="btn-group">
-					<button type="button" class="btn btn-default" ng-click="exportDemographic()">Timeline</button>
-				</div>
-			</div>
-		</div>
+        
 	
         
         <div class="row">
@@ -112,8 +81,17 @@
 		<div class="row">
 			<fieldset>
        		<legend style="margin-bottom:0px;">Drug Profile
-       			<div class="form-group">
-					<input type="text" class="form-control search-query" ng-model="$ctrl.drugProfileFilter" placeholder="Search Drug Profile">
+				<div class="row">
+					<div class="col-sm-12">
+					    <div class="input-group">
+					      <input type="text" class="form-control" placeholder="Search for..." ng-model="$ctrl.drugProfileFilter">
+					      <div class="input-group-btn">
+					        <button type="button" class="btn btn-default" ng-click="exportDemographic()">Print</button>
+					        <button type="button" class="btn btn-default" ng-click="exportDemographic()">Reprint</button>
+					        <button type="button" class="btn btn-default" ng-click="exportDemographic()">Timeline</button>
+					      </div>
+					    </div><!-- /input-group -->
+				  	</div>
 				</div>
 			</legend>
 			
