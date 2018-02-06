@@ -204,11 +204,19 @@ public class IndicatorTemplateXML {
 	}
 
 	public String getMetricSetName() {
-		return getHeadingNode().getElementsByTagName( Heading.metricSetName.name() ).item(0).getTextContent();
+		NodeList nl = getHeadingNode().getElementsByTagName( Heading.metricSetName.name() );
+		if(nl != null && nl.getLength() > 0) {
+			return nl.item(0).getTextContent();
+		}
+		return null;
 	}
 	
 	public String getMetricLabel() {
-		return getHeadingNode().getElementsByTagName( Heading.metricLabel.name() ).item(0).getTextContent();
+		NodeList nl = getHeadingNode().getElementsByTagName( Heading.metricLabel.name() );
+		if(nl != null && nl.getLength() > 0) {
+			return nl.item(0).getTextContent();
+		}
+		return null;
 	}
 	
 	/**
