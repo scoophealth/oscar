@@ -57,7 +57,7 @@ public class ConsentTypeDao extends AbstractDao<ConsentType>{
 
             if (result == null)
             {
-                result = new ArrayList();
+                result = new ArrayList <ConsentType> ();
             }
 
             return result;
