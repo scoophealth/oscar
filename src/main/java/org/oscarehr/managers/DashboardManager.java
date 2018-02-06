@@ -104,7 +104,7 @@ public class DashboardManager {
 		List<IndicatorTemplate> indicatorTemplates = null;
 		
 		if(!sharedOnly) {
-			indicatorTemplates = indicatorTemplateDao.getIndicatorTemplates();
+			indicatorTemplates = indicatorTemplateDao.getNotSharedIndicatorTemplates();
 		} else {
 			indicatorTemplates = indicatorTemplateDao.getSharedIndicatorTemplates();
 		}
@@ -119,7 +119,22 @@ public class DashboardManager {
 	}
 	
 	public List<IndicatorTemplate> getIndicatorLibrary( LoggedInInfo loggedInInfo ) {
-		return getIndicatorLibrary(loggedInInfo,false);
+		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardManager", SecurityInfoManager.WRITE, null ) ) {	
+			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorLibrary", null, null, null, "User missing _dashboardManager role with write access");
+			return null;
+        }
+		
+		List<IndicatorTemplate> indicatorTemplates = null;		
+	
+		indicatorTemplates = indicatorTemplateDao.getIndicatorTemplates();
+		
+		if( indicatorTemplates != null) {
+			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorLibrary", null, null, null, "returning Indicator Template entries");
+		} else {
+			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorLibrary", null, null, null, "Failed to find any Indicator Templates");	
+		}
+		
+		return indicatorTemplates;
 	}
 	
 	/**
@@ -472,14 +487,14 @@ public class DashboardManager {
 		return indicatorTemplateXML;
 	}
 
-	public DrilldownBean getDrilldownData( LoggedInInfo loggedInInfo, int indicatorTemplateId ) {
-		return getDrilldownData(loggedInInfo,indicatorTemplateId,null);
+	public DrilldownBean getDrilldownData( LoggedInInfo loggedInInfo, int indicatorTemplateId, String metricLabel) {
+		return getDrilldownData(loggedInInfo,indicatorTemplateId,null, metricLabel);
 	}
 	
 	/**
 	 * Create a DrilldownBean that contains the query results requested from a specific Indicator by ID.
 	 */
-	public DrilldownBean getDrilldownData( LoggedInInfo loggedInInfo, int indicatorTemplateId, String providerNo ) {
+	public DrilldownBean getDrilldownData( LoggedInInfo loggedInInfo, int indicatorTemplateId, String providerNo, String metricLabel ) {
 
 		DrilldownBean drilldownBean = null; 
 		DrilldownBeanFactory drilldownBeanFactory = null;
@@ -494,7 +509,7 @@ public class DashboardManager {
 		IndicatorTemplateXML indicatorTemplateXML = templateHandler.getIndicatorTemplateXML();
 		
 		if( indicatorTemplate != null ) {
-			drilldownBeanFactory = new DrilldownBeanFactory( loggedInInfo, indicatorTemplate, providerNo ); 
+			drilldownBeanFactory = new DrilldownBeanFactory( loggedInInfo, indicatorTemplate, providerNo, metricLabel ); 
 		}
 		
 		if( drilldownBeanFactory != null ) {
@@ -522,7 +537,7 @@ public class DashboardManager {
 
 		ExportQueryHandler exportQueryHandler = SpringUtils.getBean( ExportQueryHandler.class );
 		exportQueryHandler.setLoggedInInfo( loggedInInfo );
-		exportQueryHandler.setParameters( templateXML.getDrilldownParameters() );
+		exportQueryHandler.setParameters( templateXML.getDrilldownParameters("null") );
 		exportQueryHandler.setColumns( templateXML.getDrilldownExportColumns() );
 		exportQueryHandler.setRanges( templateXML.getDrilldownRanges() );
 		exportQueryHandler.setQuery( templateXML.getDrilldownQuery() );

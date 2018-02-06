@@ -36,6 +36,8 @@ public abstract class AbstractDataDisplayBean {
 	private String name;
 	private String category;
 	private String subCategory;
+	private String metricSetName;
+	private String metricLabel;
 	private String framework;
 	private String frameworkVersion;
 	private String definition;
@@ -97,7 +99,23 @@ public abstract class AbstractDataDisplayBean {
 	public void setSubCategory(String subCategory) {
 		this.subCategory = subCategory;
 	}
+		
+	public String getMetricSetName() {
+		return metricSetName;
+	}
 
+	public void setMetricSetName(String metricSetName) {
+		this.metricSetName = metricSetName;
+	}
+	
+	public String getMetricLabel() {
+		return metricLabel;
+	}
+
+	public void setMetricLabel(String metricLabel) {
+		this.metricLabel = metricLabel;
+	}
+	
 	public String getFramework() {
 		return framework;
 	}

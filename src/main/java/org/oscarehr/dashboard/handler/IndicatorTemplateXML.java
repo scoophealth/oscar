@@ -48,7 +48,7 @@ public class IndicatorTemplateXML {
 	private static Logger logger = MiscUtils.getLogger();
 	
 	private enum Root {heading, author, indicatorQuery, drillDownQuery, shared}
-	private enum Heading {category, subCategory, framework, frameworkVersion, name, definition, notes}
+	private enum Heading {category, subCategory, framework, frameworkVersion, name, definition, notes, metricSetName, metricLabel}
 	private enum Indicator {version, params, parameter, range, query}
 	private enum Drilldown {version, params, parameter, range, displayColumns, column, exportColumns, query}
 	private enum ParameterAttribute {id, name, value}
@@ -70,7 +70,7 @@ public class IndicatorTemplateXML {
 	private LoggedInInfo loggedInInfo;
 	
 	private String providerNo = null;
-	
+	private String sharedMetricLabel = null;
 
 	public IndicatorTemplateXML( LoggedInInfo loggedInInfo, Document xmlDocument ) {
 		this( xmlDocument );
@@ -203,6 +203,14 @@ public class IndicatorTemplateXML {
 		return getHeadingNode().getElementsByTagName( Heading.subCategory.name() ).item(0).getTextContent();
 	}
 
+	public String getMetricSetName() {
+		return getHeadingNode().getElementsByTagName( Heading.metricSetName.name() ).item(0).getTextContent();
+	}
+	
+	public String getMetricLabel() {
+		return getHeadingNode().getElementsByTagName( Heading.metricLabel.name() ).item(0).getTextContent();
+	}
+	
 	/**
 	 * Required Element - runtime error will be thrown if the node or element is missing
 	 */
@@ -292,13 +300,13 @@ public class IndicatorTemplateXML {
 			parameters = paramsElement.getElementsByTagName( Indicator.parameter.name() ); 
 		}
 
-		return createParameterList( parameters );
+		return createParameterList( parameters, "null");
 	}
 	
 	/**
 	 * Optional Element - returns null if the node or element is missing.
 	 */
-	public List<Parameter> getDrilldownParameters() {
+	public List<Parameter> getDrilldownParameters(String metricLabel ) {
 		NodeList paramsNodeList = getDrillDownQueryNode().getElementsByTagName( Drilldown.params.name() );
 		Element paramsElement = null;
 		NodeList parameters = null;
@@ -311,7 +319,7 @@ public class IndicatorTemplateXML {
 			parameters = paramsElement.getElementsByTagName( Drilldown.parameter.name() ); 
 		}
 
-		return createParameterList( parameters );
+		return createParameterList( parameters,  metricLabel);
 	}
 
 	/**
@@ -473,7 +481,7 @@ public class IndicatorTemplateXML {
 		return columnList;
 	}
 
-	private List<Parameter> createParameterList( NodeList parameters ) {
+	private List<Parameter> createParameterList( NodeList parameters,  String metricLabel) {
 		
 		List<Parameter> parameterList = null;
 		
@@ -504,6 +512,9 @@ public class IndicatorTemplateXML {
 			
 			values = setParameterAliasWithValue( id, values );
 
+			if(id.equals("sharedMetricLabel")) {
+				values[0]=metricLabel;
+			}
 			parameter.setId(id);
 			parameter.setName(name);
 			parameter.setValue(values);
@@ -557,6 +568,7 @@ public class IndicatorTemplateXML {
 		switch( ProviderValueAlias.valueOf( parameterValue ) ) {
 		case loggedinprovider : parameterValue = getLoggedInProvider().trim();
 				break;
+		
 		case all : parameterValue = "%";
 				break;
 		
@@ -579,6 +591,11 @@ public class IndicatorTemplateXML {
 		this.providerNo = providerNo;
 	}
 	
+	
+	public void setSharedMetricLabel(String sharedMetricLabel) {
+		this.sharedMetricLabel = sharedMetricLabel;
+	}
+
 	@Override
 	public String toString() {
 	   return ReflectionToStringBuilder.toString(this);
