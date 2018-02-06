@@ -3294,7 +3294,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 
                                                     <input type="button"
                                                            name="clearRadio_${consentType.type}_btn"
-                                                           onclick="consentClearBtn('${consentType.type}')" />
+                                                           onclick="consentClearBtn('${consentType.type}')" value="Clear"/>
 
                                                     <br/>
 							<c:if test="${ not empty patientConsent and not empty patientConsent.optout }" >
