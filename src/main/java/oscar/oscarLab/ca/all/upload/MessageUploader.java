@@ -258,16 +258,36 @@ public final class MessageUploader {
 				hl7TextInfoDao.persist(hl7TextInfo);
 			}
 
-			String demProviderNo = patientRouteReport(loggedInInfo, insertID, lastName, firstName, sex, dob, hin, DbConnectionFilter.getThreadLocalDbConnection());
+			String demProviderNo = null;
+			Connection c = null;
+			try {
+				c = DbConnectionFilter.getThreadLocalDbConnection();
+				demProviderNo = patientRouteReport(loggedInInfo, insertID, lastName, firstName, sex, dob, hin, c);
+			} finally {
+				try {
+					c.close();
+				}catch(SQLException e) {
+					
+				}
+			}
 			if(type.equals("OLIS_HL7") && demProviderNo.equals("0")) {
 				OLISSystemPreferencesDao olisPrefDao = (OLISSystemPreferencesDao)SpringUtils.getBean("OLISSystemPreferencesDao");
 			    OLISSystemPreferences olisPreferences =  olisPrefDao.getPreferences();
-			    if(olisPreferences.isFilterPatients()) {
-			    	//set as unclaimed
-			    	providerRouteReport(String.valueOf(insertID), null, DbConnectionFilter.getThreadLocalDbConnection(), String.valueOf(0), type);
-			    } else {
-			    	providerRouteReport(String.valueOf(insertID), docNums, DbConnectionFilter.getThreadLocalDbConnection(), demProviderNo, type);
-			    }
+			    c = DbConnectionFilter.getThreadLocalDbConnection();
+			    try {
+				    if(olisPreferences.isFilterPatients()) {
+				    	//set as unclaimed
+				    	providerRouteReport(String.valueOf(insertID), null, c, String.valueOf(0), type);
+				    } else {
+				    	providerRouteReport(String.valueOf(insertID), docNums, DbConnectionFilter.getThreadLocalDbConnection(), demProviderNo, type);
+				    }
+			    } finally {
+					try {
+						c.close();
+					}catch(SQLException e) {
+						
+					}
+				}
 			} else {
 				Integer limit = null;
 				boolean orderByLength = false;
@@ -285,8 +305,17 @@ public final class MessageUploader {
 				if( "IHAPOI".equals(type) ) {
 					search = "hso_no";
 				}
-								
-				providerRouteReport(String.valueOf(insertID), docNums, DbConnectionFilter.getThreadLocalDbConnection(), demProviderNo, type, search, limit, orderByLength);
+						
+				c = DbConnectionFilter.getThreadLocalDbConnection();
+				try {
+					providerRouteReport(String.valueOf(insertID), docNums, c, demProviderNo, type, search, limit, orderByLength);
+				} finally {
+					try {
+						c.close();
+					}catch(SQLException e) {
+						
+					}
+				}
 			}
 			retVal = h.audit();
 			if(results != null) {
@@ -535,9 +564,22 @@ public final class MessageUploader {
 
 			if(result != null) {
 				sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type,dateModified,created) values ('" + ((result != null && result.getDemographicNo()!=null)?result.getDemographicNo().toString():"0") + "', '" + labId + "','HL7',now(),now())";
-				PreparedStatement pstmt = conn.prepareStatement(sql);
-				pstmt.executeUpdate();
-				pstmt.close();
+				Connection c = null;
+				PreparedStatement pstmt = null;
+				try {
+					c = DbConnectionFilter.getThreadLocalDbConnection();
+					pstmt = c.prepareStatement(sql);
+					pstmt.executeUpdate();
+				
+				} finally {
+					try {
+						pstmt.close();	
+						c.close();
+					}catch(SQLException e) {
+						
+					}
+				}
+				
 			}
 		} catch (SQLException sqlE) {
 			logger.info("NO MATCHING PATIENT FOR LAB id =" + labId);
