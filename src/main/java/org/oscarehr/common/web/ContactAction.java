@@ -417,6 +417,27 @@ public class ContactAction extends DispatchAction {
 
 	public ActionForward addContact(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
+		
+		
+		String keyword = request.getParameter("keyword");
+		
+		
+		  org.apache.struts.validator.DynaValidatorForm contactForm = (org.apache.struts.validator.DynaValidatorForm)form;
+		  Contact cForm = (Contact) contactForm.get("contact");
+		  if(keyword != null) {
+			  String[] parts = keyword.split(",");
+			  if(parts.length == 1) {
+				  cForm.setLastName(parts[0]);
+			  }
+			  if(parts.length == 2) {
+				  cForm.setLastName(parts[0]);
+				  cForm.setFirstName(parts[1]);
+			  }
+			  
+		  }
+		  
+		  request.setAttribute("contact", cForm);
+		  
 		return mapping.findForward("cForm");
 	}
 

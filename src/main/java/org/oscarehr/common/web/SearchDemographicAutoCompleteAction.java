@@ -96,6 +96,8 @@ public class SearchDemographicAutoCompleteAction extends Action {
         
         List<Demographic> finalList = new ArrayList<Demographic>();
         
+
+        String relatedTo = request.getParameter("relatedTo");
         
         
     	DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
@@ -104,9 +106,9 @@ public class SearchDemographicAutoCompleteAction extends Action {
     	List<String> searchTerms = new ArrayList<String>(); searchTerms.add(searchStr);
     	
     	if (searchStr.length() == 8 && searchStr.matches("([0-9]*)")) {
-            list = demographicDao.searchMergedDemographicByDOB(searchStr.substring(0,4)+"-"+searchStr.substring(4,6)+"-"+searchStr.substring(6,8), 100, 0,providerNo,outOfDomain);
+            list = demographicDao.searchMergedDemographicByDOB(searchStr.substring(0,4)+"-"+searchStr.substring(4,6)+"-"+searchStr.substring(6,8), 100, 0,providerNo,outOfDomain,relatedTo);
         } else {
-        	list = demographicManager.doMultiSearch(LoggedInInfo.getLoggedInInfoFromSession(request), searchTypes, searchTerms, 100, 0, providerNo, outOfDomain, activeOnly, !activeOnly);
+        	list = demographicManager.doMultiSearch(LoggedInInfo.getLoggedInInfoFromSession(request), searchTypes, searchTerms, 100, 0, providerNo, outOfDomain, activeOnly, !activeOnly,relatedTo);
         }
     	
 		DemographicMerged dmDAO = new DemographicMerged();

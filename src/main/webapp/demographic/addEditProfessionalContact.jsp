@@ -153,7 +153,8 @@ List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, lo
 				fieldobject = fields[i];
 				fieldname = fieldobject.id;
 				fieldvalue = fieldobject.value.trim();
-	
+				
+				
 				if( fieldname == "pcontact.lastName" && fieldvalue.length == 0 ) {
 					verified = false;
 					paintErrorField(fieldobject);	
@@ -164,11 +165,22 @@ List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, lo
 					paintErrorField(fieldobject);
 				} 
 
+				<%if("true".equals(OscarProperties.getInstance().getProperty("professionalContact.required.workPhone","true"))) {%>
 				if( fieldname == "pcontact.workPhone" && fieldvalue.length == 0 ) {
 					verified = false;
 					paintErrorField(fieldobject);
 				}
+				<% } %>
 				
+				<%if("true".equals(OscarProperties.getInstance().getProperty("professionalContact.required.program","false"))) {%>
+				if( fieldname == "pcontact.programNo") {
+					
+					if(fieldobject.options[fieldobject.selectedIndex].value == '0') {
+						verified = false;
+						paintErrorField(fieldobject);
+					}
+				}
+				<% } %>
 			}
 			
 			return verified;

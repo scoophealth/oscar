@@ -460,12 +460,11 @@ jQuery(document).ready( function($) {
 		<c:set value="${ demographicContacts }" var="demographicContactList" scope="page" />
 
 		<tr id="tableTitle" >
-			<th colspan="<%=("true".equals(op.getProperty("DEMOGRAPHIC_CONTACT.ShowProgramRestriction", "true"))) ? 8:7 %>" class="alignLeft" >${headerTitle}</th>
+			<th colspan="8" class="alignLeft" >${headerTitle}</th>
 		</tr>
 
 		<c:if test="${ not empty demographicContactList }" >
 			<tr id="healthCareTeamSubHeading" >
-				<%=("true".equals(op.getProperty("DEMOGRAPHIC_CONTACT.ShowProgramRestriction", "true"))) ? "<td></td>":"" %>
 				<td></td><td></td><td>Name</td><td>Phone</td><td>Fax</td><td></td><td></td>
 			</tr>
 		</c:if>
@@ -475,27 +474,7 @@ jQuery(document).ready( function($) {
 			
 			<tr>					
 			
-			<%if("true".equals(op.getProperty("DEMOGRAPHIC_CONTACT.ShowProgramRestriction", "true"))) { %>
-				<td class="alignRight" >	
-				<%
-						pageContext.setAttribute("programName", "");
-						DemographicContact dc = (DemographicContact) pageContext.getAttribute("demographicContact");
-						Integer programNo = dc.getProgramNo();
-						
-						String programName = "";
-						if(programNo != null && programNo > 0) {
-							Program program = programDao.getProgram(programNo);
-							if(program != null) {
-								programName = program.getName();
-								pageContext.setAttribute("programName", programName);
-							}
-						}
-						
-					%>
-					
-					<c:out value="${programName }" />				 					
-				</td>
-			<% } %>
+			
 				<td class="alignLeft" >	
 					<c:out value="${ demographicContact.role }" />				 					
 				</td>
@@ -610,23 +589,7 @@ jQuery(document).ready( function($) {
 			</td>
 			
 			
-			<%
-				if("true".equals(op.getProperty("DEMOGRAPHIC_CONTACT.ShowProgramRestriction", "true"))) {
-			%>
-			<td class="external" >
-			 	<select name="selectTeamProgramId" id="selectTeamProgramId" title="Restrict to Program">
-	            		<option value="0"></option>
-	            		<%
-	            			for(ProgramProvider pp:ppList) {
-	            		%>
-							<option value="<%=pp.getProgramId()%>"><%=pp.getProgram().getName() %></option>
-						<%
-	            			}
-						%>
-	            	</select>
-			 </td>
-			 
-			 <% } %>
+			
 			 
 			<td class="external" >
 				<input type="text" id="searchHealthCareTeamInput" 

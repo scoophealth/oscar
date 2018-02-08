@@ -272,14 +272,14 @@ function searchExternalProviders<%=type%>(action) {
 	var contactRole = jQuery('#selectExternal<%=type%>TeamRoleType option:selected').val();
 	var searchfield = jQuery('#search<%=type%>TeamInput').val();
 	var windowspecs = "width=500,height=600,left=100,top=100, scrollbars=yes, resizable=yes";
-	var programId = jQuery('#selectExternal<%=type%>TeamProgramId option:selected').val();
+	//var programId = jQuery('#selectExternal<%=type%>TeamProgramId option:selected').val();
 	
 	
 	popupWindow<%=type%> = window.open(
 		'contactSearch.jsp?form=updatedelete' +
 		'&elementName=search<%=type%>TeamInput' +
 		'&elementId=search<%=type %>TeamInputId' +
-		'&programNo=' + programId + 
+		//'&programNo=' + programId + 
 		'&keyword='+ searchfield +
 		'&contactRole=' + contactRole + 
 		'&submit=' + action ,
@@ -377,12 +377,12 @@ jQuery(document).ready( function($) {
 		
 		var role = jQuery('#selectExternal<%=type%>TeamRoleType option:selected').val();
 		
-		var programId = jQuery('#selectExternal<%=type%>TeamProgramId option:selected').val();
+		//var programId = jQuery('#selectExternal<%=type%>TeamProgramId option:selected').val();
 			
 		var param = '{"contactId":'  + contactId + 
 			',"contactName":"' + contactName + 
 			'","contactRole":"' + role + 
-			'","programId":"' + programId + 
+	//		'","programId":"' + programId + 
 			'","demographicContactId":"0'+
 			'","method":"saveManage' +
 			'","contactType":"'+type+'"}';
@@ -442,7 +442,7 @@ jQuery(document).ready( function($) {
 	jQuery( "#ptName<%=type %>" ).autocomplete({		
 		source: function(request, response) {
 		  $.ajax({
-		   	url: "SearchDemographic.do?activeOnly=true&outofdomain=true&query=" + encodeURIComponent(request.term),
+		   	url: "SearchDemographic.do?activeOnly=true&outofdomain=true&relatedTo=<%=demographicNoString%>&query=" + encodeURIComponent(request.term),
 			method: "POST",
 		   	dataType: "json",
 		   	success: function(data) {
@@ -525,12 +525,11 @@ jQuery(document).ready( function($) {
 		<c:set value="${ demographicContacts }" var="demographicContactList" scope="page" />
 
 		<tr id="tableTitle" >
-			<th colspan="<%=("true".equals(op.getProperty("DEMOGRAPHIC_CONTACT.ShowProgramRestriction", "true"))) ? 6:5 %>" class="alignLeft" >${headerTitle}</th>
+			<th colspan="5" class="alignLeft" >${headerTitle}</th>
 		</tr>
 
 		<c:if test="${ not empty demographicContactList }" >
 			<tr id="healthCareTeamSubHeading" >
-				<%=("true".equals(op.getProperty("DEMOGRAPHIC_CONTACT.ShowProgramRestriction", "true"))) ? "<td></td>":"" %>
 				<td></td><td>Name</td><td>Home Phone</td><td></td><td></td>
 			</tr>
 		</c:if>
@@ -538,29 +537,7 @@ jQuery(document).ready( function($) {
 			<c:set value="internal" var="internal" scope="page" />
 			<c:set value="${ demographicContact.details.workPhone }" var="workPhone" scope="page" />
 			
-			<tr>	
-				<%if("true".equals(op.getProperty("DEMOGRAPHIC_CONTACT.ShowProgramRestriction", "true"))) { %>
-				<td class="alignRight" >	
-				<%
-						pageContext.setAttribute("programName", "");
-						DemographicContact dc = (DemographicContact) pageContext.getAttribute("demographicContact");
-						Integer programNo = dc.getProgramNo();
-						
-						String programName = "";
-						if(programNo != null && programNo > 0) {
-							Program program = programDao.getProgram(programNo);
-							if(program != null) {
-								programName = program.getName();
-								pageContext.setAttribute("programName", programName);
-							}
-						}
-						
-					%>
-					
-					<b></b><c:out value="${programName }" /></b>				 					
-				</td>
-			<% } %>
-			
+			<tr>
 				<td class="alignLeft" >
 					<c:out value="${ demographicContact.role }" />				 					
 				</td>
@@ -639,22 +616,7 @@ jQuery(document).ready( function($) {
 				</select>
 			</td>
 			
-			<%
-				if("true".equals(op.getProperty("DEMOGRAPHIC_CONTACT.ShowProgramRestriction", "false"))) {
-			%>
-			<td class="Internal<%=type %>" >
-			 	<select name="selectInternal<%=type%>TeamProgramId" id="selectInternal<%=type%>TeamProgramId" title="Restrict to Program">
-	            		<option value="0"></option>
-	            		<%
-	            			for(ProgramProvider pp:ppList) {
-	            		%>
-							<option value="<%=pp.getProgramId()%>"><%=pp.getProgram().getName() %></option>
-						<%
-	            			}
-						%>
-	            	</select>
-			 </td>
-			 <% } %>
+			
 			 
 			 <td class="Internal<%=type %>" >
 			 	<input id="ptName<%=type %>"  name="ptName<%=type %>" type="text" size="30" maxlength="60" />
@@ -677,16 +639,7 @@ jQuery(document).ready( function($) {
 			</td>
 			
 			<td class="External<%=type %>" >
-			 	<select name="selectExternal<%=type%>TeamProgramId" id="selectExternal<%=type%>TeamProgramId" title="Restrict to Program">
-	            		<option value="0"></option>
-	            		<%
-	            			for(ProgramProvider pp:ppList) {
-	            		%>
-							<option value="<%=pp.getProgramId()%>"><%=pp.getProgram().getName() %></option>
-						<%
-	            			}
-						%>
-	            	</select>
+			
 			 </td>
 			 
 			<td class="External<%=type%>" >

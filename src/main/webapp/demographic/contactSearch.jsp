@@ -213,6 +213,6 @@ function next() {
 %>
 </form>
 <br>
-<a href="Contact.do?method=addContact">Add/Edit Contact</a>
+<a href="Contact.do?method=addContact&keyword=<%=keyword%>">Add/Edit Contact</a>
 </body>
 </html:html>

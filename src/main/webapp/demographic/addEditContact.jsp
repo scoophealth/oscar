@@ -44,6 +44,11 @@
  */
 -->
 
+<%@page import="org.oscarehr.common.model.Contact"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="org.oscarehr.common.model.ProgramContactType"%>
+<%@page import="org.oscarehr.common.dao.ProgramContactTypeDao"%>
+<%@page import="org.oscarehr.PMmodule.model.Program"%>
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="java.util.Properties"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
@@ -58,9 +63,44 @@
   String msg = "Enter contact details.";
   Properties	prop  = new Properties();
   
+  ProgramContactTypeDao pcTypeDao = SpringUtils.getBean(ProgramContactTypeDao.class);
   ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
   LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
   List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+  List<ProgramProvider> ppList2 = new ArrayList<ProgramProvider>();
+  
+  //only programs with contact types set
+  for(ProgramProvider p: ppList) {
+	 List<ProgramContactType> tmp = pcTypeDao.findByProgram(p.getProgramId().intValue());
+	 if(!tmp.isEmpty()) {
+		 ppList2.add(p);
+	 }
+  }
+  
+  String lastName = null;
+  String firstName = null;
+  
+  String keyword = request.getParameter("keyword");
+  
+  org.apache.struts.validator.DynaValidatorForm contactForm = (org.apache.struts.validator.DynaValidatorForm)request.getAttribute("contactForm");
+  Contact cForm = (Contact) contactForm.get("contact");
+  if(keyword != null) {
+	  String[] parts = keyword.split(",");
+	  if(parts.length == 1) {
+		  lastName = parts[0];
+		  cForm.setLastName(parts[0]);
+	  }
+	  if(parts.length == 2) {
+		  lastName = parts[0];
+		  firstName = parts[1];
+		  cForm.setLastName(parts[0]);
+		  cForm.setFirstName(parts[1]);
+	  }
+	  
+  }
+  
+  contactForm.set("contact", cForm);
+  
 	
 %>
 <html:html locale="true">
@@ -150,6 +190,7 @@
 	<tr>
 		<td>&nbsp;</td>
 	</tr>	
+	
 	<tr>
 		<td align="right"><b>Last Name</b></td>
 		<td>
@@ -260,9 +301,14 @@
 			 	<select name="contact.programNo" id="contact.programNo" title="Restrict to Program">
 	            		<option value="0"></option>
 	            		<%
-	            			for(ProgramProvider pp:ppList) {
+	            			for(ProgramProvider pp:ppList2) {
+	            				String selected = "";
+	            				Contact cc = (Contact)request.getAttribute("contact");
+	            				if(pp.getProgramId() != null && cc != null && cc.getProgramNo() != null && pp.getProgramId().intValue() == cc.getProgramNo().intValue()) {
+	            					selected = " selected=\"selected\" ";
+	            				}
 	            		%>
-							<option value="<%=pp.getProgramId()%>"><%=pp.getProgram().getName() %></option>
+							<option value="<%=pp.getProgramId()%>" <%=selected %>><%=pp.getProgram().getName() %></option>
 						<%
 	            			}
 						%>

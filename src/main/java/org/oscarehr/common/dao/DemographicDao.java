@@ -426,7 +426,7 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 	public static final String PROGRAM_DOMAIN_RESTRICTION = "select distinct a.clientId from ProgramProvider pp,Admission a WHERE pp.ProgramId=a.programId AND pp.ProviderNo=:providerNo";
 
 	
-	public List<Demographic> doMultiSearch(List<String> searchTypes, List<String> searchStrs, int limit, int offset, String providerNo, boolean outOfDomain, boolean active, boolean inactive) {
+	public List<Demographic> doMultiSearch(List<String> searchTypes, List<String> searchStrs, int limit, int offset, String providerNo, boolean outOfDomain, boolean active, boolean inactive, String relatedTo) {
 		List<Demographic> results = new ArrayList<Demographic>();
 
 		//add program?
@@ -536,6 +536,11 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 			paramMap.put("providerNo", providerNo);
 		}
 		
+
+		if(relatedTo != null && relatedTo.length()>0) {
+			sql += " AND d.id IN( SELECT x.clientId FROM Admission x WHERE x.programId IN (SELECT a.programId FROM Admission a WHERE a.clientId = :relatedTo ) ) ";
+			paramMap.put("relatedTo", Integer.parseInt(relatedTo));
+		}
 		
 		Session session = this.getSession();
 		try {
@@ -728,10 +733,19 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public List<Demographic> searchMergedDemographicByDOB(String dobStr, int limit, int offset,  String providerNo, boolean outOfDomain) {
+	public List<Demographic> searchMergedDemographicByDOB(String dobStr, int limit, int offset,  String providerNo, boolean outOfDomain, String relatedTo) {
 		List<Demographic> list = new ArrayList<Demographic>();
 		String queryString = "From Demographic d where d.YearOfBirth like :yearOfBirth AND d.MonthOfBirth like :monthOfBirth AND d.DateOfBirth like :dateOfBirth and d.HeadRecord is not null ";
 
+		if(providerNo != null && !outOfDomain) {
+			queryString += " AND d.id IN ("+ PROGRAM_DOMAIN_RESTRICTION+") ";
+		}
+		
+		
+		if(relatedTo != null && relatedTo.length()>0) {
+			queryString += " AND d.id IN( SELECT x.clientId FROM Admission x WHERE x.programId IN (SELECT a.programId FROM Admission a WHERE a.clientId = :relatedTo ) ) ";
+		}
+		
 		//format must be yyyy-mm-dd
 		String[] params = dobStr.split("-");
 		if (params.length != 3) return new ArrayList<Demographic>();
@@ -746,6 +760,14 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 			q.setParameter("monthOfBirth", params[1].trim() + "%");
 			q.setParameter("dateOfBirth", params[2].trim() + "%");
 
+			if(providerNo != null && !outOfDomain) {
+				q.setParameter("providerNo", providerNo);
+			}
+			
+			if(relatedTo != null && relatedTo.length()>0) {
+				q.setParameter("relatedTo", Integer.parseInt(relatedTo));
+			}
+			
 			list = q.list();
 		} finally {
 			this.releaseSession(session);

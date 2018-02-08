@@ -847,7 +847,7 @@ public class DemographicManager {
 	 * Redirecting the DemographicDao multi search through the manager. 
 	 */
 	public List<Demographic> doMultiSearch(LoggedInInfo loggedInInfo, List<String> searchTypes, List<String> searchStrs, 
-			int limit, int offset, String providerNo, boolean outOfDomain, boolean active, boolean inactive) {
+			int limit, int offset, String providerNo, boolean outOfDomain, boolean active, boolean inactive, String relatedTo) {
 		
 		checkPrivilege( loggedInInfo, SecurityInfoManager.READ );
 		
@@ -893,7 +893,7 @@ public class DemographicManager {
 		
 		logger.debug( "Adding Search Types " + searchTypes + " and Search Strings " + searchStrs + " to multisearch method.");
 		
-		return demographicDao.doMultiSearch( searchTypes, searchStrs, limit, offset, providerNo, outOfDomain, active, inactive);	
+		return demographicDao.doMultiSearch( searchTypes, searchStrs, limit, offset, providerNo, outOfDomain, active, inactive, relatedTo);	
 	}
 
 	/**
