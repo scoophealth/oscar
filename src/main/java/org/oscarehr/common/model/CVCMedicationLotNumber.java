@@ -95,14 +95,12 @@ public class CVCMedicationLotNumber extends AbstractModel<Integer> {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lotNumber == null) ? 0 : lotNumber.hashCode());
 		result = prime * result + ((expiryDate == null) ? 0 : expiryDate.hashCode());
-		result = prime * result + ((medication == null) ? 0 : medication.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
-		if (!super.equals(obj)) return false;
 		if (getClass() != obj.getClass()) return false;
 		CVCMedicationLotNumber other = (CVCMedicationLotNumber) obj;
 		if (id == null) {

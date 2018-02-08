@@ -23,6 +23,8 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.CVCMedicationGTIN;
@@ -38,5 +40,12 @@ public class CVCMedicationGTINDao extends AbstractDao<CVCMedicationGTIN>{
 	public void removeAll() {
 		Query query = entityManager.createQuery("DELETE FROM CVCMedicationGTIN");
 		query.executeUpdate();
+	}
+	
+	public List<CVCMedicationGTIN> query(String term) {
+		Query query = entityManager.createQuery("SELECT x FROM CVCMedicationGTIN x WHERE x.gtin = :term");
+		query.setParameter("term", term );
+		List<CVCMedicationGTIN> results = query.getResultList();
+		return results;
 	}
 }

@@ -23,6 +23,8 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.CVCMedicationLotNumber;
@@ -47,5 +49,12 @@ public class CVCMedicationLotNumberDao extends AbstractDao<CVCMedicationLotNumbe
 		CVCMedicationLotNumber result = this.getSingleResultOrNull(query);
 		
 		return result;
+	}
+	
+	public List<CVCMedicationLotNumber> query(String term) {
+		Query query = entityManager.createQuery("SELECT x FROM CVCMedicationLotNumber x WHERE x.lotNumber like :term");
+		query.setParameter("term", term  + "%");
+		List<CVCMedicationLotNumber> results = query.getResultList();
+		return results;
 	}
 }

@@ -23,6 +23,7 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -65,5 +66,25 @@ public class CVCImmunizationDao extends AbstractDao<CVCImmunization> {
 			return result.get(0);
 		}
 		return null;
+	}
+	
+	public List<CVCImmunization> query(String term, boolean includeGenerics, boolean includeBrands) {
+		if(!includeBrands && !includeGenerics) {
+			return new ArrayList<CVCImmunization>();
+		}
+		
+		String segment = "";
+		
+		if(includeBrands && !includeGenerics) {
+			segment = " AND generic=0 ";
+		}
+		if(!includeBrands && includeGenerics) {
+			segment = " AND generic=1 ";
+		}
+		
+		Query query = entityManager.createQuery("SELECT x FROM CVCImmunization x WHERE x.displayName like :term OR x.picklistName like :term" + segment);
+		query.setParameter("term", "%" +  term  + "%");
+		List<CVCImmunization> results = query.getResultList();
+		return results;
 	}
 }

@@ -131,6 +131,9 @@ public class PreventionDisplayConfig {
 				//Do we have a mapped CVC Entry?
 				CVCMapping mapping = cvcMapping.findByOscarName(h.get("name"));
 				if(mapping != null) {
+					if(mapping.getPreferCVC() != null && mapping.getPreferCVC()) {
+						continue;
+					}
 					CVCImmunization cvcImm = cvcImmunizationDao.findBySnomedConceptId(mapping.getCvcSnomedId());
 					if(cvcImm != null) {
 						h.put("snomedConceptCode", mapping.getCvcSnomedId());

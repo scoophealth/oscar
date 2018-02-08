@@ -36,6 +36,7 @@ public class CVCMapping extends AbstractModel<Integer> {
 	private Integer id;
 	private String oscarName;
 	private String cvcSnomedId;
+	private Boolean preferCVC = false;
 	
 	
 	public Integer getId() {
@@ -60,6 +61,14 @@ public class CVCMapping extends AbstractModel<Integer> {
 
 	public void setCvcSnomedId(String cvcSnomedId) {
 		this.cvcSnomedId = cvcSnomedId;
+	}
+
+	public Boolean getPreferCVC() {
+		return preferCVC;
+	}
+
+	public void setPreferCVC(Boolean preferCVC) {
+		this.preferCVC = preferCVC;
 	}
 
 	

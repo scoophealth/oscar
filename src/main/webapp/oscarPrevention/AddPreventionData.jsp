@@ -163,6 +163,26 @@ if(!authed) {
 	  }
   }
   
+  String addByLotNbr2 = request.getParameter("search");
+  if(StringUtils.isNotEmpty(addByLotNbr2)) {
+	  String brandSnomedId = request.getParameter("brandSnomedId");
+	  
+	  generic = cvcManager.getBrandNameImmunizationBySnomedCode(loggedInInfo, snomedId);
+	  if(generic != null) {
+	  	brandName = cvcManager.getBrandNameImmunizationBySnomedCode(loggedInInfo, brandSnomedId);
+	  	prevention = generic.getPicklistName();
+	  	CVCMapping mapping1 = cvcMappingDao.findBySnomedId(generic.getSnomedConceptId());
+		  if(mapping1 != null) {
+			prevention = mapping1.getOscarName();  
+		  } else {
+		  	prevention = generic.getPicklistName();
+		  }
+	  	foundByLotNumber = true;
+	  } else {
+		  errorsToShow="Could not find this prevention in the system.";
+	  }
+  }
+  
   boolean isCvc = false;
 	isCvc = snomedId != null;
   

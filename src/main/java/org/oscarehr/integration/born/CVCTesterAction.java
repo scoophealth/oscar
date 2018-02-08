@@ -24,7 +24,12 @@
 package org.oscarehr.integration.born;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,23 +39,13 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.hl7.fhir.dstu3.model.Bundle;
-import org.hl7.fhir.dstu3.model.Bundle.BundleEntryComponent;
-import org.hl7.fhir.dstu3.model.Coding;
-import org.hl7.fhir.dstu3.model.Medication;
-import org.hl7.fhir.dstu3.model.ValueSet;
-import org.hl7.fhir.dstu3.model.ValueSet.ConceptReferenceComponent;
-import org.hl7.fhir.dstu3.model.ValueSet.ConceptReferenceDesignationComponent;
-import org.hl7.fhir.dstu3.model.ValueSet.ConceptSetComponent;
+import org.oscarehr.common.model.CVCImmunization;
 import org.oscarehr.common.model.CVCMedication;
 import org.oscarehr.common.model.CVCMedicationLotNumber;
 import org.oscarehr.managers.CanadianVaccineCatalogueManager;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.client.IGenericClient;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -59,18 +54,17 @@ import net.sf.json.JSONObject;
  * @author marc
  *
  *
- * https://fhirtest.uhn.ca/baseDstu3/Medication?_tag=CVC1 - All medication objects in a bundle
- * https://fhirtest.uhn.ca/baseDstu3/ValueSet/CVC-Tradename-ValueSet - URI for the tradename valueset
- * https://fhirtest.uhn.ca/baseDstu3/ValueSet/CVC-Generic-ValueSet - URI for the generic valueset
- * https://fhirtest.uhn.ca/baseDstu3/ValueSet?_tag=CVC1- Both valuesets in a bundle
- * https://fhirtest.uhn.ca/baseDstu3/Medication?_tag=CVC1&code=http://www.gs1.org/gtin|067055043550 - Returns bundle containing resource with single Medication that has a GTIN 067055043550
- * https://fhirtest.uhn.ca/baseDstu3/Medication?_tag=CVC1&code=http://snomed.info/sct|7641000087107 - Returns bundle containing resource with single Medication that has SNOMED CT code 7641000087107
+ * baseDstu3/Medication?_tag=CVC1 - All medication objects in a bundle
+ * baseDstu3/ValueSet/CVC-Tradename-ValueSet - URI for the tradename valueset
+ * baseDstu3/ValueSet/CVC-Generic-ValueSet - URI for the generic valueset
+ * baseDstu3/ValueSet?_tag=CVC1- Both valuesets in a bundle
+ * baseDstu3/Medication?_tag=CVC1&code=http://www.gs1.org/gtin|067055043550 - Returns bundle containing resource with single Medication that has a GTIN 067055043550
+ * baseDstu3/Medication?_tag=CVC1&code=http://snomed.info/sct|7641000087107 - Returns bundle containing resource with single Medication that has SNOMED CT code 7641000087107
  */
 public class CVCTesterAction extends DispatchAction {
 
 	Logger logger = MiscUtils.getLogger();
-	private static FhirContext ctx = FhirContext.forDstu3();
-
+	
 	CanadianVaccineCatalogueManager cvcManager = SpringUtils.getBean(CanadianVaccineCatalogueManager.class);
 
 	public ActionForward getLotNumberAndExpiryDates(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -90,8 +84,66 @@ public class CVCTesterAction extends DispatchAction {
 	}
 	
 
+	public ActionForward query(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String query = request.getParameter("query");
+		
+		JSONArray arr = new JSONArray();
+		StringBuilder matchedLotNumber = new StringBuilder();
+		
+		
+		List<CVCImmunization> results = new ArrayList<CVCImmunization>();
+		
+		//name
+		List<CVCImmunization> l1 = cvcManager.query(query, true, true, false, false,null);
+		
+		//lot#
+		List<CVCImmunization> l2 = cvcManager.query(query, false, false, true, false,matchedLotNumber);
+		
+		//GTIN
+		List<CVCImmunization> l3 = cvcManager.query(query, false, false, false, true,null);
+		
+		results.addAll(l1);
+		results.addAll(l2);
+		results.addAll(l3);
+		
+		//unique it
+		Map<String, CVCImmunization> tmp = new HashMap<String, CVCImmunization>();
+		for (CVCImmunization i : results) {
+			tmp.put(i.getSnomedConceptId(), i);
+		}
+		List<CVCImmunization> uniqueResults = new ArrayList<CVCImmunization>(tmp.values());
+
+		//sort it
+		Collections.sort(uniqueResults, new PrevalenceComparator());
+				
+		
+		
+		for(CVCImmunization result:uniqueResults) {
+			JSONObject obj = new JSONObject();
+			obj.put("name", result.getPicklistName());
+			obj.put("generic", result.isGeneric());
+			obj.put("genericSnomedId", result.isGeneric() ? result.getSnomedConceptId() : result.getParentConceptId());
+			obj.put("snomedId",result.getSnomedConceptId());
+			obj.put("lotNumber", uniqueResults.size() == 1 && matchedLotNumber != null && matchedLotNumber.length()>0 ? matchedLotNumber.toString() : "");
+			arr.add(obj);
+		}
+		
+		JSONObject t = new JSONObject();
+		t.put("results",arr);
+		response.setContentType("application/json");
+		t.write(response.getWriter());
+		
+		return null;
+	}
+	
+	
+	
+	/* USED FOR TESTING WHILE DEVELOPING
+ 
+ 	private static FhirContext ctx = FhirContext.forDstu3();
+	String serverBase = "https://xxx/baseDstu3";
+		
 	public ActionForward allMedications(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String serverBase = "https://fhirtest.uhn.ca/baseDstu3";
 		IGenericClient client = ctx.newRestfulGenericClient(serverBase);
 		Bundle bundle = client.search().forResource(Medication.class).withTag(null, "CVC1").returnBundle(Bundle.class).execute();
 		
@@ -108,22 +160,9 @@ public class CVCTesterAction extends DispatchAction {
 
 		return null;
 	}
-
-	private void processMedicationBundle(Bundle bundle) {
-		for (BundleEntryComponent entry : bundle.getEntry()) {
-			Medication med = (Medication) entry.getResource();
-			for (Coding c : med.getCode().getCoding()) {
-				if ("http://hl7.org/fhir/sid/ca-hc-din".equals(c.getSystem())) {
-					logger.info(c.getDisplay());
-				}
-			}
-		}
-	}
-	
 	
 	
 	public ActionForward allTradenames(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String serverBase = "https://fhirtest.uhn.ca/baseDstu3";
 		IGenericClient client = ctx.newRestfulGenericClient(serverBase);
 		
 		ValueSet valueSet = client.read(ValueSet.class, "CVC-Tradename-ValueSet");
@@ -134,7 +173,6 @@ public class CVCTesterAction extends DispatchAction {
 	}
 	
 	public ActionForward allGeneric(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String serverBase = "https://fhirtest.uhn.ca/baseDstu3";
 		IGenericClient client = ctx.newRestfulGenericClient(serverBase);
 		
 		ValueSet valueSet = client.read(ValueSet.class, "CVC-Generic-ValueSet");
@@ -145,7 +183,6 @@ public class CVCTesterAction extends DispatchAction {
 	}
 	
 	public ActionForward allValueSets(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String serverBase = "https://fhirtest.uhn.ca/baseDstu3";
 		IGenericClient client = ctx.newRestfulGenericClient(serverBase);
 		
 		Bundle bundle = client.search().forResource(ValueSet.class).withTag(null, "CVC1").returnBundle(Bundle.class).execute();
@@ -163,6 +200,63 @@ public class CVCTesterAction extends DispatchAction {
 		
 		return null;
 	}
+	public ActionForward medicationByGtin(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		String gtin = request.getParameter("gtin");
+		
+		IGenericClient client = ctx.newRestfulGenericClient(serverBase);
+		Bundle bundle = client.search().forResource(Medication.class).withTag(null, "CVC1").where(Medication.CODE.exactly().systemAndCode("http://www.gs1.org/gtin", gtin)).returnBundle(Bundle.class).execute();
+		
+		logger.info("Bundle ID + " + bundle.getId() + ", total = " + bundle.getTotal());
+		
+		
+		processMedicationBundle(bundle);
+
+		while (bundle.getLink(Bundle.LINK_NEXT) != null) {
+			// load next page
+			bundle = client.loadPage().next(bundle).execute();
+			processMedicationBundle(bundle);
+		}
+
+		return null;
+	}
+	
+	public ActionForward medicationBySnomed(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		String code = request.getParameter("code");
+		
+		IGenericClient client = ctx.newRestfulGenericClient(serverBase);
+		Bundle bundle = client.search().forResource(Medication.class).withTag(null, "CVC1").where(Medication.CODE.exactly().systemAndCode("http://snomed.info/sct", code)).returnBundle(Bundle.class).execute();
+		
+		logger.info("Bundle ID + " + bundle.getId() + ", total = " + bundle.getTotal());
+		
+		
+		processMedicationBundle(bundle);
+
+		while (bundle.getLink(Bundle.LINK_NEXT) != null) {
+			// load next page
+			bundle = client.loadPage().next(bundle).execute();
+			processMedicationBundle(bundle);
+		}
+
+		return null;
+	}
+	
+	private void processMedicationBundle(Bundle bundle) {
+		for (BundleEntryComponent entry : bundle.getEntry()) {
+			Medication med = (Medication) entry.getResource();
+			for (Coding c : med.getCode().getCoding()) {
+				if ("http://hl7.org/fhir/sid/ca-hc-din".equals(c.getSystem())) {
+					logger.info(c.getDisplay());
+				}
+			}
+		}
+	}
+	
+	private void processValueSetBundle(Bundle bundle) {
+		for (BundleEntryComponent entry : bundle.getEntry()) {
+			ValueSet vs = (ValueSet) entry.getResource();
+			processValueSet(vs);
+		}
+	}	
 	
 	private void processValueSet(ValueSet vs) {
 		//vs.getResourceType();
@@ -185,62 +279,22 @@ public class CVCTesterAction extends DispatchAction {
 			}
 		}
 	}
-	
-	private void processValueSetBundle(Bundle bundle) {
-		for (BundleEntryComponent entry : bundle.getEntry()) {
-			ValueSet vs = (ValueSet) entry.getResource();
-			processValueSet(vs);
-		}
-	}
-	
-	
-	public ActionForward medicationByGtin(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String serverBase = "https://fhirtest.uhn.ca/baseDstu3";
-		String gtin = request.getParameter("gtin");
-		
-		IGenericClient client = ctx.newRestfulGenericClient(serverBase);
-		Bundle bundle = client.search().forResource(Medication.class).withTag(null, "CVC1").where(Medication.CODE.exactly().systemAndCode("http://www.gs1.org/gtin", gtin)).returnBundle(Bundle.class).execute();
-		
-		logger.info("Bundle ID + " + bundle.getId() + ", total = " + bundle.getTotal());
-		
-		
-		processMedicationBundle(bundle);
+	*/
+}
 
-		while (bundle.getLink(Bundle.LINK_NEXT) != null) {
-			// load next page
-			bundle = client.loadPage().next(bundle).execute();
-			processMedicationBundle(bundle);
-		}
-
-		return null;
-	}
-	
-	public ActionForward medicationBySnomed(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String serverBase = "https://fhirtest.uhn.ca/baseDstu3";
-		String code = request.getParameter("code");
-		
-		IGenericClient client = ctx.newRestfulGenericClient(serverBase);
-		Bundle bundle = client.search().forResource(Medication.class).withTag(null, "CVC1").where(Medication.CODE.exactly().systemAndCode("http://snomed.info/sct", code)).returnBundle(Bundle.class).execute();
-		
-		logger.info("Bundle ID + " + bundle.getId() + ", total = " + bundle.getTotal());
-		
-		
-		processMedicationBundle(bundle);
-
-		while (bundle.getLink(Bundle.LINK_NEXT) != null) {
-			// load next page
-			bundle = client.loadPage().next(bundle).execute();
-			processMedicationBundle(bundle);
-		}
-
-		return null;
-	}
-
-	public ActionForward testManager(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		
-		List<CVCMedication> meds = cvcManager.getMedicationByDIN(LoggedInInfo.getLoggedInInfoFromSession(request), "12345");
-		
-		
-		return null;
-	}
+class PrevalenceComparator implements Comparator<CVCImmunization> {
+    public int compare( CVCImmunization i1, CVCImmunization i2 ) {
+  
+            Integer d1 = i1.getPrevalence();
+            Integer d2 = i2.getPrevalence();
+            
+            if( d1 == null && d2 != null )
+                    return 1;
+            else if( d1 != null && d2 == null )
+                    return -1;
+            else if( d1 == null && d2 == null )
+                    return 0;
+            else
+                    return d1.compareTo(d2) * -1;
+    }
 }

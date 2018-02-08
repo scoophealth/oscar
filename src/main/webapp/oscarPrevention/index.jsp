@@ -124,6 +124,20 @@ if(!authed) {
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"></script>
 
+<script type="text/javascript" src="../share/yui/js/yahoo-dom-event.js"></script>
+<script type="text/javascript" src="../share/yui/js/connection-min.js"></script>
+<script type="text/javascript" src="../share/yui/js/animation-min.js"></script>
+<script type="text/javascript" src="../share/yui/js/datasource-min.js"></script>
+<script type="text/javascript" src="../share/yui/js/autocomplete-min.js"></script>
+
+
+<link rel="stylesheet" type="text/css" href="../share/yui/css/fonts-min.css"/>
+<link rel="stylesheet" type="text/css" href="../share/yui/css/autocomplete.css"/>
+
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/demographicProviderAutocomplete.css"  />
+
+
+
 <style type="text/css">
 div.ImmSet {
 	background-color: #ffffff;
@@ -556,7 +570,10 @@ text-align:left;
 		<br/>
 		<table>
 			<tr>
+<!-- 
 				<td style="font-size:12pt">Add by Lot#</td><td><input type="text" id="lotNumberToAdd" name="lotNumberToAdd" size="20"/><input type="button" value="Add" onClick="addByLot()"/></td>
+-->
+				<td style="font-size:12pt">Add by Brand/Generic/Lot#</td><td><input type="text" id="lotNumberToAdd2" name="lotNumberToAdd2" size="20"/><div id="lotNumberToAdd2_choices" class="autocomplete"></div></td>
 			</tr>
 		</table>
 		
@@ -838,6 +855,66 @@ text-align:left;
 </table>
 
 <script type="text/javascript" src="../share/javascript/boxover.js"></script>
+
+<script type="text/javascript">
+
+//basic..just makes the brand name ones bold
+var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
+	var output = '';
+	
+	if(!oResultData[1]) {
+		output = '<b>' + oResultData[0] + '</b>';
+	} else {
+		output = oResultData[0];
+	}
+   	return output;
+}
+
+YAHOO.example.BasicRemote = function() {
+    if($("lotNumberToAdd2") && $("lotNumberToAdd2_choices")){
+          var url = "../cvc.do?method=query";
+          var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ignoreStaleResponses'});
+          oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
+          oDS.responseSchema = {
+              resultsList : "results",
+              fields : ["name","generic","genericSnomedId","snomedId","lotNumber"]
+          };
+          oDS.maxCacheEntries = 0;
+          var oAC = new YAHOO.widget.AutoComplete("lotNumberToAdd2","lotNumberToAdd2_choices",oDS);
+          oAC.queryMatchSubset = true;
+          oAC.minQueryLength = 3;
+          oAC.maxResultsDisplayed = 25;
+          oAC.formatResult = resultFormatter2;
+          oAC.queryMatchContains = true;
+          oAC.itemSelectEvent.subscribe(function(type, args) {
+        	  var myAC = args[0]; // reference back to the AC instance 
+        	  var elLI = args[1]; // reference to the selected LI element 
+        	  var oData = args[2]; // object literal of selected item's result data 
+        	  
+        	  console.log('selected');
+        	  
+        	  console.log('args:' + oData[0] + ',' + oData[1] + ',' + oData[2] + ',' + oData[3] + ',' + oData[4]);
+	
+        	  //We need to load AddPreventionData with possible brand name, and possible lotnumber/exp.
+        	  if(oData[4].length > 0) {
+        		popup(465,635,'AddPreventionData.jsp?demographic_no=<%=demographic_no%>&lotNumber=' + oData[4],'addPreventionData' + <%=new java.util.Random().nextInt(10000) + 1%> );
+        		document.getElementById('lotNumberToAdd2').value = '';
+        	  } else {
+        		 popup(465,635,'AddPreventionData.jsp?search=true&demographic_no=<%=demographic_no%>&snomedId=' + oData[2] + '&brandSnomedId=' + oData[3],'addPreventionData' + <%=new java.util.Random().nextInt(10000) + 1%> );
+          		document.getElementById('lotNumberToAdd2').value = '';  
+        	  }
+
+           	
+          });
+
+           return {
+               oDS: oDS,
+               oAC: oAC
+           };
+       }
+       }();
+
+</script>
 </body>
 </html:html> 
 <%!

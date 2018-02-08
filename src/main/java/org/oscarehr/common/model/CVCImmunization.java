@@ -39,12 +39,13 @@ public class CVCImmunization extends AbstractModel<Integer> {
 	private String snomedConceptId;
 	private String displayName;
 	private String picklistName;
-	private boolean generic;
+	private Boolean generic;
 	
 
 	/* for tradename ones*/
 	Integer prevalence;
 	String parentConceptId;
+	boolean ispa;
 	
 	
 	public Integer getId() {
@@ -109,6 +110,14 @@ public class CVCImmunization extends AbstractModel<Integer> {
 
 	public void setParentConceptId(String parentConceptId) {
 		this.parentConceptId = parentConceptId;
+	}
+
+	public boolean isIspa() {
+		return ispa;
+	}
+
+	public void setIspa(boolean ispa) {
+		this.ispa = ispa;
 	}
 	
 
