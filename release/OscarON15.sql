@@ -54218,6 +54218,7 @@ INSERT INTO `secObjectName` (`objectName`, `description`, `orgapplicable`) VALUE
 ('_admin.reporting', NULL, 0),
 ('_admin.resource', NULL, 0),
 ('_admin.schedule', NULL, 0),
+('_admin.schedule.curprovider_only','allow provider with non-admin role to create schedule templates and assign to themselves', 0),
 ('_admin.traceability', 'Rights to generate trace and run report', 0),
 ('_admin.userAdmin', NULL, 0),
 ('_appointment', 'Appointment', 0),

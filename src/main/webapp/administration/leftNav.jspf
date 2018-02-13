@@ -476,7 +476,7 @@ String curProvider_no = (String)session.getAttribute("user");
 <!-- #ECHART END-->	
 
 <!-- #Schedule Management -->
-	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.schedule" rights="r" reverse="<%=false%>">
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.schedule,_admin.schedule.curprovider_only" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
 				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseSeven">
 				<bean:message key="admin.admin.ScheduleManagement" />
@@ -491,6 +491,7 @@ String curProvider_no = (String)session.getAttribute("user");
 						class="xlink" rel="${ctx}/schedule/scheduletemplatesetting.jsp"
 						title="<bean:message key="admin.admin.scheduleSettingTitle"/>"><bean:message
 						key="admin.admin.scheduleSetting" /></a></li>
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.schedule.curprovider_only" rights="r" reverse="<%=true%>">
 					<oscar:oscarPropertiesCheck property="ENABLE_EDIT_APPT_STATUS"
 						value="yes">
 						<li><a href="javascript:void(0);"
@@ -519,6 +520,7 @@ String curProvider_no = (String)session.getAttribute("user");
 					</oscar:oscarPropertiesCheck>
 					
 					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/oscarPrevention/PreventionManager.jsp" title="Customize prevention notifications."><bean:message key="admin.admin.preventionNotification.title" /></a></li>
+				</security:oscarSec>
 				</ul>
 				</div>
 				</div>
