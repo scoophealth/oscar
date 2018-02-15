@@ -49,7 +49,7 @@ public class ProfessionalContactDao extends AbstractDao<ProfessionalContact> {
 		return query.getResultList();
 	}
 	
-	public List<ProfessionalContact> search(String searchMode, String orderBy, String keyword, String programNo, String providerNo) {
+	public List<ProfessionalContact> search(String searchMode, String orderBy, String keyword, String programNo, String providerNo, String relatedTo) {
 		StringBuilder where = new StringBuilder();
 		List<Object> paramList = new ArrayList<Object>();
 	    
@@ -79,6 +79,11 @@ public class ProfessionalContactDao extends AbstractDao<ProfessionalContact> {
 		if(programNo != null && !programNo.equals("") && !programNo.equals("0")) {
 			where.append(" AND c.programNo IN (select pp.ProgramId from ProgramProvider pp where pp.ProviderNo = '"+providerNo+"') ");
 		}
+		
+		if(relatedTo != null && relatedTo.length()>0) {
+			where.append(" AND c.programNo IN ( SELECT x.programId FROM Admission x WHERE x.programId IN (SELECT a.programId FROM Admission a WHERE a.clientId = " + Integer.parseInt(relatedTo) +" ) )  ");
+		}
+		
 		String sql = "SELECT c from ProfessionalContact c where " + where.toString() + " order by " + orderBy;
 		
 		Query query = entityManager.createQuery(sql);

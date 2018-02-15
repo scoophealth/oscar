@@ -290,6 +290,7 @@ function searchExternalProviders(action) {
 		'&keyword='+ searchfield +
 		'&programId=' + programId + 
 		'&contactRole=' + contactRole + 
+		'&relatedTo=<%=demographicNoString%>' + 
 		'&submit=' + action +
 		'&list=all',
 		'ManageContacts',

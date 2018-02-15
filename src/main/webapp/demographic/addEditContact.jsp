@@ -117,7 +117,7 @@
        });
 <% } %>
 
-      <!--
+      
 		function setfocus() {
 		  this.focus();
 		  document.forms[0].referral_no.focus();
@@ -129,28 +129,39 @@
 	        return ret;
 	    }
 	    function onSave() {
-	        //document.forms[0].submit.value="Save";
-	        /*
-	        var ret = true;
+	    	document.forms[0].submit.value="Save";
+	        
+	    	var ret = true;
 	        if(ret==true) {
 				ret = checkAllFields();
 			}
 	        if(ret==true) {
 	            ret = confirm("Are you sure you want to save?");
 	        }
-	        */
-	        return true;
+	        
+	        return ret;
+	        
 	    }
 		
 		function checkAllFields() {
 	        var b = true;
-	        if(document.forms[0].last_name.value.length<=0){
+	        if(document.forms[0].elements['contact.lastName'].value.length<=0){
 	            b = false;
 	            alert ("The field \"Last Name\" is empty.");
-	        } else if(document.forms[0].first_name.value.length<=0) {
+	        } else if(document.forms[0].elements['contact.firstName'].value.length<=0) {
 	            b = false;
 	            alert ("The field \"First Name\" is empty.");
 	        }
+	        
+	        <%if("true".equals(oscar.OscarProperties.getInstance().getProperty("contact.required.program","false"))) {%>
+				var fieldobject = document.forms[0].elements['contact.programNo'];
+				if(fieldobject.options[fieldobject.selectedIndex].value == '0') {
+					b = false;
+					alert("The field \"Restrict to Program\" is empty but mandatory.");
+				}
+			
+			<% } %>
+			
 			return b;
 	    }
 	    function isNumber(s){
@@ -164,7 +175,7 @@
 	        // All characters are numbers.
 	        return true;
 	    }
-//-->
+	    
 
       </script>
 </head>
@@ -183,7 +194,7 @@
 	</tr>
 </table>
 </center>
-<html:form action="/demographic/Contact">
+<html:form action="/demographic/Contact" onsubmit="javascript:return onSave();">
 	<input type="hidden" name="contact.id" value="<c:out value="${contact.id}"/>"/>
 	<input type="hidden" name="method" value="saveContact"/>
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
@@ -321,7 +332,7 @@
 	</tr>
 	<tr>
 		<td align="center" bgcolor="#CCCCFF" colspan="2">
-			<input type="submit" name="submit" value="<bean:message key="admin.resourcebaseurl.btnSave"/>" onclick="javascript:return onSave();"> 			
+			<input type="submit" name="submit" value="<bean:message key="admin.resourcebaseurl.btnSave"/>"> 			
 			<input type="button" name="Cancel" value="<bean:message key="admin.resourcebaseurl.btnExit"/>" onClick="window.close()">
 		</td>
 	</tr>	

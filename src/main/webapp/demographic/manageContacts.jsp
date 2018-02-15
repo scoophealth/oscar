@@ -281,7 +281,8 @@ function searchExternalProviders<%=type%>(action) {
 		'&elementId=search<%=type %>TeamInputId' +
 		//'&programNo=' + programId + 
 		'&keyword='+ searchfield +
-		'&contactRole=' + contactRole + 
+		'&contactRole=' + contactRole +
+		'&relatedTo=<%=demographicNoString%>' + 
 		'&submit=' + action ,
 		'ManageContacts',
 		windowspecs			

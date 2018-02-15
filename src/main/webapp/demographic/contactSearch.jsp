@@ -59,11 +59,12 @@
 	  List<Contact> contacts;
 	  
 	  String programNo = request.getParameter("programNo");
+	  String relatedTo = request.getParameter("relatedTo");
 	  
 	  if( "all".equalsIgnoreCase(list) ) {
-		  contacts = ContactAction.searchAllContacts(search_mode, orderBy, keyword, programNo,loggedInInfo.getLoggedInProviderNo());
+		  contacts = ContactAction.searchAllContacts(search_mode, orderBy, keyword, programNo,loggedInInfo.getLoggedInProviderNo(),relatedTo);
 	  } else {
-		  contacts = ContactAction.searchContacts(search_mode, orderBy, keyword, programNo, loggedInInfo.getLoggedInProviderNo());
+		  contacts = ContactAction.searchContacts(search_mode, orderBy, keyword, programNo, loggedInInfo.getLoggedInProviderNo(),relatedTo);
 	  }
 	   
 	  nItems = contacts.size();
