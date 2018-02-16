@@ -71,11 +71,15 @@
 	
         
         <div class="row">
-        		<form >
-	        <div class="form-group">
-	    			<input type="text" class="form-control" id="exampleInputEmail1" placeholder="Search:">
-	  		</div>
-	  		</form>
+        		<medsearch med-selected="$ctrl.medSelected(med)"></medsearch>
+        		
+        		<div class="list-group">
+			  <a href="#" class="list-group-item <%--active--%>" ng-repeat="med in $ctrl.toRxList">
+			    <h4 class="list-group-item-heading">{{med.getName()}}</h4>
+			    <p class="list-group-item-text">{{med}}</p>
+			  </a>
+			</div>
+        		
 		</div>
 		
 		<div class="row">

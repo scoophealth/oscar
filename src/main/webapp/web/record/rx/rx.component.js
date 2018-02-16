@@ -9,8 +9,7 @@ const RxComponent = {
 
  	rxComp.$onInit = function(){
  		console.log("oninit rxComp",this);
- 		getRightItems();
- 		getLeftItems();
+ 		
  		rxComp.page = {};
  		rxComp.page.columnOne = {};
  		rxComp.page.columnOne.modules = {};
@@ -19,18 +18,52 @@ const RxComponent = {
  		rxComp.page.columnThree.modules = {};
  		rxComp.page.drugs = [];
  		
+ 		rxComp.toRxList = [];  //might want to cache this server side and check back so that we can switch between tabs.
+ 		
+ 		
  		rxService.getMedications($stateParams.demographicNo,"").then(function(data){
 			  console.log("getMedications--",data);
 			  rxComp.page.drugs = data.data.content;
 			  
 	    	},
 	    	function(errorMessage){
-		       console.log("getMedications++"+errorMessage);
+		      console.log("getMedications++"+errorMessage);
 		      rxComp.error=errorMessage;
 	    	}
 		);
  		
+ 		getRightItems();
+ 		getLeftItems();
  		
+ 		
+ 	}
+ 	
+ 	rxComp.medSelected = function(med){
+ 		if(angular.isDefined(med.favoriteName)){
+ 		   var m = {};
+ 		   m.drug = med;
+ 		   var d = new Drug();
+ 	       d.applyFavorite(m);
+ 	       rxComp.toRxList.push(d);
+ 		}else{
+ 			console.log("calling getMEd details ",med);
+ 			rxService.getMedicationDetails(med.id).then(function (d) {
+ 				console.log("getMeddetails returns",d);
+ 	            newMed = new Drug($stateParams.demographicNo);
+ 	            newMed.name = med.name;
+ 	            newMed.newMed = true;
+ 	            newMed.populateFromDrugSearchDetails(d.data.drugs[0]);
+
+ 	           rxComp.toRxList.push(newMed);
+ 	            //updateStrengthUnits(d.drugs);
+ 			},
+ 			function(errorMessage){
+  		       console.log("getMedicationDetails "+errorMessage);
+  		       rxComp.error=errorMessage;
+  	    		});
+	
+ 		}
+ 		console.log("MEDDDD ",med,rxComp.toRxList);
  	}
  	
  	
