@@ -9215,6 +9215,7 @@ cpso varchar(10),
 systemId varchar(30),
 deleted tinyint,
 updateDate timestamp not null,
+programNo int,
 KEY (`type`),
 KEY (`cpso`),
 KEY (`systemId`)
