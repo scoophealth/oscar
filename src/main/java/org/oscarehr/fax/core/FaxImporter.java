@@ -26,6 +26,7 @@ package org.oscarehr.fax.core;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.httpclient.HttpStatus;
@@ -45,9 +46,11 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.oscarehr.common.dao.FaxConfigDao;
 import org.oscarehr.common.dao.FaxJobDao;
+import org.oscarehr.common.dao.ProviderLabRoutingDao;
 import org.oscarehr.common.dao.QueueDocumentLinkDao;
 import org.oscarehr.common.model.FaxConfig;
 import org.oscarehr.common.model.FaxJob;
+import org.oscarehr.common.model.ProviderLabRoutingModel;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -65,6 +68,7 @@ public class FaxImporter {
 	private FaxConfigDao faxConfigDao = SpringUtils.getBean(FaxConfigDao.class);
 	private FaxJobDao faxJobDao = SpringUtils.getBean(FaxJobDao.class);
 	private QueueDocumentLinkDao queueDocumentLinkDao = SpringUtils.getBean(QueueDocumentLinkDao.class);
+	private ProviderLabRoutingDao providerLabRoutingDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
 	private Logger log = MiscUtils.getLogger();
 	
 	public void poll() {
@@ -114,8 +118,9 @@ public class FaxImporter {
 	                	for( FaxJob receivedFax : faxList ) {	
 	                		
 	                		String fileName = null;
+	                		EDoc edoc = null;
 	                		FaxJob faxFile = null;
-	                		
+	  
 	                		// if this recievedFax Object contains an error 
 	                		// skip the download step there is no file to download.
 	                		if( ! FaxJob.STATUS.ERROR.equals( receivedFax.getStatus() ) ) {
@@ -123,14 +128,24 @@ public class FaxImporter {
 	                		}
 	                		
 	                		// save the received fax to the file system and assign to an inbox Queue 
-	                		if( faxFile != null ) {	 	                			
-	                			fileName = saveAndInsertIntoQueue( faxConfig, receivedFax, faxFile );
+	                		if( faxFile != null ) {	 	                				                			 
+	                			edoc = saveAndInsertIntoQueue( faxConfig, receivedFax, faxFile );
+	                		}
+	                		
+	                		if( edoc != null ) {
+	                			fileName = edoc.getFileName();
 	                		}
 
 	                		// The fileName variable will be NULL if the saveAndInsertIntoQueue methods fails
 	                		// to fully complete. If NULL, the file will not be deleted from the Host server. 
 	                		if( fileName != null ) {
+	   
+	                			// set the new fax into provider lab routing for tracking it's route.
+	                			providerRouting( Integer.parseInt( edoc.getDocId() ) );
+	                			
+	                			// delete the fax on the sever.
 	                			deleteFax( client, faxConfig, receivedFax );
+	                			
 	                		} else {
 	                			fileName = FaxJob.STATUS.ERROR.name();
 	                		}
@@ -140,7 +155,7 @@ public class FaxImporter {
                 			receivedFax.setFile_name( fileName );
 
                 			// save the receivedFax Object regardless of status or fileName.
-	                		saveFaxJob( new FaxJob( receivedFax ) );
+                			saveFaxJob( new FaxJob( receivedFax ) );
 	                	}
 	                	
 					} else {
@@ -230,7 +245,7 @@ public class FaxImporter {
 		}
 	}
 	
-	private String saveAndInsertIntoQueue( FaxConfig faxConfig, FaxJob receivedFax, FaxJob faxFile ) {		 		
+	private EDoc saveAndInsertIntoQueue( FaxConfig faxConfig, FaxJob receivedFax, FaxJob faxFile ) {		 		
 	
 		String filename = receivedFax.getFile_name();
 		
@@ -247,9 +262,6 @@ public class FaxImporter {
 		}
 		
 		filename = filename.trim();	
-		
-		log.info("Saving the Fax file " + filename + " meta data to Oscar's eDoc system.");
-
 
 		EDoc newDoc = new EDoc("Recieved Fax", "Recieved Fax", filename, "", 
 				DEFAULT_USER, DEFAULT_USER, "", 'A', 
@@ -259,23 +271,23 @@ public class FaxImporter {
 		newDoc.setDocPublic("0");
 		
 		filename = newDoc.getFileName();
-		
-		log.info("Saving the Fax file " + filename + " to the local file system at " + DOCUMENT_DIR );
-		
+
 		if( Base64.decodeToFile( faxFile.getDocument(), DOCUMENT_DIR + "/" + filename) ) {
 		
-			newDoc.setContentType("application/pdf");
-			newDoc.setNumberOfPages(receivedFax.getNumPages());
-			String doc_no = EDocUtil.addDocumentSQL(newDoc);
+			newDoc.setContentType( "application/pdf" );
+			newDoc.setNumberOfPages( receivedFax.getNumPages() );
+			String doc_no = EDocUtil.addDocumentSQL( newDoc );
 		
 			Integer queueId = faxConfig.getQueue();
-			Integer docNum = Integer.parseInt(doc_no);
+			Integer docNum = Integer.parseInt( doc_no );
 			
 			queueDocumentLinkDao.addActiveQueueDocumentLink(queueId, docNum);
 			
-			log.debug( "Saved file " + filename + " to filesystem at " + DOCUMENT_DIR );
+			log.info( "Saved file " + filename + " to filesystem at " + DOCUMENT_DIR + " as document ID " + docNum );
 			
-			return filename;
+			newDoc.setDocId( doc_no );
+			
+			return newDoc;
 		}
 		
 		log.debug( "Failed to save file " + filename + " to filesystem at " + DOCUMENT_DIR );
@@ -288,6 +300,32 @@ public class FaxImporter {
 		saveFax.setUser(DEFAULT_USER);
 		faxJobDao.persist(saveFax);
 		return saveFax.getId();
+	}
+	
+	
+	private void providerRouting( Integer labNo ) {
+		ProviderLabRoutingModel providerLabRouting = new ProviderLabRoutingModel();
+		providerLabRouting.setLabNo(labNo);
+		providerRouting( providerLabRouting );
+	}
+	
+	/**
+	 * Put an entry in Provider Lab Routing that will cause the unclaimed lab indicator
+	 * to light up next to the inbox.
+	 * @return
+	 */
+	private void providerRouting( ProviderLabRoutingModel providerLabRouting ) {
+		
+		providerLabRouting.setLabType( ProviderLabRoutingDao.LAB_TYPE.DOC.name() );
+		providerLabRouting.setProviderNo( ProviderLabRoutingDao.UNCLAIMED_PROVIDER );
+		providerLabRouting.setStatus( ProviderLabRoutingDao.STATUS.N.name() );
+		providerLabRouting.setTimestamp( new Date( System.currentTimeMillis() ) );
+		providerLabRoutingDao.persist( providerLabRouting );
+		
+		Integer id = providerLabRouting.getId();
+		if( id == null || id < 1 ) {
+			log.warn("Failed to add Fax document id " + providerLabRouting.getLabNo() + " to provider lab routing.");
+		}
 	}
 
 }
