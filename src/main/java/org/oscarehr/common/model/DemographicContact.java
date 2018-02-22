@@ -82,6 +82,8 @@ public class DemographicContact extends AbstractModel<Integer> {
 	
 	private Integer programNo;
 	
+	private Integer contactTypeId;
+	
 	@Transient
 	private String contactName;
 	@Transient
@@ -264,5 +266,12 @@ public class DemographicContact extends AbstractModel<Integer> {
 		this.programNo = programNo;
 	}
 
+	public Integer getContactTypeId() {
+		return contactTypeId;
+	}
+
+	public void setContactTypeId(Integer contactTypeId) {
+		this.contactTypeId = contactTypeId;
+	}
 	
 }

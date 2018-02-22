@@ -44,22 +44,80 @@
  */
 -->
 
+<%@page import="org.oscarehr.common.model.Contact"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="org.oscarehr.common.model.ProgramContactType"%>
+<%@page import="org.oscarehr.common.dao.ProgramContactTypeDao"%>
+<%@page import="org.oscarehr.PMmodule.model.Program"%>
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="java.util.Properties"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider"%>
+<%@page import="org.oscarehr.managers.ProgramManager2"%>
+<%@page import="org.oscarehr.managers.ContactManager"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="java.util.List"%>
 <%
   
   String msg = "Enter contact details.";
   Properties	prop  = new Properties();
   
+  ProgramContactTypeDao pcTypeDao = SpringUtils.getBean(ProgramContactTypeDao.class);
+  ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+  LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+  List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+  List<ProgramProvider> ppList2 = new ArrayList<ProgramProvider>();
+  
+  //only programs with contact types set
+  for(ProgramProvider p: ppList) {
+	 List<ProgramContactType> tmp = pcTypeDao.findByProgram(p.getProgramId().intValue());
+	 if(!tmp.isEmpty()) {
+		 ppList2.add(p);
+	 }
+  }
+  
+  String lastName = null;
+  String firstName = null;
+  
+  String keyword = request.getParameter("keyword");
+  
+  org.apache.struts.validator.DynaValidatorForm contactForm = (org.apache.struts.validator.DynaValidatorForm)request.getAttribute("contactForm");
+  Contact cForm = (Contact) contactForm.get("contact");
+  if(keyword != null) {
+	  String[] parts = keyword.split(",");
+	  if(parts.length == 1) {
+		  lastName = parts[0];
+		  cForm.setLastName(parts[0]);
+	  }
+	  if(parts.length == 2) {
+		  lastName = parts[0];
+		  firstName = parts[1];
+		  cForm.setLastName(parts[0]);
+		  cForm.setFirstName(parts[1]);
+	  }
+	  
+  }
+  
+  contactForm.set("contact", cForm);
+  
+	
 %>
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.12.3.js"></script>
+
 <title>Add/Edit Contact</title>
 <script language="JavaScript">
 
-      <!--
+<% if("saveContact".equals(request.getParameter("method"))) { %>
+       $(document).ready(function(){
+               window.close();
+       });
+<% } %>
+
+      
 		function setfocus() {
 		  this.focus();
 		  document.forms[0].referral_no.focus();
@@ -71,28 +129,39 @@
 	        return ret;
 	    }
 	    function onSave() {
-	        //document.forms[0].submit.value="Save";
-	        /*
-	        var ret = true;
+	    	document.forms[0].submit.value="Save";
+	        
+	    	var ret = true;
 	        if(ret==true) {
 				ret = checkAllFields();
 			}
 	        if(ret==true) {
 	            ret = confirm("Are you sure you want to save?");
 	        }
-	        */
-	        return true;
+	        
+	        return ret;
+	        
 	    }
 		
 		function checkAllFields() {
 	        var b = true;
-	        if(document.forms[0].last_name.value.length<=0){
+	        if(document.forms[0].elements['contact.lastName'].value.length<=0){
 	            b = false;
 	            alert ("The field \"Last Name\" is empty.");
-	        } else if(document.forms[0].first_name.value.length<=0) {
+	        } else if(document.forms[0].elements['contact.firstName'].value.length<=0) {
 	            b = false;
 	            alert ("The field \"First Name\" is empty.");
 	        }
+	        
+	        <%if("true".equals(oscar.OscarProperties.getInstance().getProperty("contact.required.program","false"))) {%>
+				var fieldobject = document.forms[0].elements['contact.programNo'];
+				if(fieldobject.options[fieldobject.selectedIndex].value == '0') {
+					b = false;
+					alert("The field \"Restrict to Program\" is empty but mandatory.");
+				}
+			
+			<% } %>
+			
 			return b;
 	    }
 	    function isNumber(s){
@@ -106,7 +175,7 @@
 	        // All characters are numbers.
 	        return true;
 	    }
-//-->
+	    
 
       </script>
 </head>
@@ -125,13 +194,14 @@
 	</tr>
 </table>
 </center>
-<html:form action="/demographic/Contact">
+<html:form action="/demographic/Contact" onsubmit="javascript:return onSave();">
 	<input type="hidden" name="contact.id" value="<c:out value="${contact.id}"/>"/>
 	<input type="hidden" name="method" value="saveContact"/>
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
 	<tr>
 		<td>&nbsp;</td>
 	</tr>	
+	
 	<tr>
 		<td align="right"><b>Last Name</b></td>
 		<td>
@@ -237,12 +307,32 @@
 		</td>
 	</tr>	
 	<tr>
+		<td align="right"><b>Restrict to program</b></td>
+			<td>
+			 	<select name="contact.programNo" id="contact.programNo" title="Restrict to Program">
+	            		<option value="0"></option>
+	            		<%
+	            			for(ProgramProvider pp:ppList2) {
+	            				String selected = "";
+	            				Contact cc = (Contact)request.getAttribute("contact");
+	            				if(pp.getProgramId() != null && cc != null && cc.getProgramNo() != null && pp.getProgramId().intValue() == cc.getProgramNo().intValue()) {
+	            					selected = " selected=\"selected\" ";
+	            				}
+	            		%>
+							<option value="<%=pp.getProgramId()%>" <%=selected %>><%=pp.getProgram().getName() %></option>
+						<%
+	            			}
+						%>
+	            	</select>
+			 </td>
+	</tr>
+	<tr>
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>
 		<td align="center" bgcolor="#CCCCFF" colspan="2">
-			<input type="submit" name="submit" value="<bean:message key="admin.resourcebaseurl.btnSave"/>" onclick="javascript:return onSave();"> 			
+			<input type="submit" name="submit" value="<bean:message key="admin.resourcebaseurl.btnSave"/>"> 			
 			<input type="button" name="Cancel" value="<bean:message key="admin.resourcebaseurl.btnExit"/>" onClick="window.close()">
 		</td>
 	</tr>	

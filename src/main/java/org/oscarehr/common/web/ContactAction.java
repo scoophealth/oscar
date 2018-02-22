@@ -163,8 +163,9 @@ public class ContactAction extends DispatchAction {
         	throw new SecurityException("missing required security object (_demographic)");
         }
     	
-    	if( "ajax".equalsIgnoreCase( postMethod ) ) {
+    	if( "ajax".equalsIgnoreCase( postMethod ) || "ajax2".equalsIgnoreCase( postMethod ) ) {
     		forward = postMethod;
+    		request.setAttribute("ajax", true);
     	}
     	
     	for(int x=1;x<=maxContact;x++) {
@@ -179,7 +180,12 @@ public class ContactAction extends DispatchAction {
     			if(id.length()>0 && Integer.parseInt(id)>0) {
     				c = demographicContactDao.find(Integer.parseInt(id));
     			}
-
+    			
+    			String strContactTypeId = request.getParameter("contact_"+x+".contactTypeId");
+    			if(StringUtils.isNotEmpty(strContactTypeId)) {
+    				c.setContactTypeId(Integer.parseInt(strContactTypeId));
+    			}
+    		
 				c.setDemographicNo(Integer.parseInt(request.getParameter("demographic_no")));
     			c.setRole(request.getParameter("contact_"+x+".role"));
     			
@@ -188,7 +194,8 @@ public class ContactAction extends DispatchAction {
     			}
     			c.setNote(request.getParameter("contact_"+x+".note"));
     			c.setContactId(otherId);
-    			c.setCategory(DemographicContact.CATEGORY_PERSONAL);
+    			
+    			c.setCategory(request.getParameter("contact_"+x+".category"));
     			if(request.getParameter("contact_"+x+".sdm") != null) {
     				c.setSdm("true");
     			} else {
@@ -208,7 +215,7 @@ public class ContactAction extends DispatchAction {
     				c.setConsentToContact(false);
     			}
     			
-    			if(request.getParameter("contact_"+x+".programId") != null && !request.getParameter("contact_"+x+".programId").equals("0")) {
+    			if(request.getParameter("contact_"+x+".programId") != null && !request.getParameter("contact_"+x+".programId").equals("0") && !request.getParameter("contact_"+x+".programId").equals("undefined")) {
     				c.setProgramNo(Integer.parseInt(request.getParameter("contact_"+x+".programId")));
     			} else {
     				c.setProgramNo(null);
@@ -279,6 +286,11 @@ public class ContactAction extends DispatchAction {
     			if (request.getParameter("procontact_"+x+".type") != null) {
     			    c.setType(Integer.parseInt(request.getParameter("procontact_"+x+".type")));
     			}
+    			
+    			String strContactTypeId = request.getParameter("procontact_"+x+".contactTypeId");
+    			if(StringUtils.isNotEmpty(strContactTypeId)) {
+    				c.setContactTypeId(Integer.parseInt(strContactTypeId));
+    			}
     			c.setContactId(otherId);
     			c.setCategory(DemographicContact.CATEGORY_PROFESSIONAL);
     			c.setFacilityId(loggedInInfo.getCurrentFacility().getId());
@@ -290,7 +302,7 @@ public class ContactAction extends DispatchAction {
     				c.setConsentToContact(false);
     			}
     			
-    			if(request.getParameter("procontact_"+x+".programId") != null && !request.getParameter("procontact_"+x+".programId").equals("0")) {
+    			if(request.getParameter("procontact_"+x+".programId") != null && !request.getParameter("procontact_"+x+".programId").equals("0") && !request.getParameter("procontact_"+x+".programId").equals("undefined")) {
     				c.setProgramNo(Integer.parseInt(request.getParameter("procontact_"+x+".programId")));
     			} else {
     				c.setProgramNo(null);
@@ -366,8 +378,9 @@ public class ContactAction extends DispatchAction {
         	throw new SecurityException("missing required security object (_demographic)");
         }
 		
-    	if( "ajax".equalsIgnoreCase( postMethod ) ) {
+    	if( "ajax".equalsIgnoreCase( postMethod ) || "ajax2".equalsIgnoreCase( postMethod ) ) {
     		actionForward = mapping.findForward( postMethod );
+    		request.setAttribute("ajax", true);
     	}
     	
     	if(removeSingleId != null) {
@@ -404,6 +417,27 @@ public class ContactAction extends DispatchAction {
 
 	public ActionForward addContact(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
+		
+		
+		String keyword = request.getParameter("keyword");
+		
+		
+		  org.apache.struts.validator.DynaValidatorForm contactForm = (org.apache.struts.validator.DynaValidatorForm)form;
+		  Contact cForm = (Contact) contactForm.get("contact");
+		  if(keyword != null) {
+			  String[] parts = keyword.split(",");
+			  if(parts.length == 1) {
+				  cForm.setLastName(parts[0]);
+			  }
+			  if(parts.length == 2) {
+				  cForm.setLastName(parts[0]);
+				  cForm.setFirstName(parts[1]);
+			  }
+			  
+		  }
+		  
+		  request.setAttribute("contact", cForm);
+		  
 		return mapping.findForward("cForm");
 	}
 
@@ -416,6 +450,26 @@ public class ContactAction extends DispatchAction {
 		request.setAttribute( "specialties", specialties );
 		request.setAttribute( "pcontact.lastName", request.getParameter("keyword") );
 		request.setAttribute( "contactRole", request.getParameter("contactRole")  );
+		
+		String keyword = request.getParameter("keyword");
+		
+		
+		org.apache.struts.validator.DynaValidatorForm contactForm = (org.apache.struts.validator.DynaValidatorForm)form;
+		ProfessionalContact cForm = (ProfessionalContact) contactForm.get("pcontact");
+		if(keyword != null) {
+			  String[] parts = keyword.split(",");
+			  if(parts.length == 1) {
+				  cForm.setLastName(parts[0]);
+			  }
+			  if(parts.length == 2) {
+				  cForm.setLastName(parts[0]);
+				  cForm.setFirstName(parts[1]);
+			  }
+			  
+		}
+		  
+		request.setAttribute("pcontact", cForm);
+		  
 		return mapping.findForward("pForm");
 	}
 	
@@ -546,11 +600,17 @@ public class ContactAction extends DispatchAction {
 			Contact savedContact = contactDao.find(Integer.parseInt(id));
 			if(savedContact != null) {
 				BeanUtils.copyProperties(contact, savedContact, new String[]{"id"});
+				if(savedContact.getProgramNo() != null && savedContact.getProgramNo().intValue() == 0) {
+					savedContact.setProgramNo(null);
+				}
 				contactDao.merge(savedContact);
 			}
 		}
 		else {
 			contact.setId(null);
+			if(contact.getProgramNo() != null && contact.getProgramNo().intValue() == 0) {
+				contact.setProgramNo(null);
+			}
 			contactDao.persist(contact);
 		}
 	   return mapping.findForward("cForm");
@@ -610,6 +670,11 @@ public class ContactAction extends DispatchAction {
 				if(savedContact != null) {
 					
 					BeanUtils.copyProperties( contact, savedContact, new String[]{"id"} );
+					
+					if(savedContact.getProgramNo() != null && savedContact.getProgramNo().intValue() == 0) {
+						savedContact.setProgramNo(null);
+					}
+					
 					proContactDao.merge( savedContact );
 					contactRole = savedContact.getSpecialty();
 				}
@@ -619,6 +684,10 @@ public class ContactAction extends DispatchAction {
 		} else {
 			
 			logger.info("Saving a new Professional Contact with id " + contact.getId());
+			
+			if(contact.getProgramNo() != null && contact.getProgramNo().intValue() == 0) {
+				contact.setProgramNo(null);
+			}
 			
 			proContactDao.persist(contact);
 			
@@ -684,13 +753,13 @@ public class ContactAction extends DispatchAction {
 	 * @param keyword
 	 * @return
 	 */
-	public static List<Contact> searchAllContacts(String searchMode, String orderBy, String keyword) {
+	public static List<Contact> searchAllContacts(String searchMode, String orderBy, String keyword, String programNo, String providerNo, String relatedTo) {
 		List<Contact> contacts = new ArrayList<Contact>();
 		List<ProfessionalSpecialist> professionalSpecialistContact = professionalSpecialistDao.search(keyword);		
 		
 		// if there is a future in adding personal contacts.
 		// contacts.addAll( contactDao.search(searchMode, orderBy, keyword) );		
-		contacts.addAll( proContactDao.search(searchMode, orderBy, keyword) );		
+		contacts.addAll( proContactDao.search(searchMode, orderBy, keyword, programNo, providerNo, relatedTo) );		
 		contacts.addAll( HealthCareTeamCreator.buildContact( professionalSpecialistContact ) );
 		
 		Collections.sort(contacts, HealthCareTeamCreator.byLastName);
@@ -699,13 +768,13 @@ public class ContactAction extends DispatchAction {
 	}
 
 
-	public static List<Contact> searchContacts(String searchMode, String orderBy, String keyword) {
-		List<Contact> contacts = contactDao.search(searchMode, orderBy, keyword);
+	public static List<Contact> searchContacts(String searchMode, String orderBy, String keyword, String programNo, String providerNo, String relatedTo) {
+		List<Contact> contacts = contactDao.search(searchMode, orderBy, keyword, programNo, providerNo, relatedTo);
 		return contacts;
 	}
 
-	public static List<ProfessionalContact> searchProContacts(String searchMode, String orderBy, String keyword) {
-		List<ProfessionalContact> contacts = proContactDao.search(searchMode, orderBy, keyword);
+	public static List<ProfessionalContact> searchProContacts(String searchMode, String orderBy, String keyword, String programNo, String providerNo, String relatedTo) {
+		List<ProfessionalContact> contacts = proContactDao.search(searchMode, orderBy, keyword, programNo, providerNo, relatedTo);
 		return contacts;
 	}
 	
@@ -910,6 +979,14 @@ public class ContactAction extends DispatchAction {
 
 		List<ContactType> contactTypes = contactManager.getContactTypes(LoggedInInfo.getLoggedInInfoFromSession(request));
 
+		Collections.sort(contactTypes, new Comparator<ContactType>() {
+			 public int compare(ContactType o1, ContactType o2) {
+                
+
+                 return o1.getName().toUpperCase().compareTo(o2.getName().toUpperCase());
+         }
+
+		});
 		JSONArray arr = JSONArray.fromObject(contactTypes);
 		
 		arr.write(response.getWriter());
@@ -981,7 +1058,7 @@ public class ContactAction extends DispatchAction {
 
 		String programId = request.getParameter("programId");
 		
-		List<ProgramContactType> results = contactManager.getContactTypesForProgram(LoggedInInfo.getLoggedInInfoFromSession(request),Integer.parseInt(programId));
+		List<ProgramContactType> results = contactManager.getContactTypesForProgramAndCategory(LoggedInInfo.getLoggedInInfoFromSession(request),Integer.parseInt(programId),null);
 		
 		JSONArray arr = JSONArray.fromObject(results);
 		

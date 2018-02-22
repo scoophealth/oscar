@@ -85,7 +85,7 @@ public class ContactDaoTest extends DaoTestFixtures {
 		dao.persist(contact2);
 		dao.persist(contact3);
 
-		List<Contact> result = dao.search(searchMode, orderBy, keyword); 
+		List<Contact> result = dao.search(searchMode, orderBy, keyword,null,null,null); 
 		List<Contact> expectedResult = new ArrayList<Contact>(Arrays.asList(
 				contact1,
 				contact2
@@ -133,7 +133,7 @@ public class ContactDaoTest extends DaoTestFixtures {
 		contact3.setLastName("Smith");
 		dao.persist(contact3);
 
-		List<Contact> result = dao.search(searchMode, orderBy, keyword); 
+		List<Contact> result = dao.search(searchMode, orderBy, keyword,null,null,null); 
 		List<Contact> expectedResult = new ArrayList<Contact>(Arrays.asList(
 				contact1,
 				contact3
@@ -183,7 +183,7 @@ public class ContactDaoTest extends DaoTestFixtures {
 		dao.persist(contact2);
 		dao.persist(contact3);
 
-		List<Contact> result = dao.search(searchMode, orderBy, keyword); 
+		List<Contact> result = dao.search(searchMode, orderBy, keyword,null,null,null); 
 		List<Contact> expectedResult = new ArrayList<Contact>(Arrays.asList(
 				contact2,
 				contact3

@@ -43,6 +43,7 @@
  * <OSCAR TEAM>
  */
 -->
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="java.util.*,java.sql.*, java.net.*"%>
 <%@ page import="org.oscarehr.common.web.ContactAction"%>
 <%@ page import="org.oscarehr.common.model.ProfessionalContact"%>
@@ -53,6 +54,9 @@
 <%@ include file="/taglibs.jsp"%>
 
 <%
+
+  LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		 
   if (session.getAttribute("user") == null) {
     response.sendRedirect("../logout.jsp");
   }
@@ -78,11 +82,14 @@
 	  String list = request.getParameter("list");
 	  List<?> contacts;
 
+	  String programNo = request.getParameter("programNo");
+	  String relatedTo = request.getParameter("relatedTo");
+	  
 	  if( "all".equalsIgnoreCase(list) ) {
-		  contacts = ContactAction.searchAllContacts(search_mode, orderBy, keyword);
+		  contacts = ContactAction.searchAllContacts(search_mode, orderBy, keyword,programNo,loggedInInfo.getLoggedInProviderNo(),relatedTo);
 		  pageContext.setAttribute("toggleSearchTool", list);
 	  } else {
-		  contacts = ContactAction.searchProContacts(search_mode, orderBy, keyword);
+		  contacts = ContactAction.searchProContacts(search_mode, orderBy, keyword,programNo, loggedInInfo.getLoggedInProviderNo(),relatedTo);
 	  }
 	  
 	  nItems = contacts.size();

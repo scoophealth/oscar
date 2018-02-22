@@ -66,6 +66,7 @@ public class Contact extends AbstractModel<Integer> {
 	private String fax;
 	private String note;
 	boolean deleted=false;
+	private Integer programNo;
 
 	@Override
 	public Integer getId() {
@@ -233,4 +234,14 @@ public class Contact extends AbstractModel<Integer> {
 	public String getFormattedName() {
 		return getLastName() + "," + getFirstName();
 	}
+
+	public Integer getProgramNo() {
+		return programNo;
+	}
+
+	public void setProgramNo(Integer programNo) {
+		this.programNo = programNo;
+	}
+	
+	
 }

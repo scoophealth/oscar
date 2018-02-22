@@ -833,7 +833,7 @@ List<Demographic> doSearch(LoggedInInfo loggedInInfo, DemographicDao demographic
 	boolean active = ("".equals(ptstatus)) || ( "active".equals(ptstatus) );
 	boolean inactive = ("".equals(ptstatus)) || ( "inactive".equals(ptstatus) );
 
-	demoList = demographicManager.doMultiSearch(loggedInInfo, searchModes, keywords, limit, offset, providerNo, outOfDomain, active, inactive);
+	demoList = demographicManager.doMultiSearch(loggedInInfo, searchModes, keywords, limit, offset, providerNo, outOfDomain, active, inactive, null);
 
 	return demoList;
 }

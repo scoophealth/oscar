@@ -833,7 +833,7 @@ List<Demographic> doSearch(DemographicDao demographicDao,List<String> searchMode
 	boolean inactive = ("".equals(ptstatus)) || ( "inactive".equals(ptstatus) );
 	
 
-	demoList = demographicDao.doMultiSearch(searchModes, keywords, limit, offset, providerNo, outOfDomain, active, inactive);
+	demoList = demographicDao.doMultiSearch(searchModes, keywords, limit, offset, providerNo, outOfDomain, active, inactive, null);
 
 	
 	return demoList;

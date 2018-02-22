@@ -847,7 +847,7 @@ public class DemographicManager {
 	 * Redirecting the DemographicDao multi search through the manager. 
 	 */
 	public List<Demographic> doMultiSearch(LoggedInInfo loggedInInfo, List<String> searchTypes, List<String> searchStrs, 
-			int limit, int offset, String providerNo, boolean outOfDomain, boolean active, boolean inactive) {
+			int limit, int offset, String providerNo, boolean outOfDomain, boolean active, boolean inactive, String relatedTo) {
 		
 		checkPrivilege( loggedInInfo, SecurityInfoManager.READ );
 		
@@ -893,7 +893,7 @@ public class DemographicManager {
 		
 		logger.debug( "Adding Search Types " + searchTypes + " and Search Strings " + searchStrs + " to multisearch method.");
 		
-		return demographicDao.doMultiSearch( searchTypes, searchStrs, limit, offset, providerNo, outOfDomain, active, inactive);	
+		return demographicDao.doMultiSearch( searchTypes, searchStrs, limit, offset, providerNo, outOfDomain, active, inactive, relatedTo);	
 	}
 
 	/**
@@ -1011,6 +1011,11 @@ public class DemographicManager {
 		return (results);
 	}
 
+	
+	public List<DemographicContact> getHealthCareTeam(LoggedInInfo loggedInInfo, Integer demographicNo) {
+		return getHealthCareTeam(loggedInInfo,demographicNo,DemographicContact.CATEGORY_PROFESSIONAL);
+	}
+
 
 	/**
 	 * Returns a list of type DemographicContacts that are associated to this demographic number.
@@ -1020,13 +1025,13 @@ public class DemographicManager {
 	 * @param demographicNo
 	 * @return DemographicContacts
 	 */
-	public List<DemographicContact> getHealthCareTeam(LoggedInInfo loggedInInfo, Integer demographicNo) {
+	public List<DemographicContact> getHealthCareTeam(LoggedInInfo loggedInInfo, Integer demographicNo, String type) {
 		if(demographicNo == null) {
 			return null;
 		}
 
 		// only professional contacts here.
-		List<DemographicContact> demographicContacts = getDemographicContacts( loggedInInfo, demographicNo, DemographicContact.CATEGORY_PROFESSIONAL );
+		List<DemographicContact> demographicContacts = getDemographicContacts( loggedInInfo, demographicNo, type);
 		LogAction.addLogSynchronous(loggedInInfo,"DemographicManager.getHealthCareTeam", demographicNo+"");
 
 		return HealthCareTeamCreator.addContactDetailsToDemographicContact( demographicContacts );

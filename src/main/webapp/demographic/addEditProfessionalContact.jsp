@@ -24,6 +24,10 @@
 
 --%>
 
+<%@page import="java.util.ArrayList"%>
+<%@page import="org.oscarehr.common.model.ProfessionalContact"%>
+<%@page import="org.oscarehr.common.dao.ProgramContactTypeDao"%>
+<%@page import="org.oscarehr.common.model.ProgramContactType"%>
 <%@page import="oscar.OscarProperties"%>
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="java.util.Properties"%>
@@ -31,13 +35,39 @@
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="org.oscarehr.common.dao.ContactSpecialtyDao" %>
 <%@ page import="org.oscarehr.common.model.ContactSpecialty" %>
+<%@page import="org.oscarehr.PMmodule.model.ProgramProvider"%>
+<%@page import="org.oscarehr.managers.ProgramManager2"%>
+<%@page import="org.oscarehr.managers.ContactManager"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 
+
+<%
+ProgramContactTypeDao pcTypeDao = SpringUtils.getBean(ProgramContactTypeDao.class);
+ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+List<ProgramProvider> ppList = programManager2.getProgramDomain(loggedInInfo, loggedInInfo.getLoggedInProviderNo());
+List<ProgramProvider> ppList2 = new ArrayList<ProgramProvider>();
+
+//only programs with contact types set
+for(ProgramProvider p: ppList) {
+	 List<ProgramContactType> tmp = pcTypeDao.findByProgram(p.getProgramId().intValue());
+	 if(!tmp.isEmpty()) {
+		 ppList2.add(p);
+	 }
+}
+%>
 <html:html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.12.3.js"></script>
 <title>Add/Edit Professional Contact</title>
 <script type="text/javascript">
 
+<% if("saveProContact".equals(request.getParameter("method"))) { %>
+	$(document).ready(function(){
+		window.close();
+	});
+<% } %>
 //<!--
 		function setfocus() {
 			this.window.focus();
@@ -137,7 +167,8 @@
 				fieldobject = fields[i];
 				fieldname = fieldobject.id;
 				fieldvalue = fieldobject.value.trim();
-	
+				
+				
 				if( fieldname == "pcontact.lastName" && fieldvalue.length == 0 ) {
 					verified = false;
 					paintErrorField(fieldobject);	
@@ -148,11 +179,22 @@
 					paintErrorField(fieldobject);
 				} 
 
+				<%if("true".equals(OscarProperties.getInstance().getProperty("professionalContact.required.workPhone","true"))) {%>
 				if( fieldname == "pcontact.workPhone" && fieldvalue.length == 0 ) {
 					verified = false;
 					paintErrorField(fieldobject);
 				}
+				<% } %>
 				
+				<%if("true".equals(OscarProperties.getInstance().getProperty("professionalContact.required.program","false"))) {%>
+				if( fieldname == "pcontact.programNo") {
+					
+					if(fieldobject.options[fieldobject.selectedIndex].value == '0') {
+						verified = false;
+						paintErrorField(fieldobject);
+					}
+				}
+				<% } %>
 			}
 			
 			return verified;
@@ -344,6 +386,26 @@
 			<input type="text" name="pcontact.note" value="<c:out value="${pcontact.note}"/>" size="30">
 		</td>
 	</tr>	
+	<tr>
+		<td align="right"><b>Restrict to program</b></td>
+			<td>
+			 	<select name="pcontact.programNo" id="pcontact.programNo" title="Restrict to Program">
+	            		<option value="0"></option>
+	            		<%
+	            			for(ProgramProvider pp:ppList2) {
+	            				String selected = "";
+	            				ProfessionalContact cc = (ProfessionalContact)request.getAttribute("pontact");
+	            				if(pp.getProgramId() != null && cc != null && cc.getProgramNo() != null && pp.getProgramId().intValue() == cc.getProgramNo().intValue()) {
+	            					selected = " selected=\"selected\" ";
+	            				}
+	            		%>
+							<option value="<%=pp.getProgramId()%>" <%=selected %>><%=pp.getProgram().getName() %></option>
+						<%
+	            			}
+						%>
+	            	</select>
+			 </td>
+	</tr>
 	<tr>
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>

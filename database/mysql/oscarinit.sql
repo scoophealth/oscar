@@ -9187,6 +9187,7 @@ create table DemographicContact (
 	active tinyint(1),
 	mrp tinyint(1),
 	programNo int(10),
+	contactTypeId int,
 	KEY (`demographicNo`)
 );
 
@@ -9214,6 +9215,7 @@ cpso varchar(10),
 systemId varchar(30),
 deleted tinyint,
 updateDate timestamp not null,
+programNo int,
 KEY (`type`),
 KEY (`cpso`),
 KEY (`systemId`)

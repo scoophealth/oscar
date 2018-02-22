@@ -256,7 +256,7 @@ if(!mergedSearch) {
 		demoList = demographicDao.searchMergedDemographicByName(keyword, limit, offset, providerNo, outOfDomain);
 	}
 	else if(searchMode.equals("search_dob")) {
-		demoList = demographicDao.searchMergedDemographicByDOB(keyword, limit, offset, providerNo, outOfDomain);
+		demoList = demographicDao.searchMergedDemographicByDOB(keyword, limit, offset, providerNo, outOfDomain,null);
 	}
 	else if(searchMode.equals("search_phone")) {
 		demoList = demographicDao.searchMergedDemographicByPhone(keyword, limit, offset, providerNo, outOfDomain);

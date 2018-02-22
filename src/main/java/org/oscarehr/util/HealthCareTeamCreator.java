@@ -33,9 +33,13 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.ContactDao;
 import org.oscarehr.common.dao.ContactSpecialtyDao;
+import org.oscarehr.common.dao.ContactTypeDao;
+import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.Contact;
 import org.oscarehr.common.model.ContactSpecialty;
+import org.oscarehr.common.model.ContactType;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.ProfessionalContact;
 import org.oscarehr.common.model.ProfessionalSpecialist;
@@ -85,6 +89,7 @@ public class HealthCareTeamCreator {
 		ContactSpecialtyDao contactSpecialtyDao = SpringUtils.getBean(ContactSpecialtyDao.class);
 		ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
 		ProfessionalSpecialistDao professionalSpecialistDao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
+		DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
 		String demographicContactRole = ( demographicContact.getRole() ).trim();
 		Integer roleid = null;
 		
@@ -98,7 +103,22 @@ public class HealthCareTeamCreator {
 			specialty = contactSpecialtyDao.find( roleid );
 			demographicContact.setRole( specialty.getSpecialty() );
 		}
+		
+		//give preference to this.
+		if(demographicContact.getContactTypeId() != null && demographicContact.getContactTypeId().intValue() != 0) {
+			ContactTypeDao dao = SpringUtils.getBean(ContactTypeDao.class);
+			ContactType ct = dao.find(demographicContact.getContactTypeId());
+			if(ct != null) {
+				demographicContact.setRole(ct.getName());
+			}
+		}
+		
 
+		if( demographicContact.getType() == DemographicContact.TYPE_DEMOGRAPHIC ) {
+			Demographic demographic = demographicDao.getDemographic(demographicContact.getContactId());
+			demographicContact.setContactName(demographic.getFormattedName());
+		}
+		
 		if( demographicContact.getType() == DemographicContact.TYPE_PROVIDER ) {
 			provider = providerDao.getProvider( demographicContact.getContactId() );
 			if(provider != null){
