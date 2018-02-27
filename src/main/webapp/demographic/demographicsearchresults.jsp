@@ -650,6 +650,7 @@ jQuery(document).ready(function() {
 
 			if (head != null && !head.equals(dem_no)) {
 				//skip non head records
+				nItems++;
 				continue;
 			}
 			
