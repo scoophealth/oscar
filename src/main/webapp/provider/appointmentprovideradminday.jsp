@@ -240,6 +240,12 @@ private HashMap<String,String> CurrentSiteMap = new HashMap<String,String>();%>
 <jsp:useBean id="dateTimeCodeBean" class="java.util.Hashtable" scope="page" />
 <%
 	Properties oscarVariables = OscarProperties.getInstance();
+	String econsultUrl = oscarVariables.getProperty("backendEconsultUrl");
+	
+	//Gets the request URL
+	StringBuffer oscarUrl = request.getRequestURL();
+	//Sets the length of the URL, found by subtracting the length of the servlet path from the length of the full URL, that way it only gets up to the context path
+	oscarUrl.setLength(oscarUrl.length() - request.getServletPath().length());
 %>
 
 <!-- Struts for i18n -->
@@ -877,6 +883,10 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 </li>
 </security:oscarSec>
 </caisi:isModuleLoad>
+ <li id="econ">
+	<a href="#" onclick ="popupOscarRx(625, 1024, '../oscarEncounter/econsult.do')" title="eConsult">
+ 	<span>eConsult</span></a>
+</li>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_pref" rights="r">
 <li>    <!-- remove this and let providerpreference check -->
     <caisi:isModuleLoad moduleName="ticklerplus">
@@ -1076,8 +1086,13 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 
 </div>
 	<%}%>
-
-	| <a href="../logout.jsp"><bean:message key="global.btnLogout"/>&nbsp;</a>
+	
+		<% if (request.getSession().getAttribute("oneIdEmail") != null && !request.getSession().getAttribute("oneIdEmail").equals("")) { %>
+				| <a href="<%=econsultUrl%>/SAML2/logout?oscarReturnURL=<%=URLEncoder.encode(oscarUrl + "/logout.jsp", "UTF-8")%>">Global Logout</a>
+ 		<% }
+		   else { %>
+				| <a href="../logout.jsp"><bean:message key="global.btnLogout"/>&nbsp;</a>
+		<% } %>
 
 </td>
 

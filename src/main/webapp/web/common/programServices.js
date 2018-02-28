@@ -32,10 +32,10 @@ angular.module("programServices", [])
 		
         getPrograms: function () {
             var deferred = $q.defer();
-            $http.get(this.apiPath+'program/programList',this.configHeadersWithCache).success(function(data){
-            	console.log(data);
-            	deferred.resolve(data.content);
-            }).error(function(){
+            $http.get(this.apiPath+'program/programList',this.configHeadersWithCache).then(function (response){
+            	console.log(response.data);
+            	deferred.resolve(response.data.content);
+            },function(){
             	console.log("error fetching program list");
             	deferred.reject("An error occured while fetching program list");
             });

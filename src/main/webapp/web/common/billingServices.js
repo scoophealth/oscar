@@ -31,10 +31,10 @@ angular.module("billingServices", [])
 		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
 		getUniqueServiceTypes: function () {
 			var deferred = $q.defer();
-			$http.get(this.apiPath+'billing/uniqueServiceTypes',this.configHeadersWithCache).success(function(data){
-				console.log(data);
-				deferred.resolve(data.content);
-			}).error(function(){
+			$http.get(this.apiPath+'billing/uniqueServiceTypes',this.configHeadersWithCache).then(function(response){
+				console.log(response);
+				deferred.resolve(response.data.content);
+			},function(){
 				console.log("error fetching billing service types");
 				deferred.reject("An error occured while fetching billing service types");
 			});
@@ -43,9 +43,9 @@ angular.module("billingServices", [])
 		
 		getBillingRegion: function () {
 			var deferred = $q.defer();
-			$http.get(this.apiPath+'billing/billingRegion',this.configHeadersWithCache).success(function (data) {
-				deferred.resolve(data);
-			}).error(function (data, status, headers, config) {
+			$http.get(this.apiPath+'billing/billingRegion',this.configHeadersWithCache).then(function(response){
+				deferred.resolve(response.data);
+			},function (data, status, headers, config) {
 				deferred.reject("An error occured while setting bilingRegion");
 			});
 			return deferred.promise;
@@ -53,9 +53,9 @@ angular.module("billingServices", [])
 		
 		getDefaultView: function () {
 			var deferred = $q.defer();
-			$http.get(this.apiPath+'billing/defaultView',this.configHeadersWithCache).success(function (data) {
-				deferred.resolve(data);
-			}).error(function (data, status, headers, config) {
+			$http.get(this.apiPath+'billing/defaultView',this.configHeadersWithCache).then(function(response){
+				deferred.resolve(response.data);
+			},function (data, status, headers, config) {
 				deferred.reject("An error occured while setting defaultView");
 			});
 			return deferred.promise;

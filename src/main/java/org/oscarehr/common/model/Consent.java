@@ -55,7 +55,7 @@ public class Consent extends AbstractModel<Integer> {
 	private Integer consentTypeId;
 	
 	private boolean explicit;
-	private boolean optout;
+	private Boolean optout;
 	
 	@Column(name = "last_entered_by")
 	private String lastEnteredBy;
@@ -79,10 +79,6 @@ public class Consent extends AbstractModel<Integer> {
 	@Override
 	public Integer getId() {
 		return this.id;
-	}
-	
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public Integer getDemographicNo() {
@@ -109,7 +105,13 @@ public class Consent extends AbstractModel<Integer> {
 		this.explicit = explicit;
 	}
 
-	public boolean isOptout() {
+	public Boolean isOptout()
+	{
+		return optout != null && optout;
+	}
+
+	public Boolean getOptout()
+	{
 		return optout;
 	}
 
@@ -121,7 +123,7 @@ public class Consent extends AbstractModel<Integer> {
 		this.lastEnteredBy = lastEnteredBy;
 	}
 
-	public void setOptout(boolean optout) {
+	public void setOptout(Boolean optout) {
 		this.optout = optout;
 	}
 

@@ -56,7 +56,7 @@
 		</form>
 		<div class="list-group">		
 			<a  ng-repeat="report in getReports() | filter: reportFilter "
-			 class="list-group-item default" ng-click="selectReport(report)">{{report.name}}</a>
+			 class="list-group-item default hand-hover" ng-click="selectReport(report)">{{report.name}}</a>
 		</div>
 	</div>
 

@@ -99,6 +99,17 @@ public final class LoginCheckLogin {
 		return bBlock;
 	}
 
+	/**
+	 * Authenticates based on an SSO Key
+	 * @param ssoKey - The ssoKey to be matched to a provider
+	 * @return String array of the provider information
+	 */
+	public String[] ssoAuth(String ssoKey) {
+		lb = new LoginCheckLoginBean();
+		lb.ssoIni(ssoKey);
+		return lb.ssoAuthenticate();
+	}
+	
 	// authenticate is used to check password
 	public String[] auth(String user_name, String password, String pin, String ip) {
 		lb = new LoginCheckLoginBean();

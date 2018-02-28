@@ -980,7 +980,8 @@ function navBarLoader() {
                   labs:         "<c:out value="${ctx}"/>/oscarEncounter/displayLabs.do?hC=A0509C", <%/* 550066   */%>
                   msgs:         "<c:out value="${ctx}"/>/oscarEncounter/displayMessages.do?hC=DDDD00", <% /* FF33CC */ %>
                   measurements: "<c:out value="${ctx}"/>/oscarEncounter/displayMeasurements.do?hC=344887",
-                  consultation: "<c:out value="${ctx}"/>/oscarEncounter/displayConsultation.do?hC="
+                  consultation: "<c:out value="${ctx}"/>/oscarEncounter/displayConsultation.do?hC=",
+                  eConsult:		"<c:out value="${ctx}"/>/oscarEncounter/displayEconsultation.do"
               };
 
           var URLs = new Array();

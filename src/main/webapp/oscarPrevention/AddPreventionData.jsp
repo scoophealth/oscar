@@ -705,7 +705,7 @@ $(document).ready(function(){
              				}
                         
              			 } else {
-              				%>  <label for="name">Name:</label> <input type="text" id="name" name="name" value="<%=str((extraData.get("name")),"")%>"/> <br/>
+             			 	%>  <label for="name">Name:</label> <input type="text" id="name" name="name" value="<%=str((extraData.get("name")),prevention)%>"/> <br/>
              			 
              			<% } %> 
              			 

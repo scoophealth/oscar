@@ -273,11 +273,11 @@ public class MSPReconcile {
 			Vector<String> exp = new Vector<String>();
 			
 			if( rejectedArray.length > 0 ) {
-				tc = (TeleplanC12) rejectedArray[1];
+				tc = (TeleplanC12) rejectedArray[0];
 			}
 			
 			if( rejectedArray.length > 1 ) {
-				ts = (TeleplanS21) rejectedArray[2];
+				ts = (TeleplanS21) rejectedArray[1];
 			}
 
 			if( tc != null ) {				

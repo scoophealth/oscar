@@ -85,7 +85,7 @@ public class DrilldownQueryHandlerTest {
 		
 		columns = indicatorTemplateXML.getDrilldownDisplayColumns();
 		ranges = indicatorTemplateXML.getDrilldownRanges();
-		parameters = indicatorTemplateXML.getDrilldownParameters();
+		parameters = indicatorTemplateXML.getDrilldownParameters("null");
 		
 		drilldownQueryHandler = new DrilldownQueryHandler();
 		drilldownQueryHandler.setColumns(columns);

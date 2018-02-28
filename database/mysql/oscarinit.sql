@@ -7193,6 +7193,7 @@ CREATE TABLE provider (
   `lastUpdateUser` varchar(6) default NULL,
   `lastUpdateDate` datetime not null,
   `signed_confidentiality` datetime,
+  `practitionerNoType` varchar(255),
   PRIMARY KEY  (provider_no)
 );
 
@@ -7499,6 +7500,9 @@ CREATE TABLE security (
   pinUpdateDate datetime,
   lastUpdateUser varchar(20),
   lastUpdateDate timestamp,
+  oneIdKey VARCHAR(255),
+  oneIdEmail VARCHAR(255),
+  delegateOneIdEmail VARCHAR(255),
   PRIMARY KEY  (security_no),
   UNIQUE user_name (user_name)
 ) ;
@@ -8928,7 +8932,8 @@ CREATE TABLE providerArchive (
   `title` varchar(20),
   `lastUpdateUser` varchar(6),
   `lastUpdateDate` date,
-  `signed_confidentiality` date
+  `signed_confidentiality` date,
+  `practitionerNoType` varchar(255)
 );
 
 CREATE TABLE appointmentArchive (
@@ -12152,6 +12157,9 @@ CREATE TABLE `indicatorTemplate` (
   `active` bit(1),
   `locked` bit(1),
   `shared` tinyint(1),
+  `metricSetName` varchar(255),
+  `metricLabel` varchar(255),
+
   PRIMARY KEY (`id`)
 );
 

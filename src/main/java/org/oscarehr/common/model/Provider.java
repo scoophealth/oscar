@@ -60,6 +60,7 @@ public class Provider implements Serializable, Comparable<Provider>{
 	private String rmaNo;
     private Date SignedConfidentiality;
     private String practitionerNo;
+    private String practitionerNoType;
     private String email;
     private String title;
     private String lastUpdateUser;
@@ -72,6 +73,15 @@ public class Provider implements Serializable, Comparable<Provider>{
 
 	public void setPractitionerNo(String practitionerNo) {
 		this.practitionerNo = practitionerNo;
+	}
+
+	
+	public String getPractitionerNoType() {
+		return practitionerNoType;
+	}
+
+	public void setPractitionerNoType(String practitionerNoType) {
+		this.practitionerNoType = practitionerNoType;
 	}
 
 	// constructors
@@ -119,6 +129,7 @@ public class Provider implements Serializable, Comparable<Provider>{
 		rmaNo = provider.rmaNo;
 		SignedConfidentiality = provider.SignedConfidentiality;
 		practitionerNo = provider.practitionerNo;
+		practitionerNoType = provider.practitionerNoType;
 		email = provider.email;
 		title = provider.title;
 		lastUpdateUser = provider.lastUpdateUser;

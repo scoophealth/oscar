@@ -53,6 +53,7 @@
     boolean isSiteAccessPrivacy=false;
     boolean isTeamAccessPrivacy=false; 
     
+    boolean grantOnlyCurProviderScheduleData = false;
 %>
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false">
 	<%
@@ -67,6 +68,11 @@
 	%>
 </security:oscarSec>
 
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.schedule.curprovider_only" rights="r" reverse="<%=false%>">
+	<%
+		grantOnlyCurProviderScheduleData = true;
+	%>
+</security:oscarSec>
 
 <html:html locale="true">
 <head>
@@ -166,7 +172,25 @@ function go() {
 						
 						<%
 							ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
-							List<Provider> providers = providerDao.getActiveProviders();
+
+							List<Provider> providers = null;
+
+							if (grantOnlyCurProviderScheduleData)
+							{
+								//only the allow the user to manipulate their own schedule
+								providers = new ArrayList<Provider>();
+
+								Provider curProvider = providerDao.getProvider(curProvider_no);
+
+								if (curProvider != null)
+								{
+									providers.add(curProvider);
+								}
+							}
+							else
+							{
+								providers = providerDao.getActiveProviders();
+							}
 							//TODO: filter by site/team if necessary
 							
 							for(Provider p:providers) {
@@ -188,7 +212,7 @@ function go() {
 			<tr>
 				<td>&nbsp;</td>
 			</tr>
-		<%if (!( isSiteAccessPrivacy  || isTeamAccessPrivacy )) {%>
+		<%if (!( isSiteAccessPrivacy  || isTeamAccessPrivacy || grantOnlyCurProviderScheduleData)) {%>
 			<tr>
 				<td nowrap bgcolor="#CCFFCC">&nbsp; <a HREF="#"
 					ONCLICK="popupPage(440,530,'scheduleholidaysetting.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>')"

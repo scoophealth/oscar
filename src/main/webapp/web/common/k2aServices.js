@@ -36,9 +36,9 @@ angular.module("k2aServices", [])
                 url: this.apiPath+'/rssproxy/rss?key=k2a&startPoint=' + startPoint + '&numberOfRows=' + numberOfRows,
                 method: "GET",
                 headers: this.configHeaders,
-              }).success(function (data) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers) {
+              }).then(function(response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers) {
                 	deferred.reject("An error occured while getting k2a content");
                 });
            return deferred.promise;
@@ -49,19 +49,19 @@ angular.module("k2aServices", [])
                 url: this.apiPath+'/app/K2AActive',
                 method: "GET",
                 headers: this.configHeaders,
-              }).success(function (data) {
-            	  deferred.resolve(data);
-                }).error(function (data, status, headers) {
+              }).then(function(response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers) {
                 	deferred.reject("An error occured while getting k2a content");
                 });
            return deferred.promise;
         },
         initK2A: function(clinicName){
            	var deferred = $q.defer();
-           	 $http.post(this.apiPath+'/app/K2AInit',clinicName,this.configHeaders).success(function(data){
-               	console.log("returned from /K2AInit",data);
-               	deferred.resolve(data);
-               }).error(function(){
+           	 $http.post(this.apiPath+'/app/K2AInit',clinicName,this.configHeaders).then(function(response){
+               	console.log("returned from /K2AInit",response.data);
+               	deferred.resolve(response.data);
+               },function(){
                	console.log("error initializing k2a");
                	deferred.reject("An error occured while trying to initialize k2a");
                });
@@ -71,10 +71,10 @@ angular.module("k2aServices", [])
 	postK2AComment: function(post) {
 		var deferred = $q.defer();
 		var commentItem = {post};
-		$http.post(this.apiPath+'/app/comment',commentItem).success(function(data){
-		console.log("return from /comment",data);
-		deferred.resolve(data);
-		}).error(function(){
+		$http.post(this.apiPath+'/app/comment',commentItem).then(function(response){
+		console.log("return from /comment",response.data);
+		deferred.resolve(response.data);
+		},function(){
 		  console.log("error posting comment to k2a");
 		  deferred.reject("An error occured while trying to post a comment to k2a");
 		});
@@ -82,10 +82,10 @@ angular.module("k2aServices", [])
 	},
 	removeK2AComment: function(commentId) {
 		var deferred = $q.defer();
-		$http.delete(this.apiPath+'/app/comment/' + commentId).success(function(data){
-		console.log("return from /comment/" + commentId,data);
-		deferred.resolve(data);
-		}).error(function(){
+		$http.delete(this.apiPath+'/app/comment/' + commentId).then(function(response){
+		console.log("return from /comment/" + commentId,response.data);
+		deferred.resolve(response.data);
+		},function(){
 		  console.log("error removing comment from k2a");
 		  deferred.reject("An error occured while trying to remove a comment from k2a");
 		});
@@ -93,10 +93,10 @@ angular.module("k2aServices", [])
 	},
 	preventionRulesList: function() {
 		var deferred = $q.defer();
-		$http.get(this.apiPath+'/resources/preventionRulesList').success(function(data){
-		console.log("return from /preventionRulesList",data);
-		deferred.resolve(data);
-		}).error(function(){
+		$http.get(this.apiPath+'/resources/preventionRulesList').then(function(response){
+		console.log("return from /preventionRulesList",response.data);
+		deferred.resolve(response.data);
+		},function(){
 		  console.log("error getting preventionRulesList");
 		  deferred.reject("An error occured while trying to remove a comment from k2a");
 		});
@@ -104,10 +104,10 @@ angular.module("k2aServices", [])
 	},loadPreventionRuleById: function(id) {
 		var deferred = $q.defer();
 		
-		$http.post(this.apiPath+'/resources/loadPreventionRulesById/'+id.id,id,this.configHeaders).success(function(data){
-		console.log("return from /loadPreventionRulesById",data);
-		deferred.resolve(data);
-		}).error(function(){
+		$http.post(this.apiPath+'/resources/loadPreventionRulesById/'+id.id,id,this.configHeaders).then(function(response){
+		console.log("return from /loadPreventionRulesById",response.data);
+		deferred.resolve(response.data);
+		},function(){
 		  console.log("error loading loadPreventionRulesById from k2a");
 		  deferred.reject("An error occured while trying to loadPreventionRulesById");
 		});
@@ -115,10 +115,10 @@ angular.module("k2aServices", [])
 	},
 	getCurrentPreventionRulesVersion: function() {
 		var deferred = $q.defer();
-		$http.get(this.apiPath+'/resources/currentPreventionRulesVersion').success(function(data){
-		console.log("return from /getCurrentPreventionRulesVersion",data);
-		deferred.resolve(data);
-		}).error(function(){
+		$http.get(this.apiPath+'/resources/currentPreventionRulesVersion').then(function(response){
+		console.log("return from /getCurrentPreventionRulesVersion",response.data);
+		deferred.resolve(response.data);
+		},function(){
 		  console.log("error getCurrentPreventionRulesVersion");
 		  deferred.reject("An error occured while trying to getCurrentPreventionRulesVersion");
 		});
@@ -127,10 +127,10 @@ angular.module("k2aServices", [])
 	
 	luCodesList: function() {
 		var deferred = $q.defer();
-		$http.get(this.apiPath+'/resources/luCodesList').success(function(data){
-		console.log("return from /luCodesList",data);
-		deferred.resolve(data);
-		}).error(function(){
+		$http.get(this.apiPath+'/resources/luCodesList').then(function(response){
+		console.log("return from /luCodesList",response.data);
+		deferred.resolve(response.data);
+		},function(){
 		  console.log("error getting luCodesList");
 		  deferred.reject("An error occured while trying to remove a comment from k2a");
 		});
@@ -139,10 +139,10 @@ angular.module("k2aServices", [])
 	loadLuCodesById: function(id) {
 		var deferred = $q.defer();
 		
-		$http.post(this.apiPath+'/resources/loadLuCodesById/'+id.id,id,this.configHeaders).success(function(data){
-		console.log("return from /loadLuCodesById",data);
-		deferred.resolve(data);
-		}).error(function(){
+		$http.post(this.apiPath+'/resources/loadLuCodesById/'+id.id,id,this.configHeaders).then(function(response){
+		console.log("return from /loadLuCodesById",response.data);
+		deferred.resolve(response.data);
+		},function(){
 		  console.log("error loading loadLuCodesById from k2a");
 		  deferred.reject("An error occured while trying to loadLuCodesById");
 		});
@@ -150,10 +150,10 @@ angular.module("k2aServices", [])
 	},
 	currentLuCodesVersion: function() {
 		var deferred = $q.defer();
-		$http.get(this.apiPath+'/resources/currentLuCodesVersion').success(function(data){
-		console.log("return from /currentLuCodesVersion",data);
-		deferred.resolve(data);
-		}).error(function(){
+		$http.get(this.apiPath+'/resources/currentLuCodesVersion').then(function(response){
+		console.log("return from /currentLuCodesVersion",response.data);
+		deferred.resolve(response.data);
+		},function(){
 		  console.log("error currentLuCodesVersion");
 		  deferred.reject("An error occured while trying to currentLuCodesVersion");
 		});
@@ -161,9 +161,9 @@ angular.module("k2aServices", [])
 	},
 	getNotifications: function() {
 		var deferred = $q.defer();
-		$http.get(this.apiPath+'/resources/notifications').success(function(data){
-		deferred.resolve(data);
-		}).error(function(){
+		$http.get(this.apiPath+'/resources/notifications').then(function(response){
+		deferred.resolve(response.data);
+		},function(){
 		  deferred.reject("An error occured while trying to getCurrentPreventionRulesVersion");
 		});
 	      return deferred.promise;
@@ -171,18 +171,18 @@ angular.module("k2aServices", [])
 	getMoreNotification: function(id) {
 		var deferred = $q.defer();
 		
-		$http.post(this.apiPath+'/resources/notifications/readmore',id,this.configHeaders).success(function(data){
-		deferred.resolve(data);
-		}).error(function(){
+		$http.post(this.apiPath+'/resources/notifications/readmore',id,this.configHeaders).then(function(response){
+		deferred.resolve(response.data);
+		},function(){
 		  deferred.reject("An error occured while trying to /resources/notifications/readmore");
 		});
 	      return deferred.promise;
 	},
 	ackNotification: function(id) {
 		var deferred = $q.defer();
-		$http.post(this.apiPath+'/resources/notifications/ack',id,this.configHeaders).success(function(data){
-		deferred.resolve(data);
-		}).error(function(){
+		$http.post(this.apiPath+'/resources/notifications/ack',id,this.configHeaders).then(function(response){
+		deferred.resolve(response.data);
+		},function(){
 		  deferred.reject("An error occured while trying to /resources/notifications/ack");
 		});
 	      return deferred.promise;
