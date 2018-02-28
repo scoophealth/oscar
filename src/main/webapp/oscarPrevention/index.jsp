@@ -122,6 +122,21 @@ if(!authed) {
 	href="../share/css/OscarStandardLayout.css" />
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"></script>
+
+<script type="text/javascript" src="../share/yui/js/yahoo-dom-event.js"></script>
+<script type="text/javascript" src="../share/yui/js/connection-min.js"></script>
+<script type="text/javascript" src="../share/yui/js/animation-min.js"></script>
+<script type="text/javascript" src="../share/yui/js/datasource-min.js"></script>
+<script type="text/javascript" src="../share/yui/js/autocomplete-min.js"></script>
+
+
+<link rel="stylesheet" type="text/css" href="../share/yui/css/fonts-min.css"/>
+<link rel="stylesheet" type="text/css" href="../share/yui/css/autocomplete.css"/>
+
+<link rel="stylesheet" type="text/css" media="all" href="../share/css/demographicProviderAutocomplete.css"  />
+
+
 
 <style type="text/css">
 div.ImmSet {
@@ -237,6 +252,13 @@ function sendToPhr(button) {
     button.form.action = "<%=request.getContextPath()%>/phr/SendToPhrPreview.jsp"
     button.form.submit();
     button.form.action = oldAction;
+}
+
+function addByLot() {
+	var lotNbr = $("#lotNumberToAdd").val();
+	
+	popup(465,635,'AddPreventionData.jsp?demographic_no=<%=demographic_no%>&lotNumber=' + lotNbr,'addPreventionData' + <%=new java.util.Random().nextInt(10000) + 1%> );
+	
 }
 </script>
 
@@ -464,11 +486,12 @@ text-align:left;
 			<%for (int i = 0 ; i < prevList.size(); i++){
 				HashMap<String,String> h = prevList.get(i);
                 String prevName = h.get("name");
+                String snomedId = h.get("snomedConceptCode") != null ? h.get("snomedConceptCode") : null;
                            
 	            if(!preventionManager.hideItem(prevName)){%>
 					<li style="margin-top: 2px;"><a
 						href="javascript: function myFunction() {return false; }"
-						onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
+						onclick="javascript:popup(465,635,'AddPreventionData.jsp?4=4&<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
 					<%=prevName%> </a></li>
 				<%
 				}
@@ -542,8 +565,19 @@ text-align:left;
 			<% } %>
 		</ul>
 		</div>
-		<% }
-	
+		<% } %>
+
+		<br/>
+		<table>
+			<tr>
+<!-- 
+				<td style="font-size:12pt">Add by Lot#</td><td><input type="text" id="lotNumberToAdd" name="lotNumberToAdd" size="20"/><input type="button" value="Add" onClick="addByLot()"/></td>
+-->
+				<td style="font-size:12pt">Add by Brand/Generic/Lot#</td><td><input type="text" id="lotNumberToAdd2" name="lotNumberToAdd2" size="20"/><div id="lotNumberToAdd2_choices" class="autocomplete"></div></td>
+			</tr>
+		</table>
+		
+	<%
 	 String[] ColourCodesArray=new String[7];
 	 ColourCodesArray[1]="#F0F0E7"; //very light grey - completed or normal
 	 ColourCodesArray[2]="#FFDDDD"; //light pink - Refused
@@ -579,6 +613,8 @@ text-align:left;
 		out.print(legend);
 %>
 
+
+
 		<div>
 		<input type="hidden" name="demographic_no" value="<%=demographic_no%>">
 		<input type="hidden" name="hin" value="<%=hin%>"/>
@@ -603,17 +639,22 @@ text-align:left;
 
 		<div class="preventionSection">
 		<%
+		 String snomedId = h.get("snomedConceptCode") != null ? h.get("snomedConceptCode") : null;
+         
                     if( alist.size() > 0 ) {
+                 
                     %>
 		<div style="position: relative; float: left; padding-right: 10px;">
 		<input style="display: none;" type="checkbox" name="printHP"
-			value="<%=i%>" checked /> <%}else {%>
+			value="<%=i%>" checked /> <%}else {
+				 
+			%>
 		<div style="position: relative; float: left; padding-right: 25px;">
 		<span style="display: none;" name="printSp">&nbsp;</span> <%}%>
 		</div>
 		<div class="headPrevention">
 		<p><a href="javascript: function myFunction() {return false; }"
-			onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs( ( h.get("name")).hashCode() ) %>')">
+			onclick="javascript:popup(465,635,'AddPreventionData.jsp?1=1&<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs( ( h.get("name")).hashCode() ) %>')">
 		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%></span>
 		</a>
 		<br />
@@ -660,16 +701,20 @@ text-align:left;
 		<div class="preventionSection">
 		<%
                             if( alist.size() > 0 ) {
+                            	 
                             %>
 		<div style="position: relative; float: left; padding-right: 10px;">
 		<input style="display: none;" type="checkbox" name="printHP"
 			value="<%=i%>" checked /> <%}else {%>
 		<div style="position: relative; float: left; padding-right: 25px;">
-		<span style="display: none;" name="printSp">&nbsp;</span> <%}%>
+		<span style="display: none;" name="printSp">&nbsp;</span> <%}
+		 String snomedId = h.get("snomedConceptCode") != null ? h.get("snomedConceptCode") : null;
+         
+		%>
 		</div>
 		<div class="headPrevention">
 		<p><a href="javascript: function myFunction() {return false; }"
-			onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs( ( h.get("name")).hashCode() ) %>')">
+			onclick="javascript:popup(465,635,'AddPreventionData.jsp?2=2&<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs( ( h.get("name")).hashCode() ) %>')">
 		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%></span>
 		</a>
 		<br />
@@ -726,7 +771,7 @@ text-align:left;
 		<div class="preventionSection">
 		<div class="headPrevention">
 		<p><a href="javascript: function myFunction() {return false; }"
-			onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(h.get("name").hashCode())%>')">
+			onclick="javascript:popup(465,635,'AddPreventionData.jsp?3=3&prevention=<%= java.net.URLEncoder.encode(h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(h.get("name").hashCode())%>')">
 		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%></span>
 		</a>  <br />
 		</p>
@@ -810,6 +855,66 @@ text-align:left;
 </table>
 
 <script type="text/javascript" src="../share/javascript/boxover.js"></script>
+
+<script type="text/javascript">
+
+//basic..just makes the brand name ones bold
+var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
+	var output = '';
+	
+	if(!oResultData[1]) {
+		output = '<b>' + oResultData[0] + '</b>';
+	} else {
+		output = oResultData[0];
+	}
+   	return output;
+}
+
+YAHOO.example.BasicRemote = function() {
+    if($("lotNumberToAdd2") && $("lotNumberToAdd2_choices")){
+          var url = "../cvc.do?method=query";
+          var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ignoreStaleResponses'});
+          oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
+          oDS.responseSchema = {
+              resultsList : "results",
+              fields : ["name","generic","genericSnomedId","snomedId","lotNumber"]
+          };
+          oDS.maxCacheEntries = 0;
+          var oAC = new YAHOO.widget.AutoComplete("lotNumberToAdd2","lotNumberToAdd2_choices",oDS);
+          oAC.queryMatchSubset = true;
+          oAC.minQueryLength = 3;
+          oAC.maxResultsDisplayed = 25;
+          oAC.formatResult = resultFormatter2;
+          oAC.queryMatchContains = true;
+          oAC.itemSelectEvent.subscribe(function(type, args) {
+        	  var myAC = args[0]; // reference back to the AC instance 
+        	  var elLI = args[1]; // reference to the selected LI element 
+        	  var oData = args[2]; // object literal of selected item's result data 
+        	  
+        	  console.log('selected');
+        	  
+        	  console.log('args:' + oData[0] + ',' + oData[1] + ',' + oData[2] + ',' + oData[3] + ',' + oData[4]);
+	
+        	  //We need to load AddPreventionData with possible brand name, and possible lotnumber/exp.
+        	  if(oData[4].length > 0) {
+        		popup(465,635,'AddPreventionData.jsp?demographic_no=<%=demographic_no%>&lotNumber=' + oData[4],'addPreventionData' + <%=new java.util.Random().nextInt(10000) + 1%> );
+        		document.getElementById('lotNumberToAdd2').value = '';
+        	  } else {
+        		 popup(465,635,'AddPreventionData.jsp?search=true&demographic_no=<%=demographic_no%>&snomedId=' + oData[2] + '&brandSnomedId=' + oData[3],'addPreventionData' + <%=new java.util.Random().nextInt(10000) + 1%> );
+          		document.getElementById('lotNumberToAdd2').value = '';  
+        	  }
+
+           	
+          });
+
+           return {
+               oDS: oDS,
+               oAC: oAC
+           };
+       }
+       }();
+
+</script>
 </body>
 </html:html> 
 <%!

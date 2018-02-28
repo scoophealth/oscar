@@ -2922,6 +2922,9 @@
 		</action>
 		<action input="/billing/CA/ON/billingON3rdInv.jsp" name="FrmForm" path="/billing/ca/on/DisplayInvoiceLogo" scope="request" type="org.oscarehr.billing.CA.ON.util.DisplayInvoiceLogo"></action>
 
+		<action path="/cvc" type="org.oscarehr.integration.born.CVCTesterAction" parameter="method">
+		</action>
+
 		<action path="/admin/AuditLogPurge" type="org.oscarehr.admin.web.AuditLogPurgeAction" parameter="method">
 			<forward name="success" path="/admin/auditLogPurge.jsp" />
 		</action>

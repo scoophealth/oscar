@@ -7747,13 +7747,14 @@ CREATE TABLE preventions (
   prevention_date datetime default NULL,
   provider_no varchar(6) NOT NULL default '',
   provider_name varchar(255) default NULL,
-  prevention_type varchar(20) default NULL,
+  prevention_type varchar(255) default NULL,
   deleted char(1) default '0',
   refused char(1) default '0',
   next_date date default NULL,
   never char(1) default '0',
   creator int(10) default NULL,
   lastUpdateDate datetime NOT NULL,
+  snomedId varchar(255),
   INDEX `preventions_demographic_no` (`demographic_no`),
   INDEX `preventions_provider_no` (provider_no(6)),
   INDEX `preventions_prevention_type` (prevention_type(10)),
@@ -12177,6 +12178,56 @@ CREATE TABLE `onCallClinicDates` (
    `name` varchar(256),
    `location` varchar(256),
    `color` varchar(7),
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE CVCMedication (
+  `id` int(11) NOT NULL auto_increment,
+  `versionId` integer,
+  `din` integer,
+  `dinDisplayName` varchar(255),
+  `snomedCode` varchar(255),
+  `snomedDisplay` varchar(255),
+  `status` varchar(40),
+  `isBrand` tinyint(1),
+  `manufacturerId` integer,
+  `manufacturerDisplay` varchar(255),
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE CVCMedicationGTIN (
+  `id` int(11) NOT NULL auto_increment,
+  `cvcMedicationId` integer NOT NULL,
+  `gtin` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE CVCMedicationLotNumber (
+  `id` int(11) NOT NULL auto_increment,
+  `cvcMedicationId` integer NOT NULL,
+  `lotNumber` varchar(255) NOT NULL,
+  `expiryDate` date,
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE CVCImmunization (
+  `id` int(11) NOT NULL auto_increment,
+  `versionId` integer,
+  `snomedConceptId` varchar(255),
+  `displayName` varchar(255),
+  `picklistName` varchar(255),
+  `generic` tinyint(1),
+  `prevalence` int,
+  `parentConceptId` varchar(255),
+  `ispa` tinyint(1),
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `CVCMapping` (
+   `id` int(10) NOT NULL auto_increment,
+   `oscarName` varchar(255),
+   `cvcSnomedId` varchar(255),
+   `preferCVC` tinyint(1),
   PRIMARY KEY (`id`)
 );
 
