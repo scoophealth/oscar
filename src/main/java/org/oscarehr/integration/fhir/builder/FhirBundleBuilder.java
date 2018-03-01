@@ -234,7 +234,7 @@ public class FhirBundleBuilder extends FhirMessageBuilder {
 
 	@Override
 	protected void addResource( BaseResource resource ) {
-		( (Bundle) getWrapper() ).addEntry().setResource( (Resource) resource );
+		getBundle().addEntry().setResource( (Resource) resource );
 	}
 
 	@Override

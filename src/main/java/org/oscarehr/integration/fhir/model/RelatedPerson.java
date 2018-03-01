@@ -38,6 +38,7 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.oscarehr.common.model.Contact;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalContact;
+import org.oscarehr.integration.fhir.interfaces.ResourceModifierFilterInterface;
 import org.oscarehr.integration.fhir.utils.MiscUtils;
 
 
@@ -147,7 +148,7 @@ public class RelatedPerson extends OscarFhirResource< org.hl7.fhir.dstu3.model.R
 	}
 
 	@Override
-	protected void mapAttributes(org.hl7.fhir.dstu3.model.RelatedPerson relatedPerson) {
+	protected void mapAttributes(org.hl7.fhir.dstu3.model.RelatedPerson relatedPerson, ResourceModifierFilterInterface filter) {
 		setName( relatedPerson );		
 		setAddress( relatedPerson );
 		setTelecom( relatedPerson );

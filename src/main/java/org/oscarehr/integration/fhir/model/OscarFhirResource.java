@@ -29,14 +29,13 @@ import java.util.UUID;
 import org.hl7.fhir.dstu3.model.Enumerations.ResourceType;
 import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.integration.fhir.interfaces.ResourceModifierFilterInterface;
-import org.oscarehr.integration.fhir.resources.ResourceModifierFilter;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 import ca.uhn.fhir.context.FhirContext;
 
 
 public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.BaseResource, OSCAR extends AbstractModel<?> > 
-	implements ResourceModifierFilterInterface {
+ {
 
 	private FhirContext fhirContext;
 	private FHIR fhirResource;
@@ -126,7 +125,7 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 	
 	protected void setResource( FHIR to, OSCAR from ) {
 		this.oscarResource = from;
-		this.filter = getFilter( to.getClass() );
+		// this.filter = getFilter( to.getClass() );
 		setFhirResource( to );
 	}
 		
@@ -177,23 +176,30 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 	
 	public Reference getReference() {
 		Reference reference = new Reference();
-		reference.setDisplay( ( (Resource) getFhirResource() ).getResourceType().name() );
 		reference.setReference( getReferenceLink() );
 		reference.setResource( getFhirResource() );
 		return reference;
 	}
 	
 	public String getReferenceLink() {
-		return String.format( "%s/%s", ((Resource) getFhirResource()).getResourceType(), getFhirResource().getId());
-	}
-
-	@Override
-	public ResourceModifierFilter getFilter(Class<?> clazz) {
-		return getFilter( clazz );
+		return String.format( "%s/%s", ((Resource) getFhirResource()).getResourceType(), getFhirResource().getId() );
 	}
 	
-	@Override
-	public String getMessage() {
-		return getMessage();
+	public String getContainedReferenceLink() {
+		// format the id of the Resource for a contained resource.  
+		String resourceType = ( (Resource) getFhirResource() ).getResourceType().name();
+		String referenceLink = String.format( "%s%s", resourceType, getFhirResource().getId().replaceAll( resourceType, "" ) );
+		getFhirResource().setId( referenceLink );
+		return ( "#" + referenceLink );
 	}
+
+//	@Override
+//	public ResourceModifierFilter getFilter( Class<?> clazz ) {
+//		return getFilter( clazz );
+//	}
+//	
+//	@Override
+//	public String getMessage() {
+//		return getMessage();
+//	}
 }

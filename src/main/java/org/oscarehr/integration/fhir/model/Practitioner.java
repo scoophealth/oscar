@@ -25,6 +25,7 @@ package org.oscarehr.integration.fhir.model;
 
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.integration.fhir.interfaces.ResourceModifierFilterInterface;
 
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 	}
 
 	@Override
-	protected void mapAttributes( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+	protected void mapAttributes( org.hl7.fhir.dstu3.model.Practitioner fhirResource, ResourceModifierFilterInterface filter) {
 		setName( fhirResource );
 		setIdentifier( fhirResource );
 		setQualification( fhirResource );

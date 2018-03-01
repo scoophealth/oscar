@@ -1,7 +1,4 @@
-package org.oscarehr.integration.fhir.builder;
-
-import org.oscarehr.integration.fhir.model.Destination;
-
+package org.oscarehr.integration.fhir.resources.constants;
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -26,8 +23,27 @@ import org.oscarehr.integration.fhir.model.Destination;
  * Ontario, Canada
  */
 
-public final class DestinationFactory {
-	public static final Destination getDestination( org.oscarehr.integration.fhir.resources.constants.FhirDestination destination ) {
-		return new Destination( destination.title(), destination.endpoint() );
+/**
+ * This class to be created at runtime from a flat file, or database, of parameters.
+ * 
+ * @author denniswarren
+ *
+ */
+public enum FhirDestination {
+
+	// add more locations here.
+	BORN ( "BORN Immunization Data Centre", "https://the.datacentre.com/fhir/immun/data/" ),
+	DHIR ( "DHIR", "https://wsgateway.prod.ehealthontario.ca/API/FHIR/Immunizations/v1/" );
+		
+	private final String title;
+	private final String endpoint;
+	
+	FhirDestination( String title, String endpoint ) {
+		this.title = title;
+		this.endpoint = endpoint;
 	}
+	
+	public final String title() { return title; }
+	public final String endpoint() { return endpoint; }
+
 }

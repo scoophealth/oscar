@@ -1,18 +1,4 @@
 package org.oscarehr.integration.fhir.builder;
-
-import java.sql.Date;
-import java.util.List;
-
-import org.hl7.fhir.dstu3.model.Attachment;
-import org.hl7.fhir.dstu3.model.BaseResource;
-import org.hl7.fhir.dstu3.model.CodeableConcept;
-import org.hl7.fhir.dstu3.model.Communication;
-import org.hl7.fhir.dstu3.model.IdType;
-import org.hl7.fhir.dstu3.model.Reference;
-import org.hl7.fhir.dstu3.model.Communication.CommunicationPayloadComponent;
-import org.hl7.fhir.dstu3.model.Communication.CommunicationStatus;
-import org.hl7.fhir.dstu3.model.Identifier.IdentifierUse;
-
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -37,82 +23,72 @@ import org.hl7.fhir.dstu3.model.Identifier.IdentifierUse;
  * Ontario, Canada
  */
 
+import java.sql.Date;
+import java.util.List;
+import java.util.UUID;
 
+import org.hl7.fhir.dstu3.model.Attachment;
+import org.hl7.fhir.dstu3.model.BaseResource;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Communication;
+import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.Resource;
+import org.hl7.fhir.dstu3.model.Communication.CommunicationPayloadComponent;
+import org.hl7.fhir.dstu3.model.Communication.CommunicationStatus;
 import org.oscarehr.integration.fhir.model.Destination;
+import org.oscarehr.integration.fhir.model.OscarFhirResource;
 import org.oscarehr.integration.fhir.model.Sender;
 
-public class FhirCommunicationBuilder extends FhirBundleBuilder {
-	
-	private Communication communication;
-	
+/**
+ * Use when the Communication resource is used to build a majority of the
+ * message. 
+ */
+public class FhirCommunicationBuilder extends FhirMessageBuilder {
+
 	public FhirCommunicationBuilder( Sender sender, Destination destination ) {
 		super( sender, destination );
-		this.communication = new Communication();
+		setCommunication( new org.hl7.fhir.dstu3.model.Communication() );
 	}
 	
-	protected void setResource( BaseResource resource ) {
-
-		// Recipient : Entity sending to
-
-		// Subject : Patient this communication is related to. (Patient)
-		if( resource instanceof org.hl7.fhir.dstu3.model.Patient ) {
-			
-			communication.getSubject().setResource( resource );
-
-		// Sender : the RelatedPerson is put here.  ie: mother of child.
-		} else if( resource instanceof org.hl7.fhir.dstu3.model.RelatedPerson ) {
-		
-			communication.getSender().setResource( resource );
-		
-		// all other Resources.  Attachment, Immunization, Notes etc... 
-		} else {
-			
-			addPayloadResource( resource );
-			
-		}
-	}
-	
-	public Communication getCommunication() {
-		return communication;
-	}
-	
-	public String getCommunicationJson() {
-		return resourceToJson( this.communication );
-	}
-
-	private void setCommunication( Communication communication ) {
-		Date timestamp = new Date(System.currentTimeMillis());
+	private void setCommunication( org.hl7.fhir.dstu3.model.Communication communication ) {
+		Date timestamp = new Date( System.currentTimeMillis() );
 		
 		// Sender : The Sender Organization (Organization)
-		communication.getSender().setResource( this.getSender().getFhirResource() );
+		communication.getSender().setReference( getSender().getOscarFhirResource().getContainedReferenceLink() );
+		communication.getContained().add( (Resource) getSender().getFhirResource() );
 		
 		// Destination: The Destination as an Organization Resource.
-		List<BaseResource> fhirResources = this.getDestination().getFhirResources();
-		for(BaseResource fhirResource : fhirResources) {
-			communication.addRecipient().setResource( fhirResource );
+		List<OscarFhirResource<?,?>> oscarFhirResources = this.getDestination().getOscarFhirResources();
+		for(OscarFhirResource<?,?> oscarFhirResource : oscarFhirResources) {
+			communication.addRecipient().setReference( oscarFhirResource.getContainedReferenceLink() );
+			communication.getContained().add( (Resource) oscarFhirResource.getFhirResource() );
 		}
 	
 		// Communication version Meta tag
-//		communication.getMeta().setVersionId( fhirContext.getVersion().getVersion().getFhirVersionString() );
-
-		//TODO: need to find out what the Identifier is and how to set it in Oscar for tracking 
-		// for now it is set to random
-		communication.addIdentifier().setUse(IdentifierUse.OFFICIAL)
-			.setSystem("[oscar URI]")
-			.setValue( IdType.newRandomUuid().toString() ); 
+		communication.getMeta().setLastUpdated( timestamp );
 		
-		// TODO: is there a status for sent communications. ie: in progress??
-		communication.setStatus( CommunicationStatus.INPROGRESS );
+		// TODO Need to feed Oscar's URI into this. ID is random UUID for now. 
+		communication.addIdentifier().setSystem("http://oscar-emr.org/")
+			.setValue( UUID.randomUUID().toString() ); 
 		
 		// Timestamp Sent
 		communication.setSent( timestamp );
+		
+		communication.setId( UUID.randomUUID().toString() );
 
-		this.communication = communication;
+		setWrapper( communication );
+		
+		// Initial communication status is INPROGRESS
+		setStatus( CommunicationStatus.INPROGRESS );
 	}
 	
-	
+	public Communication getCommunication() {
+		return ( Communication ) getWrapper();
+	}
+
 	public String getReason() {
-		List<CodeableConcept> reasons = communication.getReasonCode();
+		
+		List<CodeableConcept> reasons = getCommunication().getReasonCode();
 		StringBuilder reasonBuilder = null;
 		for( CodeableConcept reason : reasons ) {
 			if( reasonBuilder == null ) {
@@ -122,42 +98,77 @@ public class FhirCommunicationBuilder extends FhirBundleBuilder {
 			reasonBuilder.append( "\n" );
 		}
 		if( reasonBuilder != null ) {
-			reason = reasonBuilder.toString();
+			return reasonBuilder.toString();
 		}
-		return reason;
+		return null;
 	}
 
 	public void setReason( String reason ) {
-		communication.getReasonCodeFirstRep().setText(reason);
-		this.reason = reason;
+		getCommunication().getReasonCodeFirstRep().setText(reason);
 	}
 
-	public CommunicationStatus getCommunicationStatus() {
-		this.communicationStatus = communication.getStatus();
-		return this.communicationStatus; 
+	public CommunicationStatus getStatus() {
+		return getCommunication().getStatus();
 	}
 
-	public void setCommunicationStatus(CommunicationStatus communicationStatus) {
-		communication.setStatus( communicationStatus );
-		this.communicationStatus = communicationStatus;
+	public void setStatus(CommunicationStatus communicationStatus) {
+		getCommunication().setStatus( communicationStatus );
 	}
-
+	
 	/**
-	 * Add any resource to the communication payload.
+	 * The subject is usually the target patient.
+	 * This method will set the subject reference link and the resource 
+	 * as contained inside the communication resource
 	 */
-	public void addPayloadResource( BaseResource resource ) {
-		CommunicationPayloadComponent communicationPayloadComponent = new CommunicationPayloadComponent();
-		Reference reference = new Reference();
-		reference.setId( resource.getId() );
-		reference.setResource( resource );
-		communicationPayloadComponent.setContent( reference );
-		communication.addPayload( communicationPayloadComponent );
+	public void setSubject( OscarFhirResource<?,?> oscarFhirResource ) {
+		getCommunication().getSubject().setReference( oscarFhirResource.getContainedReferenceLink() );
+		setSubject( oscarFhirResource.getFhirResource() );
+	}
+	
+	/**
+	 * The subject is usually the target patient.
+	 * This method will set the subject resource as contained 
+	 */
+	public void setSubject( BaseResource patient ) {
+		addResource( patient );
+	}
+
+	public BaseResource getSubject() {
+		return getCommunication().getSubjectTarget();
+	}
+
+	private void addPayload( org.hl7.fhir.dstu3.model.Type type ) {
+		getCommunication().addPayload( new CommunicationPayloadComponent( type ) );
+	}
+	
+	/**
+	 * Resources added to the Communication resource are always contained.
+	 */
+	@Override
+	public void addResource( OscarFhirResource< ?,? > oscarFhirResource ) {
+		addResource( oscarFhirResource.getFhirResource() );
+	}
+	
+	@Override
+	protected void addResource( BaseResource resource ) {
+		getCommunication().getContained().add( (Resource) resource );
+	}
+	
+	/**
+	 * For adding a reference link to an external Communication.Payload resource.
+	 */
+	public void addAttachmentReference( Reference reference ) {
+		addPayload( reference );
 	}
 	
 	/**
 	 * Add any variety of attachments to the Communication Payload.
+	 * This attachment will be CONTAINED inside the Communication.Payload attribute.
 	 */
+	@Override
 	public void addAttachment( Attachment attachment ) {
-		communication.addPayload().setContent( attachment );
+		addPayload( attachment );
 	}
+
+
 }

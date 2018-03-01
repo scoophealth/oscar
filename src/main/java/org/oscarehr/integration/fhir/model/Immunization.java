@@ -34,6 +34,7 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
+import org.oscarehr.integration.fhir.interfaces.ResourceModifierFilterInterface;
 
 /*
 
@@ -109,7 +110,7 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 	}
 
 	@Override
-	protected void mapAttributes( org.hl7.fhir.dstu3.model.Immunization immunization ) {
+	protected void mapAttributes(org.hl7.fhir.dstu3.model.Immunization immunization, ResourceModifierFilterInterface filter) {
 		// constraint: Prevention must implement the ImmunizationInterface.
 		setStatus( immunization );
 		setAdministrationDate( immunization );

@@ -24,16 +24,13 @@ package org.oscarehr.integration.fhir.builder;
  */
 // import static org.junit.Assert.*;
 
-import static org.junit.Assert.assertEquals;
 
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.Attachment;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,24 +40,15 @@ import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
 import org.oscarehr.integration.fhir.model.ClinicalImpression;
-import org.oscarehr.integration.fhir.model.Destination;
 import org.oscarehr.integration.fhir.model.Immunization;
 import org.oscarehr.integration.fhir.model.Organization;
 import org.oscarehr.integration.fhir.model.OscarFhirResource;
 import org.oscarehr.integration.fhir.model.Patient;
 import org.oscarehr.integration.fhir.model.Practitioner;
-
-
-import ca.uhn.fhir.context.FhirContext;
+import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
 
 public class FhirMessageBuilderTest {
 
-	private static String destinationName = "BORN Immunization Data Centre";
-	private static String destinationEndpoint = "https://the.datacentre.com/fhir/immun/data/";
-	
-	private static String destinationName2 = "DHIR";
-	private static String destinationEndpoint2 = "https://wsgateway.prod.ehealthontario.ca/API/FHIR/Immunizations/v1/";
-	
 	private static Clinic clinic;
 
 	private static Provider provider;
@@ -78,11 +66,11 @@ public class FhirMessageBuilderTest {
 		// SENDER
 		clinic = new Clinic();
 		clinic.setId( 4321 );
-		clinic.setClinicAddress("123 Clinic Street");
-		clinic.setClinicCity("Vancouver");
-		clinic.setClinicProvince("BC");
-		clinic.setClinicPhone("778-567-3445");
-		clinic.setClinicFax("778-343-3453");
+//		clinic.setClinicAddress("123 Clinic Street");
+//		clinic.setClinicCity("Vancouver");
+//		clinic.setClinicProvince("BC");
+//		clinic.setClinicPhone("778-567-3445");
+//		clinic.setClinicFax("778-343-3453");
 		clinic.setClinicName("Test Medical Clinic");
 
 				
@@ -157,51 +145,51 @@ public class FhirMessageBuilderTest {
 		provider = null;
 		demographic = null;
 		prevention = null;
-
 	}
-	
-//	@After
-//	public void tearDownAfter() {
-//		fhirMessageBuilder = null;
-//	}
 
-	// @Test
+
+	/*
+	 * BIS formatted messages use a Communication resource. 
+	 */
+	@Test
 	public void testGetBISFormattedMessage() {
 		System.out.println( ">>>-- testGetBISFormattedMessage() -->");
 		System.out.println();
-				
-		// Collect the required resources. 
-		Organization organization = new Organization( clinic );
-		Practitioner practitioner = new Practitioner( provider );
-		ClinicalImpression clinicalImpression = new ClinicalImpression( "<xml>This is a test of a clinical annotation</xml>" );
-		clinicalImpression.setDescription("Well Baby");
+
+		// Patient
 		Patient patient = new Patient( demographic );
 		
-		Destination destination = new Destination(destinationName,destinationEndpoint);
-		// pass the Sender and Destination through the constructor and the MessageBuilder Class will build the MessageHeader.
-		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( SenderFactory.getSender(), destination );
+		// Practitioner
+		Practitioner practitioner = new Practitioner( provider );
+					
+		// Get the ClinicalImpresson as the Attachment resource for this message.
+		// ClinicalImpression is created to automatically map patient medical annotations. In this case it is being
+		// customized after instantiation.
+		ClinicalImpression clinicalImpression = new ClinicalImpression( "<xml>This is a test of a clinical annotation</xml>" );
+		clinicalImpression.setDescription( "Well Baby" );
+	
+		// pass the Sender and Destination through the constructor of a new Communication Builder
+		// The communication.sender attribute is set automatically.
+		FhirCommunicationBuilder fhirCommunicationBuilder = new FhirCommunicationBuilder( SenderFactory.getSender(), DestinationFactory.getDestination( FhirDestination.BORN ) );
+				
+		// this one is tricky.  The patient's managing organization Organization resource is contained inside the Communication resource.
+		// and is also represented as the Communication.sender.  So the link needs to be external. 
+		patient.setManagingOrganizationReference( "Organization/Organization" + SenderFactory.getSender().getOscarFhirResource().getFhirResource().getId() );
 		
-		// set all the resource links according to BIS documentation
-		fhirBundleBuilder.getMessageHeader().addFocus().setReference( patient.getReferenceLink() );
-		fhirBundleBuilder.getMessageHeader().getResponsible().setReference( organization.getReferenceLink() );
-		fhirBundleBuilder.getMessageHeader().getAuthor().setReference( practitioner.getReferenceLink() );
-		fhirBundleBuilder.getMessageHeader().getSender().setDisplay("CLINICBORN");
-		
-		patient.getFhirResource().getManagingOrganization().setReference( organization.getReferenceLink() );
-		
-		clinicalImpression.getFhirResource().getSubject().setReference( patient.getReferenceLink() );
-		
-		// compile a list of OscarFhirResources.
-		List<OscarFhirResource<?, ?>> resourceList = new ArrayList<OscarFhirResource<?, ?>>();
-		resourceList.add( patient );
-		resourceList.add( organization );
-		resourceList.add( practitioner );
-		resourceList.add( clinicalImpression );
-		
-		// add the resource list to the message.
-		fhirBundleBuilder.addResources( resourceList );
+		// Practitioner is referenced from inside the patient. It is contained inside the Communication resource.
+		patient.addGeneralPractitionerReference( practitioner.getContainedReferenceLink() );
+		fhirCommunicationBuilder.addResource( practitioner );
 
-		System.out.println( fhirBundleBuilder.getMessageJson() );
+		// Patient is contained under communication.subject
+		fhirCommunicationBuilder.setSubject( patient );
+		
+		// The Attachment resource can be copied from the ClinicalImpression resource.
+		fhirCommunicationBuilder.addAttachment( clinicalImpression.copyToAttachement( new Attachment() ) );
+		
+		// an Attachment can also be added directly through 1 of 4 methods. I.E.:
+		// fhirCommunicationBuilder.attachXML( "<xml>This is a test of a clinical annotation</xml>" , "Well Baby" );
+
+		System.out.println( fhirCommunicationBuilder.getMessageJson() );
 	}
 	
 	@Test
@@ -216,11 +204,9 @@ public class FhirMessageBuilderTest {
 		Immunization measles = new Immunization( prevention );
 		Immunization hpv = new Immunization( prevention2 );
 		Patient patient = new Patient( demographic );
-		
-		Destination destination = new Destination(destinationName2,destinationEndpoint2);
-		
+	
 		// pass the Sender and Destination through the constructor and the MessageBuilder Class will build the MessageHeader.
-		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( SenderFactory.getSender(), destination );
+		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( SenderFactory.getSender(), DestinationFactory.getDestination( FhirDestination.DHIR ) );
 		
 		// alternate method for setting the messageHeader reference links.
 		fhirBundleBuilder.addMessageHeaderFocus( patient.getReference() );
@@ -248,75 +234,6 @@ public class FhirMessageBuilderTest {
 		
 		System.out.println( fhirBundleBuilder.getMessageJson() );
 	}
-	
-	@Test
-	public void testGetReferences() {
-		System.out.println( ">>>-- testGetReferences() -->");
-		System.out.println();
-		
-		// Collect the required resources. 
-		Organization organization = new Organization( clinic );
-		Practitioner practitioner = new Practitioner( provider );
-		Immunization immunization = new Immunization( prevention );
-		Patient patient = new Patient( demographic );
-		
-		Destination destination = new Destination(destinationName, destinationEndpoint);
-		
-		// pass the Sender and Destination through the constructor and the MessageBuilder Class will build the MessageHeader.
-		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( SenderFactory.getSender(), destination );
 
-		// compile a list of OscarFhirResources.
-		List<OscarFhirResource<?, ?>> resourceList = new ArrayList< OscarFhirResource<?, ?> >();
-		resourceList.add( patient );
-		resourceList.add( organization );
-		resourceList.add( practitioner );
-		resourceList.add( immunization );
-		
-		// add the resource list to the message.
-		fhirBundleBuilder.addResources( resourceList );	
-		
-		Map<?,?> references = fhirBundleBuilder.getReferences();
-		Set<?> keySet = references.keySet();
-		for( Object key : keySet) {
-			System.out.println( "Reference Key: " + key );
-			System.out.println( "Reference Link: " +  ( (Reference) references.get(key) ).getReference() );
-		}
-	}
-
-	// @Test
-	public void testGetSender() {
-		System.out.println( ">>>-- testGetSender() -->");
-		System.out.println();
-		
-		Destination destination = new Destination(destinationName, destinationEndpoint);
-		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( SenderFactory.getSender(), destination );
-//		assertEquals( vendorName, fhirBundleBuilder.getSender().getVendorName() );
-//		assertEquals( softwareName, fhirBundleBuilder.getSender().getSoftwareName() );
-//		assertEquals( buildName, fhirBundleBuilder.getSender().getVersionSignature() );
-//		assertEquals( senderEndpoint, fhirBundleBuilder.getSender().getEndpoint() );		
-	}
-
-	// @Test
-	public void testGetDestination() {	
-		System.out.println( ">>>-- testGetDestination() -->");
-		System.out.println();
-		
-		Destination destination = new Destination(destinationName, destinationEndpoint);
-		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( SenderFactory.getSender(), destination );
-		System.out.println( fhirBundleBuilder.getDestination() );
-		assertEquals( destinationEndpoint, fhirBundleBuilder.getDestination().getDestinations().get( destinationName ) );
-
-	}
-
-	// @Test
-	public void testGetResources() {
-		System.out.println( ">>>-- testGetResources() -->");
-		System.out.println();
-		
-		Destination destination = new Destination(destinationName, destinationEndpoint);
-		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( SenderFactory.getSender(), destination );
-		System.out.println( fhirBundleBuilder.getBundle() );
-		System.out.println( FhirContext.forDstu3().newJsonParser().setPrettyPrint(true).encodeResourceToString( fhirBundleBuilder.getResources().get(0).getFhirResource() ) );
-	}
 
 }

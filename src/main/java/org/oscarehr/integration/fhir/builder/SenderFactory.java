@@ -30,18 +30,31 @@ import oscar.OscarProperties;
  */
 public final class SenderFactory {
 	
+	// TODO these global variables will not remain here.
+	
 	private static String vendorName = "Oscar EMR";
 	private static String softwareName = "Oscar";
 	private static String buildName = OscarProperties.getInstance().getProperty("buildtag", "[OSCAR BUILD]");
 	private static String senderEndpoint = OscarProperties.getInstance().getProperty("ws_endpoint_url_base", "[OSCAR ENDPOINT]");
+	
+	// TODO also set up a PHU resource.
+		
+	//TODO JPA Clinic resource here. The test resource below is temporary. 
+	
+	private static Clinic clinic = new Clinic() {{
+		this.setId( 4321 );
+		this.setClinicAddress("123 Clinic Street");
+		this.setClinicCity("Vancouver");
+		this.setClinicProvince("BC");
+		this.setClinicPhone("778-567-3445");
+		this.setClinicFax("778-343-3453");
+		this.setClinicName("Test Medical Clinic"); 
+	}};
 
-	public static final Sender getSender( Clinic clinic) {
+	public static final Sender getSender() {
 		Sender sender = new Sender(vendorName,softwareName,buildName,senderEndpoint);
-		sender.addClinic(clinic);
+		sender.addClinic( clinic );
 		return sender;
 	}
-	
-	public static final Sender getSender() {
-		return new Sender(vendorName,softwareName,buildName,senderEndpoint);
-	}
+
 }

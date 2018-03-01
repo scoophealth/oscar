@@ -25,21 +25,30 @@ package org.oscarehr.integration.fhir.model;
 
 import java.util.Base64;
 import java.util.List;
+
+import org.hl7.fhir.dstu3.model.Attachment;
 import org.hl7.fhir.dstu3.model.ClinicalImpression.ClinicalImpressionStatus;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.common.model.AbstractModel;
+import org.oscarehr.integration.fhir.interfaces.ResourceModifierFilterInterface;
 
 
 /**
- *  STU Note: Unlike many other resources, there is little prior art with regard to exchanging records of clinical assessments. For this reason, this resource should be regarded as particularly prone to ongoing revision. In terms of scope and usage, the Patient Care workgroup wishes to draw the attention of reviewers and implementers to the following issues:
+ *  STU Note: Unlike many other resources, there is little prior art with regard to exchanging records of clinical assessments. 
+ *  For this reason, this resource should be regarded as particularly prone to ongoing revision. In terms of scope and usage, 
+ *  the Patient Care workgroup wishes to draw the attention of reviewers and implementers to the following issues:
  *
- *   When is an existing clinical impression revised, rather than a new one created (that references the existing one)? How does that affect the status? what's the interplay between the status of the diagnosis and the status of the impression? (e.g. for a 'provisional' impression, which bit is provisional?)
+ *   When is an existing clinical impression revised, rather than a new one created (that references the existing one)? 
+ *   How does that affect the status? what's the interplay between the status of the diagnosis and the status of the impression? 
+ *   (e.g. for a 'provisional' impression, which bit is provisional?)
  *   This structure doesn't differentiate between a working and a final diagnosis. Given an answer to the previous question, should it?
- *   Further clarify around the relationship between care plan and impression is needed. Both answers to the previous questions and ongoing discussions around revisions to the care plan will influence the design of clinical impression
+ *   Further clarify around the relationship between care plan and impression is needed. Both answers to the previous questions 
+ *   and ongoing discussions around revisions to the care plan will influence the design of clinical impression
  *   Should prognosis be represented, and if so, how much structure should it have?
  *   Should an impression reference other impressions that are related? (how related?)
- *   Investigations - the specification needs a good value set for the code for the group, and will be considering the name "investigations" further
+ *   Investigations - the specification needs a good value set for the code for the group, and will be considering the 
+ *   name "investigations" further
  *
  * For the time being, this class is written with the intention to map patient encounter notes or various text messages 
  * such as BORN transmissions. 
@@ -49,20 +58,34 @@ public class ClinicalImpression extends OscarFhirResource< org.hl7.fhir.dstu3.mo
 
 	private String annotation;
 	private CaseManagementNote caseManagementNote;
+	private byte[] encodedBytes;
+	
 	
 	/**
 	 * Automatically encodes all string to Base64 encoding.
 	 */
 	public ClinicalImpression( String annotation ) {
+		org.hl7.fhir.dstu3.model.ClinicalImpression clinicalImpression = new org.hl7.fhir.dstu3.model.ClinicalImpression();
 		setAnnotation( annotation );
-		setFhirResource( new org.hl7.fhir.dstu3.model.ClinicalImpression() );
-		mapAttributes( getFhirResource() );
+		setFhirResource( clinicalImpression );
+		mapAttributes( clinicalImpression, null );
 	}
 	
 	public ClinicalImpression( org.oscarehr.casemgmt.model.CaseManagementNote caseManagementNote ) {
 		setCaseManagementNote( caseManagementNote );
 		setFhirResource( new org.hl7.fhir.dstu3.model.ClinicalImpression() );
-		mapAttributes( getFhirResource() );
+		// mapAttributes( getFhirResource(), getFilter( this.getClass() ) );
+	}
+	
+	/**
+	 * Convert to a basic Attachment resource with ContentType as text/plain, 
+	 * a Title, and Data as Base64.
+	 */
+	public Attachment copyToAttachement( Attachment attachment ) {
+		attachment.setContentType("text/plain");
+		attachment.setTitle( getDescription() );
+		attachment.setData( getEncodedBytes() );
+		return attachment;
 	}
 
 	@Override
@@ -70,29 +93,28 @@ public class ClinicalImpression extends OscarFhirResource< org.hl7.fhir.dstu3.mo
 		if( getCaseManagementNote() != null ) {
 			fhirResource.setId( getCaseManagementNote().getId() + "" );
 		} else {
-			super.setId(fhirResource);
+			super.setId( fhirResource );
 		}
 	}
 
 	@Override
-	protected void mapAttributes( org.hl7.fhir.dstu3.model.ClinicalImpression fhirResource ) {
-		byte[] encodedBytes = null;
-		fhirResource.setStatus(ClinicalImpressionStatus.COMPLETED);
-		
-		if( annotation != null ) {
-			encodedBytes = Base64.getEncoder().encode(annotation.getBytes());
-			fhirResource.setSummary(encodedBytes.toString() );
+	protected void mapAttributes(org.hl7.fhir.dstu3.model.ClinicalImpression fhirResource, ResourceModifierFilterInterface filter) {
+
+		fhirResource.setStatus( ClinicalImpressionStatus.COMPLETED );
+
+		if( ! getAnnotation().isEmpty() ) {
+			setEncodedBytes( getAnnotation() );			
 		} else if ( getCaseManagementNote() != null ) {
-			encodedBytes = Base64.getEncoder().encode( getCaseManagementNote().getNote().getBytes());
-			fhirResource.setSummary( encodedBytes.toString() );
+			setEncodedBytes( getCaseManagementNote().getNote() );
 		}
 		
+		fhirResource.setSummary( getEncodedBytes().toString() );
 		setDescription( fhirResource );
 	}
 
 	@Override
 	protected void mapAttributes(AbstractModel<?> oscarResource) {
-		// TODO Auto-generated method stub		
+		// TODO This should convert an incoming clinical impression into a readable annotation for Oscar to consume
 	}
 
 	@Override
@@ -112,8 +134,15 @@ public class ClinicalImpression extends OscarFhirResource< org.hl7.fhir.dstu3.mo
 	public void setDescription( String description ) {
 		getFhirResource().setDescription( description );
 	}
+	
+	public String getDescription() {
+		return getFhirResource().getDescription();
+	}
 
 	public String getAnnotation() {
+		if( annotation == null ) {
+			return "";
+		}
 		return annotation;
 	}
 
@@ -127,6 +156,19 @@ public class ClinicalImpression extends OscarFhirResource< org.hl7.fhir.dstu3.mo
 
 	private void setCaseManagementNote(CaseManagementNote caseManagementNote) {
 		this.caseManagementNote = caseManagementNote;
+	}
+	
+	private byte[] getEncodedBytes() {
+		return encodedBytes;
+	}
+
+	private void setEncodedBytes( String string ) {		
+		byte[] encodedBytes = Base64.getEncoder().encode( string.getBytes() );
+		setEncodedBytes( encodedBytes );
+	}
+
+	private void setEncodedBytes( byte[] encodedBytes ) {
+		this.encodedBytes = encodedBytes;
 	}
 
 }

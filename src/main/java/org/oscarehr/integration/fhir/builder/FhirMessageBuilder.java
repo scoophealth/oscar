@@ -51,7 +51,10 @@ import ca.uhn.fhir.context.FhirContext;
 public abstract class FhirMessageBuilder {
 
 	private static Logger logger = MiscUtils.getLogger();
-	private static FhirContext fhirContext = FhirContext.forDstu3();
+	
+	//TODO FHIR context needs to be set ONCE add configuration  level.
+	protected static final FhirContext fhirContext = FhirContext.forDstu3();
+	
 	private MessageHeader messageHeader;
 	private Sender sender;
 	private Destination destination; 
@@ -220,7 +223,7 @@ public abstract class FhirMessageBuilder {
 		return sender;
 	}
 
-	private void setSender(Sender sender) {
+	private void setSender( Sender sender ) {
 		this.sender = sender;
 	}
 
@@ -263,34 +266,36 @@ public abstract class FhirMessageBuilder {
 		return fhirContext.newJsonParser().setPrettyPrint(true).encodeResourceToString( resource );
 	}
 
-	public void attachPDF( String pdf ) {
-		attachPDF( pdf.getBytes() );
-	}
-	
-	public void attachPDF( byte[] bytes ) {
+	public void attachPDF( String pdf, String title ) {
 		Attachment attachment = new Attachment();
-		attachment.setTitle("PDF Attachment");
 		attachment.setContentType( "application/pdf" );
-		attachment.setData( bytes );
-		addAttachment( attachment );
+		setAttachment( pdf, title, attachment );
 	}
 	
-	public void attachRichText( String rtf ) {
+	public void attachRichText( String rtf, String title  ) {
 		Attachment attachment = new Attachment();
-		attachment.setTitle("Rich Text Attachment");
-		attachment.setContentType( "text/rtf" );
-		attachment.setData( rtf.getBytes() );
-		addAttachment( attachment );
+		attachment.setContentType( "text/rtf");
+		setAttachment( rtf, title, attachment );
 	}
 	
-	public void attachText( String text ) {
+	public void attachText( String text, String title  ) {
 		Attachment attachment = new Attachment();
-		attachment.setTitle("Text Attachment");
 		attachment.setContentType( "text/plain" );
-		attachment.setData( text.getBytes() );
-		addAttachment( attachment );
+		setAttachment( text, title, attachment );
 	}
 	
+	public void attachXML( String xml, String title  ) {
+		Attachment attachment = new Attachment();
+		attachment.setContentType( "text/xml" );
+		setAttachment( xml, title, attachment );
+	}
+	
+	private void setAttachment( String data, String title, Attachment attachment ) {
+		attachment.setTitle( title );
+		attachment.setData( data.getBytes() );
+		addAttachment( attachment );
+	}
+
 	public HashMap< ReferenceKey, Reference> getReferences() {
 		if( references == null ) {
 			setReferences( new HashMap< ReferenceKey, Reference >() );
@@ -372,7 +377,7 @@ final class ReferenceKey {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+		
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this);		

@@ -37,6 +37,7 @@ import org.hl7.fhir.dstu3.model.Identifier.IdentifierUse;
 import org.hl7.fhir.dstu3.model.Patient.PatientCommunicationComponent;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
+import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.integration.fhir.interfaces.ResourceModifierFilterInterface;
@@ -219,9 +220,6 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 	
 	@Override
 	protected void mapAttributes( org.hl7.fhir.dstu3.model.Patient patient, ResourceModifierFilterInterface filter ) {
-		
-		System.out.println( filter.getMessage() );
-		
 		setName( patient );		
 		setGender( patient );
 		setAddress( patient );
@@ -340,43 +338,70 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 	/**
 	 * Only for embedded (or contained) CareProvider resources. Some FHIR Implementers discourage this.
 	 */
-	public void addCareProvider( org.oscarehr.common.model.Provider careProvider ) {	
-		addCareProvider( new org.oscarehr.integration.fhir.model.Practitioner( careProvider ) );
+	public void addGeneralPractitioner( org.oscarehr.common.model.Provider careProvider ) {	
+		addGeneralPractitioner( new org.oscarehr.integration.fhir.model.Practitioner( careProvider ) );
 	}
 
-	public void addCareProvider( org.hl7.fhir.dstu3.model.Practitioner careProvider ) {
-		getFhirResource().addGeneralPractitioner().setResource( careProvider );
-	}
-
-	public void addCareProvider( org.oscarehr.integration.fhir.model.Practitioner careProvider ) {
-		addCareProvider( careProvider.getFhirResource() );
+	public void addGeneralPractitioner( org.oscarehr.integration.fhir.model.Practitioner careProvider ) {
+		addGeneralPractitioner( careProvider.getFhirResource() );
 	}
 	
 	/**
 	 * Only for contained Organization resources. ie: clinic
 	 */
-	public void addOrganization( org.hl7.fhir.dstu3.model.Organization organization ) {
-		getFhirResource().addGeneralPractitioner().setResource( organization  );
+	public void addGeneralPractitioner( org.oscarehr.integration.fhir.model.Organization organization ) {
+		addGeneralPractitioner( (IBaseResource) organization.getFhirResource() );
 	}
 	
-	public void addOrganization( org.oscarehr.integration.fhir.model.Organization organization ) {
-		addOrganization( organization.getFhirResource() );
+	public void addGeneralPractitioner( org.hl7.fhir.dstu3.model.Organization organization ) {		
+		addGeneralPractitioner( (IBaseResource) organization );
 	}
-	
 
-	public void addOrganization( org.oscarehr.common.model.Clinic clinic ) {
-		addOrganization( new Organization( clinic ) );
+	public void addGeneralPractitioner( org.oscarehr.common.model.Clinic clinic ) {
+		addGeneralPractitioner( new Organization( clinic ) );
 	}
 	
-	public void addOrganization( org.oscarehr.common.model.Contact clinic ) {
-		addOrganization( new Organization( clinic ) );
+	public void addGeneralPractitioner( org.oscarehr.common.model.Contact clinic ) {
+		addGeneralPractitioner( new Organization( clinic ) );
+	}
+		
+	private void addGeneralPractitioner( IBaseResource resource ) {
+		getFhirResource().addGeneralPractitioner().setResource( resource );
 	}
 	
-	public void addManagingOrganizationReference( Reference reference ) {
-		addManagingOrganizationReference( reference.getReference() );
+	public void addGeneralPractitionerReference( Reference reference ) {
+		getFhirResource().getGeneralPractitioner().add( reference );
 	}
 	
-	public void addManagingOrganizationReference( String reference ) {
+	public void addGeneralPractitionerReference( String reference ) {
+		getFhirResource().addGeneralPractitioner().setReference( reference );
+	}
+	
+	/**
+	 * Set the managing organization.
+	 */
+	public void setManagingOrganization( org.oscarehr.common.model.Contact contact ) {
+		setManagingOrganization( new Organization( contact ) );
+	}
+	
+	public void setManagingOrganization( org.oscarehr.common.model.Clinic clinic ) {
+		setManagingOrganization( new Organization( clinic ) );
+	}
+	
+	/**
+	 * This will set an Organization Resource as contained.
+	 * For external Resources use setManagingOrganizationReference.
+	 */
+	public void setManagingOrganization( Organization organization ) {
+		setManagingOrganizationReference( organization.getContainedReferenceLink() );
+		getFhirResource().getManagingOrganization().setResource( organization.getFhirResource() );
+	}
+	
+	public void setManagingOrganizationReference( Reference reference ) {
+		setManagingOrganizationReference( reference.getReference() );
+	}
+	
+	public void setManagingOrganizationReference( String reference ) {
 		getFhirResource().getManagingOrganization().setReference( reference );
 	}
 

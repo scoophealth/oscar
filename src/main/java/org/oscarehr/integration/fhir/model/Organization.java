@@ -38,6 +38,7 @@ import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Contact;
 import org.oscarehr.common.model.ProfessionalContact;
+import org.oscarehr.integration.fhir.interfaces.ResourceModifierFilterInterface;
 import org.oscarehr.integration.fhir.utils.MiscUtils;
 
 /*
@@ -153,12 +154,12 @@ public class Organization
 		if( intId != null ) {
 			fhirResource.setId( intId + "" );
 		} else {
-			super.setId(fhirResource);
+			super.setId( fhirResource );
 		}
 	}
 
 	@Override
-	protected void mapAttributes(org.hl7.fhir.dstu3.model.Organization fhirResource ) {
+	protected void mapAttributes(org.hl7.fhir.dstu3.model.Organization fhirResource, ResourceModifierFilterInterface filter) {
 		setOranizationName( fhirResource );		
 		setAddress( fhirResource );
 		setTelecom( fhirResource );
@@ -177,7 +178,7 @@ public class Organization
 	public List<Resource> getContainedFhirResources() {
 		return getFhirResource().getContained();
 	}
-	
+
 	private void setOranizationName( org.hl7.fhir.dstu3.model.Organization fhirResource ) {
 		fhirResource.setName( getOscarResource().getAddress() );
 	}
