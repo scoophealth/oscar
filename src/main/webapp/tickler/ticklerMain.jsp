@@ -697,6 +697,9 @@ function changeSite(sel) {
         String sortOrderStr = request.getParameter("sort_order");
         boolean isSortAscending = true;
 
+        if(sortOrderStr == null) {
+        	sortOrderStr = OscarProperties.getInstance().getProperty("tickler.default_sort_order","asc");
+        }
         if (sortOrderStr == null || sortOrderStr.equals("asc")) {
             isSortAscending = false;
             sortOrderStr = TicklerManager.SORT_DESC;

@@ -94,7 +94,9 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 	public Prevention() {
 		this.preventionExts = new ArrayList<PreventionExt>();
 	}
-	
+
+	private String snomedId = null;
+
 	public Integer getDemographicId() {
 		return demographicId;
 	}
@@ -181,6 +183,14 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 	
 	public void setLastUpdateDate(Date lastUpdateDate) {
 		this.lastUpdateDate = lastUpdateDate;
+	}
+
+	public String getSnomedId() {
+		return snomedId;
+	}
+
+	public void setSnomedId(String snomedId) {
+		this.snomedId = snomedId;
 	}
 
 	@Override

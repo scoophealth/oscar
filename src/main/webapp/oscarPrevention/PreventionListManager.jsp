@@ -101,7 +101,7 @@ String prevName = null;
 String prevDesc = null;
 for (int e = 0 ; e < prevList.size(); e++){ 
 	HashMap<String,String> h = prevList.get(e);
-		prevId = h.get("name").replaceAll("\\s+","");
+		prevId = h.get("name").replaceAll("\\s+","").replaceAll("\\[", "").replaceAll("\\]", "");
 		prevName = h.get("name");
 		prevDesc = h.get("desc");             	
 %>
@@ -180,11 +180,11 @@ function indicatorAllDisplay(items){
 	n = preventions.length;
 	if(n>1){
 		for(i=0;i<n;i++){
-			id = preventions[i].replace(" ", "");
+			id = preventions[i].replace(" ", "").replace("[","").replace("]","");
 			indicatorDisplay(id, preventions[i]);
 		}
 	}else{			
-		id = items.replace(" ", "");
+		id = items.replace(" ", "").replace("[","").replace("]","");
 		indicatorDisplay(id, items);
 	}
 }

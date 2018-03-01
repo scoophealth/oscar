@@ -147,6 +147,85 @@ public class PatientConsentManager {
 	
 	}
 	
+        /**
+         * Creates a new demographic consent record for the consent policy
+         * identified by consentTypeId if one doesn't already exist, or updates
+         * the existing demographic consent record if a record already does exist
+         *
+         * @param loggedinInfo the user information for the current OSCAR user
+         * @param demographic_no the demographic number of the patient
+         * @param consentTypeId the unique identifier of the consent form/policy
+         * @param explicit did the patient give explicit consent, or is consent implied?
+         * @param optOut is the patient refusing this consent policy/form or agreeing to it? A null value indicates the absence of a decision
+         * @return true if the consent record was either added or updated, false otherwise
+         */
+        public boolean addEditConsentRecord( LoggedInInfo loggedinInfo, int demographic_no, int consentTypeId, boolean explicit, Boolean optOut )
+        {
+            if (!securityInfoManager.hasPrivilege(loggedinInfo, "_demographic", SecurityInfoManager.WRITE, demographic_no))
+            {
+                throw new RuntimeException("Unauthorised Access. Object[_demographic]");
+            }
+
+            LogAction.addLogSynchronous(loggedinInfo, "PatientConsentManager.createConsent", " Demographic: " + demographic_no);
+
+            boolean addOrUpdateDbComplete = false;
+
+            ConsentType consentType = getConsentTypeByConsentTypeId( consentTypeId );
+
+            if( consentType != null && consentType.isActive())
+            {
+                Consent consent = getConsentByDemographicAndConsentType( loggedinInfo, demographic_no, consentType );
+
+                if( consent == null )
+                {
+                    consent = new Consent();
+                }
+
+                Date currentDate = new Date(System.currentTimeMillis());
+
+                consent.setDemographicNo( demographic_no );
+                consent.setConsentType( consentType );
+                consent.setExplicit( explicit );
+                consent.setOptout( optOut );
+                consent.setLastEnteredBy( loggedinInfo.getLoggedInProviderNo());
+
+                if (optOut != null)
+                {
+                    if (optOut)
+                    {
+                        consent.setConsentDate(null);
+                        consent.setOptoutDate(currentDate);
+                    }
+                    else
+                    {
+                        consent.setConsentDate(currentDate);
+                        consent.setOptoutDate( null );
+                    }
+                }
+                else
+                {
+                    consent.setConsentDate(null);
+                    consent.setOptoutDate(null);
+                }
+
+                consent.setEditDate(currentDate);
+
+
+                if( consent.getId() == null )
+                {
+                    consentDao.persist(consent);
+                    addOrUpdateDbComplete = true;
+                }
+                else if( consent.getId() > 0 )
+                {
+                    consentDao.merge(consent);
+                    addOrUpdateDbComplete = true;
+                }
+            }
+
+            return addOrUpdateDbComplete;
+	}
+
 	/**
 	 * Used for removing consent from a patient Consent that was previously consented.
 	 * Ignored if the patient has never consented. 
@@ -219,6 +298,14 @@ public class PatientConsentManager {
 		return consentTypeList;
 	}
 	
+        /**
+         * @return the list of consent types that are currently marked as active
+         */
+        public List<ConsentType> getActiveConsentTypes()
+        {
+            return consentTypeDao.findAllActive();
+        }
+
 	/**
 	 * Returns a consent type by the consent type id. 
 	 * This can be used to determine the consent program for a consent type id.
