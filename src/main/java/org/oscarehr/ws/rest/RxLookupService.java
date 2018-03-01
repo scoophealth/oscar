@@ -27,11 +27,14 @@ package org.oscarehr.ws.rest;
 import org.apache.log4j.Logger;
 import org.oscarehr.managers.DrugLookUp;
 import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.rx.util.DrugrefUtil;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.ws.rest.to.DrugDSResponse;
 import org.oscarehr.ws.rest.to.DrugLookupResponse;
 import org.oscarehr.ws.rest.to.DrugResponse;
 import org.oscarehr.ws.rest.to.model.DrugSearchTo1;
 import org.oscarehr.ws.rest.to.model.DrugTo1;
+import org.oscarehr.ws.rest.to.model.RxDsMessageTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import oscar.oscarRx.data.RxPrescriptionData;
@@ -182,6 +185,43 @@ public class RxLookupService extends AbstractServiceImpl {
 
         return resp;
 
+    }
+    
+    @POST
+    @Path("/dsMessage/{demographicNo}")
+    @Produces("application/json")
+    @Consumes("application/json")
+    public DrugDSResponse getDSMessages(@PathParam("demographicNo") Integer demographicNo,List<DrugTo1> drugTransferObjects) {
+    	
+    		DrugrefUtil drugrefUtil = new DrugrefUtil();
+    		RxPrescriptionData rxData = new RxPrescriptionData();
+    		List<String> atcCodes = rxData.getCurrentATCCodesByPatient(demographicNo);
+    		List regionalIdentifiers = rxData.getCurrentRegionalIdentifiersCodesByPatient(demographicNo);
+    		
+    		if(drugTransferObjects != null) {
+    			for(DrugTo1 drugTo: drugTransferObjects) {
+    				String atc = drugTo.getAtc();
+    				if(atc != null && !atc.trim().isEmpty()) {
+    					atcCodes.add(atc);
+    				}
+    				String din = drugTo.getRegionalIdentifier();
+    				if(din != null && !din.trim().isEmpty()) {
+    					regionalIdentifiers.add(din);
+    				}
+    			}
+    		}
+    		List<RxDsMessageTo1> dsMessages = null;
+    		DrugDSResponse drugDSResponse = new DrugDSResponse();
+    		
+    		try {
+    			dsMessages = drugrefUtil.getMessages(this.getLoggedInInfo(),this.getCurrentProvider().getProviderNo(),demographicNo,atcCodes, regionalIdentifiers,this.getLocale());
+    			drugDSResponse.setWarningLevel(drugrefUtil.getWarningLevel(this.getLoggedInInfo(),demographicNo));
+    			drugDSResponse.setDsMessages(dsMessages);
+    		}catch(Exception e) {
+    			logger.error("Error getting messages",e);
+    			drugDSResponse.setSuccess(false); 
+    		}
+    		return drugDSResponse;
     }
 
 

@@ -367,6 +367,21 @@ angular.module("rxServices", [])
                         cb([]);
                     }
                 });
+            },
+
+            getDSMessages : function(demographicNo,meds){
+
+                var deferred = $q.defer();
+                var queryPath = this.apiPath + "lookup/dsMessage/"+demographicNo
+                console.log("MEDS to transfer",meds);
+                $http.post(queryPath,meds).then(function (data) {
+                    deferred.resolve(data);
+                },function () {
+                    deferred.reject("An error occurred while attempting to get medication details");
+                });
+
+                return deferred.promise;
+
             }
         };
     });

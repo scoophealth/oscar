@@ -17,6 +17,7 @@ const RxComponent = {
  		rxComp.page.columnThree = {};
  		rxComp.page.columnThree.modules = {};
  		rxComp.page.drugs = [];
+ 		rxComp.page.dsMessageList = [];
  		
  		rxComp.toRxList = [];  //might want to cache this server side and check back so that we can switch between tabs.
  		
@@ -24,19 +25,49 @@ const RxComponent = {
  		rxService.getMedications($stateParams.demographicNo,"").then(function(data){
 			  console.log("getMedications--",data);
 			  rxComp.page.drugs = data.data.content;
-			  
-	    	},
-	    	function(errorMessage){
-		      console.log("getMedications++"+errorMessage);
-		      rxComp.error=errorMessage;
-	    	}
+		    	},
+		    	function(errorMessage){
+			      console.log("getMedications++"+errorMessage);
+			      rxComp.error=errorMessage;
+		    	}
 		);
+ 		
+ 		rxComp.getDSMessages($stateParams.demographicNo,rxComp.toRxList);
  		
  		getRightItems();
  		getLeftItems();
  		
  		
  	}
+ 	rxComp.shortDSMessage = function(){
+ 		console.log("shortDSMessage",rxComp.toRxList);
+ 		rxComp.getDSMessages($stateParams.demographicNo,rxComp.toRxList);
+ 	}
+ 	
+ 	rxComp.getAlertStyl = function(alert){
+ 		console.log("alert",alert);
+ 		if(alert.significance === 3){
+ 			return "danger";
+ 		}else if(alert.significance ===2){
+ 			return "warning";
+ 		}else if(alert.significance ===1){
+ 			return "info";
+ 		}else{
+ 			return "warning";
+ 		}
+ 	}
+ 	
+ 	rxComp.getDSMessages = function(demo,meds){
+ 		rxService.getDSMessages($stateParams.demographicNo,meds).then(function(data){
+			  console.log("dsMessageList--",data);
+			  rxComp.page.dsMessageList = data.data.dsMessages;
+		    	},
+		    	function(errorMessage){
+			      console.log("getMedications++"+errorMessage);
+			      rxComp.error=errorMessage;
+		    	}
+ 		);
+ 	};
  	
  	rxComp.medSelected = function(med){
  		if(angular.isDefined(med.favoriteName)){
