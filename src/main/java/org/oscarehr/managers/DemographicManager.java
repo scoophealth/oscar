@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
@@ -550,7 +551,7 @@ public class DemographicManager {
 		//TODO: this needs a loggedInInfo
 		if (ext != null && ext.getId() != null) {
 			DemographicExt prevExt = demographicExtDao.find(ext.getId());
-			if (!(ext.getKey().equals(prevExt.getKey()) && ext.getValue().equals(prevExt.getValue()))) {
+			if (!(ext.getKey().equals(prevExt.getKey()) && Objects.equals(ext.getValue(),prevExt.getValue()))) {
 				demographicExtArchiveDao.archiveDemographicExt(prevExt);
 			}
 		}
@@ -562,7 +563,7 @@ public class DemographicManager {
 	public void archiveExtension(LoggedInInfo loggedInInfo, DemographicExt ext) {
 		if (ext != null && ext.getId() != null) {
 			DemographicExt prevExt = demographicExtDao.find(ext.getId());
-			if (!(ext.getKey().equals(prevExt.getKey()) && ext.getValue().equals(prevExt.getValue()))) {
+			if (!(ext.getKey().equals(prevExt.getKey()) && Objects.equals(ext.getValue(),prevExt.getValue()))) {
 				demographicExtArchiveDao.archiveDemographicExt(prevExt);
 			}
 		}
