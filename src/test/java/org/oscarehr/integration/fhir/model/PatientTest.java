@@ -68,7 +68,7 @@ public class PatientTest {
 		provider.setOhipNo( "12342" );
 
 		patient = new Patient( demographic );		
-		patient.addCareProvider( provider );
+		patient.addGeneralPractitioner( provider );
 	}
 
 	@AfterClass

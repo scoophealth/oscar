@@ -31,10 +31,8 @@ import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.oscarehr.common.model.ImmunizationInterface;
-// import org.oscarehr.common.model.ImmunizationInterface;
 import org.oscarehr.common.model.Prevention;
-// import org.oscarehr.common.model.PreventionExt;
+import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
 import org.oscarehr.util.MiscUtils;
 
 public class ImmunizationTest {

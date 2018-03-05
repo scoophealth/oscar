@@ -28,7 +28,6 @@ import org.hl7.fhir.dstu3.model.BaseResource;
 import org.hl7.fhir.dstu3.model.MessageHeader.MessageSourceComponent;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.oscarehr.common.model.Contact;
-import org.oscarehr.integration.fhir.model.OscarFhirResource;
 
 /*
 "source": {
