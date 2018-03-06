@@ -339,7 +339,7 @@ if(!authed) {
 					name="pSpec<%=100+i %>" value="" size="15"> <% }  %>
 				</td>
 				<td align="right"><input type="hidden" name="value_<%=100+i %>"
-					value="demographicExt.key_val='<%=propDemoExt[i].replace(' ', '_') %>' and demographicExt.value like '${pSpec<%=100+i %>}%' ">
+					value="demographicExt.key_val='<%=propDemoExt[i].replace(' ', '_') %>' and demographicExt.value like 'pSpec<%=100+i %>%' ">
 				<input type="hidden" name="position_<%=100+i %>" value="sql">
 				<input type="hidden" name="dateFormat_<%=100+i %>" value="">
 				</td>
