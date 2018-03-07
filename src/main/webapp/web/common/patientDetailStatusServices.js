@@ -32,10 +32,10 @@ angular.module("patientDetailStatusServices", [])
 		
 		getStatus: function(demographicNo){
 			var deferred = $q.defer();
-			$http.get(this.apiPath+"/getStatus?demographicNo="+demographicNo,this.configHeaders).success(function(data){
-				console.log(data);
-				deferred.resolve(data);
-			}).error(function(){
+			$http.get(this.apiPath+"/getStatus?demographicNo="+demographicNo,this.configHeaders).then(function (response){
+				console.log(response.data);
+				deferred.resolve(response.data);
+			},function(){
 				console.log("error fetching patient detail status");
 				deferred.reject("An error occured while fetching items");
 			});
@@ -44,10 +44,10 @@ angular.module("patientDetailStatusServices", [])
 		
 		validateHC: function(healthCardNo, versionCode){
 			var deferred = $q.defer();
-			$http.get(this.apiPath+"/validateHC?hin="+healthCardNo+"&ver="+versionCode,this.configHeaders).success(function(data){
-				console.log(data);
-				deferred.resolve(data);
-			}).error(function(){
+			$http.get(this.apiPath+"/validateHC?hin="+healthCardNo+"&ver="+versionCode,this.configHeaders).then(function (response){
+				console.log(response.data);
+				deferred.resolve(response.data);
+			},function(){
 				console.log("error fetching Health Card Validation info");
 				deferred.reject("An error occured while fetching items");
 			});
@@ -56,10 +56,10 @@ angular.module("patientDetailStatusServices", [])
 		
 		isUniqueHC: function(healthCardNo, demographicNo){
 			var deferred = $q.defer();
-			$http.get(this.apiPath+"/isUniqueHC?hin="+healthCardNo+"&demographicNo="+demographicNo,this.configHeaders).success(function(data){
-				console.log(data);
-				deferred.resolve(data);
-			}).error(function(){
+			$http.get(this.apiPath+"/isUniqueHC?hin="+healthCardNo+"&demographicNo="+demographicNo,this.configHeaders).then(function (response){
+				console.log(response.data);
+				deferred.resolve(response.data);
+			},function(){
 				console.log("error fetching Patient Health Card info");
 				deferred.reject("An error occured while fetching items");
 			});

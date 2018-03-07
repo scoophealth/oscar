@@ -23,6 +23,10 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.common.model.LookupListItem"%>
+<%@page import="org.oscarehr.common.model.LookupList"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.managers.LookupListManager"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
@@ -114,6 +118,15 @@ function onsub() {
      document.searchprovider.provider_type.value==""  ) {
      alert("<bean:message key="global.msgInputKeyword"/>");
      return false;
+  }
+  
+  
+  if(document.searchprovider.practitionerNo.value != "") {
+	  var val = document.searchprovider.practitionerNoType.options[document.searchprovider.practitionerNoType.selectedIndex].value;
+	  if(val == "") {
+		  alert("Please choose a CPSID Type");
+		  return false;
+	  } 
   }
   if(!(document.searchprovider.provider_no.value=="-new-" || document.searchprovider.provider_no.value.match(/^[1-9]\d*$/))){
   		alert("Provider No. must be a number.");
@@ -368,9 +381,29 @@ for (int i=0; i<sites.size(); i++) {
 			<td><input type="text" name="xml_p_billinggroup_no"></td>
 		</tr>
 		<tr>
+			<td align="right"><bean:message key="admin.provider.formCPSIDType" />:
+			</td>
+			<td>
+				<select name="practitionerNoType" id="practitionerNoType">
+					<option value="">Select Below</option>
+					<%
+						LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
+						LookupList ll = lookupListManager.findLookupListByName(LoggedInInfo.getLoggedInInfoFromSession(request), "practitionerNoType");
+						for(LookupListItem llItem : ll.getItems()) {
+							%>
+								<option value="<%=llItem.getValue()%>"><%=llItem.getLabel()%></option>
+							<%
+						}
+					
+					%>
+				</select>
+				
+			</td>
+		</tr>
+		<tr>
 			<td align="right"><bean:message key="admin.provider.formCPSID" />:
 			</td>
-			<td><input type="text" name="practitionerNo"></td>
+			<td><input type="text" name="practitionerNo" id="practitionerNo"></td>
 		</tr>
 
 		<%

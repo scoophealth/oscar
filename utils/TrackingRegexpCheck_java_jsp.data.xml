@@ -1170,6 +1170,15 @@
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setPatientIdNames(Hashtable patientIdNames) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setPatientNumDoc(Hashtable patientNumDoc) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setTypeDocLab(Hashtable&lt;String, List&lt;String&gt;&gt; typeDocLab) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Hashtable drug = dr.getDrug2(id, true);</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Hashtable generic = dr.getGenericName(id);</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Vector&lt;Hashtable&lt;String, Object&gt;&gt; components = (Vector&lt;Hashtable&lt;String, Object&gt;&gt;) h.get("components");</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Vector&lt;Hashtable&gt; v = (Vector&lt;Hashtable&gt;) dr.list_drug_element3(s, false);</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:for (Hashtable h : v) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:for (Hashtable&lt;String, Object&gt; o : components) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:import java.util.Hashtable;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:import java.util.Vector;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:protected void extractAndPopulateDetails(DrugSearchTo1 t, Hashtable h, String id) throws Exception {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable docStatus = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable docType = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/InboxManager.java:Hashtable patientDocs = new Hashtable();</ViolationValue>
@@ -1585,6 +1594,7 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConShowAllServicesUtil.java:public void estServicesVectors()</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConShowAllServicesUtil.java:serviceDescVec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConShowAllServicesUtil.java:serviceIdVec = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EConsultAction.java:StringBuffer oscarUrl = request.getRequestURL();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestUtil.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestUtil.java:public Vector teamVec;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestUtil.java:teamVec = new Vector();</ViolationValue>
@@ -2704,6 +2714,7 @@
         <ViolationValue>/src/main/webapp/form/formselect.jsp:&lt;html:options collection="formHiddenVector" property="formName"</ViolationValue>
         <ViolationValue>/src/main/webapp/form/formselect.jsp:&lt;html:options collection="formShownVector" property="formName"</ViolationValue>
         <ViolationValue>/src/main/webapp/form/study/ar2ping.jsp:StringBuffer sb = new StringBuffer(N);</ViolationValue>
+        <ViolationValue>/src/main/webapp/index.jsp:StringBuffer oscarUrl = request.getRequestURL();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/ON/labValuesGraph.jsp:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/ON/labValuesGraph.jsp:String getChecked(Hashtable h,String reg){</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CA/ON/labValuesGraph.jsp:StringBuffer sb = new StringBuffer();</ViolationValue>
@@ -3017,6 +3028,7 @@
         <ViolationValue>/src/main/webapp/patient/sc.jsp:tt = new StringBuffer().append(e.nextElement());</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:&lt;jsp:useBean id="dateTimeCodeBean" class="java.util.Hashtable" scope="page" /&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:StringBuffer hourmin = null;</ViolationValue>
+        <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:StringBuffer oscarUrl = request.getRequestURL();</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:StringBuffer study_no=null, study_link=null,studyDescription=null;</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:hourmin = new StringBuffer(dateTimeCodeBean.get(curProvider_no[nProvider])!=null?((String) dateTimeCodeBean.get(curProvider_no[nProvider])).substring(ratio,ratio+1):" " );</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/appointmentprovideradminday.jsp:studyDescription = new StringBuffer("");</ViolationValue>

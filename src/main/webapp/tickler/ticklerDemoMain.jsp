@@ -616,7 +616,9 @@ function generateRenalLabReq(demographicNo) {
 					type="checkbox" name="checkbox"
 					value="<%=t.getId()%>"></TD>
 					<TD ROWSPAN="1" class="<%=cellColour%>">
+					<%if(Boolean.parseBoolean(OscarProperties.getInstance().getProperty("tickler_edit_enabled"))) {%>
 					<a href=#  onClick="popupPage(600,800, '../tickler/ticklerEdit.jsp?tickler_no=<%=t.getId()%>')"><bean:message key="tickler.ticklerMain.editTickler"/></a>
+					<% } %>
 					</TD>
 				<TD ROWSPAN="1" class="<%=cellColour%>"><a
 					href=#
@@ -667,7 +669,8 @@ function generateRenalLabReq(demographicNo) {
                             <td ROWSPAN="1" class="<%=cellColour%>"></td>
                             <td ROWSPAN="1" class="<%=cellColour%>"></td>
                             <td ROWSPAN="1" class="<%=cellColour%>"></td>
-                            <td ROWSPAN="1" class="<%=cellColour%>"><%=tc.getMessage()%></td>
+                            <td ROWSPAN="1" class="<%=cellColour%>" colspan="3"><%=tc.getMessage()%></td>
+                            
                         </tr>
        <%           }
                 }  
@@ -683,7 +686,7 @@ if (nItems == 0) {
 			Demographic d = demographicDao.getDemographicById(request.getParameter("demoview")==null?null: Integer.parseInt(request.getParameter("demoview")));
 			%>
 			<tr bgcolor=#FFFFFF class="noprint">
-				<td colspan="10" class="white"><a id="checkAllLink" name="checkAllLink" href="javascript:CheckAll();"><bean:message
+				<td colspan="11" class="white"><a id="checkAllLink" name="checkAllLink" href="javascript:CheckAll();"><bean:message
 					key="tickler.ticklerDemoMain.btnCheckAll" /></a> - <a
 					href="javascript:ClearAll();"><bean:message
 					key="tickler.ticklerDemoMain.btnClearAll" /></a> &nbsp; &nbsp; &nbsp;

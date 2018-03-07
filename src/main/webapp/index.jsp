@@ -26,6 +26,7 @@
 
 <%@page import="org.oscarehr.common.service.AcceptableUseAgreementManager"%>
 <%@page import="oscar.OscarProperties, javax.servlet.http.Cookie, oscar.oscarSecurity.CookieSecurity, oscar.login.UAgentInfo" %>
+<%@ page import="java.net.URLEncoder"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -42,6 +43,7 @@ Cookie prvCookie = new Cookie(CookieSecurity.providerCookie, "");
 prvCookie.setPath("/");
 response.addCookie(prvCookie);
 
+String econsultUrl = props.getProperty("backendEconsultUrl");
 
 // Initialize browser info variables
 String userAgent = request.getHeader("User-Agent");
@@ -63,9 +65,27 @@ if (detector.detectSmartphone() && detector.detectWebkit()  && session.getAttrib
 }
 Boolean isMobileOptimized = session.getAttribute("mobileOptimized") != null;
 
+String hostPath = request.getScheme() + "://" + request.getHeader("Host") +  ":" + request.getLocalPort();
+String loginUrl = hostPath + request.getContextPath();
+
+String ssoLoginMessage = "";
+if (request.getParameter("email") != null) {
+	ssoLoginMessage = "Hello " + request.getParameter("email") + "<br>"
+						+ "Please login with your OSCAR credentials to link your accounts.";
+}
+else if (request.getParameter("errorMessage") != null) {
+	ssoLoginMessage = request.getParameter("errorMessage");
+}
 
 //Input field styles
 String login_input_style="login_txt_fields";
+
+//Gets the request URL
+StringBuffer oscarUrl = request.getRequestURL();
+//Determines the initial length by subtracting the length of the servlet path from the full url's length
+Integer urlLength = oscarUrl.length() - request.getServletPath().length();
+//Sets the length of the URL, found by subtracting the length of the servlet path from the length of the full URL, that way it only gets up to the context path
+oscarUrl.setLength(urlLength);
 %>
 
 <html:html locale="true">
@@ -102,6 +122,9 @@ String login_input_style="login_txt_fields";
     var popup=window.open(page, "gpl", windowprops);
   }
   -->
+  			function addStartTime() {
+            	document.getElementById("oneIdLogin").href += (Math.round(new Date().getTime() / 1000).toString());
+			}
         </script>
         
         <style type="text/css">
@@ -150,6 +173,30 @@ String login_input_style="login_txt_fields";
                     font-size: x-small;
                 }
             #mobileMsg { display: none; }
+
+            .oneIdLogin {
+                background-color: #000;
+                width: 60%;
+                height: 34px;
+                margin: 0px auto;
+            }
+
+            .oneIdLogo {
+                background-color: transparent;
+                background: url("./images/oneId/oneIDLogo.png");
+                border: none;
+                display: inline-block;
+                float: left;
+                vertical-align: bottom;
+                width: 70px;
+                height: 16px;
+            }
+
+            .oneIDText {
+                display: inline-block;
+                float: left;
+                padding-left: 10px
+            }
         </style>
         <% if (isMobileOptimized) { %>
         <!-- Small adjustments are made to the mobile stylesheet -->
@@ -168,7 +215,9 @@ String login_input_style="login_txt_fields";
         
         <table border=0 width="100%">
             <tr>
-                <td align="center" class="leftbar" height="20px" width="200px"><%
+                <td align="center" class="leftbar" height="20px" width="200px">
+                    <h4><%=ssoLoginMessage%></h4>
+                    <%
                     String key = "loginApplication.formLabel" ;
                     if(request.getParameter("login")!=null && request.getParameter("login").equals("failed") ){
                     key = "loginApplication.formFailedLabel" ;
@@ -212,8 +261,13 @@ String login_input_style="login_txt_fields";
                             <bean:message key="loginApplication.formCmt"/>
                         </span>
                         <input type=hidden name='propname' value='<bean:message key="loginApplication.propertyFile"/>' />
+                        <input type="hidden" id="oneIdKey" name="nameId" value="<%=request.getParameter("nameId") != null ? request.getParameter("nameId") : ""%>"/>
+                        <input type="hidden" id="email" name="email" value="<%=request.getParameter("email") != null ? request.getParameter("email") : ""%>"/>
                         </html:form>
-                        
+
+			<% if("true".equalsIgnoreCase(OscarProperties.getInstance().getProperty("oneid.enabled","false"))) { %>
+                        <a href="<%=econsultUrl %>/SAML2/login?oscarReturnURL=<%=URLEncoder.encode(oscarUrl + "/ssoLogin.do", "UTF-8") + "?loginStart="%>" id="oneIdLogin" onclick="addStartTime()"><div class="btn btn-primary btn-block oneIDLogin"><span class="oneIDLogo"></span><span class="oneIdText">ONE ID Login</span></div></a>
+                        <% } %>
                         <%if (AcceptableUseAgreementManager.hasAUA()){ %>
                         <span class="extrasmall">
                         	<bean:message key="global.aua" /> &nbsp; <a href="javascript:void(0);" onclick="showHideItem('auaText');"><bean:message key="global.showhide"/></a>

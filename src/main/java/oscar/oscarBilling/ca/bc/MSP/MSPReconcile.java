@@ -59,12 +59,14 @@ import org.oscarehr.common.dao.BillingDao;
 import org.oscarehr.common.dao.BillingPaymentTypeDao;
 import org.oscarehr.common.model.Billing;
 import org.oscarehr.common.model.BillingPaymentType;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.entities.Billingmaster;
 import oscar.entities.MSPBill;
 import oscar.entities.Provider;
+import oscar.log.LogAction;
 import oscar.oscarBilling.ca.bc.data.BillRecipient;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
@@ -271,11 +273,11 @@ public class MSPReconcile {
 			Vector<String> exp = new Vector<String>();
 			
 			if( rejectedArray.length > 0 ) {
-				tc = (TeleplanC12) rejectedArray[1];
+				tc = (TeleplanC12) rejectedArray[0];
 			}
 			
 			if( rejectedArray.length > 1 ) {
-				ts = (TeleplanS21) rejectedArray[2];
+				ts = (TeleplanS21) rejectedArray[1];
 			}
 
 			if( tc != null ) {				
@@ -1067,9 +1069,11 @@ public class MSPReconcile {
 				if (b != null) {
 					b.setBillingstatus(newStat);
 					billingmasterDao.update(b);
-				}
+					dao.createBillingHistoryArchive(billingNo);
+				} else {
+					LogAction.addLogSynchronous(LoggedInInfo.getLoggedInInfoAsCurrentClassAndMethod(),"MSPReconcile", "Found a remittance record with no valid billingmaster No:" + billingNo);
 
-				dao.createBillingHistoryArchive(billingNo);
+				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Error", e);
 			}

@@ -68,7 +68,7 @@ public class CaseloadDao {
 		caseloadSortQueries.put("cl_search_demographic_query", "select demographic_no, last_name, first_name, sex, month_of_birth, date_of_birth, CAST((DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(concat(year_of_birth,month_of_birth,date_of_birth), '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(concat(year_of_birth,month_of_birth,date_of_birth), '00-%m-%d'))) as UNSIGNED INTEGER) as age from demographic");
 		caseloadSortQueries.put("cl_search_last_appt", "SELECT p.demographic_no, max(appointment_date) appointment_date FROM appointment p where addtime(appointment_date, start_time) < now() GROUP BY p.demographic_no");
 		caseloadSortQueries.put("cl_search_next_appt", "SELECT p.demographic_no, min(appointment_date) appointment_date FROM appointment p where addtime(appointment_date, start_time) > now() GROUP BY p.demographic_no");
-		caseloadSortQueries.put("cl_search_num_appts", "select demographic_no, count(1) as count from appointment where appointment_date > curdate() - 365 group by demographic_no");
+		caseloadSortQueries.put("cl_search_num_appts", "select demographic_no, count(1) as count from appointment where appointment_date > DATE(NOW()-INTERVAL 1 YEAR)  group by demographic_no");
 		caseloadSortQueries.put("cl_search_new_labs", "select demographic_no, count(1) as count from providerLabRouting left join patientLabRouting using (lab_no) where providerLabRouting.lab_type='HL7' and status='N' and provider_no='%s' group by demographic_no");
 		caseloadSortQueries.put("cl_search_new_docs", "select demographic_no, count(1) as count from providerLabRouting left join patientLabRouting using (lab_no) where providerLabRouting.lab_type='DOC' and status='N' and provider_no='%s' group by demographic_no");
 		caseloadSortQueries.put("cl_search_new_ticklers", "select demographic_no, count(1) as count from tickler where status='A' group by demographic_no");
@@ -90,7 +90,7 @@ public class CaseloadDao {
 		caseloadDemoQueries.put("cl_demographic_query_roster", "select last_name, first_name, sex, month_of_birth, date_of_birth, CAST((DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(concat(year_of_birth,month_of_birth,date_of_birth), '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(concat(year_of_birth,month_of_birth,date_of_birth), '00-%m-%d'))) as UNSIGNED INTEGER) as age from demographic where demographic_no=? AND roster_status=?");
 		caseloadDemoQueries.put("cl_last_appt", "select max(appointment_date) from appointment where addtime(appointment_date, start_time) < now() and demographic_no=?");
 		caseloadDemoQueries.put("cl_next_appt", "select min(appointment_date) from appointment where addtime(appointment_date, start_time) > now() and demographic_no=?");
-		caseloadDemoQueries.put("cl_num_appts", "select count(*) from appointment where demographic_no=? and appointment_date > curdate() - 365");
+		caseloadDemoQueries.put("cl_num_appts", "select count(*) from appointment where demographic_no=? and appointment_date > DATE(NOW()-INTERVAL 1 YEAR) ");
 		caseloadDemoQueries.put("cl_new_labs", "select count(*) from providerLabRouting left join patientLabRouting using (lab_no) where providerLabRouting.lab_type='HL7' and status='N' and provider_no=? and demographic_no=?");
 		caseloadDemoQueries.put("cl_new_docs", "select count(*) from providerLabRouting left join patientLabRouting using (lab_no) where providerLabRouting.lab_type='DOC' and status='N' and provider_no=? and demographic_no=?");
 		caseloadDemoQueries.put("cl_new_ticklers", "select count(*) from tickler where status='A' and demographic_no=?");

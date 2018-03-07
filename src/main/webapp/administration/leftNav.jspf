@@ -476,7 +476,7 @@ String curProvider_no = (String)session.getAttribute("user");
 <!-- #ECHART END-->	
 
 <!-- #Schedule Management -->
-	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.schedule" rights="r" reverse="<%=false%>">
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.schedule,_admin.schedule.curprovider_only" rights="r" reverse="<%=false%>">
 				<div class="accordion-heading">
 				<a class="accordion-toggle" data-toggle="collapse" data-parent="#adminNav" href="#collapseSeven">
 				<bean:message key="admin.admin.ScheduleManagement" />
@@ -491,6 +491,7 @@ String curProvider_no = (String)session.getAttribute("user");
 						class="xlink" rel="${ctx}/schedule/scheduletemplatesetting.jsp"
 						title="<bean:message key="admin.admin.scheduleSettingTitle"/>"><bean:message
 						key="admin.admin.scheduleSetting" /></a></li>
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_admin.schedule.curprovider_only" rights="r" reverse="<%=true%>">
 					<oscar:oscarPropertiesCheck property="ENABLE_EDIT_APPT_STATUS"
 						value="yes">
 						<li><a href="javascript:void(0);"
@@ -511,9 +512,15 @@ String curProvider_no = (String)session.getAttribute("user");
 					<li><a href="javascript:void(0);"
 						class="xlink" rel="${ctx}/admin/groupnoacl.jsp"><bean:message
 						key="admin.admin.btnGroupNoAcl" /></a></li>
-		                        <li><a href='javascript:void(0);'
+		            <oscar:oscarPropertiesCheck property="billregion" value="ON">
+		           
+		            <li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/groupPreferences.jsp"><bean:message key="admin.admin.btnGroupPreference" /></a></li>
+						
+					</oscar:oscarPropertiesCheck>
+					
 					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/oscarPrevention/PreventionManager.jsp" title="Customize prevention notifications."><bean:message key="admin.admin.preventionNotification.title" /></a></li>
+				</security:oscarSec>
 				</ul>
 				</div>
 				</div>
@@ -939,6 +946,10 @@ String curProvider_no = (String)session.getAttribute("user");
 						<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/fixRolesOnNotes.jsp"><bean:message
 						key="admin.admin.btnFixNotes" /></a></li>
+						
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/auditLogPurge.jsp"><bean:message
+						key="admin.admin.btnAuditLogPurge" /></a></li>
 				</ul>
 				</div>
 				</div>

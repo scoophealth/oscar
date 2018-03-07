@@ -60,7 +60,7 @@ public class MEDITECHHandler implements MessageHandler {
 	public static enum DIAGNOSTIC_ID {PTH,ITS,LAB,MIC,BBK,MB} // Pathology, Report, Lab, Microbiology, Blood Bank, Microbiology
 	public static enum UNSTRUCTURED {PTH,ITS} // Pathology, Report(dictation etc..)
 	public static enum STRUCTURED {LAB,MIC,BBK} // Lab, Microbiology, Blood Bank
-	public static enum OBX_DATA_TYPES {NM,ST,CE,TX} // Numeric, String, Coded Element, Text
+	public static enum OBX_DATA_TYPES {NM,ST,CE,TX,FT} // Numeric, String, Coded Element, Text, FreeText
 	public static enum ORDER_STATUS {F,C,S,P,X,I} // complete(or final), corrected, signed, preliminary, cancelled, incomplete
 	
 //	public static final boolean USE_OBR_HEADERS_FOR_OBR_NAME = Boolean.TRUE; 
@@ -82,7 +82,7 @@ public class MEDITECHHandler implements MessageHandler {
 
 		Parser parser = new PipeParser();
 		parser.setValidationContext(new NoValidation());
-		msg = (ORU_R01) parser.parse(hl7Body.replaceAll( "\n", "\r\n" ).replace("\\.Zt\\", "\t") );
+		msg = (ORU_R01) parser.parse(hl7Body.replaceAll( "\n", "\r\n" ) );
 		setTerser( new Terser(msg) );
 	}
 
@@ -114,13 +114,18 @@ public class MEDITECHHandler implements MessageHandler {
 	 * 
 	 */
 	public boolean isReportData() {		
-		return ( OBX_DATA_TYPES.TX.name().equals( getOBXValueType(0, 0) ) && ! isUnstructured() );		
+		if( OBX_DATA_TYPES.TX.name().equals( getOBXValueType(0, 0) ) 
+				|| OBX_DATA_TYPES.FT.name().equals( getOBXValueType(0, 0) ) ) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
 	 * Determines if this lab is a LTS or PATH type. 
 	 */
-	public boolean isUnstructured() {		
+	public boolean isUnstructured() {	
+		
 		for(UNSTRUCTURED lab : UNSTRUCTURED.values()) {
 			if( lab.name().equalsIgnoreCase( getSendingApplication() ) ) {
 				return true;

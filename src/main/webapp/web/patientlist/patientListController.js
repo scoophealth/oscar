@@ -146,7 +146,7 @@ $scope.changeTab = function(temp,filter){
 			    headers: {
 			        "Content-Type": "application/json"
 			    }
-			}).success(function(response){
+			}).then(function (response){
 				
 				
 				$scope.template = tab.template;
@@ -154,13 +154,13 @@ $scope.changeTab = function(temp,filter){
 				
 				$scope.currentPage = 0;
 				
-				if (response.patients instanceof Array) {
-					$scope.patients = response.patients;
-				} else if(response.patients == undefined) { 
+				if (response.data.patients instanceof Array) {
+					$scope.patients = response.data.patients;
+				} else if(response.data.patients == undefined) { 
 					$scope.patients = [];
 				} else {
 					var arr = new Array();
-					arr[0] = response.patients;
+					arr[0] = response.data.patients;
 					$scope.patients = arr;
 				}
 				
@@ -169,7 +169,7 @@ $scope.changeTab = function(temp,filter){
 					$scope.nPages=Math.ceil($scope.patients.length/$scope.pageSize);
 				} 
 			 
-			}).error(function(error){
+			},function(error){
 			   alert('error loading data for patient list:' + error);
 			});	
 		} else {
@@ -246,9 +246,9 @@ oscarApp.controller('PatientListDemographicSetCtrl', function($scope, Navigation
 	        url: '../ws/rs/reporting/demographicSets/list',
 	        method: "GET",
 	        headers: {'Content-Type': 'application/json'}
-	      }).success(function (data, status, headers, config) {
-	    	  $scope.sets = data.content;
-	      }).error(function (data, status, headers, config) {
+	      }).then(function (response){
+	    	  $scope.sets = response.data.content;
+	      },function (data, status, headers, config) {
 	          alert('Failed to get sets lists.');
 	      });
 
@@ -401,10 +401,10 @@ oscarApp.controller('PatientListProgramCtrl', function($scope,$http) {
 	        url: '../ws/rs/program/patientList?startIndex='+startIndex+'&numToReturn='+pageSize,
 	        method: "GET",
 	        headers: {'Content-Type': 'application/json'}
-	      }).success(function (data, status, headers, config) {
-	    	  $scope.admissions = data.content;
-	    	  $scope.$emit('updatePatientListPagination', data.total);
-	      }).error(function (data, status, headers, config) {
+	      }).then(function (response){
+	    	  	$scope.admissions = response.data.content;
+	    	  	$scope.$emit('updatePatientListPagination', response.data.total);
+	      },function (data, status, headers, config) {
 	          alert('Failed to get sets lists.');
 	      });
 	 }

@@ -497,6 +497,7 @@ table.ele thead {
                           <th>Guardian</th>
                           <%}%>
                           <th>Phone</th>
+                          <th>Email</th>
                           <th>Address</th>
                           <th>Next Appt.</th>
                           <th>Status</th>
@@ -564,6 +565,7 @@ table.ele thead {
                           <td><%=h.get("firstName")%></td>
                           <td><%=demo.getHin()+demo.getVer()%></td>
                           <td><%=demo.getPhone()%> </td>
+                          <td><%=demo.getEmail() %></td>
                           <td><%=demo.getAddress()+" "+demo.getCity()+" "+demo.getProvince()+" "+demo.getPostal()%> </td>
                           <td><oscar:nextAppt demographicNo="<%=demo.getDemographicNo().toString()%>"/></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.state%></td>                          
@@ -581,6 +583,7 @@ table.ele thead {
                           <td><%=demo.getHin()+demo.getVer()%></td>
                           <td><%=demoSDM==null?"":demoSDM.getLastName()%><%=demoSDM==null?"":","%> <%= demoSDM==null?"":demoSDM.getFirstName() %>&nbsp;</td>
                           <td><%=demoSDM==null?"":demoSDM.getPhone()%> &nbsp;</td>
+                          <td><%=demoSDM==null?"":demoSDM.getEmail()%> &nbsp;</td>
                           <td><%=demoSDM==null?"":demoSDM.getAddress()+" "+demoSDM==null?"":demoSDM.getCity()+" "+demoSDM==null?"":demoSDM.getProvince()+" "+demoSDM==null?"":demoSDM.getPostal()%> &nbsp;</td>
                           <td><oscar:nextAppt demographicNo="<%=demo.getDemographicNo().toString()%>"/></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.state%></td>
@@ -603,7 +606,7 @@ table.ele thead {
                               <%if ( dis.nextSuggestedProcedure != null && dis.nextSuggestedProcedure.equals("P1")){ %>
                                  <a href="javascript: return false;" onclick="return completedProcedure('<%=i+1%>','<%=followUpType%>','<%=dis.nextSuggestedProcedure%>','<%=dis.demographicNo%>');"><%=dis.nextSuggestedProcedure%></a>                              
                               <%}else{%>
-                                    <%=dis.nextSuggestedProcedure%>
+                                    <%=(dis.nextSuggestedProcedure != null)?dis.nextSuggestedProcedure:"&nbsp;"%>
                               <%}%>
                           </td>
                           <td bgcolor="<%=dis.color%>">		

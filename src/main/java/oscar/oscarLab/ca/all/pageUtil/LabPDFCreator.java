@@ -84,6 +84,7 @@ import com.lowagie.text.rtf.RtfWriter2;
 public class LabPDFCreator extends PdfPageEventHelper{
     private OutputStream os;
     private boolean isUnstructuredDoc = false;
+    private boolean isReportData = Boolean.FALSE;
     private MessageHandler handler;
     private List<MessageHandler>handlers = new ArrayList<MessageHandler>();
     
@@ -266,17 +267,20 @@ public class LabPDFCreator extends PdfPageEventHelper{
 		} else if(handler.getMsgType().equals("CLS"))
 		{
 			this.isUnstructuredDoc = ((CLSHandler) handler).isUnstructured();
-		}
+		} 
 
 		PdfPCell cell = new PdfPCell();
 		float[] mainTableWidths;
 		PdfPTable table = null;
 		
-		if ( handler instanceof MEDITECHHandler && ((MEDITECHHandler) handler).isUnstructured()
-				|| ( handler instanceof MEDITECHHandler && ((MEDITECHHandler) handler).isReportData() ) ) {
+		if( ( handler instanceof MEDITECHHandler && ((MEDITECHHandler) handler).isReportData() ) 
+				|| ( handler instanceof PATHL7Handler && ((PATHL7Handler) handler).isReportData() ) ) {
+			
 			table = new PdfPTable(1);
 			table.setWidthPercentage(100);
-			this.isUnstructuredDoc = Boolean.TRUE;
+			this.isReportData = Boolean.TRUE;
+
+			
 		} else {
 		
 			if(isUnstructuredDoc){
@@ -420,7 +424,6 @@ public class LabPDFCreator extends PdfPageEventHelper{
 				for (int k = 0; k < obxCount; k++) {
 					
 					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-					cell.setPadding(5);
 					cell.setBorder( Rectangle.BOTTOM );
 					cell.setBorderColor( Color.lightGray );
 					cell.setBackgroundColor( Color.white );
@@ -460,17 +463,38 @@ public class LabPDFCreator extends PdfPageEventHelper{
 							// add the obx results and info
 							Font lineFont = new Font(bf, 9, Font.NORMAL, getTextColor(handler,handler.getOBXAbnormalFlag(j,k)));
 
-							if(isUnstructuredDoc){
+							if( this.isReportData ) {
+								cell.setColspan(1);
+								cell.setBorder(Rectangle.NO_BORDER);
+								cell.setBorderColor(Color.white);
+								cell.setPadding(0);
+								cell.setPaddingLeft(10);
+
+								if( handler instanceof PATHL7Handler &&
+									"".equals( ( (PATHL7Handler) handler).getOBXSubId( j,k ) ) ) {
+									PdfPTable infoTable = new PdfPTable(2);
+									infoTable.setWidthPercentage(100);
+									cell.setPhrase( new Phrase( handler.getOBXName(j, k).replaceAll("<br\\s*/*>", " "), lineFont ) );
+									infoTable.addCell(cell);
+									cell.setPhrase( new Phrase( handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", " "), lineFont ) );
+									infoTable.addCell(cell);
+									table.addCell(infoTable);
+								} else {				
+									cell.setPhrase( new Phrase( handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n"), lineFont ) );
+									table.addCell(cell);
+								}
+	
+							} else if( isUnstructuredDoc ){
 
 								//if there are duplicate obxNames, display only the first 
 								cell.setBorder(Rectangle.NO_BORDER);				
 								cell.setPadding(0);
 								cell.setPaddingTop(3);
 								
-								if(! "MEDITECH".equalsIgnoreCase(handler.getMsgType() )) { 
+								if( ! "MEDITECH".equalsIgnoreCase( handler.getMsgType() ) ) { 
 									if( ( ( handler.getOBXIdentifier(j, k).equalsIgnoreCase(handler.getOBXIdentifier(j, k-1)) && (obxCount>1) ) 
 											|| ( obxName.equalsIgnoreCase(obrName) ) ) ){
-										cell.setPhrase(new Phrase("NEW PHRASE", lineFont));
+										cell.setPhrase(new Phrase("", lineFont));
 										table.addCell(cell);
 									}else {
 										cell.setPhrase(new Phrase((obrFlag ? "   " : "")+ obxName, lineFont));
@@ -482,15 +506,16 @@ public class LabPDFCreator extends PdfPageEventHelper{
 								table.addCell(cell);
 	
 								//if there are duplicate Times, display only the first 
-								if(! "MEDITECH".equalsIgnoreCase(handler.getMsgType() )) { 
+								if(! "MEDITECH".equalsIgnoreCase(handler.getMsgType() ) ){ 
 									if( handler.getTimeStamp(j, k).equals(handler.getTimeStamp(j, k-1)) && (obxCount>1) ){
-										cell.setPhrase(new Phrase("TIMESTAMP PHRASE", lineFont));		
+										cell.setPhrase(new Phrase("", lineFont));		
 										table.addCell(cell); 
 									}else {
 										cell.setPhrase(new Phrase(handler.getTimeStamp(j, k), lineFont));		
 										table.addCell(cell);
 									}
 								}
+								
 								if(handler.getMsgType().equals("CLS")) {
 									cell.setPhrase(new Phrase(handler.getOBXResultStatus(j, k), lineFont));
 									table.addCell(cell);
@@ -601,18 +626,19 @@ public class LabPDFCreator extends PdfPageEventHelper{
 						} else if (
 								( handler.getMsgType().equals("EPSILON") && header.equals(handler.getOBXIdentifier(j,k)) && obxName.equals("") ) 
 								|| ( handler.getMsgType().equals("PFHT") && obxName.equals("")&& header.equals(handler.getObservationHeader(j,k)) )
-								|| ( handler.getMsgType().equals("MEDITECH") && obxName.equals("") ) ){
+								|| ( handler.getMsgType().equals("MEDITECH") && obxName.equals("") ) 
+							){
 
 							cell.setBorder(Rectangle.NO_BORDER);
 							cell.setBorderColor(Color.white);
 							cell.setPadding(0);
 							cell.setPaddingLeft(10);
-							cell.setPaddingBottom(3);
 							cell.setColspan(7);
 
 							table.setWidthPercentage(100);
 							cell.setPhrase( new Phrase( handler.getOBXResult(j, k).replaceAll( "<br\\s*/*>", "\n" ), font ) );							
 							table.addCell(cell);
+							
 							cell.setColspan(1);
 							cell.setBorder(Rectangle.BOTTOM);
 							cell.setBorderColor(Color.lightGray);

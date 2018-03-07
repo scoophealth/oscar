@@ -23,6 +23,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -168,6 +169,23 @@ public class OscarLogDao extends AbstractDao<OscarLog> {
 		return(results);
 	}
 
+	/*
+	 * Warning. Don't use this. It's only for the log purging feature.
+	 */
+	public int purgeLogEntries(Date maxDateToRemove) {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		String sqlCommand = "delete from " + modelClass.getSimpleName() + " WHERE dateTime <= ?";
+		
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, formatter.format(maxDateToRemove));
+		int ret = query.executeUpdate();
+		
+		return ret;
+		
+		
+	}
+	
 	@Override
     public void remove(AbstractModel<?> o) {
 	    throw new SecurityException("Cannot remove audit log entries!");

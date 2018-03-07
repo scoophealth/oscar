@@ -41,6 +41,13 @@
   String param = "";
   if(request.getParameter("login")!=null ) {
 	  param = "?login="+request.getParameter("login") ;
+	  if (request.getParameter("nameId") != null) {
+		  param = param + "&nameId=" + request.getParameter("nameId");  
+	  }
   }
+  else if (request.getParameter("errorMessage") != null) {
+	  param = "?errorMessage=" + request.getParameter("errorMessage");
+  }
+  
   response.sendRedirect("index.jsp"+param);
 %>

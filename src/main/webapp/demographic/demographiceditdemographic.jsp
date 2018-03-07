@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.managers.LookupListManager"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -237,7 +238,7 @@ if(!authed) {
 	// get a list of programs the patient has consented to. 
 	if( oscarProps.getBooleanProperty("USE_NEW_PATIENT_CONSENT_MODULE", "true") ) {
 	    PatientConsentManager patientConsentManager = SpringUtils.getBean( PatientConsentManager.class );
-		pageContext.setAttribute( "consentTypes", patientConsentManager.getConsentTypes() );
+		pageContext.setAttribute( "consentTypes", patientConsentManager.getActiveConsentTypes() );
 		pageContext.setAttribute( "patientConsents", patientConsentManager.getAllConsentsByDemographic( loggedInInfo, Integer.parseInt(demographic_no) ) );
 	}
 
@@ -782,6 +783,24 @@ jQuery(document).ready(function() {
        });
 });
 
+function consentClearBtn(radioBtnName)
+{
+    //clear out opt-in/opt-out radio buttons
+    var ele = document.getElementsByName(radioBtnName);
+
+    for(var i=0;i<ele.length;i++)
+    {
+        ele[i].checked = false;
+    }
+
+    //hide consent date field from displaying
+    var consentDate = document.getElementById("consentDate");
+
+    if (consentDate && consentDate.style.display === "block")
+    {
+        consentDate.style.display = "none";
+    }
+}
 </script>
 
 </head>
@@ -1611,6 +1630,27 @@ if ( Dead.equals(PatStat) ) {%>
                                                             key="demographic.demographiceditdemographic.formEndDate" />:</span>
                                                         <span class="info"><%=MyDateFormat.getMyStandardDate(demographic.getEndDate())%></span>
 							</li>
+							
+							<li><span class="label">
+								<bean:message key="demographic.demographiceditdemographic.formPHU" />:</span>
+								<%
+									String phuName = null;
+									String phu = demoExt.get("PHU");
+									
+									LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
+									LookupList ll = lookupListManager.findLookupListByName(LoggedInInfo.getLoggedInInfoFromSession(request), "phu");
+									if(ll != null) {
+										LookupListItem phuItem =  lookupListManager.findLookupListItemByLookupListIdAndValue(loggedInInfo, ll.getId(), phu);
+										
+										if(phuItem != null) {
+											phuName = phuItem.getLabel();	
+										}
+									}
+									
+								%>
+                                <span class="info"><%=StringUtils.trimToEmpty(phuName)%></span>
+                            </li>
+                                                        
 						</ul>
 						</div>
 
@@ -1708,11 +1748,13 @@ if ( Dead.equals(PatStat) ) {%>
 <oscar:oscarPropertiesCheck property="USE_NEW_PATIENT_CONSENT_MODULE" value="true" >
 		                          	
                           		<c:forEach items="${ patientConsents }" var="patientConsent" >
+						<c:if test="${ not empty patientConsent.optout}">
                           		<li>
+							<c:if test="${ patientConsent.consentType.active }">
                           			<span class="popup label" onmouseover="nhpup.popup(${ patientConsent.consentType.description },{'width':350} );" >
 										<c:out value="${ patientConsent.consentType.name }" />
 									</span>
-                          			
+
                           			<c:choose>
 										<c:when test="${ patientConsent.optout }">
 											<span class="info" style="color:red;"> Opted Out:<c:out value="${ patientConsent.optoutDate }" /></span>
@@ -1723,7 +1765,9 @@ if ( Dead.equals(PatStat) ) {%>
 										</c:otherwise>				
 									</c:choose>		
                           				
+							</c:if>
                           		</li>	
+						</c:if>
                           		</c:forEach>	                              	
 </oscar:oscarPropertiesCheck>
 <%-- END ENABLE NEW PATIENT CONSENT MODULE --%>
@@ -3048,8 +3092,26 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								</td>
                                                         </tr>
                                                         <tr>
-                                                                <td>&nbsp;</td>
-                                                                
+                                <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formPHU" />:</b></td>
+                                <td align="left">
+		                                <select id="PHU" name="PHU" >
+										<option value="">Select Below</option>
+										<%
+											if(ll != null) {
+												for(LookupListItem llItem : ll.getItems()) {
+													String selected = "";
+													if(llItem.getValue().equals(StringUtils.trimToEmpty(demoExt.get("PHU")))) {
+														selected = " selected=\"selected\" ";	
+													}
+													%>
+														<option value="<%=llItem.getValue()%>" <%=selected%>><%=llItem.getLabel()%></option>
+													<%
+												}
+											}
+										
+										%>
+									</select>
+                                </td>                                
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formChartNo" />:</b></td>
 								<td align="left"><input type="text" name="chart_no"
@@ -3201,18 +3263,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 					<tr class="privacyConsentRow" id="${ count.index }" valign="top">
 						<td class="alignLeft" width="30%" >
 							<label style="font-weight:bold;" valign="center" for="${ consentType.type }" >
-							
-								<input type="checkbox" 
-									name="${ consentType.type }" 
-									id="${ consentType.type }" 
-									value="${ consentType.id }" 
-									${ not empty patientConsent and patientConsent.patientConsented ? 'checked' : '' } />
-								
-								<input type="hidden" name="${ consentType.type }_id" 
-									value="${ not empty patientConsent and patientConsent.id gt 0 ? patientConsent.id : 0 }" />
-									
 								<c:out value="${ consentType.name }" />
-								
 							</label>
 						</td>
 						
@@ -3221,13 +3272,40 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 						</td>
 						
 						<td class="alignLeft" id="consentStatusDate" width="25%" >	
-							<c:if test="${ not empty patientConsent }" >
+                                                    <input type="radio"
+                                                                name="${ consentType.type }"
+                                                                id="${ consentType.type }"
+                                                                value="0"
+                                                                <c:if test="${ not empty patientConsent and not empty patientConsent.optout and not patientConsent.optout }">
+                                                                    <c:out value="checked" />
+                                                                </c:if>
+                                                    />
+                                                    <span>Opt-In</span>
+
+                                                    <input type="radio"
+                                                                name="${ consentType.type }"
+                                                                id="${ consentType.type }"
+                                                                value="1"
+                                                                <c:if test="${  not empty patientConsent  and not empty patientConsent.optout and patientConsent.optout }">
+                                                                    <c:out value="checked" />
+                                                                </c:if>
+                                                    />
+                                                    <span>Opt-Out</span>
+
+                                                    <input type="button"
+                                                           name="clearRadio_${consentType.type}_btn"
+                                                           onclick="consentClearBtn('${consentType.type}')" value="Clear"/>
+
+                                                    <br/>
+							<c:if test="${ not empty patientConsent and not empty patientConsent.optout }" >
 								<c:choose>
 									<c:when test="${ patientConsent.optout }">
-										<span class="info" style="color:red;">Opted Out:<c:out value="${ patientConsent.optoutDate }" /></span>
+										<span id="consentDate" class="info" style="display: block; color:red;">Opted Out:<c:out value="${ patientConsent.optoutDate }" /></span>
+
 									</c:when>					
 									<c:otherwise>
-										<span class="info" style="color:green;">Consented:<c:out value="${ patientConsent.consentDate }" /></span>
+										<span id="consentDate" class="info" style="display: block; color:green;">Consented:<c:out value="${ patientConsent.consentDate }" /></span>
+
 									</c:otherwise>				
 								</c:choose>															
 							</c:if>																														

@@ -417,6 +417,7 @@
 
 			if (head != null && !head.equals(dem_no)) {
 				//skip non head records
+				nItems++;
 				continue;
 			}
 
@@ -502,11 +503,13 @@
 </a>
 </div>
 
+<caisi:isModuleLoad moduleName="caisi">
 <div class="goBackToSchedule">
 <a href="../provider/providercontrol.jsp" title="<bean:message key="demographic.search.btnReturnToSchedule" />">
 <bean:message key="demographic.search.btnReturnToSchedule" />
 </a>
 </div>
+</caisi:isModuleLoad>
 
 
 </div>
