@@ -352,12 +352,6 @@ public class Provider extends AbstractModel<String> implements Comparable<Provid
 		}
 	}
 
-	@Override
-    public int hashCode() {
-		if (providerNo==null) return(super.hashCode());
-		else return(providerNo.hashCode());
-	}
-
 	public class ComparatorName implements Comparator<Provider>, Serializable {
 
 		public int compare(Provider o1, Provider o2) {
@@ -377,7 +371,7 @@ public class Provider extends AbstractModel<String> implements Comparable<Provid
 
 	@Override
 	public String getId() {
-		return null;
+		return providerNo;
 	}
 
 }
