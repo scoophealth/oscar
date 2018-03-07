@@ -297,6 +297,8 @@ public class EctConsultationFormRequestAction extends Action {
                 		consult.setAppointmentTime(date);
 			}catch(NumberFormatException nfEx) {
 				MiscUtils.getLogger().error("Invalid Time", nfEx);
+			} catch(IllegalArgumentException e) {
+				MiscUtils.getLogger().error("Invalid Time", e);
 			}
                 }
                 consult.setReasonForReferral(frm.getReasonForConsultation());
