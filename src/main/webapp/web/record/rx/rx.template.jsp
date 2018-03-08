@@ -74,10 +74,24 @@
         		<medsearch med-selected="$ctrl.medSelected(med)"></medsearch>
         		
         		<div class="list-group">
-			  <a href="#" class="list-group-item <%--active--%>" ng-repeat="med in $ctrl.toRxList">
-			    <h4 class="list-group-item-heading">{{med.getName()}}</h4>
-			    <p class="list-group-item-text">{{med}}</p>
-			  </a>
+			  <li class="list-group-item <%--active--%>" ng-repeat="med in $ctrl.toRxList">
+			  <div class="row" >
+			  	<div class="col-sm-8">
+				    <h4 class="list-group-item-heading">{{med.getName()}}</h4>
+				    <p class="list-group-item-text">{{med.id}}</p>
+				    		<!-- rx entry here -->
+			    </div>
+			  	<div class="col-sm-4">
+				  	<div uib-alert ng-repeat="alert in $ctrl.page.dsMessageHash[med.atc]" class="alert"  ng-class="'alert-' + ($ctrl.getAlertStyl(alert) || 'warning')"  style="padding: 9px;margin-bottom: 3px;" uib-popover-html="{{alert.body}}" popover-trigger="'mouseenter'">
+		 		    {{alert.interactStr}}
+		 			{{alert.name}}
+		 			<br>
+		 			<small>From:{{alert.author}}</small>
+		 			</div>
+	 			</div>
+	 			
+			    </div>
+			  </li>
 			</div>
         		
 		</div>
@@ -92,7 +106,7 @@
 					      <div class="input-group-btn">
 					        <button type="button" class="btn btn-default" ng-click="exportDemographic()">Print</button>
 					        <button type="button" class="btn btn-default" ng-click="exportDemographic()">Reprint</button>
-					        <button type="button" class="btn btn-default" ng-click="exportDemographic()">Timeline</button>
+					        <button type="button" class="btn btn-default" ng-click="$ctrl.shortDSMessage()">Timeline</button>
 					      </div>
 					    </div><!-- /input-group -->
 				  	</div>
@@ -145,6 +159,22 @@
 
 
 	 <div class="col-sm-3" ng-click="checkAction($event)" ng-keypress="checkAction($event)">
+	    <fieldset>
+       		<legend style="margin-bottom:0px;">Alerts</legend>
+       		
+	 		<div uib-alert ng-repeat="alert in $ctrl.page.dsMessageList" class="alert"  ng-class="'alert-' + ($ctrl.getAlertStyl(alert) || 'warning')"  style="padding: 9px;margin-bottom: 3px;" uib-popover-html="{{alert.body}}" popover-trigger="'mouseenter'">
+	 		    {{alert.interactStr}}
+	 			{{alert.name}}
+	 			<br>
+	 			<small>From:{{alert.author}}</small>
+	 			
+	 		</div>
+	 	</fieldset>
+	 	
+	 	
+	 	
+	 
+	 
 	 	<fieldset ng-repeat="mod in $ctrl.page.columnThree.modules">
        		<legend style="margin-bottom:0px;">{{mod.displayName}}
        			<div class="form-group">

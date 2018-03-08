@@ -18,6 +18,7 @@ const RxComponent = {
  		rxComp.page.columnThree.modules = {};
  		rxComp.page.drugs = [];
  		rxComp.page.dsMessageList = [];
+ 		rxComp.page.dsMessageHash = {};
  		
  		rxComp.toRxList = [];  //might want to cache this server side and check back so that we can switch between tabs.
  		
@@ -45,7 +46,6 @@ const RxComponent = {
  	}
  	
  	rxComp.getAlertStyl = function(alert){
- 		console.log("alert",alert);
  		if(alert.significance === 3){
  			return "danger";
  		}else if(alert.significance ===2){
@@ -57,10 +57,38 @@ const RxComponent = {
  		}
  	}
  	
- 	rxComp.getDSMessages = function(demo,meds){
+ 	rxComp.getDSMessages = function(demo,medsList){
+ 		
+ 		meds = [];
+ 		for(i=0;i< medsList.length; i++){
+ 			meds.push(medsList[i].toDrugTransferObject().drug);
+ 		}
+ 		
  		rxService.getDSMessages($stateParams.demographicNo,meds).then(function(data){
 			  console.log("dsMessageList--",data);
 			  rxComp.page.dsMessageList = data.data.dsMessages;
+			  rxComp.page.dsMessageHash = {};
+			  for(i=0;i< rxComp.page.dsMessageList.length; i++){
+				 dsmessage = rxComp.page.dsMessageList[i];
+				 console.log("dsMessage",dsmessage);
+				 if(dsmessage.atc != null){
+					 if(angular.isDefined(rxComp.page.dsMessageHash[dsmessage.atc]) ){
+						 rxComp.page.dsMessageHash[dsmessage.atc].push(rxComp.page.dsMessageList[i]);
+					 }else{
+						 rxComp.page.dsMessageHash[dsmessage.atc] = [];
+						 rxComp.page.dsMessageHash[dsmessage.atc].push(rxComp.page.dsMessageList[i]);
+					 }
+				 }
+				 if(dsmessage.atc2 != null){
+					 if(angular.isDefined(rxComp.page.dsMessageHash[dsmessage.atc2])){
+						 rxComp.page.dsMessageHash[dsmessage.atc2].push(rxComp.page.dsMessageList[i]);
+					 }else{
+						 rxComp.page.dsMessageHash[dsmessage.atc2] = [];
+						 rxComp.page.dsMessageHash[dsmessage.atc2].push(rxComp.page.dsMessageList[i]);
+					 }
+				 }
+			  }
+			  console.log("rxComp.page.dsMessageHash",rxComp.page.dsMessageHash);
 		    	},
 		    	function(errorMessage){
 			      console.log("getMedications++"+errorMessage);
@@ -75,6 +103,9 @@ const RxComponent = {
  		   m.drug = med;
  		   var d = new Drug();
  	       d.applyFavorite(m);
+ 	       //if(angular.isDefined(d.id)){
+ 	    	   //   delete d.id;
+ 	       //}
  	       rxComp.toRxList.push(d);
  		}else{
  			console.log("calling getMEd details ",med);
@@ -83,6 +114,9 @@ const RxComponent = {
  	            newMed = new Drug($stateParams.demographicNo);
  	            newMed.name = med.name;
  	            newMed.newMed = true;
+ 	            //if(angular.isDefined(newMed.id)){
+ 	            //   delete newMed.id;
+ 	            //}
  	            newMed.populateFromDrugSearchDetails(d.data.drugs[0]);
 
  	           rxComp.toRxList.push(newMed);
