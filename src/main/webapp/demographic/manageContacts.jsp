@@ -601,7 +601,9 @@ jQuery(document).ready( function($) {
 			<%
 			//get options for this program.
 			ContactManager contactManager = SpringUtils.getBean(ContactManager.class);
-			List<ProgramContactType> pctList = contactManager.getContactTypesForCurrentProgramAndCategory(LoggedInInfo.getLoggedInInfoFromSession(request),type);
+			//List<ProgramContactType> pctList = contactManager.getContactTypesForCurrentProgramAndCategory(LoggedInInfo.getLoggedInInfoFromSession(request),type);
+			
+			List<ProgramContactType> pctList = contactManager.getContactTypesForBedProgramAndCategory(LoggedInInfo.getLoggedInInfoFromSession(request),type, demographicNoString);
 			
 			%>
 			<!-- If Internal list, then display the Internal Demographic options
