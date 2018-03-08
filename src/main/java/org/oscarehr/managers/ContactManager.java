@@ -30,9 +30,11 @@ import java.util.Map;
 
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.common.dao.AbstractDao;
 import org.oscarehr.common.dao.ContactTypeDao;
 import org.oscarehr.common.dao.ProgramContactTypeDao;
+import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.ContactType;
 import org.oscarehr.common.model.ProgramContactType;
 import org.oscarehr.common.model.ProgramContactTypePK;
@@ -165,6 +167,22 @@ public class ContactManager {
 			return new ArrayList<ProgramContactType>();
 		}
 		return getContactTypesForProgramAndCategory(loggedInInfo,currentProgram.getProgramId().intValue(),category);
+	}
+	
+	public List<ProgramContactType> getContactTypesForBedProgramAndCategory(LoggedInInfo loggedInInfo, String category, String demographicNo) {
+		ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
+		AdmissionManager admissionManager = SpringUtils.getBean(AdmissionManager.class);
+		Admission adm = admissionManager.getCurrentBedProgramAdmission(Integer.parseInt(demographicNo));
+		Program currentProgram = null;
+		
+		if(adm != null) {
+			currentProgram = programManager2.getProgram(loggedInInfo, adm.getProgramId());
+		}
+		
+		if(currentProgram == null) {
+			return new ArrayList<ProgramContactType>();
+		}
+		return getContactTypesForProgramAndCategory(loggedInInfo,currentProgram.getId(),category);
 	}
 	
 	public List<ProgramContactType> getContactTypesForProgramAndCategory(LoggedInInfo loggedInInfo, Integer programId, String category) {

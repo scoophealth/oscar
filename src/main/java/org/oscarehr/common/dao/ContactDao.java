@@ -51,16 +51,16 @@ public class ContactDao extends AbstractDao<Contact> {
 			String[] temp = keyword.split("\\,\\p{Space}*");
 			if(temp.length>1) {
 		      where.append("c.lastName like ?1 and c.firstName like ?2");
-		      paramList.add(temp[0]+"%");
-		      paramList.add(temp[1]+"%");
+		      paramList.add(temp[0].trim()+"%");
+		      paramList.add(temp[1].trim()+"%");
 		      maxIDUsed=2;
 		    } else {
 		      where.append("c.lastName like ?1");
-		      paramList.add(temp[0]+"%");
+		      paramList.add(temp[0].trim()+"%");
 		    }
 		}else {		
 			where.append("c." + StringEscapeUtils.escapeSql(searchMode) + " like ?1");
-			paramList.add(keyword+"%");
+			paramList.add(keyword.trim()+"%");
 		}			
 		/*
 		if(programNo != null && !programNo.equals("0")) {

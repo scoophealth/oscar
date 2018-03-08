@@ -603,6 +603,8 @@ public class ContactAction extends DispatchAction {
 				if(savedContact.getProgramNo() != null && savedContact.getProgramNo().intValue() == 0) {
 					savedContact.setProgramNo(null);
 				}
+				savedContact.setLastName(savedContact.getLastName().trim());
+				savedContact.setFirstName(savedContact.getFirstName().trim());
 				contactDao.merge(savedContact);
 			}
 		}
@@ -611,6 +613,8 @@ public class ContactAction extends DispatchAction {
 			if(contact.getProgramNo() != null && contact.getProgramNo().intValue() == 0) {
 				contact.setProgramNo(null);
 			}
+			contact.setLastName(contact.getLastName().trim());
+			contact.setFirstName(contact.getFirstName().trim());
 			contactDao.persist(contact);
 		}
 	   return mapping.findForward("cForm");
