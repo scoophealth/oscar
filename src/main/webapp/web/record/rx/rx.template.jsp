@@ -67,11 +67,8 @@
     
     <div class="col-sm-6" id="middleSpace" ng-click="checkAction($event)" ng-keypress="checkAction($event)" >
     
-        
-	
-        
         <div class="row">
-        		<medsearch med-selected="$ctrl.medSelected(med)"></medsearch>
+        		
         		
         		<div class="list-group">
 			  <li class="list-group-item <%--active--%>" ng-repeat="med in $ctrl.toRxList">
@@ -93,7 +90,7 @@
 			    </div>
 			  </li>
 			</div>
-        		
+        		<medsearch med-selected="$ctrl.medSelected(med)"></medsearch>	
 		</div>
 		
 		<div class="row">
