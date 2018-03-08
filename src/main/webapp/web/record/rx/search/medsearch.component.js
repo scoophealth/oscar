@@ -10,13 +10,15 @@ const MedsearchComponent = {
   	rxSearchComp.$onInit = function(){
   		console.log("herer??  rxlookup/search");
   		
+  		rxSearchComp.favouriteMeds = [];
+  		
  		console.log("elementfound"+$('#medQuickSearch'));
   		$('#medQuickSearch').typeahead({
   			name: 'drugSearch',
   			valueKey:'name',
   			limit: 11,
   			prefetch	: {
-  				    ttl: 300,
+  				    ttl: 1,
 	  				url: '../ws/rs/rx/favorites',
 	  	  			filter: function (parsedResponse) {
 			        		console.log("fav filter",parsedResponse);
@@ -43,6 +45,7 @@ const MedsearchComponent = {
 			            	//setQuickSearchTerm(parsedResponse.query);
 			            //}
 			            console.log("retval",retval);
+			            rxSearchComp.favouriteMeds = retval;
 			            return retval;
 			        }
 	  		},
@@ -67,6 +70,9 @@ const MedsearchComponent = {
 	  		            		//tmp.name = tmp.lastName + ", " + tmp.firstName;
 	  		            		tmp.blah = "";
 	  		            		tmp.styleClass= 'searchedHeader';
+	  		            		if(!tmp.active){
+	  		            			tmp.styleClass='inactiveHeader';
+	  		            		}
 	  		            		retval.push(tmp);
   		                 }
   		            } else {
