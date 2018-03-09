@@ -97,6 +97,16 @@ const RxComponent = {
  		);
  	};
  	
+ 	rxComp.parseInstr = function(med){
+
+ 		rxService.parseInstructions(med.instructions).then(function(d){
+ 			med.applyInstructions(d.data);
+ 			med.setQuantity();
+ 		},function(errorMessage){
+ 			console.log("Error parsing Intruction",errorMessage);		
+ 		});
+ 	}
+ 	 	
  	rxComp.medSelected = function(med){
  		if(angular.isDefined(med.favoriteName)){
  		   var m = {};

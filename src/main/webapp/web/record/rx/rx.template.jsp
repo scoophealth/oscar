@@ -68,15 +68,37 @@
     <div class="col-sm-6" id="middleSpace" ng-click="checkAction($event)" ng-keypress="checkAction($event)" >
     
         <div class="row">
-        		
-        		
+        		<ul class="nav nav-pills nav-justified">
+			  <li class="active" <%-- %>ng-class="isCurrentStatus('none')" --%> ><a data-target="#all" ng-click="removeFilter(0)" data-toggle="tab" class="hand-hover">Prescribe</a></li>
+			  <li ng-class="isCurrentStatus('Just My Notes')"><a ng-click="changeNoteFilter('Just My Notes')" class="hand-hover">Manage Meds</a></li>
+			</ul>
+			<div class="tab-content">
+			  
+			</div>
         		<div class="list-group">
 			  <li class="list-group-item <%--active--%>" ng-repeat="med in $ctrl.toRxList">
 			  <div class="row" >
 			  	<div class="col-sm-8">
 				    <h4 class="list-group-item-heading">{{med.getName()}}</h4>
 				    <p class="list-group-item-text">{{med.id}}</p>
-				    		<!-- rx entry here -->
+				    		<form>
+						  <div class="form-group">
+						    <input type="text" class="form-control" id="instructionsInput" placeholder="Instructions" ng-blur="$ctrl.parseInstr(med)" ng-model="med.instructions">
+						  </div>
+						  <div class="form-group">
+						  	<div class="row">
+							  <div class="col-xs-6">
+								<%-- label for="quantityInput">Qty/Mitte</label> --%>
+						    		<input type="text" class="form-control" id="quantityInput" placeholder="Qty/Mitte" ng-model="med.quantity">
+							  </div>
+							  <div class="col-xs-6">
+								<%-- label for="repeatsInput">Repeat</label>  --%> 
+						    		<input type="text" class="form-control" id="repeatsInput" placeholder="Repeats" ng-model="med.repeats">    
+							  </div>
+						  	</div>
+						  </div>
+						 
+						</form>
 			    </div>
 			  	<div class="col-sm-4">
 				  	<div uib-alert ng-repeat="alert in $ctrl.page.dsMessageHash[med.atc]" class="alert"  ng-class="'alert-' + ($ctrl.getAlertStyl(alert) || 'warning')"  style="padding: 9px;margin-bottom: 3px;" uib-popover-html="{{alert.body}}" popover-trigger="'mouseenter'">
@@ -92,14 +114,16 @@
 			</div>
         		<medsearch med-selected="$ctrl.medSelected(med)"></medsearch>	
 		</div>
-		
+		<hr>
 		<div class="row">
 			<fieldset>
        		<legend style="margin-bottom:0px;">Drug Profile
+       			<button type="button" class="btn btn-primary btn-xs">All</button>
+       			<button type="button" class="btn btn-default btn-xs">Current</button>
 				<div class="row">
 					<div class="col-sm-12">
 					    <div class="input-group">
-					      <input type="text" class="form-control" placeholder="Search for..." ng-model="$ctrl.drugProfileFilter">
+					      <input type="text" class="form-control" placeholder="Search Drug Profile" ng-model="$ctrl.drugProfileFilter">
 					      <div class="input-group-btn">
 					        <button type="button" class="btn btn-default" ng-click="exportDemographic()">Print</button>
 					        <button type="button" class="btn btn-default" ng-click="exportDemographic()">Reprint</button>

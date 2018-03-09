@@ -359,12 +359,18 @@ Drug.prototype.getName = function (t) {
  *      }
  */
 Drug.prototype.applyInstructions = function (x) {
-
-    if (!x || !x.drug) return;
+    if (!x || !x.drug){
+    		console.log("no drug found returning");
+    		return;
+    }
 
     if (x.drug.takeMin) this.takeMin = x.drug.takeMin;
 
     if (x.drug.takeMax) this.takeMax = x.drug.takeMax;
+    
+    if (x.drug.duration) this.duration = x.drug.duration;
+    
+    if (x.drug.durationUnit) this.durationUnit = x.drug.durationUnit;
 
     if (x.drug.frequency) this.frequency = x.drug.frequency.toUpperCase();
 
@@ -534,6 +540,10 @@ Drug.prototype.applyFavorite = function(f){
     );
 
 };
+
+Drug.prototype.setQuantity = function(){
+	this.quantity = calculateQuantity(this.frequency, this.duration, this.durationUnit, this.takeMax || this.takeMin);
+}
 
 /**
  * Applies information about the prescription to the drug object.
