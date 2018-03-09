@@ -115,7 +115,7 @@ order by billing.billingtype;]]>
 				</textElement>
 				<text><![CDATA[Payments and Refunds Summary Report]]></text>
 			</staticText>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-8" mode="Opaque" x="0" y="45" width="135" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -124,11 +124,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Account:" +$P{account}]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd-MMM-yy &apos;at&apos; h:mm aaa" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy &apos;at&apos; h:mm aaa" isBlankWhenNull="false">
 				<reportElement key="textField-9" mode="Transparent" x="0" y="29" width="90" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -137,6 +138,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
@@ -150,11 +152,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Date Range:" + $P{startDate} + " to " + $P{endDate}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-11" mode="Transparent" x="137" y="45" width="135" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -163,11 +166,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Payee:" + $P{payee}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-12" mode="Opaque" x="294" y="29" width="166" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -176,11 +180,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Insurer:"+ $P{insurers}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-13" mode="Transparent" x="272" y="45" width="135" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -189,6 +194,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Provider:" + $P{provider}]]></textFieldExpression>
@@ -206,7 +212,7 @@ order by billing.billingtype;]]>
 	</columnFooter>
 	<pageFooter>
 		<band height="23" splitType="Stretch">
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField" mode="Transparent" x="325" y="2" width="174" height="19" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -215,6 +221,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
@@ -228,6 +235,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
@@ -245,6 +253,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Payments Summary]]></text>
@@ -258,6 +267,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Refunds Summary]]></text>
@@ -271,6 +281,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Cash]]></text>
@@ -284,6 +295,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Electronic]]></text>
@@ -297,6 +309,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Debit]]></text>
@@ -310,6 +323,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Amex]]></text>
@@ -323,6 +337,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Master Card]]></text>
@@ -336,6 +351,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Cheque]]></text>
@@ -349,6 +365,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Visa]]></text>
@@ -362,6 +379,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Other]]></text>
@@ -375,6 +393,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Cash]]></text>
@@ -388,6 +407,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Electronic]]></text>
@@ -401,6 +421,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Debit]]></text>
@@ -414,6 +435,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Amex]]></text>
@@ -427,6 +449,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Master Card]]></text>
@@ -440,6 +463,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Cheque]]></text>
@@ -453,6 +477,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Visa]]></text>
@@ -466,11 +491,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Other]]></text>
 			</staticText>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-20" mode="Transparent" x="84" y="23" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -479,11 +505,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumPayed}.getCash()]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-21" mode="Transparent" x="84" y="35" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -492,11 +519,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumPayed}.getCheque()]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-23" mode="Transparent" x="84" y="47" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -505,11 +533,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumPayed}.getVisa()]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-24" mode="Transparent" x="84" y="59" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -518,11 +547,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumPayed}.getMc()]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-25" mode="Transparent" x="84" y="71" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -531,11 +561,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumPayed}.getAmex()]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-26" mode="Transparent" x="84" y="83" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -544,11 +575,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumPayed}.getElectronic()]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-27" mode="Transparent" x="84" y="95" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -557,11 +589,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumPayed}.getDebit()]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-28" mode="Transparent" x="84" y="107" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -570,11 +603,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumPayed}.getOther()]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-29" mode="Transparent" x="238" y="23" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -583,11 +617,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumRefunded}.getCash()]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-30" mode="Transparent" x="238" y="35" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -596,11 +631,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumRefunded}.getCheque()]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-31" mode="Transparent" x="238" y="47" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -609,11 +645,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumRefunded}.getVisa()]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-32" mode="Transparent" x="238" y="59" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -622,11 +659,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumRefunded}.getMc()]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-33" mode="Transparent" x="238" y="71" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -635,11 +673,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumRefunded}.getAmex()]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-34" mode="Transparent" x="238" y="83" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -648,11 +687,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumRefunded}.getElectronic()]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-35" mode="Transparent" x="238" y="95" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -661,11 +701,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumRefunded}.getDebit()]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-36" mode="Transparent" x="238" y="107" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -674,6 +715,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumRefunded}.getOther()]]></textFieldExpression>
@@ -696,7 +738,7 @@ order by billing.billingtype;]]>
 					<pen lineWidth="0.5" lineStyle="Solid"/>
 				</graphicElement>
 			</line>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-37" mode="Transparent" x="84" y="122" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -705,11 +747,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumPayed}.getTotal()]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-38" mode="Transparent" x="238" y="122" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -718,6 +761,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sumRefunded}.getTotal()]]></textFieldExpression>
@@ -731,11 +775,12 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[TOTAL:]]></text>
 			</staticText>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement key="textField-41" mode="Transparent" x="281" y="5" width="52" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -744,6 +789,7 @@ order by billing.billingtype;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None">
+					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[NumberFormat.getCurrencyInstance().format($P{sumPayed}.getRawTotal() + $P{sumRefunded}.getRawTotal())]]></textFieldExpression>
