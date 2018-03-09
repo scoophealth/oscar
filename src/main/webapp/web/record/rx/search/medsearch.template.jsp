@@ -17,7 +17,7 @@
 	<div class="input-group">
       <input type="text" 
 			   class="form-control search-query" 
-			   placeholder="<bean:message key="global.search" bundle="ui"/>" 
+			   placeholder="<bean:message key="oscarRx.placeholder.searchforMeds" bundle="ui"/>" 
 			   id="medQuickSearch" 
 			   autocomplete="off" 
 			   value="" />
