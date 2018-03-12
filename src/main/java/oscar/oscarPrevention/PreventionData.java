@@ -77,6 +77,7 @@ public class PreventionData {
 			prevention.setNever(neverWarn.trim().equals("1"));
 			if (refused.trim().equals("1")) prevention.setRefused(true);
 			else if (refused.trim().equals("2")) prevention.setIneligible(true);
+			else if (refused.trim().equals("3")) prevention.setCompletedExternally(true);
 			prevention.setSnomedId(snomedId);
 			preventionDao.persist(prevention);
 			if (prevention.getId() == null) return insertId;
@@ -257,7 +258,7 @@ public class PreventionData {
 
 				Map<String, Object> h = new HashMap<String, Object>();
 				h.put("id", prevention.getId().toString());
-				h.put("refused", prevention.isRefused() ? "1" : prevention.isIneligible() ? "2" : "0");
+				h.put("refused", prevention.isRefused() ? "1" : prevention.isIneligible() ? "2" : prevention.isCompletedExternally() ? "3" : "0");
 				h.put("type", prevention.getPreventionType());
 				h.put("provider_no", prevention.getProviderNo());
 				h.put("provider_name", ProviderData.getProviderName(prevention.getProviderNo()));
@@ -470,7 +471,7 @@ public class PreventionData {
 				addToHashIfNotNull(h, "prevention_date_asDate", prevention.getPreventionDate());
 				addToHashIfNotNull(h, "preventionType", prevention.getPreventionType());
 				addToHashIfNotNull(h, "deleted", prevention.isDeleted() ? "1" : "0");
-				addToHashIfNotNull(h, "refused", prevention.isRefused() ? "1" : prevention.isIneligible() ? "2" : "0");
+				addToHashIfNotNull(h, "refused", prevention.isRefused() ? "1" : prevention.isIneligible() ? "2" : prevention.isCompletedExternally() ? "3" : "0");
 				addToHashIfNotNull(h, "next_date", UtilDateUtilities.DateToString(prevention.getNextDate(), "yyyy-MM-dd"));
 				addToHashIfNotNull(h, "never", prevention.isNever() ? "1" : "0");
 				addToHashIfNotNull(h, "creator", prevention.getCreatorProviderNo());
