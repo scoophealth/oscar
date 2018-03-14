@@ -34,6 +34,7 @@ public class Issue extends BaseObject {
 	public static String ICD_9 = "ICD9";
 	public static String ICD_10 = "ICD10";
 	public static String SNOMED = "SNOMED";
+	public static String SNOMED_CORE = "SnomedCore";
 	
 	  
 	private java.text.DateFormat formatter = new java.text.SimpleDateFormat("yyyy-MM-dd");

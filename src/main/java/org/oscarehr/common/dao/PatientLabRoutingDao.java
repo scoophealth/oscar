@@ -359,7 +359,9 @@ public class PatientLabRoutingDao extends AbstractDao<PatientLabRouting> {
 
     	q.setParameter(1, date);
     	
-    	return q.getResultList();
+    	List<Integer> results =  q.getResultList();
+    	
+    	return results;
     }
 
     

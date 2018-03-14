@@ -830,6 +830,8 @@ String curProvider_no = (String)session.getAttribute("user");
 						<li>&nbsp;<a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/api/clients.jsp">REST Clients</a></li>
 						</ul>
 					</li>
+					<li><a  href='javascript:void(0);' class="xlink" rel="${ctx}/admin/integratorStatus.jsp">Integrator Status</a></li>
+					
 					<li><a href='javascript:void(0);' class="xlink" rel='${ctx}/setProviderStaleDate.do?method=viewIntegratorProperties'><bean:message key="provider.btnSetIntegratorPreferences" /></a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel='${ctx}/lab/CA/ALL/sendOruR01.jsp'><bean:message key="admin.admin.sendOruR01" /></a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/hospitalReportManager/hospitalReportManager.jsp">Hospital Report Manager (HRM) Status</a></li>

@@ -27,6 +27,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -983,7 +984,7 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		try {
 			c = DbConnectionFilter.getThreadLocalDbConnection();
 			PreparedStatement ps = c.prepareStatement("SELECT DISTINCT demographic_no FROM log WHERE dateTime >= ? and action != 'read'");
-			ps.setDate(1, new java.sql.Date(value.getTime()));
+			ps.setTimestamp(1, new Timestamp(value.getTime()));
 			ResultSet rs = ps.executeQuery();
 			ArrayList<Integer> results = new ArrayList<Integer>();
 			while (rs.next()) {

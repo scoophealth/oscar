@@ -443,7 +443,7 @@
 		<dependency>
 			<groupId>org.oscarehr.caisi_integrator</groupId>
 			<artifactId>caisi_integrator_client_stubs</artifactId>
-			<version>0.2</version>
+			<version>0.9</version>
 		</dependency>
 
 		<!-- macplus -->
@@ -1135,6 +1135,21 @@
 	    <artifactId>jasypt</artifactId>
 	    <version>1.8</version>
 	</dependency>
+
+
+	<dependency>
+  <groupId>org.oscarehr.caisi_integrator</groupId>
+  <artifactId>integrator-objects</artifactId>
+  <version>0.0.3</version>
+
+	</dependency>
+
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-compress</artifactId>
+    <version>1.14</version>
+</dependency>
+
 
 	<dependency>
 	    <groupId>net.rgielen</groupId>

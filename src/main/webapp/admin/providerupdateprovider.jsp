@@ -442,15 +442,23 @@ for (int i=0; i<sites.size(); i++) {
 					<%
 						LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
 						LookupList ll = lookupListManager.findLookupListByName(LoggedInInfo.getLoggedInInfoFromSession(request), "practitionerNoType");
-						for(LookupListItem llItem : ll.getItems()) {
-							String selected="";
-							if(provider.getPractitionerNoType().equals(llItem.getValue())) {
-								selected = " selected=\"selected\" ";
+						
+						if(ll != null) {
+							for(LookupListItem llItem : ll.getItems()) {
+								String selected="";
+								if(provider.getPractitionerNoType().equals(llItem.getValue())) {
+									selected = " selected=\"selected\" ";
+								}
+								%>
+									
+									<option value="<%=llItem.getValue()%>" <%=selected %>><%=llItem.getLabel()%></option>
+								<%
 							}
+						} else {
 							%>
-								
-								<option value="<%=llItem.getValue()%>" <%=selected %>><%=llItem.getLabel()%></option>
-							<%
+							
+							<option value="" >None Available</option>
+						<%
 						}
 					
 					%>

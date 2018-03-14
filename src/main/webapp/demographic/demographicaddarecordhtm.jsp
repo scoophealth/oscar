@@ -1318,15 +1318,20 @@ document.forms[1].r_doctor_ohip.value = refNo;
 						
 						LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
 						LookupList ll = lookupListManager.findLookupListByName(LoggedInInfo.getLoggedInInfoFromSession(request), "phu");
-						
-						for(LookupListItem llItem : ll.getItems()) {
-							String selected = "";
-							if(llItem.getValue().equals(defaultPhu)) {
-								selected = " selected=\"selected\" ";	
+						if(ll != null) {
+							for(LookupListItem llItem : ll.getItems()) {
+								String selected = "";
+								if(llItem.getValue().equals(defaultPhu)) {
+									selected = " selected=\"selected\" ";	
+								}
+								%>
+									<option value="<%=llItem.getValue()%>" <%=selected%>><%=llItem.getLabel()%></option>
+								<%
 							}
+						} else {
 							%>
-								<option value="<%=llItem.getValue()%>" <%=selected%>><%=llItem.getLabel()%></option>
-							<%
+							<option value="">None Available</option>
+						<%
 						}
 					
 					%>
