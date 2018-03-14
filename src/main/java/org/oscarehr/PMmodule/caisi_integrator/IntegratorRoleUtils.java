@@ -48,4 +48,23 @@ public final class IntegratorRoleUtils {
 		
 		return(null);
 	}
+	
+	public static org.oscarehr.caisi_integrator.util.Role getIntegratorRole2(String oscarRole)
+	{
+		if (oscarRole==null) return(null);
+		
+		try
+		{
+			return(org.oscarehr.caisi_integrator.util.Role.valueOf(oscarRole.toUpperCase().replaceAll(" ", "_")));
+		}
+		catch (Exception e)
+		{
+			// just ignore it, we're just testing for direct matches, null and non matches are expected
+		}
+
+		// we can put special cases where mapping is not simple, like as an example :  
+		// if ("Front Desk Worker".equals(oscarRole)) return(Role.FDW);
+		
+		return(null);
+	}
 }

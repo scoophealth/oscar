@@ -1102,6 +1102,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 					return true;
 				} else if (Issue.SNOMED.equalsIgnoreCase(issue.getType()) && noteIssue.getCodeType() == CodeType.SNOMED && noteIssue.getIssueCode().equalsIgnoreCase(issue.getCode())) {
 					return true;
+				} else if (Issue.SNOMED_CORE.equalsIgnoreCase(issue.getType()) && noteIssue.getCodeType() == CodeType.SNOMED_CORE && noteIssue.getIssueCode().equalsIgnoreCase(issue.getCode())) {
+					return true;
 				}
 			}
 		}

@@ -473,7 +473,9 @@ public class CommonLabTestValues {
 									h.put("lab_no", lab_no);
 									h.put("collDate", collDate);
 									MiscUtils.getLogger().debug("COLLDATE " + collDate);
-									if (collDate.length() == 10) {
+									if(collDate.length() == 0) {
+										
+									} else if (collDate.length() == 10) {
 										h.put("collDateDate", UtilDateUtilities.getDateFromString(collDate, "yyyy-MM-dd"));
 									} else if (collDate.length() == 16) {
 										h.put("collDateDate", UtilDateUtilities.getDateFromString(collDate, "yyyy-MM-dd HH:mm"));

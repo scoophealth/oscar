@@ -776,7 +776,13 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
     			sb.append(",");
     		sb.append(p.getId());
     	}
-		String hql = "select cmn.demographic_no from CaseManagementNote cmn where cmn.program_no in ("+sb.toString()+") and cmn.update_date > ? and cmn.locked != '1' and cmn.id = (select max(cmn2.id) from CaseManagementNote cmn2 where cmn2.uuid = cmn.uuid) order by cmn.observation_date";
-		return getHibernateTemplate().find(hql,date);
+		String hql = "select distinct cmn.demographic_no from CaseManagementNote cmn where cmn.program_no in ("+sb.toString()+") and cmn.update_date > ? and cmn.locked != '1' and cmn.id = (select max(cmn2.id) from CaseManagementNote cmn2 where cmn2.uuid = cmn.uuid) order by cmn.observation_date";
+		List<String> results =  getHibernateTemplate().find(hql,date);
+		
+		List<Integer> results2 = new ArrayList<Integer>();
+		for(String r:results) {
+			results2.add(Integer.parseInt(r));
+		}
+		return results2;
 	}
 }
