@@ -68,7 +68,6 @@ if(!authed) {
    LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
   
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
-  //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
   String demographic_no = request.getParameter("demographic_no");
   String snomedId = request.getParameter("snomedId");
   String id = request.getParameter("id");
@@ -102,10 +101,8 @@ if(!authed) {
      provider = (String) existingPrevention.get("provider_no");
      creatorProviderNo = (String) existingPrevention.get("creator");
      
-     if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("1") ){
-        completed = "1";
-     }else if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("2") ){
-        completed = "2";
+     if ( existingPrevention.get("refused") != null ){
+        completed = (String)existingPrevention.get("refused");
      }
      if ( existingPrevention.get("never") != null && ((String)existingPrevention.get("never")).equals("1") ){
         never = true;
@@ -645,12 +642,14 @@ $(document).ready(function(){
                <div class="prevention">
                    <fieldset>
                       <legend>Prevention : <%=prevention%></legend>
-                         <div style="float:left;">
+                         <div>
                             <input name="given" type="radio" value="given"      <%=checked(completed,"0")%>>Completed</input><br/>
+                            <input name="given" type="radio" value="given_ext"  <%=checked(completed,"3")%>>Completed externally</input><br/>
                             <input name="given" type="radio" value="refused"    <%=checked(completed,"1")%>>Refused</input><br/>
                             <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input>
                          </div>
-                         <div style="float:left;margin-left:30px;">
+                         <div>&nbsp;</div>
+                         <div style="margin-left:30px;">
                             <label for="prevDate" class="fields" >Date:</label>    <input readonly='readonly' type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="15" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
                             <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName" value="<%=providerName%>"/>
                                   <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
@@ -750,12 +749,14 @@ $(document).ready(function(){
                <div class="prevention">
                    <fieldset>
                       <legend>Prevention : <%=prevention%></legend>
-                         <div style="float:left;">
+                         <div>
                             <input name="given" type="radio" value="given"      <%=checked(completed,"0")%>>Completed</input><br/>
+                            <input name="given" type="radio" value="given_ext"  <%=checked(completed,"3")%>>Completed externally</input><br/>
                             <input name="given" type="radio" value="refused"    <%=checked(completed,"1")%>>Refused</input><br/>
                             <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input>
                          </div>
-                         <div style="float:left;margin-left:30px;">
+                         <div>&nbsp;</div>
+                         <div style="margin-left:30px;">
                             <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
                             <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName" value="<%=providerName%>"/>
                                   <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
@@ -845,12 +846,14 @@ $(document).ready(function(){
                <div class="prevention">
                    <fieldset>
                       <legend>Prevention : <%=prevention%></legend>
-                         <div style="float:left;">
-                            <input name="given" type="radio" value="given"   <%=checked(completed,"0")%>  >Completed</input><br/>
-                            <input name="given" type="radio" value="refused" <%=checked(completed,"1")%>>Refused</input><br/>
-                            <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input><br/>
+                         <div>
+                            <input name="given" type="radio" value="given"      <%=checked(completed,"0")%>>Completed</input><br/>
+                            <input name="given" type="radio" value="given_ext"  <%=checked(completed,"3")%>>Completed externally</input><br/>
+                            <input name="given" type="radio" value="refused"    <%=checked(completed,"1")%>>Refused</input><br/>
+                            <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input>
                          </div>
-                         <div style="float:left;margin-left:30px;">
+                         <div>&nbsp;</div>
+                         <div style="margin-left:30px;">
                             <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
                             <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName"/>
                                   <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
