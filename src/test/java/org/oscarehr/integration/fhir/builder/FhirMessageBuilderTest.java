@@ -39,6 +39,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
+import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.model.ClinicalImpression;
 import org.oscarehr.integration.fhir.model.Immunization;
 import org.oscarehr.integration.fhir.model.Organization;
@@ -66,11 +67,11 @@ public class FhirMessageBuilderTest {
 		// SENDER
 		clinic = new Clinic();
 		clinic.setId( 4321 );
-//		clinic.setClinicAddress("123 Clinic Street");
-//		clinic.setClinicCity("Vancouver");
-//		clinic.setClinicProvince("BC");
-//		clinic.setClinicPhone("778-567-3445");
-//		clinic.setClinicFax("778-343-3453");
+		clinic.setClinicAddress("123 Clinic Street");
+		clinic.setClinicCity("Vancouver");
+		clinic.setClinicProvince("BC");
+		clinic.setClinicPhone("778-567-3445");
+		clinic.setClinicFax("778-343-3453");
 		clinic.setClinicName("Test Medical Clinic");
 
 				
@@ -114,6 +115,7 @@ public class FhirMessageBuilderTest {
 		demographic.setAddress( "123 Abc Street");
 		demographic.setCity( "Vancouver" );
 		demographic.setProvince( "BC" );
+		demographic.setPostal("V6E4G7");
 		demographic.setPhone( "604-555-1212" );
 		demographic.setPhone2( "604-555-5555" );
 		demographic.setHin("9876446854");
@@ -155,13 +157,15 @@ public class FhirMessageBuilderTest {
 	public void testGetBISFormattedMessage() {
 		System.out.println( ">>>-- testGetBISFormattedMessage() -->");
 		System.out.println();
+		
+		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( FhirDestination.BORN );
 
 		// Patient
-		Patient patient = new Patient( demographic );
+		Patient patient = new Patient( demographic, configurationManager );
 		
 		// Practitioner
 		Practitioner practitioner = new Practitioner( provider );
-					
+				
 		// Get the ClinicalImpresson as the Attachment resource for this message.
 		// ClinicalImpression is created to automatically map patient medical annotations. In this case it is being
 		// customized after instantiation.
@@ -197,13 +201,15 @@ public class FhirMessageBuilderTest {
 		System.out.println( ">>>-- testGetDHIRFormattedMessage() -->");	
 		System.out.println();
 		
+		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( FhirDestination.DHIR );
+		
 		// Collect the required resources. 
 		Organization responsible = new Organization( clinic );
 		Practitioner nurse = new Practitioner( provider2 );
 		Practitioner mrp = new Practitioner( provider );
 		Immunization measles = new Immunization( prevention );
 		Immunization hpv = new Immunization( prevention2 );
-		Patient patient = new Patient( demographic );
+		Patient patient = new Patient( demographic, configurationManager );
 	
 		// pass the Sender and Destination through the constructor and the MessageBuilder Class will build the MessageHeader.
 		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( SenderFactory.getSender(), DestinationFactory.getDestination( FhirDestination.DHIR ) );

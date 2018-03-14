@@ -25,14 +25,9 @@ package org.oscarehr.integration.fhir.model;
 
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Provider;
-import org.oscarehr.integration.fhir.interfaces.ResourceModifierFilterInterface;
-
 import java.util.List;
-
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.Identifier.IdentifierUse;
-
-import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
 
@@ -48,11 +43,11 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 		super(new Provider(), practitioner );
 	}
 
-	@Override
-	public List<Resource> getContainedFhirResources() {
-		return getFhirResource().getContained();
-	}
-	
+//	@Override
+//	public List<Resource> getContainedFhirResources() {
+//		return getFhirResource().getContained();
+//	}
+//	
 
 	@Override
 	protected void setId(org.hl7.fhir.dstu3.model.Practitioner fhirResource) {
@@ -60,7 +55,7 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 	}
 
 	@Override
-	protected void mapAttributes( org.hl7.fhir.dstu3.model.Practitioner fhirResource, ResourceModifierFilterInterface filter) {
+	protected void mapAttributes( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
 		setName( fhirResource );
 		setIdentifier( fhirResource );
 		setQualification( fhirResource );

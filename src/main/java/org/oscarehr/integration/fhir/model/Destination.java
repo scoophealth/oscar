@@ -32,14 +32,11 @@ package org.oscarehr.integration.fhir.model;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.hl7.fhir.dstu3.model.BaseResource;
 import org.hl7.fhir.dstu3.model.MessageHeader.MessageDestinationComponent;
 import org.oscarehr.common.model.Contact;
+import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
 
 
 /**
@@ -54,7 +51,7 @@ public final class Destination {
 	
 	private List<MessageDestinationComponent> messageDestinationComponents;
 	private List<OscarFhirResource<?,?>> oscarFhirResource;
-	private Map<String, String> destinations;
+	private List<FhirDestination> destinations;
 	private List<BaseResource> fhirResources;
 	
 	public Destination(String name, String endpoint) {
@@ -72,37 +69,40 @@ public final class Destination {
 		return messageDestinationComponents;
 	}
 
-	public void setMessageDestinationComponents(List<MessageDestinationComponent> messageDestinationComponents) {
-		for( MessageDestinationComponent messageDestinationComponent : messageDestinationComponents ) {
-			addMessageDestinationComponent( messageDestinationComponent );
-		}
-	}
-	
+//	private void setMessageDestinationComponents( List<MessageDestinationComponent> messageDestinationComponents ) {
+//		for( MessageDestinationComponent messageDestinationComponent : messageDestinationComponents ) {
+//			addMessageDestinationComponent( messageDestinationComponent );
+//		}
+//	}
+//	
 	/**
 	 * Add a new destination Name and its associated endpoint. 
 	 * Multiple destinations can be added. 
 	 */
-	public void addMessageDestinationComponent( MessageDestinationComponent messageDestinationComponent ){
-		getDestinations().put( messageDestinationComponent.getName(), messageDestinationComponent.getEndpoint() );
+	private void addMessageDestinationComponent( MessageDestinationComponent messageDestinationComponent ){
+		// getDestinations().put( messageDestinationComponent.getName(), messageDestinationComponent.getEndpoint() );
 		toOrganization( messageDestinationComponent );
 		getMessageDestinationComponents().add( messageDestinationComponent );
 	}
 
-	public Map<String, String> getDestinations() {
+	public List<FhirDestination> getDestinations() {
 		if( destinations == null ) {
-			destinations = new HashMap<String, String>();
+			destinations = new ArrayList<FhirDestination>();
 		}
 		return destinations;
 	}
 
-	public void setDestinations( Map<String, String> destinations ) {
-		Set<String> destinationKeys = destinations.keySet();
-		for( String destinationKey : destinationKeys ) {
-			addDestination( destinationKey, destinations.get( destinationKey ) );			
+	public void setDestinations( List<FhirDestination> destinations ) {
+		for( FhirDestination destination : destinations ) {
+			addDestination( destination );			
 		}
 	}
+	
+	public void addDestination( FhirDestination destination ) {		
+		addDestination( destination.title(), destination.endpoint() );
+	}
 
-	public void addDestination( String name, String endpoint ) {		
+	private void addDestination( String name, String endpoint ) {		
 		MessageDestinationComponent messageDestinationComponent = new MessageDestinationComponent();
 		messageDestinationComponent.setName(name);
 		messageDestinationComponent.setEndpoint(endpoint);

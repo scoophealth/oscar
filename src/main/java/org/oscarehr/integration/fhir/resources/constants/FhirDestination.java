@@ -25,8 +25,6 @@ package org.oscarehr.integration.fhir.resources.constants;
 
 /**
  * This class to be created at runtime from a flat file, or database, of parameters.
- * 
- * @author denniswarren
  *
  */
 public enum FhirDestination {

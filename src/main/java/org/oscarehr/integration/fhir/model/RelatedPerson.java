@@ -29,7 +29,6 @@ import java.util.List;
 
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
-import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.Address.AddressUse;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
@@ -38,7 +37,6 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.oscarehr.common.model.Contact;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalContact;
-import org.oscarehr.integration.fhir.interfaces.ResourceModifierFilterInterface;
 import org.oscarehr.integration.fhir.utils.MiscUtils;
 
 
@@ -148,7 +146,7 @@ public class RelatedPerson extends OscarFhirResource< org.hl7.fhir.dstu3.model.R
 	}
 
 	@Override
-	protected void mapAttributes(org.hl7.fhir.dstu3.model.RelatedPerson relatedPerson, ResourceModifierFilterInterface filter) {
+	protected void mapAttributes(org.hl7.fhir.dstu3.model.RelatedPerson relatedPerson ) {
 		setName( relatedPerson );		
 		setAddress( relatedPerson );
 		setTelecom( relatedPerson );
@@ -257,9 +255,9 @@ public class RelatedPerson extends OscarFhirResource< org.hl7.fhir.dstu3.model.R
 			//TODO: how to set a relationship here.
 	}
 
-	@Override
-	public List<Resource> getContainedFhirResources() {
-		return getFhirResource().getContained();
-	}
+//	@Override
+//	public List<Resource> getContainedFhirResources() {
+//		return getFhirResource().getContained();
+//	}
 
 }

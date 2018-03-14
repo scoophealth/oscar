@@ -25,16 +25,12 @@ package org.oscarehr.integration.fhir.model;
  */
 
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.hl7.fhir.dstu3.model.Immunization.ImmunizationStatus;
 import org.hl7.fhir.dstu3.model.Reference;
-import org.hl7.fhir.dstu3.model.Resource;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
-import org.oscarehr.integration.fhir.interfaces.ResourceModifierFilterInterface;
 
 /*
 
@@ -87,10 +83,10 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 		super( new Prevention(), from );
 	}
 
-	@Override
-	public List<Resource> getContainedFhirResources() {
-		return getFhirResource().getContained();
-	}
+//	@Override
+//	public List<Resource> getContainedFhirResources() {
+//		return getFhirResource().getContained();
+//	}
 
 	@Override
 	protected void mapAttributes( org.oscarehr.common.model.Prevention prevention ) {
@@ -110,7 +106,7 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 	}
 
 	@Override
-	protected void mapAttributes(org.hl7.fhir.dstu3.model.Immunization immunization, ResourceModifierFilterInterface filter) {
+	protected void mapAttributes(org.hl7.fhir.dstu3.model.Immunization immunization ) {
 		// constraint: Prevention must implement the ImmunizationInterface.
 		setStatus( immunization );
 		setAdministrationDate( immunization );

@@ -33,14 +33,11 @@ import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.HumanName.NameUse;
-import org.hl7.fhir.dstu3.model.Identifier.IdentifierUse;
-import org.hl7.fhir.dstu3.model.Patient.PatientCommunicationComponent;
 import org.hl7.fhir.dstu3.model.Reference;
-import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.integration.fhir.interfaces.ResourceModifierFilterInterface;
+import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.utils.EnumMappingUtil;
 import org.oscarehr.integration.fhir.utils.MiscUtils;
 
@@ -89,114 +86,23 @@ import org.oscarehr.integration.fhir.utils.MiscUtils;
     "type" : "<code>" // R!  replace | refer | seealso - type of link
   }]
 } 
+*/
 
-EXAMPLE:
-
-{
-  "resourceType": "Patient",
-  "id": "Patient1",
-  "contained": [
-    {
-      "resourceType": "Organization",
-      "id": "OrgSchool1",
-      "identifier": [
-        {
-          "system": "[id-system-local-base]/ca-on-panorama-school-id",
-          "value": "10001"
-        }
-      ],
-      "name": "Dublin Heights Elementary and Middle School"
-    },
-  "identifier": [
-	{
-	  "use": "official",
-	  "system": "[id-system-global-base]/ca-on-patient-hcn",
-	  "value": "9393881587"
-	},
-	{
-	  "use": "secondary",
-	  "system": "[id-system-local-base]/ca-on-panorama-immunization-id",
-	  "value": "10000123"
-	}
-  ],
-  "name": [
-	{
-	  "use": "official",
-	  "family": [
-		"Doe"
-	  ],
-	  "given": [
-		"John",
-		"W."
-	  ]
-	}
-  ],
-  "gender": "male",
-  "birthDate": "2012-02-14",
-  "address": [
-	{
-	  "extension": [
-		{
-		  "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber",
-		  "valueString": "535"
-		},
-		{
-		  "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetName",
-		  "valueString": "Sheppard"
-		},
-		{
-		  "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetNameType",
-		  "valueString": "Avenue"
-		},
-		{
-		  "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-direction",
-		  "valueString": "West"
-		},
-		{
-		  "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-unitID",
-		  "valueString": "1907"
-		},
-		{
-		  "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-postBox",
-		  "valueString": "1234"
-		},
-		{
-		  "url": "[base-structure]/ca-on-address-rural-route",
-		  "valueString": "66"
-		},
-		{
-		  "url": "[base-structure]/ca-on-address-station",
-		  "valueString": "A"
-		},
-		{
-		  "url": "[base-structure]/ca-on-address-retail-postal-office",
-		  "valueString": "123"
-		}
-	  ],
-	  "use": "home",
-	  "line": [
-	    "535 Sheppard Avenue West, Unit 1234",
-	    "RR 66, Station A, RPO 123"
-	  ],
-	  "city": "Toronto",
-	  "state": "ON",
-	  "postalCode": "M3H4X8"
-	}
-  ],
-  "contact": [
-	{
-	  "organization": {
-		"reference": "Organization/OrgSchool1"
-	  }
-	}
-  ]
-}
-
- */
 public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient, Demographic > {
-
+	
+	/*
+	 * These are the FHIR Resource attributes that are optional in this class. 
+	 * They can be blocked by creating a new filter in  that feeds into the ResourceAttributeFilter class.
+	 * The default is to always to include. 
+	 */
+	private enum OptionalFHIRAttribute { nameExtension, nameUse, namePrefix, workPhone, email } 
+	
 	public Patient( org.oscarehr.common.model.Demographic from ) {
 		super( new org.hl7.fhir.dstu3.model.Patient(), from );
+	}
+	
+	public Patient( org.oscarehr.common.model.Demographic from,  OscarFhirConfigurationManager configurationManager) {
+		super( new org.hl7.fhir.dstu3.model.Patient(), from, configurationManager );
 	}
 
 	public Patient( org.hl7.fhir.dstu3.model.Patient from ) {
@@ -204,29 +110,23 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 	}
 
 	@Override
-	public List<Resource> getContainedFhirResources() {
-		return getFhirResource().getContained();
-	}
-
-	@Override
 	protected void mapAttributes( Demographic demographic ) {
-		setName( demographic );		
+		setPatientIdentifier( demographic ); 
+		setOfficialName( demographic );		
 		setGender( demographic );
 		setAddress( demographic );
 		setTelecom( demographic );
 		setBirthdate( demographic );
-		setHIN( demographic ); 
 	}
 	
 	@Override
-	protected void mapAttributes( org.hl7.fhir.dstu3.model.Patient patient, ResourceModifierFilterInterface filter ) {
-		setName( patient );		
+	protected void mapAttributes( org.hl7.fhir.dstu3.model.Patient patient ) {
+		setPatientIdentifier( patient ); 
+		setOfficialName( patient );		
 		setGender( patient );
 		setAddress( patient );
 		setTelecom( patient );
 		setBirthdate( patient );
-		setIdentifier( patient ); // ie: HIN and demographic_no
-		setLanguage( patient );
 	}
 	
 	@Override
@@ -234,21 +134,34 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 		patient.setId( getOscarResource().getDemographicNo() + "" );
 	}
 
-	private void setName( org.hl7.fhir.dstu3.model.Patient patient ) {
-		patient.addName().setUse( NameUse.OFFICIAL )
-			.setFamily( getOscarResource().getLastName() )
-			.addGiven( getOscarResource().getFirstName() )
-			.addPrefix( getOscarResource().getTitle() )
-			.getExtensionFirstRep().setUrl("http://hl7.org/fhir/StructureDefinition/iso21090-EN-qualifier");
+	private void setOfficialName( org.hl7.fhir.dstu3.model.Patient patient ) {
+		HumanName humanName = new HumanName();
+		
+		//mandatory
+		humanName.setFamily( getOscarResource().getLastName() );
+		humanName.addGiven( getOscarResource().getFirstName() );
+		
+		//optional
+		if( include( OptionalFHIRAttribute.namePrefix ) ) {
+			humanName.addPrefix( getOscarResource().getTitle() );
+		}
+		
+		if( include( OptionalFHIRAttribute.nameUse ) ) {
+			humanName.setUse( NameUse.OFFICIAL );
+		}
+		
+		if( include( OptionalFHIRAttribute.nameExtension ) ) {
+			humanName.getExtensionFirstRep().setUrl("http://hl7.org/fhir/StructureDefinition/iso21090-EN-qualifier");
+		}
+		
+		patient.addName( humanName );
 	}
 	
-	private void setName( Demographic demographic ) {
+	private void setOfficialName( Demographic demographic ) {
 		List<HumanName> humanNames = getFhirResource().getName();
 		for( HumanName humanName : humanNames ) {
-			if( NameUse.OFFICIAL.equals( humanName.getUse() ) ) {
-				demographic.setFirstName( humanName.getGivenAsSingleString() );
-				demographic.setLastName( humanName.getFamily() );
-			}
+			demographic.setFirstName( humanName.getGivenAsSingleString() );
+			demographic.setLastName( humanName.getFamily() );
 		}		
 	}
 
@@ -264,11 +177,11 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 	
 	private void setAddress( org.hl7.fhir.dstu3.model.Patient patient ) {
 		patient.addAddress()
-				.setUse( AddressUse.HOME )				
-				.addLine( getOscarResource().getAddress() )
-				.setCity( getOscarResource().getCity() )
-				.setState( getOscarResource().getProvince() )
-				.setPostalCode( getOscarResource().getPostal() );
+			.setUse( AddressUse.HOME )				
+			.addLine( getOscarResource().getAddress() )
+			.setCity( getOscarResource().getCity() )
+			.setState( getOscarResource().getProvince() )
+			.setPostalCode( getOscarResource().getPostal() );
 	}
 	
 	private void setAddress( Demographic demographic ) {
@@ -280,20 +193,23 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 	}
 	
 	private void setTelecom( org.hl7.fhir.dstu3.model.Patient patient ) {
-			patient.addTelecom().setUse( ContactPointUse.HOME )
-			.setSystem( ContactPointSystem.PHONE )
-			.setValue( getOscarResource().getPhone() )
-			.setRank( 1 );
+		
+		patient.addTelecom().setUse( ContactPointUse.HOME )
+		.setSystem( ContactPointSystem.PHONE )
+		.setValue( getOscarResource().getPhone() );
 			
+		//optional
+		if( include( OptionalFHIRAttribute.workPhone ) ) {	
 			patient.addTelecom().setUse( ContactPointUse.WORK )
 			.setSystem( ContactPointSystem.PHONE )
-			.setValue( getOscarResource().getPhone2() )
-			.setRank( 2 );
-
+			.setValue( getOscarResource().getPhone2() );
+		}
+		
+		if( include( OptionalFHIRAttribute.email ) ) {
 			patient.addTelecom().setUse( ContactPointUse.HOME )
 			.setSystem( ContactPointSystem.EMAIL)
-			.setValue( getOscarResource().getEmail() )
-			.setUse( ContactPointUse.HOME );
+			.setValue( getOscarResource().getEmail() );
+		}	
 	}
 	
 	private void setTelecom( Demographic demographic ) {
@@ -312,29 +228,17 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 		demographic.setBirthDay( birthdate );
 	}
 	
-	private void setIdentifier( org.hl7.fhir.dstu3.model.Patient patient ) {		
-		//TODO: ensure that the system identifier is region specific.
-		patient.addIdentifier().setUse( IdentifierUse.OFFICIAL )
+	private void setPatientIdentifier( org.hl7.fhir.dstu3.model.Patient patient ) {		
+		patient.addIdentifier()
 			.setSystem( "http://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-patient-hcn" )
 			.setValue( getOscarResource().getHin() );
-		
-		patient.addIdentifier().setUse( IdentifierUse.SECONDARY )
-		.setSystem("[oscar URI]")
-		.setValue( getOscarResource().getDemographicNo() + "" );
 	}
 
-	private void setHIN( Demographic demographic ) {
+	private void setPatientIdentifier( Demographic demographic ) {
 		String hin = MiscUtils.getFhirOfficialIdentifier( getFhirResource().getIdentifier() );
 		demographic.setHin( hin );
 	}
-	
-	private void setLanguage(  org.hl7.fhir.dstu3.model.Patient patient ) {
-		PatientCommunicationComponent communication = new PatientCommunicationComponent();
-		//TODO: this should translate the languages contained in the Demographic
-		communication.getLanguage().setText("en-US");
-		patient.addCommunication(communication);
-	}
-	
+
 	/**
 	 * Only for embedded (or contained) CareProvider resources. Some FHIR Implementers discourage this.
 	 */

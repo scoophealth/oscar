@@ -23,54 +23,52 @@ package org.oscarehr.integration.fhir.model;
  * Ontario, Canada
  */
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-import org.hl7.fhir.dstu3.model.Enumerations.ResourceType;
 import org.oscarehr.common.model.AbstractModel;
-import org.oscarehr.integration.fhir.interfaces.ResourceModifierFilterInterface;
+import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
+import org.oscarehr.integration.fhir.resources.FhirConfiguration;
+import org.oscarehr.integration.fhir.resources.ResourceAttributeFilter;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 import ca.uhn.fhir.context.FhirContext;
 
 
-public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.BaseResource, OSCAR extends AbstractModel<?> > 
- {
-
-	private FhirContext fhirContext;
+public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.BaseResource, OSCAR extends AbstractModel<?> > {
+	
+	private static FhirContext fhirContext = FhirContext.forDstu3();
 	private FHIR fhirResource;
 	private OSCAR oscarResource;
-	private ResourceModifierFilterInterface filter;
-
+	private OscarFhirConfigurationManager configurationManager;
+	
 	/**
 	 * Map attributes from an Oscar resource into a FHIR Resource. 
+	 * 
 	 */
-	protected abstract void mapAttributes( FHIR fhirResource, ResourceModifierFilterInterface filter );
+	protected abstract void mapAttributes( FHIR fhirResource );
 	
 	/**
 	 * Map attributes from a FHIR resource into an Oscar Resource. 
 	 */
 	protected abstract void mapAttributes( OSCAR oscarResource );
-	
-	/**
-	 * Pulls a list of resources that are contained (or embedded) inside the root resource.
-	 * For instance a Most Responsible Practitioner may be contained inside a Patient resource
-	 * 
-	 * There shouldn't be a need to use this too often as contained resources are discouraged in FHIR.
-	 */
-	public abstract List<Resource> getContainedFhirResources();
-	
+
 	protected OscarFhirResource() {
-		setFhirContext( FhirContext.forDstu3() );
+		//default constructor
 	}
 	
 	protected OscarFhirResource( OSCAR to, FHIR from ){
-		setFhirContext( FhirContext.forDstu3() );
 		setResource( to, from );
 	}
 	
 	protected OscarFhirResource( FHIR to, OSCAR from ) {
-		setFhirContext( FhirContext.forDstu3() );
+		setResource( to, from );
+	}
+	
+	protected OscarFhirResource( OscarFhirConfigurationManager configurationManager ) {
+		this.configurationManager = configurationManager;
+	}
+
+	protected OscarFhirResource( FHIR to, OSCAR from, OscarFhirConfigurationManager configurationManager ) {
+		this.configurationManager = configurationManager;
 		setResource( to, from );
 	}
 	
@@ -83,49 +81,9 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 	protected void setId( FHIR fhirResource ) {
 		fhirResource.setId( UUID.randomUUID().toString() );
 	}
-	
-	public final List<Resource> getContainedFhirResources( ResourceType resourceType ) {
-		List<Resource> resources = getContainedFhirResources();
-		List<Resource> filteredResources = null;
-		if( resources == null || resources.isEmpty() ) {
-			return null;
-		}
-		
-		for( Resource resource : resources ) {
-			
-			if( filteredResources == null ) {
-				filteredResources = new ArrayList<Resource>();
-			}
-			
-			if( resourceType.equals( resource.getResourceType() ) ) {
-				filteredResources.add( resource );
-			}
-		}
-		
-		return filteredResources;
-	} 
-	
-	public final Resource getContainedFhirResource( String resourceId ) {
-		
-		List<Resource> resources = getContainedFhirResources();
-		Resource filteredResource = null;
-		if( resources == null || resources.isEmpty() ) {
-			return null;
-		}
-		
-		for( Resource resource : resources ) {
-			if( resourceId.equalsIgnoreCase( resource.getId() ) ) {
-				filteredResource = resource;
-				break;
-			}
-		}
-		
-		return filteredResource;
-	}
-	
+
 	protected void setResource( FHIR to, OSCAR from ) {
 		this.oscarResource = from;
-		// this.filter = getFilter( to.getClass() );
 		setFhirResource( to );
 	}
 		
@@ -139,9 +97,14 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 	}
 	
 	protected void setFhirResource( FHIR fhirResource ) {		
-		if( this.oscarResource != null ) {
-			mapAttributes( fhirResource, filter );
+		if( configurationManager != null ) {
+			configurationManager.setTargetResource( fhirResource );
 		}
+		
+		if( this.oscarResource != null ) {
+			mapAttributes( fhirResource );
+		}
+		
 		setId( fhirResource );
 		this.fhirResource = fhirResource;
 	}
@@ -158,20 +121,20 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 		this.oscarResource = oscarResource;
 	}
 
-	public FhirContext getFhirContext() {
+	public static FhirContext getFhirContext() {
 		return fhirContext;
 	}
 	
-	public void setFhirContext(FhirContext fhirContext) {
-		this.fhirContext = fhirContext;
+	public static void setFhirContext(FhirContext fhirContext) {
+		OscarFhirResource.fhirContext = fhirContext;
 	}
 	
 	public String getFhirJSON() {
-		return fhirContext.newJsonParser().setPrettyPrint(true).encodeResourceToString( getFhirResource() );
+		return getFhirContext().newJsonParser().setPrettyPrint(true).encodeResourceToString( getFhirResource() );
 	}
 	
 	public String getFhirXML() {
-		return fhirContext.newXmlParser().encodeResourceToString( getFhirResource() );
+		return getFhirContext().newXmlParser().encodeResourceToString( getFhirResource() );
 	}
 	
 	public Reference getReference() {
@@ -193,13 +156,32 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 		return ( "#" + referenceLink );
 	}
 
-//	@Override
-//	public ResourceModifierFilter getFilter( Class<?> clazz ) {
-//		return getFilter( clazz );
-//	}
-//	
-//	@Override
-//	public String getMessage() {
-//		return getMessage();
-//	}
+	protected ResourceAttributeFilter getResourceAttributeFilter() {
+		ResourceAttributeFilter resourceAttributeFilter = null;
+		if( this.configurationManager != null  ) {
+			resourceAttributeFilter = configurationManager.getResourceAttributeFilter();
+		}
+		return resourceAttributeFilter;
+	}
+
+	public FhirConfiguration getFhirConfiguration() {
+		FhirConfiguration fhirConfiguration = null; 
+		if( configurationManager != null ) {
+			fhirConfiguration = configurationManager.getFhirConfiguration();
+		}
+		return fhirConfiguration;
+	}
+
+	public OscarFhirConfigurationManager getConfigurationManager() {
+		return configurationManager;
+	}
+	
+	protected boolean include( Enum<?> attribute ) {
+		boolean pass = Boolean.TRUE;
+		if( getResourceAttributeFilter() != null ) {
+			pass = getResourceAttributeFilter().includeAttribute( attribute.name() );
+		}
+		return pass;
+	}
+	
 }

@@ -1,4 +1,8 @@
-package org.oscarehr.integration.fhir.interfaces;
+package org.oscarehr.integration.fhir.resources;
+
+import org.hl7.fhir.dstu3.model.BaseResource;
+import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
+
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -23,6 +27,34 @@ package org.oscarehr.integration.fhir.interfaces;
  * Ontario, Canada
  */
 
-public interface MessageBuilderConfigurationInterface {
+public class FhirConfiguration {
+	
+	private FhirDestination fhirDestination;
+	private BaseResource targetResource;
+	
+	public FhirConfiguration( FhirDestination fhirDestination ) {
+		this.fhirDestination = fhirDestination;
+	}
+
+	public FhirConfiguration( FhirDestination fhirDestination, BaseResource targetResource ) {
+		this.fhirDestination = fhirDestination;
+		this.targetResource = targetResource;
+	}
+
+	public FhirDestination getFhirDestination() {
+		return fhirDestination;
+	}
+
+	public void setFhirDestination(FhirDestination fhirDestination) {
+		this.fhirDestination = fhirDestination;
+	}
+
+	public BaseResource getTargetResource() {
+		return targetResource;
+	}
+
+	public void setTargetResource(BaseResource targetResource) {
+		this.targetResource = targetResource;
+	}
 
 }

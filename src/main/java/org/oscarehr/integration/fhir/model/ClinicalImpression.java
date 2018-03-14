@@ -24,14 +24,10 @@ package org.oscarehr.integration.fhir.model;
  */
 
 import java.util.Base64;
-import java.util.List;
-
 import org.hl7.fhir.dstu3.model.Attachment;
 import org.hl7.fhir.dstu3.model.ClinicalImpression.ClinicalImpressionStatus;
-import org.hl7.fhir.dstu3.model.Resource;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.common.model.AbstractModel;
-import org.oscarehr.integration.fhir.interfaces.ResourceModifierFilterInterface;
 
 
 /**
@@ -68,7 +64,7 @@ public class ClinicalImpression extends OscarFhirResource< org.hl7.fhir.dstu3.mo
 		org.hl7.fhir.dstu3.model.ClinicalImpression clinicalImpression = new org.hl7.fhir.dstu3.model.ClinicalImpression();
 		setAnnotation( annotation );
 		setFhirResource( clinicalImpression );
-		mapAttributes( clinicalImpression, null );
+		mapAttributes( clinicalImpression );
 	}
 	
 	public ClinicalImpression( org.oscarehr.casemgmt.model.CaseManagementNote caseManagementNote ) {
@@ -98,7 +94,7 @@ public class ClinicalImpression extends OscarFhirResource< org.hl7.fhir.dstu3.mo
 	}
 
 	@Override
-	protected void mapAttributes(org.hl7.fhir.dstu3.model.ClinicalImpression fhirResource, ResourceModifierFilterInterface filter) {
+	protected void mapAttributes(org.hl7.fhir.dstu3.model.ClinicalImpression fhirResource ) {
 
 		fhirResource.setStatus( ClinicalImpressionStatus.COMPLETED );
 
@@ -117,11 +113,11 @@ public class ClinicalImpression extends OscarFhirResource< org.hl7.fhir.dstu3.mo
 		// TODO This should convert an incoming clinical impression into a readable annotation for Oscar to consume
 	}
 
-	@Override
-	public List<Resource> getContainedFhirResources() {
-		return null;
-	}
-	
+//	@Override
+//	public List<Resource> getContainedFhirResources() {
+//		return null;
+//	}
+//	
 	private void setDescription( org.hl7.fhir.dstu3.model.ClinicalImpression fhirResource ) {
 		if ( getCaseManagementNote() != null ) {
 			fhirResource.setDescription( getCaseManagementNote().getEncounter_type() );

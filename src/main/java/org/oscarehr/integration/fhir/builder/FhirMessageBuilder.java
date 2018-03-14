@@ -51,9 +51,7 @@ import ca.uhn.fhir.context.FhirContext;
 public abstract class FhirMessageBuilder {
 
 	private static Logger logger = MiscUtils.getLogger();
-	
-	//TODO FHIR context needs to be set ONCE add configuration  level.
-	protected static final FhirContext fhirContext = FhirContext.forDstu3();
+	private static FhirContext fhirContext = FhirContext.forDstu3();
 	
 	private MessageHeader messageHeader;
 	private Sender sender;
@@ -82,8 +80,7 @@ public abstract class FhirMessageBuilder {
 			} catch (Exception e) {
 				logger.error( "Error instantiating " + this.getClass().getName(), e );
 			}
-		}
-		
+		}		
 	}
 
 	/**
@@ -100,6 +97,13 @@ public abstract class FhirMessageBuilder {
 	
 	protected void setWrapper(BaseResource wrapper) {
 		this.wrapper = wrapper;
+	}
+
+	public static FhirContext getFhirContext() {
+		return fhirContext;
+	}
+	public static void setFhirContext(FhirContext fhirContext) {
+		FhirMessageBuilder.fhirContext = fhirContext;
 	}
 	
 	/**
@@ -263,7 +267,7 @@ public abstract class FhirMessageBuilder {
 		if( resource == null ) {
 			return "";
 		}
-		return fhirContext.newJsonParser().setPrettyPrint(true).encodeResourceToString( resource );
+		return getFhirContext().newJsonParser().setPrettyPrint(true).encodeResourceToString( resource );
 	}
 
 	public void attachPDF( String pdf, String title ) {
