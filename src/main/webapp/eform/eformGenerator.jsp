@@ -40,7 +40,7 @@
 %>
 <%@ page import="oscar.eform.actions.DisplayImageAction,java.lang.*,java.io.File,oscar.OscarProperties,java.io.*,oscar.eform.*,oscar.eform.data.*,java.util.*,org.apache.log4j.Logger"%>
 <!--
-/*  eForm Generator v5.5e reimagined by Peter Hutten-Czapski 2017
+/*  eForm Generator v6.0l reimagined by Peter Hutten-Czapski 2017-2018
  *
  *  eformGenerator.jsp
  *
@@ -62,16 +62,6 @@
 <!-- CSS Script that removes textarea and textbox borders when printing -->
 .noborder {
 	border : 0px;
-	background: transparent;
-	scrollbar-3dlight-color: transparent;
-	scrollbar-3dlight-color: transparent;
-	scrollbar-arrow-color: transparent;
-	scrollbar-base-color: transparent;
-	scrollbar-darkshadow-color: transparent;
-	scrollbar-face-color: transparent;
-	scrollbar-highlight-color: transparent;
-	scrollbar-shadow-color: transparent;
-	scrollbar-track-color: transparent;
 	background: transparent;
 	overflow: hidden;
 }
@@ -160,9 +150,13 @@ var SignatureHolderH = 0;
 var SignatureHolderW = 0;
 var SignatureHolderP = 0;
 var SignatureColor="Black";
-var SignatureLineColor="#FFFFFF";
+var SignatureLineColor="rgba(255, 255, 255, 0.0)";
 var SignatureBorder="2px dotted blue";
 var parentcounter = 0;
+
+var calendars = false;
+ 
+function isValid(str) { return /^\w+$/.test(str); }
 
 function getCheckedValue(radioObj) {
 	if(!radioObj)
@@ -665,56 +659,137 @@ function resetAll(){
 }
 
 function GetTextTop(){
-	textTop = "&lt;html&gt;\n&lt;head&gt;\n"
-	textTop += "&lt;META http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;\n"
-	textTop += "&lt;title&gt;"
-	textTop += document.getElementById('eFormName').value;
-	textTop += "&lt;/title&gt;\n"
-	textTop += "&lt;style type=&quot;text/css&quot; media=&quot;screen&quot; &gt;\n";
-	textTop += "input {\n\t-moz-box-sizing: content-box;\n\t-webkit-print-color-adjust: exact;\n\t-webkit-box-sizing: content-box;\n\tbox-sizing: content-box\n}\n .sig {\n\tborder: "+SignatureBorder+";\n\tcolor: "+SignatureColor+";\n\tbackground-color: white;\n }\n    /* Drawing the 'gripper' for touch-enabled devices */\n    html.touch #content {\n        float:left;\n        width:92%;\n    }\n    html.touch #scrollgrabber {\n        float:right;\n        width:4%;\n        margin-right:2%;\n        background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)\n    }\n    html.borderradius #scrollgrabber {\n        border-radius: 1em;\n    }\n"
-	textTop += " &lt;/style&gt;\n\n";
-
-	textTop += "&lt;style type=&quot;text/css&quot; media=&quot;print&quot;&gt;\n"
-	textTop += "\n .DoNotPrint {\n\tdisplay: none;\n }\n .noborder {\n\tborder : 0px;\n\tbackground: transparent;\n\tscrollbar-3dlight-color: transparent;\n\tscrollbar-3dlight-color: transparent;\n\tscrollbar-arrow-color: transparent;\n\tscrollbar-base-color: transparent;\n\tscrollbar-darkshadow-color: transparent;\n\tscrollbar-face-color: transparent;\n\tscrollbar-highlight-color: transparent;\n\tscrollbar-shadow-color: transparent;\n\tscrollbar-track-color: transparent;\n\tbackground: transparent;\n\toverflow: hidden;\n }\n.sig {\n\tborder-style: solid;\n\tborder-color: transparent;\n\tcolor: "+SignatureColor+";\n\tbackground-color: transparent;\n }\n\n "
-	textTop += "&lt;/style&gt;\n\n";
-
-	textTop += "&lt;!-- jQuery for greater functionality --&gt;\n"
-	// dependency on jquery up to version 2.2.1 for pdf and faxing hack. (3.1.1 does NOT work.)  Lets reference something off the OSCAR server
-	textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js&quot;&gt;&lt;/script&gt;\n";	
-	// if unavailable reference the one in OSCAR
-	textTop += "&lt;script&gt; window.jQuery || document.write('&lt;script src=&quot;../js/jquery-1.7.1.min.js&quot;&gt;&lt; &#92;/script&gt;') &lt;/script&gt;\n";
-
-	// ole darn it, I knew I left a copy of jQuery lying around somewhere... perhaps under my nose?
-	textTop += "&lt;script&gt; window.jQuery || document.write('&lt;script src=&quot;jquery-1.7.1.min.js&quot;&gt;&lt; &#92;/script&gt;') &lt;/script&gt;\n\n";
-	
-	// Adding jquery code for parent-child-fields (Bell Eapen, nuchange.ca)
-	textTop += "<!-- jQuery for parent-child-fields -->\n"
-    textTop += "&lt;script&gt;\n";
-	textTop += "$(document).ready(function() {\n            $('[class^=\"child-\"]').hide();\n            $('.parent-field').click(function() {\n                $('[class^=\"child-\"]').hide();\n                $('.parent-field').each(function() {\n                    if ( $(this).is('input:checkbox') ){\n                         if(this.checked){\n                            $('.child-' +  $(this).prop('id')).show();\n                        }\n                    }else{\n                        $('.child-' + $(this).val()).show();\n                    }\n                });\n            }).trigger('change');\n\n            $('[class^=\"only-one-\"]').click(function() {\n                $('.'+$(this).attr('class')).prop('checked', false);\n                $(this).prop('checked', true);\n                $(this).closest('div').find('.parent-field').change();\n            });\n});";
-    textTop += "&lt;/script&gt;\n"
-	textTop += "<!-- jQuery for parent-child-fields -->\n"
-    textTop += "&lt;/script&gt;\n"
-
-	//reference built in functions as desired
-
+    textTop = "&lt;html&gt;\n&lt;head&gt;\n"
+    textTop += "&lt;META http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;\n"
+    textTop += "&lt;title&gt;"
+    textTop += document.getElementById('eFormName').value;
+    textTop += "&lt;/title&gt;\n"
+    textTop += "&lt;style type=&quot;text/css&quot; media=&quot;screen&quot; &gt;\n";
+    textTop += " input {\n\t-moz-box-sizing: content-box;\n\t-webkit-print-color-adjust: exact;\n\t-webkit-box-sizing: content-box;\n\tbox-sizing: content-box\n }\n"
+    if (document.getElementById('AddSignature').checked){
+        textTop += " .sig {\n\tborder: "+SignatureBorder+";\n\tcolor: "+SignatureColor+";\n\tbackground-color: white;\n }\n"
+    }
+    textTop += "/* Drawing the 'gripper' for touch-enabled devices */\n html.touch #content {\n\tfloat:left;\n\twidth:92%;\n}\n html.touch #scrollgrabber {\n\tfloat:right;\n\twidth:4%;\n\tmargin-right:2%;\n\tbackground-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAAAAACh79lDAAAAAXNSR0IArs4c6QAAABJJREFUCB1jmMmQxjCT4T/DfwAPLgOXlrt3IwAAAABJRU5ErkJggg==)\n }\n html.borderradius #scrollgrabber {\n\tborder-radius: 1em;\n }\n"
+    textTop += "&lt;/style&gt;\n";
+ 
+    textTop += "&lt;style type=&quot;text/css&quot; media=&quot;print&quot;&gt;\n"
+    textTop += " .DoNotPrint {\n\tdisplay: none;\n }\n .noborder {\n\tborder : 0px;\n\tbackground: transparent;"
+    // scrollbar is not supported in Firefox nor Chrome
+    //textTop += "\n\tscrollbar-3dlight-color: transparent;\n\tscrollbar-3dlight-color: transparent;\n\tscrollbar-arrow-color: transparent;\n\tscrollbar-base-color: transparent;\n\tscrollbar-darkshadow-color: transparent;\n\tscrollbar-face-color: transparent;\n\tscrollbar-highlight-color: transparent;\n\tscrollbar-shadow-color: transparent;\n\tscrollbar-track-color: transparent;"
+    textTop += "\n\tbackground: transparent;\n\toverflow: hidden;\n }\n"
+    if (document.getElementById('AddSignature').checked){
+        textTop += " .sig {\n\tborder-style: solid;\n\tborder-color: transparent;\n\tcolor: "+SignatureColor+";\n\tbackground-color: transparent;\n }\n\n "
+    }
+    textTop += "&lt;/style&gt;\n\n";
+ 
+    
+        var parentPresent=false;
+    for (j=0; (j < (DrawData.length) ); j++){
+        var P = DrawData[j].split("|");
+        if ((P[3]=="parent1")||(P[5]=="parent1") ){
+            parentPresent=true;     
+        }
+    }   
+    var xPresent=false;
+    for (j=0; (j < (DrawData.length) ); j++){
+        var P = DrawData[j].split("|");
+        if (P[0]=="Xbox") {
+            xPresent=true;      
+        }
+    }
+ 
+    if ((document.getElementById('includePdfPrintControl').checked) || (document.getElementById("includeFaxControl").checked) || (document.getElementById('AddSignature').checked) || (document.getElementById('XboxType').checked) || (xPresent) ) {
+ 
+     	textTop += "&lt;!-- jQuery for greater functionality --&gt;\n"
+	    // dependency on jquery up to version 2.2.1 for pdf and faxing hack. (3.1.1 does NOT work.)  Lets reference something off the OSCAR server
+	    textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js&quot;&gt;&lt;/script&gt;\n";	
+	    // if unavailable reference the one in OSCAR
+	    textTop += "&lt;script&gt; window.jQuery || document.write('&lt;script src=&quot;../js/jquery-1.7.1.min.js&quot;&gt;&lt; &#92;/script&gt;') &lt;/script&gt;\n";
+	    // ole darn it, I knew I left a copy of jQuery lying around somewhere... perhaps under my nose?
+	    textTop += "&lt;script&gt; window.jQuery || document.write('&lt;script src=&quot;jquery-1.7.1.min.js&quot;&gt;&lt; &#92;/script&gt;') &lt;/script&gt;\n\n";
+    }
+ 
+    //Peter Hutten-Czapski's Xbox scripts   
+    if (xPresent){
+        textTop += "&lt;!-- scripts for Xbox functions --&gt;\n"
+        textTop += "&lt;script language=&quot;javascript&quot;&gt;\n"
+        textTop += "$(document).ready(function() {\n"
+        textTop += "\t$( &quot;.Xbox&quot; ).click(function() {\n"
+        if (document.getElementById('BlackBox').checked){
+            textTop += "\t\tvar bc = $( this ).css( &quot;background-color&quot; );\n"
+            textTop += "\t\tif (bc==&quot;rgb(0, 0, 0)&quot;) {\n"
+            textTop += "\t\t\t$( this ).css( &quot;background-color&quot;, &quot;white&quot; );\n"
+            textTop += "\t\t\t$( this ).val(&quot;&quot;);\n"
+            textTop += "\t\t} else {\n"
+            textTop += "\t\t\t$( this ).css( &quot;background-color&quot;, &quot;rgb(0, 0, 0)&quot; );\n"
+        } else {
+            textTop += "\t\tvar st = $( this ).val();\n"
+            textTop += "\t\tif (st==&quot;X&quot;) {\n"
+            textTop += "\t\t\t$( this ).val(&quot;&quot;);\n"
+            textTop += "\t\t} else {\n"
+        }
+        textTop += "\t\t\t$( this ).val(&quot;X&quot;);\n"
+        textTop += "\t\t}\n"
+        textTop += "\t});\n\n"
+        
+        //if (document.getElementById('radioX').checked){
+        //  textTop += "&lt;!-- jQuery X box radio boxes --&gt;\n"
+        //  textTop += "\t$( &#39;[class^=&quot;only-one-&quot;]&#39;).click(function() {\n"
+        //  textTop += "\t\t$(&#39;.&#39;+$(this).attr(&#39;class&#39;)).val(&#39;&#39;);\n"
+        //  textTop += "\t\t$( this ).val(&quot;X&quot;);\n"
+        //  textTop += "\t});\n\n"
+        //}
+ 
+        textTop += "\t$( &quot;.Xbox&quot; ).keypress(function(event) {\n"
+        textTop += "\t// any key press except tab will constitute a value change to the checkbox\n"
+        textTop += "\t\tif (event.which != 0){\n"
+        textTop += "\t\t\t$( this ).click();\n"
+        textTop += "\t\t\treturn false;\n"
+        textTop += "\t\t\t}\n"
+        textTop += "\t});\n\n"
+        textTop += "});\n"
+        textTop += "&lt;/script&gt;\n\n"
+    }
+    
+    if (parentPresent  || document.getElementById('radioX').checked){   
+        // Adding jquery code for checkbox parent-child-fields (Bell Eapen, nuchange.ca)
+        textTop += "\n&lt;!-- jQuery for parent-child and radio fields --&gt;\n"
+        textTop += "&lt;script&gt;\n";
+        textTop += "$(document).ready(function() {\n\t$('[class^=\"child-\"]').hide();";
+        textTop += "\n\t$('.parent-field').click(function() {\n\t\t$('[class^=\"child-\"]').hide();\n\t\t$('.parent-field').each(function() {"
+        textTop += "\n\t\t\tif ( $(this).is('input:checkbox') ){\n\t\t\t\tif(this.checked){\n\t\t\t\t\t$('.child-' +  $(this).prop('id')).show();\n\t\t\t\t}else{\n\t\t\t\t$('.child-' + $(this).val()).show();\n\t\t\t\t}\n\t\t\t}"
+        textTop += "\n\t\t\tif ( $(this).is('input:text') ){\n\t\t\t\tif($(this).val()=='X'){\n\t\t\t\t\t$('.child-' +  $(this).prop('id')).show();\n\t\t\t\t}else{\n\t\t\t\t$('.child-' + $(this).val()).show();\n\t\t\t\t}\n\t\t\t}"
+        textTop += "\n\t\t});\n\t});";
+        textTop += "\n\t$('[class^=\"only-one-\"]').click(function() {\n\t\tif ( $(this).is('input:checkbox') ){";
+        textTop += "\n\t\t\t$('.'+$(this).attr('class')).prop('checked', false);\n\t\t\t$(this).prop('checked', true);\n\t\t}\n";
+        textTop += "\n\t\tif ( $(this).is('input:text') ){";
+        textTop += "\n\t\t\t$('.'+$(this).attr('class')).val('');";
+        textTop += "\n\t\t\t$( this ).val('X');\n\t\t}\n\t});\n});\n";
+        textTop += "&lt;/script&gt;\n";       
+    }
+    //  textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;jquery-1.7.1.min.js&quot;&gt;&lt;/script&gt;\n";
+    //textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;${oscar_javascript_path}jquery/jquery-1.4.2.js&quot;&gt;&lt;/script&gt;\n";
+ 
+    //reference built in functions as desired
+   
 <% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_print_enabled")) { %>
 	if (document.getElementById('includePdfPrintControl').checked) {
 		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Deforms/printControl.js&quot;&gt;&lt;/script&gt;\n";
-	}
-	//fax number script
-	if ((document.getElementById('faxno').value.length > 0)){
-		textTop += "&lt;script language=&quot;javascript&quot;&gt;\n"
-		textTop += "function setFaxNo(){\n"
-		textTop += "\tsetTimeout('document.getElementById(&quot;otherFaxInput&quot;).value=&quot;"
-		textTop += document.getElementById('faxno').value
-		textTop += "&quot;',1000);\n"
-		textTop += "} \n"
-		textTop += "&lt;/script&gt;\n\n"	
 	}
 <% }%>
 
 	//reference built in faxControl	
 <% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_fax_enabled")) { %>
+        //fax number script
+        if ((document.getElementById('faxno').value.length > 0)){
+            textTop += "&lt;script language=&quot;javascript&quot;&gt;\n"
+            textTop += "function setFaxNo(){\n"
+            textTop += "\tsetTimeout('document.getElementById(&quot;otherFaxInput&quot;).value=&quot;"
+            textTop += document.getElementById('faxno').value
+            textTop += "&quot;',1000);\n"
+            textTop += "} \n"
+            textTop += "&lt;/script&gt;\n\n"  
+        }
 		if (document.getElementById("includeFaxControl").checked) {
 			textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Deforms/faxControl.js&quot;&gt;&lt;/script&gt;\n";
 	}
@@ -747,11 +822,25 @@ function GetTextTop(){
 			}
 		}
 
-		textTop += "\n&lt;!-- Freeform Signatures --&gt;\n"
-		//In OSCAR 15 jSignature is available within the source  
-		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;${oscar_javascript_path}/jquery/jSignature.min.js&quot;&gt;&lt;/script&gt;\n\n";
+		textTop += "\n&lt;!-- Freeform Signatures --&gt;\n\n"
+
+       //For external testing jSignature should be placed in the location as the images and the resultant html file 
+       //textTop += "\n&lt;!-- jSignature file for local testing outside of OSCAR --&gt;\n"
+       //textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;jSignature.min.js&quot;&gt;&lt;/script&gt;\n\n";
+        
+    // Sign Here is not included in OSCAR 15 source
+        //if (document.getElementById('SignHere').checked){
+        //textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;SignHere.js&quot;&gt;&lt;/script&gt;\n\n";
+        //textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;${oscar_image_path}SignHere.js&quot;&gt;&lt;/script&gt;\n\n";
+        //}
+        
+        //In OSCAR 12 jSignature and SignHere should be placed in the images folder
+        //textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;${oscar_image_path}jSignature.min.js&quot;&gt;&lt;/script&gt;\n\n";
+        //In OSCAR 15 jSignature is available within the source  
+
+		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Djquery/jSignature.min.js&quot;&gt;&lt;/script&gt;\n\n";
 		textTop += "&lt;!--[if lt IE 9]&gt;\n"
-		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;${oscar_javascript_path}flashcanvas.js&quot;&gt;&lt;/script&gt;\n";
+		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;$%7Boscar_javascript_path%7Dflashcanvas.js&quot;&gt;&lt;/script&gt;\n";
 		textTop += "&lt;![endif]--&gt;\n\n"
 
 
@@ -822,6 +911,21 @@ function GetTextTop(){
 	textTop += "} \n"
 	textTop += "&lt;/script&gt;\n\n"
 
+	//reference built in faxControl	
+<% if (OscarProperties.getInstance().isPropertyActive("eform_generator_indivica_fax_enabled")) { %>
+           //fax number script
+    if ((document.getElementById('faxno').value.length > 0)){
+        textTop += "&lt;script language=&quot;javascript&quot;&gt;\n"
+        textTop += "function setFaxNo(){\n"
+        textTop += "\tsetTimeout('document.getElementById(&quot;otherFaxInput&quot;).value=&quot;"
+        textTop += document.getElementById('faxno').value
+        textTop += "&quot;',1000);\n"
+        textTop += "} \n"
+        textTop += "&lt;/script&gt;\n\n"  
+    }
+
+<% } %>
+
 	//Peter Hutten-Czapski's script to confirm closing of window if eform changed
 	textTop += "&lt;!-- scripts to confirm closing of window if it hadnt been saved yet --&gt;\n"
 	textTop += "&lt;script language=&quot;javascript&quot;&gt;\n"
@@ -842,49 +946,6 @@ function GetTextTop(){
 	textTop += "\t }\n"
 	textTop += "}\n"
 	textTop += "&lt;/script&gt;\n\n"
-
-	//Peter Hutten-Czapski's Xbox scripts
-
-	var xPresent=false;
-	for (j=0; (j < (DrawData.length) ); j++){
-		var P = DrawData[j].split("|");
-		if (P[0]=="Xbox") {
-			xPresent=true;		
-		}
-	}
-	
-	if (xPresent){
-		textTop += "&lt;!-- scripts for Xbox functions --&gt;\n"
-		textTop += "&lt;script language=&quot;javascript&quot;&gt;\n"
-		textTop += "$(document).ready(function() {\n"
-		textTop += "\t  $( &quot;.Xbox&quot; ).click(function() {\n"
-		if (document.getElementById('BlackBox').checked){
-			textTop += "\t\t  var bc = $( this ).css( &quot;background-color&quot; );\n"
-			textTop += "\t\t  if (bc==&quot;rgb(0, 0, 0)&quot;) {\n"
-			textTop += "\t\t\t  $( this ).css( &quot;background-color&quot;, &quot;white&quot; );\n"
-			textTop += "\t\t\t  $( this ).val(&quot;&quot;);\n"
-			textTop += "\t\t  } else {\n"
-			textTop += "\t\t\t  $( this ).css( &quot;background-color&quot;, &quot;rgb(0, 0, 0)&quot; );\n"
-		} else {
-			textTop += "\t\t  var st = $( this ).val();\n"
-			textTop += "\t\t  if (st==&quot;X&quot;) {\n"
-			textTop += "\t\t\t  $( this ).val(&quot;&quot;);\n"
-			textTop += "\t\t  } else {\n"
-		}
-		textTop += "\t\t\t  $( this ).val(&quot;X&quot;);\n"
-		textTop += "\t\t  }\n"
-		textTop += "\t});\n\n"
-
-		textTop += "$( &quot;.Xbox&quot; ).keypress(function(event) {\n"
-		textTop += "\t  // any key press except tab will constitute a value change to the checkbox\n"
-		textTop += "\t  if (event.which != 0){\n"
-		textTop += "\t\t  $( this ).click();\n"
-		textTop += "\t\t  return false;\n"
-		textTop += "\t\t  }\n"
-		textTop += "\t});\n\n"
-		textTop += "});\n"
-		textTop += "&lt;/script&gt;\n\n"
-	}
 
 	//maximize window script
 	if (document.getElementById('maximizeWindow').checked){
@@ -939,21 +1000,30 @@ function GetTextTop(){
 		}
 		textTop += "\n\t];\n\n"
 		textTop += "function SignForm(){\n"
+		textTop += "\tvar ListItemArr =  [&quot;&quot;];\n"
+		textTop += "\tvar UserName = &quot;&quot;;\n"
+		textTop += "\tvar FileName = &quot;&quot;;\n"
+		textTop += "\n"
 		textTop += "\t//first look for the current users stamp\n"
 		textTop += "\tfor (i=0; i&lt;ImgArray.length;i++){\n"
-		textTop += "\t\tvar ListItemArr =  ImgArray[i].split(&quot;|&quot;);\n"
-		textTop += "\t\tvar UserName = ListItemArr[0];\n"
-		textTop += "\t\tvar FileName = ListItemArr[1];\n"
+		textTop += "\t\tListItemArr =  ImgArray[i].split(&quot;|&quot;);\n"
+		textTop += "\t\tUserName = ListItemArr[0];\n"
+		textTop += "\t\tFileName = ListItemArr[1];\n"
 		textTop += "\t\tif (document.getElementById(&quot;CurrentUserName&quot;).value.indexOf(UserName)>=0){\n"
 		textTop += "\t\t\tdocument.getElementById(&quot;Stamp&quot;).src = &quot;../eform/displayImage.do?imagefile=&quot;+FileName;\n"
+		textTop += "\t\t\tif (document.getElementById(&quot;DoctorName&quot;).value!=document.getElementById(&quot;CurrentUserName&quot;).value){\n"
+		textTop += "\t\t\t\tif (document.contains(document.getElementById(&quot;doctor&quot;))){\n"
+		textTop += "\t\t\t\t\tdocument.getElementById(&quot;doctor&quot;).value=document.getElementById(&quot;CurrentUserName&quot;).value+&quot; CC: &quot;+document.getElementById(&quot;DoctorName&quot;).value;\n"
+		textTop += "\t\t\t\t}\n"
+		textTop += "\t\t\t}\n"
 		textTop += "\t\t}\n"
 		textTop += "\t}\n"
 		textTop += "\t//hmm not found so lets try the MRPs stamp\n"
 		textTop += "\tif (document.getElementById(&quot;Stamp&quot;).src.indexOf(&quot;BNK.png&quot;)>0){\n"
 		textTop += "\t\tfor (i=0; i&lt;ImgArray.length;i++){\n"
-		textTop += "\t\t\tvar ListItemArr =  ImgArray[i].split(&quot;|&quot;);\n"
-		textTop += "\t\t\tvar UserName = ListItemArr[0];\n"
-		textTop += "\t\t\tvar FileName = ListItemArr[1];\n"
+		textTop += "\t\t\tListItemArr =  ImgArray[i].split(&quot;|&quot;);\n"
+		textTop += "\t\t\tUserName = ListItemArr[0];\n"
+		textTop += "\t\t\tFileName = ListItemArr[1];\n"
 		textTop += "\t\t\tif (document.getElementById(&quot;DoctorName&quot;).value.indexOf(UserName)>=0){\n"
 		textTop += "\t\t\t\tdocument.getElementById(&quot;Stamp&quot;).src = &quot;../eform/displayImage.do?imagefile=&quot;+FileName;\n"
 		textTop += "\t\t\t}\n"
@@ -972,6 +1042,15 @@ function GetTextTop(){
 	
 	}
 	if (document.getElementById('AddDate').checked){
+        for (j=0; (j < (DrawData.length) ); j++){
+            var P = DrawData[j].split("|");
+            if ((P[0]=="Text") && ((P[5].indexOf("day") >-1)||(P[5].indexOf("date") >-1)) && (P[5]!=="dob_day") && (P[5]!=="today_rx"))  {
+                calendars=true      
+            }
+        }
+    }
+    
+    if (calendars){
 		textTop +="\n&lt;!-- main calendar program --&gt;\n"
 		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;../share/calendar/calendar.js&quot;&gt;&lt;/script&gt;\n"
 		textTop += "&lt;script type=&quot;text/javascript&quot; src=&quot;../share/calendar/lang/<bean:message key="global.javascript.calendar"/>&quot;&gt;&lt;/script&gt;\n"
@@ -980,7 +1059,29 @@ function GetTextTop(){
 
 	}
 
-
+    //stand alone code    
+    //textTop += "&lt;script type=&quot;text/javascript&quot;&gt;\n"
+    //textTop += "function reImg(){\n"
+    //textTop += "// for stand alone development without uploading to OSCAR\n"
+    //textTop += "\tvar strLoc = window.location.href.toLowerCase();\n"
+    //textTop += "\tif(strLoc.indexOf(&quot;https&quot;) == -1) {\n"
+    
+ 
+    //for (j=0; (j < (DrawData.length) ); j++){
+        //var P = DrawData[j].split("|");
+        //if (P[0]=="Page") {
+            //var pg = parseInt(P[1]);
+            //var im = P[2];
+            //var width = parseInt(P[3]);
+            //textTop += "\t\tvar src"+pg+" = document.getElementById(&quot;BGImage"+pg+"&quot;).src;\n"
+            //textTop += "\t\tdocument.getElementById(&quot;BGImage"+pg+"&quot;).src = src"+pg+".replace(&quot;$%7Boscar_image_path%7D&quot;,&quot;&quot;);\n"
+        //}
+    //}
+    //textTop += "\t}\n"
+    //textTop += "}\n&lt;/script&gt\n"
+ 
+    
+ 
 
 	//</head>
 	textTop += "&lt;/head&gt;\n\n"
@@ -991,6 +1092,7 @@ function GetTextTop(){
 	if ((document.getElementById('preCheckGender').checked)||(document.getElementById('XboxType').checked)){
 		textTop += "checkGender();"
 	}
+    //textTop += "reImg();"
 	//auto load signature stamp image, default to 'current_user'
 	if (document.getElementById('AddStamp').checked){
 		textTop += "SignForm();"
@@ -1018,10 +1120,12 @@ var InputType = P[0];
 		var im = P[2];
 		var width = parseInt(P[3]);
 		m = "";
-		if (pg > 1){m = "&lt;/div&gt;\n\n\n";}
+		if (PageNum > 1){m = "&lt;/div&gt;\n\n";}
 		m += "&lt;div id=&quot;page"
 		m += pg
-		m += "&quot; style=&quot;page-break-after:always;position:relative;&quot; &gt;\n\n"
+        m += "&quot; style=&quot;"
+        if (PageNum > 1){m +="page-break-after:always;"}
+        m += "position:relative;&quot; &gt;\n"
 		m += "&lt;img id=&quot;BGImage"
 		m += pg
 		m += "&quot; src=&quot;$%7Boscar_image_path%7D";
@@ -1077,12 +1181,12 @@ var InputType = P[0];
 		if (oscarDB){
 			m += " oscarDB="
 			m += oscarDB
-		}else if (!oscarDB){
+        }else if ((!oscarDB)&&(inputValue)){
 			m += "value=&quot;"
 			m += inputValue
 			m += "&quot;"
 		}
-		m += "&gt;\n"
+		m += "&gt;"
 
 	} else if (InputType == "Textbox"){
 		var x0 = parseInt(P[1]);
@@ -1134,7 +1238,7 @@ var InputType = P[0];
 		if (!oscarDB) {
 			m += inputValue
 		}
-		m += "&lt;/textarea&gt;\n"
+		m += "&lt;/textarea&gt;"
 	
 	} else if (InputType == "Checkbox"){
 		var x = parseInt(P[1]);
@@ -1159,7 +1263,7 @@ var InputType = P[0];
 		var b = parseInt(y - XboxOffset);
 		m += b
 		m += "px; &quot;"
-		m += "&gt;\n"
+		m += "&gt;"
 
 	} else if (InputType == "Xbox"){
 		var x0 = parseInt(P[1]);
@@ -1174,12 +1278,17 @@ var InputType = P[0];
 		var textAlign = P[10];
 		var bgColor = P[11];
 		var oscarDB = P[12];
-		var inputValue = P[13];
+        var inputValue = P[13];
+        var inputClassValue = P[14]+P[15];
+        if (inputClassValue == ""){inputClassValue="Xbox";} //else {inputClassValue += " Xbox";}
+        if (inputClassValue == "parent-field"){inputClassValue += " Xbox";} 
 		m = "&lt;input name=&quot;" 
 		m += inputName
 		m += "&quot; id=&quot;"
 		m += inputName
-		m += "&quot; type=&quot;text&quot; class=&quot;Xbox&quot; style=&quot;position:absolute; left:"
+        m += "&quot; type=&quot;text&quot; class=&quot;"
+        m += inputClassValue
+        m += "&quot; style=&quot;position:absolute; left:"
 		m += x0
 		m += "px; top:"
 		m += y0
@@ -1203,11 +1312,13 @@ var InputType = P[0];
 		} else {
 			m += bgColor
 		}
-		m += ";&quot; "
-		m += "value=&quot;"
-		m += inputValue
-		m += "&quot;"
-		m += "&gt;\n"
+        m += ";&quot; "
+        if (inputValue){
+            m += "value=&quot;"
+            m += inputValue
+            m += "&quot;"
+        }
+        m += "&gt;"
 
 	} else if (InputType == "Signature"){
 		if (P[5] == "ClassicSignature"){
@@ -1228,7 +1339,7 @@ var InputType = P[0];
 			m += height;
 			m += "; z-index:10;&quot;&gt;\n";
 	 		m +="\t&lt;/div&gt;\n\n";
-			m +="\t&lt;input type=&quot;hidden&quot; name=&quot;Store"+P[5]+"&quot; id=&quot;Store"+P[5]+"&quot; value=&quot;&quot;&gt;\n";
+			m +="\t&lt;input type=&quot;hidden&quot; name=&quot;Store"+P[5]+"&quot; id=&quot;Store"+P[5]+"&quot; value=&quot;&quot;&gt;";
 		}
 
 	} else if (InputType == "Stamp"){
@@ -1247,7 +1358,7 @@ var InputType = P[0];
 		m += width
 		m += "&quot; height=&quot;"
 		m += height
-		m += "&quot; onclick=&quot;toggleMe();&quot;&gt;\n&lt;/div&gt;\n\n"
+		m += "&quot; onclick=&quot;toggleMe();&quot;&gt;\n&lt;/div&gt;\n"
 	}
 	textMiddle += m;
 	textMiddle += "\n"
@@ -1271,50 +1382,44 @@ function GetTextBottom(){
 	}
 
 	//bottom submit boxes
-	/*textBottom += "\n\n &lt;div class=&quot;DoNotPrint&quot; id=&quot;BottomButtons&quot; style=&quot;position: relative; top:"
-	textBottom += "10px; left:0px;&quot;&gt;\n" */
-
-	textBottom += "\n\n &lt;div class=&quot;DoNotPrint&quot; id=&quot;BottomButtons&quot; style=&quot;position: absolute; top:"
-
-	//var totalpx =  parseInt(BGHeight) ;
-	//if ( totalpx == 750 ) { totalpx=1000;} // deep choclate fudge
-	//if ( parseInt(pageoffset) == 750 ) { pageoffset=1000;} // more brown fudge
-	//totalpx =  totalpx + parseInt(pageoffset);
-	//textBottom += totalpx;
-	textBottom += pageoffset;
+    textBottom += "\n\n&lt;div class=&quot;DoNotPrint&quot; id=&quot;BottomButtons&quot; style=&quot;position: absolute; top:"
+ 
+    textBottom += parseInt(BGHeight);
 	textBottom += "px; left:0px;&quot;&gt;\n"
 
 	textBottom += "\t &lt;table&gt;&lt;tr&gt;&lt;td&gt;\n"
 	textBottom += "\t\t Subject: &lt;input name=&quot;subject&quot; size=&quot;40&quot; type=&quot;text&quot;&gt; &lt;br&gt; \n"
 	textBottom += "\t\t&lt;input value=&quot;Submit&quot; name=&quot;SubmitButton&quot; id=&quot;SubmitButton&quot; type=&quot;submit&quot; onclick=&quot;"
 
-	if (document.getElementById('AddSignature').checked){
-		textBottom += " saveSig(); releaseDirtyFlag();&quot;&gt; \n"
-		textBottom += "\t\t&lt;input value=&quot;Clear Sig&quot; name=&quot;ClearButton&quot; id=&quot;ClearButton&quot; type=&quot;button&quot; onclick=&quot;clearSig();&quot;&gt; \n"
-	} else {
+    if (document.getElementById('AddSignature').checked){
+        textBottom += " saveSig(); releaseDirtyFlag();&quot;&gt; \n"
+        textBottom += "\t\t&lt;input value=&quot;Save Sig&quot; name=&quot;SaveSigButton&quot; id=&quot;SaveSigButton&quot; type=&quot;button&quot; onclick=&quot;saveSig();&quot;&gt; \n"
+        textBottom += "\t\t&lt;input value=&quot;Clear Sig&quot; name=&quot;ClearButton&quot; id=&quot;ClearButton&quot; type=&quot;button&quot; onclick=&quot;clearSig();&quot;&gt; \n"
+    } else {
 		textBottom += " releaseDirtyFlag();&quot;&gt; \n"
 	}
-	textBottom += "\t\t\t&lt;input value=&quot;Reset&quot; name=&quot;ResetButton&quot; id=&quot;ResetButton&quot; type=&quot;reset&quot;&gt; \n"
+	textBottom += "\t\t &lt;input value=&quot;Reset&quot; name=&quot;ResetButton&quot; id=&quot;ResetButton&quot; type=&quot;reset&quot;&gt; \n"
 	textBottom += "\t\t	&lt;input value=&quot;Print&quot; name=&quot;PrintButton&quot; id=&quot;PrintButton&quot; type=&quot;button&quot; onclick=&quot;formPrint();&quot;&gt; \n"
 	textBottom += "\t\t	&lt;input value=&quot;Print &amp; Submit&quot; name=&quot;PrintSubmitButton&quot; id=&quot;PrintSubmitButton&quot; type=&quot;button&quot; onclick=&quot;formPrint();releaseDirtyFlag();setTimeout('SubmitButton.click()',1000);&quot;&gt; \n"
 
 	textBottom += "\t &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;\n"
 	textBottom += " &lt;/div&gt;\n"
-	//close the last page here
+	//close pagation
 	textBottom += "&lt;/div&gt;\n"
-	textBottom += " &lt;/form&gt;\n\n"
-
-	if (document.getElementById('AddDate').checked){
-		textBottom +="\n&lt;!-- Define Date Calendars --&gt;\n"
-		textBottom += "&lt;script type=&quot;text/javascript&quot;&gt;\n"
-		for (j=0; (j < (DrawData.length) ); j++){
-			var P = DrawData[j].split("|");
-			if ((P[0]=="Text") && ((P[5].indexOf("today") >-1)||(P[5].indexOf("date") >-1)))  {
-				textBottom += "\tCalendar.setup( { inputField : &quot;"+P[5]+"&quot;, ifFormat : &quot;%Y-%m-%d&quot;,  button : &quot;"+P[5]+"&quot; } );\n"		
-			}
-		}
-		textBottom += "&lt;/script&gt;\n\n"
-	}
+	textBottom += " &lt;/form&gt;\n"
+ 
+    if (calendars){
+        textBottom +="\n&lt;!-- Define Date Calendars --&gt;\n"
+        textBottom += "&lt;script type=&quot;text/javascript&quot;&gt;\n"
+        for (j=0; (j < (DrawData.length) ); j++){
+            var P = DrawData[j].split("|");
+            if ((P[0]=="Text") && ((P[5].indexOf("day") >-1)||(P[5].indexOf("date") >-1)) && (P[5]!=="dob_day") && (P[5]!=="today_rx"))  {
+                textBottom += "\tCalendar.setup( { inputField : &quot;"+P[5]+"&quot;, ifFormat : &quot;%Y-%m-%d&quot;,  button : &quot;"+P[5]+"&quot; } );\n"     
+            }
+        }
+        textBottom += "&lt;/script&gt;\n\n"
+    }
+ 
 
 	//</body></html>
 	textBottom += "&lt;/body&gt;\n&lt;/html&gt;\n";
@@ -1333,7 +1438,6 @@ for (j=0; (j < (DrawData.length) ); j++){
 		GetTextMiddle(GetTextMiddleParameter);
 	}
 
-//PHC edit//
 
 textBottom = "";
 GetTextBottom();
@@ -2588,7 +2692,7 @@ show('classic');
 	onmouseup="SetMouseUp(); DrawMarker();loadInputList();"
 	onload="finishLoadingImage()">
 
-<h1><bean:message key="eFormGenerator.title"/></h1>
+<h1><bean:message key="eFormGenerator.title"/> 6.0</h1>
 
 <!-- this form  used for injecting html in to Edit E-Form  efmformmanageredit.jsp -->
 <form method="post" action="efmformmanageredit.jsp" id="toSave">
@@ -2653,10 +2757,10 @@ show('classic');
 
 <hr>
 
-<span class='h2'>3. <bean:message key="eFormGenerator.gender"/></span> <a onclick="show('Section3');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section3');"><bean:message key="eFormGenerator.collapse"/></a>
+<span class='h2'>3. <bean:message key="eFormGenerator.gender"/> Radio and Parent Child boxes</span> <a onclick="show('Section3');"><bean:message key="eFormGenerator.expand"/></a>/<a onclick="hide('Section3');"><bean:message key="eFormGenerator.collapse"/></a>
 <div id="Section3">
-			<p><bean:message key="eFormGenerator.genderCheckbox"/><br> <input name="preCheckGender" id="preCheckGender" type="checkbox" onclick="toggleView(this.checked,'Section3a');"><bean:message key="eFormGenerator.GenderCheckbox"/></p>
-			<p><input name="XboxType" id="XboxType" type="checkbox" onclick="toggleView(this.checked,'Section3a');"><bean:message key="eFormGenerator.GenderXbox"/></p>
+			<p><bean:message key="eFormGenerator.genderCheckbox"/><br> <input name="preCheckGender" id="preCheckGender" type="checkbox" onclick="toggleView(this.checked,'Section3a');"><bean:message key="eFormGenerator.GenderCheckbox"/><br>
+			<input name="XboxType" id="XboxType" type="checkbox" onclick="toggleView(this.checked,'Section3a');"><bean:message key="eFormGenerator.GenderXbox"/></p>
 			<div id="Section3a" style="display:none">
 				<table>
 					<tr>
@@ -2669,7 +2773,10 @@ show('classic');
 					</tr>
 				</table>
 			</div>
-			<p><bean:message key="eFormGenerator.radio"/><br> <input name="radio" id="radio" type="checkbox" onclick="toggleView(this.checked,'Section3b');"><bean:message key="eFormGenerator.radioCheckbox"/></p>
+
+			<p><bean:message key="eFormGenerator.radio"/><br> <input name="radio" id="radio" type="checkbox" onclick="toggleView(this.checked,'Section3b');"><bean:message key="eFormGenerator.radioCheckbox"/><br>
+            <input name="radioX" id="radioX" type="checkbox" onclick="toggleView(this.checked,'Section3b');document.getElementById('bgColor').value='white';">Add Radio Xboxes</p>
+
 			<div id="Section3b" style="display:none">
 				<span><b><bean:message key="eFormGenerator.radioLabel"/></b>: </span>
 				<input name="RadioButton" id="RadioButton" type="button" value='<bean:message key="eFormGenerator.radioButton"/>' onclick="SetSwitchOn(this.id);"></td>
@@ -2703,7 +2810,7 @@ show('classic');
 <!-- Add A Freehand Signature area to this form--> <br>
 			<div id="Section4a" style="display:none"> 
 				<input type="button" name="AddSignatureBox1" id="AddSignatureBox1" style="width:400px" value="<bean:message key="eFormGenerator.signatureLocationButton"/>" onclick="SetSwitchOn('SignatureBox');document.getElementById('AddSignature').disabled=true; ">
-				<p>Signature Color
+				<br>Signature Color
 				<select id="sigColor" onchange="SignatureColor=document.getElementById('sigColor').value;">
 					<option value="black" selected>black</option>
 					<option value="blue">blue</option>
@@ -2715,7 +2822,7 @@ show('classic');
 				</select>
 Signature Line Color
 				<select id="sigLineColor" onchange="SignatureLineColor=document.getElementById('sigLineColor').value;">
-					<option value="#FFFFFF" selected>white</option>
+                    <option value="rgba(255, 255, 255, 0.0)" selected>none</option>
 					<option value="#000000">black</option>
 					<option value="#0000FF">blue</option>
 					<option value="#00FF00">green</option>
@@ -2766,8 +2873,6 @@ onclick="SetSwitchOn('Stamp');document.getElementById('AddStamp').disabled=true;
 						</li><li name="UserSignatureListItem">
 						      mith|PJS.png
 						</li><li name="UserSignatureListItem">
-						      lokod|FAO.png
-						</li><li name="UserSignatureListItem">
 						      urie|LNC.png
 						</li><li name="UserSignatureListItem">
 						      esilet|SAD.png
@@ -2776,7 +2881,7 @@ onclick="SetSwitchOn('Stamp');document.getElementById('AddStamp').disabled=true;
 						</li><li name="UserSignatureListItem">
 						      ears|STS.png
 						</li><li name="UserSignatureListItem">
-						      ayes|LH.png
+						      arron|BAB.png
 						</li>
 					</ul>
 				</ul>
@@ -2981,7 +3086,17 @@ onclick="SetSwitchOn('Stamp');document.getElementById('AddStamp').disabled=true;
 					</td>
 				</tr>
 			</table>
-
+        <p>
+            Class
+                <select id="inputClass">
+                    <option value="" selected>none</option>
+                    <option value="parent-field">parent</option>
+                    <option value="child-">child (specify parent below)</option>
+                    <option value="only-one-">radio (specify group below)</option>
+                </select><br>
+            Parent or Group Name<input type="text" name="inputParentclass" id="inputParentclass"  style="width:100px" value="" onblur="if (!isValid(this.value)){alert('one continuous word with letters/numbers only');}" >
+ 
+        </p>
 		</p></span>
 	<span class='h3'><bean:message key="eFormGenerator.inputDraw"/></span>
 	<br>
@@ -3306,7 +3421,8 @@ function DrawCheckbox(canvas,x0,y0,inputName,preCheck,inputClass,inputParentclas
 	}
 }
 
-function DrawXbox(canvas,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue){
+function DrawXbox(canvas,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue,inputClass,inputParentclass){
+
 	// draw Rectangle
 	if ( PageIterate == PageNum ) {
 		var x0 = parseInt(x0);
@@ -3466,9 +3582,14 @@ function DrawMarker(){
 	var inputNameType = getCheckedValue(document.getElementsByName('InputNameType'));  // inputNameType = Auto/Custom
 	if (inputNameType == "Custom"){
 		e = document.getElementById('inputName').value
-		if (e){
-			inputName = e
-		} else if (!e){
+        if (e){
+            if (isValid(e)){
+                inputName = e
+            } else {
+                alert("The custom input name field can only contain\n letters A-Z a-z numbers 0-9 and underline _");
+                return false;
+            }
+        } else if (!e){
 			alert("<bean:message key="eFormGenerator.emptyInput"/>");	//reminds user to put in mandatory name for input field
 			return false;
 		}
@@ -3540,7 +3661,11 @@ function DrawMarker(){
 			var sigtext ="ClassicSignature";
 			DrawSignatureBox(jg,x0,y0,width,height,sigtext);
 		}else if (RadioButtonSwitch){
-			DrawCheckbox(jg,x0,y0,inputName,false,"only-one-",document.getElementById('RadioName').value);
+			if (document.getElementById('radioX').checked) {
+                DrawXbox(jg,x0,y0,width,height,inputName,fontFamily,fontStyle,fontWeight,fontSize,textAlign,bgColor,oscarDB,inputValue,"only-one-",document.getElementById('RadioName').value);
+            } else {
+                DrawCheckbox(jg,x0,y0,inputName,false,"only-one-",document.getElementById('RadioName').value);
+            }
 		} else {
             alert("nothing selected!");
         }	

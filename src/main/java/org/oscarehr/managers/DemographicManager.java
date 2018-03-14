@@ -27,6 +27,7 @@ package org.oscarehr.managers;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.Gender;
@@ -380,7 +381,7 @@ public class DemographicManager {
 		//TODO: this needs a loggedInInfo
 		if (ext != null && ext.getId() != null) {
 			DemographicExt prevExt = demographicExtDao.find(ext.getId());
-			if (!(ext.getKey().equals(prevExt.getKey()) && ext.getValue().equals(prevExt.getValue()))) {
+			if (!(ext.getKey().equals(prevExt.getKey()) && Objects.equals(ext.getValue(),prevExt.getValue()))) {
 				demographicExtArchiveDao.archiveDemographicExt(prevExt);
 			}
 		}

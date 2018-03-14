@@ -49,10 +49,10 @@ import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.OscarProperties;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.all.parsers.CLSHandler;
 import oscar.oscarLab.ca.all.parsers.Factory;
+import oscar.oscarLab.ca.all.parsers.MEDITECHHandler;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.oscarLab.ca.all.parsers.PATHL7Handler;
 import oscar.util.UtilDateUtilities;
@@ -84,8 +84,9 @@ import com.lowagie.text.rtf.RtfWriter2;
 public class LabPDFCreator extends PdfPageEventHelper{
     private OutputStream os;
     private boolean isUnstructuredDoc = false;
+    private boolean isReportData = Boolean.FALSE;
     private MessageHandler handler;
-    List<MessageHandler>handlers = new ArrayList<MessageHandler>();
+    private List<MessageHandler>handlers = new ArrayList<MessageHandler>();
     
     private int versionNum;
     private String[] multiID;
@@ -106,6 +107,10 @@ public class LabPDFCreator extends PdfPageEventHelper{
 
     	return(baos.toByteArray());
     }
+	
+	 public LabPDFCreator() {
+		 // Default constructor.
+	 }
 
     /** Creates a new instance of LabPDFCreator */
     public LabPDFCreator(HttpServletRequest request, OutputStream os) {
@@ -154,8 +159,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
         bf = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         font = new Font(bf, 11, Font.NORMAL);
         boldFont = new Font(bf, 12, Font.BOLD);
-     //   redFont = new Font(bf, 11, Font.NORMAL, Color.RED);
-        
+
         //add the patient information
         addRtfPatientInfo();
         
@@ -168,16 +172,12 @@ public class LabPDFCreator extends PdfPageEventHelper{
     public void printPdf() throws IOException, DocumentException{
 
         // check that we have data to print
-        if (handler == null)
+        if (handler == null) {
             throw new DocumentException();
-
-        //response.setContentType("application/pdf");  //octet-stream
-        //response.setHeader("Content-Disposition", "attachment; filename=\""+handler.getPatientName().replaceAll("\\s", "_")+"_LabReport.pdf\"");
+        }
 
         //Create the document we are going to write to
         document = new Document();
-        //PdfWriter writer = PdfWriter.getInstance(document, response.getOutputStream());
-        // PdfWriter writer = PdfWriter.getInstance(document, os);
         PdfWriter writer = PdfWriterFactory.newInstance(document, os, FontSettings.HELVETICA_10PT);
 
         //Set page event, function onEndPage will execute each time a page is finished being created
@@ -192,17 +192,28 @@ public class LabPDFCreator extends PdfPageEventHelper{
         bf = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
         font = new Font(bf, 9, Font.NORMAL);
         boldFont = new Font(bf, 10, Font.BOLD);
-      //  redFont = new Font(bf, 9, Font.NORMAL, Color.RED);
 
         // add the header table containing the patient and lab info to the document
         createInfoTable();
 
         // add the tests and test info for each header
         ArrayList<String> headers = handler.getHeaders();
-        for (int i=0; i < headers.size(); i++){
-            addLabCategory( headers.get(i) ,null);
+        for (int i=0; i < headers.size(); i++) {
+        	
+        	String specimenSource = null;
+        	String specimenDescription = null;
+        	
+        	if( ( handler instanceof MEDITECHHandler )  &&  ( "MIC".equals(  ((MEDITECHHandler) handler).getSendingApplication() ) ) ) {
+				specimenSource = ((MEDITECHHandler) handler).getSpecimenSource(i);
+				specimenSource = "SPECIMEN SOURCE: " + specimenSource;
+				specimenDescription = ((MEDITECHHandler) handler).getSpecimenDescription(i);
+				specimenDescription = "SPECIMEN DESCRIPTION: " + specimenDescription;
+        	}
+        	
+            addLabCategory( headers.get(i), specimenSource, specimenDescription );
         }
         
+        // It's not exactly clear that this block does anything. 
         for(MessageHandler extraHandler:handlers) {
         	ArrayList<String> extraHeaders = extraHandler.getHeaders();
             for (int i=0; i < extraHeaders.size(); i++)
@@ -241,113 +252,160 @@ public class LabPDFCreator extends PdfPageEventHelper{
 	 * Given the name of a lab category this method will add the category
 	 * header, the test result headers and the test results for that category.
 	 */
-	private void addLabCategory(String header, MessageHandler extraHandler) throws DocumentException {
+    private void addLabCategory(String header, MessageHandler extraHandler) throws DocumentException {
+    	addLabCategory(header, extraHandler, null, null);
+    }
+    
+    private void addLabCategory(String header, String specimenSource, String specimenDescription) throws DocumentException {
+    	addLabCategory(header, null, specimenSource, specimenDescription);
+    }
+    
+	private void addLabCategory(String header, MessageHandler extraHandler, String specimenSource, String specimenDescription ) throws DocumentException {
 		MessageHandler handler = (extraHandler!=null)?extraHandler:this.handler;
 		if(handler.getMsgType().equals("PATHL7")){
 			this.isUnstructuredDoc = ((PATHL7Handler) handler).unstructuredDocCheck(header);
 		} else if(handler.getMsgType().equals("CLS"))
 		{
 			this.isUnstructuredDoc = ((CLSHandler) handler).isUnstructured();
-		}
-		
-		float[] mainTableWidths;
-		if(isUnstructuredDoc){
-			if(handler.getMsgType().equals("CLS"))
-			{
-				mainTableWidths = new float[] { 5f, 10f, 3f, 2f};
-			} else
-			{
-				mainTableWidths = new float[] { 5f, 12f, 3f};
-			}
-		}else{
-			mainTableWidths = new float[] {5f, 3f, 1f, 3f, 2f, 4f, 2f };
-		}
-		
-		PdfPTable table = new PdfPTable(mainTableWidths);
-		if(isUnstructuredDoc){
-			table.setHeaderRows(1);}
-		else{
-		table.setHeaderRows(3);}
-		table.setWidthPercentage(100);
+		} 
 
 		PdfPCell cell = new PdfPCell();
-		// category name
-		if(!isUnstructuredDoc){
-		cell.setPadding(3);
-		cell.setPhrase(new Phrase("  "));
-		cell.setBorder(0);
-		cell.setColspan(7);
-		table.addCell(cell);
-		cell.setBorder(15);
-		cell.setPadding(3);
-		cell.setColspan(2);
-		cell.setPhrase(new Phrase(header.replaceAll("<br\\s*/*>", "\n"),
-				new Font(bf, 12, Font.BOLD)));
-		table.addCell(cell);
-		cell.setPhrase(new Phrase("  "));
-		cell.setBorder(0);
-		cell.setColspan(5);
-		table.addCell(cell);}
+		float[] mainTableWidths;
+		PdfPTable table = null;
+		
+		if( ( handler instanceof MEDITECHHandler && ((MEDITECHHandler) handler).isReportData() ) 
+				|| ( handler instanceof PATHL7Handler && ((PATHL7Handler) handler).isReportData() ) ) {
+			
+			table = new PdfPTable(1);
+			table.setWidthPercentage(100);
+			this.isReportData = Boolean.TRUE;
 
-		// table headers
-		if(isUnstructuredDoc){
-			cell.setColspan(1);
-			cell.setBorder(15);
-			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			cell.setBackgroundColor(new Color(210, 212, 255));
-			cell.setPhrase(new Phrase("Test Name(s)", boldFont));
-			table.addCell(cell);
-			cell.setPhrase(new Phrase("Result", boldFont));
-			table.addCell(cell);
-			if(handler.getMsgType().equals("CLS"))
-			{
-				cell.setPhrase(new Phrase("Date/Time Collected", boldFont));
+			
+		} else {
+		
+			if(isUnstructuredDoc){
+				if(handler.getMsgType().equals("CLS"))
+				{
+					mainTableWidths = new float[] { 5f, 10f, 3f, 2f};
+				} else
+				{
+					mainTableWidths = new float[] { 5f, 12f, 3f};
+				}
+			}else{
+				mainTableWidths = new float[] {5f, 3f, 1f, 3f, 2f, 4f, 2f };
+			}
+		
+			table = new PdfPTable(mainTableWidths);
+			table.setWidthPercentage(100);
+			
+			if(isUnstructuredDoc){
+				table.setHeaderRows(1);
+			}
+			else{
+				table.setHeaderRows(3);
+			}
+	
+			// category name
+			if(!isUnstructuredDoc){
+				
+				// blank filler
+				cell.setPadding(3);
+				cell.setPhrase(new Phrase("  "));				
+				cell.setBorder(0);				
+				cell.setColspan(7);
+				table.addCell(cell);
+				
+				// lab title. ie: PT Panel, CBC
+				cell.setBorder(15);
+				cell.setPadding(3);
+				cell.setColspan(2);
+				cell.setPhrase(new Phrase(header.replaceAll("<br\\s*/*>", "\n"),
+						new Font(bf, 12, Font.BOLD)));
+				table.addCell(cell);
+				
+				// place holder after lab title
+				cell.setPhrase(new Phrase("  "));
+				cell.setBorder(0);
+				cell.setColspan(5);
+				table.addCell(cell);
+			}
+
+			// table headers
+			if(isUnstructuredDoc){
+				cell.setColspan(1);
+				cell.setBorder(Rectangle.BOX);	
+				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				cell.setBackgroundColor(new Color(210, 212, 255));
+				cell.setPhrase(new Phrase("Test Name(s)", boldFont));
+				table.addCell(cell);
+				cell.setPhrase(new Phrase("Result", boldFont));
+				table.addCell(cell);
+				
+				if(handler.getMsgType().equals("CLS"))
+				{
+					cell.setPhrase(new Phrase("Date/Time Collected", boldFont));
+					table.addCell(cell);
+					cell.setPhrase(new Phrase("Status", boldFont));
+					table.addCell(cell); 
+				} else 
+				{
+					cell.setPhrase(new Phrase("Date/Time Completed", boldFont));
+					table.addCell(cell);
+				}
+				
+			} else{
+				
+				if( (handler instanceof MEDITECHHandler) && ( "MIC".equals( ( (MEDITECHHandler) handler ).getSendingApplication() ) ) ) {
+
+					cell.setPhrase(new Phrase(specimenSource, boldFont));
+					cell.setColspan(7);
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+					table.addCell(cell);
+					cell.setColspan(1);
+					
+					
+					cell.setPhrase(new Phrase(specimenDescription, boldFont));
+					cell.setColspan(7);
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+					table.addCell(cell);
+					cell.setColspan(1);
+				}
+				
+				cell.setColspan(1);
+				cell.setBorder(Rectangle.BOX);
+				cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				cell.setBackgroundColor(new Color(210, 212, 255));
+				cell.setPhrase(new Phrase("Test Name(s)", boldFont));
+				table.addCell(cell);
+				cell.setPhrase(new Phrase("Result", boldFont));
+				table.addCell(cell);
+				cell.setPhrase(new Phrase("Abn", boldFont));
+				table.addCell(cell);
+				cell.setPhrase(new Phrase("Reference Range", boldFont));
+				table.addCell(cell);
+				cell.setPhrase(new Phrase("Units", boldFont));
+				table.addCell(cell);
+				if(handler.getMsgType().equals("CLS")){
+					cell.setPhrase(new Phrase("Date/Time Collected", boldFont));
+				}
+				else
+				{
+					cell.setPhrase(new Phrase("Date/Time Completed", boldFont));
+				}
 				table.addCell(cell);
 				cell.setPhrase(new Phrase("Status", boldFont));
 				table.addCell(cell); 
-			} else 
-			{
-				cell.setPhrase(new Phrase("Date/Time Completed", boldFont));
-				table.addCell(cell);
 			}
-		} else{
-		cell.setColspan(1);
-		cell.setBorder(15);
-		cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-		cell.setBackgroundColor(new Color(210, 212, 255));
-		cell.setPhrase(new Phrase("Test Name(s)", boldFont));
-		table.addCell(cell);
-		cell.setPhrase(new Phrase("Result", boldFont));
-		table.addCell(cell);
-		cell.setPhrase(new Phrase("Abn", boldFont));
-		table.addCell(cell);
-		cell.setPhrase(new Phrase("Reference Range", boldFont));
-		table.addCell(cell);
-		cell.setPhrase(new Phrase("Units", boldFont));
-		table.addCell(cell);
-		if(handler.getMsgType().equals("CLS")){
-			cell.setPhrase(new Phrase("Date/Time Collected", boldFont));
-		}
-		else
-		{
-			cell.setPhrase(new Phrase("Date/Time Completed", boldFont));
-		}
-		table.addCell(cell);
-		cell.setPhrase(new Phrase("Status", boldFont));
-		table.addCell(cell); }
-
-
+		} // end alternate to Meditech Unstructured doc.
+		
 		// add test results
 		int obrCount = handler.getOBRCount();
-		int linenum = 0;
-		cell.setBorder(12);
-		cell.setBorderColor(Color.BLACK); // cell.setBorderColor(Color.WHITE);
-		cell.setBackgroundColor(new Color(255, 255, 255));
+
+		// reset the borders
+		cell.setBorder(Rectangle.NO_BORDER);
 
 		if (handler.getMsgType().equals("MEDVUE")) {
 
-			//cell.setBackgroundColor(getHighlightColor(linenum));
-			linenum++;
 			cell.setPhrase(new Phrase(handler.getRadiologistInfo(), boldFont));
 			cell.setColspan(7);
 			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -364,6 +422,12 @@ public class LabPDFCreator extends PdfPageEventHelper{
 				boolean obrFlag = false;
 				int obxCount = handler.getOBXCount(j);
 				for (int k = 0; k < obxCount; k++) {
+					
+					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+					cell.setBorder( Rectangle.BOTTOM );
+					cell.setBorderColor( Color.lightGray );
+					cell.setBackgroundColor( Color.white );
+					
 					String obxName = handler.getOBXName(j, k);
 					
 					boolean isAllowedDuplicate = false;
@@ -377,192 +441,223 @@ public class LabPDFCreator extends PdfPageEventHelper{
 					if (!handler.getOBXResultStatus(j, k).equals("TDIS")) {
 
 						// ensure that the result is a real result
-						if ((!handler.getOBXResultStatus(j, k).equals("DNS")
-								&& !obxName.equals("")
-								&& header.equals(handler.getObservationHeader(j, k))) || 
-								(handler.getMsgType().equals("EPSILON") && header.equals(handler.getOBXIdentifier(j,k)) && !obxName.equals("")) 
+						if ((!handler.getOBXResultStatus(j, k).equals("DNS") && !obxName.equals("") && header.equals(handler.getObservationHeader(j, k))) 
+								|| (handler.getMsgType().equals("EPSILON") && header.equals(handler.getOBXIdentifier(j,k)) && !obxName.equals("")) 
 								|| (handler.getMsgType().equals("PFHT") && !obxName.equals("") && header.equals(handler.getObservationHeader(j,k)))) { // <<-- DNS only needed for
 													// MDS messages
 							String obrName = handler.getOBRName(j);
 							// add the obrname if necessary
-							if (!obrFlag
-									&& !obrName.equals("")
-									&& (!(obxName.contains(obrName) && obxCount < 2 && !isUnstructuredDoc))) {
-								// cell.setBackgroundColor(getHighlightColor(linenum));
-								linenum++;
+							if ( !obrFlag && !obrName.equals("")
+									&& ( !(obxName.contains(obrName) && obxCount < 2 && !isUnstructuredDoc) ) ) {
+	
 								cell.setPhrase(new Phrase(obrName, boldFont));
 								cell.setColspan(7);
-								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+								cell.setBorderColor(Color.black);
+								table.setWidthPercentage(100);
 								table.addCell(cell);
+								cell.setBorderColor( Color.lightGray );
 								cell.setColspan(1);
 								obrFlag = true;
 							}
 
 							// add the obx results and info
-							Font lineFont = new Font(bf, 8, Font.NORMAL,
-									getTextColor(handler,handler.getOBXAbnormalFlag(j,
-											k)));
-							// cell.setBackgroundColor(getHighlightColor(linenum));
-							linenum++;
-							if(isUnstructuredDoc){
-								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+							Font lineFont = new Font(bf, 9, Font.NORMAL, getTextColor(handler,handler.getOBXAbnormalFlag(j,k)));
+
+							if( this.isReportData ) {
+								cell.setColspan(1);
+								cell.setBorder(Rectangle.NO_BORDER);
+								cell.setBorderColor(Color.white);
+								cell.setPadding(0);
+								cell.setPaddingLeft(10);
+
+								if( handler instanceof PATHL7Handler &&
+									"".equals( ( (PATHL7Handler) handler).getOBXSubId( j,k ) ) ) {
+									PdfPTable infoTable = new PdfPTable(2);
+									infoTable.setWidthPercentage(100);
+									cell.setPhrase( new Phrase( handler.getOBXName(j, k).replaceAll("<br\\s*/*>", " "), lineFont ) );
+									infoTable.addCell(cell);
+									cell.setPhrase( new Phrase( handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", " "), lineFont ) );
+									infoTable.addCell(cell);
+									table.addCell(infoTable);
+								} else {				
+									cell.setPhrase( new Phrase( handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n"), lineFont ) );
+									table.addCell(cell);
+								}
+	
+							} else if( isUnstructuredDoc ){
+
 								//if there are duplicate obxNames, display only the first 
-								if((handler.getOBXIdentifier(j, k).equalsIgnoreCase(handler.getOBXIdentifier(j, k-1)) && (obxCount>1)) || (obxName.equalsIgnoreCase(obrName))){
-									cell.setPhrase(new Phrase("", lineFont));
-									table.addCell(cell);
-								}else {
-									cell.setPhrase(new Phrase((obrFlag ? "   " : "")+ obxName, lineFont));
-									table.addCell(cell);
-								}
-								cell.setPhrase(new Phrase(handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n").replace("\t","\u00a0\u00a0\u00a0\u00a0"), lineFont));				
-								table.addCell(cell);
-								cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-								//if there are duplicate Times, display only the first 
-								if(handler.getTimeStamp(j, k).equals(handler.getTimeStamp(j, k-1)) && (obxCount>1)){
-									cell.setPhrase(new Phrase("", lineFont));		
-									table.addCell(cell); 
-								}else {
-									cell.setPhrase(new Phrase(handler.getTimeStamp(j, k), lineFont));		
-									table.addCell(cell);
-								}
-								if(handler.getMsgType().equals("CLS"))
-								{
-									cell.setPhrase(new Phrase(handler
-											.getOBXResultStatus(j, k), lineFont));
-									table.addCell(cell);
-								}
-							} else{
-							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-							if(!isAllowedDuplicate && (obxCount>1) && k > 0 && handler.getOBXIdentifier(j, k).equals(handler.getOBXIdentifier(j, k-1)) && (handler.getOBXValueType(j, k).equals("TX") || handler.getOBXValueType(j, k).equals("FT"))){
-								cell.setPhrase(new Phrase("", lineFont));
-								table.addCell(cell);
-							}
-							else{
-							cell.setPhrase(new Phrase((obrFlag ? "   " : "")
-									+ obxName, lineFont));
-							table.addCell(cell);}
-							boolean isLongText =false;
-							if(handler.getMsgType().equals("PATHL7")){
-								cell.setPhrase(new Phrase(handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n").replace("\t","\u00a0\u00a0\u00a0\u00a0"), lineFont));
-								//if this PATHL7 result is from CDC/SG and is greater than 100 characters
-								if((handler.getOBXResult(j, k).length() > 100) && (handler.getPatientLocation().equals("SG") || handler.getPatientLocation().equals("CDC"))){
-									cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-									//if the Abn, Reference Range and Units are empty or equal to null, give the long result the use of those columns
-									if(( handler.getOBXAbnormalFlag(j, k) == null ||handler.getOBXAbnormalFlag(j, k).isEmpty()) &&
-									( handler.getOBXReferenceRange(j, k) == null || handler.getOBXReferenceRange(j, k).isEmpty()) &&
-									(handler.getOBXUnits(j, k) == null || handler.getOBXUnits(j, k).isEmpty())){
-										isLongText = true;
-										cell.setColspan(4);
-										table.addCell(cell);
-									}else{//else use the 6 remaining columns, and add a new empty cell that takes the first two columns(Test & Results). 
-										//This will allow the corresponding Abn, RR and Units to be printed beneath the long result in the appropriate columns
-										cell.setColspan(6);
-										table.addCell(cell);
+								cell.setBorder(Rectangle.NO_BORDER);				
+								cell.setPadding(0);
+								cell.setPaddingTop(3);
+								
+								if( ! "MEDITECH".equalsIgnoreCase( handler.getMsgType() ) ) { 
+									if( ( ( handler.getOBXIdentifier(j, k).equalsIgnoreCase(handler.getOBXIdentifier(j, k-1)) && (obxCount>1) ) 
+											|| ( obxName.equalsIgnoreCase(obrName) ) ) ){
 										cell.setPhrase(new Phrase("", lineFont));
-										cell.setColspan(2);
+										table.addCell(cell);
+									}else {
+										cell.setPhrase(new Phrase((obrFlag ? "   " : "")+ obxName, lineFont));
 										table.addCell(cell);
 									}
-								}else{
-									cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-									table.addCell(cell);}
-							}else{
-							cell.setPhrase(new Phrase(handler
-									.getOBXResult(j, k).replaceAll(
-											"<br\\s*/*>", "\n"), lineFont));
-							cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-							table.addCell(cell);}
-							cell.setColspan(1);
-							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-							
-							String abnFlag = handler.getOBXAbnormalFlag(j, k);
-							if(!isLongText){//if the Abn, RR and Unit columns have not been occupied above
-								if(handler.getMsgType().equals("PATHL7")){
-									cell.setPhrase(new Phrase(abnFlag, lineFont));
-								} 
-								else if("CLS".equals(handler.getMsgType())) 
-								{
-									cell.setPhrase(new Phrase(
-										(handler.isOBXAbnormal(j, k) ?
-											handler.getOBXAbnormalFlag(j, k) :
-											""),
-										lineFont));
 								}
-								else
-								{
-									if (abnFlag == null || abnFlag.trim().equals(""))
-										abnFlag = "N";
-									cell.setPhrase(new Phrase(
-										abnFlag, lineFont));
+								
+								cell.setPhrase( new Phrase( handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n").replace("\t","\u00a0\u00a0\u00a0\u00a0"), lineFont ) );
+								table.addCell(cell);
+	
+								//if there are duplicate Times, display only the first 
+								if(! "MEDITECH".equalsIgnoreCase(handler.getMsgType() ) ){ 
+									if( handler.getTimeStamp(j, k).equals(handler.getTimeStamp(j, k-1)) && (obxCount>1) ){
+										cell.setPhrase(new Phrase("", lineFont));		
+										table.addCell(cell); 
+									}else {
+										cell.setPhrase(new Phrase(handler.getTimeStamp(j, k), lineFont));		
+										table.addCell(cell);
+									}
 								}
-								table.addCell(cell);
-								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-								cell.setPhrase(new Phrase(handler
-										.getOBXReferenceRange(j, k), lineFont));
-								table.addCell(cell);
-								cell.setPhrase(new Phrase(
-										handler.getOBXUnits(j, k), lineFont));
-								table.addCell(cell);}// end of isLongText
-							cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-							cell.setPhrase(new Phrase(handler
-									.getTimeStamp(j, k), lineFont));
-							table.addCell(cell);
-							cell.setPhrase(new Phrase(handler
-									.getOBXResultStatus(j, k), lineFont));
-							table.addCell(cell);}
-							
-						if(!handler.getMsgType().equals("PFHT")) {
-							// add obx comments
-							if (handler.getOBXCommentCount(j, k) > 0) {
-								// cell.setBackgroundColor(getHighlightColor(linenum));
-								linenum++;
-								cell.setPaddingLeft(100);
-								cell.setColspan(7);
-								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-								for (int l = 0; l < handler.getOBXCommentCount(
-										j, k); l++) {
-
-									cell.setPhrase(new Phrase(handler
-											.getOBXComment(j, k, l).replaceAll(
-													"<br\\s*/*>", "\n"), font));
+								
+								if(handler.getMsgType().equals("CLS")) {
+									cell.setPhrase(new Phrase(handler.getOBXResultStatus(j, k), lineFont));
 									table.addCell(cell);
-
 								}
-								cell.setPadding(3);
+							
+								cell.setBorder(Rectangle.BOTTOM);
+								cell.setPadding(5);
+							} else {
+
+								if(!isAllowedDuplicate 
+										&& (obxCount>1) 
+										&& k > 0 
+										&& handler.getOBXIdentifier(j, k).equals(handler.getOBXIdentifier(j, k-1)) 
+										&& (handler.getOBXValueType(j, k).equals("TX") || handler.getOBXValueType(j, k).equals("FT"))){
+									cell.setPhrase(new Phrase("", lineFont));
+									table.addCell(cell);
+								}else{
+									cell.setPhrase(new Phrase((obrFlag ? "   " : "") + obxName, lineFont));
+									table.addCell(cell);
+								}
+								
+								boolean isLongText =false;
+								
+								if( handler.getMsgType().equals("PATHL7") ){
+									
+									cell.setPhrase(new Phrase(handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n").replace("\t","\u00a0\u00a0\u00a0\u00a0"), lineFont));
+									//if this PATHL7 result is from CDC/SG and is greater than 100 characters
+									if((handler.getOBXResult(j, k).length() > 100) && (handler.getPatientLocation().equals("SG") || handler.getPatientLocation().equals("CDC"))){
+
+										//if the Abn, Reference Range and Units are empty or equal to null, give the long result the use of those columns
+										if(( handler.getOBXAbnormalFlag(j, k) == null ||handler.getOBXAbnormalFlag(j, k).isEmpty()) &&
+										( handler.getOBXReferenceRange(j, k) == null || handler.getOBXReferenceRange(j, k).isEmpty()) &&
+										(handler.getOBXUnits(j, k) == null || handler.getOBXUnits(j, k).isEmpty())){
+											isLongText = true;
+											cell.setColspan(4);
+											table.addCell(cell);
+										}else{
+											//else use the 6 remaining columns, and add a new empty cell that takes the first two columns(Test & Results). 
+											//This will allow the corresponding Abn, RR and Units to be printed beneath the long result in the appropriate columns
+											cell.setColspan(6);
+											table.addCell(cell);
+											cell.setPhrase(new Phrase("", lineFont));
+											cell.setColspan(2);
+											table.addCell(cell);
+										}
+									}else{
+										// cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+										table.addCell(cell);
+									}
+									cell.setColspan(1);
+									
+								} else { // end PATHHL7 labs
+									
+									cell.setPhrase(new Phrase(handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n"), lineFont));
+									table.addCell(cell);
+								}
+
+								String abnFlag = handler.getOBXAbnormalFlag(j, k);
+								
+								if(!isLongText){//if the Abn, RR and Unit columns have not been occupied above
+									if(handler.getMsgType().equals("PATHL7")){
+										cell.setPhrase(new Phrase(abnFlag, lineFont));
+									} else if("CLS".equals(handler.getMsgType())) {
+										cell.setPhrase(new Phrase(
+											(handler.isOBXAbnormal(j, k) ?
+												handler.getOBXAbnormalFlag(j, k) :
+												""),
+											lineFont));
+									} else {
+										if (abnFlag == null || abnFlag.trim().equals(""))
+											abnFlag = "N";
+										cell.setPhrase(new Phrase(abnFlag, lineFont));
+									}
+									
+									table.addCell(cell);
+									cell.setPhrase(new Phrase(handler.getOBXReferenceRange(j, k), lineFont));
+									table.addCell(cell);
+									cell.setPhrase(new Phrase(handler.getOBXUnits(j, k), lineFont));
+									table.addCell(cell);
+								}// end of isLongText
+								
+								cell.setPhrase(new Phrase(handler.getTimeStamp(j, k), lineFont));
+								table.addCell(cell);
+								cell.setPhrase(new Phrase(handler.getOBXResultStatus(j, k), lineFont));
+								table.addCell(cell);
+							} // end else not unstructured.
+							
+							if(!handler.getMsgType().equals("PFHT")) {
+								// add obx comments
+								if (handler.getOBXCommentCount(j, k) > 0) {
+
+									cell.setColspan(7);
+									cell.setBorderColor(Color.white);
+
+									for (int l = 0; l < handler.getOBXCommentCount(j, k); l++) {
+	
+										cell.setPhrase(new Phrase(handler.getOBXComment(j, k, l).replaceAll("<br\\s*/*>", "\n"), font));
+										table.addCell(cell);
+	
+									}
+
+									cell.setBorderColor(Color.lightGray);
+									cell.setColspan(1);
+								}
 								cell.setColspan(1);
 							}
-						}
-						// if (DNS)
-						} else if ((handler.getMsgType().equals("EPSILON") && header.equals(handler.getOBXIdentifier(j,k)) && obxName.equals("")) || (handler.getMsgType().equals("PFHT") && obxName.equals("")&& header.equals(handler.getObservationHeader(j,k)))){
-							// cell.setBackgroundColor(getHighlightColor(linenum));
-							linenum++;
-							cell.setPaddingLeft(100);
+						// end if not DNS
+						} else if (
+								( handler.getMsgType().equals("EPSILON") && header.equals(handler.getOBXIdentifier(j,k)) && obxName.equals("") ) 
+								|| ( handler.getMsgType().equals("PFHT") && obxName.equals("")&& header.equals(handler.getObservationHeader(j,k)) )
+								|| ( handler.getMsgType().equals("MEDITECH") && obxName.equals("") ) 
+							){
+
+							cell.setBorder(Rectangle.NO_BORDER);
+							cell.setBorderColor(Color.white);
+							cell.setPadding(0);
+							cell.setPaddingLeft(10);
 							cell.setColspan(7);
-							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-							cell.setPhrase(new Phrase(handler
-									.getOBXResult(j, k).replaceAll(
-											"<br\\s*/*>", "\n"), font));
+
+							table.setWidthPercentage(100);
+							cell.setPhrase( new Phrase( handler.getOBXResult(j, k).replaceAll( "<br\\s*/*>", "\n" ), font ) );							
 							table.addCell(cell);
-							cell.setPadding(3);
+							
 							cell.setColspan(1);
-						
+							cell.setBorder(Rectangle.BOTTOM);
+							cell.setBorderColor(Color.lightGray);
+							cell.setPadding(5);
 						}
 						if (handler.getMsgType().equals("PFHT") && !handler.getNteForOBX(j,k).equals("") && handler.getNteForOBX(j,k)!=null) {
-							// cell.setBackgroundColor(getHighlightColor(linenum));
-							linenum++;
+
 							cell.setPaddingLeft(100);
 							cell.setColspan(7);
-							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+
 							cell.setPhrase(new Phrase(handler.getNteForOBX(j, k).replaceAll("<br\\s*/*>", "\n"),font));
 							table.addCell(cell);
-							cell.setPadding(3);
+							cell.setPaddingLeft(5);
 							cell.setColspan(1);
 							
 							if (handler.getOBXCommentCount(j, k) > 0) {
-								// cell.setBackgroundColor(getHighlightColor(linenum));
-								linenum++;
-								cell.setPaddingLeft(100);
+
 								cell.setColspan(7);
-								cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+
 								for (int l = 0; l < handler.getOBXCommentCount(
 										j, k); l++) {
 
@@ -572,17 +667,16 @@ public class LabPDFCreator extends PdfPageEventHelper{
 									table.addCell(cell);
 
 								}
-								cell.setPadding(3);
+
 								cell.setColspan(1);
 							}
 						}
-					}else {
+						
+					} else {
 						if (handler.getOBXCommentCount(j, k) > 0) {
-							// cell.setBackgroundColor(getHighlightColor(linenum));
-							linenum++;
-							cell.setPaddingLeft(100);
+
 							cell.setColspan(7);
-							cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+
 							for (int l = 0; l < handler
 									.getOBXCommentCount(j, k); l++) {
 
@@ -592,7 +686,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 								table.addCell(cell);
 
 							}
-							cell.setPadding(3);
+
 							cell.setColspan(1);
 						}
 					} // if (!handler.getOBXResultStatus(j, k).equals("TDIS"))
@@ -602,14 +696,12 @@ public class LabPDFCreator extends PdfPageEventHelper{
 				// add obr comments
 				if (handler.getObservationHeader(j, 0).equals(header)) {
 					cell.setColspan(7);
-					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+					// cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 					for (int k = 0; k < handler.getOBRCommentCount(j); k++) {
 						// the obrName should only be set if it has not been
 						// set already which will only have occured if the
 						// obx name is "" or if it is the same as the obr name
 						if (!obrFlag && handler.getOBXName(j, 0).equals("")) {
-							// cell.setBackgroundColor(getHighlightColor(linenum));
-							linenum++;
 
 							cell.setPhrase(new Phrase(handler.getOBRName(j),
 									boldFont));
@@ -617,9 +709,6 @@ public class LabPDFCreator extends PdfPageEventHelper{
 							obrFlag = true;
 						}
 
-						// cell.setBackgroundColor(getHighlightColor(linenum));
-						linenum++;
-						//cell.setPaddingLeft(100);
 						if (handler.getMsgType().equals("TRUENORTH")) {
 							try {
 								Phrase phrase= new Phrase();
@@ -671,19 +760,6 @@ public class LabPDFCreator extends PdfPageEventHelper{
     }
 
 
-    /*
-     *  getHighlightColor will return the background color of the current result
-     *  line, this is determined by the line number
-     */
- /*
-    private Color getHighlightColor(int linenum){
-        Color ret = new Color(225,225,255);
-        if ((linenum % 2) == 1)
-            ret = new Color(245,245,255);
-
-        return ret;
-    }
-*/
     /*
      *  createInfoTable creates and adds the table at the top of the document
      *  which contains the patient and lab information
@@ -773,7 +849,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
         //Create header info table
         float[] tableWidths = {2f, 1f};
         PdfPTable table = new PdfPTable(tableWidths);
-        if (multiID.length > 1){
+        if ( multiID != null && multiID.length > 1 ){
             cell = new PdfPCell(new Phrase("Version: "+versionNum+" of "+multiID.length, boldFont));
             cell.setBackgroundColor(new Color(210, 212, 255));
             cell.setPadding(3);
@@ -916,20 +992,6 @@ public class LabPDFCreator extends PdfPageEventHelper{
 
             }
 
-            //add footer for every page
-            cb.beginText();
-            cb.setFontAndSize(bf, 8);
-            cb.showTextAligned(PdfContentByte.ALIGN_CENTER, "-"+pageNum+"-", width/2, 30, 0);
-            cb.endText();
-
-
-            // add promotext as footer if it is enabled
-            if ( OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null){
-                cb.beginText();
-                cb.setFontAndSize(BaseFont.createFont(BaseFont.HELVETICA,BaseFont.CP1252,BaseFont.NOT_EMBEDDED), 6);
-                cb.showTextAligned(PdfContentByte.ALIGN_CENTER, OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT"), width/2, 19, 0);
-                cb.endText();
-            }
 
         // throw any exceptions
         } catch (Exception e) {
@@ -943,6 +1005,43 @@ public class LabPDFCreator extends PdfPageEventHelper{
 
 	public void setUnstructuredDoc(boolean isUnstructuredDoc) {
 		this.isUnstructuredDoc = isUnstructuredDoc;
+	}
+
+	public OutputStream getOs() {
+		return os;
+	}
+
+	public void setOs(OutputStream os) {
+		this.os = os;
+	}
+	
+	public void closeOs() throws IOException {
+		if( this.os != null ) {
+			flushOs();
+			os.close();
+		}
+	}
+	
+	private void flushOs() throws IOException {
+		if( this.os != null ) {
+			os.flush();
+		}
+	}
+
+	public MessageHandler getHandler() {
+		return handler;
+	}
+
+	public void setHandler(MessageHandler handler) {
+		this.handler = handler;
+	}
+
+	public List<MessageHandler> getHandlers() {
+		return handlers;
+	}
+
+	public void setHandlers(List<MessageHandler> handlers) {
+		this.handlers = handlers;
 	}
 
 }

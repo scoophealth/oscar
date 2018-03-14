@@ -509,7 +509,7 @@ try
 	<input type="hidden" name="chain" value="">
 	<input type="hidden" name="caseNote.program_no" value="<%=pId%>">
 	<input type="hidden" name="noteId" value="0">
-	<input type="hidden" name="note_edit" value="new">
+	<input type="hidden" name="note_edit" value="">
 	<input type="hidden" name="sign" value="off">
 	<input type="hidden" name="verify" value="off">
 	<input type="hidden" name="forceNote" value="false">
@@ -518,6 +518,7 @@ try
 	<input type="hidden" name="printCPP" id="printCPP" value="false">
 	<input type="hidden" name="printRx" id="printRx" value="false">
 	<input type="hidden" name="printLabs" id="printLabs" value="false">
+	<input type="hidden" name="printPreventions" id="printPreventions" value="false">
 	<input type="hidden" name="encType" id="encType" value="">
 	<input type="hidden" name="pStartDate" id="pStartDate" value="">
 	<input type="hidden" name="pEndDate" id="pEndDate" value="">

@@ -2140,7 +2140,7 @@ function addDocToPatient(doclabid,patientId){//if doc is previously not assigned
                                                   $('curPage_'+docid).value=curPage;
 
                                                         showPageImg(docid,curPage,cp);
-                                                        if(curPage+1>=totalPage){
+                                                        if(curPage>=totalPage){
                                                             hideNext(docid);
                                                             showPrev(docid);
                                                         } else{

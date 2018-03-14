@@ -42,6 +42,7 @@ import ca.uhn.hl7v2.parser.Parser;
 import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.parser.XMLParser;
 import ca.uhn.hl7v2.util.Terser;
+// import ca.uhn.hl7v2.validation.ValidationContext;
 import ca.uhn.hl7v2.validation.impl.NoValidation;
 
 
@@ -56,10 +57,11 @@ import ca.uhn.hl7v2.validation.impl.NoValidation;
  */
 public class MEDITECHHandler implements MessageHandler {
 
-	public static enum DIAGNOSTIC_ID {PTH,ITS,LAB,MIC,BBK}
-	public static enum UNSTRUCTURED {PTH,ITS}
-	public static enum STRUCTURED {LAB,MIC,BBK}
-	public static enum OBX_DATA_TYPES {NM,ST,CE,TX}
+	public static enum DIAGNOSTIC_ID {PTH,ITS,LAB,MIC,BBK,MB} // Pathology, Report, Lab, Microbiology, Blood Bank, Microbiology
+	public static enum UNSTRUCTURED {PTH,ITS} // Pathology, Report(dictation etc..)
+	public static enum STRUCTURED {LAB,MIC,BBK} // Lab, Microbiology, Blood Bank
+	public static enum OBX_DATA_TYPES {NM,ST,CE,TX,FT} // Numeric, String, Coded Element, Text, FreeText
+	public static enum ORDER_STATUS {F,C,S,P,X,I} // complete(or final), corrected, signed, preliminary, cancelled, incomplete
 	
 //	public static final boolean USE_OBR_HEADERS_FOR_OBR_NAME = Boolean.TRUE; 
 	public static final String DEFAULT_LAB_NAME = "LAB";
@@ -67,7 +69,7 @@ public class MEDITECHHandler implements MessageHandler {
 	public static String DATE_FORMAT = "yyyyMMddHHmmss";
 	public static String DATE_STRING_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-	private static Logger logger = Logger.getLogger(MEDITECHHandler.class);
+	protected static Logger logger = Logger.getLogger(MEDITECHHandler.class);
 	protected ORU_R01 msg = null;
 	private Terser terser;
 
@@ -77,10 +79,19 @@ public class MEDITECHHandler implements MessageHandler {
 
 	@Override
 	public void init(String hl7Body) throws HL7Exception {
+
 		Parser parser = new PipeParser();
 		parser.setValidationContext(new NoValidation());
-		msg = (ORU_R01) parser.parse(hl7Body.replaceAll( "\n", "\r\n" ).replace("\\.Zt\\", "\t"));
-		terser = new Terser(msg);
+		msg = (ORU_R01) parser.parse(hl7Body.replaceAll( "\n", "\r\n" ) );
+		setTerser( new Terser(msg) );
+	}
+
+	protected Terser getTerser() {
+		return terser;
+	}
+
+	protected void setTerser(Terser terser) {
+		this.terser = terser;
 	}
 
 	public String getXML() {
@@ -103,13 +114,18 @@ public class MEDITECHHandler implements MessageHandler {
 	 * 
 	 */
 	public boolean isReportData() {		
-		return ( OBX_DATA_TYPES.TX.name().equals( getOBXValueType(0, 0) ) && ! isUnstructured() );		
+		if( OBX_DATA_TYPES.TX.name().equals( getOBXValueType(0, 0) ) 
+				|| OBX_DATA_TYPES.FT.name().equals( getOBXValueType(0, 0) ) ) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
 	 * Determines if this lab is a LTS or PATH type. 
 	 */
-	public boolean isUnstructured() {		
+	public boolean isUnstructured() {	
+		
 		for(UNSTRUCTURED lab : UNSTRUCTURED.values()) {
 			if( lab.name().equalsIgnoreCase( getSendingApplication() ) ) {
 				return true;
@@ -171,8 +187,9 @@ public class MEDITECHHandler implements MessageHandler {
 	
 	/**
 	 * Returns a stringed together list of OBR headings as the discipline name.
-	 * Alternatively, this could be adapted to return the proper discipline name 
-	 * stored in 
+	 * Alternatively, this could be adapted to return the proper discipline name stored
+	 * in the universial service ID. 
+	 * 
 	 */
 	public String getDiscipline() {
 
@@ -338,6 +355,7 @@ public class MEDITECHHandler implements MessageHandler {
 
 	/**
 	 * Observation Identifier
+	 * AKA LOINC code
 	 * OBX 3.1 3.2. 
 	 * Is the name of the specific test result.
 	 */
@@ -552,7 +570,7 @@ public class MEDITECHHandler implements MessageHandler {
             age--;
         }
 
-		if( age == 0 ) {
+		if( age < 0 ) {
 			return "N/A";
 		}
 		
@@ -637,13 +655,28 @@ public class MEDITECHHandler implements MessageHandler {
 				+ getString( msg.getRESPONSE().getPATIENT().getVISIT().getPV1().getAssignedPatientLocation().getPl4_Facility().getHd1_NamespaceID().getValue() ) ));
 	}
 
+	/**
+	 * There are some situations where the date could be located in OBR.14 (Received Date/Time ) in some cases.  Such as Pathology Labs.
+	 * Normal location is OBR.7
+	 */
 	@Override
 	public String getServiceDate(){
+		
+		String serviceDate = "";
+		
 		try{
-			return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue())));
+			serviceDate = getString( msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue());
+		
+			if( serviceDate == null || serviceDate.isEmpty() ) {
+				serviceDate = getString( msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObr14_SpecimenReceivedDateTime().getTimeOfAnEvent().getValue() ); 
+			}
+		
+			serviceDate = formatDateTime(serviceDate);
 		}catch(Exception e){
 			return("");
 		}
+		
+		return serviceDate;
 	}
 
 	@Override
@@ -662,19 +695,34 @@ public class MEDITECHHandler implements MessageHandler {
 			String orderStatus = getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getResultStatus().getValue());
 			int obrCount = getOBRCount();
 			int obxCount;
-			int count = 0;
+			int correctionCount = 0;
+			String lastOBXStatus = "";
+			
 			for (int i=0; i < obrCount; i++){
 				obxCount = getOBXCount(i);
 				for (int j=0; j < obxCount; j++){
 					String obxStatus = getOBXResultStatus(i, j);
-					if (obxStatus.equalsIgnoreCase("C")) {
-						count++;
+					if(  ORDER_STATUS.C.name().equalsIgnoreCase( obxStatus ) ) {
+						correctionCount++;
+					}
+
+					if( (j + 1) == obxCount ) {
+						lastOBXStatus = obxStatus;
 					}
 				}
 			}
+
+			// Graceful handling of an incorrectly marked report status.
+			// If OBR status is empty or signed and the last OBX status is F then the status is final.
+			if( ( orderStatus == null || orderStatus.isEmpty() || ORDER_STATUS.S.name().equalsIgnoreCase( orderStatus ) ) 
+					&& ( ORDER_STATUS.F.name().equalsIgnoreCase( lastOBXStatus ) ) ) {				
+				orderStatus = ORDER_STATUS.F.name();
+			}
 			
-			if(count > 0){//if any of the OBX's have been corrected, mark the entire report as corrected
-				orderStatus = "C";
+			// if any of the OBX's have been corrected, override and mark the entire report as corrected
+			// A little inefficient - I know.
+			if(correctionCount > 0){
+				orderStatus = ORDER_STATUS.C.name();
 			}
 				
 			return orderStatus;
@@ -693,7 +741,7 @@ public class MEDITECHHandler implements MessageHandler {
 			obxCount = getOBXCount(i);
 			for (int j=0; j < obxCount; j++){
 				String status = getOBXResultStatus(i, j);
-				if (status.equalsIgnoreCase("F") || status.equalsIgnoreCase("C")) {
+				if ( ORDER_STATUS.F.name().equalsIgnoreCase(status) ||  ORDER_STATUS.C.name().equalsIgnoreCase(status) ) {
 					count++;
 				}
 			}
@@ -703,9 +751,9 @@ public class MEDITECHHandler implements MessageHandler {
 		String orderStatus = getOrderStatus();
 		// add extra so final reports are always the ordered as the latest except
 		// if the report has been changed in which case that report should be the latest
-		if (orderStatus.equalsIgnoreCase("F")) {
+		if ( ORDER_STATUS.F.name().equalsIgnoreCase(orderStatus) ) {
 			count = count + 100;
-		} else if (orderStatus.equalsIgnoreCase("C"))  {
+		} else if ( ORDER_STATUS.C.name().equalsIgnoreCase(orderStatus) )  {
 			count = count + 150;
 		}
 
@@ -960,7 +1008,7 @@ public class MEDITECHHandler implements MessageHandler {
 
 	/* HELPER METHODS */
 
-	private static final String getString(final String retrieve){
+	protected static final String getString(final String retrieve){
 		String newRetrieve = new String("");
 		if (retrieve == null){
 			return newRetrieve;

@@ -72,6 +72,13 @@ if( request.getParameter("updateParent") != null )
 else
     updateParent = "true";  
 
+boolean recall = false;
+String taskTo = user_no; //default current user
+String priority = "Normal";
+if(request.getParameter("taskTo")!=null) taskTo = request.getParameter("taskTo");
+if(request.getParameter("priority")!=null) priority = request.getParameter("priority");
+if(request.getParameter("recall")!=null) recall = true;
+
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarEncounter.pageUtil.EctSessionBean" %>
 <%@page import="org.oscarehr.util.SpringUtils" %>
@@ -122,7 +129,18 @@ GregorianCalendar now=new GregorianCalendar();
 -->
 </style>
       <script language="JavaScript">
-<!--
+
+      function addMonth(no,numday)
+      {       var gCurrentDate = new Date();
+              var newDate = DateAdd(gCurrentDate, numday, no,0 );
+      var newYear = newDate.getFullYear()
+      var newMonth = newDate.getMonth()+1;
+      var newDay = newDate.getDate();
+      var newD = newYear + "-" + newMonth + "-" + newDay;
+              document.serviceform.xml_appointment_date.value = newD;
+      }
+      
+      <!--
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
   var page = "" + varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
@@ -321,24 +339,43 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
       <td><input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>"> 
         <font color="#003366" size="1" face="Verdana, Arial, Helvetica, sans-serif">
         <a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message key="tickler.ticklerAdd.btnCalendarLookup"/></a> &nbsp; &nbsp; 
-        <a href="#" onClick="addMonth(6)"><bean:message key="tickler.ticklerAdd.btn6Month"/></a>&nbsp; &nbsp;
-        <a href="#" onClick="addMonth(12)"><bean:message key="tickler.ticklerAdd.btn1Year"/></a></font> </td>
+         
+         <a href="#" onClick="addMonth(0,14)">14d</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonth(1,0)">1m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonth(2,0)">2m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonth(3,0)">3m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonth(4,0)">4m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonth(5,0)">5m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonth(6,0)">6m</a>&nbsp; &nbsp;
+         <a href="#" onClick="addMonth(7,0)">7m</a>&nbsp; &nbsp;
+         <a href="#" onClick="addMonth(8,0)">8m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonth(9,0)">9m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonth(10,0)">10m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonth(11,0)">11m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonth(12,0)">1yr</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonth(24,0)">2yr</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonth(36,0)">3yr</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonth(60,0)">5yr</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonth(96,0)">8yr</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonth(120,0)">10yr</a></font> </td>
+        
+        
       <td>&nbsp;</td>
     </tr>
     <tr> 
-      <td height="21" valign="top"><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerMain.Priority"/></strong></font></td>
+      <td height="21" valign="top"><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerMain.Priority"/>:</strong></font></td>
       <td valign="top"> 
 	<select name="priority" style="font-face:Verdana, Arial, Helvetica, sans-serif">
- 	<option value="<bean:message key="tickler.ticklerMain.priority.high"/>"><bean:message key="tickler.ticklerMain.priority.high"/>
-	<option value="<bean:message key="tickler.ticklerMain.priority.normal"/>" SELECTED><bean:message key="tickler.ticklerMain.priority.normal"/>
-	<option value="<bean:message key="tickler.ticklerMain.priority.low"/>"><bean:message key="tickler.ticklerMain.priority.low"/>	
+ 	<option value="<bean:message key="tickler.ticklerMain.priority.high"/>" <%=priority.equals("High")?"selected":""%>><bean:message key="tickler.ticklerMain.priority.high"/>
+	<option value="<bean:message key="tickler.ticklerMain.priority.normal"/>" <%=priority.equals("Normal")?"selected":""%>><bean:message key="tickler.ticklerMain.priority.normal"/>
+	<option value="<bean:message key="tickler.ticklerMain.priority.low"/>" <%=priority.equals("Low")?"selected":""%>><bean:message key="tickler.ticklerMain.priority.low"/>	
      	</select>
       </td>
       <td>&nbsp;</td>
     </tr>
 
     <tr> 
-      <td height="21" valign="top"><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerMain.taskAssignedTo"/></strong></font></td>
+      <td height="21" valign="top"><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerMain.taskAssignedTo"/>:</strong></font></td>
       <td valign="top"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333">
 <% if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) 
 { // multisite start ==========================================
@@ -371,6 +408,7 @@ function changeSite(sel) {
 	sel.form.task_assigned_to.innerHTML=sel.value=="none"?"":_providers[sel.value];
 }
       </script>
+ 
       	<select id="site" name="site" onchange="changeSite(this)">
       		<option value="none">---select clinic---</option>
       	<%
@@ -387,7 +425,8 @@ function changeSite(sel) {
 <% // multisite end ==========================================
 } else {
 %>
-      <select name="task_assigned_to">           
+  
+      <select name="task_assigned_to">        
             <%  String proFirst="";
                 String proLast="";
                 String proOHIP="";
@@ -399,7 +438,7 @@ function changeSite(sel) {
                     proOHIP = p.getProviderNo();
 
             %> 
-            <option value="<%=proOHIP%>" <%=user_no.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
+            <option value="<%=proOHIP%>" <%=taskTo.equals(proOHIP)?"selected":""%>><%=proLast%>, <%=proFirst%></option>
             <%
                 }
             %>

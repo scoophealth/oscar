@@ -53,11 +53,6 @@ oscarApp.controller('NavBarCtrl', function ($scope, $location, $modal, $state, $
 		}
 	});
 	
-	personaService.getDashboardMenu().then(function(response){
-		$scope.dashboardMenu = response.menus.menu;
-	}),function(reason){
-		alert(reason);
-	};
 	
 	personaService.getNavBar().then(function(response){
 		$scope.currentProgram = response.currentProgram.program;
@@ -116,48 +111,12 @@ oscarApp.controller('NavBarCtrl', function ($scope, $location, $modal, $state, $
 		$state.go('record.details', {demographicNo:demographicNo, hideNote:true});
 	}
 	
-	//pre-load clinical connect url
-	appService.getClinicalConnectURL().then(function(data){
-		$scope.clinicalConnectUrl = data;
-	});
 	
 	//to help ng-clicks on buttons
 	$scope.transition = function (item) {
-		
-		if(angular.isDefined(item) && angular.isDefined(item.state)){
-			var url = "";
-			var wname = "";
-			if(item.state=="inbox"){
-				url = "../dms/inboxManage.do?method=prepareForIndexPage";
-				wname="inbox";
-			}else if(item.state=="billing"){
-				url = "../billing/CA/" + $scope.billRegion + "/billingReportCenter.jsp?displaymode=billreport";
-				wname="billing";
-			}else if(item.state=="admin"){
-				url = "../administration/";
-				wname="admin";
-			}else if(item.state=="documents"){
-				url = "../dms/documentReport.jsp?function=provider&functionid="+$scope.me.providerNo;
-				wname="edocView";
-			}else if(item.state=="clinicalconnect"){
-				url = $scope.clinicalConnectUrl;
-				if (url=="") {
-					alert("Cannot access ClinicalConnect. Please contact the adminstrator.");
-					return;
-				}
-				wname="clinicalconnect";
-			}else{
-				$state.go(item.state);
-			}
-			
-			if(url!="" && wname!=""){
-				var newwindow = window.open(url, wname, 'scrollbars=1,height=700,width=1000');
-				if (window.focus) {
-					newwindow.focus();
-				}
-			}
-			
-			
+		console.log("item",item);
+		if(angular.isDefined(item) && angular.isDefined(item.state) && item.state != null){
+			$state.go(item.state);
 		}else if(angular.isDefined(item) && angular.isDefined(item.url)){
 			
 			if(item.label=="Schedule"){
@@ -175,7 +134,15 @@ oscarApp.controller('NavBarCtrl', function ($scope, $location, $modal, $state, $
 				window.location = item.url + qs;
 				return false;
 			}else{
-				window.location = item.url;
+				
+				if(item.newWindowName != null){
+					var newwindow = window.open(item.url, item.newWindowName, 'scrollbars=1,height=700,width=1000');
+					newwindow.focus();
+				}else{
+					window.location = item.url;
+				}
+				
+				
 			}
 		}
 	};

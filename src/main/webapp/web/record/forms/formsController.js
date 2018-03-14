@@ -155,9 +155,12 @@ oscarApp.controller('FormCtrl', function ($scope,$http,$location,$stateParams,de
 		
 
 		if(item.type == 'eform'){
-			if(angular.isDefined(item.id)){
+			if(item.id != null){
+			//if(angular.isDefined(item.id)){
+				console.log('id is defined - ' + item.id);
 				addOrShow = '../eform/efmshowform_data.jsp?fdid='+item.id;
 			}else{
+				console.log('id is not defined. new form');
 				addOrShow = '../eform/efmformadd_data.jsp?fid='+item.formId+'&demographic_no='+ $stateParams.demographicNo;
 			}
 			/*

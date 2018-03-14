@@ -242,6 +242,19 @@
 		}  
 	}
     
+    if(demographic.getMyOscarUserName() != null && !demographic.getMyOscarUserName().trim().isEmpty()){ 
+     	Demographic myoscarDemographic = demographicDao.getDemographicByMyOscarUserName(demographic.getMyOscarUserName());
+     	if(myoscarDemographic != null){
+
+%>
+			***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedPHR" /></font>
+			***<br><br><a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message key="global.btnBack" /></b></a> 
+<% 
+			return;
+     	}
+
+    } 
+    
     bufName = new StringBuilder(request.getParameter("last_name")+ ","+ request.getParameter("first_name") );
     bufNo = new StringBuilder( (StringUtils.trimToEmpty("demographic_no")) );
     bufChart = new StringBuilder(StringUtils.trimToEmpty("chart_no"));
@@ -317,6 +330,7 @@
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "informedConsent", request.getParameter("informedConsent"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "HasPrimaryCarePhysician", request.getParameter("HasPrimaryCarePhysician"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "EmploymentStatus", request.getParameter("EmploymentStatus"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "PHU", request.getParameter("PHU"), "");
        //for the IBD clinic
 		OtherIdManager.saveIdDemographic(dem, "meditech_id", request.getParameter("meditech_id"));
 

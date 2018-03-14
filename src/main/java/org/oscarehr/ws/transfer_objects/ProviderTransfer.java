@@ -54,6 +54,7 @@ public final class ProviderTransfer {
 	private String rmaNo;
 	private Date SignedConfidentiality;
 	private String practitionerNo;
+	private String practitionerNoType;
 	private String email;
 	private String title;
 
@@ -215,6 +216,16 @@ public final class ProviderTransfer {
 
 	public void setPractitionerNo(String practitionerNo) {
 		this.practitionerNo = practitionerNo;
+	}
+	
+	
+
+	public String getPractitionerNoType() {
+		return practitionerNoType;
+	}
+
+	public void setPractitionerNoType(String practitionerNoType) {
+		this.practitionerNoType = practitionerNoType;
 	}
 
 	public String getEmail() {

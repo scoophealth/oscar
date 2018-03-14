@@ -58,8 +58,8 @@ public class DemographicSearchResultTransformer implements ResultTransformer{
 	    String patientStatus = (String)tuple[7];
 	    String phone = (String)tuple[8];
 	    String year = (String)tuple[9];
-	    String month = (String)tuple[10];
-	    String day = (String)tuple[11];
+	    String month = ""+tuple[10];
+	    String day = ""+tuple[11];
 	    String providerLastName = (String)tuple[12];
 		String providerFirstName = (String)tuple[13];
 		String hin = (String)tuple[14];

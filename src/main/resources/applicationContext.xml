@@ -158,6 +158,7 @@
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/painAssistant.xml</value>
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/periodicHealthVisit.xml</value>
 				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/healthTracker.xml</value>
+				<value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hepCFlowsheet.xml</value>
 				
 			</list>
 		</property>
@@ -264,8 +265,8 @@
 
             <property name="javaMailProperties">
                <props>
-                  <prop key="mail.smtp.auth">true</prop>
-                  <prop key="mail.smtp.starttls.enable">true</prop>
+                  <prop key="mail.smtp.auth">${email.smtp.auth:true}</prop>
+                  <prop key="mail.smtp.starttls.enable">${email.starttls.enable:true}</prop>
                </props>
             </property>
         </bean>

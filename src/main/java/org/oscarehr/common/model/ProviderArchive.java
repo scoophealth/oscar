@@ -73,6 +73,7 @@ public class ProviderArchive extends AbstractModel<Integer> {
 	@Column(name="provider_activity")
 	private String providerActivity;
 	private String practitionerNo;
+	private String practitionerNoType;
 	private String init;
 	@Column(name="job_title")
 	private String jobTitle;
@@ -244,6 +245,12 @@ public class ProviderArchive extends AbstractModel<Integer> {
 	public void setSignedConfidentiality(Date signedConfidentiality) {
     	SignedConfidentiality = signedConfidentiality;
     }
+	public String getPractitionerNoType() {
+		return practitionerNoType;
+	}
+	public void setPractitionerNoType(String practitionerNoType) {
+		this.practitionerNoType = practitionerNoType;
+	}
 
 
 

@@ -83,6 +83,19 @@ public class TicklerDao extends AbstractDao<Tickler>{
 		return results;
 	}
 	
+	@SuppressWarnings("unchecked")
+    public List<Tickler> findByTicklerNoAssignedTo(Integer ticklerNo, String assignedTo, Integer demoNo) {
+		
+		Query query = entityManager.createQuery("select t from Tickler t where t.id = ?1 AND t.taskAssignedTo = ?2 AND t.demographicNo = ?3 AND t.status != 'D'");
+		query.setParameter(1, ticklerNo);
+		query.setParameter(2, assignedTo);
+		query.setParameter(3, demoNo);
+		
+		List<Tickler> results = query.getResultList();
+		
+		return results;
+	}
+	
 	/**
 	 * Finds all ticklers for the specified demographic, assigned to and message fields. 
 	 */

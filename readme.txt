@@ -2,15 +2,17 @@
 OSCAR McMaster Project
 ======================
 
+Note: this readme is now out of date, and marked for change. For the latest documentation, visit https://oscaremr.atlassian.net/wiki/display/OS
+
+
 ------------
 Requirements  
 ------------
 These are not necessarily requirements but the version of software used by the author of this read me at the time of this writing. Generally speaking any newer version should work.
-- mysql 5.1.52
-- jdk1.6.0_23
-- tomcat-6.0.29
-- maven 2.2.1
-- ant 1.8.1
+- mysql 5.5/5.6
+- jdk1.7
+- tomcat 7
+- maven 3.3.x
 
 -----------
 Directories

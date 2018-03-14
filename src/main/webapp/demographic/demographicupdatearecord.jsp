@@ -240,23 +240,24 @@
 	if( OscarProperties.getInstance().getBooleanProperty("USE_NEW_PATIENT_CONSENT_MODULE", "true") ) {
 		// Retrieve and set patient consents.
 		PatientConsentManager patientConsentManager = SpringUtils.getBean( PatientConsentManager.class );
-		List<ConsentType> consentTypes = patientConsentManager.getConsentTypes();
-		String consentTypeId = null;
-		int patientConsentIdInt = 0; 
+		List<ConsentType> consentTypes = patientConsentManager.getActiveConsentTypes();
 
+		if (consentTypes != null)
+		{
 		for( ConsentType consentType : consentTypes ) {
-			consentTypeId = request.getParameter( consentType.getType() );
-			String patientConsentId = request.getParameter( consentType.getType() + "_id" );
-			if (patientConsentId!=null) patientConsentIdInt = Integer.parseInt( patientConsentId );
-			
-			// checked box means add or edit consent. 
-			if( consentTypeId != null ) {		
-				patientConsentManager.addConsent(loggedInInfo, demographic.getDemographicNo(), Integer.parseInt( consentTypeId ) );
-			
-			// unchecked and patientConsentId > 0 could mean the patient opted out. 
-			} else if( patientConsentIdInt > 0 ) {
-				patientConsentManager.optoutConsent( loggedInInfo, patientConsentIdInt );		
-			}		
+
+			String consentRecord = request.getParameter( consentType.getType() );
+			Boolean optOut = null;
+			Boolean explicitConsent = Boolean.TRUE;
+
+			if( consentRecord != null )
+			{
+				//either opt-in or opt-out is selected
+				optOut = Integer.parseInt(consentRecord) == 1;
+			}
+
+			patientConsentManager.addEditConsentRecord(loggedInInfo, demographic.getDemographicNo(), consentType.getId(), explicitConsent, optOut);
+		}
 		}
 	}
 	
@@ -288,6 +289,8 @@
 	
 	extensions.add(new DemographicExt(request.getParameter("HasPrimaryCarePhysician_id"), proNo, demographicNo, "HasPrimaryCarePhysician", request.getParameter("HasPrimaryCarePhysician")));
 	extensions.add(new DemographicExt(request.getParameter("EmploymentStatus_id"), proNo, demographicNo, "EmploymentStatus", request.getParameter("EmploymentStatus")));
+	
+	extensions.add(new DemographicExt(request.getParameter("PHU_id"), proNo, demographicNo, "PHU", request.getParameter("PHU")));
 	
 	// customized key
 	if(oscarVariables.getProperty("demographicExt") != null) {
@@ -333,7 +336,19 @@
 	        }
 	    }
 	}
+     
+    if(demographic.getMyOscarUserName() != null && !demographic.getMyOscarUserName().trim().isEmpty()){ 
+     	Demographic myoscarDemographic = demographicDao.getDemographicByMyOscarUserName(demographic.getMyOscarUserName());
+     	if(!myoscarDemographic.getDemographicNo().equals(demographic.getDemographicNo())){
 
+%>
+			***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedPHR" /></font>
+			***<br><br><a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message key="global.btnBack" /></b></a> 
+<% 
+			return;
+     	}
+
+    } 
     Long archiveId = demographicArchiveDao.archiveRecord(demographic);
 	for (DemographicExt extension : extensions) {
 		DemographicExtArchive archive = new DemographicExtArchive(extension);

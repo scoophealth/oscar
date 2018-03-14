@@ -128,7 +128,7 @@ $(function() {
 					<option value="HHSEMR">HHSEMR</option>
 					<option value="HRMXML">HRM XML</option>
 					<option value="ICL">ICL</option>
-					<option value="IHA">IHA</option>
+					<option value="IHAPOI">IHAPOI</option>
 					<option value="MDS">MDS/Lifelabs</option>
 					<option value="MEDVUE">MEDVUE</option>
 					<!-- <option value="HL7">HL7</option> -->

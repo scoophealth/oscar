@@ -78,6 +78,9 @@ if(!authed) {
             
             <input type="hidden" id="method" name="method"/>
             
+            <%if(request.getAttribute("saved") != null) { %>
+            	<span style="color:red">Preference has been saved</span>
+            <% } %>
             <!--Header-->
             <table border=0 cellspacing=0 cellpadding=0 width="100%">
 		<tr bgcolor="#486ebd">
@@ -147,12 +150,15 @@ if(!authed) {
                 <tr>
                     <td align="center">
 			<input type="button" name="Submit" value="<bean:message key='admin.adminnewgroup.btnSubmit'/>" onClick="savePreference()"/>
-			<input TYPE="reset" VALUE="<bean:message key='global.btnClose'/>" onClick="window.close();">
+			
                     </td>
                 </tr>
             </table>
 
         </html:form>
+        
+        <br>
+        
     </body>
 </html:html>
     

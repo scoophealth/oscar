@@ -50,6 +50,7 @@ import org.oscarehr.common.dao.CustomFilterDao;
 import org.oscarehr.common.dao.TicklerCategoryDao;
 import org.oscarehr.common.dao.TicklerCommentDao;
 import org.oscarehr.common.dao.TicklerDao;
+import org.oscarehr.common.dao.TicklerLinkDao;
 import org.oscarehr.common.dao.TicklerTextSuggestDao;
 import org.oscarehr.common.dao.TicklerUpdateDao;
 import org.oscarehr.common.model.Clinic;
@@ -84,6 +85,7 @@ public class TicklerManager {
         public static String CREATION_DATE = "creation_date";
         public static String PRIORITY = "priority";
         public static String TASK_ASSIGNED_TO = "task_assigned_to";
+        public static String STATUS = "status";
         public static String SORT_ASC = "asc";
         public static String SORT_DESC = "desc";
         
@@ -100,6 +102,9 @@ public class TicklerManager {
 	 
 	@Autowired
 	private TicklerDao ticklerDao;
+	
+	@Autowired
+	private TicklerLinkDao ticklerLinkDao;
 	
 	@Autowired
 	private TicklerCommentDao ticklerCommentDao;
@@ -246,6 +251,25 @@ public class TicklerManager {
         }
         
         return(results);
+    }
+
+    public List<Tickler> getTicklerByLabId(LoggedInInfo loggedInInfo, int labId, Integer demoNo){
+    	checkPrivilege(loggedInInfo, PRIVILEGE_READ);
+    	String providerNo = loggedInInfo.getLoggedInProviderNo();
+    	
+    	List<TicklerLink> links = ticklerLinkDao.getLinkByTableId("HL7", Long.valueOf(labId));
+    	
+    	ArrayList<Tickler> results = new ArrayList<Tickler>();
+    	
+    	for(TicklerLink link:links){
+    		List<Tickler> ticklers = ticklerDao.findByTicklerNoAssignedTo(link.getTicklerNo(), providerNo, demoNo);
+    		for(Tickler tickler:ticklers){
+    			results.add(tickler);
+    		}
+    	}
+    	
+    	Collections.sort(results, Tickler.StatusAscComparator);
+    	return results;
     }
     
     protected List<Tickler> ticklerFacilityFiltering(LoggedInInfo loggedInInfo, List<Tickler> ticklers) {
@@ -401,6 +425,7 @@ public class TicklerManager {
       	
         return tickler;
     }
+    
     
 	public void addComment(LoggedInInfo loggedInInfo, Integer tickler_id, String provider, String message) {
     	checkPrivilege(loggedInInfo, PRIVILEGE_UPDATE);

@@ -31,6 +31,7 @@ import java.util.List;
 
 import org.oscarehr.common.dao.MyGroupDao;
 import org.oscarehr.common.dao.WaitingListNameDao;
+import org.oscarehr.common.model.MyGroup;
 import org.oscarehr.common.model.WaitingListName;
 import org.oscarehr.util.SpringUtils;
 
@@ -48,7 +49,8 @@ public class WLWaitingListNameBeanHandler {
     }
 
     public boolean init(String groupNo, String providerNo) {
-        List<WaitingListName> wlNames = waitingListNameDao.findByMyGroups(myGroupDao.getProviderGroups(providerNo));
+    	List<MyGroup> groupList = myGroupDao.getGroupByGroupNo(groupNo);
+        List<WaitingListName> wlNames = waitingListNameDao.findByMyGroups(providerNo, groupList);
     	for(WaitingListName tmp:wlNames) {
     		WLWaitingListNameBean wLBean =
     				new WLWaitingListNameBean(String.valueOf(tmp.getId()), tmp.getName(), tmp.getGroupNo(), tmp.getProviderNo(), formatter.format(tmp.getCreateDate()));                   

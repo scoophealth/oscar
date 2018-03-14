@@ -28,6 +28,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -67,7 +68,7 @@ public class DisplayDrilldownAction extends DispatchAction  {
 			id = Integer.parseInt( indicatorTemplateId );
 		}
 		
-		DrilldownBean drilldown = dashboardManager.getDrilldownData(loggedInInfo, id);
+		DrilldownBean drilldown = dashboardManager.getDrilldownData(loggedInInfo, id, "null");
 		
 		// something must be returned. If not then something is very wrong.
 		if ( drilldown == null ) {
@@ -92,19 +93,36 @@ public class DisplayDrilldownAction extends DispatchAction  {
 		
 		String providerNo = request.getParameter("providerNo");
 		
+		String metricLabel = request.getParameter("sharedMetricSetLable");
+		if(StringUtils.isBlank(metricLabel)) {
+			metricLabel = "null";
+		} 
 		
+		List<IndicatorTemplate> sharedIndicatorTemplates = null;
+		IndicatorTemplate indicatorTemplate = null;
+		
+		if(metricLabel.equals("null")) { //local pie opens drill down list for whole pie, should use shared xml file
+			sharedIndicatorTemplates = dashboardManager.getIndicatorLibrary(LoggedInInfo.getLoggedInInfoFromSession(request), true);
+			indicatorTemplate = findIndicatorTemplateBySharedMetricSetName(loggedInInfo,sharedIndicatorTemplates, metricSetName);
 
-		List<IndicatorTemplate> sharedIndicatorTemplates = dashboardManager.getIndicatorLibrary(LoggedInInfo.getLoggedInInfoFromSession(request));
-
-		IndicatorTemplate indicatorTemplate = findIndicatorTemplateBySharedMetricSetName(loggedInInfo,sharedIndicatorTemplates, metricSetName);
+		} else { //common dashboard opens drill down list from pie slice, should use not-shared xml file for different metric label
+			sharedIndicatorTemplates = dashboardManager.getIndicatorLibrary(LoggedInInfo.getLoggedInInfoFromSession(request), false);
+			indicatorTemplate = findIndicatorTemplateBySharedMetricSetNameAndMatricLabel(loggedInInfo,sharedIndicatorTemplates, metricSetName, metricLabel);
+		}
 		
 		if(indicatorTemplate == null) {
 			return mapping.findForward("error");
 		}
 		
 		
-		DrilldownBean drilldown = dashboardManager.getDrilldownData(loggedInInfo, indicatorTemplate.getId(),providerNo!=null?providerNo:null);
+		DrilldownBean drilldown = null;
 		
+		if(metricLabel.equals("null")) { //local pie opens drill down list for whole pie, should use shared xml file
+			drilldown = dashboardManager.getDrilldownData(loggedInInfo, indicatorTemplate.getId(),providerNo!=null?providerNo:null, metricLabel);
+		} else { //common dashboard opens drill down list from pie slice, should use not-shared xml file for different metric label
+			drilldown = dashboardManager.getDrilldownData(loggedInInfo, indicatorTemplate.getId(),providerNo!=null?providerNo:null, metricLabel);
+		}
+			
 		// something must be returned. If not then something is very wrong.
 		if ( drilldown == null ) {
 			return mapping.findForward("error");
@@ -128,6 +146,29 @@ public class DisplayDrilldownAction extends DispatchAction  {
 			
 			if(sharedMetricSetName.equals(metricSetName)) {
 				return template;
+			}
+		}
+		return null;
+	}
+	
+
+	protected IndicatorTemplate findIndicatorTemplateBySharedMetricSetNameAndMatricLabel(LoggedInInfo x, List<IndicatorTemplate> templates, String sharedMetricSetName, String metricLabel) {
+		
+		for(IndicatorTemplate template:templates) {
+			IndicatorTemplateHandler ith = new IndicatorTemplateHandler(x, template.getTemplate().getBytes());
+			
+			String metricLabelFromTemplate = ith.getIndicatorTemplateXML().getMetricLabel();
+			
+			String metricSetName = null;
+			NodeList nl = ith.getIndicatorTemplateDocument().getElementsByTagName("sharedMetricSetName");
+			if (nl != null && nl.getLength() > 0) {
+				metricSetName = nl.item(0).getTextContent();
+			}
+			
+			if(sharedMetricSetName.equals(metricSetName)) {
+				if(metricLabel.equals(metricLabelFromTemplate)) {
+					return template;
+				}				
 			}
 		}
 		return null;

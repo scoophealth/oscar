@@ -229,11 +229,55 @@ String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime
 </body>
 </html>
 <%!
-    String moneyFormat(String str){       
+
+	//convert from COBOL format. See Teleplan 4.3 manual section 1.15
+	String convertSignage(String val) {
+		String ret = val;
+		
+		if(val.matches(".*[\\}JKLMNOPQR]$")) {
+		 
+		    ret = "-" + val.substring(0,val.length()-1);
+		
+		    String lastChar = val.charAt(val.length()-1)+"";
+		    
+		    if("}".equals(lastChar)) {
+		    	ret += "0";
+		    } else if("J".equals(lastChar)) {
+		    	ret += "1";
+		    } else if("K".equals(lastChar)) {
+		    	ret += "2";
+		    } else if("L".equals(lastChar)) {
+		    	ret += "3";
+		    } else if("M".equals(lastChar)) {
+		    	ret += "4";
+		    } else if("N".equals(lastChar)) {
+		    	ret += "5";
+		    } else if("O".equals(lastChar)) {
+		    	ret += "6";
+		    } else if("P".equals(lastChar)) {
+		    	ret += "7";
+		    } else if("Q".equals(lastChar)) {
+		    	ret += "8";
+		    } else if("R".equals(lastChar)) {
+		    	ret += "9";
+		    }
+		
+		}
+		
+	
+		return ret;
+	}
+
+    String moneyFormat(String str){ 
         String moneyStr = "0.00";
+        str = convertSignage(str);
+        
+        
         try{             
             moneyStr = new java.math.BigDecimal(str).movePointLeft(2).toString();
         }catch (Exception moneyException) { MiscUtils.getLogger().error("Error", moneyException); }
+              	
+       
     return moneyStr;
     }
 %>

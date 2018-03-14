@@ -51,20 +51,23 @@ public class GroupPreferenceAction extends DispatchAction {
             
             String selectedGroups[] = request.getParameterValues("data");
             
-            for (int i = 0; i < selectedGroups.length; i++) {
-                
-                List<MyGroup> myGroups = myGroupDao.getGroupByGroupNo(selectedGroups[i]);
-                for (MyGroup myGroup : myGroups) {
-                    
-                    if (selectedGroups[i].isEmpty())
-                        myGroup.setDefaultBillingForm(null);
-                    else
-                        myGroup.setDefaultBillingForm(billingForm);
-                    
-                    myGroupDao.merge(myGroup);
-                }
+            if(selectedGroups != null) {
+	            for (int i = 0; i < selectedGroups.length; i++) {
+	                
+	                List<MyGroup> myGroups = myGroupDao.getGroupByGroupNo(selectedGroups[i]);
+	                for (MyGroup myGroup : myGroups) {
+	                    
+	                    if (selectedGroups[i].isEmpty())
+	                        myGroup.setDefaultBillingForm(null);
+	                    else
+	                        myGroup.setDefaultBillingForm(billingForm);
+	                    
+	                    myGroupDao.merge(myGroup);
+	                }
+	            }
             }
         }
+        request.setAttribute("saved", true);
         return  mapping.findForward("saved");
     }
     

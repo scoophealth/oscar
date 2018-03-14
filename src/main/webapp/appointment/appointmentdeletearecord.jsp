@@ -23,6 +23,8 @@
     Ontario, Canada
 
 --%>
+<%@page import="oscar.log.LogAction"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%
   if (session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
 %>
@@ -35,6 +37,7 @@
 <%
 	AppointmentArchiveDao appointmentArchiveDao = (AppointmentArchiveDao)SpringUtils.getBean("appointmentArchiveDao");
 	OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
+	LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 %>
 <html:html locale="true">
 <head>
@@ -50,9 +53,13 @@
 </table>
 <%
 	Appointment appt = appointmentDao.find(Integer.parseInt(request.getParameter("appointment_no")));
+	if(appt.getLastUpdateUser() == null || "".equals(appt.getLastUpdateUser())) {
+		appt.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
+	}
 	appointmentArchiveDao.archiveAppointment(appt);
 	int rowsAffected=0;
 	if(appt != null) {
+		LogAction.addLogSynchronous(loggedInInfo,"Appointment.delete", "id="+appt.getId());
 		appointmentDao.remove(appt.getId());
 		rowsAffected=1;
 	}

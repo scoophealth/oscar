@@ -53,6 +53,7 @@ public final class LoginCheckLoginBean {
 	private String password = "";
 	private String pin = "";
 	private String ip = "";
+	private String ssoKey = "";
 
 	private String userpassword = null; // your password in the table
 
@@ -68,6 +69,10 @@ public final class LoginCheckLoginBean {
 		setPassword(password);
 		setPin(pin1);
 		setIp(ip1);
+	}
+	
+	public void ssoIni(String ssoKey) {
+		setSsoKey(ssoKey);
 	}
 
 	public String[] authenticate() {
@@ -126,6 +131,28 @@ public final class LoginCheckLoginBean {
 			return cleanNullObj(LOG_PRE + "password failed: " + username);
 		}
 	}
+	
+	public String[] ssoAuthenticate() {
+		security = getUserIDWithSSOKey();
+		String [] strAuth;
+		if (security != null) {
+			String expired_days = "";
+			strAuth = new String[7];
+			strAuth[0] = security.getProviderNo();
+			strAuth[1] = firstname;
+			strAuth[2] = lastname;
+			strAuth[3] = profession;
+			strAuth[4] = rolename;
+			strAuth[5] = expired_days;
+			strAuth[6] = security.getDelagateOneIdEmail();
+			
+		}
+		else {
+			strAuth = cleanNullObj(LOG_PRE + "ssoKey does not match a record");
+		}
+		
+		return strAuth;
+	}
 
 	private String[] cleanNullObj(String errorMsg) {
 		logger.warn(errorMsg);
@@ -179,6 +206,44 @@ public final class LoginCheckLoginBean {
 
 		return security;
 	}
+	
+	private Security getUserIDWithSSOKey() {
+		SecurityDao securityDao = (SecurityDao) SpringUtils.getBean("securityDao");
+		List<Security> securityResults = securityDao.findByOneIdKey(ssoKey); 
+		Security securityRecord = null;
+		
+		if (securityResults != null && securityResults.size() > 0) {
+			securityRecord = securityResults.get(0);
+		}
+		
+		if (securityRecord != null) {
+			if (OscarProperties.isLdapAuthenticationEnabled()) {
+				securityRecord = new LdapSecurity(securityRecord);
+			}
+			
+			// Gets the provider record
+			ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+			Provider provider = providerDao.getProvider(securityRecord.getProviderNo());
+
+			if (provider != null) {
+				firstname = provider.getFirstName();
+				lastname = provider.getLastName();
+			}
+
+			// retrieve the oscar roles for this Provider as a comma separated list
+			SecUserRoleDao secUserRoleDao = (SecUserRoleDao) SpringUtils.getBean("secUserRoleDao");
+			List<SecUserRole> roles = secUserRoleDao.getUserRoles(securityRecord.getProviderNo());
+			for (SecUserRole role : roles) {
+				if (rolename == null) {
+					rolename = role.getRoleName();
+				} else {
+					rolename += "," + role.getRoleName();
+				}
+			}
+		}
+		
+		return securityRecord;
+	}
 
 	public boolean isWAN() {
 		boolean bWAN = true;
@@ -201,6 +266,10 @@ public final class LoginCheckLoginBean {
 
 	public void setIp(String ip1) {
 		this.ip = ip1;
+	}
+	
+	public void setSsoKey(String ssoKey) {
+		this.ssoKey = ssoKey;
 	}
 
 	public Security getSecurity() {

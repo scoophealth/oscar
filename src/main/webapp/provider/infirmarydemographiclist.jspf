@@ -1,4 +1,13 @@
-<%@ page import="oscar.*, org.oscarehr.util.*"%>
+<%@ page import="org.oscarehr.managers.TicklerManager" %>
+<%@ page import="org.oscarehr.common.model.Tickler" %>
+
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+
+<%@ page import="oscar.*, org.oscarehr.util.*,oscar.util.*,java.net.URLEncoder"%>
 
 <logic:equal name="infirmaryView_isOscar" value="false">
 
@@ -10,29 +19,29 @@
 	todayDate.setHours(23);
 	todayDate.setMinutes(59);
 	todayDate.setSeconds(59);
+	Boolean userAvail = Boolean.valueOf(request.getParameter("userAvail"));
+	TicklerManager ticklerManager= SpringUtils.getBean(TicklerManager.class);
+	String strDate = request.getParameter("strDate");
+	Boolean bShowDocLink = Boolean.valueOf(request.getParameter("bShowDocLink"));
+	Boolean bShowEncounterLink = Boolean.valueOf(request.getParameter("bShowEncounterLink"));
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+	String base_eURL = request.getParameter("eURL");
 	
-	if (((String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID)).equalsIgnoreCase("0"))
-	{%>
-	<p><b>No Assigned Program.</b></p>
-	<%}else	if (session.getAttribute("infirmaryView_date")!=null && todayDate.before((java.util.Date) session.getAttribute("infirmaryView_date")))
-	{ %>
-	<p><b>Future clients list is unavailable.</b></p>
-	<%}
-	else{
-	if (((java.util.List) session.getAttribute("infirmaryView_demographicBeans")).size()==0)
-	{ %>
-	<p><b>no client in this program.</b></p>
-	<%if(session.getAttribute("archiveView")==null || session.getAttribute("archiveView")=="false") { %>
-	<b>You are in Case Management View! </b>
-	&nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>">Click here for Archive View</a>
-	<%} else {%>
-	<b>You are in the archive view ! </b>&nbsp; <a
-		href="<html:rewrite action="/ArchiveView.do"/>?method=cmm">Back to
-	Case Management View</a>
-	<%} %>
-	<%}else{
-	int k=0;
-
+	if (((String)session.getAttribute(SessionConstants.CURRENT_PROGRAM_ID)).equalsIgnoreCase("0")) {%>
+		<p><b>No Assigned Program.</b></p>
+	<%}else	if (session.getAttribute("infirmaryView_date")!=null && todayDate.before((java.util.Date) session.getAttribute("infirmaryView_date"))) { %>
+		<p><b>Future clients list is unavailable.</b></p>
+	<%} else {
+		if (((java.util.List) session.getAttribute("infirmaryView_demographicBeans")).size()==0) { %>
+			<p><b>no client in this program.</b></p>
+		<%if(session.getAttribute("archiveView")==null || session.getAttribute("archiveView")=="false") { %>
+			<b>You are in Case Management View! </b>
+			&nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>">Click here for Archive View</a>
+		<%} else {%>
+			<b>You are in the archive view ! </b>&nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>?method=cmm">Back to Case Management View</a>
+		<%} %>
+	 <%}else{
+		int k=0;
 	%>
 	<table border="1" cellpadding="0"
 		bgcolor="<%=userAvail?"#486ebd":"silver"%>" cellspacing="0"
@@ -64,8 +73,8 @@ int demographic_no = (new Integer(de.getValue())).intValue();
 String demographic_name=de.getLabel();
 
 %><c:if test="${empty sessionScope.archiveView or sessionScope.archiveView != true}"><%
-tickler_no = "";
-tickler_note="";
+String tickler_no = "";
+String tickler_note="";
 for(Tickler t: ticklerManager.search_tickler(loggedInInfo,demographic_no,MyDateFormat.getSysDate(strDate))) {
 	tickler_no = t.getId().toString();
     tickler_note = t.getMessage()==null?tickler_note:tickler_note + "\n" + t.getMessage();
@@ -73,16 +82,16 @@ for(Tickler t: ticklerManager.search_tickler(loggedInInfo,demographic_no,MyDateF
 
 %></c:if><%
 
-ver = "";
-roster = "";
-study_no = new StringBuffer("");
-study_link = new StringBuffer("");
-studyDescription = new StringBuffer("");
+String ver = "";
+String roster = "";
+StringBuffer study_no = new StringBuffer("");
+StringBuffer study_link = new StringBuffer("");
+StringBuffer studyDescription = new StringBuffer("");
 String reason ="";
 String notes = "";
 String status = "T";
-bFirstTimeRs=true;
-as.setApptStatus(status);
+boolean bFirstTimeRs=true;
+//as.setApptStatus(status);
 
 String rsAppointNO="0";
 if ((k/2)*2==k){ %>
@@ -118,7 +127,7 @@ if ((k/2)*2==k){ %>
 				</caisi:isModuleLoad> <%  } %> <!-- doctor code block --> <% if(bShowDocLink) { %> <!-- security:oscarSec roleName="<%--=roleName$--%>" objectName="_appointment.doctorLink" rights="r" -->
 				<% if (study_no.toString().compareTo("") != 0) {%> <a href="#"
 					onClick="popupPage(700,1000, '../form/study/forwardstudyname.jsp?study_link=<%=study_link.toString()%>&demographic_no=<%=demographic_no%>&study_no=<%=study_no%>');return false;"
-					title="<bean:message key="provider.appointmentProviderAdminDay.study"/>: <%=UtilMisc.htmlEscape(studyDescription.toString())%>"><%="<font color='"+studyColor+"'>"+studySymbol+"</font>"%></a>
+					title="<bean:message key="provider.appointmentProviderAdminDay.study"/>: <%=UtilMisc.htmlEscape(studyDescription.toString())%>"><%="<font color='red'>"+"\u03A3"+"</font>"%></a>
 				<%} %> <% if (ver.toString().compareTo("##") == 0){%><a href="#"
 					title="<bean:message key="provider.appointmentProviderAdminDay.versionMsg"/> <%=UtilMisc.htmlEscape(ver)%>">
 				<font color="red">*</font>
@@ -129,7 +138,8 @@ if ((k/2)*2==k){ %>
 					href="#"
 					onclick="location.href='../PMmodule/ClientManager.do?id=<%=demographic_no%>'">
 				<%=de.getLabel()%></a> <!-- doctor code block --> <% if(bShowEncounterLink) {
-	String  eURL = "../oscarEncounter/IncomingEncounter.do?providerNo="+curUser_no+"&appointmentNo="+rsAppointNO+"&demographicNo="+demographic_no+"&curProviderNo="+curProvider_no[nProvider]+"&reason="+URLEncoder.encode(reason)+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+year+"-"+month+"-"+day+"&startTime="+apptime.getHours()+":"+apptime.getMinutes()+"&status="+status+"&source=cm";%>
+		String eURL= base_eURL +"&appointmentNo="+rsAppointNO+"&demographicNo="+demographic_no + "&reason="+URLEncoder.encode(reason) + "&startTime="+apptime.getHours()+":"+apptime.getMinutes()+"&status="+status;
+	%>
 				<!-- open CME in current window
         <a href="#" onclick="location.href='../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=URLEncoder.encode(eURL)%>'" title="<bean:message key="global.encounter"/>">  
         --> <a href=#
@@ -140,8 +150,13 @@ if ((k/2)*2==k){ %>
 					rights="r">
 
 					<%String appointment_no=rsAppointNO;%>
-					<%@include file="appointmentFormsLinks.jspf" %>
- 
+					
+					 <jsp:include page="appointmentFormsLinks.jspf">	  	
+					  	<jsp:param value="<%=demographic_no %>" name="demographic_no"/>
+					  	<jsp:param value="<%=appointment_no %>" name="appointment_no"/>
+					  </jsp:include>
+	  
+					
 				</security:oscarSec> <!-- billing code block --> <security:oscarSec
 					roleName="<%=roleName$%>" objectName="_masterLink" rights="r">
 					
@@ -156,7 +171,7 @@ if ((k/2)*2==k){ %>
 					<security:oscarSec roleName="<%=roleName$%>"
 						objectName="_appointment.doctorLink" rights="r">
 						<a href=#
-							onClick="popupOscarRx(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')">|<bean:message
+							onClick="popupOscarRx(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=loggedInInfo.getLoggedInProviderNo()%>&demographicNo=<%=demographic_no%>')">|<bean:message
 							key="global.rx" /></a>
 						<oscar:oscarPropertiesCheck property="SHOW_APPT_REASON"
 							value="yes">| <b><%=reason%></b>
@@ -164,8 +179,7 @@ if ((k/2)*2==k){ %>
 					</security:oscarSec>
 					
 					<!-- doctor code block -->
-				</caisi:isModuleLoad> <%}%> <% if(isBirthday(monthDay,demBday)){%> | <img
-					src="../images/cake.gif" height="20" /> <%}%>
+				</caisi:isModuleLoad> <%}%> 
 				
 				<td width='1'></td>
 			</tr>

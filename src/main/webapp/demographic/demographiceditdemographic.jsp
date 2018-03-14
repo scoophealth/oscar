@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.managers.LookupListManager"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -237,7 +238,7 @@ if(!authed) {
 	// get a list of programs the patient has consented to. 
 	if( oscarProps.getBooleanProperty("USE_NEW_PATIENT_CONSENT_MODULE", "true") ) {
 	    PatientConsentManager patientConsentManager = SpringUtils.getBean( PatientConsentManager.class );
-		pageContext.setAttribute( "consentTypes", patientConsentManager.getConsentTypes() );
+		pageContext.setAttribute( "consentTypes", patientConsentManager.getActiveConsentTypes() );
 		pageContext.setAttribute( "patientConsents", patientConsentManager.getAllConsentsByDemographic( loggedInInfo, Integer.parseInt(demographic_no) ) );
 	}
 
@@ -742,6 +743,22 @@ function updatePaperArchive(paperArchiveSel) {
 	}
 }
 
+function updatePatientStatusDate() { 
+    var d = new Date(); 
+    document.updatedelete.patientstatus_date_year.value = d.getFullYear(); 
+    var mth = "" + (d.getMonth() + 1);
+    if(mth.length == 1) {
+    	mth = "0" + mth;
+    }
+    document.updatedelete.patientstatus_date_month.value = mth; 
+    var day = "" + d.getDate();
+    if(day.length == 1) {
+    	day = "0" + day;
+    }
+    document.updatedelete.patientstatus_date_day.value = day; 
+} 
+
+
 jQuery(document).ready(function() {
 	var addresses;
 	
@@ -766,6 +783,24 @@ jQuery(document).ready(function() {
        });
 });
 
+function consentClearBtn(radioBtnName)
+{
+    //clear out opt-in/opt-out radio buttons
+    var ele = document.getElementsByName(radioBtnName);
+
+    for(var i=0;i<ele.length;i++)
+    {
+        ele[i].checked = false;
+    }
+
+    //hide consent date field from displaying
+    var consentDate = document.getElementById("consentDate");
+
+    if (consentDate && consentDate.style.display === "block")
+    {
+        consentDate.style.display = "none";
+    }
+}
 </script>
 
 </head>
@@ -1595,6 +1630,27 @@ if ( Dead.equals(PatStat) ) {%>
                                                             key="demographic.demographiceditdemographic.formEndDate" />:</span>
                                                         <span class="info"><%=MyDateFormat.getMyStandardDate(demographic.getEndDate())%></span>
 							</li>
+							
+							<li><span class="label">
+								<bean:message key="demographic.demographiceditdemographic.formPHU" />:</span>
+								<%
+									String phuName = null;
+									String phu = demoExt.get("PHU");
+									
+									LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
+									LookupList ll = lookupListManager.findLookupListByName(LoggedInInfo.getLoggedInInfoFromSession(request), "phu");
+									if(ll != null) {
+										LookupListItem phuItem =  lookupListManager.findLookupListItemByLookupListIdAndValue(loggedInInfo, ll.getId(), phu);
+										
+										if(phuItem != null) {
+											phuName = phuItem.getLabel();	
+										}
+									}
+									
+								%>
+                                <span class="info"><%=StringUtils.trimToEmpty(phuName)%></span>
+                            </li>
+                                                        
 						</ul>
 						</div>
 
@@ -1692,11 +1748,13 @@ if ( Dead.equals(PatStat) ) {%>
 <oscar:oscarPropertiesCheck property="USE_NEW_PATIENT_CONSENT_MODULE" value="true" >
 		                          	
                           		<c:forEach items="${ patientConsents }" var="patientConsent" >
+						<c:if test="${ not empty patientConsent.optout}">
                           		<li>
+							<c:if test="${ patientConsent.consentType.active }">
                           			<span class="popup label" onmouseover="nhpup.popup(${ patientConsent.consentType.description },{'width':350} );" >
 										<c:out value="${ patientConsent.consentType.name }" />
 									</span>
-                          			
+
                           			<c:choose>
 										<c:when test="${ patientConsent.optout }">
 											<span class="info" style="color:red;"> Opted Out:<c:out value="${ patientConsent.optoutDate }" /></span>
@@ -1707,7 +1765,9 @@ if ( Dead.equals(PatStat) ) {%>
 										</c:otherwise>				
 									</c:choose>		
                           				
+							</c:if>
                           		</li>	
+						</c:if>
                           		</c:forEach>	                              	
 </oscar:oscarPropertiesCheck>
 <%-- END ENABLE NEW PATIENT CONSENT MODULE --%>
@@ -2143,7 +2203,7 @@ if ( Dead.equals(PatStat) ) {%>
 						<h3>&nbsp;<bean:message
 							key="demographic.demographiceditdemographic.formNotes" /></h3>
 
-                                                    <%=notes%>&nbsp;
+                                                    <%=StringEscapeUtils.escapeHtml(notes)%>&nbsp;
 <%if (hasImportExtra) { %>
 		                <a href="javascript:void(0);" title="Extra data from Import" onclick="window.open('../annotation/importExtra.jsp?display=<%=annotation_display %>&amp;table_id=<%=demographic_no %>&amp;demo=<%=demographic_no %>','anwin','width=400,height=250');">
 		                    <img src="../images/notes.gif" align="right" alt="Extra data from Import" height="16" width="13" border="0"> </a>
@@ -2900,7 +2960,10 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 									<% }
                                     
                                    // end while %>
-								</select> <input type="button" onClick="newStatus1();" value="<bean:message key="demographic.demographiceditdemographic.btnAddNew"/>">
+								</select>
+                                                                <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.demographic" rights="r" reverse="<%=false%>">
+                                                                    <input type="button" onClick="newStatus1();" value="<bean:message key="demographic.demographiceditdemographic.btnAddNew"/>">
+                                                                </security:oscarSec>
 								</td>
                                                                     <%
                                                              // Put 0 on the left on dates
@@ -2933,17 +2996,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                                              }
                                                              rosterTerminationReason = demographic.getRosterTerminationReason();
 
-                                                             String patientStatusDateYear="";
-                                                             String patientStatusDateMonth="";
-                                                             String patientStatusDateDay="";
-                                                             if (demographic.getPatientStatusDate()!=null){
-                                                                dateCal.setTime(demographic.getPatientStatusDate());
-                                                                patientStatusDateYear = decF.format(dateCal.get(GregorianCalendar.YEAR));
-                                                                // Month and Day
-                                                                decF.applyPattern("00");
-                                                                patientStatusDateMonth = decF.format(dateCal.get(GregorianCalendar.MONTH)+1);
-                                                                patientStatusDateDay   = decF.format(dateCal.get(GregorianCalendar.DAY_OF_MONTH));
-                                                             }
+                                                             
                                                                     %>
 
 								<td align="right" nowrap><b><bean:message
@@ -2984,7 +3037,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                 String patientStatus = demographic.getPatientStatus();
                                  if(patientStatus==null) patientStatus="";%>
                                 <input type="hidden" name="initial_patientstatus" value="<%=patientStatus%>">
-								<select name="patient_status" style="width: 120" <%=getDisabled("patient_status")%>>
+								<select name="patient_status" style="width: 120" <%=getDisabled("patient_status")%> onChange="updatePatientStatusDate()">
 									<option value="AC"
 										<%="AC".equals(patientStatus)?" selected":""%>>
 									<bean:message key="demographic.demographiceditdemographic.optActive"/></option>
@@ -3008,21 +3061,57 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 									<% }
                                  
                                    // end while %>
-								</select> <input type="button" onClick="newStatus();" value="<bean:message key="demographic.demographiceditdemographic.btnAddNew"/>">
-								
+								</select>
+                                                                <security:oscarSec roleName="<%=roleName$%>" objectName="_admin.demographic" rights="r" reverse="<%=false%>">
+                                                                    <input type="button" onClick="newStatus();" value="<bean:message key="demographic.demographiceditdemographic.btnAddNew"/>">
+								</security:oscarSec>
 								</td>
-								<%--
+								
 								<td align="right" nowrap><b><bean:message
 									key="demographic.demographiceditdemographic.PatientStatusDate" />: </b></td>
 								<td align="left">
+									<%
+									 decF.applyPattern("0000");
+
+                                    GregorianCalendar dateCal=new GregorianCalendar();
+									String patientStatusDateYear="";
+                                    String patientStatusDateMonth="";
+                                    String patientStatusDateDay="";
+                                    if (demographic.getPatientStatusDate()!=null){
+                                       dateCal.setTime(demographic.getPatientStatusDate());
+                                       patientStatusDateYear = decF.format(dateCal.get(GregorianCalendar.YEAR));
+                                       // Month and Day
+                                       decF.applyPattern("00");
+                                       patientStatusDateMonth = decF.format(dateCal.get(GregorianCalendar.MONTH)+1);
+                                       patientStatusDateDay   = decF.format(dateCal.get(GregorianCalendar.DAY_OF_MONTH));
+                                    }
+									%>
                                                                     <input  type="text" name="patientstatus_date_year" size="4" maxlength="4" value="<%=patientStatusDateYear%>">
                                                                     <input  type="text" name="patientstatus_date_month" size="2" maxlength="2" value="<%=patientStatusDateMonth%>">
                                                                     <input  type="text" name="patientstatus_date_day" size="2" maxlength="2" value="<%=patientStatusDateDay%>">
 								</td>
                                                         </tr>
                                                         <tr>
-                                                                <td>&nbsp;</td>
-                                                                --%>
+                                <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formPHU" />:</b></td>
+                                <td align="left">
+		                                <select id="PHU" name="PHU" >
+										<option value="">Select Below</option>
+										<%
+											if(ll != null) {
+												for(LookupListItem llItem : ll.getItems()) {
+													String selected = "";
+													if(llItem.getValue().equals(StringUtils.trimToEmpty(demoExt.get("PHU")))) {
+														selected = " selected=\"selected\" ";	
+													}
+													%>
+														<option value="<%=llItem.getValue()%>" <%=selected%>><%=llItem.getLabel()%></option>
+													<%
+												}
+											}
+										
+										%>
+									</select>
+                                </td>                                
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formChartNo" />:</b></td>
 								<td align="left"><input type="text" name="chart_no"
@@ -3174,18 +3263,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 					<tr class="privacyConsentRow" id="${ count.index }" valign="top">
 						<td class="alignLeft" width="30%" >
 							<label style="font-weight:bold;" valign="center" for="${ consentType.type }" >
-							
-								<input type="checkbox" 
-									name="${ consentType.type }" 
-									id="${ consentType.type }" 
-									value="${ consentType.id }" 
-									${ not empty patientConsent and patientConsent.patientConsented ? 'checked' : '' } />
-								
-								<input type="hidden" name="${ consentType.type }_id" 
-									value="${ not empty patientConsent and patientConsent.id gt 0 ? patientConsent.id : 0 }" />
-									
 								<c:out value="${ consentType.name }" />
-								
 							</label>
 						</td>
 						
@@ -3194,13 +3272,40 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 						</td>
 						
 						<td class="alignLeft" id="consentStatusDate" width="25%" >	
-							<c:if test="${ not empty patientConsent }" >
+                                                    <input type="radio"
+                                                                name="${ consentType.type }"
+                                                                id="${ consentType.type }"
+                                                                value="0"
+                                                                <c:if test="${ not empty patientConsent and not empty patientConsent.optout and not patientConsent.optout }">
+                                                                    <c:out value="checked" />
+                                                                </c:if>
+                                                    />
+                                                    <span>Opt-In</span>
+
+                                                    <input type="radio"
+                                                                name="${ consentType.type }"
+                                                                id="${ consentType.type }"
+                                                                value="1"
+                                                                <c:if test="${  not empty patientConsent  and not empty patientConsent.optout and patientConsent.optout }">
+                                                                    <c:out value="checked" />
+                                                                </c:if>
+                                                    />
+                                                    <span>Opt-Out</span>
+
+                                                    <input type="button"
+                                                           name="clearRadio_${consentType.type}_btn"
+                                                           onclick="consentClearBtn('${consentType.type}')" value="Clear"/>
+
+                                                    <br/>
+							<c:if test="${ not empty patientConsent and not empty patientConsent.optout }" >
 								<c:choose>
 									<c:when test="${ patientConsent.optout }">
-										<span class="info" style="color:red;">Opted Out:<c:out value="${ patientConsent.optoutDate }" /></span>
+										<span id="consentDate" class="info" style="display: block; color:red;">Opted Out:<c:out value="${ patientConsent.optoutDate }" /></span>
+
 									</c:when>					
 									<c:otherwise>
-										<span class="info" style="color:green;">Consented:<c:out value="${ patientConsent.consentDate }" /></span>
+										<span id="consentDate" class="info" style="display: block; color:green;">Consented:<c:out value="${ patientConsent.consentDate }" /></span>
+
 									</c:otherwise>				
 								</c:choose>															
 							</c:if>																														

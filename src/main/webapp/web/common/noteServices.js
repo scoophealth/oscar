@@ -31,10 +31,10 @@ angular.module("noteServices", [])
 		configHeadersWithCache: {headers: {"Content-Type": "application/json","Accept":"application/json"},cache: true},
         getNotesFrom: function(demographicNo,offset,numberToReturn,noteConfig){
         	var deferred = $q.defer();
-       	 $http.post(this.apiPath+'/'+demographicNo+'/all?offset='+offset+'&numToReturn='+numberToReturn,noteConfig,this.configHeaders).success(function(data){
-           	console.log(data);
-           	deferred.resolve(data);
-           }).error(function(){
+       	 $http.post(this.apiPath+'/'+demographicNo+'/all?offset='+offset+'&numToReturn='+numberToReturn,noteConfig,this.configHeaders).then(function (response){
+           	console.log(response.data);
+           	deferred.resolve(response.data);
+           },function(){
            	console.log("error fetching forms");
            	deferred.reject("An error occured while fetching items");
            });
@@ -44,10 +44,10 @@ angular.module("noteServices", [])
        saveNote: function(demographicNo,notea){
        	var deferred = $q.defer();
        	console.log("sending to server ",notea);
-       	$http.post(this.apiPath+'/'+demographicNo+'/save',JSON.stringify(notea)).success(function(data){
-           	console.log("returned from /save",data);
-           	deferred.resolve(data);
-           }).error(function(){
+       	$http.post(this.apiPath+'/'+demographicNo+'/save',JSON.stringify(notea)).then(function (response){
+           	console.log("returned from /save",response.data);
+           	deferred.resolve(response.data);
+           },function(){
            	console.log("error saving notes");
            	deferred.reject("An error occured while trying to save note");
            });
@@ -56,11 +56,11 @@ angular.module("noteServices", [])
        },
        saveIssueNote: function(demographicNo,notea){
        	var deferred = $q.defer();
-	 console.log("sending to server -------------------note" + notea);
-       	 $http.post(this.apiPath+'/'+demographicNo+'/saveIssueNote',JSON.stringify(notea)).success(function(data){
-           	console.log("returned from /save",data);
-           	deferred.resolve(data);
-           }).error(function(){
+       	console.log("sending to server -------------------note" + notea);
+       	$http.post(this.apiPath+'/'+demographicNo+'/saveIssueNote',notea).then(function (response){
+           	console.log("returned from /save",response.data);
+           	deferred.resolve(response.data);
+           },function(){
            	console.log("error saving Issuenotes");
            	deferred.reject("An error occured while trying to save Issuenote");
            });
@@ -69,10 +69,10 @@ angular.module("noteServices", [])
        },
        getCurrentNote: function(demographicNo,config){
     	   var deferred = $q.defer();
-          	 $http.post(this.apiPath+'/'+demographicNo+'/getCurrentNote',config).success(function(data){
-              	console.log("returned from /getCurrentNote",data);
-              	deferred.resolve(data);
-              }).error(function(){
+          	 $http.post(this.apiPath+'/'+demographicNo+'/getCurrentNote',config).then(function (response){
+              	console.log("returned from /getCurrentNote",response.data);
+              	deferred.resolve(response.data);
+              },function(){
               	console.log("error getting current note");
               	deferred.reject("An error occured while fetching items");
               });
@@ -80,10 +80,10 @@ angular.module("noteServices", [])
        },
        tmpSave: function(demographicNo,notea){
           	var deferred = $q.defer();
-           	 $http.post(this.apiPath+'/'+demographicNo+'/tmpSave',notea).success(function(data){
-               	console.log("returned from /tmpSave",data);
-               	deferred.resolve(data);
-               }).error(function(){
+           	 $http.post(this.apiPath+'/'+demographicNo+'/tmpSave',notea).then(function (response){
+               	console.log("returned from /tmpSave",response.data);
+               	deferred.resolve(response.data);
+               },function(){
                	console.log("error tmp saving");
                	deferred.reject("An error occured while fetching items");
                });
@@ -92,10 +92,10 @@ angular.module("noteServices", [])
        },
        getNoteExt: function(noteId){
     	   var deferred = $q.defer();
-          	 $http.post(this.apiPath+'/getGroupNoteExt/'+noteId).success(function(data){
-              	console.log("returned from /getGroupNoteExt",data);
-              	deferred.resolve(data);
-              }).error(function(){
+          	 $http.post(this.apiPath+'/getGroupNoteExt/'+noteId).then(function (response){
+              	console.log("returned from /getGroupNoteExt",response.data);
+              	deferred.resolve(response.data);
+              },function(){
               	console.log("error getting note ext");
               	deferred.reject("An error occured while fetching note ext");
               });
@@ -104,10 +104,10 @@ angular.module("noteServices", [])
 
        getIssueNote: function(noteId){
     	   var deferred = $q.defer();
-          	 $http.post(this.apiPath+'/getIssueNote/'+noteId).success(function(data){
-              	console.log("returned from /getIssueNote",data);
-              	deferred.resolve(data);
-              }).error(function(){
+          	 $http.post(this.apiPath+'/getIssueNote/'+noteId).then(function (response){
+              	console.log("returned from /getIssueNote",response.data);
+              	deferred.resolve(response.data);
+              },function(){
               	console.log("error getting getIssueNote");
               	deferred.reject("An error occured while fetching getIssueNote");
               });
@@ -115,10 +115,10 @@ angular.module("noteServices", [])
        },
        getIssueId: function(issueCode){
     	   var deferred = $q.defer();
-          	 $http.post(this.apiPath+'/getIssueId/'+issueCode).success(function(data){
-              	console.log("returned from /getIssueId",data);
-              	deferred.resolve(data);
-              }).error(function(){
+          	 $http.post(this.apiPath+'/getIssueId/'+issueCode).then(function (response){
+              	console.log("returned from /getIssueId",response.data);
+              	deferred.resolve(response.data);
+              },function(){
               	console.log("error getting issue id");
               	deferred.reject("An error occured while fetching issue id");
               });
@@ -126,9 +126,9 @@ angular.module("noteServices", [])
        },
        getTicklerNote: function (ticklerId) {
            var deferred = $q.defer();
-           $http.get(this.apiPath + '/ticklerGetNote/'+ticklerId,{headers: {"Content-Type": "application/json","Accept":"application/json"}}).success(function(data){
-           	deferred.resolve(data);
-           }).error(function(){
+           $http.get(this.apiPath + '/ticklerGetNote/'+ticklerId,{headers: {"Content-Type": "application/json","Accept":"application/json"}}).then(function (response){
+           	deferred.resolve(response.data);
+           },function(){
            	deferred.reject("An error occured while fetching tickler note");
            });
     
@@ -141,18 +141,18 @@ angular.module("noteServices", [])
                method: "POST",
                data: JSON.stringify(ticklerNote),
                headers: {'Content-Type': 'application/json'}
-             }).success(function (data, status, headers, config) {
-           	  deferred.resolve(data);
-               }).error(function (data, status, headers, config) {
+             }).then(function (response){
+           	  deferred.resolve(response.data);
+               },function (data, status, headers, config) {
                	deferred.reject("An error occured while setting saving tickler note");
                });
           return deferred.promise;
        },
        searchIssues: function(search,startIndex,itemsToReturn){
        	var deferred = $q.defer();
-       	$http.post(this.apiPath+'/searchIssues?startIndex='+startIndex + "&itemsToReturn="+itemsToReturn,search).success(function(data){
-       		deferred.resolve(data);
-           }).error(function(){
+       	$http.post(this.apiPath+'/searchIssues?startIndex='+startIndex + "&itemsToReturn="+itemsToReturn,search).then(function (response){
+       		deferred.resolve(response.data);
+           },function(){
          	  console.log("error fetching items");
              deferred.reject("An error occured while fetching items");
            });
@@ -161,10 +161,10 @@ angular.module("noteServices", [])
        },
        getIssue: function(issueId){
     	   var deferred = $q.defer();
-          	 $http.post(this.apiPath+'/getIssueById/'+issueId).success(function(data){
-              	console.log("returned from /getIssueById",data);
-              	deferred.resolve(data);
-              }).error(function(){
+          	 $http.post(this.apiPath+'/getIssueById/'+issueId).then(function (response){
+              	console.log("returned from /getIssueById",response.data);
+              	deferred.resolve(response.data);
+              },function(){
               	console.log("error getting issue");
               	deferred.reject("An error occured while fetching issue");
               });
@@ -172,10 +172,10 @@ angular.module("noteServices", [])
        },
        setEditingNoteFlag: function(noteUUID, userId){
     	   var deferred = $q.defer();
-    	   $http.post(this.apiPath+'/setEditingNoteFlag?noteUUID='+noteUUID+"&userId="+userId).success(function(data){
-    		   console.log("returned from /setEditingNoteFlag",data);
-    		   deferred.resolve(data);
-		   }).error(function(){
+    	   $http.post(this.apiPath+'/setEditingNoteFlag?noteUUID='+noteUUID+"&userId="+userId).then(function (response){
+    		   console.log("returned from /setEditingNoteFlag",response.data);
+    		   deferred.resolve(response.data);
+		   },function(){
 			   console.log("error setting EditingNoteFlag");
 			   deferred.reject("An error occured while setting EditingNoteFlag");
 		   });
@@ -183,10 +183,10 @@ angular.module("noteServices", [])
        },
        checkEditNoteNew: function(noteUUID, userId){
     	   var deferred = $q.defer();
-    	   $http.post(this.apiPath+'/checkEditNoteNew?noteUUID='+noteUUID+"&userId="+userId).success(function(data){
-    		   console.log("returned from /checkEditNoteNew",data);
-    		   deferred.resolve(data);
-		   }).error(function(){
+    	   $http.post(this.apiPath+'/checkEditNoteNew?noteUUID='+noteUUID+"&userId="+userId).then(function (response){
+    		   console.log("returned from /checkEditNoteNew",response.data);
+    		   deferred.resolve(response.data);
+		   },function(){
 			   console.log("error checking EditNoteNew");
 			   deferred.reject("An error occured while checking EditNoteNew");
 		   });

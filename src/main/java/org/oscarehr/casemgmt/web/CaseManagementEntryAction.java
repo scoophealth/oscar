@@ -2921,9 +2921,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		boolean printCPP  = request.getParameter("printCPP").equalsIgnoreCase("true");
 		boolean printRx   = request.getParameter("printRx").equalsIgnoreCase("true");
 		boolean printLabs = request.getParameter("printLabs") != null && request.getParameter("printLabs").equalsIgnoreCase("true");		
+		boolean printPreventions = request.getParameter("printPreventions") != null && request.getParameter("printPreventions").equalsIgnoreCase("true");		
+		
 		
 		CaseManagementPrint cmp = new CaseManagementPrint();
-		cmp.doPrint(loggedInInfo,demographicNo, printAllNotes,noteIds,printCPP,printRx,printLabs,cStartDate,cEndDate,request, response.getOutputStream());
+		cmp.doPrint(loggedInInfo,demographicNo, printAllNotes,noteIds,printCPP,printRx,printLabs,printPreventions,cStartDate,cEndDate,request, response.getOutputStream());
 		
 		return null;
 	}
@@ -3196,7 +3198,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		String encounterText = "";
 		String apptDate = request.getParameter("appointmentDate");
 		String reason = request.getParameter("reason");
-
+		String appointmentNo = request.getParameter("appointmentNo");
+		
+		if(appointmentNo != null && !appointmentNo.isEmpty() && !"null".equals(appointmentNo)) {
+			OscarAppointmentDao apptDao = SpringUtils.getBean(OscarAppointmentDao.class);
+			Appointment appt = apptDao.find(Integer.parseInt(appointmentNo));
+			if(appt != null) {
+				reason = appt.getReason();
+			}
+		}
 		if (reason == null) {
 			reason = "";
 		}

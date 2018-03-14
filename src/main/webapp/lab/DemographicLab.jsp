@@ -23,12 +23,16 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="oscar.oscarEncounter.pageUtil.EctDisplayLabAction2"%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="java.net.URLEncoder"%>
 <%@page import="oscar.oscarLab.ca.all.web.LabDisplayHelper"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="java.util.*"%>
+<%@ page import="oscar.oscarLab.ca.on.LabResultData"%>
 <%@ page import="oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.*"%>
+<%@ page import="oscar.util.DateUtils" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -71,10 +75,28 @@ if(!authed) {
        labs.addAll(remoteResults);
     }
     
+    Collections.sort(labs);
+    
     int pageNum = 1;
     if ( request.getParameter("pageNum") != null ) {
         pageNum = Integer.parseInt(request.getParameter("pageNum"));
     }
+    
+    LabResultData result;
+    
+    LinkedHashMap<String,LabResultData> accessionMap = new LinkedHashMap<String,LabResultData>();
+
+	for (int i = 0; i < labs.size(); i++) {
+		result = labs.get(i);
+		if (result.accessionNumber == null || result.accessionNumber.equals("")) {
+			accessionMap.put("noAccessionNum" + i + result.labType, result);
+		} else {
+			if (!accessionMap.containsKey(result.accessionNumber + result.labType)) accessionMap.put(result.accessionNumber + result.labType, result);
+		}
+	}
+	labs = new ArrayList<LabResultData>(accessionMap.values());
+	
+	
 %>
 <html>
 <head>
@@ -165,6 +187,12 @@ $(function() {
     $( document ).tooltip();
   });
 </script>
+
+<style>
+.visLink {
+	color : white; 
+}
+</style>
 </head>
 
 <body oldclass="BodyStyle" vlink="#0000FF">
@@ -264,7 +292,7 @@ $(function() {
             for (int i = startIndex; i < endIndex; i++) {
                 
                 
-                LabResultData result =  (LabResultData) labs.get(i);
+                result =  (LabResultData) labs.get(i);
                 
                 String segmentID        = (String) result.segmentID;
                 String status           = (String) result.acknowledgedStatus;
@@ -322,7 +350,14 @@ $(function() {
 			href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?demographicId=<%=demographicNo%>&segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%><%=remoteFacilityIdQueryString%>')"><%=(String) result.getDiscipline()%></a>
 		<% }%>
 		</td>
-		<td nowrap><%= (String) result.getDateTime()%></td>
+		<td nowrap>
+		<% 
+		    Date d1 = getServiceDate(loggedInInfo,result);
+		 	String formattedDate = DateUtils.getDate(d1);
+         
+		%>
+		<%=formattedDate %>
+		</td>
 		<td nowrap><%= (String) result.getRequestingClient()%></td>
 		<td nowrap><%= (result.isAbnormal() ? "Abnormal" : "" ) %></td>
 
@@ -333,7 +368,7 @@ $(function() {
 
 		<td nowrap><%= ( (String) ( result.isFinal() ? "Final" : "Partial") )%>
 		</td>
-		<td nowrap><%=result.getLabel() %></td>
+		<td nowrap><%=StringUtils.trimToEmpty(result.getLabel()) %></td>
 	</tr>
 	<% } 
          
@@ -366,20 +401,20 @@ $(function() {
 					class="smallButton" value="File" onclick="submitFile()" /> <% } %>
 				</td>
 				<td align="center" valign="middle" width="40%">
-				<div class="Nav">
+				<div class="Nav" >
 				<% if ( pageNum > 1 || labs.size() > endIndex ) {
-                                    if ( pageNum > 1 ) { %> <a
+                                    if ( pageNum > 1 ) { %> <a class="visLink"
 					href="DemographicLab.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum-1%>&startIndex=<%=startIndex-20%>"><
 				<bean:message key="oscarMDS.index.msgPrevious" /></a> <% } else { %>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<% } %> <%int count = 1;
                                       for( int i =0; i < labs.size(); i = i +20){%>
-				<a style="text-decoration: none;"
+				<a style="text-decoration: none;" class="visLink"
 					href="DemographicLab.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=count%>&startIndex=<%=i%>">[<%=count%>]</a>
 				<%count++;
                                       }%> <% if ( labs.size() > endIndex ) { %>
 				<a
-					href="DemographicLab.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum+1%>&startIndex=<%=startIndex+20%>"><bean:message
+					class="visLink" href="DemographicLab.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum+1%>&startIndex=<%=startIndex+20%>"><bean:message
 					key="oscarMDS.index.msgNext" /> ></a> <% } else { %>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<% }
@@ -395,3 +430,13 @@ $(function() {
 </form>
 </body>
 </html>
+<%!
+public Date getServiceDate(LoggedInInfo loggedInInfo, LabResultData labData) {
+    EctDisplayLabAction2.ServiceDateLoader loader = new EctDisplayLabAction2.ServiceDateLoader(labData);
+    Date resultDate = loader.determineResultDate(loggedInInfo);
+    if (resultDate != null) {
+        return resultDate;
+    }
+    return labData.getDateObj();
+}
+%>

@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -126,7 +127,9 @@ param[19]=request.getParameter("reasonCode");
 	a.setCreateDateTime(ConversionUtils.fromTimestampString(createDateTime));
 	a.setCreator(request.getParameter("creator"));
 	a.setRemarks(request.getParameter("remarks"));
-	a.setReasonCode(Integer.parseInt(request.getParameter("reasonCode")));
+	if(!StringUtils.isEmpty(request.getParameter("reasonCode"))) {
+		a.setReasonCode(Integer.parseInt(request.getParameter("reasonCode")));
+	}
 	//the keyword(name) must match the demographic_no if it has been changed
     demo = null;
 if (request.getParameter("demographic_no") != null && !(request.getParameter("demographic_no").equals(""))) {

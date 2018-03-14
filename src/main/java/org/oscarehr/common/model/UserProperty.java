@@ -94,6 +94,12 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
     public static final String DEFAULT_DX_CODE = "default_dx_code";
     public static final String CPP_SINGLE_LINE="cpp_single_line";
     public static final String LAB_ACK_COMMENT="lab_ack_comment";
+    
+    public static final String LAB_RECALL_DELEGATE="lab_recall_delegate";
+    public static final String LAB_RECALL_MSG_SUBJECT="lab_recall_msg_subject";
+    public static final String LAB_RECALL_TICKLER_ASSIGNEE="lab_recall_tickler_assignee";
+    public static final String LAB_RECALL_TICKLER_PRIORITY="lab_recall_tickler_priority";
+
     public static final String EDOC_BROWSER_IN_MASTER_FILE="edoc_browser_in_master_file";
     public static final String EDOC_BROWSER_IN_DOCUMENT_REPORT="edoc_browser_in_document_report";
     public static final String VIEW_DOCUMENT_AS="view_document_as";

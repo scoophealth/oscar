@@ -94,12 +94,13 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
         ArrayList<NavBarDisplayDAO.Item> warnings = new ArrayList<NavBarDisplayDAO.Item>();
         ArrayList<NavBarDisplayDAO.Item> items = new ArrayList<NavBarDisplayDAO.Item>();
         String result;
+        Date demographicDateOfBirth=PreventionData.getDemographicDateOfBirth(loggedInInfo, Integer.valueOf(bean.demographicNo));
+
         for (int i = 0 ; i < prevList.size(); i++){
             NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
             HashMap<String,String> h = prevList.get(i);
             String prevName = h.get("name");
             ArrayList<Map<String,Object>> alist = PreventionData.getPreventionData(loggedInInfo, prevName, Integer.valueOf(bean.demographicNo));
-            Date demographicDateOfBirth=PreventionData.getDemographicDateOfBirth(loggedInInfo, Integer.valueOf(bean.demographicNo));
             PreventionData.addRemotePreventions(loggedInInfo, alist, Integer.valueOf(bean.demographicNo),prevName,demographicDateOfBirth);
             boolean show = pdc.display(loggedInInfo, h, bean.demographicNo,alist.size());
             if( show ) {

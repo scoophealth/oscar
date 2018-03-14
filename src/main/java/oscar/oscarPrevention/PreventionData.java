@@ -64,7 +64,7 @@ public class PreventionData {
 		// prevent instantiation
 	}
 
-	public static Integer insertPreventionData(String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list) {
+	public static Integer insertPreventionData(String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list, String snomedId) {
 		Integer insertId = -1;
 		try {
 			Prevention prevention = new Prevention();
@@ -77,7 +77,8 @@ public class PreventionData {
 			prevention.setNever(neverWarn.trim().equals("1"));
 			if (refused.trim().equals("1")) prevention.setRefused(true);
 			else if (refused.trim().equals("2")) prevention.setIneligible(true);
-
+			else if (refused.trim().equals("3")) prevention.setCompletedExternally(true);
+			prevention.setSnomedId(snomedId);
 			preventionDao.persist(prevention);
 			if (prevention.getId() == null) return insertId;
 
@@ -158,9 +159,9 @@ public class PreventionData {
 		return name;
 	}
 
-	public static void updatetPreventionData(String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list) {
+	public static void updatetPreventionData(String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list, String snomedId) {
 		deletePreventionData(id);
-		insertPreventionData(creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list);
+		insertPreventionData(creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list, snomedId);
 	}
 
 	public static ArrayList<Map<String, Object>> getPreventionDataFromExt(String extKey, String extVal) {
@@ -257,7 +258,7 @@ public class PreventionData {
 
 				Map<String, Object> h = new HashMap<String, Object>();
 				h.put("id", prevention.getId().toString());
-				h.put("refused", prevention.isRefused() ? "1" : prevention.isIneligible() ? "2" : "0");
+				h.put("refused", prevention.isRefused() ? "1" : prevention.isIneligible() ? "2" : prevention.isCompletedExternally() ? "3" : "0");
 				h.put("type", prevention.getPreventionType());
 				h.put("provider_no", prevention.getProviderNo());
 				h.put("provider_name", ProviderData.getProviderName(prevention.getProviderNo()));
@@ -470,15 +471,17 @@ public class PreventionData {
 				addToHashIfNotNull(h, "prevention_date_asDate", prevention.getPreventionDate());
 				addToHashIfNotNull(h, "preventionType", prevention.getPreventionType());
 				addToHashIfNotNull(h, "deleted", prevention.isDeleted() ? "1" : "0");
-				addToHashIfNotNull(h, "refused", prevention.isRefused() ? "1" : prevention.isIneligible() ? "2" : "0");
+				addToHashIfNotNull(h, "refused", prevention.isRefused() ? "1" : prevention.isIneligible() ? "2" : prevention.isCompletedExternally() ? "3" : "0");
 				addToHashIfNotNull(h, "next_date", UtilDateUtilities.DateToString(prevention.getNextDate(), "yyyy-MM-dd"));
 				addToHashIfNotNull(h, "never", prevention.isNever() ? "1" : "0");
 				addToHashIfNotNull(h, "creator", prevention.getCreatorProviderNo());
-
+				addToHashIfNotNull(h, "snomedId", prevention.getSnomedId());
 				String summary = "Prevention " + prevention.getPreventionType() + " provided by " + providerName + " on " + preventionDate;
 				summary = summary + " entered by " + creatorName + " on " + lastUpdateDate;
 				Map<String, String> ext = getPreventionKeyValues(prevention.getId().toString());
 
+				addToHashIfNotNull(h, "brandSnomedId", ext.get("brandSnomedId"));
+				
 				if (ext.containsKey("result")) { //This is a preventive Test
 					addToHashIfNotNull(h, "result", ext.get("result"));
 					summary += "\nResult: " + ext.get("result");
@@ -494,6 +497,10 @@ public class PreventionData {
 					if (ext.containsKey("location") && !ext.get("location").equals("")) {
 						addToHashIfNotNull(h, "location", ext.get("location"));
 						summary += "\nLocation: " + ext.get("location");
+					}
+					if (ext.containsKey("expiryDate") && !ext.get("expiryDate").equals("")) {
+						addToHashIfNotNull(h, "expiryDate", ext.get("expiryDate"));
+						summary += "\nExpiryDate: " + ext.get("expiryDate");
 					}
 					if (ext.containsKey("route") && !ext.get("route").equals("")) {
 						addToHashIfNotNull(h, "route", ext.get("route"));

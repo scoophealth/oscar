@@ -11,7 +11,8 @@
 	<handler name="GDML" className="GDMLHandler"/>
 	<handler name="HHSEMR" className="HHSEmrDownloadHandler"/>
 	<handler name="ICL" className="ICLHandler" />
-	<handler name="IHA" className="IHAHandler"/>
+	<handler name="IHA" className="IHAPOIHandler"/>
+	<handler name="IHAPOI" className="IHAPOIHandler" />
 	<handler name="MDS" className="MDSHandler" />
 	<handler name="OLIS_HL7" className="OLISHL7Handler" />   
 	<handler name="OSCAR_TO_OSCAR_HL7_V2" className="OscarToOscarHl7V2Handler"/>

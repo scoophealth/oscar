@@ -6897,7 +6897,7 @@ CREATE TABLE measurementsDeleted(
   type varchar(4) NOT NULL,
   demographicNo int(10) NOT NULL default '0',
   providerNo varchar(6) NOT NULL default '',
-  dataField  varchar(10) NOT NULL,
+  dataField  varchar(255) NOT NULL,
   measuringInstruction varchar(255) NOT NULL,
   comments varchar(255) NOT NULL,
   dateObserved datetime NOT NULL,
@@ -7193,6 +7193,7 @@ CREATE TABLE provider (
   `lastUpdateUser` varchar(6) default NULL,
   `lastUpdateDate` datetime not null,
   `signed_confidentiality` datetime,
+  `practitionerNoType` varchar(255),
   PRIMARY KEY  (provider_no)
 );
 
@@ -7499,6 +7500,9 @@ CREATE TABLE security (
   pinUpdateDate datetime,
   lastUpdateUser varchar(20),
   lastUpdateDate timestamp,
+  oneIdKey VARCHAR(255),
+  oneIdEmail VARCHAR(255),
+  delegateOneIdEmail VARCHAR(255),
   PRIMARY KEY  (security_no),
   UNIQUE user_name (user_name)
 ) ;
@@ -7723,7 +7727,7 @@ CREATE TABLE `log` (
   `dateTime` datetime not null,
   `provider_no` varchar(10),
   index datetime (`dateTime`, `provider_no`),
-  `action` varchar(64),
+  `action` varchar(100),
   INDEX `action` (`action`),
   `content` varchar(80),
   INDEX `content` (`content`),
@@ -7743,13 +7747,14 @@ CREATE TABLE preventions (
   prevention_date datetime default NULL,
   provider_no varchar(6) NOT NULL default '',
   provider_name varchar(255) default NULL,
-  prevention_type varchar(20) default NULL,
+  prevention_type varchar(255) default NULL,
   deleted char(1) default '0',
   refused char(1) default '0',
   next_date date default NULL,
   never char(1) default '0',
   creator int(10) default NULL,
   lastUpdateDate datetime NOT NULL,
+  snomedId varchar(255),
   INDEX `preventions_demographic_no` (`demographic_no`),
   INDEX `preventions_provider_no` (provider_no(6)),
   INDEX `preventions_prevention_type` (prevention_type(10)),
@@ -8927,7 +8932,8 @@ CREATE TABLE providerArchive (
   `title` varchar(20),
   `lastUpdateUser` varchar(6),
   `lastUpdateDate` date,
-  `signed_confidentiality` date
+  `signed_confidentiality` date,
+  `practitionerNoType` varchar(255)
 );
 
 CREATE TABLE appointmentArchive (
@@ -12151,6 +12157,9 @@ CREATE TABLE `indicatorTemplate` (
   `active` bit(1),
   `locked` bit(1),
   `shared` tinyint(1),
+  `metricSetName` varchar(255),
+  `metricLabel` varchar(255),
+
   PRIMARY KEY (`id`)
 );
 
@@ -12181,5 +12190,55 @@ CREATE TABLE IntegratorFileLog (
     integratorStatus varchar(100),
     dateCreated timestamp,
     PRIMARY KEY(id)
+);
+
+CREATE TABLE CVCMedication (
+  `id` int(11) NOT NULL auto_increment,
+  `versionId` integer,
+  `din` integer,
+  `dinDisplayName` varchar(255),
+  `snomedCode` varchar(255),
+  `snomedDisplay` varchar(255),
+  `status` varchar(40),
+  `isBrand` tinyint(1),
+  `manufacturerId` integer,
+  `manufacturerDisplay` varchar(255),
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE CVCMedicationGTIN (
+  `id` int(11) NOT NULL auto_increment,
+  `cvcMedicationId` integer NOT NULL,
+  `gtin` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE CVCMedicationLotNumber (
+  `id` int(11) NOT NULL auto_increment,
+  `cvcMedicationId` integer NOT NULL,
+  `lotNumber` varchar(255) NOT NULL,
+  `expiryDate` date,
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE CVCImmunization (
+  `id` int(11) NOT NULL auto_increment,
+  `versionId` integer,
+  `snomedConceptId` varchar(255),
+  `displayName` varchar(255),
+  `picklistName` varchar(255),
+  `generic` tinyint(1),
+  `prevalence` int,
+  `parentConceptId` varchar(255),
+  `ispa` tinyint(1),
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `CVCMapping` (
+   `id` int(10) NOT NULL auto_increment,
+   `oscarName` varchar(255),
+   `cvcSnomedId` varchar(255),
+   `preferCVC` tinyint(1),
+  PRIMARY KEY (`id`)
 );
 

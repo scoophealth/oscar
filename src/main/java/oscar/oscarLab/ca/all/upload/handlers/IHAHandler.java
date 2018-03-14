@@ -54,6 +54,11 @@ import org.w3c.dom.Node;
 import oscar.oscarLab.ca.all.parsers.DefaultGenericHandler;
 import oscar.oscarLab.ca.all.upload.MessageUploader;
 
+@Deprecated
+/**
+ * @Deprecated use IHAPOIHandler
+ * 
+ */
 public class IHAHandler extends DefaultGenericHandler implements MessageHandler {
     Logger logger = Logger.getLogger(IHAHandler.class);
     String hl7Type = null;
@@ -127,6 +132,7 @@ public class IHAHandler extends DefaultGenericHandler implements MessageHandler 
             try{
                 msgId=null;
                 NodeList allNodes = xmlDoc.getElementsByTagNameNS("*","*");
+
                 for (int i=1; i<allNodes.getLength(); i++){
                 	try {
 	                    element = (Element)allNodes.item(i);
@@ -141,22 +147,38 @@ public class IHAHandler extends DefaultGenericHandler implements MessageHandler 
 	                        }
 	                    }
 	                    hl7Body = allNodes.item(i).getFirstChild().getTextContent();
+	                    
+	                    logger.debug("MESSAGE ID: " + msgId);
+	                    logger.debug("MESSAGE: ");
+	                    logger.debug(hl7Body);
+	                    
 	                    if (hl7Body != null && hl7Body.indexOf("\nPID|") > 0){
 	                        logger.info("using xml HL7 Type "+getHl7Type());
 	                        MessageUploader.routeReport(loggedInInfo, serviceName, "IHA", hl7Body, fileId);
 	                        result += "success:" + msgId + ",";
 	                    }
-                	}
-                	catch(Exception e) {
+	                    
+                	}catch(Exception e) {
+                		
+                		logger.debug("NESTED EXCEPTION RESULT: " + result);
+                		
                 		result += "fail:" + msgId + ",";
                 	}
+                	
+                	// The exception handling here is very dangerous. 
                 }
             }catch(Exception e){
+            	
+                logger.debug("EXCEPTION RESULT: " + result);
+                
                 MessageUploader.clean(fileId);
                 logger.error("ERROR:", e);
                 return null;
             }
         }
+        
+        logger.debug("FINAL RESULT: " + result);
+        
         return(result);
     }
 

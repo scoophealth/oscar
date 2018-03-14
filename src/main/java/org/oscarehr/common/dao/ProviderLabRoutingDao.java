@@ -24,6 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 @SuppressWarnings("unchecked")
 public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> {
 
+	public enum LAB_TYPE{ DOC, HL7 }
+	public enum STATUS{ X, N, A, D}
+	public static final String UNCLAIMED_PROVIDER = "0";
+	
 	public ProviderLabRoutingDao() {
 		super(ProviderLabRoutingModel.class);
 	}
@@ -77,6 +81,15 @@ public class ProviderLabRoutingDao extends AbstractDao<ProviderLabRoutingModel> 
 
 		return this.getSingleResultOrNull(query);
 	}
+	
+	//this is written for the clean()method to fix OSCAREMR-6161.
+	public List<ProviderLabRoutingModel> findByLabNoIncludingPotentialDuplicates(int labNo) {
+		Query query = entityManager.createQuery("select x from " + modelClass.getName() + " x where x.labNo=?");
+		query.setParameter(1, labNo);
+
+		return query.getResultList();
+	}
+	
 	
 	public ProviderLabRoutingModel findByLabNoAndLabType(int labNo, String labType) {
 		Query query = entityManager.createQuery("select x from " + modelClass.getName() + " x where x.labNo=? and x.labType = ?");

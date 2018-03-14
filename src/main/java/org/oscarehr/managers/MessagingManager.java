@@ -26,17 +26,19 @@ package org.oscarehr.managers;
 import java.util.List;
 
 import org.oscarehr.common.dao.MessageListDao;
+import org.oscarehr.common.dao.UserPropertyDAO;
+import org.oscarehr.common.dao.ProviderDataDao;
+import org.oscarehr.common.model.ProviderData;
 import org.oscarehr.common.model.MessageList;
+import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.oscarehr.util.SpringUtils;
 import oscar.log.LogAction;
 
 @Service
 public class MessagingManager {
-
-	//private static Logger logger=MiscUtils.getLogger();
 
 	@Autowired
 	private MessageListDao messageListDao;
@@ -72,5 +74,44 @@ public class MessagingManager {
 		}
 		
 	}
+	
+	public String getLabRecallMsgSubjectPref(LoggedInInfo loggedInInfo){
+		String subject = "";
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
+		
+	    	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
+	    	UserProperty prop = userPropertyDao.getProp(providerNo, UserProperty.LAB_RECALL_MSG_SUBJECT);
+	    	
+	    	if(prop!=null){
+	    		subject = prop.getValue();
+	    	}
+    	
+		return subject;
+	}
 
+	
+	public String getLabRecallDelegatePref(LoggedInInfo loggedInInfo){
+		String delegate = "";
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
+
+	    	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
+	    	UserProperty prop = userPropertyDao.getProp(providerNo, UserProperty.LAB_RECALL_DELEGATE);
+	    	
+	    	if(prop!=null){
+	    		delegate = prop.getValue();		
+	    	}
+
+		return delegate;
+	}
+	
+	public String getDelegateName(String delegate){
+		String delegateName = "";
+		ProviderDataDao dao = SpringUtils.getBean(ProviderDataDao.class);
+		ProviderData pd = dao.findByProviderNo(delegate);
+		
+		delegateName = pd.getLastName() + ", " + pd.getFirstName();
+			
+		return delegateName;
+	}
+	
 }

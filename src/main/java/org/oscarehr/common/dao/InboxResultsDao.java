@@ -17,7 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.http.impl.cookie.DateUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -435,9 +435,8 @@ public class InboxResultsDao {
 				lbData.resultStatus = "N";
 
 				lbData.dateTime = getStringValue(r[obsDateLoc]);
-				lbData.setDateObj(DateUtils.parseDate(getStringValue(r[obsDateLoc]), new String[] {
-						"yyyy-MM-dd"
-				}));
+				
+				lbData.setDateObj(DateUtils.parseDate(getStringValue(r[obsDateLoc]), new String[] {"yyyy-MM-dd"}));
 
 				String priority = "";
 				if (priority != null && !priority.equals("")) {

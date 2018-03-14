@@ -50,7 +50,7 @@ import oscar.oscarLab.ca.all.upload.MessageUploader;
 
 public class MEDITECHHandler implements MessageHandler {
 
-	private static Logger logger = Logger.getLogger(IHAHandler.class);
+	private static Logger logger = Logger.getLogger(MEDITECHHandler.class);
 	private final String XML = "<(\\S+?)(.*?)>(.*?)</\\1>";
 	
 	@Override

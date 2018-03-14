@@ -1,4 +1,3 @@
-
 <%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -25,20 +24,20 @@
 
 --%>
 
-<%@page import="org.oscarehr.util.LoggedInInfo"%>
-<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
-<%@page import="oscar.util.ConversionUtils"%>
-<%@page import="org.oscarehr.common.dao.PatientLabRoutingDao"%>
-<%@page import="org.oscarehr.common.model.PatientLabRouting"%>
-<%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
-<%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
-<%@page import="java.net.URLEncoder"%>
-<%@page import="org.apache.commons.lang.builder.ReflectionToStringBuilder"%>
-<%@page import="org.oscarehr.util.MiscUtils"%>
-<%@page import="org.w3c.dom.Document"%>
-<%@page import="org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult"%>
-<%@page import="oscar.oscarLab.ca.all.web.LabDisplayHelper"%>
-<%@page errorPage="../../../provider/errorpage.jsp" %>
+<%@ page import="org.oscarehr.util.LoggedInInfo"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@ page import="oscar.util.ConversionUtils"%>
+<%@ page import="org.oscarehr.common.dao.PatientLabRoutingDao"%>
+<%@ page import="org.oscarehr.common.model.PatientLabRouting"%>
+<%@ page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
+<%@ page import="org.oscarehr.phr.util.MyOscarUtils"%>
+<%@ page import="java.net.URLEncoder"%>
+<%@ page import="org.apache.commons.lang.builder.ReflectionToStringBuilder"%>
+<%@ page import="org.oscarehr.util.MiscUtils"%>
+<%@ page import="org.w3c.dom.Document"%>
+<%@ page import="org.oscarehr.caisi_integrator.ws.CachedDemographicLabResult"%>
+<%@ page import="oscar.oscarLab.ca.all.web.LabDisplayHelper"%>
+<%@ page errorPage="../../../provider/errorpage.jsp" %>
 <%@ page import="java.util.*,
 		 java.sql.*,
 		 oscar.oscarDB.*, oscar.oscarLab.FileUploadCheck, oscar.util.UtilDateUtilities,
@@ -54,6 +53,8 @@
 <%@ page import="org.oscarehr.util.SpringUtils"%>
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO, org.oscarehr.common.model.UserProperty" %>
 <%@ page import="org.oscarehr.common.model.MeasurementMap, org.oscarehr.common.dao.MeasurementMapDao" %>
+<%@ page import="org.oscarehr.common.model.Tickler" %>
+<%@ page import="org.oscarehr.managers.TicklerManager" %>
 <%@ page import="org.apache.commons.lang.StringUtils" %>
 <%@ page import="org.oscarehr.casemgmt.service.CaseManagementManager, org.oscarehr.common.dao.Hl7TextMessageDao, org.oscarehr.common.model.Hl7TextMessage,org.oscarehr.common.dao.Hl7TextInfoDao,org.oscarehr.common.model.Hl7TextInfo"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
@@ -103,6 +104,23 @@ UserProperty uProp = userPropertyDAO.getProp(providerNo, UserProperty.LAB_ACK_CO
 boolean skipComment = false;
 if( uProp != null && uProp.getValue().equalsIgnoreCase("yes")) {
 	skipComment = true;
+}
+
+UserProperty  getRecallDelegate = userPropertyDAO.getProp(providerNo, UserProperty.LAB_RECALL_DELEGATE);
+UserProperty  getRecallTicklerAssignee = userPropertyDAO.getProp(providerNo, UserProperty.LAB_RECALL_TICKLER_ASSIGNEE);
+UserProperty  getRecallTicklerPriority = userPropertyDAO.getProp(providerNo, UserProperty.LAB_RECALL_TICKLER_PRIORITY);
+boolean recall = false;
+String recallDelegate = "";
+String ticklerAssignee = "";
+String recallTicklerPriority = "";
+
+if(getRecallDelegate!=null){
+recall = true;
+recallDelegate = getRecallDelegate.getValue();
+recallTicklerPriority = getRecallTicklerPriority.getValue();
+if(getRecallTicklerAssignee.getValue().equals("yes")){
+	ticklerAssignee = "&taskTo="+recallDelegate;
+}
 }
 
 
@@ -379,6 +397,18 @@ pre {
     font-weight:600;
 } 
             -->
+            
+input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;padding:0px;}    
+#ticklerWrap{position:relative;top:0px;background-color:#FF6600;width:100%;}  
+
+.completedTickler{
+    opacity: 0.8;
+    filter: alpha(opacity=80); /* For IE8 and earlier */
+}
+
+@media print { 
+.DoNotPrint{display:none;}
+}      
         </style>
 
         <script language="JavaScript">
@@ -470,6 +500,11 @@ pre {
                                                                                 demoid=json.demoId;
                                                                                 if(demoid!=null && demoid.length>0)
                                                                                     window.popup(700,960,'../../../oscarMessenger/SendDemoMessage.do?demographic_no='+demoid,'msg');
+                                                                            }else if(action=='msgLabRecall'){
+                                                                                demoid=json.demoId;
+                                                                                if(demoid!=null && demoid.length>0)
+                                                                                    window.popup(700,980,'../../../oscarMessenger/SendDemoMessage.do?demographic_no='+demoid+"&recall",'msgRecall');
+                                                                                    window.popup(450,600,'../../../tickler/ForwardDemographicTickler.do?docType=HL7&docId='+labid+'&demographic_no='+demoid+'<%=ticklerAssignee%>&priority=<%=recallTicklerPriority%>&recall','ticklerRecall');
                                                                             }else if(action=='ticklerLab'){
                                                                                 demoid=json.demoId;
                                                                                 if(demoid!=null && demoid.length>0)
@@ -710,7 +745,13 @@ pre {
 									<input type="button" value="<%=formName2Short%>" onClick="popupStart(700, 1024, '../../../form/forwardshortcutname.jsp?formname=<%=formName2%>&demographic_no=<%=demographicID%>', '<%=formName2Short%>')" />
 									<% } %>
 
-
+<% if(recall){%>
+<input type="button" value="Recall" onclick="handleLab('','<%=segmentID%>','msgLabRecall');">
+<%}%>
+									<%
+										if(remoteLabKey == null || "".equals(remoteLabKey.length())) {
+									%>
+									
                                     <% if (!label.equals(null) && !label.equals("")) { %>
 										<button type="button" id="createLabel_<%=segmentID%>" value="Label" onclick="submitLabel(this, '<%=segmentID%>');">Label</button>
 										<%} else { %>
@@ -728,6 +769,7 @@ pre {
 						                 } %>
 					                 <span id="labelspan_<%=segmentID%>" class="Field2"><i>Label: <%=labelval %> </i></span>
 
+									<% } %>
                                     <span class="Field2"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span>
                                 </td>
                             </tr>
@@ -1042,7 +1084,63 @@ pre {
                                 </td>
                             </tr>
                             <tr>
-                                <td align="center" bgcolor="white" colspan="2">
+                                <td align="center" bgcolor="white" colspan="2" style="padding:0px;" cellspacing="0">							    
+<% if(demographicID!=null && !demographicID.equals("")){
+							    TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
+							    List<Tickler> LabTicklers = null;
+							    if(demographicID != null) {
+							    	LabTicklers = ticklerManager.getTicklerByLabId(loggedInInfo, Integer.valueOf(segmentID), Integer.valueOf(demographicID));
+							    }
+							    
+							    if(LabTicklers!=null && LabTicklers.size()>0){
+							    %>
+							    <div id="ticklerWrap" class="DoNotPrint">
+							    <h3 style="color:#fff"><a href="javascript:void(0)" id="open-ticklers" onclick="showHideItem('ticklerDisplay')">View Ticklers</a> Linked to this Lab</h3><br>
+							    
+							           <div id="ticklerDisplay" style="display:none">
+							   <%
+							   String flag;
+							   String ticklerClass;
+							   String ticklerStatus;
+							   for(Tickler tickler:LabTicklers){
+							   
+							   ticklerStatus = tickler.getStatus().toString();
+							   if(!ticklerStatus.equals("C") && tickler.getPriority().toString().equals("High")){ 
+							   	flag="<span style='color:red'>&#9873;</span>";
+							   }else if(ticklerStatus.equals("C") && tickler.getPriority().toString().equals("High")){
+							   	flag="<span>&#9873;</span>";
+							   }else{	
+							   	flag="";
+							   }
+							   
+							   if(ticklerStatus.equals("C")){
+							  	 ticklerClass = "completedTickler";
+							   }else{
+							  	 ticklerClass="";
+							   }
+							   %>	
+							   <div style="text-align:left;background-color:#fff;padding:5px; width:600px;" class="<%=ticklerClass%>">
+							   	<table width="100%">
+							   	<tr>
+							   	<td><b>Priority:</b> <%=flag%> <%=tickler.getPriority()%></td>
+							   	<td><b>Service Date:</b> <%=tickler.getServiceDate()%></td>   	
+							   	<td><b>Assigned To:</b> <%=tickler.getAssignee() != null ? tickler.getAssignee().getLastName() + ", " + tickler.getAssignee().getFirstName() : "N/A"%></td>
+							   	<td width="90px"><b>Status:</b> <%=ticklerStatus.equals("C") ? "Completed" : "Active" %></td> 
+							   	</tr>
+							   	<tr>
+							   	<td colspan="4"><%=tickler.getMessage()%></td>
+							   	</tr>
+							   	</table>
+							   </div>	
+							   <br>
+							   <%
+							   }
+							   %>
+							   		</div><!-- end ticklerDisplay -->
+							   </div>   
+							   <%}//no ticklers to display 
+}%>                     
+                                
                                     <%String[] multiID = multiLabId.split(",");
                                     ReportStatus report;
                                     boolean startFlag = false;
@@ -1103,7 +1201,6 @@ pre {
                                 </td>
                             </tr>
                         </table>
-
 
                         <% int i=0;
                         int j=0;
@@ -1293,7 +1390,9 @@ pre {
                                    	//logger.info("ERROR :"+e);
                                    }
 
-                                   if (handler.getMsgType().equals("EPSILON")) {
+                                   if ( handler.getMsgType().equals("MEDITECH") ) {
+                                	   b2=true;
+                                   } if (handler.getMsgType().equals("EPSILON")) {
                                    	b2=true;
                                    	b3=true; //Because Observation header can never be the same as the header. Observation header = OBX-4.2 and header= OBX-4.1
                                    } else if(handler.getMsgType().equals("PFHT") || handler.getMsgType().equals("CML") || handler.getMsgType().equals("HHSEMR")) {
@@ -1305,11 +1404,11 @@ pre {
                                    	String obrName = handler.getOBRName(j);
                                    	b1 = !obrFlag && !obrName.equals("");
                                    	b2 = !(obxName.contains(obrName));
-                                   	b3 = obxCount < 2;
+                                   	b3 = !(obxCount < 2 && !isUnstructuredDoc);
                                        if( b1 && b2 && b3){
                                        %>
                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >
-                                               <td valign="top" align="left"><%=obrName%></td>
+                                               <td valign="top" align="left"><span style="font-size:16px;font-weight: bold;"><%=obrName%></span></td>
                                                <td colspan="6">&nbsp;</td>
                                            </tr>
                                            <%obrFlag = true;
@@ -1370,39 +1469,7 @@ pre {
 
 	                                                </tr>
 	                                       	<% }
-                                       } else if (handler.getMsgType().equals("IHA") ) {
-                                           if(handler.getOBXValueType(j,k) != null &&  handler.getOBXValueType(j,k).equalsIgnoreCase("NAR")) {
-                                               %>                                         
-                                               <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%="NarrativeRes"%>" >
-                                                   <td align="left" colspan="7"style="padding-left:10px;"><%= handler.getOBXResult( j, k) %></td>
-                                               </tr>
-                                           <%}else{%>
-                                               <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                                   <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= URLEncoder.encode(handler.getOBXIdentifier(j, k).replaceAll("&","%26"),"UTF-8") %><%=remoteFacilityIdQueryString%>')"><%=obxName %></a>
-                                                   &nbsp;
-                                                   	<%if(loincCode != null){ %>
-                                                   	<a href="javascript:popupStart('660','1000','http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.1&mainSearchCriteria.v.c=<%=loincCode%>&informationRecipient.languageCode.c=en')"> info</a>
-                                                   	<%} %>
-                                                   </td>
-                                                   <td align="right"><%= handler.getOBXResult( j, k) %></td>
-                                                   <td align="center" valign="top"><%= handler.getOBXAbnormalFlag(j, k)%></td>
-                                                   <td align="left" valign="top"><%=handler.getOBXReferenceRange( j, k)%></td>
-                                                   <td align="left" valign="top"><%=handler.getOBXUnits( j, k) %></td>
-                                                   <td align="center" valign="top"><%= handler.getTimeStamp(j, k) %></td>
-                                                   <td align="center" valign="top"><%= handler.getOBXResultStatus( j, k) %></td>
-                                                   <td align="center" valign="top">
-   	                                                <a href="javascript:void(0);" title="Annotation" onclick="window.open('<%=request.getContextPath()%>/annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=segmentID%>&amp;demo=<%=demographicID%>&amp;other_id=<%=String.valueOf(j) + "-" + String.valueOf(k) %>','anwin','width=400,height=500');">
-   	                                                	<%if(!isPrevAnnotation){ %><img src="../../../images/notes.gif" alt="rxAnnotation" height="16" width="13" border="0"/><%}else{ %><img src="../../../images/filledNotes.gif" alt="rxAnnotation" height="16" width="13" border="0"/> <%} %>
-   	                                                </a>
-                                                   </td>
-                                               </tr>
-                                           <%}%>
-                                           <%for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
-                                               <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes" >
-                                                   <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
-                                               </tr>
-                                           <%}
-                                   
+
                                       } else if (handler.getMsgType().equals("PFHT") || handler.getMsgType().equals("HHSEMR") || handler.getMsgType().equals("CML")) {
                                    	   if (!obxName.equals("")) { %>
 	                                    		<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
@@ -1506,9 +1573,9 @@ pre {
 
                                     	if(isUnstructuredDoc){%>
                                    			<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%="NarrativeRes"%>"><% 
-                                   			if(handler.getOBXIdentifier(j, k).equalsIgnoreCase(handler.getOBXIdentifier(j, k-1)) && (obxCount>1)){%>
+                                   			if(handler.getOBXIdentifier(j, k).equalsIgnoreCase(handler.getOBXIdentifier(j, k-1)) && (obxCount>1) && ! handler.getMsgType().equals("MEDITECH") ){%>
                                    					<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier='<%= URLEncoder.encode(handler.getOBXIdentifier(j, k).replaceAll("&","%26"),"UTF-8")%>')"></a><%
-                                   			}else{%> 
+                                   			}else if(! handler.getMsgType().equals("MEDITECH") ) {%> 
                                    					<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= URLEncoder.encode(handler.getOBXIdentifier(j, k).replaceAll("&","%26"),"UTF-8") %>')"><%=obxName %></a>
                                    			<%}%>
 											<%if(isVIHARtf){
@@ -1524,7 +1591,11 @@ pre {
 										    	String disclaimer = "<br>IMPORTANT DISCLAIMER: You are viewing a PREVIEW of the original report. The rich text formatting contained in the original report may convey critical information that must be considered for clinical decision making. Please refer to the ORIGINAL report, by clicking 'Print', prior to making any decision on diagnosis or treatment.";%>
 										    	<td align="left"><%= rtfText + disclaimer %></td>
 										    <%}else{%>
-                                           		<td align="left"><%= handler.getOBXResult( j, k) %></td>
+                                           		<td align="left">
+	                                           		<pre>
+	                                           			<%= handler.getOBXResult( j, k) %>
+	                                           		</pre>
+                                           		</td>
                                            	<%} %>
                                            	
                                           	<% if(handler.getTimeStamp(j, k).equals(handler.getTimeStamp(j, k-1)) && (obxCount>1)){ %>
@@ -1560,7 +1631,7 @@ pre {
                                            
                                            
                                            <% if(handler instanceof AlphaHandler && "FT".equals(handler.getOBXValueType(j, k))) { %>
-                                           		<td colspan="4"><%= handler.getOBXResult( j, k) %></td>
+                                           		<td colspan="4"><pre style="font-family:Courier New, monospace;">       <%= handler.getOBXResult( j, k) %></pre></td>
                                            <%
                                        			lastObxSetId = ((AlphaHandler)handler).getObxSetId(j,k);
                                     	  
@@ -1790,7 +1861,6 @@ pre {
     ED Encapsulated Data
     FT Formatted Text (Display)
     MO Money
-    NAR Narrative (not official HL7. Added for IHA POI interface)
     NM Numeric
     PN Person Name
     RP Reference Pointer

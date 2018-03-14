@@ -47,7 +47,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@ page import="org.oscarehr.util.LoggedInInfo"%>
 
 
 <%
@@ -71,16 +71,20 @@
     //load eform groups
     List<LabelValueBean> cytologyForms = PregnancyAction.getEformsByGroup("Cytology");
     List<LabelValueBean> ultrasoundForms = PregnancyAction.getEformsByGroup("Ultrasound");
-    List<LabelValueBean> ipsForms = PregnancyAction.getEformsByGroup("IPS");
-    
+
+    String customEformGroup = oscar.OscarProperties.getInstance().getProperty("prenatal_screening_eform_group");
+    String prenatalScreenName = oscar.OscarProperties.getInstance().getProperty("prenatal_screening_name");
+    String prenatalScreen =  oscar.OscarProperties.getInstance().getProperty("prenatal_screening_abbrv");
+
+    List<LabelValueBean> customForms = PregnancyAction.getEformsByGroup(customEformGroup);
+
     if(props.getProperty("obxhx_num", "0").equals("")) {props.setProperty("obxhx_num","0");}
     
     String labReqVer = oscar.OscarProperties.getInstance().getProperty("onare_labreqver","07");
     if(labReqVer.equals("")) {labReqVer="07";}
-%>
-<%
-  boolean bView = false;
-  if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true; 
+
+  	boolean bView = false;
+  	if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true; 
 %>
 
 <html:html locale="true">
@@ -159,25 +163,25 @@ function loadUltrasoundForms() {
 	}
 	
 	
-function loadIPSForms() {
+function loadCustomForms() {
 	<%
-		if(ipsForms != null) {
-			if(ipsForms.size()==0) {
+		if(customForms != null) {
+			if(customForms.size()==0) {
 				%>
-					alert('No IPS Forms configured');
+					alert('No <%=customEformGroup%> Forms configured');
 				<%
-			} else if(ipsForms.size() == 1) {
+			} else if(customForms.size() == 1) {
 				%>
-				popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=ipsForms.get(0).getValue()%>&demographic_no=<%=demoNo%>&appointment=0','ipsform');			
+				popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=customForms.get(0).getValue()%>&demographic_no=<%=demoNo%>&appointment=0','<%=customEformGroup%>form');			
 				<%
 			} else {
-				%>$( "#ips-eform-form" ).dialog( "open" );<%
+				%>$( "#custom-eform-form" ).dialog( "open" );<%
 			}
 		}
 	%>
 	}
 	
-	$(document).ready(function(){	
+	$(document).ready(function(){
 		window.moveTo(0, 0);
 		window.resizeTo(screen.availWidth, screen.availHeight);
 	});
@@ -425,9 +429,7 @@ width: 100%;
 		}
 		
 	});
-</script>
 
-<script>
 	function validate() {		
 		if($("input[name='c_lastName']").val().length == 0) {
 			alert('Must include last name');
@@ -720,10 +722,7 @@ width: 100%;
 		}	
 		return total;
 	}
-	
-</script>
 
-<script>
 function addObxHx() {
 	if(adjustDynamicListTotalsOH("obxhx_",12,false) >= 12) {
 		alert('Maximum number of rows is 12');
@@ -923,10 +922,8 @@ $(document).ready(function() {
 function updateGeneticD() {
 	$("input[name='pg1_geneticD']").val($("input[name='pg1_geneticD1']").attr('checked') + "/" + $("input[name='pg1_geneticD2']").attr('checked'));	
 }
-
 </script>
 <html:base />
-</head>
 
 <script type="text/javascript" language="Javascript">
     function reset() {        
@@ -961,6 +958,7 @@ function updateGeneticD() {
 		}	
     }
     window.onunload=refreshOpener;
+
     function onSave() {
         document.forms[0].submit.value="save";
         var ret1 = validate();
@@ -975,6 +973,7 @@ function updateGeneticD() {
         adjustDynamicListTotals();
         return ret && ret1;
     }
+
     function onPageChange(url) {
     	var result = false;
     	var newID = 0;
@@ -1363,21 +1362,37 @@ function getGA() {
 	return parseInt(week) + "w+" + offset;
 }
 
+function confirmUpdateText(e,dv){
+	var ev = e.val();
+	var dvl = dv.length;
+	var el = ev.length;
+	length = parseInt(dvl) + parseInt(el);
+	if(el == 0){ 
+		e.val(dv);
+	} else if(length>150) {
+		
+		var r = confirm("Data is too long for this textbox and may not display when printed. Are you sure you would like to import this data?");
+		if (r == true) {
+			e.val(ev + "\n" + dv);
+		} else {
+		    return false;
+		}
+	} else if(dvl==0) {
+		alert("No data in chart");
+	} else {	
+		e.val(ev + "\n" + dv);
+	}
+}
+
 function updateAllergies() {
 	jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=getAllergies&demographicNo=<%=demoNo%>',async:true, dataType:'json', success:function(data) {
-		if($("textarea[name='c_allergies']").val().length == 0) 
-			$("textarea[name='c_allergies']").val(data.value);
-		else 
-			$("textarea[name='c_allergies']").val($("textarea[name='c_allergies']").val() + "\n" + data.value);
+		confirmUpdateText($("textarea[name='c_allergies']"),data.value)	
 	}});
 }
 
 function updateMeds() {
 	jQuery.ajax({url:'<%=request.getContextPath()%>/Pregnancy.do?method=getMeds&demographicNo=<%=demoNo%>',async:true, dataType:'json', success:function(data) {
-		if($("textarea[name='c_meds']").val().length == 0)
-			$("textarea[name='c_meds']").val(data.value);
-		else 
-			$("textarea[name='c_meds']").val($("textarea[name='c_meds']").val() + "\n" + data.value);
+		confirmUpdateText($("textarea[name='c_meds']"),data.value)
 	}});
 }
 
@@ -1550,7 +1565,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$( "#ips-eform-form" ).dialog({
+	$( "#custom-eform-form" ).dialog({
 		autoOpen: false,
 		height: 300,
 		width: 450,
@@ -1710,72 +1725,7 @@ function firstVisitTool() {
 function wk16VisitTool() {
 	$( "#16wk-visit-form" ).dialog( "open" );
 }
-//limit size of textareas
-$(document).ready(function(){
-	$('textarea[name="pg1_commentsAR1"]').bind('keypress',function(){
-		var length = 885 - parseInt($('textarea[name="pg1_commentsAR1"]').val().length);
-		if(length<0) {
-			length=0;
-			$('textarea[name="pg1_commentsAR1"]').val($('textarea[name="pg1_commentsAR1"]').val().substring(0,885));
-		}
-		$('#comment_size').html(length + ' Characters left');
-	});
-	
-	var length = 885 - parseInt($('textarea[name="pg1_commentsAR1"]').val().length);
-	if(length<0) {
-		length=0;
-	}
-	$('#comment_size').html(length + ' Characters left');
-	
-	$('textarea[name="pg1_comments2AR1"]').bind('keypress',function(){
-		var length = 4160 - parseInt($('textarea[name="pg1_comments2AR1"]').val().length);
-		if(length<0) {
-			length=0;
-			$('textarea[name="pg1_comments2AR1"]').val($('textarea[name="pg1_comments2AR1"]').val().substring(0,4160));
-		}
-		$('#comment2_size').html(length + ' Characters left');
-	});
-	
-	length = 4160 - parseInt($('textarea[name="pg1_comments2AR1"]').val().length);
-	if(length<0) {
-		length=0;
-	}
-	$('#comment2_size').html(length + ' Characters left');
-	
-	
-	//meds
-	$('textarea[name="c_meds"]').bind('keypress',function(){
-		var length = 146 - parseInt($('textarea[name="c_meds"]').val().length);
-		if(length<0) {
-			length=0;
-			$('textarea[name="c_meds"]').val($('textarea[name="c_meds"]').val().substring(0,146));
-		}
-		$('#meds_size').html(length + ' Characters left');
-	});
-	
-	length = 146 - parseInt($('textarea[name="c_meds"]').val().length);
-	if(length<0) {
-		length=0;
-	}
-	$('#meds_size').html(length + ' Characters left');
-	
-	//allergies
-	$('textarea[name="c_allergies"]').bind('keypress',function(){
-		var length = 150 - parseInt($('textarea[name="c_allergies"]').val().length);
-		if(length<0) {
-			length=0;
-			$('textarea[name="c_allergies"]').val($('textarea[name="c_allergies"]').val().substring(0,150));
-		}
-		$('#allergies_size').html(length + ' Characters left');
-	});
-	
-	length = 150 - parseInt($('textarea[name="c_allergies"]').val().length);
-	if(length<0) {
-		length=0;
-	}
-	$('#allergies_size').html(length + ' Characters left');
-	
-});
+
 </script>
 
 <% if(!bView) { %>
@@ -1845,7 +1795,12 @@ $(document).ready(function(){
             -moz-opacity: 0.7;
             filter: alpha(opacity=70);
         }
+
+#content_bar{background-color:#c4e9f6;}        
+.Head{width:100%;background-color:#ccc !important;}   
+    
 </style>
+</head>
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
 <div id="framecontent">
 <div class="innertube">
@@ -1989,7 +1944,7 @@ $(document).ready(function(){
 
 
 <div id="maincontent">
-<div id="content_bar" class="innertube" style="background-color: #c4e9f6">
+<div id="content_bar" class="innertube">
 <html:form action="/form/formname">
 	<input type="hidden" name="c_lastVisited"
 		value=<%=props.getProperty("c_lastVisited", "pg1")%> />
@@ -2010,14 +1965,14 @@ $(document).ready(function(){
 		value="<%= request.getParameter("provNo") %>" />
 	<input type="hidden" name="submit" value="exit" />
 
-	<table class="Head" class="hidePrint">
+	<table class="Head hidePrint">
 		<tr>
 			<td align="left">
 			<%
   if (!bView) {
 %> 
 	<input type="submit" value="Save" onclick="javascript:return onSave();" /> 
-	<input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();" /> <%
+	<input type="submit" value="Save & Exit" onclick="javascript:return onSaveExit();" /> <%
   }
 %> 
 	<input type="submit" value="Exit" onclick="javascript:return onExit();" /> 
@@ -2029,13 +1984,11 @@ $(document).ready(function(){
   if (!bView) {
 %>
 &nbsp;&nbsp;&nbsp;
-			<b>View:</b> <a
-				href="javascript:void(0)" onclick="popupPage(960,700,'formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2
-				</a>&nbsp;&nbsp;&nbsp;
-			<b>Edit:</b> <a
-				href="javascript:void(0)" onclick="onPageChange('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=#id&provNo=<%=provNo%>');">AR2</a>			
-			&nbsp;
-			<a href="formonarenhancedxml.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&episodeId=<%=props.getProperty("episodeId","0")%>">XML</a>
+			<b>View:</b> <a	href="javascript:void(0)" onclick="popupPage(960,700,'formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2</a>
+&nbsp;&nbsp;&nbsp;
+			<b>Edit:</b> <a href="javascript:void(0)" onclick="onPageChange('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=#id&provNo=<%=provNo%>');">AR2</a>			
+&nbsp;&nbsp;&nbsp;
+			<b>Download:</b> <a href="formonarenhancedxml.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&episodeId=<%=props.getProperty("episodeId","0")%>">XML</a>
 			</td>
 			
 			
@@ -2299,7 +2252,7 @@ $(document).ready(function(){
 						<option value="NDE">North Ndebele</option>
 						<option value="SME">Northern Sami</option>
 						<option value="NOR">Norwegian</option>
-						<option value="NOB">Norwegian Bokmål</option>
+						<option value="NOB">Norwegian BokmÃ¥l</option>
 						<option value="NNO">Norwegian Nynorsk</option>
 						<option value="NYA">Nyanja</option>
 						<option value="OCI">Occitan (post 1500)</option>
@@ -2422,7 +2375,7 @@ $(document).ready(function(){
 					</select>					
 			</td>
 			<td colspan="3" width="50%" valign="top">Ethnic or Racial backgrounds<br>
-				Mother:
+				Mother
 				<select name="pg1_ethnicBgMother" >
 					<option value="UN">Select</option>					
 					<option value="ANC001">Aboriginal</option>
@@ -2445,12 +2398,13 @@ $(document).ready(function(){
 		</tr>
 		<tr>
 			<td colspan="2" width="20%" valign="top">
+			OHIP No.<br>
 				<select name="c_hinType">
 					<option value="OHIP">OHIP</option>
 					<option value="RAMQ">RAMQ</option>
 					<option value="OTHER">OTHER</option>
 				</select>
-			<input type="text" name="c_hin" size="10" style="width: 100%"
+			<input type="text" name="c_hin" size="10" style="width:60%"
 				maxlength="20"
 				value="<%= UtilMisc.htmlEscape(props.getProperty("c_hin", "")) %>" />
 			</td>
@@ -2489,7 +2443,7 @@ $(document).ready(function(){
 				name="pg1_ncMidwife" <%= props.getProperty("pg1_ncMidwife", "") %> />Midwife<br>
 			</font> <input type="text" name="c_nc" size="10" style="width: 100%"
 				maxlength="25" value="<%= UtilMisc.htmlEscape(props.getProperty("c_nc", "")) %>" /></td>
-			<td>Family physician<br>
+			<td><br>Family physician<br>
 			<input type="text" name="c_famPhys" size="30" maxlength="80"
 				style="width: 100%"
 				value="<%= UtilMisc.htmlEscape(props.getProperty("c_famPhys", "")) %>" /></td>
@@ -2497,17 +2451,17 @@ $(document).ready(function(){
 	</table>
 	<table width="100%" border="1" cellspacing="0" cellpadding="0">
 		<tr>
-			<td width="50%">Allergies or Sensitivities &nbsp;<a id="update_allergies_link" href="javascript:void(0)" onclick="updateAllergies();">Update from Chart</a><br>
-			<div align="center"><textarea name="c_allergies"
-				style="width: 100%" cols="30" rows="4"><%= UtilMisc.htmlEscape(props.getProperty("c_allergies", "")) %></textarea></div>			
+			<td width="50%">Allergies or Sensitivities &nbsp;<a id="update_allergies_link" href="javascript:void(0)" class="edit-feature" onclick="updateAllergies();">Update from Chart</a><br>
+			<div align="center"><textarea name="c_allergies" class="limit-text"
+				style="width: 100%" cols="30" rows="4" maxlength="150" data-msg="allergies_size" data-new-line="true"><%= UtilMisc.htmlEscape(props.getProperty("c_allergies", "")) %></textarea></div>			
 			<%if(!bView) {%>
 				<span id="allergies_size">150 Characters left</span>		
 			<% } %>
 			</td>
 			
-			<td width="50%">Medications/Herbals&nbsp;<a id="update_meds_link" href="javascript:void(0)" onclick="updateMeds();">Update from Chart</a><br>
-			<div align="center"><textarea name="c_meds" style="width: 100%"
-				cols="30" rows="4"><%= UtilMisc.htmlEscape(props.getProperty("c_meds", "")) %></textarea></div>
+			<td width="50%">Medications/Herbals&nbsp;<a id="update_meds_link" href="javascript:void(0)" class="edit-feature" onclick="updateMeds();">Update from Chart</a><br>
+			<div align="center"><textarea name="c_meds" class="limit-text" style="width: 100%"
+				cols="30" rows="4" maxlength="146" data-msg="meds_size" data-new-line="true"><%= UtilMisc.htmlEscape(props.getProperty("c_meds", "")) %></textarea></div>
 				<%if(!bView) {%>
 				<span id="meds_size">146 Characters left</span>		
 				<% } %>
@@ -3512,8 +3466,8 @@ $(document).ready(function(){
 			<th colspan="4"><b>Comments</b></th>
 		</tr>
 		<tr>
-			<td colspan="4"><textarea name="pg1_commentsAR1"
-				style="width: 100%" cols="80" rows="5"><%= UtilMisc.htmlEscape(props.getProperty("pg1_commentsAR1", "")) %></textarea>
+			<td colspan="4"><textarea name="pg1_commentsAR1" class="limit-text"
+				style="width: 100%" cols="80" rows="5" maxlength="885" data-msg="comment_size"><%= UtilMisc.htmlEscape(props.getProperty("pg1_commentsAR1", "")) %></textarea>
 			</td>
 		</tr>
 		<%if(!bView) {%>
@@ -3526,8 +3480,8 @@ $(document).ready(function(){
 			<th colspan="4"><b>Extra Comments (Will print on a separate page)</b></th>
 		</tr>
 		<tr>
-			<td colspan="4"><textarea id="pg1_comments2AR1" name="pg1_comments2AR1"
-				style="width: 100%" cols="80" rows="15"><%= UtilMisc.htmlEscape(props.getProperty("pg1_comments2AR1", "")) %></textarea>
+			<td colspan="4"><textarea id="pg1_comments2AR1" name="pg1_comments2AR1" class="limit-text"
+				style="width: 100%" cols="80" rows="15" maxlength="4160" data-msg="comment2_size"><%= UtilMisc.htmlEscape(props.getProperty("pg1_comments2AR1", "")) %></textarea>
 			</td>
 		</tr>
 		<%if(!bView) {%>
@@ -3560,14 +3514,14 @@ $(document).ready(function(){
 
 	</table>
 
-	<table class="Head" class="hidePrint">
+	<table class="Head hidePrint">
 		<tr>
 			<td align="left">
 			<%
   if (!bView) {
 %> <input type="submit" value="Save"
 				onclick="javascript:return onSave();" /> <input type="submit"
-				value="Save and Exit" onclick="javascript:return onSaveExit();" /> <%
+				value="Save & Exit" onclick="javascript:return onSaveExit();" /> <%
   }
 %> <input type="submit" value="Exit"
 				onclick="javascript:return onExit();" /> <input type="submit"
@@ -3576,14 +3530,13 @@ $(document).ready(function(){
   if (!bView) {
 %>
 &nbsp;&nbsp;&nbsp;
-			<b>View:</b> <a
-				href="javascript:void(0)" onClick="popupPage(960,700,'formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2
-			</a> 
-			&nbsp;&nbsp;&nbsp;
-			<b>Edit:</b> 
-			<a
-				href="javascript:void(0)" onclick="onPageChange('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=#id&provNo=<%=provNo%>');">AR2</a> </td>
-			<%
+			<b>View:</b> <a	href="javascript:void(0)" onclick="popupPage(960,700,'formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&view=1');">AR2</a>
+&nbsp;&nbsp;&nbsp;
+			<b>Edit:</b> <a href="javascript:void(0)" onclick="onPageChange('formonarenhancedpg2.jsp?demographic_no=<%=demoNo%>&formId=#id&provNo=<%=provNo%>');">AR2</a>			
+&nbsp;&nbsp;&nbsp;
+			<b>Download:</b> <a href="formonarenhancedxml.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>&episodeId=<%=props.getProperty("episodeId","0")%>">XML</a>
+			</td>
+<%
   }
 %>
 		</tr>
@@ -3603,19 +3556,62 @@ window.onload = function () {
 		parent.parent.document.getElementById('formInViewFrame').firstChild.style.height = height+"px";
 	}
 };
-</script>
 
-</body>
-
-<script type="text/javascript">
 Calendar.setup({ inputField : "pg1_menLMP", ifFormat : "%Y/%m/%d", showsTime :false, button : "pg1_menLMP_cal", singleClick : true, step : 1 });
 Calendar.setup({ inputField : "pg1_lastUsed", ifFormat : "%Y/%m/%d", showsTime :false, button : "pg1_lastUsed_cal", singleClick : true, step : 1 });
 Calendar.setup({ inputField : "pg1_menEDB", ifFormat : "%Y/%m/%d", showsTime :false, button : "pg1_menEDB_cal", singleClick : true, step : 1 });
 Calendar.setup({ inputField : "c_finalEDB", ifFormat : "%Y/%m/%d", showsTime :false, button : "c_finalEDB_cal", singleClick : true, step : 1 });
 Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "pg1_labLastPapDate_cal", singleClick : true, step : 1 });
 
-</script>
+//limit size of textareas
+$(document).ready(function(){
 
+	    $(".limit-text").on('keypress keyup', function() {
+		mlength = $(this).attr('maxlength');
+		msg = $(this).attr('data-msg');
+		disableNewLine = $(this).attr('data-new-line');
+		limitCharacters($(this),mlength,msg,disableNewLine);
+		});
+
+		$(".limit-text").bind('paste', function(e){ 
+		var pasteData = e.originalEvent.clipboardData.getData('text');
+		pasteLength = pasteData.length;
+		textLength = $(this).val().length;
+		length = parseInt(pasteLength) + parseInt(textLength);
+		mlength = $(this).attr('maxlength');
+			if(length>mlength) {
+				alert("Copy/Paste data is too long for this textbox.");
+				return false;
+			}
+		});
+		
+		$('.limit-text').each(function(i, obj) {
+		    mlength = $(obj).attr('maxlength');
+			msg = $(obj).attr('data-msg');
+			length = mlength - parseInt($(obj).val().length);
+			if(length<0) {
+				length=0;
+			}
+			$("#"+msg).html(length + ' Characters left');
+		});
+});
+
+
+function limitCharacters( el, mlength, lbl, disableNewLine ){	
+	length = mlength - parseInt($(el).val().length);
+	if(length<0) {
+		length=0;
+		$(el).val($(el).val().substring(0,150));
+	}
+	$("#"+lbl).html(length + ' Characters left');
+	
+	if(disableNewLine){
+	 $(el).val( $(el).val().replace( /\r?\n/gi, '' ) );
+	}
+}
+
+</script>
+</body>
 
 <div id="mcv-req-form" title="Create Lab Requisition">
 	<p class="validateTips"></p>
@@ -3655,6 +3651,7 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 
 <div id="lab_menu_div" class="hidden">
 <ul>
+	<li><a href="javascript:void(0)" onclick="popPage('formlabreq<%=labReqVer%>.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=eFTS','LabReq')">MOH&amp;LTC eFTS</a></li>
 	<li><a href="javascript:void(0)" onclick="popPage('formlabreq<%=labReqVer %>.jsp?demographic_no=<%=demoNo%>&formId=0&provNo=<%=provNo%>&labType=AnteNatal','LabReq')">Routine Prenatal</a></li>
 	<li><a href="javascript:void(0)" onclick="loadCytologyForms();">Cytology</a></li>
 </ul>
@@ -3663,7 +3660,7 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 <div id="forms_menu_div" class="hidden">
 <ul>
 	<li><a href="javascript:void(0)" onclick="loadUltrasoundForms();">Ultrasound</a></li>
-	<li><a href="javascript:void(0)" onclick="loadIPSForms();">IPS</a></li>
+	<li><a href="javascript:void(0)" onclick="loadCustomForms();"><%=customEformGroup%></a></li>
 </ul>
 </div>
 
@@ -3689,7 +3686,7 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 <ul>
 	<li><a href="http://www.sogc.org/guidelines/documents/gui217CPG0810.pdf" target="sogc">SOGC Guidelines</a></li>
 	<li><a href="<%=request.getContextPath()%>/pregnancy/genetics-provider-guide-e.pdf" target="sogc">Guide</a></li>	
-	<li><a href="javascript:void(0)" onclick="loadIPSForms();">IPS Forms</a></li>
+	<li><a href="javascript:void(0)" onclick="loadCustomForms();"><%=customEformGroup%> Forms</a></li>
 </ul>
 </div>
 
@@ -3791,8 +3788,8 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 					</tr>
 					<tr>
 						<td>
-							Order Integrated Prenatal Screening (IPS)
-							<a href="javascript:void(0);" onclick="return false;" title="Click on 'Forms' menu item under Prompts, and choose IPS"><img border="0" src="../images/icon_help_sml.gif"/></a>		
+							Order <%=prenatalScreenName%> (<%=prenatalScreen%>)
+							<a href="javascript:void(0);" onclick="return false;" title="Click on 'Forms' menu item under Prompts, and choose <%=customEformGroup%>"><img border="0" src="../images/icon_help_sml.gif"/></a>		
 						</td>
 					</tr>
 					<tr>
@@ -3884,17 +3881,17 @@ Calendar.setup({ inputField : "pg1_labLastPapDate", ifFormat : "%Y/%m/%d", shows
 
 
 
-<div id="ips-eform-form" title="IPS Forms">
+<div id="custom-eform-form" title="<%=customEformGroup%> Forms">
 	<form>
 		<fieldset>
 			<table>
 				<tbody>
 				<%
-					if(ipsForms != null) {
-						for(LabelValueBean bean:ipsForms) {
+					if(customForms != null) {
+						for(LabelValueBean bean:customForms) {
 							%>
 							<tr>
-								<td><button onClick="popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=bean.getValue()%>&demographic_no=<%=demoNo%>&appointment=0','ipsform');return false;">Open</button></td>
+								<td><button onClick="popPage('<%=request.getContextPath()%>/eform/efmformadd_data.jsp?fid=<%=bean.getValue()%>&demographic_no=<%=demoNo%>&appointment=0','<%=customEformGroup%>form');return false;">Open</button></td>
 								<td><%=bean.getLabel() %></td>
 							</tr>
 							<%

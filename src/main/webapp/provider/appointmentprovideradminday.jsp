@@ -240,6 +240,12 @@ private HashMap<String,String> CurrentSiteMap = new HashMap<String,String>();%>
 <jsp:useBean id="dateTimeCodeBean" class="java.util.Hashtable" scope="page" />
 <%
 	Properties oscarVariables = OscarProperties.getInstance();
+	String econsultUrl = oscarVariables.getProperty("backendEconsultUrl");
+	
+	//Gets the request URL
+	StringBuffer oscarUrl = request.getRequestURL();
+	//Sets the length of the URL, found by subtracting the length of the servlet path from the length of the full URL, that way it only gets up to the context path
+	oscarUrl.setLength(oscarUrl.length() - request.getServletPath().length());
 %>
 
 <!-- Struts for i18n -->
@@ -575,7 +581,13 @@ function review(key) {
 
 
 </script>
-
+<style type="text/css">
+.ds-btn{
+	background-color: #f4ead7;
+    border: 1px solid #0097cf;
+    font-size: 11px;
+}
+</style>
 
 <%
 	if (OscarProperties.getInstance().getBooleanProperty("indivica_hc_read_enabled", "true")) {
@@ -871,6 +883,10 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 </li>
 </security:oscarSec>
 </caisi:isModuleLoad>
+ <li id="econ">
+	<a href="#" onclick ="popupOscarRx(625, 1024, '../oscarEncounter/econsult.do')" title="eConsult">
+ 	<span>eConsult</span></a>
+</li>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_pref" rights="r">
 <li>    <!-- remove this and let providerpreference check -->
     <caisi:isModuleLoad moduleName="ticklerplus">
@@ -990,9 +1006,11 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 						<c:out value="${ dashboard.name }" />
 					</a>
 				</c:forEach>
-				<a href="javascript:void(0)" onclick="newWindow('<%=request.getContextPath()%>/web/dashboard/display/sharedOutcomesDashboard.jsp','shared_dashboard')"> 
+				<security:oscarSec roleName="<%=roleName$%>" objectName="_dashboardCommonLink" rights="r">
+					<a href="javascript:void(0)" onclick="newWindow('<%=request.getContextPath()%>/web/dashboard/display/sharedOutcomesDashboard.jsp','shared_dashboard')"> 
 						Common Provider Dashboard
 					</a>
+				</security:oscarSec>
 			</div>
 			
 		</div>
@@ -1068,8 +1086,13 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 
 </div>
 	<%}%>
-
-	| <a href="../logout.jsp"><bean:message key="global.btnLogout"/>&nbsp;</a>
+	
+		<% if (request.getSession().getAttribute("oneIdEmail") != null && !request.getSession().getAttribute("oneIdEmail").equals("")) { %>
+				| <a href="<%=econsultUrl%>/SAML2/logout?oscarReturnURL=<%=URLEncoder.encode(oscarUrl + "/logout.jsp", "UTF-8")%>">Global Logout</a>
+ 		<% }
+		   else { %>
+				| <a href="../logout.jsp"><bean:message key="global.btnLogout"/>&nbsp;</a>
+		<% } %>
 
 </td>
 
@@ -1510,6 +1533,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 				<c:set value="true" var="hideReason" />
 		</oscar:oscarPropertiesCheck>	
 </b>
+          <button class="ds-btn" type="button" data-provider_no="<%=curProvider_no[nProvider]%>">DS</button>
       <% } %>
 
           <%
@@ -1790,7 +1814,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 							}else{
 				    %>
 					
-				    			<img src="../images/<%=as.getImageName()%>" border="0" height="10" title="<%=as.getTitleString(request.getLocale())%>">
+				    			<img src="../images/<%=as.getImageName()%>" border="0" height="10" title="<%=(as.getTitleString(request.getLocale()).length()>0)?as.getTitleString(request.getLocale()):as.getTitle()%>">
 					
             <%
 							}
@@ -2118,6 +2142,7 @@ start_time += iSm + ":00";
           <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=StringEscapeUtils.escapeJavaScript(curProviderName[nProvider])%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>" >
           <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperation=searchappointmentday" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>"-->
           <%=curProviderName[nProvider]%></a></b>
+          <button class="ds-btn" type="button" data-provider_no="<%=curProvider_no[nProvider]%>">DS</button>		  
       <% } %>
 
           <% if(!userAvail) { %>
@@ -2255,6 +2280,24 @@ document.onkeydown=function(e){
         }
 }
 
+</script>
+<script>
+jQuery(document).ready(function(){
+	jQuery('.ds-btn').click(function(){
+		//var provider_no = '<%=curUser_no%>';
+		var provider_no = jQuery(this).attr('data-provider_no');
+		var y = '<%=request.getParameter("year")%>';
+		var m = '<%=request.getParameter("month")%>';
+		var d = '<%=request.getParameter("day")%>';
+		var sTime = 8;
+		var eTime = 20;
+		var dateStr = y + '-' + m + '-' + d;
+		var url = '<%=request.getContextPath()%>/report/reportdaysheet.jsp?dsmode=all&provider_no=' + provider_no
+				+ '&sdate=' + dateStr + '&edate=' + dateStr + '&sTime=' + sTime + '&eTime=' + eTime;
+		popupPage(600,750, url);
+		return false;
+	});
+});
 </script>
 <!-- end of keycode block -->
 <% if (OscarProperties.getInstance().getBooleanProperty("indivica_hc_read_enabled", "true")) { %>

@@ -59,12 +59,14 @@ import org.oscarehr.common.dao.BillingDao;
 import org.oscarehr.common.dao.BillingPaymentTypeDao;
 import org.oscarehr.common.model.Billing;
 import org.oscarehr.common.model.BillingPaymentType;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.entities.Billingmaster;
 import oscar.entities.MSPBill;
 import oscar.entities.Provider;
+import oscar.log.LogAction;
 import oscar.oscarBilling.ca.bc.data.BillRecipient;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
@@ -271,11 +273,11 @@ public class MSPReconcile {
 			Vector<String> exp = new Vector<String>();
 			
 			if( rejectedArray.length > 0 ) {
-				tc = (TeleplanC12) rejectedArray[1];
+				tc = (TeleplanC12) rejectedArray[0];
 			}
 			
 			if( rejectedArray.length > 1 ) {
-				ts = (TeleplanS21) rejectedArray[2];
+				ts = (TeleplanS21) rejectedArray[1];
 			}
 
 			if( tc != null ) {				
@@ -1067,9 +1069,11 @@ public class MSPReconcile {
 				if (b != null) {
 					b.setBillingstatus(newStat);
 					billingmasterDao.update(b);
-				}
+					dao.createBillingHistoryArchive(billingNo);
+				} else {
+					LogAction.addLogSynchronous(LoggedInInfo.getLoggedInInfoAsCurrentClassAndMethod(),"MSPReconcile", "Found a remittance record with no valid billingmaster No:" + billingNo);
 
-				dao.createBillingHistoryArchive(billingNo);
+				}
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Error", e);
 			}
@@ -1745,7 +1749,7 @@ public class MSPReconcile {
 	public ResultSet getMSPRemittanceQuery(String payeeNo, String s21Id) {
 		MiscUtils.getLogger().debug(new java.util.Date() + ":MSPReconcile.getMSPRemittanceQuery(payeeNo, s21Id)");
 		String qry = "SELECT billing_code,provider.first_name,provider.last_name,t_practitionerno,t_s00type,billingmaster.service_date as 't_servicedate',t_payment," + "t_datacenter,billing.demographic_name,billing.demographic_no,teleplanS00.t_paidamt,t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_dataseq " + " from teleplanS00,billing,billingmaster,provider " + " where teleplanS00.t_officeno = billingmaster.billingmaster_no " + " and teleplanS00.s21_id = " + s21Id
-		        + " and billingmaster.billing_no = billing.billing_no " + " and provider.ohip_no= teleplanS00.t_practitionerno " + " and teleplanS00.t_payeeno = " + payeeNo + " order by provider.first_name,t_servicedate,billing.demographic_name";
+		        + " and billingmaster.billing_no = billing.billing_no " + " and provider.ohip_no= teleplanS00.t_practitionerno " + " and teleplanS00.t_practitionerno != '' and teleplanS00.t_payeeno = " + payeeNo + " order by provider.first_name,t_servicedate,billing.demographic_name";
 
 		ResultSet rs = null;
 		try {

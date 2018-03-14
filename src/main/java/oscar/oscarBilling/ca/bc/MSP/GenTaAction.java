@@ -277,7 +277,7 @@ public class GenTaAction  extends Action {
                     t.setPayeeNo(s04.t_payeeno);
                     t.setMspCtlNo(s04.t_mspctlno);
                     
-                	t.setPractitionerNo("");
+                	t.setPractitionerNo(s04.t_practitionerno);
                 	t.setMspRcdDate("");
                     t.setInitial("");
                     t.setSurname("");
