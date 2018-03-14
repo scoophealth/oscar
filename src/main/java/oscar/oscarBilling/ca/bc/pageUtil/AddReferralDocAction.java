@@ -68,6 +68,8 @@ public class AddReferralDocAction extends Action {
     		 billingReferral.setPostal(f.getPostal());
     		 billingReferral.setPhone(f.getPhone());
     		 billingReferral.setFax(f.getFax());
+    		 billingReferral.setSpecialty(f.getSpecialty());
+    		 billingReferral.setCountry("Canada");
     		 billingReferralDao.updateBillingreferral(billingReferral);
     	 } else {
     		 request.setAttribute("Error", "Billing # already in use");
