@@ -830,4 +830,29 @@ public class ProviderDao extends HibernateDaoSupport {
 				this.releaseSession(session);
 			}
 		}
+		
+		
+		public List<Provider> getProviderByBillingNo(String billingNo) {
+			if (billingNo == null || billingNo.isEmpty()) {
+				throw new IllegalArgumentException();
+			}
+
+			List<Provider> providerList = getHibernateTemplate().find("From Provider p where p.BillingNo=?",new Object[]{billingNo});
+
+			
+			return providerList;
+
+		}
+		
+		public List<Provider> getProviderByThirdPartyBillingNo(String billingNo) {
+			if (billingNo == null || billingNo.isEmpty()) {
+				throw new IllegalArgumentException();
+			}
+
+			List<Provider> providerList = getHibernateTemplate().find("From Provider p where p.RmaNo=?",new Object[]{billingNo});
+
+			
+			return providerList;
+
+		}
 }
