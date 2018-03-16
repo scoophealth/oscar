@@ -48,7 +48,7 @@ CREATE TABLE `CVCMapping` (
    `id` int(10) NOT NULL auto_increment,
    `oscarName` varchar(255),
    `cvcSnomedId` varchar(255),
-   `preferCVC` tinyint(1)
+   `preferCVC` tinyint(1),
   PRIMARY KEY (`id`)
 );
 
