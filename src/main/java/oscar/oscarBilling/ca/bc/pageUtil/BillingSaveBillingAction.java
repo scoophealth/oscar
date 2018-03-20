@@ -195,7 +195,7 @@ public class BillingSaveBillingAction extends Action {
 
         ActionForward af = mapping.findForward("success");
         if (frm.getSubmit().equals("Another Bill")) {
-            bean.setBillForm("GP");   //Todo: is this what this should be?
+            bean.setBillForm( OscarProperties.getInstance().getProperty("default_view", "GP") );
             af = mapping.findForward("anotherBill");
 
         } else if (frm.getSubmit().equals("Save & Print Receipt")) {
