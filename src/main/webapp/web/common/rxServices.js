@@ -145,10 +145,10 @@ angular.module("rxServices", [])
                     toSend.push(drugs[m].toDrugTransferObject(false));
                 }
 
-                var obj = {drug : toSend};
+               // var obj = {drug : toSend};
 
-                this._prescribe(demoNo, obj).then(function(resp){
-                    return cb(resp.success);
+                this._prescribe(demoNo, toSend).then(function(resp){
+                    return cb(resp.data);
                 });
             },
 

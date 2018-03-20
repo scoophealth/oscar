@@ -80,7 +80,6 @@
 			  <div class="row" >
 			  	<div class="col-sm-8">
 				    <h4 class="list-group-item-heading">{{med.getName()}}</h4>
-				    <p class="list-group-item-text">{{med.id}}</p>
 				    		<form>
 						  <div class="form-group">
 						    <input type="text" class="form-control" id="instructionsInput" placeholder="Instructions" ng-blur="$ctrl.parseInstr(med)" ng-model="med.instructions">
@@ -113,6 +112,7 @@
 			  </li>
 			</div>
         		<medsearch med-selected="$ctrl.medSelected(med)"></medsearch>	
+        		<button type="button" class="btn btn-primary btn-block" style="margin-top:3px;" ng-click="$ctrl.saveAndPrint()">Save And Print</button>
 		</div>
 		<hr>
 		<div class="row">

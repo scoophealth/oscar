@@ -156,6 +156,10 @@ public class RxManager {
 
         // Will throw an exception if access is denied.
         this.writeCheck(info, d.getDemographicId());
+        
+        if(d.getId() == null) {
+        		return null;
+        }
 
         Drug old = this.drugDao.find(d.getId());
 
@@ -481,17 +485,35 @@ public class RxManager {
      */
     protected Boolean canPrescribe(Drug d){
 
-        if(d == null) return false;
+        if(d == null) {
+        		logger.debug("drug was null returning false");
+        		return false;
+        }
 
-        if(d.getProviderNo() == null || d.getProviderNo().equals("")) return false;
+        if(d.getProviderNo() == null || d.getProviderNo().equals("")) {
+        		logger.debug("provider was null or blank returning false");
+        		return false;
+        }
 
-        if(d.getDemographicId() == null || d.getDemographicId() < 0) return false;
+        if(d.getDemographicId() == null || d.getDemographicId() < 0) {
+        		logger.debug("demographic was null returning false");
+        		return false;
+        }
 
-        if(d.getRxDate() == null) return false;
+        if(d.getRxDate() == null) {
+        		logger.debug("rx date was null returning false");
+        		return false;
+        }
 
-        if(d.getEndDate() == null || d.getRxDate().after(d.getEndDate())) return false;
+        if(d.getEndDate() == null || d.getRxDate().after(d.getEndDate())) {
+        		logger.debug("drug endDate was null");
+        		return false;
+        }
 
-        if(d.getSpecial() == null || d.getSpecial().equals("")) return false;
+        if(d.getSpecial() == null || d.getSpecial().equals("")) {
+        		logger.debug("drug special instructions was null returning false");
+        		return false;
+        }
 
         return true;
     }

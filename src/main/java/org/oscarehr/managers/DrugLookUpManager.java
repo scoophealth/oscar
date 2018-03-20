@@ -104,7 +104,7 @@ public class DrugLookUpManager implements DrugLookUp {
         t.setAtc((String) h.get("atc"));
         t.setRegionalId(Integer.parseInt((String) h.get("regional_identifier")));
         t.setForm((String) h.get("drugForm"));
-        t.setName((String) h.get("name"));
+        t.setName((String) h.get("product"));
 
         // Component: { name=STRING, strength=INT, unit=STRING }
         Vector<Hashtable<String, Object>> components = (Vector<Hashtable<String, Object>>) h.get("components");

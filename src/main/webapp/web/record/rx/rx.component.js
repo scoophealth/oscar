@@ -40,6 +40,21 @@ const RxComponent = {
  		
  		
  	}
+ 	
+ 	getMeds = function(){
+ 		
+ 		rxService.getMedications($stateParams.demographicNo,"").then(function(data){
+			  console.log("getMedications--",data);
+			  rxComp.page.drugs = data.data.content;
+		    	},
+		    	function(errorMessage){
+			      console.log("getMedications++"+errorMessage);
+			      rxComp.error=errorMessage;
+		    	}
+		);
+ 		
+ 	}
+ 	
  	rxComp.shortDSMessage = function(){
  		console.log("shortDSMessage",rxComp.toRxList);
  		rxComp.getDSMessages($stateParams.demographicNo,rxComp.toRxList);
@@ -96,6 +111,23 @@ const RxComponent = {
 		    	}
  		);
  	};
+ 	
+ 	rxComp.saveAndPrint = function(){
+ 		rxService.prescribe($stateParams.demographicNo,rxComp.toRxList,rxComp.processRxSuccess);
+ 		console.log("PRESCRIBE CALLED");
+ 	}
+ 	
+ 	rxComp.processRxSuccess = function(resp){
+ 		console.log("WHAT IS THERE RETURN",resp);
+ 		
+ 		if(resp.success){
+ 			getMeds();
+ 			alert("Rx Print modal will be here");
+ 			rxComp.toRxList = [];
+ 		}else{
+ 			alert("Error Prescribing" +resp.drugs)
+ 		}
+ 	}
  	
  	rxComp.parseInstr = function(med){
 
