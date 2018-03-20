@@ -37,8 +37,11 @@ import org.hl7.fhir.dstu3.model.BaseResource;
 import org.hl7.fhir.dstu3.model.MessageHeader;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
+import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.model.Destination;
 import org.oscarehr.integration.fhir.model.OscarFhirResource;
+import org.oscarehr.integration.fhir.model.Practitioner;
+import org.oscarehr.integration.fhir.model.Practitioner.ActorType;
 import org.oscarehr.integration.fhir.model.Sender;
 import org.oscarehr.util.MiscUtils;
 
@@ -59,6 +62,7 @@ public abstract class FhirMessageBuilder {
 	private List<OscarFhirResource< ?,? > > resources;
 	private BaseResource wrapper;
 	private HashMap< ReferenceKey, Reference > references;
+	private OscarFhirConfigurationManager oscarFhirConfigurationManager;
 
 	protected abstract void addResource( BaseResource resource );	
 	protected abstract void addAttachment( Attachment attachment );
@@ -69,7 +73,23 @@ public abstract class FhirMessageBuilder {
 	 * @throws Exception 
 	 */
 	protected FhirMessageBuilder( Sender sender, Destination destination ) {
+		setEndpointParameters( sender, destination );				
+	}
+	
+	protected FhirMessageBuilder( OscarFhirConfigurationManager oscarFhirConfigurationManager ) {
+		// setEndpointParameters( oscarFhirConfigurationManager, destination.getDestinations() );
+		this.oscarFhirConfigurationManager = oscarFhirConfigurationManager;
+	}
 
+	/**
+	 * The MessageHeader is a requirement because there are often some reference 
+	 * links that need to be added after they are created. 
+	 */
+	protected FhirMessageBuilder( MessageHeader messageHeader ) {
+		setMessageHeader( messageHeader );
+	}
+		
+	private void setEndpointParameters( Sender sender, Destination destination ) {
 		if( sender != null && destination != null ) {
 			setSender( sender );
 			setDestination( destination );		
@@ -80,15 +100,7 @@ public abstract class FhirMessageBuilder {
 			} catch (Exception e) {
 				logger.error( "Error instantiating " + this.getClass().getName(), e );
 			}
-		}		
-	}
-
-	/**
-	 * The MessageHeader is a requirement because there are often some reference 
-	 * links that need to be added after they are created. 
-	 */
-	protected FhirMessageBuilder( MessageHeader messageHeader ) {
-		setMessageHeader( messageHeader );
+		}
 	}
 
 	protected BaseResource getWrapper() {
@@ -115,7 +127,7 @@ public abstract class FhirMessageBuilder {
 		messageHeader.getEvent()
 			.setSystem("http://hl7.org/fhir/message-type")
 			.setCode("MedicationAdministration-Recording");
-		//TODO: these resource links cannot be hard coded.
+
 		messageHeader.setTimestamp( new Date(System.currentTimeMillis() ) );
 		messageHeader.setSource( getSender().getMessageSourceComponent() );
 		messageHeader.setDestination( getDestination().getMessageDestinationComponents() );
@@ -238,6 +250,31 @@ public abstract class FhirMessageBuilder {
 	private void setDestination(Destination destination) {
 		this.destination = destination;
 	}
+	
+	/**
+	 * Used in certain situations when the Message Header Author is also 
+	 * known as the Message Submitter. The given Resource will be altered to 
+	 * represent the attributes required for a submitter.
+	 * The Author reference link will be set to this Resource.
+	 * @param reference
+	 */
+	public void setMessageHeaderSubmitter( Practitioner practitioner ) {
+		
+		if( getMessageHeader() != null ) {
+			
+			practitioner.setActor( ActorType.sumbitter );
+			
+			//TODO change this so its not a complete hack.
+			// the qualification info is optional for submitters 
+			practitioner.getFhirResource().setQualification(null);
+			
+			// add the resource to the bundle
+			addResource(practitioner);
+		
+			// set the reference link in the Author attribute of the header.
+			setMessageHeaderAuthor( practitioner.getReference() );
+		}
+	}
 
 	/**
 	 * Get a List of Resources that were contained in this message bundle.
@@ -248,7 +285,6 @@ public abstract class FhirMessageBuilder {
 		}
 		return resources;
 	}
-
 	
 	public void addResources( List< OscarFhirResource< ?,? > > oscarFhirResources ) {
 		for( OscarFhirResource< ?,? > oscarFhirResource :  oscarFhirResources ) {
@@ -312,7 +348,7 @@ public abstract class FhirMessageBuilder {
 	}
 	
 	private void addReference( Reference reference ) {		
-		addReference( new ReferenceKey( reference.getDisplay(), ( (BaseResource) reference.getResource() ).getId() ), reference );		
+		addReference( new ReferenceKey( reference.getResource().getClass().getSimpleName(), ( (BaseResource) reference.getResource() ).getId() ), reference );		
 	}
 	
 	private void addReference( ReferenceKey referenceKey, Reference reference ) {
@@ -320,23 +356,16 @@ public abstract class FhirMessageBuilder {
 	}
 	
 	private void addReference( OscarFhirResource< ?,? > oscarFhirResource ) {		
-//		Reference reference = new Reference();		
-//		reference.setDisplay( oscarFhirResource.getFhirResource().getClass().getSimpleName() );
-//		reference.setResource( oscarFhirResource.getFhirResource() );
-//		reference.setReference( oscarFhirResource.getReferenceLink() );
 		addReference( oscarFhirResource.getReference() );		
 	}
 	
-//	private void addReference( BaseResource resource ) {		
-//		Reference reference = new Reference();
-//		reference.setDisplay( resource.getClass().getSimpleName() );
-//		reference.setResource( resource );
-//		addReference( reference );		
-//	}
+	protected OscarFhirConfigurationManager getOscarFhirConfigurationManager() {
+		return oscarFhirConfigurationManager;
+	}
 	
-//	private void addReference( ReferenceKey referenceKey, String referenceLink ) {
-//		addReference( referenceKey, new Reference( referenceLink ) );	
-//	}
+	protected void setOscarFhirConfigurationManager(OscarFhirConfigurationManager oscarFhirConfigurationManager) {
+		this.oscarFhirConfigurationManager = oscarFhirConfigurationManager;
+	}
 
 }
 

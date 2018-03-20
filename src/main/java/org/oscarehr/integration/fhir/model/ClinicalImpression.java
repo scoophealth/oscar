@@ -23,9 +23,13 @@ package org.oscarehr.integration.fhir.model;
  * Ontario, Canada
  */
 
-import java.util.Base64;
+import java.io.UnsupportedEncodingException;
+
+import javax.xml.bind.DatatypeConverter;
+
 import org.hl7.fhir.dstu3.model.Attachment;
 import org.hl7.fhir.dstu3.model.ClinicalImpression.ClinicalImpressionStatus;
+import org.oscarehr.caisi_integrator.util.MiscUtils;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.common.model.AbstractModel;
 
@@ -54,7 +58,7 @@ public class ClinicalImpression extends OscarFhirResource< org.hl7.fhir.dstu3.mo
 
 	private String annotation;
 	private CaseManagementNote caseManagementNote;
-	private byte[] encodedBytes;
+	private String encodedBytes;
 	
 	
 	/**
@@ -113,11 +117,6 @@ public class ClinicalImpression extends OscarFhirResource< org.hl7.fhir.dstu3.mo
 		// TODO This should convert an incoming clinical impression into a readable annotation for Oscar to consume
 	}
 
-//	@Override
-//	public List<Resource> getContainedFhirResources() {
-//		return null;
-//	}
-//	
 	private void setDescription( org.hl7.fhir.dstu3.model.ClinicalImpression fhirResource ) {
 		if ( getCaseManagementNote() != null ) {
 			fhirResource.setDescription( getCaseManagementNote().getEncounter_type() );
@@ -155,16 +154,22 @@ public class ClinicalImpression extends OscarFhirResource< org.hl7.fhir.dstu3.mo
 	}
 	
 	private byte[] getEncodedBytes() {
-		return encodedBytes;
+		byte[] bytes = null;
+		try {
+			bytes = encodedBytes.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			MiscUtils.getLogger().error( "Error encoding attachment. " );
+		}
+		return bytes;
 	}
 
 	private void setEncodedBytes( String string ) {		
-		byte[] encodedBytes = Base64.getEncoder().encode( string.getBytes() );
-		setEncodedBytes( encodedBytes );
+		try {
+			encodedBytes = DatatypeConverter.printBase64Binary( string.getBytes("UTF-8") );
+		} catch (UnsupportedEncodingException e) {
+			MiscUtils.getLogger().error( "Error encoding attachment. " );
+		}
 	}
 
-	private void setEncodedBytes( byte[] encodedBytes ) {
-		this.encodedBytes = encodedBytes;
-	}
 
 }

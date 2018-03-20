@@ -148,8 +148,7 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 		return String.format( "%s/%s", ((Resource) getFhirResource()).getResourceType(), getFhirResource().getId() );
 	}
 	
-	public String getContainedReferenceLink() {
-		// format the id of the Resource for a contained resource.  
+	public String getContainedReferenceLink() { 
 		String resourceType = ( (Resource) getFhirResource() ).getResourceType().name();
 		String referenceLink = String.format( "%s%s", resourceType, getFhirResource().getId().replaceAll( resourceType, "" ) );
 		getFhirResource().setId( referenceLink );
@@ -176,12 +175,22 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 		return configurationManager;
 	}
 	
-	protected boolean include( Enum<?> attribute ) {
+
+	public boolean include( Enum<?> attribute ) {
 		boolean pass = Boolean.TRUE;
 		if( getResourceAttributeFilter() != null ) {
 			pass = getResourceAttributeFilter().includeAttribute( attribute.name() );
 		}
 		return pass;
+	}
+	
+
+	public boolean isMandatory( Enum<?> attribute ) {
+		boolean manditory = Boolean.FALSE;
+		if( getResourceAttributeFilter() != null ) {
+			manditory = ! getResourceAttributeFilter().includeAttribute( attribute.name() );
+		}
+		return manditory;
 	}
 	
 }

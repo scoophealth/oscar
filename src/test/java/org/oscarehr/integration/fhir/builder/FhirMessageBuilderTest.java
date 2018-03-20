@@ -53,7 +53,8 @@ public class FhirMessageBuilderTest {
 	private static Clinic clinic;
 
 	private static Provider provider;
-	private static Provider provider2;
+	private static Provider nurse;
+	private static Provider doctor;
 	
 	private static Demographic demographic;
 	private static ImmunizationInterface<Prevention> prevention;
@@ -81,6 +82,7 @@ public class FhirMessageBuilderTest {
 		prevention.setImmunizationDate( new Date(System.currentTimeMillis() ) );
 		prevention.setImmunizationRefused(Boolean.FALSE);
 		prevention.setComment("This is a comment");
+		prevention.setVaccineCode("SM1234527");
 		prevention.setDose("10cc");
 		prevention.setImmunizationType("T");
 		prevention.setSite("LD");
@@ -96,6 +98,7 @@ public class FhirMessageBuilderTest {
 		prevention2.setImmunizationRefused(Boolean.FALSE);
 		prevention2.setImmunizationRefusedReason("Didnt want it.");
 		prevention2.setComment("This is a comment");
+		prevention2.setVaccineCode("SM4567445527");
 		prevention2.setDose("20cc");
 		prevention2.setImmunizationType("HPV");
 		prevention2.setSite("LD");
@@ -133,12 +136,27 @@ public class FhirMessageBuilderTest {
 		provider.setPractitionerNo("12342");
 		provider.setHsoNo( "12342" );
 		provider.setOhipNo( "12342" );
+		provider.setPhone("604-290-2343");
+		provider.setPractitionerNoType("CPSO");
 		
-		provider2 = new Provider();
-		provider2.setProviderNo("1000");
-		provider2.setFirstName( "Nurse" );
-		provider2.setLastName( "Betty" );
+		nurse = new Provider();
+		nurse.setProviderNo("6768");
+		nurse.setFirstName( "Nurse" );
+		nurse.setLastName( "Betty" );
+		nurse.setPractitionerNo("345645");
+		nurse.setPhone("645-290-1235");
+		nurse.setPractitionerNoType("CNO");
+		
 
+		doctor = new Provider();
+		doctor.setProviderNo("7678");
+		doctor.setFirstName( "Doctor" );
+		doctor.setLastName( "Sharp" );
+		doctor.setPractitionerNo("457888");
+		doctor.setHsoNo( "12342" );
+		doctor.setOhipNo( "12342" );
+		doctor.setPhone("604-333-2343");
+		doctor.setPractitionerNoType("CPSO");
 	}
 
 	@AfterClass
@@ -201,37 +219,51 @@ public class FhirMessageBuilderTest {
 		System.out.println( ">>>-- testGetDHIRFormattedMessage() -->");	
 		System.out.println();
 		
+		// set up the configuration for a DHIR type transmission.
 		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( FhirDestination.DHIR );
 		
-		// Collect the required resources. 
-		Organization responsible = new Organization( clinic );
-		Practitioner nurse = new Practitioner( provider2 );
-		Practitioner mrp = new Practitioner( provider );
-		Immunization measles = new Immunization( prevention );
-		Immunization hpv = new Immunization( prevention2 );
 		Patient patient = new Patient( demographic, configurationManager );
+		
+		// Collect the required resources. 
+		Organization responsible = new Organization( clinic, configurationManager);
+		
+		// The doctor type should be identified in the provider profile. 
+		Practitioner administering = new Practitioner( doctor, configurationManager ); // this could be a nurse or the same as the submitting
+		
+		// A nurse should be identified in the provider profile.
+		Practitioner administering2 = new Practitioner( nurse, configurationManager ); // this second one is the nurse.
+		
+		// this is the MRP or the provider in charge.
+		// this practitioner must be active AND have a working ONEid code.
+		Practitioner submitting = new Practitioner( provider, configurationManager ); 
+		
+		Immunization measles = new Immunization( prevention, configurationManager );
+		Immunization hpv = new Immunization( prevention2, configurationManager );
 	
-		// pass the Sender and Destination through the constructor and the MessageBuilder Class will build the MessageHeader.
+		// pass the configuration manager into a new FHIR Bundle message builder.
+		// the configuration manager will set the Bundle Header automatically. 
 		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( SenderFactory.getSender(), DestinationFactory.getDestination( FhirDestination.DHIR ) );
 		
 		// alternate method for setting the messageHeader reference links.
 		fhirBundleBuilder.addMessageHeaderFocus( patient.getReference() );
-		fhirBundleBuilder.setMessageHeaderSender( clinic.getClinicName() ); // this should come from the Sender object.
-		fhirBundleBuilder.setMessageHeaderAuthor( mrp.getReference() );
-		fhirBundleBuilder.setMessageHeaderResponsible( responsible.getReference() );
+		fhirBundleBuilder.setMessageHeaderSender( clinic.getClinicName() ); // this should come from the Sender object.		
+		fhirBundleBuilder.setMessageHeaderResponsible( responsible.getReference() );	
+		
+		fhirBundleBuilder.setMessageHeaderSubmitter( submitting );
 		
 		measles.getFhirResource().setPatient( patient.getReference() );
-		measles.setAdministeringProvider( mrp.getReference() );
+		measles.setAdministeringProvider( administering );
 		
 		hpv.getFhirResource().setPatient( patient.getReference() );
-		hpv.setAdministeringProvider( nurse.getReference() );
+		hpv.setAdministeringProvider( administering2 );
 		
 		// compile a list of OscarFhirResources.
 		List<OscarFhirResource<?, ?>> resourceList = new ArrayList< OscarFhirResource<?, ?> >();
 		resourceList.add( patient );
 		resourceList.add( responsible );		
-		resourceList.add( nurse );
-		resourceList.add( mrp );
+		resourceList.add( administering );
+		resourceList.add( administering2 );
+		resourceList.add( submitting );
 		resourceList.add( measles );
 		resourceList.add( hpv );
 		

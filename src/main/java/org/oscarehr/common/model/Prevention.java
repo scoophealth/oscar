@@ -24,6 +24,8 @@
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,6 +45,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.oscarehr.caisi_integrator.util.MiscUtils;
 import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
 
 @Entity
@@ -50,6 +53,8 @@ import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
 @NamedQuery(name="Prevention.findAll", query="SELECT p FROM Prevention p")
 public class Prevention extends AbstractModel<Integer> implements Serializable, ImmunizationInterface<Prevention> {
 
+	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id = null;
@@ -398,12 +403,57 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 
 	@Override
 	public String getSite() {
-		return getImmunizationProperty( ImmunizationProperty.location);
+		return getImmunizationProperty( ImmunizationProperty.location );
 	}
 
 	@Override
 	public void setSite(String site) {
 		addPreventionExt( ImmunizationProperty.location, site );
+	}
+
+	@Override
+	public String getVaccineCode() {
+		return getSnomedId();
+	}
+
+	@Override
+	public void setVaccineCode(String vaccineCode) {
+		setSnomedId( vaccineCode );		
+	}
+
+	@Override
+	public boolean isPrimarySource() {
+		return isCompletedExternally();
+	}
+
+	@Override
+	public void setPrimarySource(boolean truefalse) {
+		setCompletedExternally( truefalse );	
+	}
+
+	@Override
+	public java.util.Date getExpiryDate() {
+		String datestring = getImmunizationProperty( ImmunizationProperty.expiryDate );
+		Date date = null;
+		
+		if( datestring != null ) {
+			try {
+				date = dateFormat.parse( datestring );
+			} catch (ParseException e) {
+				MiscUtils.getLogger().warn( "Given Immunization expiry date [" + datestring + "] was not parsable into a Date object" );
+			} 
+		}
+		
+		return date;
+	}
+
+	@Override
+	public void setExpiryDate( java.util.Date expiryDate ) {
+		String datestring = "";
+		if( expiryDate != null ) {
+			datestring = dateFormat.format( expiryDate );
+		} 
+		addPreventionExt( ImmunizationProperty.expiryDate, datestring );		
 	}
 
 }

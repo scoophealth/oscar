@@ -1,4 +1,4 @@
-package org.oscarehr.integration.fhir.resources.constants;
+package org.oscarehr.integration.fhir.interfaces;
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -23,25 +23,31 @@ package org.oscarehr.integration.fhir.resources.constants;
  * Ontario, Canada
  */
 
-/**
- * This class to be created at runtime from a flat file, or database, of parameters.
- *
- */
-public enum FhirDestination {
-
-	// add more locations here.
-	BORN ( "BORN Immunization Data Centre", "https://the.datacentre.com/fhir/immun/data/" ),
-	DHIR ( "DHIR", "https://wsgateway.prod.ehealthontario.ca/API/FHIR/Immunizations/v3/clinician/" );
-		
-	private final String title;
-	private final String endpoint;
+public interface OptionalFHIRAttributeInterface {
 	
-	private FhirDestination( String title, String endpoint ) {
-		this.title = title;
-		this.endpoint = endpoint;
-	}
+	/**
+	 * Each enum can be customized in the inheriting class.
+	 */
+	public enum OptionalFHIRAttribute {}
 	
-	public final String title() { return title; }
-	public final String endpoint() { return endpoint; }
-
+	/**
+	 * Indicates if the passed in parameter is optional 
+	 * true = include this parameter in every message.
+	 * false = do not include this paramter in every message.
+	 */
+	public boolean include( OptionalFHIRAttribute attribute );
+	
+	/**
+	 * The OptionalFHIRAttribute optional selector works inversely in this situation. ie:
+	 * 
+	 * parameter = providerNo
+	 * - default = true
+	 * - optional = true 
+	 * - mandatory = false
+	 * 
+	 * practitionerNo = false : this value is mandatory
+	 * practitionerNo = true : this value is not mandatory
+	 * empty : this value is not mandatory
+	 */
+	public boolean isMandatory( OptionalFHIRAttribute attribute );
 }

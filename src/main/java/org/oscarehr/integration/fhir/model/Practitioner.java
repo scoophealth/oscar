@@ -25,29 +25,38 @@ package org.oscarehr.integration.fhir.model;
 
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.integration.fhir.exception.MandatoryAttributeException;
+import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
+import org.oscarehr.util.MiscUtils;
 import java.util.List;
 import org.hl7.fhir.dstu3.model.Address;
-import org.hl7.fhir.dstu3.model.Identifier.IdentifierUse;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
 
 public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Practitioner, org.oscarehr.common.model.Provider> {
 
+	private enum OptionalFHIRAttribute { practitionerNo, workPhone, qualification, oneid }
+	private enum LicenseType { CPSO, CNO }
+	/**
+	 * Performer: a practitioner whom executed the medical service on a patient
+	 * Submitter: the practitioner whom is most responsible for the patient
+	 */
+	public enum ActorType {performer, sumbitter}
+	
+	private ActorType actor;
 	private Clinic location;
 
 	public Practitioner( Provider provider ) {
 		super( new org.hl7.fhir.dstu3.model.Practitioner(), provider );
 	}
 	
+	public Practitioner( Provider provider, OscarFhirConfigurationManager configurationManager ) {
+		super( new org.hl7.fhir.dstu3.model.Practitioner(), provider, configurationManager );
+	}
+	
 	public Practitioner( org.hl7.fhir.dstu3.model.Practitioner practitioner ) {
 		super(new Provider(), practitioner );
 	}
-
-//	@Override
-//	public List<Resource> getContainedFhirResources() {
-//		return getFhirResource().getContained();
-//	}
-//	
 
 	@Override
 	protected void setId(org.hl7.fhir.dstu3.model.Practitioner fhirResource) {
@@ -56,8 +65,16 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 
 	@Override
 	protected void mapAttributes( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+		
+		//Mandatory
 		setName( fhirResource );
-		setIdentifier( fhirResource );
+				
+		try {
+			setIdentifier( fhirResource );
+		} catch (MandatoryAttributeException e) {
+			MiscUtils.getLogger().error( "Provider number " + getOscarResource().getProviderNo() + " is missing a mandatory attribute value for practitioner number" );
+		}
+
 		setQualification( fhirResource );
 		setWorkPhone( fhirResource );
 	}
@@ -90,40 +107,73 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 		.addGiven( getOscarResource().getFirstName() );
 	}
 	
-	private void setIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
-		
-		//TODO: need to identify the type of provider. ie: nurse or md.
+	/**
+	 * In some programs the Practitioner number will be a hard requirement.
+	 * @throws MandatoryAttributeException 
+	 * 
+	 */
+	private void setIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) throws MandatoryAttributeException {
 		
 		String practitionerNumber = getOscarResource().getPractitionerNo();
 		
-		if( practitionerNumber == null || practitionerNumber.isEmpty() ) {
-			practitionerNumber = getOscarResource().getHsoNo();
+		if( ( practitionerNumber == null || practitionerNumber.isEmpty() ) && isMandatory( OptionalFHIRAttribute.practitionerNo ) ) {
+			throw new MandatoryAttributeException();
+		} 
+		
+		//TODO these codes cannot be hard coded like this. Temporary hack
+		String licensetype = getOscarResource().getPractitionerNoType();
+		String uri = "";
+		
+		if( LicenseType.CNO.name().equals( licensetype ) ) {
+			uri =  "http://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-nurse";
 		}
 		
-		if( practitionerNumber == null || practitionerNumber.isEmpty() ) {
-			practitionerNumber = getOscarResource().getOhipNo();
+		if( LicenseType.CPSO.name().equals( licensetype ) ) {
+			uri = "http://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-physician";
 		}
 
-		if( practitionerNumber != null ) {
-			fhirResource.addIdentifier()
-				.setUse( IdentifierUse.OFFICIAL )
-				.setSystem("http://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-physician")
-				.setValue( practitionerNumber );
-		}
+		fhirResource.addIdentifier()
+			.setSystem( uri )
+			.setValue( practitionerNumber );
+
 	}
 	
 	private void setQualification( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+		
+		//TODO these codes cannot be hard coded like this. Temporary hack
+		String licensetype = getOscarResource().getPractitionerNoType();
+		String designation = "OD";
+		
+		if( LicenseType.CNO.name().equals( licensetype ) ) {
+			designation =  "RN";
+		}
+		
+		if( LicenseType.CPSO.name().equals( licensetype ) ) {
+			designation = "MD";
+		}
+				
 		fhirResource.addQualification().getCode().addCoding()
-			.setSystem("[code-system-local-base]/ca-on-immunizations-practitioner-designation")
-			.setCode("")
-			.setDisplay("Still need to determine how to do.");
+			.setSystem("https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-immunizations-practitioner-designation")
+			.setCode( designation )
+			.setDisplay( designation );
 	}
+	
 	
 	private void setWorkPhone( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
 		fhirResource.addTelecom()
 			.setUse( ContactPointUse.WORK )
 			.setSystem( ContactPointSystem.PHONE )
 			.setValue( getOscarResource().getWorkPhone() );
+	}
+
+	public ActorType getActor() {
+		return actor;
+	}
+
+	public void setActor(ActorType actor) {
+		// TODO still not sure on this.  The provider profile should be able to indicate if 
+		// what kind of actor this is.
+		this.actor = actor;
 	}
 
 }

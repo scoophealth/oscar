@@ -1,7 +1,9 @@
 package org.oscarehr.integration.fhir.resources;
 
 import org.hl7.fhir.dstu3.model.BaseResource;
+// import org.oscarehr.integration.fhir.interfaces.RegionalURI;
 import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
+// import org.oscarehr.integration.fhir.resources.constants.uri.regional.OntarioURI;
 
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -32,14 +34,26 @@ public class FhirConfiguration {
 	private FhirDestination fhirDestination;
 	private BaseResource targetResource;
 	
+	public Object enumValue;
+	
 	public FhirConfiguration( FhirDestination fhirDestination ) {
-		this.fhirDestination = fhirDestination;
+//		this.fhirDestination = fhirDestination;
+//		try {
+//			Class enumClass = Class.forName( OntarioURI.class.getSimpleName() );
+//			enumValue = Enum.valueOf(enumClass, "BASE");
+//		} catch (ClassNotFoundException e) {
+//			// TODO Auto-generated catch block
+//		}
 	}
 
 	public FhirConfiguration( FhirDestination fhirDestination, BaseResource targetResource ) {
 		this.fhirDestination = fhirDestination;
 		this.targetResource = targetResource;
 	}
+	
+//	private static < T extends Enum<T> & RegionalURI > T getRegionalURI( Class<T> clazz ) {
+//		return Class.forName( OntarioURI.class.getSimpleName() );
+//	}
 
 	public FhirDestination getFhirDestination() {
 		return fhirDestination;
@@ -53,8 +67,9 @@ public class FhirConfiguration {
 		return targetResource;
 	}
 
-	public void setTargetResource(BaseResource targetResource) {
-		this.targetResource = targetResource;
-	}
+//	public void setTargetResource(BaseResource targetResource) {
+//		this.targetResource = targetResource;
+//		this.enumClass.
+//	}
 
 }

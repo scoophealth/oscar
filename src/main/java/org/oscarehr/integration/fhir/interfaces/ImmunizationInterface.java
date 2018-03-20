@@ -36,7 +36,7 @@ import java.util.Date;
  */
 public interface ImmunizationInterface<T> {
 	
-	public enum ImmunizationProperty{lot,location,route,dose,comments,neverReason,manufacture,name}
+	public enum ImmunizationProperty{lot,location,route,dose,comments,neverReason,manufacture,name,expiryDate}
 	
 	/**
 	 * Get an immunization data value by ImmunizationProperty key
@@ -75,5 +75,36 @@ public interface ImmunizationInterface<T> {
 	
 	public Date getImmunizationDate();
 	public void setImmunizationDate(Date immunizationDate);
+	
+	/**
+	 * The expiry date of this immunization.  
+	 * Returns NULL if no date is available. 
+	 * Returns a Date object parsed from a string source.
+	 */
+	public Date getExpiryDate();
+	
+	/**
+	 * Set the expiry date of this immunization
+	 * Sets an empty string field if the parameter is null. 
+	 */
+	public void setExpiryDate( Date expiryDate );
+	
+	/**
+	 * Fixed to SNOMED codes only
+	 */
+	public String getVaccineCode();
+	
+	/**
+	 * Use SNOMED codes only
+	 */
+	public void setVaccineCode(String vaccineCode);
+	
+	/**
+	 * True if the Immunization was administered by this clinician at this clinic.
+	 * For now this is hard coded to True as there is no way in Oscar to determine this. 
+	 */
+	public boolean isPrimarySource();
+	
+	public void setPrimarySource(boolean truefalse );
 	
 }

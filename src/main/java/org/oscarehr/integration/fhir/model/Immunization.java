@@ -24,79 +24,94 @@ package org.oscarehr.integration.fhir.model;
  * Ontario, Canada
  */
 
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.hl7.fhir.dstu3.model.BooleanType;
 import org.hl7.fhir.dstu3.model.Immunization.ImmunizationStatus;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
+import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
+import org.oscarehr.integration.fhir.model.Practitioner.ActorType;
 
 /*
-
-CLINICIAN SUBMISSION
-
-{
-  "resourceType": "Immunization",
-  "id": "Immunization02",
-  "status": "completed",
-  "date": "2016-02-14T10:22:00-05:00",
-  "vaccineCode": {
-	"coding": [[
-	  {
-		"system": "http://snomed.info/sct",
-		"code": "61153008",
-		"display": "MMR measles + mumps + rubella unspecified"
-	  }
-	]
+  {doco
+  "resourceType" : "Immunization",
+  // from Resource: id, meta, implicitRules, and language
+  // from DomainResource: text, contained, extension, and modifierExtension
+  "identifier" : [{ Identifier }], // Business identifier
+  "status" : "<code>", // R!  completed | entered-in-error
+  "notGiven" : <boolean>, // R!  Flag for whether immunization was given
+  "vaccineCode" : { CodeableConcept }, // R!  Vaccine product administered
+  "patient" : { Reference(Patient) }, // R!  Who was immunized
+  "encounter" : { Reference(Encounter) }, // Encounter administered as part of
+  "date" : "<dateTime>", // Vaccination administration date
+  "primarySource" : <boolean>, // R!  Indicates context the data was recorded in
+  "reportOrigin" : { CodeableConcept }, // Indicates the source of a secondarily reported record
+  "location" : { Reference(Location) }, // Where vaccination occurred
+  "manufacturer" : { Reference(Organization) }, // Vaccine manufacturer
+  "lotNumber" : "<string>", // Vaccine lot number
+  "expirationDate" : "<date>", // Vaccine expiration date
+  "site" : { CodeableConcept }, // Body site vaccine  was administered
+  "route" : { CodeableConcept }, // How vaccine entered body
+  "doseQuantity" : { Quantity(SimpleQuantity) }, // Amount of vaccine administered
+  "practitioner" : [{ // Who performed event
+    "role" : { CodeableConcept }, // What type of performance was done
+    "actor" : { Reference(Practitioner) } // R!  Individual who was performing
+  }],
+  "note" : [{ Annotation }], // Vaccination notes
+  "explanation" : { // Administration/non-administration reasons
+    "reason" : [{ CodeableConcept }], // Why immunization occurred
+    "reasonNotGiven" : [{ CodeableConcept }] // Why immunization did not occur
   },
-  "patient": {
-	"reference": "Patient/Patient1"
-  },
-  "wasNotGiven": false,
-  "reported": false,
-  "lotNumber": "AAJN11K",
-  "expirationDate": "2017-02-15",
-  "site": {
-
-  },
-  "route": {
-
-  },
-  "doseQuantity": {
-
-  }
+  "reaction" : [{ // Details of a reaction that follows immunization
+    "date" : "<dateTime>", // When reaction started
+    "detail" : { Reference(Observation) }, // Additional information on reaction
+    "reported" : <boolean> // Indicates self-reported reaction
+  }],
+  "vaccinationProtocol" : [{ // What protocol was followed
+    "doseSequence" : "<positiveInt>", // Dose number within series
+    "description" : "<string>", // Details of vaccine protocol
+    "authority" : { Reference(Organization) }, // Who is responsible for protocol
+    "series" : "<string>", // Name of vaccine series
+    "seriesDoses" : "<positiveInt>", // Recommended number of doses for immunity
+    "targetDisease" : [{ CodeableConcept }], // R!  Disease immunized against
+    "doseStatus" : { CodeableConcept }, // R!  Indicates if dose counts towards immunity
+    "doseStatusReason" : { CodeableConcept } // Why dose does (not) count
+  }]
 }
-
  */
 
+/**
+ * 
+ * constraint: Prevention must implement the ImmunizationInterface.
+ *
+ */
 public class Immunization 
 extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.common.model.Prevention > {
 
+	private enum OptionalFHIRAttribute { annotation }
+	
 	private static final Pattern measurementValuePattern = Pattern.compile("^([0-9])*(\\.)*([0-9])*");
 
 	public Immunization( ImmunizationInterface<Prevention> from ){
 		super( new org.hl7.fhir.dstu3.model.Immunization(), (Prevention) from );
+	}
+	
+	public Immunization( ImmunizationInterface<Prevention> from,  OscarFhirConfigurationManager configurationManager ){
+		super( new org.hl7.fhir.dstu3.model.Immunization(), (Prevention) from, configurationManager );
 	}
 
 	public Immunization( org.hl7.fhir.dstu3.model.Immunization from ) {
 		super( new Prevention(), from );
 	}
 
-//	@Override
-//	public List<Resource> getContainedFhirResources() {
-//		return getFhirResource().getContained();
-//	}
-
 	@Override
 	protected void mapAttributes( org.oscarehr.common.model.Prevention prevention ) {
-		// constraint: Prevention must implement the ImmunizationInterface.
-		setStatus( prevention );
 		setAdministrationDate( prevention );
 		setVaccineCode( prevention );
-		setPatientReference( prevention );
 		setRefused( prevention );
-		setReported( prevention );
 		setLotNumber( prevention );
 		setExpirationDate( prevention );
 		setSite( prevention );
@@ -107,21 +122,35 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 
 	@Override
 	protected void mapAttributes(org.hl7.fhir.dstu3.model.Immunization immunization ) {
-		// constraint: Prevention must implement the ImmunizationInterface.
+		
+		//mandatory
 		setStatus( immunization );
 		setAdministrationDate( immunization );
 		setVaccineCode( immunization );
-		setPatientReference( immunization );
 		setRefused( immunization );
-		setReported( immunization );
 		setLotNumber( immunization );
 		setExpirationDate( immunization );
 		setSite( immunization );
 		setDose( immunization );
 		setRoute( immunization );
-		setAnnotation( immunization );
 		setReason( immunization );
 		setIsPrimarySource( immunization );
+		
+		// optional
+		if( include( OptionalFHIRAttribute.annotation ) ) {
+			setAnnotation( immunization );
+		}
+
+		if( ! getOscarResource().isPrimarySource() ) {
+			setReportOrigin( immunization );
+		}
+	}
+	
+	/**
+	 * Returns the Oscar patient Id for whom this immunization was for.
+	 */
+	public int getDemographicNo() {
+		return getOscarResource().getDemographicId();
 	}
 
 	@Override
@@ -149,40 +178,38 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 		immunization.setStatus( immunizationStatus );
 	}
 
-	private void setStatus(  ImmunizationInterface<Prevention> prevention ) {
-		//TODO: how should all the various status' be set in Oscar?  ie: isNever, isRefused, isDeleted, isNeverReason
-	}
-
+	/**
+	 * The extension URI for the administration date indicates if the immunization date was 
+	 * estimated.
+	 * It is assumed that the date is estimated if the vaccine was done externally.
+	 */
 	private void setAdministrationDate( org.hl7.fhir.dstu3.model.Immunization immunization ){
-		immunization.setDate( getOscarResource().getPreventionDate() );
+
+		BooleanType estimated = new BooleanType();
+		estimated.setValue( getOscarResource().isCompletedExternally() );
+			
+		immunization.setDate( getOscarResource().getPreventionDate() )
+			.addExtension()
+			.setUrl("https://ehealthontario.ca/API/FHIR/StructureDefinition/ca-on-extension")
+			.setValue( estimated );		
 	}
 
 	private void setAdministrationDate( ImmunizationInterface<Prevention> prevention ){
 		prevention.setImmunizationDate( getFhirResource().getDate() );
 	}
 
+	/**
+	 * SNOMED is a fixed (static) system in Oscar.
+	 */
 	private void setVaccineCode( org.hl7.fhir.dstu3.model.Immunization immunization ){
 		immunization.getVaccineCode().addCoding()
-		.setSystem("http://hl7.org/fhir/sid/cvx")
-		.setCode( getOscarResource().getImmunizationType() )
+		.setSystem("http://snomed.info/sct")
+		.setCode( getOscarResource().getVaccineCode() )
 		.setDisplay( getOscarResource().getManufacture() + " " + getOscarResource().getName() );
 	}
 
 	private void setVaccineCode( ImmunizationInterface<Prevention> prevention ){
-		//TODO: for now, it is unknown how Oscar will handle incoming immunization codes. Suggested is SNOMED so a translation 
-		// table will need to be built.
-	}
-
-	private void setPatientReference( org.hl7.fhir.dstu3.model.Immunization immunization ){
-		//TODO: this will be the URI that references back to the patient. This is different when the Patient is contained.
-		// somehow this will include the demographic number
-		Reference reference = new Reference();
-		reference.setDisplay( getOscarResource().getDemographicId() + "");
-		immunization.setPatient( reference );
-	}
-
-	private void setPatientReference(  ImmunizationInterface<Prevention> prevention ){
-		//TODO: this will be the demographic number. Not sure that it can be set here.
+		prevention.setVaccineCode( getFhirResource().getVaccineCode().getCodingFirstRep().getCode() );
 	}
 
 	private void setRefused( org.hl7.fhir.dstu3.model.Immunization immunization ){
@@ -191,14 +218,6 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 
 	private void setRefused(  ImmunizationInterface<Prevention> prevention ){
 		prevention.setImmunizationRefused( getFhirResource().getNotGiven() );
-	}
-
-	private void setReported( org.hl7.fhir.dstu3.model.Immunization immunization ){
-		//TODO: will need to check what determines if the immunization is reported or not.
-	}
-
-	private void setReported(  ImmunizationInterface<Prevention> prevention ){
-		//TODO: will need to check what determines if the immunization is reported or not.
 	}
 
 	private void setLotNumber( org.hl7.fhir.dstu3.model.Immunization immunization ){
@@ -210,16 +229,18 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 	}
 
 	private void setExpirationDate( org.hl7.fhir.dstu3.model.Immunization immunization ){
-		//TODO: lot expiration is not provided in Oscar's Prevention model. This may need to be referenced
+		immunization.setExpirationDate(  getOscarResource().getExpiryDate() );
 	}
 
 	private void setExpirationDate(  ImmunizationInterface<Prevention> prevention ){
-		//TODO: lot expiration is not provided in Oscar's Prevention model. This may need to be referenced
+		prevention.setExpiryDate( getFhirResource().getExpirationDate() );
 	}
 
+	/**
+	 * This is the body part - or location - the immunization was given.
+	 */
 	private void setSite( org.hl7.fhir.dstu3.model.Immunization immunization ){
-		immunization.getSite().setText(getOscarResource().getSite()).addCoding()
-		.setSystem("http://hl7.org/fhir/v3/ActSite");
+		immunization.getSite().setText( getOscarResource().getSite() );
 	}
 
 	private void setSite(  ImmunizationInterface<Prevention> prevention ){
@@ -247,7 +268,7 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 
 	private void setRoute( org.hl7.fhir.dstu3.model.Immunization immunization ){
 		immunization.getRoute().addCoding()
-		.setSystem("http://hl7.org/fhir/v3/RouteOfAdministration")
+		.setSystem("http://snomed.info/sct")
 		.setCode( getOscarResource().getRoute() )
 		.setDisplay( getOscarResource().getRoute() );		
 	}
@@ -272,27 +293,64 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 		prevention.setComment( note.toString() );
 	}
 	
+	/**
+	 * For now the immunization reason is hard coded to routine.
+	 */
 	private void setReason( org.hl7.fhir.dstu3.model.Immunization immunization ) {
 		immunization.getExplanation().addReason().addCoding()
-			.setSystem("[code-system-local-base]/ca-on-immunizations-reason")
+			.setSystem("https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-immunizations-reason")
 			.setCode( "routine" )
 			.setDisplay( "Routine" );
 	}
 	
-	/**
-	 * True if the Immunization was administered by this clinician at this clinic.
-	 * For now this is hard coded to True as there is no way in Oscar to determine this. 
-	 */
+
 	private void setIsPrimarySource( org.hl7.fhir.dstu3.model.Immunization immunization ) {	
-		immunization.setPrimarySource( Boolean.TRUE );
+		immunization.setPrimarySource( getOscarResource().isPrimarySource() );
 	}
 	
-	public void setAdministeringProvider( Reference reference ) {
-		getFhirResource().addPractitioner().setActor( reference )
-		.getRole().addCoding()
-			.setSystem("http://hl7.org/fhir/v2/0443")
-			.setCode("AP")
-			.setDisplay("AdministeringProvider");
+	/**
+	 * Where was the immunization given if this is not the primary source. 
+	 * Not very detailed in Oscar, so for now, unknown is given.
+	 */
+	private void setReportOrigin( org.hl7.fhir.dstu3.model.Immunization immunization ) {		
+		immunization.getReportOrigin().addCoding()
+			.setSystem("http://hl7.org/fhir/immunization-origin")
+			.setCode("provider")
+			.setDisplay("other provider");		
+	}
+	
+	/**
+	 * All practitioners added here are ALWAYS the administering provider.
+	 * This is the provider that gave the immunization.
+	 */
+	public void setAdministeringProvider( org.oscarehr.integration.fhir.model.Practitioner provider ) {
+		
+		provider.setActor( ActorType.performer );
+		
+		// TODO this is a hack and will not stay like this. Providers need to be extended as actors. 
+		provider.getFhirResource().setTelecom(null);
+		
+		getFhirResource().addPractitioner()
+			.setActor( provider.getReference() )
+			.getRole().addCoding()
+				.setSystem("http://hl7.org/fhir/v2/0443")
+				.setCode("AP")
+				.setDisplay("AdministeringProvider");
+	}
+	
+	/**
+	 * This will add a reference link to any involved practitioner. 
+	 * Not to be confused with administering provider.
+	 */
+	public void setPractitioner( Reference reference ) {
+		getFhirResource().addPractitioner().setActor( reference );
+	}
+	
+	/**
+	 * This is a reference link to whom the immunization was given to. 
+	 */
+	public void setPatientReference( Reference reference ) {
+		getFhirResource().setPatient( reference );
 	}
 
 }

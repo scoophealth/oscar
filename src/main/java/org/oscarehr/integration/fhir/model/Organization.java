@@ -29,7 +29,6 @@ package org.oscarehr.integration.fhir.model;
 import java.util.List;
 
 import org.hl7.fhir.dstu3.model.Address;
-import org.hl7.fhir.dstu3.model.Identifier.IdentifierUse;
 import org.hl7.fhir.dstu3.model.Address.AddressUse;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem;
@@ -37,46 +36,30 @@ import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Contact;
 import org.oscarehr.common.model.ProfessionalContact;
+import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.utils.MiscUtils;
 
 /*
-{
-	  "resourceType": "Organization",
-	  "id": "OrgSchool1",
-	  "identifier": [
-	    {
-	      "system": "[id-system-local-base]/ca-on-panorama-school-id",
-	      "value": "10001"
-	    }
-	  ],
-	  "name": "Dublin Heights Elementary and Middle School"
-	},
-	{
-	  "resourceType": "Organization",
-	  "id": "OrgPHU1",
-	  "identifier": [
-	    {
-	      "system": "[id-system-local-base]/ca-on-panorama-phu-id",
-	      "value": "55"
-	    }
-	  ],
-	  "name": "Toronto Public Health"
-	}
-*/
-
-/*
-    {
-      "resourceType": "Organization",
-      "id": "Clinic1",
-      "identifier": [
-        {
-          "system": "urn:ietf:rfc:3986",
-          "value": "CLINICTEST"
-        }
-      ],
-      "name": "Family Health Team"
-    }
-
+ *  {doco
+  "resourceType" : "Organization",
+  // from Resource: id, meta, implicitRules, and language
+  // from DomainResource: text, contained, extension, and modifierExtension
+  "identifier" : [{ Identifier }], // C? Identifies this organization  across multiple systems
+  "active" : <boolean>, // Whether the organization's record is still in active use
+  "type" : [{ CodeableConcept }], // Kind of organization
+  "name" : "<string>", // C? Name used for the organization
+  "alias" : ["<string>"], // A list of alternate names that the organization is known as, or was known as in the past
+  "telecom" : [{ ContactPoint }], // C? A contact detail for the organization
+  "address" : [{ Address }], // C? An address for the organization
+  "partOf" : { Reference(Organization) }, // The organization of which this organization forms a part
+  "contact" : [{ // Contact for the organization for a certain purpose
+    "purpose" : { CodeableConcept }, // The type of contact
+    "name" : { HumanName }, // A name associated with the contact
+    "telecom" : [{ ContactPoint }], // Contact details (telephone, email, etc.)  for a contact
+    "address" : { Address } // Visiting or postal addresses for the contact
+  }],
+  "endpoint" : [{ Reference(Endpoint) }] // Technical endpoints providing access to services operated for the organization
+}
  */
 
 /**
@@ -91,10 +74,21 @@ import org.oscarehr.integration.fhir.utils.MiscUtils;
 public class Organization 
 	extends OscarFhirResource< org.hl7.fhir.dstu3.model.Organization, org.oscarehr.common.model.Contact > {
 
+	/*
+	 * These are the FHIR Resource attributes that are optional in this class. 
+	 * They can be blocked by creating a new filter in  that feeds into the ResourceAttributeFilter class.
+	 * The default is to always to include. 
+	 */
+	private enum OptionalFHIRAttribute { address, telecom, fax, oranizationName } 
+	
 	private org.oscarehr.common.model.Clinic clinic;
 
 	public Organization( org.oscarehr.common.model.Contact contact ) {
 		super( new org.hl7.fhir.dstu3.model.Organization(), contact );
+	}
+	
+	public Organization( org.oscarehr.common.model.Contact contact, OscarFhirConfigurationManager configurationManager  ) {
+		super( new org.hl7.fhir.dstu3.model.Organization(), contact, configurationManager );
 	}
 	
 	public Organization( org.hl7.fhir.dstu3.model.Organization organization ) {
@@ -103,6 +97,11 @@ public class Organization
 	
 	public Organization( org.oscarehr.common.model.Clinic clinic ) {
 		super();
+		setClinic( clinic );
+	}
+	
+	public Organization( org.oscarehr.common.model.Clinic clinic, OscarFhirConfigurationManager configurationManager ) {
+		super(configurationManager);
 		setClinic( clinic );
 	}
 
@@ -158,10 +157,22 @@ public class Organization
 
 	@Override
 	protected void mapAttributes(org.hl7.fhir.dstu3.model.Organization fhirResource ) {
-		setOranizationName( fhirResource );		
-		setAddress( fhirResource );
-		setTelecom( fhirResource );
+		// mandatory
 		setIdentifier( fhirResource );
+		
+		//optional
+		if( include( OptionalFHIRAttribute.oranizationName ) ) {
+			setOranizationName( fhirResource );		
+		}
+		
+		if( include( OptionalFHIRAttribute.address ) ) {
+			setAddress( fhirResource );
+		}
+		
+		if( include( OptionalFHIRAttribute.telecom ) ) {	
+			setTelecom( fhirResource );
+		}
+			
 	}
 
 	@Override
@@ -171,11 +182,6 @@ public class Organization
 		setTelecom( oscarResource );
 		setIdentifier( oscarResource );
 	}
-
-//	@Override
-//	public List<Resource> getContainedFhirResources() {
-//		return getFhirResource().getContained();
-//	}
 
 	private void setOranizationName( org.hl7.fhir.dstu3.model.Organization fhirResource ) {
 		fhirResource.setName( getOscarResource().getAddress() );
@@ -207,9 +213,11 @@ public class Organization
 			.setSystem( ContactPointSystem.PHONE )
 			.setValue( getOscarResource().getWorkPhone() );
 		
-		fhirResource.addTelecom()
-			.setSystem( ContactPointSystem.FAX )
-			.setValue( getOscarResource().getFax() );
+		if( include( OptionalFHIRAttribute.fax ) ) {	
+			fhirResource.addTelecom()
+				.setSystem( ContactPointSystem.FAX )
+				.setValue( getOscarResource().getFax() );
+		}
 	}
 	
 	private void setTelecom( Contact oscarResource ) {		
@@ -221,9 +229,8 @@ public class Organization
 	private void setIdentifier( org.hl7.fhir.dstu3.model.Organization fhirResource ) {
 		if( getOscarResource() instanceof ProfessionalContact ) {
 			fhirResource.addIdentifier()
-				.setUse( IdentifierUse.OFFICIAL )
-				.setSystem( "urn:ietf:rfc:3986" )
-				.setValue( "Test Clinic's Official Registry ID" );
+				.setSystem( "https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-panorama-phu-id" )
+				.setValue( "PHUID" );
 		}
 	}
 	

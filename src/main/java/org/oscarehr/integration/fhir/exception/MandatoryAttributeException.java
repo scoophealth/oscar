@@ -1,4 +1,4 @@
-package org.oscarehr.integration.fhir.resources.constants;
+package org.oscarehr.integration.fhir.exception;
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -23,25 +23,10 @@ package org.oscarehr.integration.fhir.resources.constants;
  * Ontario, Canada
  */
 
-/**
- * This class to be created at runtime from a flat file, or database, of parameters.
- *
- */
-public enum FhirDestination {
 
-	// add more locations here.
-	BORN ( "BORN Immunization Data Centre", "https://the.datacentre.com/fhir/immun/data/" ),
-	DHIR ( "DHIR", "https://wsgateway.prod.ehealthontario.ca/API/FHIR/Immunizations/v3/clinician/" );
-		
-	private final String title;
-	private final String endpoint;
-	
-	private FhirDestination( String title, String endpoint ) {
-		this.title = title;
-		this.endpoint = endpoint;
+public class MandatoryAttributeException extends Exception {
+
+	public MandatoryAttributeException() {
+		super( "This attribute is mandatory. It was found to be null or empty." );
 	}
-	
-	public final String title() { return title; }
-	public final String endpoint() { return endpoint; }
-
 }

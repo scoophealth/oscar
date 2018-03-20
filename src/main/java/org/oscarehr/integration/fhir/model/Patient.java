@@ -151,7 +151,7 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 		}
 		
 		if( include( OptionalFHIRAttribute.nameExtension ) ) {
-			humanName.getExtensionFirstRep().setUrl("http://hl7.org/fhir/StructureDefinition/iso21090-EN-qualifier");
+			humanName.getExtensionFirstRep().setUrl( "http://hl7.org/fhir/StructureDefinition/iso21090-EN-qualifier" );
 		}
 		
 		patient.addName( humanName );
