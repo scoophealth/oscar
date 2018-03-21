@@ -439,7 +439,7 @@ font-size:20px
 	<script src="../library/angular-ui-router.js"></script>
  	<script src="../library/angular-resource.min.js"></script>
  	
- 	<script src="../library/ui-bootstrap-tpls-0.11.0.js"></script>
+ 	<script src="../library/ui-bootstrap-tpls-2.5.0.js"></script>
  	<script src="../library/pym.js"></script>
  	
  	<script src="../library/ng-infinite-scroll.min.js"></script>
