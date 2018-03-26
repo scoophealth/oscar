@@ -4,7 +4,7 @@ const RxComponent = {
 
   },
   templateUrl: 'record/rx/rx.template.jsp',
-  controller: ['$stateParams','$state','$log','summaryService','rxService',function($stateParams,$state,$log,summaryService,rxService) {
+  controller: ['$stateParams','$state','$log','summaryService','rxService','$uibModal',function($stateParams,$state,$log,summaryService,rxService,$uibModal) {
   	rxComp = this;
 
  	rxComp.$onInit = function(){
@@ -122,8 +122,23 @@ const RxComponent = {
  		
  		if(resp.success){
  			getMeds();
- 			alert("Rx Print modal will be here");
- 			rxComp.toRxList = [];
+ 			var modalInstance = $uibModal.open({
+ 				component: 'rxPrintComponent',
+ 				size: 'lg',
+ 				resolve: {
+ 				scriptId: function (){
+ 						return resp.prescription.scriptId;
+ 					}
+ 				}
+ 			});
+ 			
+ 			modalInstance.result.then(function (selectedItem) {
+ 				console.log(selectedItem);
+ 				rxComp.toRxList = [];
+ 			}, function () {
+ 				console.log('Modal dismissed at: ' + new Date());
+ 			});
+ 			
  		}else{
  			alert("Error Prescribing" +resp.drugs)
  		}

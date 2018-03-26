@@ -92,7 +92,7 @@ public class PrescriptionConverter extends AbstractConverter<Prescription, Presc
         PrescriptionTo1 t = new PrescriptionTo1();
 
         try{
-
+        		t.setScriptId(p.getId());
             t.setDemographicNo(p.getDemographicId());
             t.setProviderNo(Integer.parseInt(p.getProviderNo()));
             t.setDatePrescribed(p.getDatePrescribed());

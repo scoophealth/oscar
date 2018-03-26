@@ -474,6 +474,7 @@ font-size:20px
 	<script src="record/rx/rx.component.js"></script>
 	<script src="record/rx/rxModel.js"></script>
 	<script src="record/rx/search/medsearch.component.js"></script>
+	<script src="record/rx/print/print.component.js"></script>
 	<script src="app.js"></script>
 	
 	<script src="oscarController.js"></script>
