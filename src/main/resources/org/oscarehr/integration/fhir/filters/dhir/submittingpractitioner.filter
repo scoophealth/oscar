@@ -1,7 +1,8 @@
 ## OptionalFHIRAttribute { telecom, workPhone, qualification, oneid, email, otherphone }
+practitionerNo=false
+qualification=false
+oneid=true
 otherphone=false
-email=true
-oneid=false
 
 ## MandatoryFHIRAttribute { practitionerNo }
 practitionerNo=true

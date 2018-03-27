@@ -40,8 +40,6 @@ import org.hl7.fhir.dstu3.model.Resource;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.model.Destination;
 import org.oscarehr.integration.fhir.model.OscarFhirResource;
-import org.oscarehr.integration.fhir.model.Practitioner;
-import org.oscarehr.integration.fhir.model.Practitioner.ActorType;
 import org.oscarehr.integration.fhir.model.Sender;
 import org.oscarehr.util.MiscUtils;
 
@@ -111,7 +109,7 @@ public abstract class FhirMessageBuilder {
 		this.wrapper = wrapper;
 	}
 
-	public static FhirContext getFhirContext() {
+	public static final FhirContext getFhirContext() {
 		return fhirContext;
 	}
 	public static void setFhirContext(FhirContext fhirContext) {
@@ -258,22 +256,8 @@ public abstract class FhirMessageBuilder {
 	 * The Author reference link will be set to this Resource.
 	 * @param reference
 	 */
-	public void setMessageHeaderSubmitter( Practitioner practitioner ) {
-		
-		if( getMessageHeader() != null ) {
-			
-			practitioner.setActor( ActorType.sumbitter );
-			
-			//TODO change this so its not a complete hack.
-			// the qualification info is optional for submitters 
-			practitioner.getFhirResource().setQualification(null);
-			
-			// add the resource to the bundle
-			addResource(practitioner);
-		
-			// set the reference link in the Author attribute of the header.
-			setMessageHeaderAuthor( practitioner.getReference() );
-		}
+	public void setMessageHeaderSubmitter(  Reference reference ) {
+		setMessageHeaderAuthor( reference );
 	}
 
 	/**

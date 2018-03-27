@@ -23,13 +23,10 @@ package org.oscarehr.integration.fhir.resources.constants;
  * Ontario, Canada
  */
 
-/**
- * This class to be created at runtime from a flat file, or database, of parameters.
- *
- */
+
 public enum FhirDestination {
 
-	// add more locations here.
+	// add more locations here in this format: ID (["Title or Description"], ["endpoint"] )
 	BORN ( "BORN Immunization Data Centre", "https://the.datacentre.com/fhir/immun/data/" ),
 	DHIR ( "DHIR", "https://wsgateway.prod.ehealthontario.ca/API/FHIR/Immunizations/v3/clinician/" );
 		

@@ -98,15 +98,15 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 	
 	protected void setFhirResource( FHIR fhirResource ) {		
 		if( configurationManager != null ) {
-			configurationManager.setTargetResource( fhirResource );
-		}
-		
-		if( this.oscarResource != null ) {
-			mapAttributes( fhirResource );
+			configurationManager.setTargetResource( this );
 		}
 		
 		setId( fhirResource );
 		this.fhirResource = fhirResource;
+		
+		if( this.oscarResource != null ) {
+			mapAttributes( fhirResource );
+		}
 	}
 
 	public OSCAR getOscarResource() {
@@ -176,6 +176,8 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 	}
 	
 
+	//TODO implement these 
+	
 	public boolean include( Enum<?> attribute ) {
 		boolean pass = Boolean.TRUE;
 		if( getResourceAttributeFilter() != null ) {
@@ -188,7 +190,7 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 	public boolean isMandatory( Enum<?> attribute ) {
 		boolean manditory = Boolean.FALSE;
 		if( getResourceAttributeFilter() != null ) {
-			manditory = ! getResourceAttributeFilter().includeAttribute( attribute.name() );
+			manditory = getResourceAttributeFilter().includeAttribute( attribute.name() );
 		}
 		return manditory;
 	}

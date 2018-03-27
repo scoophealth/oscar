@@ -25,7 +25,7 @@ package org.oscarehr.integration.fhir.builder;
 
 import java.io.File;
 import java.net.URL;
-import org.hl7.fhir.dstu3.model.BaseResource;
+import org.oscarehr.integration.fhir.model.OscarFhirResource;
 import org.oscarehr.integration.fhir.resources.ResourceAttributeFilter;
 import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
 
@@ -46,7 +46,7 @@ public final class ResourceAttributeFilterFactory {
 	 * getFilter("/born/Patient.filter")
 	 * 
 	 */
-	public static ResourceAttributeFilter getFilter( FhirDestination destination, BaseResource target) {
+	public static ResourceAttributeFilter getFilter( FhirDestination destination, OscarFhirResource<?,?> target) {
 		return getFilter( destination.name().toLowerCase(), target.getClass().getSimpleName().toLowerCase() );
 	}
 	

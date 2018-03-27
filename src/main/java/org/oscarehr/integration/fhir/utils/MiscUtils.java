@@ -136,9 +136,6 @@ public final class MiscUtils {
 		}
 		
 		return id;
-
 	}
-	
-
 	
 }

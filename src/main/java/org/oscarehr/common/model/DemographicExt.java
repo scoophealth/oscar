@@ -29,9 +29,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -59,6 +62,14 @@ public class DemographicExt extends AbstractModel<Integer> implements Serializab
     @Temporal(TemporalType.TIMESTAMP)
     private java.util.Date dateCreated;
     private boolean hidden;
+    
+    public enum DemographicProperty { PHU, EmploymentStatus, HasPrimaryCarePhyscian, 
+    	informedConsent, privacyConsent, usSigned, fNationCom, statusNum, area, ethnicity, 
+    	cytolNum, wPhoneExt, hPhoneExt, demo_cell, phoneComment }
+    
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="demographic_no", insertable = false, updatable = false )
+	private Demographic demographic;
 	
 	@PrePersist
 	@PreUpdate
@@ -244,7 +255,15 @@ public class DemographicExt extends AbstractModel<Integer> implements Serializab
         return this.hashCode;
     }
 
-    public String toString () {
+    public Demographic getDemographic() {
+		return demographic;
+	}
+
+	public void setDemographic(Demographic demographic) {
+		this.demographic = demographic;
+	}
+
+	public String toString () {
         return super.toString();
     }
 }

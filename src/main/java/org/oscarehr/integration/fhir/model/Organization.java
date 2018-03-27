@@ -32,6 +32,7 @@ import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.Address.AddressUse;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem;
+import org.hl7.fhir.dstu3.model.Identifier;
 import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Contact;
@@ -101,7 +102,7 @@ public class Organization
 	}
 	
 	public Organization( org.oscarehr.common.model.Clinic clinic, OscarFhirConfigurationManager configurationManager ) {
-		super(configurationManager);
+		super( configurationManager );
 		setClinic( clinic );
 	}
 
@@ -158,7 +159,7 @@ public class Organization
 	@Override
 	protected void mapAttributes(org.hl7.fhir.dstu3.model.Organization fhirResource ) {
 		// mandatory
-		setIdentifier( fhirResource );
+		setFHIRIdentifier();
 		
 		//optional
 		if( include( OptionalFHIRAttribute.oranizationName ) ) {
@@ -226,16 +227,41 @@ public class Organization
 		oscarResource.setFax( MiscUtils.getFhirFax( contactPointList ) );
 	}
 
-	private void setIdentifier( org.hl7.fhir.dstu3.model.Organization fhirResource ) {
+	/**
+	 * Sets the official unique identifier that is referenced - and relative to - external resources
+	 * This is the default identifier.  This is overriden by alternative identifiers set after instantiation. 
+	 */
+	private void setFHIRIdentifier() {
+		Identifier identifier = new Identifier();
 		if( getOscarResource() instanceof ProfessionalContact ) {
-			fhirResource.addIdentifier()
-				.setSystem( "https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-panorama-phu-id" )
-				.setValue( "PHUID" );
+			identifier.setSystem("").setValue( "" );
 		}
+		setIdentifier( identifier );
 	}
 	
+	private void setIdentifier( Identifier identifier ) {
+		if( getFhirResource().getIdentifier() != null ) {
+			getFhirResource().getIdentifier().clear();
+		}	
+		getFhirResource().addIdentifier( identifier );
+	}
+
 	private void setIdentifier( Contact oscarResource ) {
 		( (ProfessionalContact) oscarResource).setCpso( MiscUtils.getFhirOfficialIdentifier( getFhirResource().getIdentifier() ));
+	}
+	
+	/**
+	 * Set a Public Health Unit Id as this organization's identifier.
+	 * 
+	 * This is mainly used for setting the identifier for ONTARIO's PHU ids. 
+	 * Each patient in Oscar is assinged a specific PHU ID according to the patient's location in the province.
+	 * Each Clinic is assigned a specific PHU ID according to the clinic's location in the province.
+	 * 
+	 * Please create an overhead for identifiers that have a different nomenclature, yet behave the same way.
+	 */
+	public void setOrganizationPHUID( String phuId ) {
+		Identifier identifier = new Identifier();
+		identifier.setSystem( "https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-panorama-phu-id" ).setValue( phuId );
 	}
 
 }

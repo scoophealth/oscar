@@ -24,21 +24,21 @@ package org.oscarehr.integration.fhir.manager;
  */
 
 import org.apache.log4j.Logger;
-import org.hl7.fhir.dstu3.model.BaseResource;
 import org.oscarehr.integration.fhir.builder.DestinationFactory;
 import org.oscarehr.integration.fhir.builder.ResourceAttributeFilterFactory;
 import org.oscarehr.integration.fhir.model.Destination;
+import org.oscarehr.integration.fhir.model.OscarFhirResource;
 import org.oscarehr.integration.fhir.resources.FhirConfiguration;
 import org.oscarehr.integration.fhir.resources.ResourceAttributeFilter;
 import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
 import org.oscarehr.util.MiscUtils;
 
-public class OscarFhirConfigurationManager {
+public final class OscarFhirConfigurationManager {
 
 	private static Logger logger = MiscUtils.getLogger();
 	
 	private FhirDestination fhirDestination;
-	private BaseResource targetResource;
+	private OscarFhirResource<?,?> targetResource;
 	private Destination destination;
 	private ResourceAttributeFilter resourceAttributeFilter;
 	private FhirConfiguration fhirConfiguration;
@@ -51,11 +51,11 @@ public class OscarFhirConfigurationManager {
 		this.destination = DestinationFactory.getDestination( fhirDestination );
 	}
 	
-	public BaseResource getTargetResource() {
+	public OscarFhirResource<?,?> getTargetResource() {
 		return targetResource;
 	}
 	
-	public void setTargetResource( BaseResource targetResource ) {
+	public void setTargetResource( OscarFhirResource<?,?> targetResource ) {
 		
 		logger.info( "Setting resource attribute filter for " + targetResource.getClass().getName() );
 		

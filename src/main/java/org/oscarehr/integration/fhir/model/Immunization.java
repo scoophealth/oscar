@@ -33,7 +33,6 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
-import org.oscarehr.integration.fhir.model.Practitioner.ActorType;
 
 /*
   {doco
@@ -121,7 +120,7 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 	}
 
 	@Override
-	protected void mapAttributes(org.hl7.fhir.dstu3.model.Immunization immunization ) {
+	protected final void mapAttributes(org.hl7.fhir.dstu3.model.Immunization immunization ) {
 		
 		//mandatory
 		setStatus( immunization );
@@ -154,7 +153,7 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 	}
 
 	@Override
-	protected void setId( org.hl7.fhir.dstu3.model.Immunization fhirResource ) {
+	protected final void setId( org.hl7.fhir.dstu3.model.Immunization fhirResource ) {
 		if( getOscarResource() != null && getOscarResource().getId() != null ) {
 			fhirResource.setId( getOscarResource().getId() + "" );
 		} else {
@@ -303,7 +302,6 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 			.setDisplay( "Routine" );
 	}
 	
-
 	private void setIsPrimarySource( org.hl7.fhir.dstu3.model.Immunization immunization ) {	
 		immunization.setPrimarySource( getOscarResource().isPrimarySource() );
 	}
@@ -323,15 +321,9 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 	 * All practitioners added here are ALWAYS the administering provider.
 	 * This is the provider that gave the immunization.
 	 */
-	public void setAdministeringProvider( org.oscarehr.integration.fhir.model.Practitioner provider ) {
-		
-		provider.setActor( ActorType.performer );
-		
-		// TODO this is a hack and will not stay like this. Providers need to be extended as actors. 
-		provider.getFhirResource().setTelecom(null);
-		
+	public void addPerformingPractitioner( Reference reference ) {
 		getFhirResource().addPractitioner()
-			.setActor( provider.getReference() )
+			.setActor( reference )
 			.getRole().addCoding()
 				.setSystem("http://hl7.org/fhir/v2/0443")
 				.setCode("AP")
@@ -342,7 +334,7 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 	 * This will add a reference link to any involved practitioner. 
 	 * Not to be confused with administering provider.
 	 */
-	public void setPractitioner( Reference reference ) {
+	public void addPractitioner( Reference reference ) {
 		getFhirResource().addPractitioner().setActor( reference );
 	}
 	

@@ -45,7 +45,9 @@ import org.oscarehr.integration.fhir.model.Immunization;
 import org.oscarehr.integration.fhir.model.Organization;
 import org.oscarehr.integration.fhir.model.OscarFhirResource;
 import org.oscarehr.integration.fhir.model.Patient;
+import org.oscarehr.integration.fhir.model.PerformingPractitioner;
 import org.oscarehr.integration.fhir.model.Practitioner;
+import org.oscarehr.integration.fhir.model.SubmittingPractitioner;
 import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
 
 public class FhirMessageBuilderTest {
@@ -73,7 +75,7 @@ public class FhirMessageBuilderTest {
 		clinic.setClinicProvince("BC");
 		clinic.setClinicPhone("778-567-3445");
 		clinic.setClinicFax("778-343-3453");
-		clinic.setClinicName("Test Medical Clinic");
+		clinic.setClinicName( "Test Medical Clinic" );
 
 				
 		// IMMUNIZATION
@@ -126,6 +128,7 @@ public class FhirMessageBuilderTest {
 		Calendar birthdate = Calendar.getInstance();
 		birthdate.set(1969, 6, 18);
 		demographic.setBirthDay(birthdate);
+		demographic.setPHU( "DEMO-PHU" );
 				
 		
 		//PRACTITIONER
@@ -137,6 +140,7 @@ public class FhirMessageBuilderTest {
 		provider.setHsoNo( "12342" );
 		provider.setOhipNo( "12342" );
 		provider.setPhone("604-290-2343");
+		provider.setWorkPhone("604-333-2343");
 		provider.setPractitionerNoType("CPSO");
 		
 		nurse = new Provider();
@@ -145,6 +149,7 @@ public class FhirMessageBuilderTest {
 		nurse.setLastName( "Betty" );
 		nurse.setPractitionerNo("345645");
 		nurse.setPhone("645-290-1235");
+		nurse.setWorkPhone("604-333-2343");
 		nurse.setPractitionerNoType("CNO");
 		
 
@@ -156,6 +161,7 @@ public class FhirMessageBuilderTest {
 		doctor.setHsoNo( "12342" );
 		doctor.setOhipNo( "12342" );
 		doctor.setPhone("604-333-2343");
+		doctor.setWorkPhone("604-333-2343");
 		doctor.setPractitionerNoType("CPSO");
 	}
 
@@ -182,7 +188,7 @@ public class FhirMessageBuilderTest {
 		Patient patient = new Patient( demographic, configurationManager );
 		
 		// Practitioner
-		Practitioner practitioner = new Practitioner( provider );
+		Practitioner practitioner = new Practitioner( provider, configurationManager );
 				
 		// Get the ClinicalImpresson as the Attachment resource for this message.
 		// ClinicalImpression is created to automatically map patient medical annotations. In this case it is being
@@ -196,10 +202,12 @@ public class FhirMessageBuilderTest {
 				
 		// this one is tricky.  The patient's managing organization Organization resource is contained inside the Communication resource.
 		// and is also represented as the Communication.sender.  So the link needs to be external. 
-		patient.setManagingOrganizationReference( "Organization/Organization" + SenderFactory.getSender().getOscarFhirResource().getFhirResource().getId() );
+		patient.setManagingOrganizationReference( SenderFactory.getSender().getOscarFhirResource().getContainedReferenceLink() );
+				
+				// "Organization/Organization" + SenderFactory.getSender().getOscarFhirResource().getFhirResource().getId() );
 		
 		// Practitioner is referenced from inside the patient. It is contained inside the Communication resource.
-		patient.addGeneralPractitionerReference( practitioner.getContainedReferenceLink() );
+		// patient.addGeneralPractitionerReference( practitioner.getContainedReferenceLink() );
 		fhirCommunicationBuilder.addResource( practitioner );
 
 		// Patient is contained under communication.subject
@@ -225,17 +233,19 @@ public class FhirMessageBuilderTest {
 		Patient patient = new Patient( demographic, configurationManager );
 		
 		// Collect the required resources. 
-		Organization responsible = new Organization( clinic, configurationManager);
+		Organization responsible = new Organization( clinic, configurationManager );
+		
+		responsible.setOrganizationPHUID( demographic.getPHU() );
 		
 		// The doctor type should be identified in the provider profile. 
-		Practitioner administering = new Practitioner( doctor, configurationManager ); // this could be a nurse or the same as the submitting
+		PerformingPractitioner performing = new PerformingPractitioner( doctor, configurationManager ); // this could be a nurse or the same as the submitting
 		
 		// A nurse should be identified in the provider profile.
-		Practitioner administering2 = new Practitioner( nurse, configurationManager ); // this second one is the nurse.
+		PerformingPractitioner performing2 = new PerformingPractitioner( nurse, configurationManager ); // this second one is the nurse.
 		
 		// this is the MRP or the provider in charge.
 		// this practitioner must be active AND have a working ONEid code.
-		Practitioner submitting = new Practitioner( provider, configurationManager ); 
+		SubmittingPractitioner submitting = new SubmittingPractitioner( provider, configurationManager ); 
 		
 		Immunization measles = new Immunization( prevention, configurationManager );
 		Immunization hpv = new Immunization( prevention2, configurationManager );
@@ -247,22 +257,22 @@ public class FhirMessageBuilderTest {
 		// alternate method for setting the messageHeader reference links.
 		fhirBundleBuilder.addMessageHeaderFocus( patient.getReference() );
 		fhirBundleBuilder.setMessageHeaderSender( clinic.getClinicName() ); // this should come from the Sender object.		
-		fhirBundleBuilder.setMessageHeaderResponsible( responsible.getReference() );	
-		
-		fhirBundleBuilder.setMessageHeaderSubmitter( submitting );
+		fhirBundleBuilder.setMessageHeaderResponsible( responsible.getReference() );			
+		fhirBundleBuilder.setMessageHeaderSubmitter( submitting.getReference() );
 		
 		measles.getFhirResource().setPatient( patient.getReference() );
-		measles.setAdministeringProvider( administering );
+		measles.addPerformingPractitioner( performing.getReference() );
 		
 		hpv.getFhirResource().setPatient( patient.getReference() );
-		hpv.setAdministeringProvider( administering2 );
+		hpv.addPerformingPractitioner( performing2.getReference() );
 		
-		// compile a list of OscarFhirResources.
+		// list of OscarFhirResources. This is only to demonstrate that 
+		// resources can be contained in an array.
 		List<OscarFhirResource<?, ?>> resourceList = new ArrayList< OscarFhirResource<?, ?> >();
 		resourceList.add( patient );
 		resourceList.add( responsible );		
-		resourceList.add( administering );
-		resourceList.add( administering2 );
+		resourceList.add( performing );
+		resourceList.add( performing2 );
 		resourceList.add( submitting );
 		resourceList.add( measles );
 		resourceList.add( hpv );

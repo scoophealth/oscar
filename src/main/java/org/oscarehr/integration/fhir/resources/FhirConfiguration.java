@@ -1,10 +1,4 @@
 package org.oscarehr.integration.fhir.resources;
-
-import org.hl7.fhir.dstu3.model.BaseResource;
-// import org.oscarehr.integration.fhir.interfaces.RegionalURI;
-import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
-// import org.oscarehr.integration.fhir.resources.constants.uri.regional.OntarioURI;
-
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -28,6 +22,9 @@ import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
  * Hamilton
  * Ontario, Canada
  */
+
+import org.hl7.fhir.dstu3.model.BaseResource;
+import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
 
 public class FhirConfiguration {
 	

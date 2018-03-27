@@ -35,13 +35,14 @@ import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
 
 public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Practitioner, org.oscarehr.common.model.Provider> {
 
-	private enum OptionalFHIRAttribute { practitionerNo, workPhone, qualification, oneid }
-	private enum LicenseType { CPSO, CNO }
-	/**
-	 * Performer: a practitioner whom executed the medical service on a patient
-	 * Submitter: the practitioner whom is most responsible for the patient
-	 */
-	public enum ActorType {performer, sumbitter}
+	protected enum OptionalFHIRAttribute { telecom, workPhone, qualification, oneid, email, otherphone }
+	protected enum MandatoryFHIRAttribute { practitionerNo }
+	
+	public enum LicenseType { CPSO, CNO }
+	public enum ActorType {
+		performing, // a practitioner whom executed the medical service on a patient
+		submitting // the practitioner whom is most responsible for the patient
+		}
 	
 	private ActorType actor;
 	private Clinic location;
@@ -59,12 +60,12 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 	}
 
 	@Override
-	protected void setId(org.hl7.fhir.dstu3.model.Practitioner fhirResource) {
+	protected final void setId(org.hl7.fhir.dstu3.model.Practitioner fhirResource) {
 		fhirResource.setId( getOscarResource().getProviderNo() );		
 	}
 
 	@Override
-	protected void mapAttributes( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+	protected final void mapAttributes( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
 		
 		//Mandatory
 		setName( fhirResource );
@@ -75,25 +76,41 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 			MiscUtils.getLogger().error( "Provider number " + getOscarResource().getProviderNo() + " is missing a mandatory attribute value for practitioner number" );
 		}
 
-		setQualification( fhirResource );
-		setWorkPhone( fhirResource );
+		if( include( OptionalFHIRAttribute.qualification ) ) {
+			setQualification( fhirResource );
+		}
+		
+		if( include( OptionalFHIRAttribute.telecom ) ) {
+			
+			if( include( OptionalFHIRAttribute.workPhone ) ) {
+				setWorkPhone( fhirResource );
+			}
+			
+			if( include( OptionalFHIRAttribute.otherphone ) ) {
+				setOtherPhone( fhirResource );
+			}
+			
+			if( include( OptionalFHIRAttribute.email ) ) {
+				setEmail( fhirResource );
+			}						
+		}
 	}
 
 	@Override
-	protected void mapAttributes( Provider oscarResource ) {
+	protected final void mapAttributes( Provider oscarResource ) {
 		oscarResource.setProviderNo( getFhirResource().getId() );
 		oscarResource.setFirstName( getFhirResource().getNameFirstRep().getGivenAsSingleString() );
 		oscarResource.setLastName( getFhirResource().getNameFirstRep().getFamily() );
 	}
 
-	public Clinic getLocation() {
+	public final Clinic getLocation() {
 		return location;
 	}
 
 	/**
 	 * This is a contained resource.
 	 */
-	public void setLocation( Clinic location ) {
+	public final void setLocation( Clinic location ) {
 		Organization organization = new Organization( location );
 		List<Address> address = organization.getFhirResource().getAddress();	
 		getFhirResource().setAddress( address );
@@ -101,7 +118,7 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 		this.location = location;
 	}
 	
-	private void setName( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+	private final void setName( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
 		fhirResource.addName()
 		.setFamily( getOscarResource().getLastName() )
 		.addGiven( getOscarResource().getFirstName() );
@@ -112,33 +129,41 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 	 * @throws MandatoryAttributeException 
 	 * 
 	 */
-	private void setIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) throws MandatoryAttributeException {
+	protected void setIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) throws MandatoryAttributeException {
 		
 		String practitionerNumber = getOscarResource().getPractitionerNo();
 		
-		if( ( practitionerNumber == null || practitionerNumber.isEmpty() ) && isMandatory( OptionalFHIRAttribute.practitionerNo ) ) {
+		if( ( practitionerNumber == null || practitionerNumber.isEmpty() ) && isMandatory( MandatoryFHIRAttribute.practitionerNo ) ) {
 			throw new MandatoryAttributeException();
 		} 
 		
 		//TODO these codes cannot be hard coded like this. Temporary hack
 		String licensetype = getOscarResource().getPractitionerNoType();
-		String uri = "";
-		
-		if( LicenseType.CNO.name().equals( licensetype ) ) {
-			uri =  "http://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-nurse";
-		}
-		
-		if( LicenseType.CPSO.name().equals( licensetype ) ) {
-			uri = "http://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-physician";
-		}
 
-		fhirResource.addIdentifier()
-			.setSystem( uri )
-			.setValue( practitionerNumber );
+		switch( LicenseType.valueOf( licensetype ) ) {
+		case CNO: setNurseIdentifier( fhirResource, practitionerNumber );
+			break;
+		case CPSO: setDoctorIdentifier( fhirResource, practitionerNumber );
+			break;
+		default: fhirResource.addIdentifier().setSystem( "" ).setValue( practitionerNumber );
+			break;		
+		}
 
 	}
 	
-	private void setQualification( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+	protected void setNurseIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource, String practitionerNumber ) {
+		fhirResource.addIdentifier()
+		.setSystem( "http://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-nurse" )
+		.setValue( practitionerNumber );		
+	}
+	
+	protected void setDoctorIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource, String practitionerNumber ) {
+		fhirResource.addIdentifier()
+		.setSystem( "http://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-physician" )
+		.setValue( practitionerNumber );
+	}
+	
+	protected void setQualification( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
 		
 		//TODO these codes cannot be hard coded like this. Temporary hack
 		String licensetype = getOscarResource().getPractitionerNoType();
@@ -159,20 +184,39 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 	}
 	
 	
-	private void setWorkPhone( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+	protected void setWorkPhone( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+		fhirResource.addTelecom()
+			.setUse( ContactPointUse.WORK )
+			.setSystem( ContactPointSystem.PHONE )
+			.setValue( getOscarResource().getWorkPhone() );
+	}
+	
+	protected void setOtherPhone( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+		fhirResource.addTelecom()
+			.setUse( ContactPointUse.NULL )
+			.setSystem( ContactPointSystem.PHONE )
+			.setValue( getOscarResource().getPhone() );
+	}
+	
+	protected void setEmail( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
 		fhirResource.addTelecom()
 			.setUse( ContactPointUse.WORK )
 			.setSystem( ContactPointSystem.PHONE )
 			.setValue( getOscarResource().getWorkPhone() );
 	}
 
-	public ActorType getActor() {
+	/**
+	 * Get the type of actor for this practitioner (Performing or Submitting)
+	 */
+	public final ActorType getActor() {
 		return actor;
 	}
 
-	public void setActor(ActorType actor) {
-		// TODO still not sure on this.  The provider profile should be able to indicate if 
-		// what kind of actor this is.
+	/**
+	 * Set the type of actor for this practitioner (Performing or Submitting)
+	 * This is autoset when instantiating the sub classes. 
+	 */
+	public final void setActor(ActorType actor) {
 		this.actor = actor;
 	}
 
