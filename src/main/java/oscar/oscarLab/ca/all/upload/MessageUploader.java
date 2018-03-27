@@ -415,7 +415,14 @@ public final class MessageUploader {
 			for (int i = 0; i < docNums.size(); i++) {
 
 				if (docNums.get(i) != null && !((String) docNums.get(i)).trim().equals("")) {
-					sql = "select provider_no from provider where "+ sqlSearchOn +" LIKE '" + ((String) docNums.get(i)) + "'" + sqlOrderByLength + sqlLimit;
+					
+					StringBuilder practitionerNum = new StringBuilder(((String)docNums.get(i)).trim());
+					if( sqlSearchOn.equalsIgnoreCase("ohip_no")) {
+						while( practitionerNum.length() < 6 ) {
+							practitionerNum.insert(0, "0");
+						}						
+					}
+					sql = "select provider_no from provider where "+ sqlSearchOn +" = '" + practitionerNum.toString() + "'" + sqlOrderByLength + sqlLimit;
 					pstmt = conn.prepareStatement(sql);
 					ResultSet rs = pstmt.executeQuery();
 					while (rs.next()) {
