@@ -1428,7 +1428,7 @@ import oscar.util.UtilDateUtilities;
 
                     Date entryDateDate=toDateFromString(entryDate);
                     Date startDateDate=toDateFromString(startDate);
-                    Integer allergyId = saveRxAllergy(Integer.valueOf(demographicNo), entryDateDate, description, Integer.parseInt(typeCode), reaction, startDateDate, severity, regionalId, lifeStage);
+                    Integer allergyId = saveRxAllergy(Integer.valueOf(demographicNo), entryDateDate, description, "".equals(typeCode)?0:Integer.parseInt(typeCode), reaction, startDateDate, severity, regionalId, lifeStage);
                     addOneEntry(ALLERGY);
 
                     //write partial dates
@@ -1742,7 +1742,7 @@ import oscar.util.UtilDateUtilities;
                     immExtra = Util.addLine(immExtra, "Instructions: ", immuArray[i].getInstructions());
                     immExtra = Util.addLine(immExtra, getResidual(immuArray[i].getResidualInfo()));
 
-                    Integer preventionId = PreventionData.insertPreventionData(admProviderNo, demographicNo, preventionDate, defaultProviderNo(), "", preventionType, refused, "", "", preventionExt, null);
+                    Integer preventionId = PreventionData.insertPreventionData(admProviderNo, demographicNo, preventionDate, defaultProviderNo(), "", preventionType, refused, "", "", preventionExt);
                     addOneEntry(IMMUNIZATION);
 
                     //to dumpsite: Extra immunization data
@@ -3000,7 +3000,7 @@ import oscar.util.UtilDateUtilities;
 		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(dateOfMessage);
-		msh.getDateTimeOfMessage().getTimeOfAnEvent().setDateSecondPrecision(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH),cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE),cal.get(Calendar.SECOND));
+		msh.getDateTimeOfMessage().getTimeOfAnEvent().setDateSecondPrecision(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1,cal.get(Calendar.DAY_OF_MONTH),cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE),cal.get(Calendar.SECOND));
 		msh.getMessageType().getMessageType().setValue(messageCode);
 		msh.getMessageType().getTriggerEvent().setValue(triggerEvent);
 		msh.getMessageControlID().setValue(messageControlId);
@@ -3125,38 +3125,50 @@ import oscar.util.UtilDateUtilities;
 					}
 					
 					obr.getObservationDateTime().getTimeOfAnEvent().setDateSecondPrecision(cal.get(Calendar.YEAR),
-							cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
+							cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
 					
-					if(result.getLabRequisitionDateTime().isSetFullDate()) {
-						cal = result.getLabRequisitionDateTime().getFullDate();
-					} else {
-						cal = result.getLabRequisitionDateTime().getFullDateTime();
+					if(result.getLabRequisitionDateTime() != null) {
+						if(result.getLabRequisitionDateTime().isSetFullDate()) {
+							cal = result.getLabRequisitionDateTime().getFullDate();
+						} else {
+							cal = result.getLabRequisitionDateTime().getFullDateTime();
+						}
+						
+						obr.getRequestedDateTime().getTimeOfAnEvent().setDateSecondPrecision(cal.get(Calendar.YEAR),
+								cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
 					}
 					
-					obr.getRequestedDateTime().getTimeOfAnEvent().setDateSecondPrecision(cal.get(Calendar.YEAR),
-							cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
-				
 					//NOTE: obr-17 lost - ordering physician
 					
 					//OBX
 					OBX obx = grp.getOBSERVATION().getOBX();
 					obx.getSetIDOBX().setValue("1");
-					ID abnormalFlags = obx.insertAbnormalFlags(0);
-					Varies val = obx.insertObservationValue(0);
 					
 					obx.getObx2_ValueType().setValue("ST");
 					obx.getObx3_ObservationIdentifier().getIdentifier().setValue(result.getLabTestCode());
 					obx.getObx3_ObservationIdentifier().getText().setValue(result.getTestNameReportedByLab());
 					obx.getObx4_ObservationSubID().setValue("1");
 
-					ST st = new ST(observationMsg);
-					st.setValue(result.getResult().getValue());
-					val.setData(st);
+					if(result.getResult() != null && result.getResult().getValue() != null) {
+						ST st = new ST(observationMsg);
+						st.setValue(result.getResult().getValue());
+						Varies val = obx.insertObservationValue(0);
+						val.setData(st);
+					}
 					
-					obx.getObx6_Units().getCe2_Text().setValue(result.getResult().getUnitOfMeasure());
-					obx.getObx7_ReferencesRange().setValue(result.getReferenceRange().getReferenceRangeText());
 					
-					abnormalFlags.setValue(result.getResultNormalAbnormalFlag().toString());
+					if(result != null && result.getResult() != null && result.getResult().getUnitOfMeasure() != null) {
+						obx.getObx6_Units().getCe2_Text().setValue(result.getResult().getUnitOfMeasure());
+					}
+					
+					if(result.getReferenceRange() != null) {
+						obx.getObx7_ReferencesRange().setValue(result.getReferenceRange().getReferenceRangeText());
+					}
+					
+					if(result.getResultNormalAbnormalFlag() != null) {
+						ID abnormalFlags = obx.insertAbnormalFlags(0);
+						abnormalFlags.setValue(result.getResultNormalAbnormalFlag().toString());
+					}
 					
 				}
 				
