@@ -193,7 +193,8 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 		
 }]).component('rxComponent',RxComponent)
    .component('medsearch',MedsearchComponent)
-   .component('rxPrintComponent',RxPrintComponent); 
+   .component('rxPrintComponent',RxPrintComponent)
+   .component('rxProfile',RxProfileComponent); 
 
 // For debugging purposes
 /*

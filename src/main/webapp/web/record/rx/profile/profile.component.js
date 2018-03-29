@@ -1,0 +1,153 @@
+const RxProfileComponent = {
+  bindings: {
+  	fulldrugs: '<',
+  	reRx: '&'
+
+  },
+  templateUrl: 'record/rx/profile/profile.template.jsp',
+  controller: ['$stateParams','$state','$log','$timeout','summaryService','rxService','$filter',function($stateParams,$state,$log,$timeout,summaryService,rxService,$filter) {
+  	rxProfileComp = this;
+
+  	
+  	rxProfileComp.$onInit = function(){
+  		console.log("herer??  RxProfileComponent",rxProfileComp);
+  		rxProfileComp.rxComp = {};
+  		rxProfileComp.rxComp.drugs = [];
+  		rxProfileComp.rxComp.profileHash = {};
+  		fullDrugList = [];
+  		rxProfileComp.mode = 0;
+
+ 	}
+  	
+  	rxProfileComp.daysToExp = function(drug){
+  		//console.log("drug--",drug);
+  		var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+  		var endDate = Date.parse(drug.endDate);
+  	    var now = new Date();
+  	    return Math.round(Math.abs((now.getTime() - endDate)/(oneDay)));
+  	}
+  	
+  	profileAll = function(drugList){
+  		profileObject = {}
+  		profileObject.profileHash = {};
+  		profileObject.profileList = [];
+  		for(i=0; i < drugList.length; i++){
+	  			console.log("here1."+i+" ",drugList[i]);
+	  			if(angular.isDefined(profileObject.profileHash[drugList[i].atc])){
+	  				profileObject.profileHash[drugList[i].atc].push(drugList[i]);
+	  			}else{
+	  				profileObject.profileHash[drugList[i].atc] = [];
+	  				profileObject.profileHash[drugList[i].atc].push(drugList[i]);
+	  			}
+	  			profileObject.profileList.push(drugList[i]);
+	  			
+	  	}
+  		return profileObject;
+  	}
+  	
+  	profileCurrent = function(drugList){
+  		profileObject = {}
+  		profileObject.profileHash = {};
+  		profileObject.profileList = [];
+  		for(i=0; i < drugList.length; i++){
+	  			console.log("here1."+i+" ",drugList[i]);
+	  			if(angular.isDefined(profileObject.profileHash[drugList[i].atc])){
+	  				profileObject.profileHash[drugList[i].atc].push(drugList[i]);
+	  			}else{
+	  				profileObject.profileHash[drugList[i].atc] = [];
+	  				profileObject.profileHash[drugList[i].atc].push(drugList[i]);
+	  				profileObject.profileList.push(drugList[i]);
+	  			}			
+	  	}
+  		return profileObject;
+  	}
+  	
+  	rxProfileComp.$onChanges = function(changesObj){
+  		console.log("hereZZ",changesObj);
+  		if(angular.isDefined(changesObj.fulldrugs)){
+  			console.log("was defined");
+  			drugList = changesObj.fulldrugs.currentValue;
+  			fullDrugList = $filter('orderBy')(drugList, 'rxDate', true);
+  			rxProfileComp.processList(fullDrugList);
+  		}
+  	}
+  	
+  	rxProfileComp.processList = function(drugList){
+  		profileObject = {};
+		profileObject.profileHash = {};
+	  	profileObject.profileList = [];
+	  		
+		if(rxProfileComp.mode == 0){
+			profileObject = profileCurrent(drugList);
+		}else{
+			profileObject = profileAll(drugList);
+		}
+		rxProfileComp.rxComp = {};
+		rxProfileComp.rxComp.profileHash = profileObject.profileHash;
+		rxProfileComp.rxComp.drugs = profileObject.profileList;
+  	}
+  	
+  	/*Profile Mode*/
+  	rxProfileComp.setMode = function(mode){
+  		rxProfileComp.mode = mode
+  		rxProfileComp.processList(fullDrugList);
+  	}
+  	
+  	rxProfileComp.buttonStyle = function(mode){
+  		if(mode === rxProfileComp.mode){
+  			return "btn-primary";
+  		}
+  		return "btn-default";
+  	}
+  	/*Profile Mode End*/
+  	
+
+  	rxProfileComp.print = function(){
+  		alert("Not Implemented Yet");
+  	}
+    rxProfileComp.rePrint= function(){
+  		alert("Not Implemented Yet");
+  	}
+    rxProfileComp.timeline = function(){
+  		alert("Not Implemented Yet");
+  	}
+  	
+  	/*Action Drop Box methods*/
+  	rxProfileComp.discontinue = function(drug){
+  		alert("Not Implemented Yet");
+  		console.log("Not Implemented Yet",drug);
+  	}
+    rxProfileComp.delete = function(drug){
+  		alert("Not Implemented Yet");
+  		console.log("Not Implemented Yet",drug);
+  	}
+    rxProfileComp.addReason = function(drug){
+  		alert("Not Implemented Yet");
+  		console.log("Not Implemented Yet",drug);
+  	}
+    rxProfileComp.setAsLongTermMed = function(drug){
+  		alert("Not Implemented Yet");
+  		console.log("Not Implemented Yet",drug);
+  	}
+    rxProfileComp.annotate = function(drug){
+  		alert("Not Implemented Yet");
+  		console.log("Not Implemented Yet",drug);
+  	}
+    rxProfileComp.hideFromCPP = function(drug){
+  		alert("Not Implemented Yet");
+  		console.log("Not Implemented Yet",drug);
+  	}
+    rxProfileComp.moveUpInList = function(drug){
+  		alert("Not Implemented Yet");
+  		console.log("Not Implemented Yet",drug);
+  	}
+    rxProfileComp.moveDownInList = function(drug){
+  		alert("Not Implemented Yet");
+  		console.log("Not Implemented Yet",drug);
+  	}
+ 	/*Action Drop Box methods END*/
+ 	 	
+	
+ 	} 
+  ]
+};

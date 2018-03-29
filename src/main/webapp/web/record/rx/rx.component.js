@@ -16,23 +16,13 @@ const RxComponent = {
 
  		rxComp.page.columnThree = {};
  		rxComp.page.columnThree.modules = {};
- 		rxComp.page.drugs = [];
+ 		rxComp.page.fulldrugs = [];
  		rxComp.page.dsMessageList = [];
  		rxComp.page.dsMessageHash = {};
  		
  		rxComp.toRxList = [];  //might want to cache this server side and check back so that we can switch between tabs.
  		
- 		
- 		rxService.getMedications($stateParams.demographicNo,"").then(function(data){
-			  console.log("getMedications--",data);
-			  rxComp.page.drugs = data.data.content;
-		    	},
-		    	function(errorMessage){
-			      console.log("getMedications++"+errorMessage);
-			      rxComp.error=errorMessage;
-		    	}
-		);
- 		
+ 		getMeds();
  		rxComp.getDSMessages($stateParams.demographicNo,rxComp.toRxList);
  		
  		getRightItems();
@@ -45,7 +35,8 @@ const RxComponent = {
  		
  		rxService.getMedications($stateParams.demographicNo,"").then(function(data){
 			  console.log("getMedications--",data);
-			  rxComp.page.drugs = data.data.content;
+			  rxComp.page.fulldrugs = data.data.content;
+			  console.log("set meds", rxComp.page.fulldrugs);
 		    	},
 		    	function(errorMessage){
 			      console.log("getMedications++"+errorMessage);
@@ -152,6 +143,15 @@ const RxComponent = {
  		},function(errorMessage){
  			console.log("Error parsing Intruction",errorMessage);		
  		});
+ 	}
+ 	
+ 	rxComp.reRx = function(drug){
+ 		console.log("reRx in comp",drug);
+ 		var d = new Drug();
+ 		d.fromDrugTransferObject(drug);
+ 		d.start = new Date();
+ 		calculateEndDate(d);
+ 		rxComp.toRxList.push(d);
  	}
  	 	
  	rxComp.medSelected = function(med){

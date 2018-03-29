@@ -87,11 +87,11 @@
 						  <div class="form-group">
 						  	<div class="row">
 							  <div class="col-xs-6">
-								<%-- label for="quantityInput">Qty/Mitte</label> --%>
+								<label for="quantityInput">Qty/Mitte</label> 
 						    		<input type="text" class="form-control" id="quantityInput" placeholder="Qty/Mitte" ng-model="med.quantity">
 							  </div>
 							  <div class="col-xs-6">
-								<%-- label for="repeatsInput">Repeat</label>  --%> 
+								<label for="repeatsInput">Repeat</label>   
 						    		<input type="text" class="form-control" id="repeatsInput" placeholder="Repeats" ng-model="med.repeats">    
 							  </div>
 						  	</div>
@@ -116,61 +116,7 @@
 		</div>
 		<hr>
 		<div class="row">
-			<fieldset>
-       		<legend style="margin-bottom:0px;">Drug Profile
-       			<button type="button" class="btn btn-primary btn-xs">All</button>
-       			<button type="button" class="btn btn-default btn-xs">Current</button>
-				<div class="row">
-					<div class="col-sm-12">
-					    <div class="input-group">
-					      <input type="text" class="form-control" placeholder="Search Drug Profile" ng-model="$ctrl.drugProfileFilter">
-					      <div class="input-group-btn">
-					        <button type="button" class="btn btn-default" ng-click="exportDemographic()">Print</button>
-					        <button type="button" class="btn btn-default" ng-click="exportDemographic()">Reprint</button>
-					        <button type="button" class="btn btn-default" ng-click="$ctrl.shortDSMessage()">Timeline</button>
-					      </div>
-					    </div><!-- /input-group -->
-				  	</div>
-				</div>
-			</legend>
-			
-			<table class="table table-condensed table-striped">
-				<tr>
-					<th>Medication</th>
-					<th>Start Date</th>
-					<th>Days To Exp</th>
-					<th>reRx</th>
-					<th>Action</th>
-				</tr>
-				<tr ng-repeat="drug in $ctrl.page.drugs | filter:$ctrl.drugProfileFilter">
-					<td>
-					{{drug.instructions}}
-					</td>
-					<td>{{drug.rxDate}}</td>
-					<td>0</td>
-					<td>rx</td>
-					<td>
-						<div class="btn-group">
-						  <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						    Actions<span class="caret"></span>
-						  </button>
-						  <ul class="dropdown-menu">
-						    <li><a>Discontinue</a></li>
-						    <li><a>Delete</a></li>
-						    <li><a>Add Reason</a></li>
-						    <li><a>Set as Long Term Med</a></li>
-						    <li><a>Annotate</a></li>
-						    <li><a>Hide From CPP</a></li>
-						    <li><a>Move up in list</a></li>
-						    <li><a>Move down in list</a></li>
-						  </ul>
-						</div>
-					</td>
-				</tr>	
-			</table>
-			
-			</fieldset>
-		
+			<rx-profile fulldrugs="$ctrl.page.fulldrugs" re-rx="$ctrl.reRx(drug)"></rx-profile>
 		</div>
 			  
 
