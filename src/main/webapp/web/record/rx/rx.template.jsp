@@ -82,7 +82,7 @@
 				    <h4 class="list-group-item-heading">{{med.getName()}}</h4>
 				    		<form>
 						  <div class="form-group">
-						    <input type="text" class="form-control" id="instructionsInput" placeholder="Instructions" ng-blur="$ctrl.parseInstr(med)" ng-model="med.instructions">
+						    <input type="text" class="form-control" id="instructionsInput" placeholder="Instructions" ng-blur="$ctrl.parseInstr(med)" ng-model="med.instructions" auto-focus>
 						  </div>
 						  <div class="form-group">
 						  	<div class="row">
