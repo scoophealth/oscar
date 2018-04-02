@@ -335,29 +335,27 @@ angular.module("rxServices", [])
                      * @property {object|array} resp.drugs
                      */
 
-                    console.log("favorites:");
-                    console.log(resp);
+                    console.log("favorites:",resp);
 
-
-                    if(resp && resp.success && resp.drugs){
+                    if(resp && resp.data.success && resp.data.drugs){
 
                         var favs = [];
                         var tmp = null;
 
 
-                        if(resp.drugs instanceof Array){
+                        if(resp.data.drugs instanceof Array){
 
-                            for(var i = 0; i < resp.drugs.length; i++){
+                            for(var i = 0; i < resp.data.drugs.length; i++){
 
                                 tmp = new Favorite();
-                                tmp.fromFavoriteTransferObject(resp.drugs[i], demo, provider);
+                                tmp.fromFavoriteTransferObject(resp.data.drugs[i], demo, provider);
                                 favs.push(tmp);
 
                             }
 
                         }else{
                             tmp = new Favorite();
-                            tmp.fromFavoriteTransferObject(resp.drugs, demo, provider);
+                            tmp.fromFavoriteTransferObject(resp.data.drugs, demo, provider);
                             favs.push(tmp);
                         }
 

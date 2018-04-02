@@ -111,7 +111,7 @@
 			    </div>
 			  </li>
 			</div>
-        		<medsearch med-selected="$ctrl.medSelected(med)"></medsearch>	
+        		<medsearch med-selected="$ctrl.medSelected(med)" fav-selected="$ctrl.favSelected(fav)" favourite-meds="$ctrl.page.favouriteDrugs"></medsearch>	
         		<button type="button" class="btn btn-primary btn-block" style="margin-top:3px;" ng-click="$ctrl.saveAndPrint()">Save And Print</button>
 		</div>
 		<hr>

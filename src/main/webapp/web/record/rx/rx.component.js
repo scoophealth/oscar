@@ -19,12 +19,15 @@ const RxComponent = {
  		rxComp.page.fulldrugs = [];
  		rxComp.page.dsMessageList = [];
  		rxComp.page.dsMessageHash = {};
+ 		rxComp.page.favouriteDrugs=[];
  		
  		rxComp.toRxList = [];  //might want to cache this server side and check back so that we can switch between tabs.
  		
  		getMeds();
  		rxComp.getDSMessages($stateParams.demographicNo,rxComp.toRxList);
  		
+ 		rxService.favorites($stateParams.demographicNo,null,rxComp.processFavourites);
+		
  		getRightItems();
  		getLeftItems();
  		
@@ -108,6 +111,11 @@ const RxComponent = {
  		console.log("PRESCRIBE CALLED");
  	}
  	
+ 	rxComp.processFavourites = function(resp){
+ 		console.log("favourites returned",resp);
+ 		rxComp.page.favouriteDrugs = resp;
+ 	}
+ 	
  	rxComp.processRxSuccess = function(resp){
  		console.log("WHAT IS THERE RETURN",resp);
  		
@@ -154,7 +162,18 @@ const RxComponent = {
  		rxComp.toRxList.push(d);
  	}
  	 	
+ 	
+ 	rxComp.favSelected = function(fav){
+ 		var m = {};
+		m.drug = fav.drug;
+		var d = new Drug();
+	    d.applyFavorite(m);
+	    console.log("Fav drug",d,fav);
+	    rxComp.toRxList.push(d);
+ 	}
+ 	
  	rxComp.medSelected = function(med){
+ 		console.log("med",med);
  		if(angular.isDefined(med.favoriteName)){
  		   var m = {};
  		   m.drug = med;

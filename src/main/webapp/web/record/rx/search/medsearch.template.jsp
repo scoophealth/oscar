@@ -31,7 +31,7 @@
           <li><a href="#">Drug of Choice</a></li>
           <li role="separator" class="divider"></li>
           <li class="dropdown-header">Favourites</li>
-          <li  ng-repeat="fmed in $ctrl.favouriteMeds"><a href="#">{{fmed.name}}</a></li>
+          <li  ng-repeat="fmed in $ctrl.favouriteMeds"><a ng-click="$ctrl.selectFav(fmed)">{{fmed.name}}</a></li>
         </ul>
       </div><!-- /btn-group -->
     </div><!-- /input-group -->

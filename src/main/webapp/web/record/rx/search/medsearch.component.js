@@ -1,7 +1,8 @@
 const MedsearchComponent = {
   bindings: {
+	favouriteMeds: '<',
+	favSelected: '&',
   	medSelected: '&'
-
   },
   templateUrl: 'record/rx/search/medsearch.template.jsp',
   controller: ['$stateParams','$state','$log','$timeout','summaryService','rxService',function($stateParams,$state,$log,$timeout,summaryService,rxService) {
@@ -9,8 +10,6 @@ const MedsearchComponent = {
 
   	rxSearchComp.$onInit = function(){
   		console.log("herer??  rxlookup/search");
-  		
-  		rxSearchComp.favouriteMeds = [];
   		
  		console.log("elementfound"+$('#medQuickSearch'));
   		$('#medQuickSearch').typeahead({
@@ -35,17 +34,6 @@ const MedsearchComponent = {
 			            } else {
 			            	retval.push(parsedResponse.drugs);
 			            }
-			            
-			            //console.log("total:"+retval.length);
-			            //var scope = angular.element($("#medQuickSearch")).scope();
-			            //setQuickSearchTerm("");
-			            
-			            //if(parsedResponse.total > 10) {
-			            	//retval.push({name:"more results",hin:parsedResponse.total+" total","demographicNo":-1,"more":true});
-			            	//setQuickSearchTerm(parsedResponse.query);
-			            //}
-			            console.log("retval",retval);
-			            rxSearchComp.favouriteMeds = retval;
 			            return retval;
 			        }
 	  		},
@@ -60,14 +48,7 @@ const MedsearchComponent = {
   		            if(parsedResponse.drugs instanceof Array) {
   		            		for (var i = 0;  i < parsedResponse.drugs.length;  i++) {
 	  		            		var tmp = parsedResponse.drugs[i];
-	  		            		//if(tmp.hin != null && tmp.hin == '') {
-	  		            		//	tmp.hin = null;
-	  		            		//}
-	  		            		//if(tmp.formattedDOB != null && tmp.formattedDOB == '') {
-	  		            		//	tmp.formattedDOB = null;
-	  		            		//}
 	  		            		
-	  		            		//tmp.name = tmp.lastName + ", " + tmp.firstName;
 	  		            		tmp.blah = "";
 	  		            		tmp.styleClass= 'searchedHeader';
 	  		            		if(!tmp.active){
@@ -101,7 +82,7 @@ const MedsearchComponent = {
   			}
   				
   			).on('typeahead:selected', function (obj, datum) {
-  				//$('input#medQuickSearch').on('blur',function(event){$("#medQuickSearch").val("");});
+  				$('input#medQuickSearch').on('blur',function(event){$("#medQuickSearch").val("");});
 
   				//var scope = angular.element($("#medQuickSearch")).scope();
   						
@@ -116,7 +97,6 @@ const MedsearchComponent = {
   					scope.switchToAdvancedView();
   				} else {
   					rxSearchComp.medSelected({med:datum});
-  					//scope.loadRecord(datum.demographicNo);
   				}
   				
   				
@@ -125,6 +105,11 @@ const MedsearchComponent = {
   		
   		
  	}
+  	
+  	rxSearchComp.selectFav = function(datum){
+  		console.log("Calling selectFav ",datum);
+  		rxSearchComp.favSelected({fav:datum});
+  	}
  	
  	
   	setQuickSearchTerm = function(term) {
