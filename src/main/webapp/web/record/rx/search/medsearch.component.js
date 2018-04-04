@@ -5,120 +5,75 @@ const MedsearchComponent = {
   	medSelected: '&'
   },
   templateUrl: 'record/rx/search/medsearch.template.jsp',
-  controller: ['$stateParams','$state','$log','$timeout','summaryService','rxService',function($stateParams,$state,$log,$timeout,summaryService,rxService) {
+  controller: ['$stateParams','$state','$log','$timeout','summaryService','rxService','$http','$filter',function($stateParams,$state,$log,$timeout,summaryService,rxService,$http,$filter) {
   	rxSearchComp = this;
 
   	rxSearchComp.$onInit = function(){
-  		console.log("herer??  rxlookup/search");
-  		
- 		console.log("elementfound"+$('#medQuickSearch'));
-  		$('#medQuickSearch').typeahead({
-  			name: 'drugSearch',
-  			valueKey:'name',
-  			limit: 11,
-  			prefetch	: {
-  				    ttl: 1,
-	  				url: '../ws/rs/rx/favorites',
-	  	  			filter: function (parsedResponse) {
-			        		console.log("fav filter",parsedResponse);
-			            retval = [];
-			            if(parsedResponse.drugs instanceof Array) {
-			            		for (var i = 0;  i < parsedResponse.drugs.length;  i++) {
-			            			var tmp = parsedResponse.drugs[i];
-			            			tmp.blah = "";
-			            			tmp.name = tmp.favoriteName;
-			            			tmp.styleClass= 'favHeader';
-			            			console.log()
-			            			retval.push(tmp);
-			                 }
-			            } else {
-			            	retval.push(parsedResponse.drugs);
-			            }
-			            return retval;
-			        }
-	  		},
-  			remote: {
-  		        //url: '../ws/rs/demographics/quickSearch?query=%QUERY',
-  				url: '../ws/rs/rxlookup/search?string=%QUERY',
-  		        cache:false,
-  		        //I needed to override this to handle the differences in the JSON when it's a single result as opposed to multiple.
-  		        filter: function (parsedResponse) {
-  		        		console.log("filter",parsedResponse);
-  		            retval = [];
-  		            if(parsedResponse.drugs instanceof Array) {
-  		            		for (var i = 0;  i < parsedResponse.drugs.length;  i++) {
-	  		            		var tmp = parsedResponse.drugs[i];
-	  		            		
-	  		            		tmp.blah = "";
-	  		            		tmp.styleClass= 'searchedHeader';
-	  		            		if(!tmp.active){
-	  		            			tmp.styleClass='inactiveHeader';
-	  		            		}
-	  		            		retval.push(tmp);
-  		                 }
-  		            } else {
-  		            	retval.push(parsedResponse.drugs);
-  		            }
-  		            
-  		            console.log("total:"+parsedResponse.total);
-  		            var scope = angular.element($("#medQuickSearch")).scope();
-  		            setQuickSearchTerm("");
-  		            
-  		            if(parsedResponse.total > 10) {
-  		            	retval.push({name:"more results",hin:parsedResponse.total+" total","demographicNo":-1,"more":true});
-  		            	setQuickSearchTerm(parsedResponse.query);
-  		            }
-  		            
-  		            return retval;
-  		        }
-  		    },
-  		    
-  			template: [
-  			        "<p class='{{styleClass}}'>{{#favoriteName}}<span class='glyphicon glyphicon-star'></span>{{/favoriteName}} {{name}}</p>",
-  			        '{{#favoriteName}}<p class="demo-quick-hin">&nbsp;<em>{{brandName}}</em></p>{{/favoriteName}}',
-  			       	'{{#dob}}<p class="demo-quick-dob">&nbsp;{{formattedDOB}}</p>{{/dob}}'
-  			 ].join(''),
-  			       	engine: Hogan
-  			}
-  				
-  			).on('typeahead:selected', function (obj, datum) {
-  				$('input#medQuickSearch').on('blur',function(event){$("#medQuickSearch").val("");});
-
-  				//var scope = angular.element($("#medQuickSearch")).scope();
-  						
-  				// jQuery#typeahead('setQuery', query)
-  				console.log("whats in obj ",obj);
-  				obj.delegateTarget.value = '';	
-  				
-  				
-  				
-  				
-  				if(datum.more != null && datum.more == true) {
-  					scope.switchToAdvancedView();
-  				} else {
-  					rxSearchComp.medSelected({med:datum});
-  				}
-  				
-  				
-  				
-  			});
-  		
-  		
+  		console.log("herer??  rxlookup/search",rxSearchComp.favouriteMeds);
  	}
+  	 
+  	rxSearchComp.medTypeAheadLabel = function(med) {
+  		if (med == null || med == undefined){
+     		return;
+     	}
+        		
+     	if (med.name == '' || med.name == undefined) {
+     		console.log("label  blank",med);
+        		return '';
+     	}
+ 
+     	var fav = "";
+     	var styleClass="";
+     	if(angular.isDefined(med.fav) && med.fav == true){
+     		fav = "<span class='glyphicon glyphicon-star'></span>";
+     		styleClass="favHeader";
+     	}
+     	if(angular.isDefined(med.active) && med.active == false){
+     		styleClass="inactiveHeader";
+     	}
+     	
+     	var label = fav+" "+med.name+" ";
+     	console.log("label ",label);
+    		return label;
+	}
+ 	
+ 
+ 	rxSearchComp.onSelect = function($item, $model, $label){
+ 		console.log("onSElect",$item, $model, $label);
+ 		if(angular.isDefined($item.fav) && $item.fav == true){
+ 			rxSearchComp.selectFav($item);
+ 		}else{
+ 			rxSearchComp.medSelected({med:$item});
+ 		}
+ 		rxSearchComp.selected = "";
+ 	};
+		 
+ 	
+ 	rxSearchComp.lookupMeds = function (val) {
+      var urlStr = "../ws/rs/rxlookup/search?string="+ val;
+      
+    	  //return $http.get(urlStr).then(function (response) {
+      return rxService.lookup(val).then(function (response) {
+    	  
+    		  console.log("lookupMeds return ",response,rxSearchComp.favouriteMeds,val);
+    		  
+    		  var myFavourites = $filter('filter')(rxSearchComp.favouriteMeds, { name: val });
+    		  console.log("MyRedObj",myFavourites);
+    		  
+    		  for (var i = 0, len = myFavourites.length; i < len; i++) {
+    			  myFavourites[i].fav = true;
+    			  response.data.drugs.unshift(myFavourites[i]);
+    		  }
+    		  
+         return response.data.drugs;
+      });
+    };
   	
   	rxSearchComp.selectFav = function(datum){
   		console.log("Calling selectFav ",datum);
   		rxSearchComp.favSelected({fav:datum});
-  	}
- 	
- 	
-  	setQuickSearchTerm = function(term) {
-  		console.log("term ",term);
-  		rxSearchComp.quickSearchTerm = term;
-  		
-	}
+  	};
 
- 	
 	
  	} 
   ]
