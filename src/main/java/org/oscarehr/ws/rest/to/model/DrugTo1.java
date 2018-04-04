@@ -49,7 +49,7 @@ public class DrugTo1 implements Serializable {
 
     private Integer demographicNo;
 
-    private Integer providerNo;
+    private String providerNo;
 
     private float takeMin;
 
@@ -177,11 +177,11 @@ public class DrugTo1 implements Serializable {
         this.demographicNo = demographicNo;
     }
 
-    public Integer getProviderNo() {
+    public String getProviderNo() {
         return providerNo;
     }
 
-    public void setProviderNo(Integer providerNo) {
+    public void setProviderNo(String providerNo) {
         this.providerNo = providerNo;
     }
 

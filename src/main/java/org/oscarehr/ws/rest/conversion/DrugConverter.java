@@ -76,7 +76,7 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
             if(t.getProviderNo() == null) {
             	  d.setProviderNo(loggedInInfo.getLoggedInProviderNo());
             }else {
-               d.setProviderNo(t.getProviderNo().toString()); // Cast to string.
+               d.setProviderNo(t.getProviderNo()); // Cast to string.
             }
             d.setAtc(t.getAtc());
             d.setRegionalIdentifier(t.getRegionalIdentifier());
@@ -86,7 +86,7 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
             d.setRxDate(t.getRxDate());
             d.setEndDate(t.getEndDate());
             d.setFreqCode(t.getFrequency());
-            d.setDuration(t.getDuration().toString()); // Cast to string.
+            d.setDuration(convertToStringOrNull(t.getDuration())); // Cast to string.
             d.setDurUnit(t.getDurationUnit());
             d.setRepeat(t.getRepeats());
             d.setSpecial(t.getInstructions());
@@ -119,6 +119,22 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
         return d;
 
     }
+    
+    private String convertToStringOrNull(Integer integer) {
+    		try {
+    			String ret =  integer.toString();
+    			return ret;
+    		}catch(Exception e) {logger.debug("value was not parseable "+integer);}
+    		return null;
+    }
+    
+    private Integer convertToIntegerOrNull(String integer) {
+		try {
+			Integer ret =  Integer.parseInt(integer);
+			return ret;
+		}catch(Exception e) {logger.debug("value was not parseable "+integer);}
+		return null;
+}
 
     /**
      * Converts from the Drug domain model object to a serializable Drug transfer object.
@@ -143,13 +159,13 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
         t.setAtc(d.getAtc());
         t.setRegionalIdentifier(d.getRegionalIdentifier());
         t.setDemographicNo(d.getDemographicId());
-        t.setProviderNo(Integer.parseInt(d.getProviderNo())); // Parse the providerNo string to an int.
+        t.setProviderNo(d.getProviderNo()); 
         t.setTakeMin(d.getTakeMin());
         t.setTakeMax(d.getTakeMax());
         t.setRxDate(d.getRxDate());
         t.setEndDate(d.getEndDate());
         t.setFrequency(d.getFreqCode());
-        t.setDuration(Integer.parseInt(d.getDuration()));   // Parse the duration string to an int.
+        t.setDuration(convertToIntegerOrNull(d.getDuration()));   // Parse the duration string to an int.
         t.setDurationUnit(d.getDurUnit());
         t.setRoute(d.getRoute());
         t.setForm(d.getDrugForm());
