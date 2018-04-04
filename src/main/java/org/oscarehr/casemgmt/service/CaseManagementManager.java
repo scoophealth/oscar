@@ -1085,8 +1085,30 @@ public class CaseManagementManager {
 	}
 
 	public CaseManagementTmpSave restoreTmpSave(String providerNo, String demographicNo, String programId) {
+		boolean removed = false;
+
+		logger.debug("Get tmp note");
 		CaseManagementTmpSave obj = caseManagementTmpSaveDao.find(providerNo, new Integer(demographicNo), new Integer(programId));
-		return obj;
+
+		//There is a temporary note, but does it have any content besides the tag?
+		if (obj != null && OscarProperties.getInstance().isPropertyActive("encounter.remove_empty_tmp_notes") && !caseManagementTmpSaveDao.noteHasContent(obj.getId()))
+		{
+			logger.debug("Empty Tmp note found");
+
+			//The temporary note available doesn't have any content anyway, so get rid of it.
+			removed = caseManagementTmpSaveDao.remove(obj.getId());
+		}
+
+		if (removed)
+		{
+			logger.debug("Removed empty tmp note");
+			return null;
+		}
+		else
+		{
+			logger.debug("Could not remove empty tmp note -or- tmp note with content found");
+			return obj;
+		}
 	}
 
 	// we want to load a temp saved note only if it's more recent than date
