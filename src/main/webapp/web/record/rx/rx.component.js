@@ -196,6 +196,7 @@ const RxComponent = {
  	            newMed.populateFromDrugSearchDetails(d.data.drugs[0]);
 
  	           rxComp.toRxList.push(newMed);
+ 	           rxComp.shortDSMessage();
  	            //updateStrengthUnits(d.drugs);
  			},
  			function(errorMessage){
