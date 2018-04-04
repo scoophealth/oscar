@@ -11,6 +11,21 @@ const MedsearchComponent = {
   	rxSearchComp.$onInit = function(){
   		console.log("herer??  rxlookup/search",rxSearchComp.favouriteMeds);
  	}
+  	
+  	rxSearchComp.fullSearch = function(){
+  		alert("Not Implemented Yet");
+  		console.log("Would search for ",rxSearchComp.selected);
+  	}
+  	
+  	rxSearchComp.customDrug = function(){
+  		alert("Not Implemented Yet");
+  	}
+    rxSearchComp.customNote = function(){
+    		alert("Not Implemented Yet");
+    }
+    rxSearchComp.DrugOfChoice = function(){
+    		alert("Not Implemented Yet");
+    }
   	 
   	rxSearchComp.medTypeAheadLabel = function(med) {
   		if (med == null || med == undefined){

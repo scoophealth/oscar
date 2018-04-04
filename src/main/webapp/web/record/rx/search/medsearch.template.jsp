@@ -33,12 +33,12 @@
 			 class="form-control">
 			
       <div class="input-group-btn">
-      	<button type="button" class="btn btn-default">?</button>
+      	<button type="button" class="btn btn-default" ng-click="$ctrl.fullSearch()">?</button>
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action <span class="caret"></span></button>
         <ul class="dropdown-menu dropdown-menu-right">
-          <li><a href="#">Custom Drug</a></li>
-          <li><a href="#">Note</a></li>
-          <li><a href="#">Drug of Choice</a></li>
+          <li><a ng-click="$ctrl.customDrug()">Custom Drug</a></li>
+          <li><a ng-click="$ctrl.customNote()">Note</a></li>
+          <li><a ng-click="$ctrl.DrugOfChoice()">Drug of Choice</a></li>
           <li role="separator" class="divider"></li>
           <li class="dropdown-header">Favourites</li>
           <li  ng-repeat="fmed in $ctrl.favouriteMeds"><a ng-click="$ctrl.selectFav(fmed)">{{fmed.name}}</a></li>
