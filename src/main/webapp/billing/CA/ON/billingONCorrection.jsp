@@ -431,6 +431,7 @@ function validateAmountNumberic(idx) {
 
         billingNo = Integer.parseInt(billNo);
 		bCh1 = bCh1Dao.find(billingNo);
+	billNoErr = (bCh1 == null);
 
         if (bCh1 != null) {	
 
@@ -595,7 +596,11 @@ function validateAmountNumberic(idx) {
 						credit = new BigDecimal(creditItem.getValue());
 					}
 					*/
-					total = bCh1.getTotal();
+
+                                        if (bCh1 != null)
+                                        {
+                                            total = bCh1.getTotal();
+                                        }
 					
 					balance = total.subtract(payment).subtract(discount).add(credit);
 					payment = payment.subtract(credit);
@@ -1080,8 +1085,13 @@ for (ClinicNbr clinic : nbrs) {
 
         if (bFlag) {
             BillingONService billingONService = (BillingONService) SpringUtils.getBean("billingONService"); 
-            List<BillingONItem> bItems = billingONService.getNonDeletedInvoices(bCh1.getId());
+            List<BillingONItem> bItems = new ArrayList();
             
+            if (bCh1 != null)
+            {
+                bItems = billingONService.getNonDeletedInvoices(bCh1.getId());
+            }
+
             if (!bItems.isEmpty()) {
 
                 int maxRecs = Math.max(bItems.size(), MAXRECORDS);
