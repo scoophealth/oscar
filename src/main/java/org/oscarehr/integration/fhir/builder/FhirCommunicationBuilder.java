@@ -35,6 +35,7 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.Communication.CommunicationPayloadComponent;
 import org.hl7.fhir.dstu3.model.Communication.CommunicationStatus;
+import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.model.Destination;
 import org.oscarehr.integration.fhir.model.OscarFhirResource;
 import org.oscarehr.integration.fhir.model.Sender;
@@ -45,6 +46,11 @@ import org.oscarehr.integration.fhir.model.Sender;
  */
 public class FhirCommunicationBuilder extends FhirMessageBuilder {
 
+	public FhirCommunicationBuilder( OscarFhirConfigurationManager configurationManager ) {
+		super( configurationManager );
+		setCommunication( new org.hl7.fhir.dstu3.model.Communication() );
+	}
+	
 	public FhirCommunicationBuilder( Sender sender, Destination destination ) {
 		super( sender, destination );
 		setCommunication( new org.hl7.fhir.dstu3.model.Communication() );
@@ -54,8 +60,12 @@ public class FhirCommunicationBuilder extends FhirMessageBuilder {
 		Date timestamp = new Date( System.currentTimeMillis() );
 		
 		// Sender : The Sender Organization (Organization)
-		communication.getSender().setReference( getSender().getOscarFhirResource().getContainedReferenceLink() );
-		communication.getContained().add( (Resource) getSender().getFhirResource() );
+		OscarFhirResource<?,?> senderOscarFhirResource = getSender().getOscarFhirResource();
+		if( senderOscarFhirResource != null ) {
+			communication.getSender().setReference( senderOscarFhirResource.getContainedReferenceLink() );
+			communication.getContained().add( (Resource) senderOscarFhirResource.getFhirResource() );
+		}
+		
 		
 		// Destination: The Destination as an Organization Resource.
 		List<OscarFhirResource<?,?>> oscarFhirResources = this.getDestination().getOscarFhirResources();
@@ -68,7 +78,7 @@ public class FhirCommunicationBuilder extends FhirMessageBuilder {
 		communication.getMeta().setLastUpdated( timestamp );
 		
 		// TODO Need to feed Oscar's URI into this. ID is random UUID for now. 
-		communication.addIdentifier().setSystem("http://oscar-emr.org/")
+		communication.addIdentifier().setSystem( getSender().getEndpoint() )
 			.setValue( UUID.randomUUID().toString() ); 
 		
 		// Timestamp Sent

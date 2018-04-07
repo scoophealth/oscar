@@ -1,10 +1,4 @@
 package org.oscarehr.integration.fhir.builder;
-
-import org.oscarehr.common.model.Clinic;
-import org.oscarehr.integration.fhir.model.Sender;
-
-import oscar.OscarProperties;
-
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -28,33 +22,31 @@ import oscar.OscarProperties;
  * Hamilton
  * Ontario, Canada
  */
+
+import org.oscarehr.common.dao.ClinicDAO;
+import org.oscarehr.common.model.Clinic;
+import org.oscarehr.integration.fhir.model.Sender;
+import org.oscarehr.util.SpringUtils;
+import oscar.OscarProperties;
+
+
 public final class SenderFactory {
-	
-	// TODO these global variables will not remain here.
-	
-	private static String vendorName = "Oscar EMR";
-	private static String softwareName = "Oscar";
+
+	// PHU = Public Health Unit. Used in Ontario to identify regional health units.
+	private static String clinicPHU = OscarProperties.getInstance().getProperty("default_phu", "0" );
 	private static String buildName = OscarProperties.getInstance().getProperty("buildtag", "[OSCAR BUILD]");
 	private static String senderEndpoint = OscarProperties.getInstance().getProperty("ws_endpoint_url_base", "[OSCAR ENDPOINT]");
-	
-	// TODO also set up a PHU resource.
-		
-	//TODO JPA Clinic resource here. The test resource below is temporary. 
-	
-	private static Clinic clinic = new Clinic() {{
-		this.setId( 4321 );
-		this.setClinicAddress("123 Clinic Street");
-		this.setClinicCity("Vancouver");
-		this.setClinicProvince("BC");
-		this.setClinicPhone("778-567-3445");
-		this.setClinicFax("778-343-3453");
-		this.setClinicName("Test Medical Clinic"); 
-	}};
+	private static ClinicDAO clinicDao = SpringUtils.getBean( ClinicDAO.class );
+	private static String vendorName = "Oscar EMR";
+	private static String softwareName = "Oscar";
 
+	
 	public static final Sender getSender() {
-		Sender sender = new Sender(vendorName,softwareName,buildName,senderEndpoint);
-		sender.addClinic( clinic );
+		Sender sender = new Sender( vendorName, softwareName, buildName, senderEndpoint );
+		Clinic clinic = clinicDao.getClinic();
+		sender.setClinic( clinic );
+		sender.setClinicPHU( clinicPHU );
 		return sender;
 	}
-
+	
 }

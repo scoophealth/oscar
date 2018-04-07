@@ -25,21 +25,30 @@ package org.oscarehr.integration.fhir.model;
 
 import java.util.UUID;
 import org.oscarehr.common.model.AbstractModel;
+import org.oscarehr.integration.fhir.interfaces.ResourceAttributeFilterInterface;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
-import org.oscarehr.integration.fhir.resources.FhirConfiguration;
 import org.oscarehr.integration.fhir.resources.ResourceAttributeFilter;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 import ca.uhn.fhir.context.FhirContext;
 
 
-public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.BaseResource, OSCAR extends AbstractModel<?> > {
+public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.BaseResource, OSCAR extends AbstractModel<?> > 
+implements ResourceAttributeFilterInterface {
+	
+	public enum ActorType {
+		none,
+		performing, // a practitioner whom executed the medical service on a patient
+		submitting // the practitioner whom is most responsible for the patient
+	}
 	
 	private static FhirContext fhirContext = FhirContext.forDstu3();
 	private FHIR fhirResource;
 	private OSCAR oscarResource;
 	private OscarFhirConfigurationManager configurationManager;
-	
+	private boolean focusResource;
+	private ActorType actor = ActorType.none;
+
 	/**
 	 * Map attributes from an Oscar resource into a FHIR Resource. 
 	 * 
@@ -97,10 +106,6 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 	}
 	
 	protected void setFhirResource( FHIR fhirResource ) {		
-		if( configurationManager != null ) {
-			configurationManager.setTargetResource( this );
-		}
-		
 		setId( fhirResource );
 		this.fhirResource = fhirResource;
 		
@@ -153,46 +158,69 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 		String referenceLink = String.format( "%s%s", resourceType, getFhirResource().getId().replaceAll( resourceType, "" ) );
 		getFhirResource().setId( referenceLink );
 		return ( "#" + referenceLink );
+	} 
+
+	/**
+	 * override to return true whenever the filter is not available. 
+	 */
+	@Override
+	public boolean include( OptionalFHIRAttribute attribute ) {
+		boolean include = Boolean.TRUE;
+		ResourceAttributeFilter resourceAttributeFilter = getFilter( this.getClass() );
+		if( resourceAttributeFilter != null ) {
+			include = resourceAttributeFilter.include( attribute );
+		}
+		return include;
 	}
 
-	protected ResourceAttributeFilter getResourceAttributeFilter() {
+	@Override
+	public boolean isMandatory( MandatoryFHIRAttribute attribute ) {
+		ResourceAttributeFilter resourceAttributeFilter = getFilter( this.getClass() );
+		boolean mandatory = Boolean.FALSE;
+		if( resourceAttributeFilter != null ) {
+			mandatory = resourceAttributeFilter.isMandatory( attribute );
+		}
+		return mandatory;
+	}
+
+	@Override
+	public ResourceAttributeFilter getFilter( Class<?> targetResource ) {
 		ResourceAttributeFilter resourceAttributeFilter = null;
 		if( this.configurationManager != null  ) {
-			resourceAttributeFilter = configurationManager.getResourceAttributeFilter();
+			resourceAttributeFilter = configurationManager.getResourceAttributeFilter( targetResource );
 		}
 		return resourceAttributeFilter;
-	}
-
-	public FhirConfiguration getFhirConfiguration() {
-		FhirConfiguration fhirConfiguration = null; 
-		if( configurationManager != null ) {
-			fhirConfiguration = configurationManager.getFhirConfiguration();
-		}
-		return fhirConfiguration;
 	}
 
 	public OscarFhirConfigurationManager getConfigurationManager() {
 		return configurationManager;
 	}
 	
+	public boolean isFocusResource() {
+		return focusResource;
+	}
 
-	//TODO implement these 
-	
-	public boolean include( Enum<?> attribute ) {
-		boolean pass = Boolean.TRUE;
-		if( getResourceAttributeFilter() != null ) {
-			pass = getResourceAttributeFilter().includeAttribute( attribute.name() );
-		}
-		return pass;
+	/**
+	 * Only one resource can be the focus point in any message structure.
+	 * Ie: the Patient is the focus resource in an immunization transmission 
+	 */
+	public void setFocusResource( boolean focusResource ) {
+		this.focusResource = focusResource;
 	}
 	
-
-	public boolean isMandatory( Enum<?> attribute ) {
-		boolean manditory = Boolean.FALSE;
-		if( getResourceAttributeFilter() != null ) {
-			manditory = getResourceAttributeFilter().includeAttribute( attribute.name() );
-		}
-		return manditory;
+	/**
+	 * Get the type of actor for this resource. Returns null if not set.
+	 */
+	public final ActorType getActor() {
+		return actor;
 	}
-	
+
+	/**
+	 * Set the type of actor for this resource
+	 * This is auto set when instantiating the Practitioner subclasses. 
+	 */
+	public final void setActor(ActorType actor) {
+		this.actor = actor;
+	}
+
 }

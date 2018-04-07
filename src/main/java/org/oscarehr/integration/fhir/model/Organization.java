@@ -24,10 +24,7 @@ package org.oscarehr.integration.fhir.model;
  * Ontario, Canada
  */
 
-
-
 import java.util.List;
-
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.Address.AddressUse;
 import org.hl7.fhir.dstu3.model.ContactPoint;
@@ -38,7 +35,7 @@ import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Contact;
 import org.oscarehr.common.model.ProfessionalContact;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
-import org.oscarehr.integration.fhir.utils.MiscUtils;
+import org.oscarehr.integration.fhir.utils.FhirUtils;
 
 /*
  *  {doco
@@ -75,13 +72,6 @@ import org.oscarehr.integration.fhir.utils.MiscUtils;
 public class Organization 
 	extends OscarFhirResource< org.hl7.fhir.dstu3.model.Organization, org.oscarehr.common.model.Contact > {
 
-	/*
-	 * These are the FHIR Resource attributes that are optional in this class. 
-	 * They can be blocked by creating a new filter in  that feeds into the ResourceAttributeFilter class.
-	 * The default is to always to include. 
-	 */
-	private enum OptionalFHIRAttribute { address, telecom, fax, oranizationName } 
-	
 	private org.oscarehr.common.model.Clinic clinic;
 
 	public Organization( org.oscarehr.common.model.Contact contact ) {
@@ -203,7 +193,7 @@ public class Organization
 	
 	private void setAddress( Contact oscarResource ) {
 		Address address = getFhirResource().getAddressFirstRep();
-		oscarResource.setAddress( MiscUtils.fhirAddressLineToString( address ) );
+		oscarResource.setAddress( FhirUtils.fhirAddressLineToString( address ) );
 		oscarResource.setCity( address.getCity() );
 		oscarResource.setProvince( address.getState() );
 		oscarResource.setPostal( address.getPostalCode() );
@@ -223,8 +213,8 @@ public class Organization
 	
 	private void setTelecom( Contact oscarResource ) {		
 		List<ContactPoint> contactPointList = getFhirResource().getTelecom();
-		oscarResource.setWorkPhone( MiscUtils.getFhirPhone( contactPointList ) );
-		oscarResource.setFax( MiscUtils.getFhirFax( contactPointList ) );
+		oscarResource.setWorkPhone( FhirUtils.getFhirPhone( contactPointList ) );
+		oscarResource.setFax( FhirUtils.getFhirFax( contactPointList ) );
 	}
 
 	/**
@@ -247,7 +237,7 @@ public class Organization
 	}
 
 	private void setIdentifier( Contact oscarResource ) {
-		( (ProfessionalContact) oscarResource).setCpso( MiscUtils.getFhirOfficialIdentifier( getFhirResource().getIdentifier() ));
+		( (ProfessionalContact) oscarResource).setCpso( FhirUtils.getFhirOfficialIdentifier( getFhirResource().getIdentifier() ));
 	}
 	
 	/**

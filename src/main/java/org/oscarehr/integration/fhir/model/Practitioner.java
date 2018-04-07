@@ -23,29 +23,16 @@ package org.oscarehr.integration.fhir.model;
  * Ontario, Canada
  */
 
-import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.integration.fhir.exception.MandatoryAttributeException;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.util.MiscUtils;
-import java.util.List;
-import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
 
 public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Practitioner, org.oscarehr.common.model.Provider> {
 
-	protected enum OptionalFHIRAttribute { telecom, workPhone, qualification, oneid, email, otherphone }
-	protected enum MandatoryFHIRAttribute { practitionerNo }
-	
-	public enum LicenseType { CPSO, CNO }
-	public enum ActorType {
-		performing, // a practitioner whom executed the medical service on a patient
-		submitting // the practitioner whom is most responsible for the patient
-		}
-	
-	private ActorType actor;
-	private Clinic location;
+	public enum LicenseType { CPSO, CNO, DEFAULT }
 
 	public Practitioner( Provider provider ) {
 		super( new org.hl7.fhir.dstu3.model.Practitioner(), provider );
@@ -103,21 +90,6 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 		oscarResource.setLastName( getFhirResource().getNameFirstRep().getFamily() );
 	}
 
-	public final Clinic getLocation() {
-		return location;
-	}
-
-	/**
-	 * This is a contained resource.
-	 */
-	public final void setLocation( Clinic location ) {
-		Organization organization = new Organization( location );
-		List<Address> address = organization.getFhirResource().getAddress();	
-		getFhirResource().setAddress( address );
-
-		this.location = location;
-	}
-	
 	private final void setName( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
 		fhirResource.addName()
 		.setFamily( getOscarResource().getLastName() )
@@ -139,13 +111,17 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 		
 		//TODO these codes cannot be hard coded like this. Temporary hack
 		String licensetype = getOscarResource().getPractitionerNoType();
+		
+		if( licensetype == null || licensetype == "" )  {
+			licensetype = LicenseType.DEFAULT.name();
+		}
 
 		switch( LicenseType.valueOf( licensetype ) ) {
 		case CNO: setNurseIdentifier( fhirResource, practitionerNumber );
 			break;
 		case CPSO: setDoctorIdentifier( fhirResource, practitionerNumber );
 			break;
-		default: fhirResource.addIdentifier().setSystem( "" ).setValue( practitionerNumber );
+		case DEFAULT: fhirResource.addIdentifier().setSystem( "" ).setValue( practitionerNumber );
 			break;		
 		}
 
@@ -203,21 +179,6 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 			.setUse( ContactPointUse.WORK )
 			.setSystem( ContactPointSystem.PHONE )
 			.setValue( getOscarResource().getWorkPhone() );
-	}
-
-	/**
-	 * Get the type of actor for this practitioner (Performing or Submitting)
-	 */
-	public final ActorType getActor() {
-		return actor;
-	}
-
-	/**
-	 * Set the type of actor for this practitioner (Performing or Submitting)
-	 * This is autoset when instantiating the sub classes. 
-	 */
-	public final void setActor(ActorType actor) {
-		this.actor = actor;
 	}
 
 }

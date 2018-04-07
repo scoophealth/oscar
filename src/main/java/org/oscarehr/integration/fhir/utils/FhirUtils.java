@@ -34,7 +34,7 @@ import org.hl7.fhir.dstu3.model.StringType;
 import org.hl7.fhir.dstu3.model.codesystems.ContactPointSystem;
 import org.hl7.fhir.dstu3.model.codesystems.IdentifierUse;
 
-public final class MiscUtils {
+public final class FhirUtils {
 	
 	public static final List<String> fhirAddressLineToString( List<Address> addresses ) {
 		List<String> addressList = null;

@@ -1,4 +1,4 @@
-package org.oscarehr.integration.fhir.exception;
+package org.oscarehr.integration.fhir.resources.constants;
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -23,14 +23,6 @@ package org.oscarehr.integration.fhir.exception;
  * Ontario, Canada
  */
 
-
-public class MandatoryAttributeException extends Exception {
-
-	public MandatoryAttributeException( String comment ) {
-		super( comment );
-	}
-	
-	public MandatoryAttributeException() {
-		super( "This attribute is mandatory. It was found to be null or empty." );
-	}
+public enum ProfessionalRelationship {
+	emergency, family, legal, friend, nurse, doctor
 }

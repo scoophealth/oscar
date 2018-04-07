@@ -25,15 +25,16 @@ package org.oscarehr.integration.fhir.builder;
 
 import java.io.File;
 import java.net.URL;
-import org.oscarehr.integration.fhir.model.OscarFhirResource;
+
 import org.oscarehr.integration.fhir.resources.ResourceAttributeFilter;
 import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
 
 public final class ResourceAttributeFilterFactory {
 	
 	private static final String ROOT_RESOURCE_URL = "/org/oscarehr/integration/fhir/filters/";	
-	public static final String FILE_APPEND = "filter";
-	
+	private static final String FILE_NAME = "resource_attribute";
+	private static final String FILE_APPEND = "filter";
+
 	/**
 	 * Returns a Resource Attribute Filter class customized specifically for the 
 	 * FHIR destination and FHIR Resource. 
@@ -46,21 +47,21 @@ public final class ResourceAttributeFilterFactory {
 	 * getFilter("/born/Patient.filter")
 	 * 
 	 */
-	public static ResourceAttributeFilter getFilter( FhirDestination destination, OscarFhirResource<?,?> target) {
-		return getFilter( destination.name().toLowerCase(), target.getClass().getSimpleName().toLowerCase() );
+	public static ResourceAttributeFilter getFilter( FhirDestination destination ) {
+		return getFilter( destination.name().toLowerCase() );
 	}
 	
-	private static ResourceAttributeFilter getFilter( String destination, String classname ) {
-		String filterURL = String.format( "%s%s%s%s.%s", ROOT_RESOURCE_URL, destination, File.separator, classname, FILE_APPEND );
+	private static ResourceAttributeFilter getFilter( String destination ) {
+		String filterURL = String.format( "%s%s%s%s.%s", ROOT_RESOURCE_URL, destination, File.separator, FILE_NAME, FILE_APPEND );
+		
+		// dont even try to instantiate a class if the resource is not available. 
 		URL url = ResourceAttributeFilterFactory.class.getResource( filterURL );
 		if( url == null ) {
 			return null;
 		}
-		return getFilter( filterURL );
+		
+		return new ResourceAttributeFilter( url.getPath() );
 	}
-	
-	private static ResourceAttributeFilter getFilter( String url ) {
-		return new ResourceAttributeFilter( url ); 
-	}
+
 
 }

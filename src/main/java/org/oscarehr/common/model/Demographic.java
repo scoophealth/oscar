@@ -32,7 +32,7 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -134,7 +134,7 @@ public class Demographic extends AbstractModel<Integer> implements Serializable 
     private List<DemographicExt> demographicExts;
 	
 	@Transient
-	private HashMap<String, String> demographicExtendedProperties;
+	private Hashtable<String, String> demographicExtendedProperties;
 
         public String getTitle() {
         	return title;
@@ -904,8 +904,10 @@ public class Demographic extends AbstractModel<Integer> implements Serializable 
 	@Override
 	public int hashCode() {
 		if (Integer.MIN_VALUE == this.hashCode) {
-			if (null == this.getDemographicNo()) return super.hashCode();
-			else {
+			if ( null == this.getDemographicNo() ) {
+				// do nothing, warn everyone.
+				MiscUtils.getLogger().warn(OBJECT_NOT_YET_PERISTED, new Exception());
+			} else {
 				String hashStr = this.getClass().getName() + ":" + this.getDemographicNo().hashCode();
 				this.hashCode = hashStr.hashCode();
 			}
@@ -1150,9 +1152,9 @@ public class Demographic extends AbstractModel<Integer> implements Serializable 
 		return demographicExt;
 	}
 
-	public HashMap<String, String> getDemographicExtendedProperties() {
+	public Hashtable<String, String> getDemographicExtendedProperties() {
 		if( demographicExtendedProperties == null ) {
-			demographicExtendedProperties = new HashMap<String, String>();
+			demographicExtendedProperties = new Hashtable<String, String>();
 		}
 		return demographicExtendedProperties;
 	}
@@ -1165,7 +1167,7 @@ public class Demographic extends AbstractModel<Integer> implements Serializable 
 		return getDemographicExtendedProperties().get( property.name() );
 	}
 
-	public void setDemographicExtendedProperties( HashMap<String, String> demographicExtendedProperties ) {
+	public void setDemographicExtendedProperties( Hashtable<String, String> demographicExtendedProperties ) {
 		if( this.getDemographicExts() != null && demographicExtendedProperties.isEmpty() ) {
 			for( DemographicExt demographicExt : getDemographicExts() ) {
 				addDemographicExtendedProperty( demographicExt );

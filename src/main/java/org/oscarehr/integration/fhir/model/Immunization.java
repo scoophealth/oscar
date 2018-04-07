@@ -1,5 +1,4 @@
 package org.oscarehr.integration.fhir.model;
-
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -28,11 +27,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.hl7.fhir.dstu3.model.BooleanType;
+import org.hl7.fhir.dstu3.model.DateType;
 import org.hl7.fhir.dstu3.model.Immunization.ImmunizationStatus;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
+
 
 /*
   {doco
@@ -88,10 +89,8 @@ import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
  *
  */
 public class Immunization 
-extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.common.model.Prevention > {
+extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.common.model.Prevention >  {
 
-	private enum OptionalFHIRAttribute { annotation }
-	
 	private static final Pattern measurementValuePattern = Pattern.compile("^([0-9])*(\\.)*([0-9])*");
 
 	public Immunization( ImmunizationInterface<Prevention> from ){
@@ -184,13 +183,18 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 	 */
 	private void setAdministrationDate( org.hl7.fhir.dstu3.model.Immunization immunization ){
 
+		// immunization.setDate( getOscarResource().getPreventionDate() );	
 		BooleanType estimated = new BooleanType();
 		estimated.setValue( getOscarResource().isCompletedExternally() );
-			
-		immunization.setDate( getOscarResource().getPreventionDate() )
-			.addExtension()
-			.setUrl("https://ehealthontario.ca/API/FHIR/StructureDefinition/ca-on-extension")
-			.setValue( estimated );		
+
+		DateType dateType = new DateType();
+		dateType.setValue(getOscarResource().getPreventionDate());
+		dateType.addExtension().setUrl("https://ehealthontario.ca/API/FHIR/StructureDefinition/ca-on-extension-estimated-date").setValue( estimated );
+		
+		immunization.setDate( dateType.getValue() );
+		
+		immunization.addExtension( dateType.getExtensionFirstRep() );
+
 	}
 
 	private void setAdministrationDate( ImmunizationInterface<Prevention> prevention ){

@@ -42,7 +42,6 @@ import org.oscarehr.integration.fhir.model.Destination;
 import org.oscarehr.integration.fhir.model.OscarFhirResource;
 import org.oscarehr.integration.fhir.model.Sender;
 import org.oscarehr.util.MiscUtils;
-
 import ca.uhn.fhir.context.FhirContext;
 
 
@@ -75,7 +74,7 @@ public abstract class FhirMessageBuilder {
 	}
 	
 	protected FhirMessageBuilder( OscarFhirConfigurationManager oscarFhirConfigurationManager ) {
-		// setEndpointParameters( oscarFhirConfigurationManager, destination.getDestinations() );
+		setEndpointParameters( oscarFhirConfigurationManager.getSender(), oscarFhirConfigurationManager.getDestination() );
 		this.oscarFhirConfigurationManager = oscarFhirConfigurationManager;
 	}
 
@@ -129,6 +128,8 @@ public abstract class FhirMessageBuilder {
 		messageHeader.setTimestamp( new Date(System.currentTimeMillis() ) );
 		messageHeader.setSource( getSender().getMessageSourceComponent() );
 		messageHeader.setDestination( getDestination().getMessageDestinationComponents() );
+		messageHeader.getSender().setDisplay( getSender().getClinic().getClinicName() );
+				
 		setMessageHeader( messageHeader );
 	}
 	
@@ -197,6 +198,7 @@ public abstract class FhirMessageBuilder {
 	/**
 	 * Add a Resource reference link that will be identified as the Author 
 	 * Resource in the MessageHeader. Usually the practitioner resource.
+	 * Can also be considered the submitter of this message.
 	 */
 	public void setMessageHeaderAuthor( Reference reference ) {
 		if( getMessageHeader() != null ) {
@@ -248,17 +250,6 @@ public abstract class FhirMessageBuilder {
 	private void setDestination(Destination destination) {
 		this.destination = destination;
 	}
-	
-	/**
-	 * Used in certain situations when the Message Header Author is also 
-	 * known as the Message Submitter. The given Resource will be altered to 
-	 * represent the attributes required for a submitter.
-	 * The Author reference link will be set to this Resource.
-	 * @param reference
-	 */
-	public void setMessageHeaderSubmitter(  Reference reference ) {
-		setMessageHeaderAuthor( reference );
-	}
 
 	/**
 	 * Get a List of Resources that were contained in this message bundle.
@@ -269,6 +260,21 @@ public abstract class FhirMessageBuilder {
 		}
 		return resources;
 	}
+		
+	//TODO this will need to be set in a properties. ie: DHIR = MessageHeader.focus = Patient Resource
+	private void resourceFilter( OscarFhirResource< ?,? > oscarFhirResource ) {
+		
+		if( oscarFhirResource.isFocusResource() ) {
+			
+			addMessageHeaderFocus( oscarFhirResource.getReference() );
+		} 
+		
+		if(  oscarFhirResource.getActor().equals( OscarFhirResource.ActorType.submitting ) ) {
+			
+			setMessageHeaderAuthor( oscarFhirResource.getReference() );
+			
+		}
+	}
 	
 	public void addResources( List< OscarFhirResource< ?,? > > oscarFhirResources ) {
 		for( OscarFhirResource< ?,? > oscarFhirResource :  oscarFhirResources ) {
@@ -277,6 +283,7 @@ public abstract class FhirMessageBuilder {
 	}
 	
 	public void addResource( OscarFhirResource< ?,? > oscarFhirResource ) {
+		resourceFilter( oscarFhirResource );
 		getResources().add( oscarFhirResource );		
 		BaseResource resource = oscarFhirResource.getFhirResource();
 		addResource( resource );
@@ -389,7 +396,6 @@ final class ReferenceKey {
 	public String getId() {
 		return id;
 	}
-
 
 	public void setId(String id) {
 		this.id = id;

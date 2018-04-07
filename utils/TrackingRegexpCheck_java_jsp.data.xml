@@ -1119,6 +1119,11 @@
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDao.java:Hashtable&lt;String, Long&gt; retHash = new Hashtable&lt;String, Long&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDao.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDao.java:public Hashtable&lt;String, Long&gt; getHashofMessages(String providerNo, String name) {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/common/model/Demographic.java:demographicExtendedProperties = new Hashtable&lt;String, String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/common/model/Demographic.java:import java.util.Hashtable;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/common/model/Demographic.java:private Hashtable&lt;String, String&gt; demographicExtendedProperties;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/common/model/Demographic.java:public Hashtable&lt;String, String&gt; getDemographicExtendedProperties() {</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/common/model/Demographic.java:public void setDemographicExtendedProperties( Hashtable&lt;String, String&gt; demographicExtendedProperties ) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/FlowSheetCustomAction.java:Hashtable&lt;String,String&gt; h = new Hashtable&lt;String,String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/FlowSheetCustomAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/SearchProviderAutoCompleteAction.java:Hashtable d=new Hashtable();</ViolationValue>

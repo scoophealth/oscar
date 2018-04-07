@@ -28,11 +28,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import org.apache.log4j.Logger;
+import org.oscarehr.integration.fhir.interfaces.ResourceAttributeFilterInterface;
 import org.oscarehr.util.MiscUtils;
 
-public class ResourceAttributeFilter {
+public class ResourceAttributeFilter implements ResourceAttributeFilterInterface {
 	
 	private static Logger logger = MiscUtils.getLogger();
+	
+	private Class<?> targetResource;
 	private Properties properties;
 
 	public ResourceAttributeFilter(  String filterURL ) {
@@ -62,20 +65,35 @@ public class ResourceAttributeFilter {
 	/**
 	 * Checks if the given attribute value should be included (true) or excluded (false)
 	 */
-	public boolean includeAttribute( String attribute ) {
+	@Override
+	public final boolean include( OptionalFHIRAttribute attribute ) {
+		boolean value = validate( attribute.name() );
+		logger.info( "Filtering optional attribute " + attribute.name() + "=" + value );
+		return value;
+	}
+	
+	@Override
+	public final boolean isMandatory( MandatoryFHIRAttribute attribute ) {
+		boolean value = validate( attribute.name() );
+		logger.info( "Filtering mandatory attribute " + attribute.name() + "=" + value );
+		return value;
+	}
+
+	@Override
+	public ResourceAttributeFilter getFilter( Class<?> targetResource ) {
+		this.targetResource = targetResource;
+		return this;
+	}
+
+	private boolean validate( String attribute ) {
+		String value = "true";
 		
-		if( attribute != null ) {
-			attribute = attribute.trim();
+		if( properties != null ) {		
+			value = properties.getProperty( String.format( "%s.%s", targetResource.getSimpleName().toLowerCase(), attribute ), "true" );
 		}
 		
-		String value = properties.getProperty( attribute, "true" );
-		
-		logger.info( "Filtering attribute " + attribute + "=" + value );
-		
-		if( value != null ) {
-			value = value.trim().toLowerCase();
-		}
-		
+		value = value.trim().toLowerCase();
+
 		return Boolean.parseBoolean( value );
 	}
 

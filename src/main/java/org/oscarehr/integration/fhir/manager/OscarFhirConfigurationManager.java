@@ -26,60 +26,54 @@ package org.oscarehr.integration.fhir.manager;
 import org.apache.log4j.Logger;
 import org.oscarehr.integration.fhir.builder.DestinationFactory;
 import org.oscarehr.integration.fhir.builder.ResourceAttributeFilterFactory;
+import org.oscarehr.integration.fhir.builder.SenderFactory;
 import org.oscarehr.integration.fhir.model.Destination;
-import org.oscarehr.integration.fhir.model.OscarFhirResource;
-import org.oscarehr.integration.fhir.resources.FhirConfiguration;
+import org.oscarehr.integration.fhir.model.Sender;
 import org.oscarehr.integration.fhir.resources.ResourceAttributeFilter;
 import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
+import org.oscarehr.integration.fhir.resources.constants.Region;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 public final class OscarFhirConfigurationManager {
 
 	private static Logger logger = MiscUtils.getLogger();
 	
-	private FhirDestination fhirDestination;
-	private OscarFhirResource<?,?> targetResource;
 	private Destination destination;
+	private Sender sender;
+	private LoggedInInfo loggedInInfo;
 	private ResourceAttributeFilter resourceAttributeFilter;
-	private FhirConfiguration fhirConfiguration;
-	
+
 	/**
 	 * Every configuration Object is set based on the FHIR destination.
 	 */
-	public OscarFhirConfigurationManager( FhirDestination fhirDestination ) {
-		this.fhirDestination = fhirDestination;
+	public OscarFhirConfigurationManager( LoggedInInfo loggedInInfo, FhirDestination fhirDestination, Region region ) {
+		this.loggedInInfo = loggedInInfo;
 		this.destination = DestinationFactory.getDestination( fhirDestination );
-	}
-	
-	public OscarFhirResource<?,?> getTargetResource() {
-		return targetResource;
-	}
-	
-	public void setTargetResource( OscarFhirResource<?,?> targetResource ) {
+		this.sender = SenderFactory.getSender();
 		
-		logger.info( "Setting resource attribute filter for " + targetResource.getClass().getName() );
+		logger.info( "Setting resource attribute filter for " + fhirDestination );
 		
-		resourceAttributeFilter = ResourceAttributeFilterFactory.getFilter( fhirDestination, targetResource );	
-		// TODO FHIR CONFIGURATION HERE.
-		this.targetResource = targetResource;
+		this.resourceAttributeFilter = ResourceAttributeFilterFactory.getFilter( fhirDestination );
 	}
-	
+
 	public Destination getDestination() {
 		return destination;
 	}
 
-	public ResourceAttributeFilter getResourceAttributeFilter() {
-		return resourceAttributeFilter; 
+	public Sender getSender() {
+		return sender;
 	}
-	
-	/**
-	 * FHIR Configuration has 3 states:
-	 * Global:  all FHIR config attributes
-	 * Location: all FHIR config attributes specific to the destination.
-	 * Resource: all FHIR config attributes specific to the destination and FHIR resource
-	 */
-	public FhirConfiguration getFhirConfiguration( ) {
-		return this.fhirConfiguration;
+
+	public LoggedInInfo getLoggedInInfo() {
+		return loggedInInfo;
+	}
+
+	public ResourceAttributeFilter getResourceAttributeFilter( Class<?> targetResource ) {
+		if( resourceAttributeFilter == null ) {
+			return null;
+		}
+		return resourceAttributeFilter.getFilter( targetResource );
 	}
 	
 }

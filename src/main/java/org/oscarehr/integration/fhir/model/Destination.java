@@ -54,14 +54,14 @@ public final class Destination {
 	private List<FhirDestination> destinations;
 	private List<BaseResource> fhirResources;
 	
+	public Destination() {
+		// default constructor.
+	}
+	
 	public Destination(String name, String endpoint) {
 		addDestination( name, endpoint );
 	}
 	
-	public Destination() {
-		// default constructor.
-	}
-
 	public List<MessageDestinationComponent> getMessageDestinationComponents() {
 		if( messageDestinationComponents == null ) {
 			 messageDestinationComponents = new ArrayList<MessageDestinationComponent>();
@@ -69,18 +69,11 @@ public final class Destination {
 		return messageDestinationComponents;
 	}
 
-//	private void setMessageDestinationComponents( List<MessageDestinationComponent> messageDestinationComponents ) {
-//		for( MessageDestinationComponent messageDestinationComponent : messageDestinationComponents ) {
-//			addMessageDestinationComponent( messageDestinationComponent );
-//		}
-//	}
-//	
 	/**
 	 * Add a new destination Name and its associated endpoint. 
 	 * Multiple destinations can be added. 
 	 */
 	private void addMessageDestinationComponent( MessageDestinationComponent messageDestinationComponent ){
-		// getDestinations().put( messageDestinationComponent.getName(), messageDestinationComponent.getEndpoint() );
 		toOrganization( messageDestinationComponent );
 		getMessageDestinationComponents().add( messageDestinationComponent );
 	}

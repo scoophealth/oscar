@@ -37,11 +37,13 @@ import java.util.Date;
 public interface ImmunizationInterface<T> {
 	
 	public enum ImmunizationProperty{lot,location,route,dose,comments,neverReason,manufacture,name,expiryDate}
-	
+
 	/**
 	 * Get an immunization data value by ImmunizationProperty key
 	 */
 	public String getImmunizationProperty( ImmunizationProperty immunizationProperty );
+	
+	public boolean isImmunization();
 		
 	public String getLotNo();
 	public void setLotNo(String lotNo);

@@ -22,12 +22,13 @@ package org.oscarehr.integration.fhir.model;
  * Hamilton
  * Ontario, Canada
  */
-import java.util.ArrayList;
+
 import java.util.List;
+import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.oscarehr.common.model.Contact;
 import org.oscarehr.common.model.ProfessionalContact;
 import org.oscarehr.common.model.ProfessionalSpecialist;
-
 import ca.uhn.fhir.model.dstu2.composite.AddressDt;
 import ca.uhn.fhir.model.dstu2.composite.CodeableConceptDt;
 import ca.uhn.fhir.model.dstu2.resource.Location;
@@ -89,11 +90,10 @@ import ca.uhn.fhir.model.primitive.StringDt;
 	  }],
 	  "availabilityExceptions" : "<string>" // Description of availability exceptions
 	}
+ * @param <T>
  */
-public class PatientContact {
+public class PatientContact extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient, Contact >  {
 	
-	public static enum ContactRelationship { emergency, family, legal, friend, nurse, doctor }
-
 	private org.oscarehr.common.model.Contact contact;
 	private ProfessionalSpecialist professionalSpecialist;
 	private org.oscarehr.common.model.DemographicContact demographicContact;
@@ -102,10 +102,6 @@ public class PatientContact {
 	private ca.uhn.fhir.model.dstu2.resource.Patient.Contact[] fhirContacts;
 	private ca.uhn.fhir.model.dstu2.resource.Patient.Contact fhirContact;
 	private List<CodeableConceptDt> contactRelationships; 
-	
-	public static enum CaredoveContactRelationshipEnum {spouse, son, daughter, sibling, parent, mother, father,
-		friend, guardian, other }
-	public static enum CaredoveContactType { sdm, poa, other }
 
 	public PatientContact( org.oscarehr.common.model.Contact[] contacts ) {
 		this.setContacts( contacts );
@@ -153,6 +149,18 @@ public class PatientContact {
 		}
 
 	}
+	
+	@Override
+	protected void mapAttributes(Patient fhirResource) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void mapAttributes( Contact oscarResource ) {
+		// TODO Auto-generated method stub		
+	}
+	
 
 	/**
 	 * Get the Oscar Entity Contact.
@@ -402,22 +410,6 @@ public class PatientContact {
 		}
 		this.fhirContact = fhirContact;
 	}
-	
-	public void addFHIRContactRelationship( ContactRelationship contactRelationship ) {
-	
-		CodeableConceptDt fhirContactRelationship = new CodeableConceptDt();
-		fhirContactRelationship.setText( contactRelationship.name() );
-		
-		if( getFhirContact() != null ) {
-			getFhirContact().addRelationship( fhirContactRelationship );		
-		}
 
-		if( this.contactRelationships == null ) {
-			this.contactRelationships = new ArrayList<CodeableConceptDt>();
-		}
-		
-		this.contactRelationships.add( fhirContactRelationship );
-
-	}
 
 }

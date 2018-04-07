@@ -1,4 +1,5 @@
 package org.oscarehr.integration.fhir.interfaces;
+
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -23,10 +24,16 @@ package org.oscarehr.integration.fhir.interfaces;
  * Ontario, Canada
  */
 
+
+import org.oscarehr.common.model.AbstractModel;
+
+
 /**
  * An interface used for all contact types in Oscar. 
  */
-public interface OrganizationInterface<T> {
+public interface ContactInterface< T extends AbstractModel<?> > {
+	
+//	public void setContactType()
 
 	public void setId( Integer id );
 	public Integer getId();

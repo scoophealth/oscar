@@ -37,50 +37,11 @@ import org.hl7.fhir.dstu3.model.Reference;
 import org.oscarehr.common.model.Contact;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.ProfessionalContact;
-import org.oscarehr.integration.fhir.utils.MiscUtils;
-
+import org.oscarehr.integration.fhir.utils.FhirUtils;
 
 
 /*
-{
-	  "resourceType": "RelatedPerson",
-	  "id": "RelatedPerson1",
-	  "patient": {
-		"reference": "Patient/Patient1"
-	  },
-	  "relationship": {
-		"coding": [
-		  {
-			"system": "http://hl7.org/fhir/v3/RoleCode",
-			"code": "ONESELF"
-		  }
-		]
-	  },
-	  "name": {
-		"family": [
-		  "Doe"
-		],
-		"given": [
-		  "Jane"
-		]
-	  },
-	  "telecom": [
-		{
-		  "system": "email",
-		  "value": "mom@parent.com"
-		},
-		{
-		  "system": "phone",
-		  "value": "416-555-5555",
-		  "use": "mobile"
-		},
-		{
-		  "system": "phone",
-		  "value": "416-444-4444",
-		  "use": "home"
-		}
-	  ]
-	}
+
 */
 
 public class RelatedPerson extends OscarFhirResource< org.hl7.fhir.dstu3.model.RelatedPerson, org.oscarehr.common.model.Contact > {
@@ -101,7 +62,6 @@ public class RelatedPerson extends OscarFhirResource< org.hl7.fhir.dstu3.model.R
 		super();
 		setPatient( patient );
 	}
-
 
 	/**
 	 * This patient is represents a relationship to another (or the same) patient
@@ -160,7 +120,7 @@ public class RelatedPerson extends OscarFhirResource< org.hl7.fhir.dstu3.model.R
 		setAddress( contact );
 		setTelecom( contact );
 		setIdentifier( contact );
-		setRelationship( contact );
+//		setRelationship( contact );
 	}
 	
 	private void setName(org.hl7.fhir.dstu3.model.RelatedPerson relatedPerson ) {
@@ -186,7 +146,7 @@ public class RelatedPerson extends OscarFhirResource< org.hl7.fhir.dstu3.model.R
 	
 	private void setAddress( Contact contact ) {
 		Address address = getFhirResource().getAddressFirstRep();
-		contact.setAddress( MiscUtils.fhirAddressLineToString( address ) );
+		contact.setAddress( FhirUtils.fhirAddressLineToString( address ) );
 		contact.setCity( address.getCity() );
 		contact.setProvince( address.getState() );
 		contact.setPostal( address.getPostalCode() );
@@ -226,8 +186,8 @@ public class RelatedPerson extends OscarFhirResource< org.hl7.fhir.dstu3.model.R
 	
 	private void setTelecom( Contact contact ) {		
 		List<ContactPoint> contactPointList = getFhirResource().getTelecom();
-		contact.setWorkPhone( MiscUtils.getFhirPhone( contactPointList ) );
-		contact.setFax( MiscUtils.getFhirFax( contactPointList ) );
+		contact.setWorkPhone( FhirUtils.getFhirPhone( contactPointList ) );
+		contact.setFax( FhirUtils.getFhirFax( contactPointList ) );
 	}
 
 	private void setIdentifier( org.hl7.fhir.dstu3.model.RelatedPerson relatedPerson ) {
@@ -240,7 +200,7 @@ public class RelatedPerson extends OscarFhirResource< org.hl7.fhir.dstu3.model.R
 	}
 	
 	private void setIdentifier( Contact contact ) {
-		( (ProfessionalContact) contact).setCpso( MiscUtils.getFhirOfficialIdentifier( getFhirResource().getIdentifier() ));
+		( (ProfessionalContact) contact).setCpso( FhirUtils.getFhirOfficialIdentifier( getFhirResource().getIdentifier() ));
 	}
 	
 	public void setRelationship( org.hl7.fhir.dstu3.model.RelatedPerson relatedPerson ) {
@@ -251,13 +211,5 @@ public class RelatedPerson extends OscarFhirResource< org.hl7.fhir.dstu3.model.R
 			.setCode( "RoleCode" );
 	}
 	
-	private void setRelationship(  Contact contact ) {
-			//TODO: how to set a relationship here.
-	}
-
-//	@Override
-//	public List<Resource> getContainedFhirResources() {
-//		return getFhirResource().getContained();
-//	}
 
 }

@@ -36,7 +36,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -50,7 +49,6 @@ import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
 
 @Entity
 @Table(name = "preventions")
-@NamedQuery(name="Prevention.findAll", query="SELECT p FROM Prevention p")
 public class Prevention extends AbstractModel<Integer> implements Serializable, ImmunizationInterface<Prevention> {
 
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -454,6 +452,14 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 			datestring = dateFormat.format( expiryDate );
 		} 
 		addPreventionExt( ImmunizationProperty.expiryDate, datestring );		
+	}
+
+	/**
+	 * So far, only immunizations have the "dose" key.
+	 */
+	@Override
+	public boolean isImmunization() {
+		return getPreventionExtendedProperties().containsKey( ImmunizationProperty.dose.name() );
 	}
 
 }

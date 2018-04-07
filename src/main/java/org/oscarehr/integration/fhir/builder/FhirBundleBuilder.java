@@ -32,6 +32,7 @@ import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.Bundle.BundleType;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.model.Destination;
+import org.oscarehr.integration.fhir.model.Organization;
 import org.oscarehr.integration.fhir.model.Sender;
 
 /*
@@ -105,9 +106,20 @@ public class FhirBundleBuilder extends FhirMessageBuilder {
 	private void setBundle( Bundle bundle ) {
 		bundle.setId( UUID.randomUUID().toString() );
 		bundle.setType( BundleType.MESSAGE );		
-		bundle.addEntry().setResource( getMessageHeader() );
 		setWrapper( bundle );
+		
+		//TODO this may need to be optional by vendor.
+		initResources();
 	}	
+	
+	private void initResources() {
+		MessageHeader messageHeader = getMessageHeader();
+		Organization responsible = new Organization( getSender().getClinic(), getOscarFhirConfigurationManager() );
+		responsible.setOrganizationPHUID( getSender().getClinicPHU() );
+		messageHeader.setResponsible( responsible.getReference() );
+		addResource( messageHeader );
+		addResource( responsible );
+	}
 
 	@Override
 	protected void addResource( BaseResource resource ) {

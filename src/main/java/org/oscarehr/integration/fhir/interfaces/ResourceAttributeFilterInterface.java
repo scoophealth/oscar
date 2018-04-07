@@ -23,19 +23,37 @@ package org.oscarehr.integration.fhir.interfaces;
  * Ontario, Canada
  */
 
-public interface OptionalFHIRAttributeInterface {
+
+import org.oscarehr.integration.fhir.resources.ResourceAttributeFilter;
+
+public interface ResourceAttributeFilterInterface {
 	
-	/**
-	 * Each enum can be customized in the inheriting class.
-	 */
-	public enum OptionalFHIRAttribute {}
+	public enum OptionalFHIRAttribute {
+		address, 
+		telecom, 
+		fax, 
+		oranizationName,
+		annotation,
+		nameExtension, 
+		nameUse, 
+		namePrefix, 
+		workPhone, 
+		email,
+		qualification, 
+		otherphone
+	}
+	
+	public enum MandatoryFHIRAttribute {
+		practitionerNo,
+		oneid
+	} 
 	
 	/**
 	 * Indicates if the passed in parameter is optional 
 	 * true = include this parameter in every message.
 	 * false = do not include this paramter in every message.
 	 */
-	public boolean include( OptionalFHIRAttribute attribute );
+	public abstract boolean include( OptionalFHIRAttribute attribute );
 	
 	/**
 	 * The OptionalFHIRAttribute optional selector works inversely in this situation. ie:
@@ -49,5 +67,9 @@ public interface OptionalFHIRAttributeInterface {
 	 * practitionerNo = true : this value is not mandatory
 	 * empty : this value is not mandatory
 	 */
-	public boolean isMandatory( OptionalFHIRAttribute attribute );
+	public abstract boolean isMandatory( MandatoryFHIRAttribute attribute );
+	
+	
+	public abstract ResourceAttributeFilter getFilter( Class<?> targetResource );
+
 }

@@ -39,7 +39,7 @@ import org.oscarehr.common.Gender;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.utils.EnumMappingUtil;
-import org.oscarehr.integration.fhir.utils.MiscUtils;
+import org.oscarehr.integration.fhir.utils.FhirUtils;
 
 /*
  *{
@@ -89,14 +89,7 @@ import org.oscarehr.integration.fhir.utils.MiscUtils;
 */
 
 public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient, Demographic > {
-	
-	/*
-	 * These are the FHIR Resource attributes that are optional in this class. 
-	 * They can be blocked by creating a new filter in  that feeds into the ResourceAttributeFilter class.
-	 * The default is to always to include. 
-	 */
-	private enum OptionalFHIRAttribute { nameExtension, nameUse, namePrefix, workPhone, email } 
-	
+
 	public Patient( org.oscarehr.common.model.Demographic from ) {
 		super( new org.hl7.fhir.dstu3.model.Patient(), from );
 	}
@@ -186,7 +179,7 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 	
 	private void setAddress( Demographic demographic ) {
 		Address address = getFhirResource().getAddressFirstRep();
-		demographic.setAddress( MiscUtils.fhirAddressLineToString( address ) );
+		demographic.setAddress( FhirUtils.fhirAddressLineToString( address ) );
 		demographic.setCity(address.getCity());
 		demographic.setProvince(address.getState());
 		demographic.setPostal(address.getPostalCode());
@@ -214,8 +207,8 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 	
 	private void setTelecom( Demographic demographic ) {
 		List<ContactPoint> contactList = getFhirResource().getTelecom();
-		demographic.setPhone( MiscUtils.getFhirPhone(contactList) );
-		demographic.setEmail( MiscUtils.getFhirEmail(contactList) );
+		demographic.setPhone( FhirUtils.getFhirPhone(contactList) );
+		demographic.setEmail( FhirUtils.getFhirEmail(contactList) );
 	}
 	
 	private void setBirthdate( org.hl7.fhir.dstu3.model.Patient patient ) {
@@ -235,7 +228,7 @@ public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient
 	}
 
 	private void setPatientIdentifier( Demographic demographic ) {
-		String hin = MiscUtils.getFhirOfficialIdentifier( getFhirResource().getIdentifier() );
+		String hin = FhirUtils.getFhirOfficialIdentifier( getFhirResource().getIdentifier() );
 		demographic.setHin( hin );
 	}
 

@@ -51,20 +51,28 @@ public class SubmittingPractitioner extends Practitioner {
 	}
 	
 	@Override
-	protected final void setIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) throws MandatoryAttributeException {
-		super.setIdentifier(fhirResource);
-		if( include( OptionalFHIRAttribute.oneid ) ) {
+	protected final void setIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) throws MandatoryAttributeException {		
+		if( isMandatory( MandatoryFHIRAttribute.oneid ) ) {
 			setOntarioOneIdentifier( fhirResource );
+		} else {
+			super.setIdentifier(fhirResource);
 		}
 	}
 	
 	/**
 	 * Specifically used for the Ontario OneID program. Only added in the SubmittingPractitioner.
 	 */
-	protected final void setOntarioOneIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
-		fhirResource.addIdentifier()
+	protected final void setOntarioOneIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) throws MandatoryAttributeException {
+
+		String oneid = getConfigurationManager().getLoggedInInfo().getLoggedInSecurity().getOneIdEmail();
+		
+		if( oneid == null || oneid.isEmpty() ) {
+			throw new MandatoryAttributeException( "Missing mandatory FHIR attribute OneID for Submitting Practitioner" );
+		} else {
+			fhirResource.addIdentifier()
 			.setSystem("https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-provider-oneid")
-			.setValue( getOscarResource().getPractitionerNo() );
+			.setValue( oneid );
+		}	
 	}
 	
 	@Override
