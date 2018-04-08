@@ -596,6 +596,8 @@ $(document).ready(function(){
         </tr>
         <tr>
             <td class="MainTableLeftColumn" valign="top">
+
+
                &nbsp;
 <!--
                <%
@@ -614,6 +616,15 @@ $(document).ready(function(){
 -->
             </td>
             <td valign="top" class="MainTableRightColumn">
+<%
+			if(session.getAttribute("oneIdEmail") == null) {
+		%>
+		<div style="width:100%;background-color:pink;text-align:center;font-weight:bold;font-size:13pt">
+			Warning: You are not logged into OneId and will not be able to submit data to DHIR
+		</div>
+		<% } %>
+
+
             <% if(prevHash == null) { %>
             	<h3 style="color:red">Prevention not found!</h3>
             <%} else { %>

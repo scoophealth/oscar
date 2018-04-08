@@ -30,6 +30,7 @@ import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.MessageHeader;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.Bundle.BundleType;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.model.Destination;
 import org.oscarehr.integration.fhir.model.Organization;
@@ -113,8 +114,10 @@ public class FhirBundleBuilder extends FhirMessageBuilder {
 	}	
 	
 	private void initResources() {
+		Clinic c = new Clinic();
+		c.setClinicName(getSender().getClinicPHUName());
 		MessageHeader messageHeader = getMessageHeader();
-		Organization responsible = new Organization( getSender().getClinic(), getOscarFhirConfigurationManager() );
+		Organization responsible = new Organization( c, getOscarFhirConfigurationManager() );
 		responsible.setOrganizationPHUID( getSender().getClinicPHU() );
 		messageHeader.setResponsible( responsible.getReference() );
 		addResource( messageHeader );

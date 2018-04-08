@@ -252,6 +252,7 @@ public class Organization
 	public void setOrganizationPHUID( String phuId ) {
 		Identifier identifier = new Identifier();
 		identifier.setSystem( "https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-panorama-phu-id" ).setValue( phuId );
+		setIdentifier(identifier);
 	}
 
 }

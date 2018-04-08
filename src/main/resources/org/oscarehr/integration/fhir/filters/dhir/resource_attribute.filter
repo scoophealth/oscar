@@ -3,6 +3,8 @@ submittingpractitioner.practitionerNo=false
 submittingpractitioner.qualification=false
 submittingpractitioner.oneid=true
 submittingpractitioner.otherphone=false
+submittingpractitioner.email=false
+
 
 practitioner.otherphone=false
 practitioner.email=true

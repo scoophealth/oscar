@@ -24,7 +24,10 @@ package org.oscarehr.integration.fhir.manager;
  */
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
+
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
@@ -33,27 +36,63 @@ import org.oscarehr.integration.fhir.model.PerformingPractitioner;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.PreventionManager;
 import org.oscarehr.managers.ProviderManager2;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.stereotype.Service;
+
 import oscar.log.LogAction;
 
 @Service
 public class OscarFhirResourceManager {
 	
-	@Autowired
-	private static PreventionManager preventionManager ;
-	@Autowired
-	private static DemographicManager demographicManager;
-	@Autowired
-	private static ProviderManager2 providerManager;
+	//@Autowired
+	//private static PreventionManager preventionManager ;
+	//@Autowired
+	//private static DemographicManager demographicManager;
+	//@Autowired
+	//private static ProviderManager2 providerManager;
 	
 	public static final List< org.oscarehr.integration.fhir.model.Immunization > getImmunizationsByDemographicNo( OscarFhirConfigurationManager configurationManager, int demographicNo ) {
+		PreventionManager preventionManager = SpringUtils.getBean(PreventionManager.class);
+		
 		//TODO what kind of security check goes here?
 		List< org.oscarehr.integration.fhir.model.Immunization > immunizations = null;
 		List<Prevention> preventions = preventionManager.getPreventionsByDemographicNo( configurationManager.getLoggedInInfo(), demographicNo );
 		
 		if( preventions != null ) {
-			LogAction.addLogSynchronous( configurationManager.getLoggedInInfo(), "OscarFhirResourceManager.getImmunizationsByDemographicNo", "Retrieved Immunization list for FHIR transport " + preventions.toString() );
+			LogAction.addLogSynchronous( configurationManager.getLoggedInInfo(), "OscarFhirResourceManager.getImmunizationsByDemographicNo", "Retrieved Immunization list for FHIR transport "  );
+					
+			for( Prevention prevention : preventions ) {
+				
+				if( prevention.isImmunization() ) {
+					
+					if( immunizations == null ) {
+						immunizations = new ArrayList< org.oscarehr.integration.fhir.model.Immunization >();							
+					}
+					org.oscarehr.integration.fhir.model.Immunization immunization = new org.oscarehr.integration.fhir.model.Immunization( prevention, configurationManager );
+					immunizations.add( immunization );
+				}
+			}
+		}
+		
+		return immunizations;
+	}
+
+	
+	public static final List< org.oscarehr.integration.fhir.model.Immunization > getImmunizationsByDemographicNo( OscarFhirConfigurationManager configurationManager, int demographicNo , int preventionId) {
+		PreventionManager preventionManager = SpringUtils.getBean(PreventionManager.class);
+		
+		//TODO what kind of security check goes here?
+		List< org.oscarehr.integration.fhir.model.Immunization > immunizations = null;
+		List<Prevention> preventions = new ArrayList<Prevention>();
+
+		Prevention p = preventionManager.getPrevention(configurationManager.getLoggedInInfo(), preventionId);
+		p.setPreventionExtendedProperties(new HashMap<String,String>());
+		if(p.getDemographicId().intValue() == demographicNo) {
+			preventions.add(p);
+		}
+		
+		if( preventions != null ) {
+			LogAction.addLogSynchronous( configurationManager.getLoggedInInfo(), "OscarFhirResourceManager.getImmunizationsByDemographicNo", "Retrieved Immunization list for FHIR transport "  );
 					
 			for( Prevention prevention : preventions ) {
 				
@@ -72,7 +111,10 @@ public class OscarFhirResourceManager {
 	}
 	
 	public static final org.oscarehr.integration.fhir.model.Patient getPatientByDemographicNumber( OscarFhirConfigurationManager configurationManager, int demographic_no ) {
+		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+		
 		Demographic demographic = demographicManager.getDemographic( configurationManager.getLoggedInInfo(), demographic_no);
+		demographic.setDemographicExtendedProperties(new Hashtable<String,String>());
 		org.oscarehr.integration.fhir.model.Patient patient = null;
 		
 		if( demographic != null ) {
@@ -84,6 +126,8 @@ public class OscarFhirResourceManager {
 	}
 	
 	public static final List<org.oscarehr.integration.fhir.model.Patient> getPatientsByPHN( OscarFhirConfigurationManager configurationManager, String hcn, String hcnType ) {
+		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+		
 		List<Demographic> demographicList = demographicManager.getActiveDemosByHealthCardNo( configurationManager.getLoggedInInfo(), hcn, hcnType );
 		List<org.oscarehr.integration.fhir.model.Patient> patientList = null;
 		
@@ -104,6 +148,8 @@ public class OscarFhirResourceManager {
 	}
 	
 	public static final org.oscarehr.integration.fhir.model.PerformingPractitioner getPerformingPractitionerByProviderNumber( OscarFhirConfigurationManager configurationManager, String providerNo ) {
+		ProviderManager2 providerManager = SpringUtils.getBean(ProviderManager2.class);
+		
 		Provider provider = providerManager.getProvider( configurationManager.getLoggedInInfo(), providerNo );
 		org.oscarehr.integration.fhir.model.PerformingPractitioner practitioner = null;
 		
@@ -116,6 +162,8 @@ public class OscarFhirResourceManager {
 	}
 	
 	public static final org.oscarehr.integration.fhir.model.Practitioner getPractitionerByProviderNumber( OscarFhirConfigurationManager configurationManager, String providerNo ) {
+		ProviderManager2 providerManager = SpringUtils.getBean(ProviderManager2.class);
+		
 		Provider provider = providerManager.getProvider( configurationManager.getLoggedInInfo(), providerNo );
 		org.oscarehr.integration.fhir.model.Practitioner practitioner = null;
 		
@@ -146,6 +194,29 @@ public class OscarFhirResourceManager {
 		
 		return resourceList;
 	}
+	
+	/**
+	 * Builds a list of linked resources of Immunization data by patient for insertion into a message Bundle 
+	 * Contains:
+	 * - Immunizations
+	 * - Patient
+	 * - SubmittingPractitioner
+	 * - PerformingPractitioner
+	 */
+	public static final List<OscarFhirResource<?,?>> getImmunizationResourceBundle( OscarFhirConfigurationManager configurationManager, org.oscarehr.integration.fhir.model.Patient patient, int preventionId ) {
+		
+		List<org.oscarehr.integration.fhir.model.Immunization> immunizations = OscarFhirResourceManager.getImmunizationsByDemographicNo( configurationManager, patient.getOscarResource().getDemographicNo() , preventionId);
+		
+		
+		org.oscarehr.integration.fhir.model.SubmittingPractitioner submittingPractitioner = new org.oscarehr.integration.fhir.model.SubmittingPractitioner( configurationManager.getLoggedInInfo().getLoggedInProvider(), configurationManager );
+	
+		List<OscarFhirResource<?,?>> resourceList = OscarFhirResourceManager.setPerformingPractitionerAndPatient( configurationManager, immunizations, patient );
+		resourceList.add( submittingPractitioner );
+		resourceList.add( patient );
+		
+		return resourceList;
+	}
+	
 	
 	public static final List<OscarFhirResource<?,?>> setPerformingPractitionerAndPatient( 
 			OscarFhirConfigurationManager configurationManager, 

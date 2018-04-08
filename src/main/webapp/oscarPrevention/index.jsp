@@ -24,6 +24,10 @@
 
 --%>
 
+<%@page import="org.oscarehr.common.model.DHIRSubmissionLog"%>
+<%@page import="org.oscarehr.managers.DHIRSubmissionManager"%>
+<%@page import="org.oscarehr.common.model.Consent"%>
+<%@page import="org.oscarehr.common.dao.ConsentDao"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="org.oscarehr.util.WebUtilsOld"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
@@ -57,7 +61,8 @@ if(!authed) {
 %>
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
-   		 
+	DHIRSubmissionManager submissionManager = SpringUtils.getBean(DHIRSubmissionManager.class);
+
   //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
   String demographic_no = request.getParameter("demographic_no");
   DemographicData demoData = new DemographicData();
@@ -257,7 +262,7 @@ function sendToPhr(button) {
 function addByLot() {
 	var lotNbr = $("#lotNumberToAdd").val();
 	
-	popup(465,635,'AddPreventionData.jsp?demographic_no=<%=demographic_no%>&lotNumber=' + lotNbr,'addPreventionData' + <%=new java.util.Random().nextInt(10000) + 1%> );
+	popup(600,900,'AddPreventionData.jsp?demographic_no=<%=demographic_no%>&lotNumber=' + lotNbr,'addPreventionData' + <%=new java.util.Random().nextInt(10000) + 1%> );
 	
 }
 </script>
@@ -433,7 +438,6 @@ height:10px;
 border:1px solid #999999;
 }
 
-
 </style>
 
 <!--[if IE]>
@@ -491,7 +495,7 @@ text-align:left;
 	            if(!preventionManager.hideItem(prevName)){%>
 					<li style="margin-top: 2px;"><a
 						href="javascript: function myFunction() {return false; }"
-						onclick="javascript:popup(465,635,'AddPreventionData.jsp?4=4&<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
+						onclick="javascript:popup(600,900,'AddPreventionData.jsp?4=4&<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
 					<%=prevName%> </a></li>
 				<%
 				}
@@ -511,6 +515,30 @@ text-align:left;
 		<form name="printFrm" method="post" onsubmit="return onPrint();"
 			action="<rewrite:reWrite jspPage="printPrevention.do"/>">
 		<td valign="top" class="MainTableRightColumn">
+		
+		<%
+			if(session.getAttribute("oneIdEmail") == null) {
+		%>
+		<div style="width:100%;background-color:pink;text-align:center;font-weight:bold;font-size:13pt">
+			Warning: You are not logged into OneId and will not be able to submit data to DHIR
+		</div>
+		<% } %>
+		
+		<%
+			ConsentDao consentDao = SpringUtils.getBean(ConsentDao.class);
+			Consent dhirConsent =  consentDao.findByDemographicAndConsentType(demographicId, "dhir_non_ispa_consent");
+			
+			if(dhirConsent == null || dhirConsent.isOptout() ) {
+		%>
+		<div style="width:100%;background-color:pink;text-align:center;font-weight:bold;font-size:13pt">
+			Warning: Patient has not consented to send non-ISPA data to DHIR.
+		</div>
+		<% } else if (dhirConsent != null && !dhirConsent.isOptout()) { %>
+			<div style="width:100%;background-color:rgb(30, 240, 239);text-align:center;font-weight:bold;font-size:13pt">
+				Patient has consented to send non-ISPA data to DHIR.
+			</div>
+		<% } %>
+		
 		<a href="#" onclick="popup(600,800,'http://www.phac-aspc.gc.ca/im/is-cv/index-eng.php')">Immunization Schedules - Public Health Agency of Canada</a>
 
 		<%
@@ -640,6 +668,8 @@ text-align:left;
 		<div class="preventionSection">
 		<%
 		 String snomedId = h.get("snomedConceptCode") != null ? h.get("snomedConceptCode") : null;
+         boolean ispa = h.get("ispa") != null ? Boolean.valueOf(h.get("ispa")) : false;
+         String ispaView = (ispa) ? "&nbsp;<span title=\"ISPA\">[I]</span>" : "";
          
                     if( alist.size() > 0 ) {
                  
@@ -654,9 +684,10 @@ text-align:left;
 		</div>
 		<div class="headPrevention">
 		<p><a href="javascript: function myFunction() {return false; }"
-			onclick="javascript:popup(465,635,'AddPreventionData.jsp?1=1&<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs( ( h.get("name")).hashCode() ) %>')">
+			onclick="javascript:popup(600,900,'AddPreventionData.jsp?1=1&<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs( ( h.get("name")).hashCode() ) %>')">
 		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%></span>
 		</a>
+		<%=ispaView%>
 		<br />
 		</p>
 		</div>
@@ -666,7 +697,7 @@ text-align:left;
                         Map<String,String> hExt = PreventionData.getPreventionKeyValues((String)hdata.get("id"));
                         result = hExt.get("result");
 
-                        String onClickCode="javascript:popup(465,635,'AddPreventionData.jsp?id="+hdata.get("id")+"&amp;demographic_no="+demographic_no+"','addPreventionData')";
+                        String onClickCode="javascript:popup(600,900,'AddPreventionData.jsp?id="+hdata.get("id")+"&amp;demographic_no="+demographic_no+"','addPreventionData')";
                         if (hdata.get("id")==null) onClickCode="popup(300,500,'display_remote_prevention.jsp?remoteFacilityId="+hdata.get("integratorFacilityId")+"&remotePreventionId="+hdata.get("integratorPreventionId")+"&amp;demographic_no="+demographic_no+"')";
                         %>
              
@@ -682,6 +713,14 @@ text-align:left;
             <span class="footnote">1</span>
             <%      }
                  }%>
+               
+         <%
+			List<DHIRSubmissionLog> dhirLogs =  submissionManager.findByPreventionId(Integer.parseInt((String)hdata.get("id")));
+         	if(!dhirLogs.isEmpty()) {
+         	%> <span class="footnote" style="background-color:black;color:white"><%=dhirLogs.get(0).getStatus()%></span> <%
+         	}
+         %>
+        
 		<%=getFromFacilityMsg(hdata)%></p>
 		</div>
 		<%}%>
@@ -709,14 +748,16 @@ text-align:left;
 		<div style="position: relative; float: left; padding-right: 25px;">
 		<span style="display: none;" name="printSp">&nbsp;</span> <%}
 		 String snomedId = h.get("snomedConceptCode") != null ? h.get("snomedConceptCode") : null;
-         
+		 boolean ispa = h.get("ispa") != null ? Boolean.valueOf(h.get("ispa")) : false;
+		 String ispaView = (ispa) ? "&nbsp;<span title=\"ISPA\">[I]</span>" : "";
 		%>
 		</div>
 		<div class="headPrevention">
 		<p><a href="javascript: function myFunction() {return false; }"
-			onclick="javascript:popup(465,635,'AddPreventionData.jsp?2=2&<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs( ( h.get("name")).hashCode() ) %>')">
+			onclick="javascript:popup(600,900,'AddPreventionData.jsp?2=2&<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs( ( h.get("name")).hashCode() ) %>')">
 		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%></span>
 		</a>
+		<%=ispaView %>
 		<br />
 		</p>
 		</div>
@@ -727,7 +768,7 @@ text-align:left;
                             Map<String,String> hExt = PreventionData.getPreventionKeyValues(hdata.get("id"));
                             result = hExt.get("result");
                             %>
-		<div class="preventionProcedure" onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date_no_time")%>] body=[<%=hExt.get("comments")%>&lt;br/&gt;Entered By: <%=hdata.get("provider_name")%>]">
+		<div class="preventionProcedure" onclick="javascript:popup(600,900,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date_no_time")%>] body=[<%=hExt.get("comments")%>&lt;br/&gt;Entered By: <%=hdata.get("provider_name")%>]">
 		<p <%=r(hdata.get("refused"), result)%>>Age: <%=hdata.get("age")%> <br />
 		<!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date_no_time")%>
 		<%if (hExt.get("comments") != null && (hExt.get("comments")).length()>0) {
@@ -737,6 +778,12 @@ text-align:left;
             <span class="footnote">1</span>
             <%      }
                 }%>
+         <%
+			List<DHIRSubmissionLog> dhirLogs =  submissionManager.findByPreventionId(Integer.parseInt((String)hdata.get("id")));
+         	if(!dhirLogs.isEmpty()) {
+         	%> <span class="footnote" style="background-color:black;color:white"><%=dhirLogs.get(0).getStatus()%></span> <%
+         	}
+         %>
 		</p>
 		</div>
 		<%}%>
@@ -771,7 +818,7 @@ text-align:left;
 		<div class="preventionSection">
 		<div class="headPrevention">
 		<p><a href="javascript: function myFunction() {return false; }"
-			onclick="javascript:popup(465,635,'AddPreventionData.jsp?3=3&prevention=<%= java.net.URLEncoder.encode(h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(h.get("name").hashCode())%>')">
+			onclick="javascript:popup(600,900,'AddPreventionData.jsp?3=3&prevention=<%= java.net.URLEncoder.encode(h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(h.get("name").hashCode())%>')">
 		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%></span>
 		</a>  <br />
 		</p>
@@ -786,7 +833,7 @@ text-align:left;
           	  Map<String,String> hExt = PreventionData.getPreventionKeyValues((String)hdata.get("id"));
             result = hExt.get("result");
 
-            String onClickCode="javascript:popup(465,635,'AddPreventionData.jsp?id="+hdata.get("id")+"&amp;demographic_no="+demographic_no+"','addPreventionData')";
+            String onClickCode="javascript:popup(600,900,'AddPreventionData.jsp?id="+hdata.get("id")+"&amp;demographic_no="+demographic_no+"','addPreventionData')";
             if (hdata.get("id")==null) onClickCode="popup(300,500,'display_remote_prevention.jsp?remoteFacilityId="+hdata.get("integratorFacilityId")+"&remotePreventionId="+hdata.get("integratorPreventionId")+"&amp;demographic_no="+demographic_no+"')";
         %>
 		<div class="preventionProcedure" onclick="<%=onClickCode%>">

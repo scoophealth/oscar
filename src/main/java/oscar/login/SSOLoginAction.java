@@ -26,14 +26,15 @@
 package oscar.login;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
@@ -64,6 +65,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 
+import net.sf.json.JSONObject;
 import oscar.OscarProperties;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
@@ -102,7 +104,7 @@ public final class SSOLoginAction extends MappingDispatchAction {
 	String[] providerInformation;
 	String providerNumber = "";
 	
-    public ActionForward econsultLogin(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public ActionForward econsultLogin(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  throws IOException {
         boolean ajaxResponse = request.getParameter("ajaxResponse") != null ? Boolean.valueOf(request.getParameter("ajaxResponse")) : false;
         ParameterActionForward actionForward = null;
         
@@ -213,7 +215,7 @@ public final class SSOLoginAction extends MappingDispatchAction {
         return actionForward;
     }
     
-    public ActionForward ssoLogin(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public ActionForward ssoLogin(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
     	boolean ajaxResponse = request.getParameter("ajaxResponse") != null ? Boolean.valueOf(request.getParameter("ajaxResponse")) : false;
     	//Gets the IP address
     	String ip = request.getRemoteAddr();
@@ -229,6 +231,9 @@ public final class SSOLoginAction extends MappingDispatchAction {
     	oneIdEmail = request.getParameter("email");
         requestStartTime = request.getParameter("loginStart");
 
+        //access_token for backend app
+        String oneid_token = request.getParameter("oneid_token");
+       
         Boolean valid = isSessionValid();
 
         if (!valid) {
@@ -309,7 +314,7 @@ public final class SSOLoginAction extends MappingDispatchAction {
             session.setAttribute("oscar_context_path", request.getContextPath());
             session.setAttribute("expired_days", providerInformation[5]);
             session.setAttribute("oneIdEmail", oneIdEmail);
-            
+            session.setAttribute("oneid_token", oneid_token);
             if (providerInformation[6] != null && !providerInformation[6].equals("")) {
                 session.setAttribute("delegateOneIdEmail", providerInformation[6]);
             }

@@ -1839,6 +1839,7 @@
 		<action name="createBillingReportActionForm" path="/billing/CA/BC/createBillingReportAction" scope="request" type="oscar.oscarBilling.ca.bc.MSP.CreateBillingReportAction" validate="false" />
 		<action input="/oscarPrevention/AddPreventionData.jsp" name="FrmForm" path="/oscarPrevention/AddPrevention" scope="request" type="oscar.oscarPrevention.pageUtil.AddPreventionAction">
 			<forward name="success" path="/oscarPrevention/close.jsp" />
+			<forward name="review" path="/oscarPrevention/review.jsp" />
 		</action>
 		<action input="/oscarPrevention/PreventionReporting.jsp" name="PreventionReportForm" path="/oscarPrevention/PreventionReport" scope="request" type="oscar.oscarPrevention.pageUtil.PreventionReportAction">
 			<forward name="success" path="/oscarPrevention/PreventionReporting.jsp" />
@@ -2927,6 +2928,10 @@
 
 		<action path="/admin/AuditLogPurge" type="org.oscarehr.admin.web.AuditLogPurgeAction" parameter="method">
 			<forward name="success" path="/admin/auditLogPurge.jsp" />
+		</action>
+		
+		<action path="/dhir/submit" type="org.oscarehr.integration.dhir.SubmitImmunizationAction">
+			<forward name="success" path="/oscarPrevention/dhirSubmission.jsp"/>
 		</action>
 		
 	</action-mappings>

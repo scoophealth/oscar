@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
@@ -130,7 +131,7 @@ public class Demographic extends AbstractModel<Integer> implements Serializable 
     private String countryOfOrigin;
     private String newsletter;
     
-	@OneToMany(mappedBy="demographic")
+	@OneToMany(mappedBy="demographic",fetch=FetchType.EAGER)
     private List<DemographicExt> demographicExts;
 	
 	@Transient
@@ -1174,7 +1175,7 @@ public class Demographic extends AbstractModel<Integer> implements Serializable 
 			}
 		}
 		
-		this.demographicExtendedProperties = demographicExtendedProperties;
+	//	this.demographicExtendedProperties = demographicExtendedProperties;
 	}
 	
 	public void addDemographicExtendedProperty( DemographicProperty key, String value ) {		

@@ -27,13 +27,17 @@ import java.util.List;
 
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.MessageHeader;
+import org.oscarehr.common.model.LookupList;
+import org.oscarehr.common.model.LookupListItem;
 import org.oscarehr.integration.fhir.builder.FhirBundleBuilder;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.manager.OscarFhirResourceManager;
 import org.oscarehr.integration.fhir.model.OscarFhirResource;
 import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
 import org.oscarehr.integration.fhir.resources.constants.Region;
+import org.oscarehr.managers.LookupListManager;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.SpringUtils;
 
 
 public class DHIR {
@@ -42,7 +46,7 @@ public class DHIR {
 	private static final Region region = Region.ON;
 
 	/**
-	 * Get the FhirBundleBuilder Object.
+	 * Get the FhirBundleBuilder Object for all immunizations
 	 * Useful for adding additional resources or adjusting the message structure.
 	 */
 	public static synchronized FhirBundleBuilder getFhirBundleBuilder( LoggedInInfo loggedInInfo, int demographicNo ) {
@@ -64,6 +68,42 @@ public class DHIR {
 		fhirBundleBuilder.addResources(resourceList);
 		return fhirBundleBuilder;
 	}
+	
+	/**
+	 * Get the FhirBundleBuilder Object for a specific immunization
+	 * Useful for adding additional resources or adjusting the message structure.
+	 */
+	public static synchronized FhirBundleBuilder getFhirBundleBuilder( LoggedInInfo loggedInInfo, int demographicNo, int preventionId ) {
+		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, destination, region );
+		org.oscarehr.integration.fhir.model.Patient patient = OscarFhirResourceManager.getPatientByDemographicNumber( configurationManager, demographicNo );
+		
+		// the patient is the focus resource for this type of bundle
+		// A referrence link will be inserted into the MessageHeader.focus
+		patient.setFocusResource( Boolean.TRUE );
+		
+		// intercept the default clinic PHU with the PHU from the Patient resource.
+		String phu = configurationManager.getSender().getClinicPHU();
+		//String phu = patient.getOscarResource().getPHU();
+		if( phu != null && ! phu.isEmpty()) {
+			configurationManager.getSender().setClinicPHU( phu );
+			
+			LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
+			LookupList ll = lookupListManager.findLookupListByName(loggedInInfo, "phu");
+			if(ll != null) {
+				LookupListItem phuItem =  lookupListManager.findLookupListItemByLookupListIdAndValue(loggedInInfo, ll.getId(), phu);
+				
+				if(phuItem != null) {
+					configurationManager.getSender().setClinicPHUName(phuItem.getLabel());
+				}
+			}
+		}
+		
+		List<OscarFhirResource<?,?>> resourceList = OscarFhirResourceManager.getImmunizationResourceBundle( configurationManager, patient, preventionId );	
+		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( configurationManager );
+		fhirBundleBuilder.addResources(resourceList);
+		return fhirBundleBuilder;
+	}
+	
 	
 	/**
 	 * Get the FHIR Resource Bundle.

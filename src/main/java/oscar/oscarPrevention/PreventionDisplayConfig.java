@@ -138,6 +138,7 @@ public class PreventionDisplayConfig {
 					if(cvcImm != null) {
 						h.put("snomedConceptCode", mapping.getCvcSnomedId());
 						h.put("cvcName", cvcImm.getPicklistName());
+						h.put("ispa",String.valueOf(cvcImm.isIspa()));
 						addedSnomeds.add(mapping.getCvcSnomedId());
 					}
 					
@@ -159,7 +160,7 @@ public class PreventionDisplayConfig {
 				h.put("atc", "");
 				h.put("showIfMinRecordNum", "1");
 				h.put("snomedConceptCode", imm.getSnomedConceptId());
-				
+				h.put("ispa", String.valueOf(imm.isIspa()));
 				if(!addedSnomeds.contains(imm.getSnomedConceptId())) {
 					prevList.add(h);
 					prevHash.put(h.get("name"), h);

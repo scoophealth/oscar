@@ -67,7 +67,7 @@ public class DemographicExt extends AbstractModel<Integer> implements Serializab
     	informedConsent, privacyConsent, usSigned, fNationCom, statusNum, area, ethnicity, 
     	cytolNum, wPhoneExt, hPhoneExt, demo_cell, phoneComment }
     
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="demographic_no", insertable = false, updatable = false )
 	private Demographic demographic;
 	

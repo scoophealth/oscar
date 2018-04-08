@@ -27,6 +27,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.integration.fhir.exception.MandatoryAttributeException;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.util.MiscUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
 
@@ -129,13 +130,13 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 	
 	protected void setNurseIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource, String practitionerNumber ) {
 		fhirResource.addIdentifier()
-		.setSystem( "http://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-nurse" )
+		.setSystem( "https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-nurse" )
 		.setValue( practitionerNumber );		
 	}
 	
 	protected void setDoctorIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource, String practitionerNumber ) {
 		fhirResource.addIdentifier()
-		.setSystem( "http://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-physician" )
+		.setSystem( "https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-physician" )
 		.setValue( practitionerNumber );
 	}
 	
@@ -161,6 +162,9 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 	
 	
 	protected void setWorkPhone( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+		if(StringUtils.isEmpty(getOscarResource().getWorkPhone())) {
+			return;
+		}
 		fhirResource.addTelecom()
 			.setUse( ContactPointUse.WORK )
 			.setSystem( ContactPointSystem.PHONE )
@@ -168,6 +172,9 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 	}
 	
 	protected void setOtherPhone( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+		if(StringUtils.isEmpty(getOscarResource().getPhone())) {
+			return;
+		}
 		fhirResource.addTelecom()
 			.setUse( ContactPointUse.NULL )
 			.setSystem( ContactPointSystem.PHONE )
@@ -175,10 +182,13 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 	}
 	
 	protected void setEmail( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+		if(StringUtils.isEmpty(getOscarResource().getEmail())) {
+			return;
+		}
 		fhirResource.addTelecom()
 			.setUse( ContactPointUse.WORK )
-			.setSystem( ContactPointSystem.PHONE )
-			.setValue( getOscarResource().getWorkPhone() );
+			.setSystem( ContactPointSystem.EMAIL )
+			.setValue( getOscarResource().getEmail() );
 	}
 
 }

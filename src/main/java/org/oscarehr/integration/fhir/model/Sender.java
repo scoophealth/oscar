@@ -74,6 +74,7 @@ public class Sender {
 	private RelatedPerson relatedPerson;
 	private Contact contact;
 	private String clinicPHU;
+	private String clinicPHUName;
 	private Clinic clinic;
 	
 	public Sender() {
@@ -199,4 +200,13 @@ public class Sender {
 		this.clinicPHU = clinicPHU;
 	}
 
+	public String getClinicPHUName() {
+		return clinicPHUName;
+	}
+
+	public void setClinicPHUName(String clinicPHUName) {
+		this.clinicPHUName = clinicPHUName;
+	}
+
+	
 }

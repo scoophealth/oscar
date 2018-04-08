@@ -35,12 +35,31 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.hl7.fhir.dstu3.model.Bundle;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.common.dao.CVCImmunizationDao;
+import org.oscarehr.common.dao.ConsentDao;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DemographicExtDao;
+import org.oscarehr.common.dao.LookupListDao;
+import org.oscarehr.common.dao.LookupListItemDao;
+import org.oscarehr.common.dao.PreventionDao;
+import org.oscarehr.common.model.CVCImmunization;
+import org.oscarehr.common.model.Consent;
+import org.oscarehr.common.model.DemographicExt;
+import org.oscarehr.common.model.LookupList;
+import org.oscarehr.common.model.LookupListItem;
+import org.oscarehr.common.model.Prevention;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.integration.fhir.api.DHIR;
+import org.oscarehr.integration.fhir.builder.FhirBundleBuilder;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.provider.model.PreventionManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.OscarProperties;
 import oscar.oscarPrevention.PreventionData;
 /**
  *
@@ -50,6 +69,14 @@ public class AddPreventionAction  extends Action {
    
 
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	CVCImmunizationDao cvcImmunizationDao = SpringUtils.getBean(CVCImmunizationDao.class);
+    ConsentDao consentDao = SpringUtils.getBean(ConsentDao.class);
+    DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+    DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
+    LookupListDao lookupListDao = SpringUtils.getBean(LookupListDao.class);
+    LookupListItemDao lookupListItemDao = SpringUtils.getBean(LookupListItemDao.class);
+    ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	 
 	
    public AddPreventionAction() {
    }
@@ -151,20 +178,68 @@ public class AddPreventionAction  extends Action {
          if(request.getParameter("cvcName") != null && !request.getParameter("cvcName").equals("-1") ) {
         	 addHashtoArray(extraData,request.getParameter("cvcName"),"brandSnomedId");
          }
-                                                                                                                           
+         
+         Integer preventionId = id != null ? Integer.parseInt(id) : null;
+         String operation = null;
+         
          if (id == null || id.equals("null")){ //New                                             
-        	 PreventionData.insertPreventionData(sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData,snomedId);            
+        	 preventionId = PreventionData.insertPreventionData(sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData,snomedId);
+        	 operation="new_prevention";
          }else if (id != null &&  delete != null  ){  // Delete
-        	 PreventionData.deletePreventionData(id);               
+        	 PreventionData.deletePreventionData(id);    
+        	 operation="delete_prevention";
          }else if (id != null && delete == null ){ //Update
             addHashtoArray(extraData,id,"previousId"); 
-            PreventionData.updatetPreventionData(id,sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData,snomedId);
+            preventionId = PreventionData.updatetPreventionData(id,sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData,snomedId);
+            operation="update_prevention";
          }
 
          PreventionManager prvMgr = (PreventionManager) SpringUtils.getBean("preventionMgr");
          prvMgr.removePrevention(demographic_no); 
          MiscUtils.getLogger().debug("Given "+given+" prevDate "+prevDate+" providerName "+providerName+" provider "+providerNo);
 
+         
+         //should we be sending this?
+         CVCImmunization imm =  cvcImmunizationDao.findBySnomedConceptId(snomedId);
+         Consent dhirConsent =  consentDao.findByDemographicAndConsentType(Integer.parseInt(demographic_no), "dhir_non_ispa_consent");
+			
+         if(imm != null && (imm.isIspa() || (dhirConsent != null && !dhirConsent.isOptout()))) {
+        	 request.setAttribute("preventionId", preventionId);
+        	 PreventionDao preventionDao = SpringUtils.getBean(PreventionDao.class);
+        	 Prevention p =  preventionDao.find(preventionId);
+        	 request.setAttribute("prevention",p);
+        	 request.setAttribute("operation", operation);
+        	 request.setAttribute("demographic", demographicDao.getDemographic(demographic_no));
+        	 DemographicExt phuExt = demographicExtDao.getDemographicExt(Integer.parseInt(demographic_no), "PHU");
+        	 String phu = phuExt != null ? phuExt.getValue() : OscarProperties.getInstance().getProperty("default_phu");
+        	 request.setAttribute("phu", phu);
+        	 
+        	 LookupList ll= lookupListDao.findByName("phu");
+        	 LookupListItem lli =  lookupListItemDao.findByLookupListIdAndValue(ll.getId(), phu);
+        	 request.setAttribute("phuName", lli != null ? lli.getLabel() : null);
+         	 
+        	 String performerProviderNo = p.getProviderNo();
+        	 Provider performer = providerDao.getProvider(performerProviderNo);
+        	 request.setAttribute("performer",performer);
+        	 
+        	FhirBundleBuilder fbb = DHIR.getFhirBundleBuilder(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.parseInt(demographic_no), preventionId);
+        	 
+        	Bundle bundle = fbb.getBundle();
+        	request.setAttribute("bundle", bundle);
+        	
+        	Map<String,Bundle> bundles = (Map<String,Bundle>)request.getSession().getAttribute("bundles");
+        	if(bundles == null) {
+        		 bundles = new HashMap<String,Bundle>();
+        	}
+        	bundles.put(bundle.getId(), bundle);
+        	request.getSession().setAttribute("bundles", bundles);
+        	
+        	MiscUtils.getLogger().info(fbb.getMessageJson());
+        	
+        	 return mapping.findForward("review");
+         }
+         
+         
       return mapping.findForward("success");                                
    }
    

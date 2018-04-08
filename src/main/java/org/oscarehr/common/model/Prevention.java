@@ -33,6 +33,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -88,7 +89,7 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 	private Date lastUpdateDate = null;
 
 	// This is a bi-directional relationship
-	@OneToMany(mappedBy="prevention")
+	@OneToMany(mappedBy="prevention", fetch=FetchType.EAGER)
 	private List<PreventionExt> preventionExts;
 	
 	@Transient
@@ -270,7 +271,7 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 			}
 		}
 		
-		this.preventionExtendedProperties = preventionExtendedProperties;
+	//	this.preventionExtendedProperties = preventionExtendedProperties;
 	}
 	
 	public void setPreventionExtendedProperty( PreventionExt property ) {		
@@ -421,12 +422,12 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 
 	@Override
 	public boolean isPrimarySource() {
-		return isCompletedExternally();
+		return !isCompletedExternally();
 	}
 
 	@Override
 	public void setPrimarySource(boolean truefalse) {
-		setCompletedExternally( truefalse );	
+		setCompletedExternally( !truefalse );	
 	}
 
 	@Override
@@ -461,5 +462,4 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 	public boolean isImmunization() {
 		return getPreventionExtendedProperties().containsKey( ImmunizationProperty.dose.name() );
 	}
-
 }
