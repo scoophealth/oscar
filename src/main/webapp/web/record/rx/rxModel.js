@@ -196,7 +196,7 @@ Drug.prototype.toDrugTransferObject = function (drugKey) {
 
     }
 
-    var tempInstructions = this.getInstructionLine();
+    var tempInstructions = this.getInstructionLine2();
 
     var obj = {
             drugId : this.id,
@@ -224,7 +224,7 @@ Drug.prototype.toDrugTransferObject = function (drugKey) {
             prn: this.prn || false,
             repeats: this.repeats,
             additionalInstructions: this.additionalInstructions,
-
+            quantity:this.quantity,
             endDate: tempEndDate.toISOString(),
             rxDate: tempStartDate.toISOString(),
 
@@ -269,6 +269,7 @@ Drug.prototype.fromDrugTransferObject = function (obj) {
     this.strength = obj.strength;
     this.strengthUnit = obj.strengthUnit;
     this.method = obj.method;
+    this.quantity = obj.quantity;
     this.repeats = obj.repeats;
     this.prn = obj.prn;
     this.instructions = obj.instructions;
@@ -469,6 +470,33 @@ Drug.prototype.getInstructionLine = function(){
     return s;
     
 };
+
+
+Drug.prototype.getInstructionLine2 = function(){
+
+    var s = "";
+
+    s += (this.name || this.brandName) +  " \n";
+    
+    console.log("getInstructionLine 2",this);
+    
+    
+    s += this.instructions + "\n"
+
+    if(this.quantity !== null && this.quantity !== undefined){
+        s += " Qty:" + this.quantity+" ";
+    }
+
+    if(this.repeats !== null && this.repeats !== undefined){
+        s += " Repeats:" + this.repeats+" ";
+    }
+    console.log("double check ",s);
+    return s;
+    
+};
+
+
+
 
 Drug.prototype.resetInstructions = function () {
 

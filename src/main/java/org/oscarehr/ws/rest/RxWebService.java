@@ -40,6 +40,7 @@ import org.oscarehr.common.model.Favorite;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.RxManager;
 import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.rx.util.RxUtil;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.ws.rest.conversion.ConversionException;
@@ -305,6 +306,26 @@ public class RxWebService extends AbstractServiceImpl {
         return resp;
 
     }
+    
+    @Path("/drug/{drugId}")
+    @POST
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public DrugResponse represcribe(@PathParam("drugId") Integer drugId) {
+    		LoggedInInfo info = getLoggedInInfo();
+    		Drug drug = rxManager.getDrug(info, drugId);
+    		DrugResponse resp = new DrugResponse();
+    		
+    		logger.error("special before" +drug.getSpecial());
+    		String special = RxUtil.trimSpecial(drug);
+    		logger.error("special after" +special);
+    		drug.setSpecial(special);
+    		resp.setSuccess(true);
+        resp.setDrug(this.drugConverter.getAsTransferObject(info, drug));
+    		
+    		return resp;
+    }
+ 
 
     /**
      * Creates a prescription for the drugs that are provided.

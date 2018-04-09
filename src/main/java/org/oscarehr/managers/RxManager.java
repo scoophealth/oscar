@@ -100,6 +100,35 @@ public class RxManager {
 
         }
     }
+    
+    
+    /**
+     * Get drug by id,  User is checked to make sure they have permissions to view drug by checking the patient it was prescribed too.
+     *
+     * @param info          details regarding the current user
+     * @param drugId 		id of the drug to retreive
+     *
+     * @return drug 
+     *
+     * @throws UnsupportedOperationException when a drug is not found.
+     */
+    public Drug getDrug( LoggedInInfo info,  int drugId) throws UnsupportedOperationException {
+
+    		Drug drug = drugDao.find(drugId);
+    		
+    		if(drug == null) {
+    			throw new UnsupportedOperationException("drug not found: " + drugId);
+    		}
+    		//(LoggedInInfo loggedInInfo, String action, String content, String contentId, String demographicNo, String data)
+        LogAction.addLog(info, "RxManager.getDrug", "drugs",""+drugId,""+drug.getDemographicId(),drug.toString());
+
+        // Access control check.
+        readCheck(info, drug.getDemographicId());
+        
+        
+
+        return drug;
+    }
 
     /**
      * Adds a new drug to the database.

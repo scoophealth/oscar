@@ -155,11 +155,19 @@ const RxComponent = {
  	
  	rxComp.reRx = function(drug){
  		console.log("reRx in comp",drug);
- 		var d = new Drug();
- 		d.fromDrugTransferObject(drug);
- 		d.start = new Date();
- 		calculateEndDate(d);
- 		rxComp.toRxList.push(d);
+ 		rxService.getMedication(drug.drugId).then(function (resp) {
+			var d = new Drug();
+			console.log("resp", resp);
+			d.fromDrugTransferObject(resp.data.drug);
+			d.start = new Date();
+			d.endDate = calculateEndDate(d);
+			rxComp.toRxList.push(d);
+ 		},
+		function(errorMessage){
+	       console.log("getMedicationDetails "+errorMessage);
+	       rxComp.error=errorMessage;
+	    	});
+ 		
  	}
  	 	
  	

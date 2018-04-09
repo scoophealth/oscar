@@ -112,6 +112,22 @@ angular.module("rxServices", [])
 
             },
 
+            getMedication: function (drugId) {
+
+                var deferred = $q.defer();
+                var queryPath = this.apiPath + "/drug/"+drugId;
+                $http.post(queryPath).then(function (data) {
+                    deferred.resolve(data);
+                    console.log(data);
+                },function () {
+                    console.log("Error, could not update Medication.");
+                    deferred.reject("An error occurred while attempting to update a medication.");
+                });
+
+                return deferred.promise;
+
+            },
+
             discontinueMedication : function(demo, medId, reason){
                 reason = reason || "unknown";
 

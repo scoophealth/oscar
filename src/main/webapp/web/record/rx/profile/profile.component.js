@@ -32,7 +32,7 @@ const RxProfileComponent = {
   		profileObject.profileHash = {};
   		profileObject.profileList = [];
   		for(i=0; i < drugList.length; i++){
-	  			console.log("here1."+i+" ",drugList[i]);
+	  			//console.log("here1."+i+" ",drugList[i]);
 	  			if(angular.isDefined(profileObject.profileHash[drugList[i].atc])){
 	  				profileObject.profileHash[drugList[i].atc].push(drugList[i]);
 	  			}else{
@@ -50,7 +50,7 @@ const RxProfileComponent = {
   		profileObject.profileHash = {};
   		profileObject.profileList = [];
   		for(i=0; i < drugList.length; i++){
-	  			console.log("here1."+i+" ",drugList[i]);
+	  			//console.log("here1."+i+" ",drugList[i]);
 	  			if(angular.isDefined(profileObject.profileHash[drugList[i].atc])){
 	  				profileObject.profileHash[drugList[i].atc].push(drugList[i]);
 	  			}else{
