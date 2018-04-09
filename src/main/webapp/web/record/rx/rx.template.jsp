@@ -100,7 +100,7 @@
 						</form>
 			    </div>
 			  	<div class="col-sm-4">
-				  	<div uib-alert ng-repeat="alert in $ctrl.page.dsMessageHash[med.atc]" class="alert"  ng-class="'alert-' + ($ctrl.getAlertStyl(alert) || 'warning')"  style="padding: 9px;margin-bottom: 3px;" uib-popover-html="{{alert.body}}" popover-trigger="'mouseenter'">
+				  	<div uib-alert ng-repeat="alert in $ctrl.page.dsMessageHash[med.atc]" class="alert"  ng-class="'alert-' + ($ctrl.getAlertStyl(alert) || 'warning')"  style="padding: 9px;margin-bottom: 3px;" <%-- uib-popover-html="{{alert.body}}" popover-trigger="'mouseenter'"  --%>  >
 		 		    {{alert.interactStr}}
 		 			{{alert.name}}
 		 			<br>
@@ -129,7 +129,7 @@
 	    <fieldset>
        		<legend style="margin-bottom:0px;">Alerts</legend>
        		
-	 		<div uib-alert ng-repeat="alert in $ctrl.page.dsMessageList" class="alert"  ng-class="'alert-' + ($ctrl.getAlertStyl(alert) || 'warning')"  style="padding: 9px;margin-bottom: 3px;" uib-popover-html="{{alert.body}}" popover-trigger="'mouseenter'">
+	 		<div uib-alert ng-repeat="alert in $ctrl.page.dsMessageList" class="alert"  ng-class="'alert-' + ($ctrl.getAlertStyl(alert) || 'warning')"  style="padding: 9px;margin-bottom: 3px;" <%-- uib-popover-html="{{alert.body}}" popover-trigger="'mouseenter'" --%> >
 	 		    {{alert.interactStr}}
 	 			{{alert.name}}
 	 			<br>
