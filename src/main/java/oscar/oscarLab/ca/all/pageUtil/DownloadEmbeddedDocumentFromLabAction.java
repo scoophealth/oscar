@@ -69,7 +69,6 @@ public class DownloadEmbeddedDocumentFromLabAction extends Action {
 		output.write(decodedData);
 		output.close();
 
-		//System.out.println("result=" + result);
 
 		return null;
 	}

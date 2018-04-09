@@ -936,7 +936,11 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                                                 <tr>
                                                                     <td nowrap>
                                                                         <div align="left" class="FieldData">
+                                                                         <% if ("ExcellerisON".equals(handler.getMsgType())) { %>
+                                                                         	<strong>Reported by:</strong>
+                                                                         <% } else { %>
                                                                             <strong><bean:message key="oscarMDS.segmentDisplay.formPatientLocation"/>: </strong>
+                                                                         <% } %>
                                                                         </div>
                                                                     </td>
                                                                     <td nowrap>

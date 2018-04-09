@@ -339,25 +339,25 @@ X = deleted (available on request; not always preceded by non-X OBRs in an earli
             String orderStatus = getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(0).getOBR().getResultStatus().getValue());
             
             if("P".equals(orderStatus)) {
-            	return "preliminary";
+            	return "Preliminary";
             }
             if("I".equals(orderStatus)) {
-            	return "pending";
+            	return "Pending";
             }
             if("A".equals(orderStatus)) {
-            	return "partial results";
+            	return "Partial results";
             }
             if("F".equals(orderStatus)) {
-            	return "complete";
+            	return "Complete";
             }
             if("R".equals(orderStatus)) {
             	return "Retransmitted";
             }
             if("C".equals(orderStatus)) {
-            	return "corrected";
+            	return "Corrected";
             }
             if("X".equals(orderStatus)) {
-            	return "deleted";
+            	return "Deleted";
             }
         }catch(Exception e){
             return("");
