@@ -468,7 +468,7 @@ public class RxWebServiceTest {
 
         t.setDrugId(1);
         t.setDemographicNo(1);
-        t.setProviderNo(1);
+        t.setProviderNo("1");
         t.setGenericName("bangbar");
         t.setBrandName("foobar");
         t.setRegionalIdentifier("12345");

@@ -94,7 +94,7 @@ public class DrugConverterTest extends DrugConverter {
 
         assertEquals(1, (int)t.getDrugId());
         assertEquals(1, (int) t.getDemographicNo());
-        assertEquals(1, (int) t.getProviderNo());
+        assertEquals(1, t.getProviderNo());
         assertEquals("Foobar", t.getBrandName());
         assertEquals("Barbang", t.getGenericName());
         assertEquals("12345", t.getRegionalIdentifier());
@@ -211,7 +211,7 @@ public class DrugConverterTest extends DrugConverter {
         Date archivedDate = new Date();
 
         t.setDemographicNo(1);
-        t.setProviderNo(1);
+        t.setProviderNo("1");
         t.setGenericName("bangbar");
         t.setBrandName("foobar");
         t.setRegionalIdentifier("12345");
