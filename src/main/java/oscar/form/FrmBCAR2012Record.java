@@ -111,7 +111,7 @@ public class FrmBCAR2012Record extends FrmRecord{
         props.setProperty("c_address", demographic.getAddress());
         props.setProperty("c_city", demographic.getCity());
         props.setProperty("c_province", demographic.getProvince());
-        props.setProperty("c_postal", demographic.getPostal());
+        props.setProperty("c_postal", demographic.getPostal() != null ? demographic.getPostal() : "");
         props.setProperty("c_phn", demographic.getHin()); 
         props.setProperty("c_phone", demographic.getPhone());
         props.setProperty("c_phoneAlt1", demographic.getPhone2());
