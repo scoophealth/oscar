@@ -62,14 +62,13 @@ public class MsgSendDemographicMessageAction extends Action {
 			throw new SecurityException("missing required security object (_msg)");
 		}
        
-       if ( request.getSession().getAttribute("msgSessionBean") == null){
-           MsgSessionBean bean = new MsgSessionBean();
-           bean.setProviderNo(provNo);
-           ProviderData pd = new ProviderData();
-           bean.setUserName(ProviderData.getProviderName(provNo));
-           request.getSession().setAttribute("msgSessionBean", bean); 
-       } 
-        
+       MsgSessionBean bean  = new MsgSessionBean();
+       bean.setProviderNo(provNo);
+       ProviderData pd = new ProviderData();
+       bean.setUserName(ProviderData.getProviderName(provNo));
+      
+       
+       request.getSession().setAttribute("msgSessionBean", bean);  
        request.setAttribute("demographic_no", request.getParameter("demographic_no"));
        return mapping.findForward("success");   
     }
