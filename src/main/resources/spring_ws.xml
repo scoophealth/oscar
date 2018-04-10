@@ -24,7 +24,9 @@
 	<bean id="abstractLoggingInterceptor" abstract="true">
 		<property name="prettyLogging" value="true" />
 	</bean>
-	<bean id="loggingInInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor" parent="abstractLoggingInterceptor" />
+	<bean id="loggingInInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor" parent="abstractLoggingInterceptor">
+		<property name="limit" value="1024000" />
+	</bean>
 	<bean id="loggingOutInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor" parent="abstractLoggingInterceptor" />
 
     <cxf:bus>
