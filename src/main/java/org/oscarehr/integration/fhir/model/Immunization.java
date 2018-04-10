@@ -193,7 +193,7 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 		
 		immunization.setDate( dateType.getValue() );
 		
-		immunization.addExtension( dateType.getExtensionFirstRep() );
+	//	immunization.addExtension( dateType.getExtensionFirstRep() );
 
 	}
 
@@ -208,7 +208,7 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 		immunization.getVaccineCode().addCoding()
 		.setSystem("http://snomed.info/sct")
 		.setCode( getOscarResource().getVaccineCode() )
-		.setDisplay( getOscarResource().getManufacture() + " " + getOscarResource().getName() );
+		.setDisplay( (getOscarResource().getManufacture() + " " + getOscarResource().getName()).trim() );
 	}
 
 	private void setVaccineCode( ImmunizationInterface<Prevention> prevention ){

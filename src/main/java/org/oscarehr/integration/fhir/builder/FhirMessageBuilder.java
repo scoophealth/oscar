@@ -122,7 +122,7 @@ public abstract class FhirMessageBuilder {
 	private void createMessageHeader( MessageHeader messageHeader ) {
 		messageHeader.setId( UUID.randomUUID().toString() );
 		messageHeader.getEvent()
-			.setSystem("http://hl7.org/fhir/message-type")
+			.setSystem("http://hl7.org/fhir/message-events")
 			.setCode("MedicationAdministration-Recording");
 
 		messageHeader.setTimestamp( new Date(System.currentTimeMillis() ) );
