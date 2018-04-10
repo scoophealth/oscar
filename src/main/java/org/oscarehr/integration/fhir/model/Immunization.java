@@ -183,17 +183,14 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 	 */
 	private void setAdministrationDate( org.hl7.fhir.dstu3.model.Immunization immunization ){
 
-		// immunization.setDate( getOscarResource().getPreventionDate() );	
 		BooleanType estimated = new BooleanType();
 		estimated.setValue( getOscarResource().isCompletedExternally() );
-
-		DateType dateType = new DateType();
-		dateType.setValue(getOscarResource().getPreventionDate());
-		dateType.addExtension().setUrl("https://ehealthontario.ca/API/FHIR/StructureDefinition/ca-on-extension-estimated-date").setValue( estimated );
 		
-		immunization.setDate( dateType.getValue() );
-		
-	//	immunization.addExtension( dateType.getExtensionFirstRep() );
+		immunization.setDate( getOscarResource().getPreventionDate() )
+			.getDateElement()
+			.addExtension()
+			.setUrl("https://ehealthontario.ca/API/FHIR/StructureDefinition/ca-on-extension-estimated-date")
+			.setValue( estimated );
 
 	}
 
