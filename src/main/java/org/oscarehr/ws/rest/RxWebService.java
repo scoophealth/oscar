@@ -38,6 +38,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Favorite;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.PrescriptionManager;
 import org.oscarehr.managers.RxManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.rx.util.RxUtil;
@@ -57,13 +58,16 @@ import org.springframework.stereotype.Component;
 
 import oscar.log.LogAction;
 
+import javax.imageio.ImageIO;
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.StreamingOutput;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +97,8 @@ public class RxWebService extends AbstractServiceImpl {
     @Autowired
     protected DemographicManager demographicManager;
     
+    @Autowired
+    protected PrescriptionManager prescriptionManager;
 
     /**
      * Gets drugs for the demographic and filter based on their status.
@@ -315,10 +321,7 @@ public class RxWebService extends AbstractServiceImpl {
     		LoggedInInfo info = getLoggedInInfo();
     		Drug drug = rxManager.getDrug(info, drugId);
     		DrugResponse resp = new DrugResponse();
-    		
-    		logger.error("special before" +drug.getSpecial());
     		String special = RxUtil.trimSpecial(drug);
-    		logger.error("special after" +special);
     		drug.setSpecial(special);
     		resp.setSuccess(true);
         resp.setDrug(this.drugConverter.getAsTransferObject(info, drug));
@@ -492,7 +495,37 @@ public class RxWebService extends AbstractServiceImpl {
     }
     
     
-    
+    @GET
+    @Path("/{demographicNo}/watermark/{rxNo}")
+    @Produces("image/png")
+    public StreamingOutput watermark(@PathParam("demographicNo") Integer demographicNo,@PathParam("rxNo") Integer rxNo  ,@Context HttpServletRequest request,@Context HttpServletResponse response){
+    		LoggedInInfo loggedInInfo = getLoggedInInfo();
+    		response.setContentType("image/png");
+    		List<Drug> list = prescriptionManager.getDrugsByScriptNo(loggedInInfo, rxNo,null);
+    		StringBuilder sb = new StringBuilder();
+    		for(Drug drug: list) {
+    			sb.append(drug.getSpecial());
+    			sb.append("\n\n");
+    		}
+    		
+    		final String text = sb.toString();
+    		return new StreamingOutput() {
+    			@Override
+    			public void write(java.io.OutputStream os)
+    					throws IOException, WebApplicationException {
+    				try{
+    			
+    					BufferedImage img = RxUtil.getWaterMarkImage(text);
+    		            ImageIO.write(img,"PNG", os);
+    					
+    				}catch(Exception e) {
+    					logger.error("error writing image",e);
+    				}
+    			}
+    			
+    		};
+		
+    }
     @POST
 	@Path("/{demographicNo}/print/{rxNo}")
 	@Produces("application/pdf")

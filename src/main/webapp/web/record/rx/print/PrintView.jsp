@@ -25,8 +25,7 @@
 --%>
 <%@page import="oscar.oscarRx.data.RxPatientData"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscar"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page import="oscar.oscarProvider.data.ProSignatureData, oscar.oscarProvider.data.ProviderData"%>
@@ -75,7 +74,7 @@
 %>
 
 
-<html:html locale="true">
+<html locale="true">
 <head>
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
@@ -85,6 +84,12 @@
  .noprint {
 	 display: none;
  }
+ </style>
+ <style type="text/css"> 
+ .watermark {
+	background: url("../../../../ws/rs/rx/<%=prescription.getDemographicId()%>/watermark/<%=scriptId%>");
+ }
+ 
  </style>
 <html:base />
 
@@ -182,12 +187,13 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
     showPatientDOB=true;
 }
 %>
-<html:form action="/form/formname" styleId="preview2Form">
+<form action="/form/formname" styleId="preview2Form">
 
 	<input type="hidden" name="demographic_no" value="<%=prescription.getDemographicId()%>"/>
     <p id="pharmInfo" style="float:right;">
     </p>
-    <table>
+    <table class="watermark">
+    
         <tr>
             <td>
                             <table id="pwTable" width="400px" height="500px" cellspacing=0 cellpadding=10 border=2>
@@ -412,7 +418,7 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
                                             Logger.getLogger("preview_jsp").error("DRUG LIST SIZE$$$ "+drugList.size()+ "for script ID "+ prescription.getId());
                                             for(Drug drug: drugList){
                                             
-                                                 String fullOutLine=drug.getFullOutLine();//  rx.getFullOutLine().replaceAll(";","<br />");
+                                                 String fullOutLine=drug.getFullOutLine().replaceAll(";","<br />");
 
                                                  if (fullOutLine==null || fullOutLine.length()<=6){
                                                          Logger.getLogger("preview_jsp").error("drug full outline was null");
@@ -543,6 +549,6 @@ if(prop!=null && prop.getValue().equalsIgnoreCase("yes")){
 			</td>
 		</tr>
 	</table>
-</html:form>
+</form>
 </body>
-</html:html>
+</html>

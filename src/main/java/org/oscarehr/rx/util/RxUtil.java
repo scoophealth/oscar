@@ -23,6 +23,11 @@
  */
 package org.oscarehr.rx.util;
 
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+
+import java.awt.image.BufferedImage;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -113,6 +118,48 @@ public class RxUtil {
 
 		return special.trim();
 
+	}
+	
+	public static BufferedImage getWaterMarkImage(String text) {
+		
+		int width = 200;
+		int height = 100;
+		
+		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+        Graphics2D g = img.createGraphics();
+        
+        String[] lines = text.split("\n");
+        height = g.getFontMetrics().getHeight() * lines.length + 20;
+        FontMetrics fm = g.getFontMetrics();
+        for(String line : lines) {
+        		if(width < fm.stringWidth(line)) {
+        			width = fm.stringWidth(line);
+        		}
+        }
+
+        img = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+        g = img.createGraphics();
+        
+        
+        // white background
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, width, height);
+
+        // draw black circle around clock
+        g.setColor(new Color(230,230,230));
+
+        fm = g.getFontMetrics();
+        
+        int y = 10;//; ((height - fm.getHeight()) / 2) + fm.getDescent();
+        //g.setTransform(AffineTransform.getRotateInstance(Math.toRadians(-45), 150, y));
+        //g.drawString(text, x, y);
+        for (String line : text.split("\n")){
+        		int x = (width - fm.stringWidth(line)) / 2;
+            g.drawString(line, x, y += g.getFontMetrics().getHeight());
+    		}
+        
+        g.dispose();
+        return img;
 	}
 
 	
