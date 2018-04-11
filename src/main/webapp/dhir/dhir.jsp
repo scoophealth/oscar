@@ -77,7 +77,7 @@
 	
 	try {
  
-		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("fhirMessage3.json");
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("fhirMessage6.json");
 		String theString = IOUtils.toString(inputStream); 
 	//	logger.info("theString=" + theString);
 		JSONObject bundle = new JSONObject(theString);
