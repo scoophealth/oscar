@@ -1020,9 +1020,65 @@ function addCCName(){
 </script>
 
 
+<%
+String lhndType = "provider"; //set default as provider
+String providerDefault = providerNo;
+
+if(consultUtil.letterheadName == null ){
+//nothing saved so find default	
+UserProperty lhndProperty = userPropertyDAO.getProp(providerNo, UserProperty.CONSULTATION_LETTERHEADNAME_DEFAULT);
+String lhnd = lhndProperty != null?lhndProperty.getValue():null;
+//1 or null = provider, 2 = MRP and 3 = clinic
+
+	if(lhnd!=null){	
+		if(lhnd.equals("2")){
+			//mrp
+			providerDefault = providerNoFromChart;
+		}else if(lhnd.equals("3")){
+			//clinic
+			lhndType="clinic";
+		}
+	}	
+
+}
+%>
+
 <script>
 
 var providerData = new Object(); //{};
+
+
+providerData['<%=StringEscapeUtils.escapeHtml(clinic.getClinicName())%>'] = new Object();
+
+var addr;
+var ph;
+var fx;
+
+<% 
+if (consultUtil.letterheadAddress != null) { 
+	%>addr = '<%=consultUtil.letterheadAddress%>';<%
+} else {
+	%> addr = '<%=clinic.getClinicAddress() %>  <%=clinic.getClinicCity() %>  <%=clinic.getClinicProvince() %>  <%=clinic.getClinicPostal() %>';<%
+}
+
+if(consultUtil.letterheadPhone != null) {
+	%>ph = '<%=consultUtil.letterheadAddress%>';<%
+} else {
+	%>ph = '<%=clinic.getClinicPhone()%>';<%
+}
+
+
+if(consultUtil.letterheadFax != null) {
+	%>fx = '<%=consultUtil.letterheadFax%>';<%
+} else {
+	%>fx = '<%=clinic.getClinicFax()%>';<%
+}
+%>
+providerData['<%=StringEscapeUtils.escapeHtml(clinic.getClinicName())%>'].address = addr;
+providerData['<%=StringEscapeUtils.escapeHtml(clinic.getClinicName())%>'].phone = ph;
+providerData['<%=StringEscapeUtils.escapeHtml(clinic.getClinicName())%>'].fax = fx;
+
+
 <%
 for (Provider p : prList) {
 	if (!p.getProviderNo().equalsIgnoreCase("-1")) {
@@ -1066,10 +1122,12 @@ function switchProvider(value) {
 		document.getElementById("letterheadFax").value = "<%=clinic.getClinicFax().trim() %>";
 		// document.getElementById("letterheadFaxSpan").innerHTML = "<%=clinic.getClinicFax().trim() %>";
 	} else {
-		if (typeof providerData["prov_" + value] != "undefined")
+		var origValue = value;
+		if (typeof providerData["prov_" + value.toString()] != "undefined")
 			value = "prov_" + value;
-
-		document.getElementById("letterheadName").value = value;
+		
+		
+		document.getElementById("letterheadName").value = origValue;
 		document.getElementById("letterheadAddress").value = providerData[value]['address'];
 		document.getElementById("letterheadAddressSpan").innerHTML = providerData[value]['address'].replace(" ", "&nbsp;");
 		document.getElementById("letterheadPhone").value = providerData[value]['phone'];
@@ -1836,28 +1894,7 @@ function updateFaxButton() {
 					<td colspan=2>
 					<table  width="100%">
 						<tr>
-						<%
-						String lhndType = "provider"; //set default as provider
-						String providerDefault = providerNo;
-
-						if(consultUtil.letterheadName == null ){
-						//nothing saved so find default	
-						UserProperty lhndProperty = userPropertyDAO.getProp(providerNo, UserProperty.CONSULTATION_LETTERHEADNAME_DEFAULT);
-						String lhnd = lhndProperty != null?lhndProperty.getValue():null;
-						//1 or null = provider, 2 = MRP and 3 = clinic
 						
-							if(lhnd!=null){	
-								if(lhnd.equals("2")){
-									//mrp
-									providerDefault = providerNoFromChart;
-								}else if(lhnd.equals("3")){
-									//clinic
-									lhndType="clinic";
-								}
-							}	
-
-						}
-						%>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.letterheadName" />:
 							</td>							
 							<td  class="tite3">				
@@ -1932,7 +1969,7 @@ function updateFaxButton() {
 									List<FaxConfig> faxConfigs = faxConfigDao.findAll(null, null);
 								%>
 									<span id="letterheadFaxSpan">
-										<select name="letterheadFax">
+										<select name="letterheadFax" id="letterheadFax">
 								<%
 									for( FaxConfig faxConfig : faxConfigs ) {
 								%>
