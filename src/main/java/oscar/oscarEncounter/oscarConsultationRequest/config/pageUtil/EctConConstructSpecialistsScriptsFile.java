@@ -154,7 +154,7 @@ public class EctConConstructSpecialistsScriptsFile {
 
 	private String escapeString(String s) {
 		s = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(s);
-		s = org.apache.commons.lang.StringEscapeUtils.escapeJava(s);
+	//	s = org.apache.commons.lang.StringEscapeUtils.escapeJava(s);
 		return s;
 	}
 }
