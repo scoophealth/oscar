@@ -678,7 +678,7 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
       	      url: '<%=request.getContextPath()%>'+"/lab/CA/ALL/createLabelTDIS.do",
       	      dataType: "json",
       	      data: { lab_no: jQuery("#labNum_<%=segmentID%>").val(),accessionNum: jQuery("#accNum").val(), label: jQuery("#label_<%=segmentID%>").val(), ajaxcall: true },
-      	      success: function(result) {alert("label applied");
+      	      success: function(result) {console.log("label applied");
       	    	jQuery("#labelspan_<%=segmentID%>").children().get(0).innerHTML = "Label: " +  jQuery("#label_<%=segmentID%>").val();
         	  	document.forms['acknowledgeForm_<%=segmentID%>'].label.value = "";    
       	      }
