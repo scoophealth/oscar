@@ -28,10 +28,6 @@
 		</layout>
 	</appender>
 	
-	<category name="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorUpdateTask" additivity="false">
-		<level value="INFO" />
-		<appender-ref ref="INTEGRATOR_FILE" />
-	</category>
 
 	<!-- Example gmail appender (can be used for any smtp ssl) -->
 	<!-- 
@@ -71,7 +67,7 @@
 	</category>
 
 	<category name="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorUpdateTask" additivity="false">
-		<level value="DEBUG" />
+		<level value="INFO" />
 		<appender-ref ref="INTEGRATOR_FILE" />
 	</category>
 	
