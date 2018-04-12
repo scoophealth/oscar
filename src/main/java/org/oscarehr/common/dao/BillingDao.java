@@ -313,7 +313,7 @@ public class BillingDao extends AbstractDao<Billing> {
 
 	public List<Object[]> findOutstandingBills(Integer demographicNo, String billingType, List<String> statuses) {
 		String q = "FROM Billingmaster bm, Billing b " +
-				"WHERE bm.billingmasterNo = b.id " +
+				"WHERE bm.billingNo = b.id " +
 				"AND b.demographicNo = :dNo " +
 				(statuses.isEmpty() ? "" : "AND bm.billingstatus NOT IN ( :statuses ) ") +
 				"AND b.billingtype = :bType";
