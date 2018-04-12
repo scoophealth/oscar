@@ -97,11 +97,7 @@ function switchColor(val){
 		<td width="100%"
 			style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2"
 			height="0%" colspan="2">
-		<p class="HelpAboutLogout"><span class="FakeLink"><a
-			href="Help.htm"><bean:message key="global.help" /></a></span> | <span
-			class="FakeLink"><a href="About.htm"><bean:message
-			key="global.about" /></a></span> | <span class="FakeLink"> <a
-			href="Disclaimer.htm"><bean:message key="global.disclaimer" /></a></span></p>
+		
 		</td>
 	</tr>
 	<tr>
