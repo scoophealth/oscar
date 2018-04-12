@@ -100,6 +100,9 @@ public class EctConAddSpecialistAction extends Action {
 				}
 			}
 			professionalSpecialistDao.merge(professionalSpecialist);
+
+			EctConConstructSpecialistsScriptsFile constructSpecialistsScriptsFile = new EctConConstructSpecialistsScriptsFile();
+		    constructSpecialistsScriptsFile.makeString(request.getLocale());
 		}
 		else
 		{
