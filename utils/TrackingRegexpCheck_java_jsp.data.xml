@@ -170,6 +170,7 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConShowAllServicesUtil.java:serviceIdVec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/ConsultationPrintDocsAction.java:ArrayList alist = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestUtil.java:teamVec = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:consultProvider = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:providerNo = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementFlowSheet.java://Hashtable dsRulesHash = new Hashtable();   //Each items Rules ** Not sure what to do with yet</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementFlowSheet.java:public Hashtable&lt;String,String&gt; getIndicatorHashtable(){</ViolationValue>
@@ -1604,6 +1605,7 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestUtil.java:public Vector teamVec;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestUtil.java:teamVec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:apptDate = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:consultProvider = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:date = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:demographicNo = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:followUpDate = new Vector&lt;String&gt;();</ViolationValue>
@@ -1612,6 +1614,7 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:patient = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:provider = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:providerNo = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:public Vector consultProvider;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:public Vector&lt;String&gt; apptDate;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:public Vector&lt;String&gt; date;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctViewConsultationRequestsUtil.java:public Vector&lt;String&gt; demographicNo;</ViolationValue>
