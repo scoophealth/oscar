@@ -840,6 +840,15 @@ function checkForm(submissionVal,formName){
      document.EctConsultationFormRequestForm.service.focus();
      return false;
   }
+  
+  var apptDate = document.EctConsultationFormRequestForm.appointmentDate.value;
+  var hasApptTime = document.EctConsultationFormRequestForm.appointmentHour.options.selectedIndex != 0 && 
+  	document.EctConsultationFormRequestForm.appointmentMinute.options.selectedIndex != 0;
+  
+  if(apptDate.length > 0 && !hasApptTime) {
+	  alert('Please enter appointment time. You cannot choose appointment date only.');
+	  return false;
+  }
   $("saved").value = "true";
   document.forms[formName].submission.value=submissionVal;
   document.forms[formName].submit();
