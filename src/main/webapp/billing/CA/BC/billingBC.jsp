@@ -141,7 +141,7 @@ if(!authed) {
    mRecRefDoctor = "none";
   }
 
-  ArrayList<String> recentList = billform.getRecentReferralDoctorsList();
+  ArrayList<String> recentList = billform.getRecentReferralDoctorsList(demo.getDemographicNo());
 %>
 <html>
 <head>
