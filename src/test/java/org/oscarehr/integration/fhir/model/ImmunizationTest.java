@@ -32,12 +32,11 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.oscarehr.common.model.Prevention;
-import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
 import org.oscarehr.util.MiscUtils;
 
 public class ImmunizationTest {
 	private static Logger logger = MiscUtils.getLogger();
-	private static ImmunizationInterface<Prevention> immunization;
+	private static Prevention immunization;
 	private static OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, Prevention> oscarFhirResource;
 	private static final String testJSON = "";
 	private static final String testXML = "";
@@ -59,7 +58,7 @@ public class ImmunizationTest {
 		immunization.setManufacture("Pfizer");
 		immunization.setName("HPV Vaccine");
 	
-		oscarFhirResource = new org.oscarehr.integration.fhir.model.Immunization( immunization );		
+		oscarFhirResource = new org.oscarehr.integration.fhir.model.Immunization<Prevention>( immunization );		
 	}
 
 	@AfterClass

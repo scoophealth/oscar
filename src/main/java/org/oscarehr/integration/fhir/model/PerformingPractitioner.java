@@ -24,6 +24,7 @@ package org.oscarehr.integration.fhir.model;
  */
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
+import org.oscarehr.integration.fhir.resources.constants.ActorType;
 
 
 /**

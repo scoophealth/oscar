@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.hl7.fhir.dstu3.model.BaseResource;
 import org.hl7.fhir.dstu3.model.MessageHeader.MessageDestinationComponent;
-import org.oscarehr.common.model.Contact;
 import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
 
 
@@ -101,17 +100,7 @@ public final class Destination {
 		messageDestinationComponent.setEndpoint(endpoint);
 		addMessageDestinationComponent( messageDestinationComponent );
 	}
-	
-	public void addContacts( List<Contact> contacts ) {
-		for( Contact contact : contacts ) {
-			addOrganization( new org.oscarehr.integration.fhir.model.Organization( contact ) );
-		}
-	}
-	
-	public void addContact( Contact contact ) {
-		addOrganization( new org.oscarehr.integration.fhir.model.Organization( contact ) );
-	}
-	
+
 	private void toOrganization( MessageDestinationComponent messageDestinationComponent ) {
 		org.hl7.fhir.dstu3.model.Organization organization = new org.hl7.fhir.dstu3.model.Organization();
 		organization.setName( messageDestinationComponent.getName() );

@@ -34,9 +34,9 @@ import java.util.Date;
  * 
  * This interface is currently being used in FHIR mapping.
  */
-public interface ImmunizationInterface<T> {
+public interface ImmunizationInterface {
 	
-	public enum ImmunizationProperty{lot,location,route,dose,comments,neverReason,manufacture,name,expiryDate}
+	public enum ImmunizationProperty{lot, location, route, dose, comments, neverReason, manufacture, name, expiryDate}
 
 	/**
 	 * Get an immunization data value by ImmunizationProperty key
@@ -44,6 +44,11 @@ public interface ImmunizationInterface<T> {
 	public String getImmunizationProperty( ImmunizationProperty immunizationProperty );
 	
 	public boolean isImmunization();
+	
+	public int getDemographicId();
+	
+	public String getStatus();
+	public void setStatus( String status );
 		
 	public String getLotNo();
 	public void setLotNo(String lotNo);

@@ -23,6 +23,8 @@ package org.oscarehr.integration.fhir.resources.constants;
  * Ontario, Canada
  */
 
-public enum ProfessionalRelationship {
-	emergency, family, legal, friend, nurse, doctor
+public enum ActorType {
+	none,
+	performing, // a practitioner whom executed the medical service on a patient
+	submitting // the practitioner whom is most responsible for the patient
 }

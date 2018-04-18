@@ -26,6 +26,9 @@
 package org.oscarehr.common.model;
 
 import javax.persistence.Entity;
+import javax.persistence.PostLoad;
+
+import org.oscarehr.integration.fhir.resources.constants.ContactType;
 
 @Entity
 public class ProfessionalContact extends Contact {
@@ -64,6 +67,47 @@ public class ProfessionalContact extends Contact {
 
 	public String toString() {
 		return "ProfessionalRelationship - id:"+ getId();
+	}
+	
+	@Override
+	public void setProviderCpso(String providerCPSO) {
+		this.setCpso(providerCPSO);
+		
+	}
+
+	@Override
+	public String getProviderCpso() {
+		return this.getProviderCpso();
+	}
+	
+	/**
+	 * Organization name is a first name for now. 
+	 * An Organization field should be added to the database.
+	 */
+	@Override
+	public void setOrganizationName(String organizationName) {
+		this.setFirstName( organizationName );
+	}
+
+	@Override
+	public String getOrganizationName() {
+		return ( this.getFirstName() + " " + this.getLastName() );
+	}
+	
+	@Override
+	public void setLocationCode(String locationCode) {
+		setSystemId(locationCode);		
+	}
+
+	@Override
+	public String getLocationCode() {
+		return this.getSystemId();
+	}
+	
+	@Override
+	@PostLoad
+	public void setContactType(ContactType contactType) {
+		contactType = ContactType.professional;
 	}
 
 }

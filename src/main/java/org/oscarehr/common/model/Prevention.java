@@ -50,7 +50,7 @@ import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
 
 @Entity
 @Table(name = "preventions")
-public class Prevention extends AbstractModel<Integer> implements Serializable, ImmunizationInterface<Prevention> {
+public class Prevention extends AbstractModel<Integer> implements Serializable, ImmunizationInterface {
 
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	

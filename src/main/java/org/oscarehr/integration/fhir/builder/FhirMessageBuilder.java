@@ -41,6 +41,7 @@ import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.model.Destination;
 import org.oscarehr.integration.fhir.model.OscarFhirResource;
 import org.oscarehr.integration.fhir.model.Sender;
+import org.oscarehr.integration.fhir.resources.constants.ActorType;
 import org.oscarehr.util.MiscUtils;
 import ca.uhn.fhir.context.FhirContext;
 
@@ -61,7 +62,7 @@ public abstract class FhirMessageBuilder {
 	private HashMap< ReferenceKey, Reference > references;
 	private OscarFhirConfigurationManager oscarFhirConfigurationManager;
 
-	protected abstract void addResource( BaseResource resource );	
+	public abstract void addResource( BaseResource resource );	
 	protected abstract void addAttachment( Attachment attachment );
 
 	/**
@@ -269,7 +270,7 @@ public abstract class FhirMessageBuilder {
 			addMessageHeaderFocus( oscarFhirResource.getReference() );
 		} 
 		
-		if(  oscarFhirResource.getActor().equals( OscarFhirResource.ActorType.submitting ) ) {
+		if(  oscarFhirResource.getActor().equals( ActorType.submitting ) ) {
 			
 			setMessageHeaderAuthor( oscarFhirResource.getReference() );
 			

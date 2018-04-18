@@ -34,16 +34,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import org.oscarehr.integration.fhir.interfaces.ContactInterface;
+import org.oscarehr.integration.fhir.resources.constants.ContactRelationship;
+import org.oscarehr.integration.fhir.resources.constants.ContactType;
 
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="type")
-public class Contact extends AbstractModel<Integer> {
+public class Contact extends AbstractModel<Integer> implements ContactInterface {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,6 +73,12 @@ public class Contact extends AbstractModel<Integer> {
 	private String note;
 	boolean deleted=false;
 
+    @Transient
+    private ContactRelationship contactRelationship;
+    
+    @Transient
+    private ContactType contactType;
+	
 	@Override
 	public Integer getId() {
 		return this.id;
@@ -232,5 +244,66 @@ public class Contact extends AbstractModel<Integer> {
 	
 	public String getFormattedName() {
 		return getLastName() + "," + getFirstName();
+	}
+
+	@Override
+	public void setContactRelationship(ContactRelationship contactRelationship) {
+		this.contactRelationship = contactRelationship;
+	}
+
+	@Override
+	public ContactRelationship getContactRelationship() {
+		return this.contactRelationship;
+	}
+
+	@Override
+	@PostLoad
+	public void setContactType(ContactType contactType) {
+		this.contactType = ContactType.personal;
+	}
+
+	@Override
+	public ContactType getContactType() {
+		return this.contactType;
+	}
+
+	@Override
+	public void setLocationCode(String locationCode) {
+		// unused		
+	}
+
+	@Override
+	public String getLocationCode() {
+		return null;
+	}
+
+	@Override
+	public void setOrganizationName(String organizationName) {
+		// unused
+	}
+
+	@Override
+	public String getOrganizationName() {
+		return null;
+	}
+
+	@Override
+	public void setProviderCpso(String providerCPSO) {
+		// unused		
+	}
+
+	@Override
+	public String getProviderCpso() {
+		return null;
+	}
+
+	@Override
+	public void setPhone(String phone) {
+		this.setResidencePhone(phone);
+	}
+
+	@Override
+	public String getPhone() {
+		return this.getResidencePhone();
 	}
 }

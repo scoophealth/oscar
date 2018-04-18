@@ -160,7 +160,7 @@ public class FhirCommunicationBuilder extends FhirMessageBuilder {
 	}
 	
 	@Override
-	protected void addResource( BaseResource resource ) {
+	public void addResource( BaseResource resource ) {
 		getCommunication().getContained().add( (Resource) resource );
 	}
 	

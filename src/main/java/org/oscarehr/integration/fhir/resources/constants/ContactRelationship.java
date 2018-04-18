@@ -1,4 +1,4 @@
-package org.oscarehr.integration.fhir.builder;
+package org.oscarehr.integration.fhir.resources.constants;
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -23,27 +23,14 @@ package org.oscarehr.integration.fhir.builder;
  * Ontario, Canada
  */
 
-import org.oscarehr.common.dao.ClinicDAO;
-import org.oscarehr.common.model.Clinic;
-import org.oscarehr.integration.fhir.model.Sender;
-import org.oscarehr.util.SpringUtils;
-import oscar.OscarProperties;
+public class ContactRelationship {
 
-
-public final class SenderFactory {
-
-	private static String buildName = OscarProperties.getInstance().getProperty("buildtag", "[OSCAR BUILD]");
-	private static String senderEndpoint = OscarProperties.getInstance().getProperty("ws_endpoint_url_base", "[OSCAR ENDPOINT]");
-	private static ClinicDAO clinicDao = SpringUtils.getBean( ClinicDAO.class );
-	private static String vendorName = "Oscar EMR";
-	private static String softwareName = "Oscar";
-
-	
-	public static final Sender getSender() {
-		Sender sender = new Sender( vendorName, softwareName, buildName, senderEndpoint );
-		Clinic clinic = clinicDao.getClinic();
-		sender.setClinic( clinic );
-		return sender;
+	public enum Personal {
+		spouse, son, daughter, sibling, parent, mother, father,
+		friend, guardian, other
 	}
 	
+	public enum ProfessionalRelationship {
+		emergency, family, legal, friend, nurse, doctor
+	}
 }

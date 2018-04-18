@@ -73,8 +73,6 @@ public class Sender {
 	private Organization organization;
 	private RelatedPerson relatedPerson;
 	private Contact contact;
-	private String clinicPHU;
-	private String clinicPHUName;
 	private Clinic clinic;
 	
 	public Sender() {
@@ -191,22 +189,5 @@ public class Sender {
 	public void setRelatedPerson( RelatedPerson relatedPerson ) {
 		this.relatedPerson = relatedPerson;
 	}
-
-	public String getClinicPHU() {
-		return clinicPHU;
-	}
-
-	public void setClinicPHU(String clinicPHU) {
-		this.clinicPHU = clinicPHU;
-	}
-
-	public String getClinicPHUName() {
-		return clinicPHUName;
-	}
-
-	public void setClinicPHUName(String clinicPHUName) {
-		this.clinicPHUName = clinicPHUName;
-	}
-
 	
 }

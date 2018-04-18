@@ -38,11 +38,9 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Security;
-import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.model.ClinicalImpression;
 import org.oscarehr.integration.fhir.model.Immunization;
-import org.oscarehr.integration.fhir.model.Organization;
 import org.oscarehr.integration.fhir.model.OscarFhirResource;
 import org.oscarehr.integration.fhir.model.Patient;
 import org.oscarehr.integration.fhir.model.PerformingPractitioner;
@@ -61,8 +59,8 @@ public class FhirMessageBuilderTest {
 	private static Provider doctor;
 	
 	private static Demographic demographic;
-	private static ImmunizationInterface<Prevention> prevention;
-	private static ImmunizationInterface<Prevention> prevention2;
+	private static Prevention prevention;
+	private static Prevention prevention2;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() {
@@ -248,12 +246,7 @@ public class FhirMessageBuilderTest {
 		Patient patient = new Patient( demographic, configurationManager );
 		
 		patient.setFocusResource( Boolean.TRUE );
-		
-		// Collect the required resources. 
-		Organization responsible = new Organization( clinic, configurationManager );
-		
-		responsible.setOrganizationPHUID( demographic.getPHU() );
-		
+
 		// The doctor type should be identified in the provider profile. 
 		PerformingPractitioner performing = new PerformingPractitioner( doctor, configurationManager ); // this could be a nurse or the same as the submitting
 		
@@ -264,8 +257,8 @@ public class FhirMessageBuilderTest {
 		// this practitioner must be active AND have a working ONEid code.
 		SubmittingPractitioner submitting = new SubmittingPractitioner( provider, configurationManager ); 
 		
-		Immunization measles = new Immunization( prevention, configurationManager );
-		Immunization hpv = new Immunization( prevention2, configurationManager );
+		Immunization<Prevention> measles = new Immunization<Prevention>( prevention, configurationManager );
+		Immunization<Prevention> hpv = new Immunization<Prevention>( prevention2, configurationManager );
 	
 		// pass the configuration manager into a new FHIR Bundle message builder.
 		// the configuration manager will set the Bundle Header automatically. 
@@ -280,8 +273,7 @@ public class FhirMessageBuilderTest {
 		// list of OscarFhirResources. This is only to demonstrate that 
 		// resources can be contained in an array.
 		List<OscarFhirResource<?, ?>> resourceList = new ArrayList< OscarFhirResource<?, ?> >();
-		resourceList.add( patient );
-		resourceList.add( responsible );		
+		resourceList.add( patient );		
 		resourceList.add( performing );
 		resourceList.add( performing2 );
 		resourceList.add( submitting );

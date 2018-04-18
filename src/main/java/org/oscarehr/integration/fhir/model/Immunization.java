@@ -27,9 +27,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.hl7.fhir.dstu3.model.BooleanType;
-import org.hl7.fhir.dstu3.model.DateType;
 import org.hl7.fhir.dstu3.model.Immunization.ImmunizationStatus;
 import org.hl7.fhir.dstu3.model.Reference;
+import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
@@ -85,37 +85,38 @@ import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 
 /**
  * 
- * constraint: Prevention must implement the ImmunizationInterface.
+ * constraint: Oscar class must implement ImmunizationInterface.
  *
  */
-public class Immunization 
-extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.common.model.Prevention >  {
+public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterface > 
+	extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, T> {
 
 	private static final Pattern measurementValuePattern = Pattern.compile("^([0-9])*(\\.)*([0-9])*");
 
-	public Immunization( ImmunizationInterface<Prevention> from ){
-		super( new org.hl7.fhir.dstu3.model.Immunization(), (Prevention) from );
+	public Immunization( T from ){
+		super( new org.hl7.fhir.dstu3.model.Immunization(), from );
 	}
 	
-	public Immunization( ImmunizationInterface<Prevention> from,  OscarFhirConfigurationManager configurationManager ){
-		super( new org.hl7.fhir.dstu3.model.Immunization(), (Prevention) from, configurationManager );
+	public Immunization( T from,  OscarFhirConfigurationManager configurationManager ){
+		super( new org.hl7.fhir.dstu3.model.Immunization(), from, configurationManager );
 	}
 
+	@SuppressWarnings("unchecked")
 	public Immunization( org.hl7.fhir.dstu3.model.Immunization from ) {
-		super( new Prevention(), from );
+		super( (T) new Prevention(), from );
 	}
-
+	
 	@Override
-	protected void mapAttributes( org.oscarehr.common.model.Prevention prevention ) {
-		setAdministrationDate( prevention );
-		setVaccineCode( prevention );
-		setRefused( prevention );
-		setLotNumber( prevention );
-		setExpirationDate( prevention );
-		setSite( prevention );
-		setDose( prevention );
-		setRoute( prevention );
-		setAnnotation( prevention );
+	protected void mapAttributes( T immunization ) {
+		setAdministrationDate( immunization );
+		setVaccineCode( immunization );
+		setRefused( immunization );
+		setLotNumber( immunization );
+		setExpirationDate( immunization );
+		setSite( immunization );
+		setDose( immunization );
+		setRoute( immunization );
+		setAnnotation( immunization );
 	}
 
 	@Override
@@ -170,9 +171,9 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 
 		ImmunizationStatus immunizationStatus = ImmunizationStatus.NULL;
 
-		if( ! getOscarResource().isNever() && ! getOscarResource().isRefused() ) {
+		// if( ! getOscarResource().isNever() && ! getOscarResource().isRefused() ) {
 			immunizationStatus = ImmunizationStatus.COMPLETED;
-		}
+		// }
 		immunization.setStatus( immunizationStatus );
 	}
 
@@ -184,9 +185,9 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 	private void setAdministrationDate( org.hl7.fhir.dstu3.model.Immunization immunization ){
 
 		BooleanType estimated = new BooleanType();
-		estimated.setValue( getOscarResource().isCompletedExternally() );
+		estimated.setValue( ! getOscarResource().isPrimarySource() );
 		
-		immunization.setDate( getOscarResource().getPreventionDate() )
+		immunization.setDate( getOscarResource().getImmunizationDate() )
 			.getDateElement()
 			.addExtension()
 			.setUrl("https://ehealthontario.ca/API/FHIR/StructureDefinition/ca-on-extension-estimated-date")
@@ -194,8 +195,8 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 
 	}
 
-	private void setAdministrationDate( ImmunizationInterface<Prevention> prevention ){
-		prevention.setImmunizationDate( getFhirResource().getDate() );
+	private void setAdministrationDate( ImmunizationInterface immunization ){
+		immunization.setImmunizationDate( getFhirResource().getDate() );
 	}
 
 	/**
@@ -208,32 +209,32 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 		.setDisplay( (getOscarResource().getManufacture() + " " + getOscarResource().getName()).trim() );
 	}
 
-	private void setVaccineCode( ImmunizationInterface<Prevention> prevention ){
-		prevention.setVaccineCode( getFhirResource().getVaccineCode().getCodingFirstRep().getCode() );
+	private void setVaccineCode( ImmunizationInterface immunization ){
+		immunization.setVaccineCode( getFhirResource().getVaccineCode().getCodingFirstRep().getCode() );
 	}
 
 	private void setRefused( org.hl7.fhir.dstu3.model.Immunization immunization ){
 		immunization.setNotGiven( getOscarResource().getImmunizationRefused() );
 	}
 
-	private void setRefused(  ImmunizationInterface<Prevention> prevention ){
-		prevention.setImmunizationRefused( getFhirResource().getNotGiven() );
+	private void setRefused(  ImmunizationInterface immunization ){
+		immunization.setImmunizationRefused( getFhirResource().getNotGiven() );
 	}
 
 	private void setLotNumber( org.hl7.fhir.dstu3.model.Immunization immunization ){
 		immunization.setLotNumber( getOscarResource().getLotNo() );
 	}
 
-	private void setLotNumber(  ImmunizationInterface<Prevention> prevention ){
-		prevention.setLotNo( getFhirResource().getLotNumber() );
+	private void setLotNumber(  ImmunizationInterface immunization ){
+		immunization.setLotNo( getFhirResource().getLotNumber() );
 	}
 
 	private void setExpirationDate( org.hl7.fhir.dstu3.model.Immunization immunization ){
 		immunization.setExpirationDate(  getOscarResource().getExpiryDate() );
 	}
 
-	private void setExpirationDate(  ImmunizationInterface<Prevention> prevention ){
-		prevention.setExpiryDate( getFhirResource().getExpirationDate() );
+	private void setExpirationDate(  ImmunizationInterface immunization ){
+		immunization.setExpiryDate( getFhirResource().getExpirationDate() );
 	}
 
 	/**
@@ -243,8 +244,8 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 		immunization.getSite().setText( getOscarResource().getSite() );
 	}
 
-	private void setSite(  ImmunizationInterface<Prevention> prevention ){
-		prevention.setSite( getFhirResource().getSite().getText() );
+	private void setSite(  ImmunizationInterface immunization ){
+		immunization.setSite( getFhirResource().getSite().getText() );
 	}
 
 	private void setDose( org.hl7.fhir.dstu3.model.Immunization immunization ){
@@ -262,8 +263,8 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 		immunization.getDoseQuantity().setValue(value).setUnit(unit);
 	}
 
-	private void setDose(  ImmunizationInterface<Prevention> prevention ){
-		prevention.setDose( getFhirResource().getDoseQuantity().getValue().toString() + " " + getFhirResource().getDoseQuantity().getUnit() );
+	private void setDose(  ImmunizationInterface immunization ){
+		immunization.setDose( getFhirResource().getDoseQuantity().getValue().toString() + " " + getFhirResource().getDoseQuantity().getUnit() );
 	}
 
 	private void setRoute( org.hl7.fhir.dstu3.model.Immunization immunization ){
@@ -273,8 +274,8 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 		.setDisplay( getOscarResource().getRoute() );		
 	}
 
-	private void setRoute( ImmunizationInterface<Prevention> prevention ){
-		prevention.setSite( getFhirResource().getRoute().getText() );
+	private void setRoute( ImmunizationInterface immunization ){
+		immunization.setSite( getFhirResource().getRoute().getText() );
 	}
 
 	private void setAnnotation( org.hl7.fhir.dstu3.model.Immunization immunization ){
@@ -282,7 +283,7 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 		immunization.addNote().setText( getOscarResource().getComment() );
 	}
 
-	private void setAnnotation(  ImmunizationInterface<Prevention> prevention ){
+	private void setAnnotation(  ImmunizationInterface immunization ){
 		StringBuilder note = new StringBuilder("");
 		note.append( getFhirResource().getLocation() );
 
@@ -290,7 +291,7 @@ extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, org.oscarehr.c
 			note.append( annotation.getText() );
 		}
 
-		prevention.setComment( note.toString() );
+		immunization.setComment( note.toString() );
 	}
 	
 	/**

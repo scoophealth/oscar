@@ -1,4 +1,4 @@
-package org.oscarehr.integration.fhir.resources.constants;
+package org.oscarehr.integration.fhir.resources.types;
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -23,7 +23,41 @@ package org.oscarehr.integration.fhir.resources.constants;
  * Ontario, Canada
  */
 
-public enum PersonalRelationship {
-	spouse, son, daughter, sibling, parent, mother, father,
-	friend, guardian, other
+public final class PublicHealthUnitType {
+
+	public static enum PhuKey { default_phu, phu }
+
+	private String id;
+	private String name;
+	private String systemURI;
+	
+	public PublicHealthUnitType( String id, String name ) {
+		this.id = id;
+		this.name = name;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getSystemURI() {
+		return systemURI;
+	}
+
+	public void setSystemURI(String systemURI) {
+		this.systemURI = systemURI;
+	}
+
 }
