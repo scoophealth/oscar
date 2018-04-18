@@ -451,11 +451,11 @@ public class BillingFormData {
 	}
 
 	
-	public ArrayList<String> getRecentReferralDoctorsList() {
+	public ArrayList<String> getRecentReferralDoctorsList(Integer demographicNo) {
 		ArrayList<String> recentList = new ArrayList<String>();
 		
 		BillingmasterDAO dao = SpringUtils.getBean(BillingmasterDAO.class);
-		List<Object[]> results = dao.getRecentReferralDoctors();
+		List<Object[]> results = dao.getRecentReferralDoctors(demographicNo);
 
 		if(!results.isEmpty()){
 		String one;
