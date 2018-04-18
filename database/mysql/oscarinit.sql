@@ -160,7 +160,7 @@ CREATE TABLE billing (
   clinic_ref_code varchar(10) default NULL,
   content text,
   total varchar(6) default NULL,
-  status char(1) default NULL,
+  status varchar(1) default NULL,
   dob varchar(8) default NULL,
   visitdate date default NULL,
   visittype char(2) default NULL,
