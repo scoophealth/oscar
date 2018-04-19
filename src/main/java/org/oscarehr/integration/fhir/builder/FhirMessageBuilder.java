@@ -129,7 +129,7 @@ public abstract class FhirMessageBuilder {
 		messageHeader.setTimestamp( new Date(System.currentTimeMillis() ) );
 		messageHeader.setSource( getSender().getMessageSourceComponent() );
 		messageHeader.setDestination( getDestination().getMessageDestinationComponents() );
-		messageHeader.getSender().setDisplay( getSender().getClinic().getClinicName() );
+		messageHeader.getSender().setDisplay( getSender().getSenderName() );
 				
 		setMessageHeader( messageHeader );
 	}

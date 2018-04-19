@@ -25,6 +25,7 @@ package org.oscarehr.integration.fhir.manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.UUID;
@@ -79,36 +80,20 @@ public class OscarFhirResourceManager {
 	}
 
 	
-	public static final List< org.oscarehr.integration.fhir.model.Immunization<Prevention> > getImmunizationsByDemographicNo( OscarFhirConfigurationManager configurationManager, int demographicNo , int preventionId) {
+	public static final org.oscarehr.integration.fhir.model.Immunization<Prevention> getImmunizationByDemographicNoAndId( OscarFhirConfigurationManager configurationManager, int demographicNo , int preventionId) {
 		PreventionManager preventionManager = SpringUtils.getBean(PreventionManager.class);
+		Prevention prevention = preventionManager.getPrevention(configurationManager.getLoggedInInfo(), preventionId);
+		org.oscarehr.integration.fhir.model.Immunization<Prevention> immunization = null;
 		
-		//TODO what kind of security check goes here?
-		List< org.oscarehr.integration.fhir.model.Immunization<Prevention> > immunizations = null;
-		List<Prevention> preventions = new ArrayList<Prevention>();
+		//TODO set this into the entity lifecycle.
+		prevention.setPreventionExtendedProperties(new HashMap<String,String>());
 
-		Prevention p = preventionManager.getPrevention(configurationManager.getLoggedInInfo(), preventionId);
-		p.setPreventionExtendedProperties(new HashMap<String,String>());
-		if(p.getDemographicId().intValue() == demographicNo) {
-			preventions.add(p);
-		}
-		
-		if( preventions != null ) {
+		if( prevention != null || prevention.getDemographicId() == demographicNo ) {
 			LogAction.addLogSynchronous( configurationManager.getLoggedInInfo(), "OscarFhirResourceManager.getImmunizationsByDemographicNo", "Retrieved Immunization list for FHIR transport "  );
-					
-			for( Prevention prevention : preventions ) {
-				
-				if( prevention.isImmunization() ) {
-					
-					if( immunizations == null ) {
-						immunizations = new ArrayList< org.oscarehr.integration.fhir.model.Immunization<Prevention> >();							
-					}
-					org.oscarehr.integration.fhir.model.Immunization<Prevention> immunization = new org.oscarehr.integration.fhir.model.Immunization<Prevention>( prevention, configurationManager );
-					immunizations.add( immunization );
-				}
-			}
+			immunization = new org.oscarehr.integration.fhir.model.Immunization<Prevention>( prevention, configurationManager );		
 		}
 		
-		return immunizations;
+		return immunization;
 	}
 	
 	public static final org.oscarehr.integration.fhir.model.Patient getPatientByDemographicNumber( OscarFhirConfigurationManager configurationManager, int demographic_no ) {
@@ -184,16 +169,10 @@ public class OscarFhirResourceManager {
 	 * - SubmittingPractitioner
 	 * - PerformingPractitioner
 	 */
-	public static final List<OscarFhirResource<?,?>> getImmunizationResourceBundle( OscarFhirConfigurationManager configurationManager, org.oscarehr.integration.fhir.model.Patient patient ) {
+	public static final HashSet<OscarFhirResource<?,?>> getImmunizationResourceBundle( OscarFhirConfigurationManager configurationManager, org.oscarehr.integration.fhir.model.Patient patient, HashSet<OscarFhirResource<?,?>> resourceList ) {
 		
 		List< org.oscarehr.integration.fhir.model.Immunization<Prevention> > immunizations = OscarFhirResourceManager.getImmunizationsByDemographicNo( configurationManager, patient.getOscarResource().getDemographicNo() );
-		org.oscarehr.integration.fhir.model.SubmittingPractitioner submittingPractitioner = new org.oscarehr.integration.fhir.model.SubmittingPractitioner( configurationManager.getLoggedInInfo().getLoggedInProvider(), configurationManager );
-	
-		List<OscarFhirResource<?,?>> resourceList = OscarFhirResourceManager.setPerformingPractitionerAndPatient( configurationManager, immunizations, patient );
-		resourceList.add( submittingPractitioner );
-		resourceList.add( patient );
-		
-		return resourceList;
+		return OscarFhirResourceManager.setPerformingPractitionerAndPatient( configurationManager, immunizations, patient, resourceList );
 	}
 	
 	/**
@@ -204,47 +183,38 @@ public class OscarFhirResourceManager {
 	 * - SubmittingPractitioner
 	 * - PerformingPractitioner
 	 */
-	public static final List<OscarFhirResource<?,?>> getImmunizationResourceBundle( OscarFhirConfigurationManager configurationManager, org.oscarehr.integration.fhir.model.Patient patient, int preventionId ) {
+	public static final HashSet<OscarFhirResource<?,?>> getImmunizationResourceBundle( OscarFhirConfigurationManager configurationManager, org.oscarehr.integration.fhir.model.Patient patient, int preventionId, HashSet<OscarFhirResource<?,?>> resourceList ) {
 		
-		List<org.oscarehr.integration.fhir.model.Immunization<Prevention>> immunizations = OscarFhirResourceManager.getImmunizationsByDemographicNo( configurationManager, patient.getOscarResource().getDemographicNo() , preventionId);		
-		org.oscarehr.integration.fhir.model.SubmittingPractitioner submittingPractitioner = new org.oscarehr.integration.fhir.model.SubmittingPractitioner( configurationManager.getLoggedInInfo().getLoggedInProvider(), configurationManager );
+		org.oscarehr.integration.fhir.model.Immunization<Prevention> immunization = OscarFhirResourceManager.getImmunizationByDemographicNoAndId( configurationManager, patient.getOscarResource().getDemographicNo() , preventionId);
+		return OscarFhirResourceManager.setPerformingPractitionerAndPatient( configurationManager, immunization, patient, resourceList  );
+	}
 	
-		List<OscarFhirResource<?,?>> resourceList = OscarFhirResourceManager.setPerformingPractitionerAndPatient( configurationManager, immunizations, patient );
-		resourceList.add( submittingPractitioner );
+	public static final HashSet<OscarFhirResource<?,?>> setPerformingPractitionerAndPatient( 
+			OscarFhirConfigurationManager configurationManager, 
+			org.oscarehr.integration.fhir.model.Immunization<Prevention> immunization, 
+			org.oscarehr.integration.fhir.model.Patient patient, HashSet<OscarFhirResource<?,?>> resourceList) {
+		
+		String performingProviderNo = immunization.getOscarResource().getProviderNo();
+		PerformingPractitioner performingPractitioner = OscarFhirResourceManager.getPerformingPractitionerByProviderNumber( configurationManager, performingProviderNo );
+		if( performingPractitioner != null ) {
+			immunization.addPerformingPractitioner( performingPractitioner.getReference() );
+			resourceList.add( performingPractitioner );
+		}
+		immunization.setPatientReference( patient.getReference() );
 		resourceList.add( patient );
+		resourceList.add( immunization );
 		
 		return resourceList;
 	}
 	
-	
-	public static final List<OscarFhirResource<?,?>> setPerformingPractitionerAndPatient( 
+	public static final HashSet<OscarFhirResource<?,?>> setPerformingPractitionerAndPatient( 
 			OscarFhirConfigurationManager configurationManager, 
 			List<org.oscarehr.integration.fhir.model.Immunization<Prevention>> immunizations, 
-			org.oscarehr.integration.fhir.model.Patient patient ) {
-		
-		List<OscarFhirResource<?,?>> resourceList = new ArrayList<OscarFhirResource<?,?>>();
+			org.oscarehr.integration.fhir.model.Patient patient, HashSet<OscarFhirResource<?,?>> resourceList ) {
 
-		if( immunizations != null && ! immunizations.isEmpty() ) {
-
-			String previousPerformingProviderNo = null; 
-					
-			for( Immunization<Prevention> immunization : immunizations ) {
-				
-				String performingProviderNo = immunization.getOscarResource().getProviderNo();
-				PerformingPractitioner performingPractitioner = OscarFhirResourceManager.getPerformingPractitionerByProviderNumber( configurationManager, performingProviderNo );
-	
-				if( performingPractitioner != null ) {
-					immunization.addPerformingPractitioner( performingPractitioner.getReference() );
-					
-					if( ! performingProviderNo.equals( previousPerformingProviderNo ) ) {
-						resourceList.add( performingPractitioner );
-					}
-					
-					previousPerformingProviderNo = performingProviderNo;
-				}
-				
-				immunization.setPatientReference( patient.getReference() );
-				resourceList.add( immunization );				
+		if( immunizations != null && ! immunizations.isEmpty() ) {		
+			for( Immunization<Prevention> immunization : immunizations ) {				
+				setPerformingPractitionerAndPatient( configurationManager, immunization, patient, resourceList );			
 			}
 		}
 		

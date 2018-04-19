@@ -45,7 +45,7 @@ public interface ImmunizationInterface {
 	
 	public boolean isImmunization();
 	
-	public int getDemographicId();
+	public Integer getDemographicId();
 	
 	public String getStatus();
 	public void setStatus( String status );

@@ -23,6 +23,7 @@ package org.oscarehr.integration.fhir.builder;
  * Ontario, Canada
  */
 
+import java.util.HashSet;
 import java.util.UUID;
 import org.hl7.fhir.dstu3.model.Attachment;
 import org.hl7.fhir.dstu3.model.BaseResource;
@@ -32,6 +33,7 @@ import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.Bundle.BundleType;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.model.Destination;
+import org.oscarehr.integration.fhir.model.OscarFhirResource;
 import org.oscarehr.integration.fhir.model.Sender;
 
 /*
@@ -112,6 +114,12 @@ public class FhirBundleBuilder extends FhirMessageBuilder {
 	private void initResources() {
 		MessageHeader messageHeader = getMessageHeader();
 		addResource( messageHeader );
+	}
+	
+	public void addResources( HashSet< OscarFhirResource< ?,? > > oscarFhirResources ) {
+		for( OscarFhirResource< ?,? > oscarFhirResource :  oscarFhirResources ) {
+			addResource( oscarFhirResource );
+		}
 	}
 
 	@Override

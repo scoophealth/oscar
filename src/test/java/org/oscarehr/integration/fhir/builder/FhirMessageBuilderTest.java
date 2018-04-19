@@ -33,6 +33,7 @@ import java.util.List;
 import org.hl7.fhir.dstu3.model.Attachment;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Prevention;
@@ -154,7 +155,7 @@ public class FhirMessageBuilderTest {
 		
 
 		doctor = new Provider();
-		doctor.setProviderNo("7678");
+		doctor.setProviderNo("6433");
 		doctor.setFirstName( "Doctor" );
 		doctor.setLastName( "Sharp" );
 		doctor.setPractitionerNo("457888");
@@ -229,7 +230,7 @@ public class FhirMessageBuilderTest {
 		System.out.println( fhirCommunicationBuilder.getMessageJson() );
 	}
 	
-	// @Test
+	@Test
 	public void testGetDHIRFormattedMessage() {
 		System.out.println( ">>>-- testGetDHIRFormattedMessage() -->");	
 		System.out.println();
@@ -248,10 +249,10 @@ public class FhirMessageBuilderTest {
 		patient.setFocusResource( Boolean.TRUE );
 
 		// The doctor type should be identified in the provider profile. 
-		PerformingPractitioner performing = new PerformingPractitioner( doctor, configurationManager ); // this could be a nurse or the same as the submitting
+		PerformingPractitioner performing = new PerformingPractitioner( provider, configurationManager ); // this could be a nurse or the same as the submitting
 		
 		// A nurse should be identified in the provider profile.
-		PerformingPractitioner performing2 = new PerformingPractitioner( nurse, configurationManager ); // this second one is the nurse.
+		PerformingPractitioner performing2 = new PerformingPractitioner( provider, configurationManager ); // this second one is the nurse.
 		
 		// this is the MRP or the provider in charge.
 		// this practitioner must be active AND have a working ONEid code.

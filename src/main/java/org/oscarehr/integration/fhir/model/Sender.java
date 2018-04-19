@@ -25,9 +25,7 @@ package org.oscarehr.integration.fhir.model;
 
 
 import org.hl7.fhir.dstu3.model.MessageHeader.MessageSourceComponent;
-import org.hl7.fhir.dstu3.model.Organization;
 import org.oscarehr.common.model.Clinic;
-import org.oscarehr.common.model.Contact;
 
 /*
 "source": {
@@ -69,10 +67,9 @@ public class Sender {
 	private String softwareName;
 	private String versionSignature;
 	private String endpoint;
-	private OscarFhirResource<Organization, Contact> oscarFhirResource;
-	private Organization organization;
-	private RelatedPerson relatedPerson;
-	private Contact contact;
+	private String senderName;
+	private OscarFhirResource<org.hl7.fhir.dstu3.model.Organization, ?> oscarFhirResource;
+	private org.hl7.fhir.dstu3.model.Organization organization;
 	private Clinic clinic;
 	
 	public Sender() {
@@ -154,40 +151,35 @@ public class Sender {
 		return this.organization;
 	}
 
-	public void setFhirOrganization( org.hl7.fhir.dstu3.model.Organization organization ) {
+	public void setOrganization( org.hl7.fhir.dstu3.model.Organization organization ) {
 		this.organization = organization;
-	}
-	
-	public org.oscarehr.common.model.Contact getContact() {
-		return this.contact;
-	}
-	
-	public void setContact( org.oscarehr.common.model.Contact contact ) {	
-		this.contact = contact;
 	}
 
 	public org.oscarehr.common.model.Clinic getClinic() {
 		return this.clinic;
 	}
 
-	public void setClinic( org.oscarehr.common.model.Clinic clinic ) {	
+	public void setClinic( org.oscarehr.common.model.Clinic clinic ) {
+		setSenderName( clinic.getClinicName() );
 		this.clinic = clinic;
 	}
 	
-	public OscarFhirResource<Organization, Contact> getOscarFhirResource() {
+	public OscarFhirResource<org.hl7.fhir.dstu3.model.Organization, ?> getOscarFhirResource() {
 		return oscarFhirResource;
 	}
 
-	public void setOscarFhirResource( OscarFhirResource<Organization, Contact> oscarFhirResource ) {
+	public void setOscarFhirResource( OscarFhirResource<org.hl7.fhir.dstu3.model.Organization, ?> oscarFhirResource ) {
+		setOrganization( this.oscarFhirResource.getFhirResource() );
+		setClinic( (Clinic) this.oscarFhirResource.getOscarResource() );
 		this.oscarFhirResource = oscarFhirResource;
 	}
-	
-	public RelatedPerson getRelatedPerson() {
-		return relatedPerson;
+
+	public String getSenderName() {
+		return senderName;
 	}
 
-	public void setRelatedPerson( RelatedPerson relatedPerson ) {
-		this.relatedPerson = relatedPerson;
+	public void setSenderName(String senderName) {
+		this.senderName = senderName;
 	}
-	
+
 }

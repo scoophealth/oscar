@@ -48,7 +48,7 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 	}
 
 	@Override
-	protected final void setId(org.hl7.fhir.dstu3.model.Practitioner fhirResource) {
+	protected void setId(org.hl7.fhir.dstu3.model.Practitioner fhirResource) {
 		fhirResource.setId( getOscarResource().getProviderNo() );		
 	}
 

@@ -39,6 +39,11 @@ public class PerformingPractitioner extends Practitioner {
 		super(provider, configurationManager);
 		setActor( ActorType.performing );
 	}
+	
+	@Override
+	protected final void setId(org.hl7.fhir.dstu3.model.Practitioner fhirResource) {
+		fhirResource.setId( "P" + getOscarResource().getProviderNo() );		
+	}
 
 	@Override
 	protected final void setWorkPhone( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {

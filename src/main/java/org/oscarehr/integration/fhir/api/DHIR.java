@@ -23,8 +23,7 @@ package org.oscarehr.integration.fhir.api;
  * Ontario, Canada
  */
 
-import java.util.List;
-
+import java.util.HashSet;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.MessageHeader;
 import org.hl7.fhir.dstu3.model.Reference;
@@ -49,6 +48,7 @@ public class DHIR {
 	 */
 	public static synchronized FhirBundleBuilder getFhirBundleBuilder( LoggedInInfo loggedInInfo, int demographicNo ) {
 		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, destination, region );
+		HashSet<OscarFhirResource<?,?>> resourceList = new HashSet<OscarFhirResource<?,?>>();
 		org.oscarehr.integration.fhir.model.Patient patient = OscarFhirResourceManager.getPatientByDemographicNumber( configurationManager, demographicNo );
 		
 		// the patient is the focus resource for this type of bundle
@@ -57,14 +57,15 @@ public class DHIR {
 		
 		org.hl7.fhir.dstu3.model.Organization publicHealthUnit = OscarFhirResourceManager.getPublicHealthUnit( configurationManager, patient.getOscarResource().getPHU() );
 
-		List<OscarFhirResource<?,?>> resourceList = OscarFhirResourceManager.getImmunizationResourceBundle( configurationManager, patient );	
+		OscarFhirResourceManager.getImmunizationResourceBundle( configurationManager, patient, resourceList );	
 		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( configurationManager );
-		fhirBundleBuilder.addResources(resourceList);
 		
 		Reference reference = new Reference();
 		reference.setReference( String.format( "%s/%s", ((Resource) publicHealthUnit).getResourceType(), publicHealthUnit.getId() ) );
 		reference.setResource( publicHealthUnit );
 		fhirBundleBuilder.setMessageHeaderResponsible( reference );
+		
+		fhirBundleBuilder.addResources(resourceList);
 		fhirBundleBuilder.addResource( publicHealthUnit );
 		
 		return fhirBundleBuilder;
@@ -75,26 +76,31 @@ public class DHIR {
 	 * Useful for adding additional resources or adjusting the message structure.
 	 */
 	public static synchronized FhirBundleBuilder getFhirBundleBuilder( LoggedInInfo loggedInInfo, int demographicNo, int preventionId ) {
-		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, destination, region );
-		org.oscarehr.integration.fhir.model.Patient patient = OscarFhirResourceManager.getPatientByDemographicNumber( configurationManager, demographicNo );
 		
-		// the patient is the focus resource for this type of bundle
-		// A reference link will be inserted into the MessageHeader.focus
-		patient.setFocusResource( Boolean.TRUE );
+		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, destination, region );
+		HashSet<OscarFhirResource<?,?>> resourceList = new HashSet<OscarFhirResource<?,?>>();
+		org.oscarehr.integration.fhir.model.Patient patient = OscarFhirResourceManager.getPatientByDemographicNumber( configurationManager, demographicNo );
+		org.oscarehr.integration.fhir.model.SubmittingPractitioner submittingPractitioner = new org.oscarehr.integration.fhir.model.SubmittingPractitioner( configurationManager.getLoggedInInfo().getLoggedInProvider(), configurationManager );
+		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( configurationManager );
 		
 		// Public Health Unit requirement for Ontario submissions. 
 		org.hl7.fhir.dstu3.model.Organization publicHealthUnit = OscarFhirResourceManager.getPublicHealthUnit( configurationManager, patient.getOscarResource().getPHU() );
+			
+		// the patient is the focus resource for this type of bundle. A reference link will be inserted into the MessageHeader.focus
+		patient.setFocusResource( Boolean.TRUE );
 		
-		List<OscarFhirResource<?,?>> resourceList = OscarFhirResourceManager.getImmunizationResourceBundle( configurationManager, patient, preventionId );	
-		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( configurationManager );
-		fhirBundleBuilder.addResources(resourceList);
+		// set the immunizations into the resource list
+		OscarFhirResourceManager.getImmunizationResourceBundle( configurationManager, patient, preventionId, resourceList );			
 		
 		Reference reference = new Reference();
 		reference.setReference( String.format( "%s/%s", ((Resource) publicHealthUnit).getResourceType(), publicHealthUnit.getId() ) );
 		reference.setResource( publicHealthUnit );
 		fhirBundleBuilder.setMessageHeaderResponsible( reference );
-		fhirBundleBuilder.addResource( publicHealthUnit );
 
+		resourceList.add(submittingPractitioner);
+		fhirBundleBuilder.addResources(resourceList);
+		fhirBundleBuilder.addResource(publicHealthUnit);
+		
 		return fhirBundleBuilder;
 	}
 	

@@ -38,6 +38,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -101,12 +102,12 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 
 	private String snomedId = null;
 
-	public Integer getDemographicId() {
-		return demographicId;
-	}
-
 	public void setDemographicId(Integer demographicId) {
 		this.demographicId = demographicId;
+	}
+
+	public Integer getDemographicId() {
+		return this.demographicId;
 	}
 
 	public Date getPreventionDate() {
@@ -231,7 +232,6 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 
 	public void setPreventionExts(List<PreventionExt> preventionExts) {
 		this.preventionExts = preventionExts;
-		setPreventionExtendedProperties( new HashMap<String, String>() );
 	}
 
 	public PreventionExt addPreventionExt(PreventionExt preventionExt) {
@@ -242,7 +242,6 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 	}
 
 	public void addPreventionExt( ImmunizationProperty key, String value ) {
-		getPreventionExtendedProperties().put( key.name(), value );
 		PreventionExt preventionExt = new PreventionExt();
 		preventionExt.setKeyval( key.name() );
 		preventionExt.setVal( value );
@@ -264,14 +263,13 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 		return this.preventionExtendedProperties;
 	}
 	
-	public void setPreventionExtendedProperties( HashMap<String, String> preventionExtendedProperties ) {		
-		if( this.getPreventionExts() != null && preventionExtendedProperties.isEmpty() ) {
+	@PostLoad
+	public void setPreventionExtendedProperties() {		
+		if( this.getPreventionExts() != null ) {
 			for( PreventionExt property : getPreventionExts() ) {
 				setPreventionExtendedProperty( property );
 			}
 		}
-		
-	//	this.preventionExtendedProperties = preventionExtendedProperties;
 	}
 	
 	public void setPreventionExtendedProperty( PreventionExt property ) {		
@@ -461,5 +459,16 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 	@Override
 	public boolean isImmunization() {
 		return getPreventionExtendedProperties().containsKey( ImmunizationProperty.dose.name() );
+	}
+
+	@Override
+	public String getStatus() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setStatus(String status) {
+		// TODO Auto-generated method stub		
 	}
 }

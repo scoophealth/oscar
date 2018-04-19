@@ -45,6 +45,11 @@ public class SubmittingPractitioner extends Practitioner {
 	}
 	
 	@Override
+	protected final void setId(org.hl7.fhir.dstu3.model.Practitioner fhirResource) {
+		fhirResource.setId( "S" + getOscarResource().getProviderNo() );		
+	}
+	
+	@Override
 	protected final void setQualification( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
 		if( include( OptionalFHIRAttribute.qualification ) ) {
 			super.setQualification( fhirResource );
