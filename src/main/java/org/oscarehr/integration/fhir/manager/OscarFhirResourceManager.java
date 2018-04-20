@@ -24,9 +24,7 @@ package org.oscarehr.integration.fhir.manager;
  */
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.UUID;
 
@@ -84,9 +82,6 @@ public class OscarFhirResourceManager {
 		PreventionManager preventionManager = SpringUtils.getBean(PreventionManager.class);
 		Prevention prevention = preventionManager.getPrevention(configurationManager.getLoggedInInfo(), preventionId);
 		org.oscarehr.integration.fhir.model.Immunization<Prevention> immunization = null;
-		
-		//TODO set this into the entity lifecycle.
-		prevention.setPreventionExtendedProperties(new HashMap<String,String>());
 
 		if( prevention != null || prevention.getDemographicId() == demographicNo ) {
 			LogAction.addLogSynchronous( configurationManager.getLoggedInInfo(), "OscarFhirResourceManager.getImmunizationsByDemographicNo", "Retrieved Immunization list for FHIR transport "  );
@@ -100,7 +95,6 @@ public class OscarFhirResourceManager {
 		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 		
 		Demographic demographic = demographicManager.getDemographic( configurationManager.getLoggedInInfo(), demographic_no);
-		demographic.setDemographicExtendedProperties(new Hashtable<String,String>());
 		org.oscarehr.integration.fhir.model.Patient patient = null;
 		
 		if( demographic != null ) {
