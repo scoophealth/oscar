@@ -36,11 +36,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-
 import java.util.regex.Matcher;
 
 import org.apache.commons.lang.StringUtils;
@@ -131,10 +126,8 @@ public class Demographic extends AbstractModel<Integer> implements Serializable 
     private String countryOfOrigin;
     private String newsletter;
     
-	@OneToMany(mappedBy="demographic",fetch=FetchType.EAGER)
     private List<DemographicExt> demographicExts;
 	
-	@Transient
 	private Hashtable<String, String> demographicExtendedProperties;
 
         public String getTitle() {
@@ -1145,6 +1138,7 @@ public class Demographic extends AbstractModel<Integer> implements Serializable 
 
 	public void setDemographicExts(List<DemographicExt> demographicExts) {
 		this.demographicExts = demographicExts;
+		setDemographicExtendedProperties();
 	}
 	
 	public DemographicExt addDemographicExt( DemographicExt demographicExt ) {
@@ -1168,14 +1162,13 @@ public class Demographic extends AbstractModel<Integer> implements Serializable 
 		return getDemographicExtendedProperties().get( property.name() );
 	}
 
-	public void setDemographicExtendedProperties( Hashtable<String, String> demographicExtendedProperties ) {
-		if( this.getDemographicExts() != null && demographicExtendedProperties.isEmpty() ) {
+	
+	public void setDemographicExtendedProperties() {
+		if( this.getDemographicExts() != null ) {
 			for( DemographicExt demographicExt : getDemographicExts() ) {
 				addDemographicExtendedProperty( demographicExt );
 			}
 		}
-		
-	//	this.demographicExtendedProperties = demographicExtendedProperties;
 	}
 	
 	public void addDemographicExtendedProperty( DemographicProperty key, String value ) {		

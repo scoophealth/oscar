@@ -26,10 +26,8 @@ package org.oscarehr.integration.fhir.builder;
 
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-
+import java.util.HashSet;
 import org.hl7.fhir.dstu3.model.Attachment;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -273,7 +271,7 @@ public class FhirMessageBuilderTest {
 		
 		// list of OscarFhirResources. This is only to demonstrate that 
 		// resources can be contained in an array.
-		List<OscarFhirResource<?, ?>> resourceList = new ArrayList< OscarFhirResource<?, ?> >();
+		HashSet<OscarFhirResource<?, ?>> resourceList = new HashSet< OscarFhirResource<?, ?> >();
 		resourceList.add( patient );		
 		resourceList.add( performing );
 		resourceList.add( performing2 );
