@@ -79,13 +79,6 @@
 
 		<property column="newsletter" name="newsletter" type="string" />
 		<property column="country_of_origin" name="countryOfOrigin" type="string" />
-		
-		<set name="demographicExts" table="demographicExt" inverse="true" lazy="false" fetch="select" >
-			<key>
-				<column name="demographic_no" not-null="true"
-			</key>
-			<one-to-many class="org.oscarehr.common.model.DemographicExt" />
-		</set>
 
 	</class>
 </hibernate-mapping>

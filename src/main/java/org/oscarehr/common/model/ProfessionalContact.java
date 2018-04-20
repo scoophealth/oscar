@@ -26,7 +26,6 @@
 package org.oscarehr.common.model;
 
 import javax.persistence.Entity;
-import javax.persistence.PostLoad;
 
 import org.oscarehr.integration.fhir.resources.constants.ContactType;
 
@@ -38,6 +37,10 @@ public class ProfessionalContact extends Contact {
 	
 	//to be used on a site specific basis. Any additional ids should be done with other_id
 	private String systemId;
+	
+	public ProfessionalContact() {
+		setContactType( ContactType.professional );
+	}
 	
 	public String getSpecialty() {
 		return specialty;
@@ -102,12 +105,6 @@ public class ProfessionalContact extends Contact {
 	@Override
 	public String getLocationCode() {
 		return this.getSystemId();
-	}
-	
-	@Override
-	@PostLoad
-	public void setContactType(ContactType contactType) {
-		contactType = ContactType.professional;
 	}
 
 }

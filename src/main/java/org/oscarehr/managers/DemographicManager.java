@@ -199,6 +199,10 @@ public class DemographicManager {
 
 		return result;
 	}
+	
+	public DemographicExt getDemographicExt(LoggedInInfo loggedInInfo, Integer demographicNo, DemographicExt.DemographicProperty key) {
+		return getDemographicExt(loggedInInfo, demographicNo, key.name());
+	}
 
 	public DemographicExt getDemographicExt(LoggedInInfo loggedInInfo, Integer demographicNo, String key) {
 		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);

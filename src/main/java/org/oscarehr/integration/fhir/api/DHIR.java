@@ -55,7 +55,7 @@ public class DHIR {
 		// A reference link will be inserted into the MessageHeader.focus
 		patient.setFocusResource( Boolean.TRUE );
 		
-		org.hl7.fhir.dstu3.model.Organization publicHealthUnit = OscarFhirResourceManager.getPublicHealthUnit( configurationManager, patient.getOscarResource().getPHU() );
+		org.hl7.fhir.dstu3.model.Organization publicHealthUnit = OscarFhirResourceManager.getPublicHealthUnit( configurationManager, demographicNo );
 
 		OscarFhirResourceManager.getImmunizationResourceBundle( configurationManager, patient, resourceList );	
 		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( configurationManager );
@@ -84,7 +84,7 @@ public class DHIR {
 		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( configurationManager );
 		
 		// Public Health Unit requirement for Ontario submissions. 
-		org.hl7.fhir.dstu3.model.Organization publicHealthUnit = OscarFhirResourceManager.getPublicHealthUnit( configurationManager, patient.getOscarResource().getPHU() );
+		org.hl7.fhir.dstu3.model.Organization publicHealthUnit = OscarFhirResourceManager.getPublicHealthUnit( configurationManager, demographicNo );
 			
 		// the patient is the focus resource for this type of bundle. A reference link will be inserted into the MessageHeader.focus
 		patient.setFocusResource( Boolean.TRUE );

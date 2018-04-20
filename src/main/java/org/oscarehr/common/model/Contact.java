@@ -34,7 +34,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
@@ -77,7 +76,7 @@ public class Contact extends AbstractModel<Integer> implements ContactInterface 
     private ContactRelationship contactRelationship;
     
     @Transient
-    private ContactType contactType;
+    private ContactType contactType = ContactType.personal;
 	
 	@Override
 	public Integer getId() {
@@ -257,9 +256,8 @@ public class Contact extends AbstractModel<Integer> implements ContactInterface 
 	}
 
 	@Override
-	@PostLoad
 	public void setContactType(ContactType contactType) {
-		this.contactType = ContactType.personal;
+		this.contactType = contactType; 
 	}
 
 	@Override

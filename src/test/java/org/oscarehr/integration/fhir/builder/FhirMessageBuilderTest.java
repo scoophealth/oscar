@@ -127,7 +127,7 @@ public class FhirMessageBuilderTest {
 		Calendar birthdate = Calendar.getInstance();
 		birthdate.set(1969, 6, 18);
 		demographic.setBirthDay(birthdate);
-		demographic.setPHU( "DEMO-PHU" );
+
 				
 		
 		//PRACTITIONER

@@ -30,6 +30,7 @@ import java.util.UUID;
 
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.LookupList;
 import org.oscarehr.common.model.LookupListItem;
 import org.oscarehr.common.model.Prevention;
@@ -215,9 +216,13 @@ public class OscarFhirResourceManager {
 		return resourceList;
 	}
 	
-	public static final org.hl7.fhir.dstu3.model.Organization getPublicHealthUnit( OscarFhirConfigurationManager configurationManager, String phuId ) {
-		PublicHealthUnitType publicHealthUnitType  = getPublicHealthUnitType( configurationManager, phuId );
-		org.hl7.fhir.dstu3.model.Organization organization = new org.hl7.fhir.dstu3.model.Organization();
+	public static final org.hl7.fhir.dstu3.model.Organization getPublicHealthUnit( OscarFhirConfigurationManager configurationManager, int demographicNo ) {
+		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+		DemographicExt demographicExt = demographicManager.getDemographicExt(configurationManager.getLoggedInInfo(), demographicNo, DemographicExt.DemographicProperty.PHU);
+		String phuId = demographicExt.getValue();
+		PublicHealthUnitType publicHealthUnitType = getPublicHealthUnitType( configurationManager, phuId );
+		org.hl7.fhir.dstu3.model.Organization organization = null;
+		
 		if( publicHealthUnitType != null ) {
 			organization = new org.hl7.fhir.dstu3.model.Organization();
 			organization.setId( UUID.randomUUID().toString() );
@@ -225,7 +230,8 @@ public class OscarFhirResourceManager {
 			identifier.setSystem( publicHealthUnitType.getSystemURI() ).setValue( publicHealthUnitType.getId() );
 			organization.addIdentifier( identifier );
 			organization.setName( publicHealthUnitType.getName() );
-		}		
+		}	
+		
 		return organization;
 	}
 	

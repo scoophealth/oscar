@@ -31,7 +31,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PostLoad;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -111,7 +110,7 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
     private ContactRelationship contactRelationship;
     
     @Transient
-    private ContactType contactType;
+    private ContactType contactType = ContactType.professional;
     
     @Transient
     private String[] addressArray;
@@ -408,9 +407,8 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 	}
 
 	@Override
-	@PostLoad
 	public void setContactType(ContactType contactType) {
-		this.contactType = ContactType.professional;		
+		this.contactType = contactType;		
 	}
 
 	@Override
