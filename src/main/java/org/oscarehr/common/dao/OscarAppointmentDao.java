@@ -769,4 +769,16 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		return results;
 	}
 	
+	public List<Appointment> findFutureAppointmentsWithProvider(Integer demographicNo, String providerNo, Date date) {
+		String sql = "select a from Appointment a where a.demographicNo=? and a.providerNo = ? and a.appointmentDate >= ?";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, demographicNo);
+		query.setParameter(2, providerNo);
+		query.setParameter(3, date);
+		List<Appointment> result = query.getResultList();
+		
+		return result;
+	}
+	
+	
 }

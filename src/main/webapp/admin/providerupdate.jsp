@@ -209,7 +209,15 @@ if(!authed) {
 		  userPropertyDAO.saveProp(provider.getProviderNo(), UserProperty.OFFICIAL_LAST_NAME, officialLastName);
 		  userPropertyDAO.saveProp(provider.getProviderNo(), UserProperty.OFFICIAL_OLIS_IDTYPE, officialOlisIdtype);
 		  
-		
+
+		  String groupModule = request.getParameter("groupModule");
+		  
+		  if(groupModule != null && "true".equals(groupModule)) {
+			  userPropertyDAO.saveProp(provider.getProviderNo(), "groupModule",groupModule);
+		  } else {
+			  userPropertyDAO.saveProp(provider.getProviderNo(), "groupModule","false");
+		  }
+			  
         if (org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
             String[] sites = request.getParameterValues("sites");
             DBPreparedHandler dbObj = new DBPreparedHandler();

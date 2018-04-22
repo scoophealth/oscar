@@ -2924,6 +2924,9 @@
             <forward name="failure" path="/admin/quickUser.jsp" />
 		</action> 		
 		
+		<action path="/groupAppointment" type="org.oscarehr.common.web.GroupAppointmentAction" parameter="method" />
+		
+		
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="100M" />
 	<message-resources parameter="oscarResources" null="false" />

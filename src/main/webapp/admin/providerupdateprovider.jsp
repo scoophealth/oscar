@@ -64,6 +64,8 @@
 
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
   ProviderDataDao providerDao = SpringUtils.getBean(ProviderDataDao.class);
+  UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+	
 %>
 
 <%@page import="org.oscarehr.common.dao.SiteDao"%>
@@ -408,9 +410,7 @@ for (int i=0; i<sites.size(); i++) {
 				value="<%= provider.getPractitionerNo()==null ? "" : provider.getPractitionerNo() %>"
 				maxlength="10"></td>
 		</tr>
-		<%
-		UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
-		%>
+		
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formClinicalConnectId" />:</td>
 			<td><input type="text" name="clinicalConnectId" value="<%=StringUtils.trimToEmpty(userPropertyDAO.getStringValue(provider_no, UserProperty.CLINICALCONNECT_ID))%>" maxlength="255"></td>
@@ -529,6 +529,21 @@ for (int i=0; i<sites.size(); i++) {
         </td>
 	</tr>
 	
+	<%if("true".equals(OscarProperties.getInstance().getProperty("groupModuleEnabled", "false"))) { %>
+	<%
+		String val = StringUtils.trimToEmpty(userPropertyDAO.getStringValue(provider_no, "groupModule"));
+		String checked = "";
+		if("true".equals(val)) {
+			checked = " checked=\"checked\" ";
+		}
+	%>
+		<tr>
+			<td align="right"><bean:message
+				key="admin.provider.groupModuleEnabled" />:</td>
+			<td><input type="checkbox" name="groupModule" value="true" <%=checked %>/></td>
+		</tr>
+	<%} %>
+		
 	
 	<tr>
 		<td colspan="2">

@@ -127,6 +127,15 @@ public class ScheduleDateDao extends AbstractDao<ScheduleDate>{
 		return results;
 	}
 	
+	public List<ScheduleDate> findActiveByProviderAndHour(String providerNo, String hour) {
+		Query query = entityManager.createQuery("select s from ScheduleDate s where s.providerNo=? and s.status = ? and s.hour = ? order by s.date ASC");
+		query.setParameter(1, providerNo);
+		query.setParameter(2, 'A');
+		query.setParameter(3, hour);
+	
+		return query.getResultList();
+	}
+	
 
 	public List<ScheduleDate> findByProviderStartDateAndPriority(String providerNo, Date apptDate, String priority) {
 		Query query = createQuery("sd", "sd.date = :apptDate AND sd.providerNo = :providerNo AND sd.priority = :priority");
