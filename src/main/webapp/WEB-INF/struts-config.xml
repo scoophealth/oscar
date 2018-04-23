@@ -2930,8 +2930,9 @@
 			<forward name="success" path="/admin/auditLogPurge.jsp" />
 		</action>
 		
-		<action path="/dhir/submit" type="org.oscarehr.integration.dhir.SubmitImmunizationAction">
+		<action path="/dhir/submit" type="org.oscarehr.integration.dhir.SubmitImmunizationAction" parameter="method" scope="request">
 			<forward name="success" path="/oscarPrevention/dhirSubmission.jsp"/>
+			<forward name="testresult" path="/oscarPrevention/test_case.jsp"/>
 		</action>
 		
 	</action-mappings>

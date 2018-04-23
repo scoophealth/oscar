@@ -28,6 +28,7 @@ import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.MessageHeader;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
+import org.oscarehr.caisi_integrator.util.MiscUtils;
 import org.oscarehr.integration.fhir.builder.FhirBundleBuilder;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.manager.OscarFhirResourceManager;
@@ -51,8 +52,7 @@ public class DHIR {
 		HashSet<OscarFhirResource<?,?>> resourceList = new HashSet<OscarFhirResource<?,?>>();
 		org.oscarehr.integration.fhir.model.Patient patient = OscarFhirResourceManager.getPatientByDemographicNumber( configurationManager, demographicNo );
 		
-		// the patient is the focus resource for this type of bundle
-		// A reference link will be inserted into the MessageHeader.focus
+		// The patient is the focus resource for this type of bundle. A reference link will be inserted into the MessageHeader.focus
 		patient.setFocusResource( Boolean.TRUE );
 		
 		org.hl7.fhir.dstu3.model.Organization publicHealthUnit = OscarFhirResourceManager.getPublicHealthUnit( configurationManager, demographicNo );
@@ -60,13 +60,17 @@ public class DHIR {
 		OscarFhirResourceManager.getImmunizationResourceBundle( configurationManager, patient, resourceList );	
 		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( configurationManager );
 		
-		Reference reference = new Reference();
-		reference.setReference( String.format( "%s/%s", ((Resource) publicHealthUnit).getResourceType(), publicHealthUnit.getId() ) );
-		reference.setResource( publicHealthUnit );
-		fhirBundleBuilder.setMessageHeaderResponsible( reference );
+		if(publicHealthUnit != null) {
+			Reference reference = new Reference();
+			reference.setReference( String.format( "%s/%s", ((Resource) publicHealthUnit).getResourceType(), publicHealthUnit.getId() ) );
+			reference.setResource( publicHealthUnit );
+			fhirBundleBuilder.setMessageHeaderResponsible( reference );
+			fhirBundleBuilder.addResource(publicHealthUnit);
+		} else {
+			MiscUtils.getLogger().warn("Patient and Clinic default PHU ID is missing. Check Oscar properties file for Default PHU setting.");
+		}
 		
 		fhirBundleBuilder.addResources(resourceList);
-		fhirBundleBuilder.addResource( publicHealthUnit );
 		
 		return fhirBundleBuilder;
 	}
@@ -92,15 +96,19 @@ public class DHIR {
 		// set the immunizations into the resource list
 		OscarFhirResourceManager.getImmunizationResourceBundle( configurationManager, patient, preventionId, resourceList );			
 		
-		Reference reference = new Reference();
-		reference.setReference( String.format( "%s/%s", ((Resource) publicHealthUnit).getResourceType(), publicHealthUnit.getId() ) );
-		reference.setResource( publicHealthUnit );
-		fhirBundleBuilder.setMessageHeaderResponsible( reference );
+		if(publicHealthUnit != null) {
+			Reference reference = new Reference();
+			reference.setReference( String.format( "%s/%s", ((Resource) publicHealthUnit).getResourceType(), publicHealthUnit.getId() ) );
+			reference.setResource( publicHealthUnit );
+			fhirBundleBuilder.setMessageHeaderResponsible( reference );
+			fhirBundleBuilder.addResource(publicHealthUnit);
+		} else {
+			MiscUtils.getLogger().warn("Patient and Clinic default PHU ID is missing. Check Oscar properties file for Default PHU setting.");
+		}
 
 		resourceList.add(submittingPractitioner);
 		fhirBundleBuilder.addResources(resourceList);
-		fhirBundleBuilder.addResource(publicHealthUnit);
-		
+
 		return fhirBundleBuilder;
 	}
 	

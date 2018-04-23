@@ -43,6 +43,7 @@ import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.LookupListManager;
 import org.oscarehr.managers.PreventionManager;
 import org.oscarehr.managers.ProviderManager2;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.stereotype.Service;
 import oscar.OscarProperties;
@@ -79,12 +80,12 @@ public class OscarFhirResourceManager {
 	}
 
 	
-	public static final org.oscarehr.integration.fhir.model.Immunization<Prevention> getImmunizationByDemographicNoAndId( OscarFhirConfigurationManager configurationManager, int demographicNo , int preventionId) {
+	public static final org.oscarehr.integration.fhir.model.Immunization<Prevention> getImmunizationById( OscarFhirConfigurationManager configurationManager, int preventionId) {
 		PreventionManager preventionManager = SpringUtils.getBean(PreventionManager.class);
 		Prevention prevention = preventionManager.getPrevention(configurationManager.getLoggedInInfo(), preventionId);
 		org.oscarehr.integration.fhir.model.Immunization<Prevention> immunization = null;
 
-		if( prevention != null || prevention.getDemographicId() == demographicNo ) {
+		if( prevention != null ) {
 			LogAction.addLogSynchronous( configurationManager.getLoggedInInfo(), "OscarFhirResourceManager.getImmunizationsByDemographicNo", "Retrieved Immunization list for FHIR transport "  );
 			immunization = new org.oscarehr.integration.fhir.model.Immunization<Prevention>( prevention, configurationManager );		
 		}
@@ -167,7 +168,11 @@ public class OscarFhirResourceManager {
 	public static final HashSet<OscarFhirResource<?,?>> getImmunizationResourceBundle( OscarFhirConfigurationManager configurationManager, org.oscarehr.integration.fhir.model.Patient patient, HashSet<OscarFhirResource<?,?>> resourceList ) {
 		
 		List< org.oscarehr.integration.fhir.model.Immunization<Prevention> > immunizations = OscarFhirResourceManager.getImmunizationsByDemographicNo( configurationManager, patient.getOscarResource().getDemographicNo() );
-		return OscarFhirResourceManager.setPerformingPractitionerAndPatient( configurationManager, immunizations, patient, resourceList );
+		if( immunizations != null ) {
+			 OscarFhirResourceManager.setPerformingPractitionerAndPatient( configurationManager, immunizations, patient, resourceList );
+		}
+		
+		return resourceList;
 	}
 	
 	/**
@@ -180,8 +185,13 @@ public class OscarFhirResourceManager {
 	 */
 	public static final HashSet<OscarFhirResource<?,?>> getImmunizationResourceBundle( OscarFhirConfigurationManager configurationManager, org.oscarehr.integration.fhir.model.Patient patient, int preventionId, HashSet<OscarFhirResource<?,?>> resourceList ) {
 		
-		org.oscarehr.integration.fhir.model.Immunization<Prevention> immunization = OscarFhirResourceManager.getImmunizationByDemographicNoAndId( configurationManager, patient.getOscarResource().getDemographicNo() , preventionId);
-		return OscarFhirResourceManager.setPerformingPractitionerAndPatient( configurationManager, immunization, patient, resourceList  );
+		org.oscarehr.integration.fhir.model.Immunization<Prevention> immunization = OscarFhirResourceManager.getImmunizationById( configurationManager, preventionId);
+		if( immunization != null) {
+			OscarFhirResourceManager.setPerformingPractitionerAndPatient( configurationManager, immunization, patient, resourceList  );
+		} else {
+			MiscUtils.getLogger().warn( "Requested Immunization id " + preventionId + " was not found.");
+		}
+		return resourceList;
 	}
 	
 	public static final HashSet<OscarFhirResource<?,?>> setPerformingPractitionerAndPatient( 
@@ -219,9 +229,14 @@ public class OscarFhirResourceManager {
 	public static final org.hl7.fhir.dstu3.model.Organization getPublicHealthUnit( OscarFhirConfigurationManager configurationManager, int demographicNo ) {
 		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 		DemographicExt demographicExt = demographicManager.getDemographicExt(configurationManager.getLoggedInInfo(), demographicNo, DemographicExt.DemographicProperty.PHU);
-		String phuId = demographicExt.getValue();
-		PublicHealthUnitType publicHealthUnitType = getPublicHealthUnitType( configurationManager, phuId );
+		String phuId = null;
 		org.hl7.fhir.dstu3.model.Organization organization = null;
+		
+		if(demographicExt != null) {
+			phuId = demographicExt.getValue();
+		}
+		
+		PublicHealthUnitType publicHealthUnitType = getPublicHealthUnitType( configurationManager, phuId );
 		
 		if( publicHealthUnitType != null ) {
 			organization = new org.hl7.fhir.dstu3.model.Organization();

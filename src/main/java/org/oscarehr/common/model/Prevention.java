@@ -38,7 +38,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -232,6 +231,7 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 
 	public void setPreventionExts(List<PreventionExt> preventionExts) {
 		this.preventionExts = preventionExts;
+		setPreventionExtendedProperties();
 	}
 
 	public PreventionExt addPreventionExt(PreventionExt preventionExt) {
@@ -262,11 +262,10 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 		}
 		return this.preventionExtendedProperties;
 	}
-	
-	@PostLoad
+
 	public void setPreventionExtendedProperties() {		
 		if( this.getPreventionExts() != null ) {
-			for( PreventionExt property : getPreventionExts() ) {
+			for( PreventionExt property : preventionExts ) {
 				setPreventionExtendedProperty( property );
 			}
 		}

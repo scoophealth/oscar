@@ -23,10 +23,9 @@ package org.oscarehr.integration.fhir.builder;
  * Ontario, Canada
  */
 
-// import org.oscarehr.common.dao.ClinicDAO;
-// import org.oscarehr.common.model.Clinic;
+import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.integration.fhir.model.Sender;
-// import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.SpringUtils;
 import oscar.OscarProperties;
 
 
@@ -34,15 +33,15 @@ public final class SenderFactory {
 
 	private static String buildName = OscarProperties.getInstance().getProperty("buildtag", "[OSCAR BUILD]");
 	private static String senderEndpoint = OscarProperties.getInstance().getProperty("ws_endpoint_url_base", "[OSCAR ENDPOINT]");
-	//private static ClinicDAO clinicDao = SpringUtils.getBean( ClinicDAO.class );
+	private static ClinicDAO clinicDao = SpringUtils.getBean( ClinicDAO.class );
 	private static String vendorName = "Oscar EMR";
 	private static String softwareName = "Oscar";
 
 	
 	public static final Sender getSender() {
 		Sender sender = new Sender( vendorName, softwareName, buildName, senderEndpoint );
-//		Clinic clinic = clinicDao.getClinic();
-//		sender.setClinic( clinic );
+		org.oscarehr.common.model.Clinic clinic = clinicDao.getClinic();
+		sender.setClinic( clinic );
 		return sender;
 	}
 	
