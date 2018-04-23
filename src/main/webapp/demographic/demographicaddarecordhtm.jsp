@@ -1241,7 +1241,7 @@ var refNo = "";
   		prop= (Properties) vecRef.get(k);
   	%>
 if(refName.indexOf("<%=prop.getProperty("last_name")+","+prop.getProperty("first_name")%>")>=0) {
-  refNo = <%=prop.getProperty("referral_no", "")%>;
+  refNo = '<%=prop.getProperty("referral_no", "")%>';
 }
 <% } %>
 document.forms[1].r_doctor_ohip.value = refNo;
