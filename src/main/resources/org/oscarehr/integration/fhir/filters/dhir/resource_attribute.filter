@@ -1,0 +1,35 @@
+## OptionalFHIRAttribute 
+submittingpractitioner.practitionerNo=false
+submittingpractitioner.qualification=false
+submittingpractitioner.oneid=true
+submittingpractitioner.otherphone=false
+
+practitioner.otherphone=false
+practitioner.email=true
+practitioner.oneid=false
+
+performingpractitioner.workPhone=false
+performingpractitioner.otherphone=false
+performingpractitioner.email=false
+performingpractitioner.oneid=false
+
+patient.nameExtension=false
+patient.nameUse=false
+patient.workPhone=false
+patient.namePrefix=false
+patient.email=false
+
+organization.address=false 
+organization.telecom=false 
+organization.fax=false 
+organization.name=false 
+organization.oranizationName=true
+
+immunization.annotation=false
+
+## MandatoryFHIRAttribute 
+submittingpractitioner.practitionerNo=true
+submittingpractitioner.oneid=true
+practitioner.practitionerNo=true
+performingpractitioner.practitionerNo=true
+

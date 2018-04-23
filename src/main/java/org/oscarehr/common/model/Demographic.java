@@ -27,24 +27,32 @@ package org.oscarehr.common.model;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+
 import java.util.regex.Matcher;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.PMmodule.utility.Utility;
+import org.oscarehr.common.model.DemographicExt.DemographicProperty;
 import org.oscarehr.util.MiscUtils;
 
 /**
  * This is the object class that relates to the demographic table. Any customizations belong here.
  */
-public class Demographic implements Serializable {
+public class Demographic extends AbstractModel<Integer> implements Serializable {
 
 	private static final String DEFAULT_MONTH = "01";
 	private static final String DEFAULT_DATE = "01";
@@ -122,6 +130,11 @@ public class Demographic implements Serializable {
     private String countryOfOrigin;
     private String newsletter;
     
+	@OneToMany(mappedBy="demographic")
+    private List<DemographicExt> demographicExts;
+	
+	@Transient
+	private Hashtable<String, String> demographicExtendedProperties;
 
         public String getTitle() {
         	return title;
@@ -218,16 +231,12 @@ public class Demographic implements Serializable {
 		demographic.setYearOfBirth(yearOfBirth);
 		demographic.setHin(hin);
 		demographic.setVer(ver);
-
 		demographic.setHcType(DEFAULT_HEATH_CARD_TYPE);
 		demographic.setPatientStatus(DEFAULT_PATIENT_STATUS);
-                demographic.setPatientStatusDate(new Date());
+        demographic.setPatientStatusDate(new Date());
 		demographic.setSex(gender == null || gender.length() == 0 ? DEFAULT_SEX : gender.substring(0, 1).toUpperCase());
-
 		demographic.setDateJoined(new Date());
-		//demographic.setEffDate(new Date());
 		demographic.setEndDate(DateTimeFormatUtils.getDateFromString(DEFAULT_FUTURE_DATE));
-		//demographic.setHcRenewDate(DateTimeFormatUtils.getDateFromString(DEFAULT_FUTURE_DATE));
 
 		return demographic;
 	}
@@ -895,8 +904,10 @@ public class Demographic implements Serializable {
 	@Override
 	public int hashCode() {
 		if (Integer.MIN_VALUE == this.hashCode) {
-			if (null == this.getDemographicNo()) return super.hashCode();
-			else {
+			if ( null == this.getDemographicNo() ) {
+				// do nothing, warn everyone.
+				MiscUtils.getLogger().warn(OBJECT_NOT_YET_PERISTED, new Exception());
+			} else {
 				String hashStr = this.getClass().getName() + ":" + this.getDemographicNo().hashCode();
 				this.hashCode = hashStr.hashCode();
 			}
@@ -911,6 +922,7 @@ public class Demographic implements Serializable {
 
 	protected void initialize() {
 		links = StringUtils.EMPTY;
+		this.demographicExts = new ArrayList<DemographicExt>();
 	}
 
 	public String addZero(String text, int num) {
@@ -930,22 +942,6 @@ public class Demographic implements Serializable {
 	public String getAgeAsOf(Date asofDate) {
 		return Utility.calcAgeAtDate(Utility.calcDate(Utility.convertToReplaceStrIfEmptyStr(getYearOfBirth(), DEFAULT_YEAR), Utility.convertToReplaceStrIfEmptyStr(getMonthOfBirth(), DEFAULT_MONTH), Utility.convertToReplaceStrIfEmptyStr(getDateOfBirth(), DEFAULT_DATE)), asofDate);
 	}
-
-
-        //NEED TO IMPLEMENT
-
-//            public long getAgeInDays(){
-//           return UtilDateUtilities.getNumDays(UtilDateUtilities.calcDate(year_of_birth,month_of_birth,date_of_birth),Calendar.getInstance().getTime());
-//        }
-//
-//
-//        public int getAgeInMonths(){
-//           return UtilDateUtilities.getNumMonths(UtilDateUtilities.calcDate(year_of_birth,month_of_birth,date_of_birth),Calendar.getInstance().getTime());
-//        }
-//
-//        public int getAgeInMonthsAsOf(Date asofDate){
-//           return UtilDateUtilities.getNumMonths(UtilDateUtilities.calcDate(year_of_birth,month_of_birth,date_of_birth),asofDate);
-//        }
 
 	public int getAgeInYears() {
 		return Utility.getNumYears(Utility.calcDate(Utility.convertToReplaceStrIfEmptyStr(getYearOfBirth(), DEFAULT_YEAR), Utility.convertToReplaceStrIfEmptyStr(getMonthOfBirth(), DEFAULT_MONTH), Utility.convertToReplaceStrIfEmptyStr(getDateOfBirth(), DEFAULT_DATE)), Calendar.getInstance().getTime());
@@ -977,14 +973,6 @@ public class Demographic implements Serializable {
 		}
 
 	}
-
-//      Implement?
-//      public String getDob() {
-//           return addZero(year_of_birth,4)+addZero(month_of_birth,2)+addZero(date_of_birth,2);
-//      }
-//      public String getDob(String seperator){
-//	   return this.getYearOfBirth() + seperator + this.getMonthOfBirth() + seperator + this.getDateOfBirth();
-//	}
 
 	public String getFormattedLinks() {
 		StringBuilder response = new StringBuilder();
@@ -1150,7 +1138,174 @@ public class Demographic implements Serializable {
     	this.newsletter = newsletter;
     }
 
-    public static final Comparator<Demographic> FormattedNameComparator = new Comparator<Demographic>() {	
+    public List<DemographicExt> getDemographicExts() {
+		return demographicExts;
+	}
+
+	public void setDemographicExts(List<DemographicExt> demographicExts) {
+		this.demographicExts = demographicExts;
+	}
+	
+	public DemographicExt addDemographicExt( DemographicExt demographicExt ) {
+		getDemographicExts().add( demographicExt );
+		demographicExt.setDemographic(this);
+		return demographicExt;
+	}
+
+	public Hashtable<String, String> getDemographicExtendedProperties() {
+		if( demographicExtendedProperties == null ) {
+			demographicExtendedProperties = new Hashtable<String, String>();
+		}
+		return demographicExtendedProperties;
+	}
+	
+	public void addDemographicExtendedProperty( DemographicExt demographicExtendedProperty ) {
+		getDemographicExtendedProperties().put(demographicExtendedProperty.getKey(), demographicExtendedProperty.getValue() );
+	}
+	
+	public String getDemographicExtendedProperty( DemographicProperty property ) {
+		return getDemographicExtendedProperties().get( property.name() );
+	}
+
+	public void setDemographicExtendedProperties( Hashtable<String, String> demographicExtendedProperties ) {
+		if( this.getDemographicExts() != null && demographicExtendedProperties.isEmpty() ) {
+			for( DemographicExt demographicExt : getDemographicExts() ) {
+				addDemographicExtendedProperty( demographicExt );
+			}
+		}
+		
+		this.demographicExtendedProperties = demographicExtendedProperties;
+	}
+	
+	public void addDemographicExtendedProperty( DemographicProperty key, String value ) {		
+		DemographicExt demographicExt = new DemographicExt();
+		demographicExt.setKey( key.name() );
+		demographicExt.setValue(value);
+		
+		addDemographicExt( demographicExt );
+	}
+
+	public String getPHU() {
+		return getDemographicExtendedProperty( DemographicProperty.PHU );
+	}
+
+	public void setPHU(String PHU) {
+		addDemographicExtendedProperty( DemographicProperty.PHU, PHU );
+	}
+
+	public String getEmploymentStatus() {
+		return getDemographicExtendedProperty( DemographicProperty.EmploymentStatus );
+	}
+
+	public void setEmploymentStatus(String employmentStatus) {
+		addDemographicExtendedProperty( DemographicProperty.EmploymentStatus , employmentStatus );
+	}
+
+	public String getHasPrimaryCarePhyscian() {
+		return getDemographicExtendedProperty( DemographicProperty.HasPrimaryCarePhyscian );
+	}
+
+	public void setHasPrimaryCarePhyscian(String hasPrimaryCarePhyscian) {
+		addDemographicExtendedProperty( DemographicProperty.HasPrimaryCarePhyscian , hasPrimaryCarePhyscian );
+	}
+
+	public String getInformedConsent() {
+		return getDemographicExtendedProperty( DemographicProperty.informedConsent );
+	}
+
+	public void setInformedConsent(String informedConsent) {
+		addDemographicExtendedProperty( DemographicProperty.informedConsent , informedConsent );
+	}
+
+	public String getPrivacyConsent() {
+		return getDemographicExtendedProperty( DemographicProperty.privacyConsent );
+	}
+
+	public void setPrivacyConsent(String privacyConsent) {
+		addDemographicExtendedProperty( DemographicProperty.privacyConsent , privacyConsent );
+	}
+
+	public String getUsSigned() {
+		return getDemographicExtendedProperty( DemographicProperty.usSigned );
+	}
+
+	public void setUsSigned(String usSigned) {
+		addDemographicExtendedProperty( DemographicProperty.usSigned , usSigned );
+	}
+
+	public String getfNationCom() {
+		return getDemographicExtendedProperty( DemographicProperty.fNationCom );
+	}
+
+	public void setfNationCom(String fNationCom) {
+		addDemographicExtendedProperty( DemographicProperty.fNationCom , fNationCom );
+	}
+
+	public String getStatusNum() {
+		return getDemographicExtendedProperty( DemographicProperty.statusNum );
+	}
+
+	public void setStatusNum(String statusNum) {
+		addDemographicExtendedProperty( DemographicProperty.statusNum , statusNum );
+	}
+
+	public String getArea() {
+		return getDemographicExtendedProperty( DemographicProperty.area );
+	}
+
+	public void setArea(String area) {
+		addDemographicExtendedProperty( DemographicProperty.area , area );
+	}
+
+	public String getEthnicity() {
+		return getDemographicExtendedProperty( DemographicProperty.ethnicity);
+	}
+
+	public void setEthnicity(String ethnicity) {
+		addDemographicExtendedProperty( DemographicProperty.ethnicity , ethnicity );
+	}
+
+	public String getCytolNum() {
+		return getDemographicExtendedProperty( DemographicProperty.cytolNum );
+	}
+
+	public void setCytolNum(String cytolNum) {
+		addDemographicExtendedProperty( DemographicProperty.cytolNum , cytolNum );
+	}
+
+	public String getwPhoneExt() {
+		return getDemographicExtendedProperty( DemographicProperty.wPhoneExt );
+	}
+
+	public void setwPhoneExt(String wPhoneExt) {
+		addDemographicExtendedProperty( DemographicProperty.wPhoneExt , wPhoneExt );
+	}
+
+	public String gethPhoneExt() {
+		return getDemographicExtendedProperty( DemographicProperty.hPhoneExt );
+	}
+
+	public void sethPhoneExt(String hPhoneExt) {
+		addDemographicExtendedProperty( DemographicProperty.hPhoneExt , hPhoneExt );
+	}
+
+	public String getDemo_cell() {
+		return getDemographicExtendedProperty( DemographicProperty.demo_cell );
+	}
+
+	public void setDemo_cell(String demo_cell) {
+		addDemographicExtendedProperty( DemographicProperty.demo_cell , demo_cell );
+	}
+
+	public String getPhoneComment() {
+		return getDemographicExtendedProperty( DemographicProperty.phoneComment );
+	}
+
+	public void setPhoneComment(String phoneComment) {
+		addDemographicExtendedProperty( DemographicProperty.phoneComment , phoneComment );
+	}
+
+	public static final Comparator<Demographic> FormattedNameComparator = new Comparator<Demographic>() {	
         @Override	
         public int compare(Demographic dm1, Demographic dm2) {	
             return dm1.getFormattedName().compareToIgnoreCase(dm2.getFormattedName());	
@@ -1241,6 +1396,11 @@ public class Demographic implements Serializable {
 			sb.append("</b>");
 		}
 		return sb.toString();
+	}
+
+	@Override
+	public Integer getId() {
+		return this.getDemographicNo();
 	}
 	
 }

@@ -88,8 +88,9 @@ public class NewAppointmentConverter extends AbstractConverter<Appointment, NewA
 		d.setType(t.getType());
 		d.setUrgency(t.getUrgency());
 		d.setUpdateDateTime(d.getCreateDateTime());
+		d.setReasonCode(t.getReasonCode());
 		//This looks sketchy, but 17=Others
-		d.setReasonCode(17);
+	//	d.setReasonCode(17);
 
 		return d;
 	}

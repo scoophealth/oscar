@@ -56,6 +56,7 @@ public class NewAppointmentTo1 implements Serializable {
 	
 	private String urgency;
 
+	private Integer reasonCode;
 
 	public String getProviderNo() {
 		return providerNo;
@@ -194,6 +195,16 @@ public class NewAppointmentTo1 implements Serializable {
 
 	public void setStartTime12hWithMedian(String startTime12hWithMedian) {
 		this.startTime12hWithMedian = startTime12hWithMedian;
+	}
+
+
+	public Integer getReasonCode() {
+		return reasonCode;
+	}
+
+
+	public void setReasonCode(Integer reasonCode) {
+		this.reasonCode = reasonCode;
 	}
 	
 	

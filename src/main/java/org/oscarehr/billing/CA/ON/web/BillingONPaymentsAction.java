@@ -97,16 +97,18 @@ public class BillingONPaymentsAction extends DispatchAction {
 		request.setAttribute("totalInvoiced", cheader.getTotal());
 		
 		BigDecimal payments = BigDecimal.ZERO;
-		BigDecimal balances = BigDecimal.ZERO;
 		BigDecimal refunds = BigDecimal.ZERO;
 		BigDecimal discounts = BigDecimal.ZERO;
 		BigDecimal credits = BigDecimal.ZERO;
-		for(BillingONPayment pmt:paymentLists) {
-			payments = new BigDecimal(pmt.getTotal_payment().intValue() + payments.intValue());
-			discounts = new BigDecimal(pmt.getTotal_discount().intValue() + discounts.intValue());
-			refunds = new BigDecimal (pmt.getTotal_refund().intValue() + refunds.intValue());
-			credits = new BigDecimal(pmt.getTotal_credit().intValue() + credits.intValue());
+
+		for(BillingONPayment pmt:paymentLists)
+		{
+			payments = payments.add(pmt.getTotal_payment());
+			discounts =  discounts.add(pmt.getTotal_discount());
+			refunds = refunds.add(pmt.getTotal_refund());
+			credits = credits.add(pmt.getTotal_credit());
 		}
+
 		BigDecimal balance = total.subtract(payments).subtract(discounts).add(credits);
 		request.setAttribute("balance", balance);
 	
@@ -144,24 +146,6 @@ public class BillingONPaymentsAction extends DispatchAction {
 		List<BillingPaymentType> paymentTypes = billingPaymentTypeDao.findAll();
 		request.setAttribute("paymentTypeList", paymentTypes);
 
-		
-		BillingONCHeader1 cheader1 = billingClaimDAO.find(billingNo);
-		Integer demographicNo = cheader1.getDemographicNo();
-		BigDecimal payment = BigDecimal.ZERO;
-		balance = BigDecimal.ZERO;
-		total = BigDecimal.ZERO;
-		BigDecimal discount = BigDecimal.ZERO;
-		BigDecimal credit = BigDecimal.ZERO;
-		BigDecimal refund = BigDecimal.ZERO;
-		
-		total = cheader1.getTotal();
-		
-		for (BillingONPayment bop : paymentLists) {
-			credit = credit.add(bop.getTotal_credit());
-			discount = discount.add(bop.getTotal_discount());
-			payment = payment.add(bop.getTotal_payment());
-			refund = refund.add(bop.getTotal_refund());		
-		}
 		return actionMapping.findForward("success");
 	}
 	
