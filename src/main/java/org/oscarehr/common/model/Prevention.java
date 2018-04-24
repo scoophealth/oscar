@@ -45,6 +45,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
 import org.oscarehr.caisi_integrator.util.MiscUtils;
 import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
 
@@ -411,8 +412,25 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 		addPreventionExt( ImmunizationProperty.location, site );
 	}
 
+	
+	
+	@Override
+	public String getVaccineCode2() {
+		String brandSnomedId = getImmunizationProperty(ImmunizationProperty.brandSnomedId);
+		if(!StringUtils.isEmpty(brandSnomedId)) {
+			return brandSnomedId;
+		}
+		return null;
+	}
+
+	@Override
+	public void setVaccineCode2(String vaccineCode) {
+		addPreventionExt( ImmunizationProperty.brandSnomedId,vaccineCode );
+	}
+	
 	@Override
 	public String getVaccineCode() {
+		
 		return getSnomedId();
 	}
 
@@ -474,5 +492,17 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 	@Override
 	public void setStatus(String status) {
 		// TODO Auto-generated method stub		
+	}
+	
+
+	@Override
+	public String getProviderName() {
+		return getImmunizationProperty( ImmunizationProperty.providerName );
+	}
+
+
+	@Override
+	public void setProviderName(String providerName) {
+		addPreventionExt( ImmunizationProperty.providerName,providerName );
 	}
 }

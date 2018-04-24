@@ -654,8 +654,8 @@ $(document).ready(function(){
                    <fieldset>
                       <legend>Prevention : <%=prevention%></legend>
                          <div>
-                            <input name="given" type="radio" value="given"      <%=checked(completed,"0")%>>Completed</input><br/>
-                            <input name="given" type="radio" value="given_ext"  <%=checked(completed,"3")%>>Completed externally</input><br/>
+                            <input name="given" type="radio" value="given"      <%=checked(completed,"0")%> onClick="$('#providerDrop').val('<%=LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo() %>');hideExtraName(document.getElementById('providerDrop'))">Completed</input><br/>
+                            <input name="given" type="radio" value="given_ext"  <%=checked(completed,"3")%> onClick="$('#providerDrop').val('-1');hideExtraName(document.getElementById('providerDrop'))">Completed externally</input><br/>
                             <input name="given" type="radio" value="refused"    <%=checked(completed,"1")%>>Refused</input><br/>
                             <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input>
                          </div>
@@ -722,7 +722,20 @@ $(document).ready(function(){
              			 
              			 
              			 <label for="location">Location:</label> <input type="text" name="location" value="<%=str((extraData.get("location")),"")%>"/> <br/>
-                         <label for="route">Route:</label> <input type="text" name="route"   value="<%=str((extraData.get("route")),"")%>"/><br/>
+                         <label for="route">Route:</label> 
+                         	
+                         	<select name="route" id="route">
+                         	    <option value=""></option>
+                         	    <%
+                         	    	String routeSelected = " selected=\"selected\" ";
+                         	    %>
+                         		<option value="ID" <%="ID".equals(str((extraData.get("route")),"")) ? routeSelected : "" %>>Intradermal: ID</option>
+                         		<option value="IM" <%="IM".equals(str((extraData.get("route")),"")) ? routeSelected : "" %>>Intramuscular: IM</option>
+                         		<option value="IN" <%="IN".equals(str((extraData.get("route")),"")) ? routeSelected : "" %>>Intranasal: IN</option>
+                         		<option value="PO" <%="PO".equals(str((extraData.get("route")),"")) ? routeSelected : "" %>>Oral: PO</option>
+                         		<option value="SC" <%="SC".equals(str((extraData.get("route")),"")) ? routeSelected : "" %>>Subcutaneous: SC</option>
+                         	</select>
+                         	<br/>
                          <label for="dose">Dose:</label> <input type="text" name="dose"  value="<%=str((extraData.get("dose")),"")%>"/><br/>
                         <%if(!isCvc) { %>
                          <label for="lot">Lot:</label>  <input type="text" name="lot" id="lot" value="<%=str(lot,"")%>" />

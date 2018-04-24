@@ -455,8 +455,16 @@ public class PreventionData {
 		try {
 			Prevention prevention = preventionDao.find(Integer.valueOf(id));
 			if (prevention != null) {
+				Map<String, String> ext = getPreventionKeyValues(prevention.getId().toString());
+
 				h = new HashMap<String, Object>();
-				String providerName = ProviderData.getProviderName(prevention.getProviderNo());
+				String providerName = null;
+				if(!"-1".equals(prevention.getProviderNo())) {
+					providerName = ProviderData.getProviderName(prevention.getProviderNo());
+				} else {
+					providerName = ext.get("providerName") != null ? ext.get("providerName") : "";
+				}
+				
 				String preventionDate = UtilDateUtilities.DateToString(prevention.getPreventionDate(), "yyyy-MM-dd HH:mm");
 				String lastUpdateDate = UtilDateUtilities.DateToString(prevention.getLastUpdateDate(), "yyyy-MM-dd");
 				@SuppressWarnings("deprecation")
@@ -478,8 +486,7 @@ public class PreventionData {
 				addToHashIfNotNull(h, "snomedId", prevention.getSnomedId());
 				String summary = "Prevention " + prevention.getPreventionType() + " provided by " + providerName + " on " + preventionDate;
 				summary = summary + " entered by " + creatorName + " on " + lastUpdateDate;
-				Map<String, String> ext = getPreventionKeyValues(prevention.getId().toString());
-
+				
 				addToHashIfNotNull(h, "brandSnomedId", ext.get("brandSnomedId"));
 				
 				if (ext.containsKey("result")) { //This is a preventive Test

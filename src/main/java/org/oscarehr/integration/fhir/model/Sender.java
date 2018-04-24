@@ -81,7 +81,7 @@ public class Sender {
 		setVendorName(vendorName);
 		setSoftwareName(softwareName);
 		setVersionSignature(versionSignature);
-		setEndpoint(endpoint);
+		//setEndpoint(endpoint);
 	}
 
 	public MessageSourceComponent getMessageSourceComponent() {

@@ -36,7 +36,7 @@ import java.util.Date;
  */
 public interface ImmunizationInterface {
 	
-	public enum ImmunizationProperty{lot, location, route, dose, comments, neverReason, manufacture, name, expiryDate}
+	public enum ImmunizationProperty{lot, location, route, dose, comments, neverReason, manufacture, name, expiryDate,providerName, brandSnomedId}
 
 	/**
 	 * Get an immunization data value by ImmunizationProperty key
@@ -113,5 +113,20 @@ public interface ImmunizationInterface {
 	public boolean isPrimarySource();
 	
 	public void setPrimarySource(boolean truefalse );
+	
+	
+	public String getProviderName();
+	public void setProviderName(String providerName);
+	
+	/**
+	 * Fixed to SNOMED codes only
+	 */
+	public String getVaccineCode2();
+	
+	/**
+	 * Use SNOMED codes only
+	 */
+	public void setVaccineCode2(String vaccineCode);
+	
 	
 }

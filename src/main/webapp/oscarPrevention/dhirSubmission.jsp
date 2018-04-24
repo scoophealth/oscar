@@ -88,7 +88,8 @@
 	}
 	logger.debug("providerEmail is " + providerEmail);
 	
-	String backendEconsultUrl = "https://159.203.37.21";
+	String backendEconsultUrl = OscarProperties.getInstance().getProperty("backendEconsultUrl");
+	
 	
 	String url = backendEconsultUrl + "/api/test";
 	
@@ -288,7 +289,7 @@ clear: left;
         httpPost.addHeader("x-access-token", oneIdToken);
         
         JSONObject obj = new JSONObject();
-        obj.put("url","https://wsgateway.vte1.ehealthontario.ca:9443/API/FHIR/Immunizations/v3/partner/clinician/$process-message");
+        obj.put("url","https://wsgateway.pst.ehealthontario.ca:9443/API/FHIR/Immunizations/v3/partner/clinician/$process-message");
         obj.put("service","DHIR");
         obj.put("body",jbundle);
         
