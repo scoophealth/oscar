@@ -231,7 +231,6 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 
 	public void setPreventionExts(List<PreventionExt> preventionExts) {
 		this.preventionExts = preventionExts;
-		setPreventionExtendedProperties();
 	}
 
 	public PreventionExt addPreventionExt(PreventionExt preventionExt) {
@@ -263,6 +262,11 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 		return this.preventionExtendedProperties;
 	}
 
+	/**
+	 * There is no listener for this method. 
+	 * This method needs to be invoked "manually" after this entity is instantiated and loaded 
+	 * ie: Prevention.setPreventionExtendedProperties()
+	 */
 	public void setPreventionExtendedProperties() {		
 		if( this.getPreventionExts() != null ) {
 			for( PreventionExt property : preventionExts ) {
@@ -457,6 +461,7 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 	 */
 	@Override
 	public boolean isImmunization() {
+		//TODO there needs to be a better method to identify an ISPA Immunization.  This "isImmunization" method can be changed
 		return getPreventionExtendedProperties().containsKey( ImmunizationProperty.dose.name() );
 	}
 

@@ -108,6 +108,12 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 	
 	@Override
 	protected void mapAttributes( T immunization ) {
+		
+		// this is important to initialize easy access of the hash list of properties populated from the PreventionExt table.
+		if( immunization instanceof Prevention ) {
+			( (Prevention) immunization ).setPreventionExtendedProperties();
+		}
+		
 		setAdministrationDate( immunization );
 		setVaccineCode( immunization );
 		setRefused( immunization );
@@ -121,6 +127,11 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 
 	@Override
 	protected final void mapAttributes(org.hl7.fhir.dstu3.model.Immunization immunization ) {
+		
+		// this is important to initialize easy access of the hash list of properties populated from the PreventionExt table.
+		if( getOscarResource() instanceof Prevention ) {
+			( (Prevention) getOscarResource() ).setPreventionExtendedProperties();
+		}
 		
 		//mandatory
 		setStatus( immunization );
