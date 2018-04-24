@@ -83,6 +83,8 @@ public class OscarFhirResourceManager {
 	public static final org.oscarehr.integration.fhir.model.Immunization<Prevention> getImmunizationById( OscarFhirConfigurationManager configurationManager, int preventionId) {
 		PreventionManager preventionManager = SpringUtils.getBean(PreventionManager.class);
 		Prevention prevention = preventionManager.getPrevention(configurationManager.getLoggedInInfo(), preventionId);
+		prevention.setPreventionExtendedProperties();
+		
 		org.oscarehr.integration.fhir.model.Immunization<Prevention> immunization = null;
 
 		if( prevention != null ) {

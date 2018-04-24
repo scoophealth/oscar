@@ -26,13 +26,17 @@ package org.oscarehr.integration.fhir.model;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.hl7.fhir.dstu3.model.BooleanType;
 import org.hl7.fhir.dstu3.model.Immunization.ImmunizationStatus;
 import org.hl7.fhir.dstu3.model.Reference;
+import org.oscarehr.common.dao.CVCImmunizationDao;
 import org.oscarehr.common.model.AbstractModel;
+import org.oscarehr.common.model.CVCImmunization;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
+import org.oscarehr.util.SpringUtils;
 
 
 /*
@@ -92,7 +96,7 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 	extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, T> {
 
 	private static final Pattern measurementValuePattern = Pattern.compile("^([0-9])*(\\.)*([0-9])*");
-
+	
 	public Immunization( T from ){
 		super( new org.hl7.fhir.dstu3.model.Immunization(), from );
 	}
@@ -110,6 +114,7 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 	protected void mapAttributes( T immunization ) {
 		setAdministrationDate( immunization );
 		setVaccineCode( immunization );
+		setVaccineCode2( immunization );
 		setRefused( immunization );
 		setLotNumber( immunization );
 		setExpirationDate( immunization );
@@ -126,6 +131,7 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 		setStatus( immunization );
 		setAdministrationDate( immunization );
 		setVaccineCode( immunization );
+		setVaccineCode2( immunization );
 		setRefused( immunization );
 		setLotNumber( immunization );
 		setExpirationDate( immunization );
@@ -178,20 +184,25 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 	}
 
 	/**
+	 * TODO: hard coded.
+	 * 
 	 * The extension URI for the administration date indicates if the immunization date was 
 	 * estimated.
 	 * It is assumed that the date is estimated if the vaccine was done externally.
 	 */
 	private void setAdministrationDate( org.hl7.fhir.dstu3.model.Immunization immunization ){
 
-		BooleanType estimated = new BooleanType();
-		estimated.setValue( ! getOscarResource().isPrimarySource() );
+		immunization.setDate(getOscarResource().getImmunizationDate());
 		
-		immunization.setDate( getOscarResource().getImmunizationDate() )
-			.getDateElement()
-			.addExtension()
-			.setUrl("https://ehealthontario.ca/API/FHIR/StructureDefinition/ca-on-extension-estimated-date")
-			.setValue( estimated );
+		if(!getOscarResource().isPrimarySource()) {
+			BooleanType estimated = new BooleanType(true);
+			
+			immunization.setDate( getOscarResource().getImmunizationDate() )
+				.getDateElement()
+				.addExtension()
+				.setUrl("https://ehealthontario.ca/API/FHIR/StructureDefinition/ca-on-extension-estimated-date")
+				.setValue( estimated );
+		}
 
 	}
 
@@ -203,15 +214,45 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 	 * SNOMED is a fixed (static) system in Oscar.
 	 */
 	private void setVaccineCode( org.hl7.fhir.dstu3.model.Immunization immunization ){
-		immunization.getVaccineCode().addCoding()
-		.setSystem("http://snomed.info/sct")
-		.setCode( getOscarResource().getVaccineCode() )
-		.setDisplay( (getOscarResource().getManufacture() + " " + getOscarResource().getName()).trim() );
+		CVCImmunizationDao cvcImmDao = SpringUtils.getBean(CVCImmunizationDao.class);
+	
+		
+		if(!StringUtils.isEmpty(getOscarResource().getVaccineCode())) {
+			String display = getOscarResource().getName().trim();
+			if(StringUtils.isEmpty(display) || !StringUtils.isEmpty(getOscarResource().getVaccineCode2())) {
+				CVCImmunization cvcImm = cvcImmDao.findBySnomedConceptId(getOscarResource().getVaccineCode());
+				if(cvcImm != null) {
+					display = cvcImm.getDisplayName();
+				}
+			}
+			
+			immunization.getVaccineCode().addCoding()
+			.setSystem("http://snomed.info/sct")
+			.setCode( getOscarResource().getVaccineCode() )
+			.setDisplay( display );
+		}
 	}
 
 	private void setVaccineCode( ImmunizationInterface immunization ){
 		immunization.setVaccineCode( getFhirResource().getVaccineCode().getCodingFirstRep().getCode() );
 	}
+	
+	/**
+	 * SNOMED is a fixed (static) system in Oscar.
+	 */
+	private void setVaccineCode2( org.hl7.fhir.dstu3.model.Immunization immunization ){
+		if(!StringUtils.isEmpty(getOscarResource().getVaccineCode2())) {
+			immunization.getVaccineCode().addCoding()
+			.setSystem("http://snomed.info/sct")
+			.setCode( getOscarResource().getVaccineCode2() )
+			.setDisplay((getOscarResource().getName()).trim());
+		}
+	}
+
+	private void setVaccineCode2( ImmunizationInterface immunization ){
+		immunization.setVaccineCode2( getFhirResource().getVaccineCode().getCoding().get(1).getCode() );
+	}
+	
 
 	private void setRefused( org.hl7.fhir.dstu3.model.Immunization immunization ){
 		immunization.setNotGiven( getOscarResource().getImmunizationRefused() );
@@ -241,15 +282,23 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 	 * This is the body part - or location - the immunization was given.
 	 */
 	private void setSite( org.hl7.fhir.dstu3.model.Immunization immunization ){
-		immunization.getSite().setText( getOscarResource().getSite() );
+		if(!StringUtils.isEmpty(getOscarResource().getSite())) {
+			immunization.getSite().setText( getOscarResource().getSite() );
+		}
 	}
 
 	private void setSite(  ImmunizationInterface immunization ){
-		immunization.setSite( getFhirResource().getSite().getText() );
+		if(!StringUtils.isEmpty(getFhirResource().getSite().getText())) {
+			immunization.setSite( getFhirResource().getSite().getText() );
+		}
 	}
 
 	private void setDose( org.hl7.fhir.dstu3.model.Immunization immunization ){
 		String dose = getOscarResource().getDose();
+		
+		if(StringUtils.isEmpty(dose)) {
+			return;
+		}
 		Matcher matcher = measurementValuePattern.matcher(dose);
 		String number = "";
 		Double value = 0.0;
@@ -268,14 +317,33 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 	}
 
 	private void setRoute( org.hl7.fhir.dstu3.model.Immunization immunization ){
-		immunization.getRoute().addCoding()
-		.setSystem("http://snomed.info/sct")
-		.setCode( getOscarResource().getRoute() )
-		.setDisplay( getOscarResource().getRoute() );		
+		if(!StringUtils.isEmpty(getOscarResource().getRoute())) {
+			
+			String oscarRouteCode = getOscarResource().getRoute();
+			String code = oscarRouteCode;
+			if("ID".equals(oscarRouteCode)) {
+				code = "372464004";
+			} else if("IM".equals(oscarRouteCode)) {
+				code = "78421000";
+			} else if("IN".equals(oscarRouteCode)) {
+				code = "46713006";
+			} else if("PO".equals(oscarRouteCode)) {
+				code = "26643006";
+			} else if("SC".equals(oscarRouteCode)) {
+				code = "34206005";
+			}
+			
+			immunization.getRoute().addCoding()
+			.setSystem("http://snomed.info/sct")
+			.setCode( code )
+			.setDisplay( getOscarResource().getRoute() );		
+		}
 	}
 
 	private void setRoute( ImmunizationInterface immunization ){
-		immunization.setSite( getFhirResource().getRoute().getText() );
+		if(!StringUtils.isEmpty(getFhirResource().getRoute().getText())) {
+			immunization.setSite( getFhirResource().getRoute().getText() );
+		}
 	}
 
 	private void setAnnotation( org.hl7.fhir.dstu3.model.Immunization immunization ){
@@ -312,11 +380,13 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 	 * Where was the immunization given if this is not the primary source. 
 	 * Not very detailed in Oscar, so for now, unknown is given.
 	 */
-	private void setReportOrigin( org.hl7.fhir.dstu3.model.Immunization immunization ) {		
+	private void setReportOrigin( org.hl7.fhir.dstu3.model.Immunization immunization ) {	
+		String providerName = getOscarResource().getProviderName();
+		
 		immunization.getReportOrigin().addCoding()
 			.setSystem("http://hl7.org/fhir/immunization-origin")
 			.setCode("provider")
-			.setDisplay("other provider");		
+			.setDisplay(providerName);		
 	}
 	
 	/**

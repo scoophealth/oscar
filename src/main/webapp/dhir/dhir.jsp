@@ -70,7 +70,7 @@
 	if (!delegateOneIdEmail.equals("")) {
 		providerEmail = delegateOneIdEmail;
 	}
-	String backendEconsultUrl = "https://159.203.37.21";
+	String backendEconsultUrl = "https://138.197.167.236";
 	
 	String url = backendEconsultUrl + "/api/test";
 	
@@ -93,7 +93,7 @@
         httpPost.addHeader("x-access-token", oneIdToken);
         
         JSONObject obj = new JSONObject();
-        obj.put("url","https://wsgateway.vte1.ehealthontario.ca:9443/API/FHIR/Immunizations/v3/partner/clinician/$process-message");
+        obj.put("url","https://wsgateway.pst.ehealthontario.ca:9443/API/FHIR/Immunizations/v3/partner/clinician/$process-message");
         obj.put("service","DHIR");
         obj.put("body",bundle);
         

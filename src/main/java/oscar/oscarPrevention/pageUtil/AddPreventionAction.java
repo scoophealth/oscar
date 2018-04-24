@@ -43,14 +43,8 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.LookupListDao;
 import org.oscarehr.common.dao.LookupListItemDao;
-import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.model.CVCImmunization;
 import org.oscarehr.common.model.Consent;
-import org.oscarehr.common.model.DemographicExt;
-import org.oscarehr.common.model.LookupList;
-import org.oscarehr.common.model.LookupListItem;
-import org.oscarehr.common.model.Prevention;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.integration.fhir.api.DHIR;
 import org.oscarehr.integration.fhir.builder.FhirBundleBuilder;
 import org.oscarehr.managers.SecurityInfoManager;
@@ -59,7 +53,6 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import oscar.OscarProperties;
 import oscar.oscarPrevention.PreventionData;
 /**
  *
@@ -175,6 +168,8 @@ public class AddPreventionAction  extends Action {
          addHashtoArray(extraData,request.getParameter("firstnations"),"firstnations");
          addHashtoArray(extraData,request.getParameter("name"),"name");
          addHashtoArray(extraData,request.getParameter("expiryDate"),"expiryDate");
+         addHashtoArray(extraData,request.getParameter("providerName"),"providerName");
+         
          if(request.getParameter("cvcName") != null && !request.getParameter("cvcName").equals("-1") ) {
         	 addHashtoArray(extraData,request.getParameter("cvcName"),"brandSnomedId");
          }
@@ -204,24 +199,9 @@ public class AddPreventionAction  extends Action {
          Consent dhirConsent =  consentDao.findByDemographicAndConsentType(Integer.parseInt(demographic_no), "dhir_non_ispa_consent");
 			
          if(imm != null && (imm.isIspa() || (dhirConsent != null && !dhirConsent.isOptout()))) {
-        	 request.setAttribute("preventionId", preventionId);
-        	 PreventionDao preventionDao = SpringUtils.getBean(PreventionDao.class);
-        	 Prevention p =  preventionDao.find(preventionId);
-        	 request.setAttribute("prevention",p);
-        	 request.setAttribute("operation", operation);
-        	 request.setAttribute("demographic", demographicDao.getDemographic(demographic_no));
-        	 DemographicExt phuExt = demographicExtDao.getDemographicExt(Integer.parseInt(demographic_no), "PHU");
-        	 String phu = phuExt != null ? phuExt.getValue() : OscarProperties.getInstance().getProperty("default_phu");
-        	 request.setAttribute("phu", phu);
         	 
-        	 LookupList ll= lookupListDao.findByName("phu");
-        	 LookupListItem lli =  lookupListItemDao.findByLookupListIdAndValue(ll.getId(), phu);
-        	 request.setAttribute("phuName", lli != null ? lli.getLabel() : null);
-         	 
-        	 String performerProviderNo = p.getProviderNo();
-        	 Provider performer = providerDao.getProvider(performerProviderNo);
-        	 request.setAttribute("performer",performer);
-        	 
+        	 if("given".equals(given) || "given_ext".equals(given)) {
+        	
         	FhirBundleBuilder fbb = DHIR.getFhirBundleBuilder(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.parseInt(demographic_no), preventionId);
         	 
         	Bundle bundle = fbb.getBundle();
@@ -237,6 +217,8 @@ public class AddPreventionAction  extends Action {
         	MiscUtils.getLogger().info(fbb.getMessageJson());
         	
         	 return mapping.findForward("review");
+
+		}
          }
          
          

@@ -71,22 +71,22 @@ public class SubmitImmunizationAction extends DispatchAction {
 		return mapping.findForward("testresult");
 	}
 	
-//	@Override
-//	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-//		
-//		//need prevention, patient, and loggedInProvider
-//		
-//		//create some kind of log entry
-//		
-//		//generate the message - update log
-//		
-//		//submit through hial - update log
-//		
-//		MiscUtils.getLogger().info("submitting to DHIR");
-//		
-//		
-//		return mapping.findForward("success");
-//	}
+	@Override
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		//need prevention, patient, and loggedInProvider
+		
+		//create some kind of log entry
+		
+		//generate the message - update log
+		
+		//submit through hial - update log
+		
+		MiscUtils.getLogger().info("submitting to DHIR");
+		
+		
+		return mapping.findForward("success");
+	}
 
 	
 }
