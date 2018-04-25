@@ -45,7 +45,7 @@ public final class DestinationFactory {
 		//TODO will be changed from an Enum to a Class once the properties files are in effect.
 		if(destination != null) {
 			title = destination.name();
-			endpoint = destination.title();
+			endpoint = destination.endpoint();
 		}
 		
 		return new Destination( title, endpoint );
