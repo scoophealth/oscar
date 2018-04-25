@@ -92,7 +92,8 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 	extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, T> {
 
 	private static final Pattern measurementValuePattern = Pattern.compile("^([0-9])*(\\.)*([0-9])*");
-
+	private boolean isHistorical;
+	
 	public Immunization( T from ){
 		super( new org.hl7.fhir.dstu3.model.Immunization(), from );
 	}
@@ -133,7 +134,13 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 			( (Prevention) getOscarResource() ).setPreventionExtendedProperties();
 		}
 		
+		// this is a particular requirement for the DHIR - but it may have other applications. 
+		if( include( OptionalFHIRAttribute.dateIsEstimated ) ) {
+			setHistorical( getOscarResource().isHistorical(14) );
+		}
+		
 		//mandatory
+		setIsPrimarySource( immunization );
 		setStatus( immunization );
 		setAdministrationDate( immunization );
 		setVaccineCode( immunization );
@@ -144,14 +151,13 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 		setDose( immunization );
 		setRoute( immunization );
 		setReason( immunization );
-		setIsPrimarySource( immunization );
-		
+
 		// optional
 		if( include( OptionalFHIRAttribute.annotation ) ) {
 			setAnnotation( immunization );
 		}
 
-		if( ! getOscarResource().isPrimarySource() ) {
+		if( ! immunization.getPrimarySource() ) {
 			setReportOrigin( immunization );
 		}
 	}
@@ -190,20 +196,25 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 	}
 
 	/**
-	 * The extension URI for the administration date indicates if the immunization date was 
-	 * estimated.
-	 * It is assumed that the date is estimated if the vaccine was done externally.
+	 * The extension URI for the administration date indicates if the immunization date was estimated.
+	 * 
 	 */
 	private void setAdministrationDate( org.hl7.fhir.dstu3.model.Immunization immunization ){
-
-		BooleanType estimated = new BooleanType();
-		estimated.setValue( ! getOscarResource().isPrimarySource() );
 		
-		immunization.setDate( getOscarResource().getImmunizationDate() )
-			.getDateElement()
-			.addExtension()
-			.setUrl("https://ehealthontario.ca/API/FHIR/StructureDefinition/ca-on-extension-estimated-date")
-			.setValue( estimated );
+		immunization.setDate( getOscarResource().getImmunizationDate() );
+
+		if( include( OptionalFHIRAttribute.dateIsEstimated ) ) {
+			
+			//TODO the number of days to estimate a historical date will need to fetched from the configuration settings.
+			
+			BooleanType estimated = new BooleanType();
+			estimated.setValue( isHistorical() );
+			
+			immunization.getDateElement()
+				.addExtension()
+				.setUrl("https://ehealthontario.ca/API/FHIR/StructureDefinition/ca-on-extension-estimated-date")
+				.setValue( estimated );
+		}
 
 	}
 
@@ -316,19 +327,51 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 			.setDisplay( "Routine" );
 	}
 	
+	/**
+	 * Determined if the user has selected if the immunization has been "Done Externally".
+	 * 
+	 * If the dateIsEstimated is enabled. This value will also be set to NOT be a primary source.
+	 * 
+	 */
 	private void setIsPrimarySource( org.hl7.fhir.dstu3.model.Immunization immunization ) {	
-		immunization.setPrimarySource( getOscarResource().isPrimarySource() );
+		
+		boolean primarySource = getOscarResource().isPrimarySource();
+
+		if( include( OptionalFHIRAttribute.dateIsEstimated ) ) {
+			if( primarySource ) {
+				primarySource = !isHistorical();
+			}
+		}
+		
+		immunization.setPrimarySource( primarySource );
 	}
 	
 	/**
-	 * Where was the immunization given if this is not the primary source. 
-	 * Not very detailed in Oscar, so for now, unknown is given.
+	 * This method is triggered when the user has indicated that the immunization has been performed externally.
+	 * 
+	 * The display value is changed if the dateIsEstimated is enabled.
+	 * 
+	 * The source of the data when the report of the immunization event is not based on 
+	 * information from the person who administered the vaccine.
 	 */
-	private void setReportOrigin( org.hl7.fhir.dstu3.model.Immunization immunization ) {		
+	private void setReportOrigin( org.hl7.fhir.dstu3.model.Immunization immunization ) {	
+		String provider = "provider";
+		String display = "other";
+		
+		if( include( OptionalFHIRAttribute.dateIsEstimated ) ) {
+			if( isHistorical() ) {
+				provider = "record";
+			}
+		}
+		
+		if( "provider".equals(provider) ) {
+			display = getOscarResource().getProviderName();
+		}
+		
 		immunization.getReportOrigin().addCoding()
 			.setSystem("http://hl7.org/fhir/immunization-origin")
-			.setCode("provider")
-			.setDisplay("other provider");		
+			.setCode( provider )
+			.setDisplay( display );		
 	}
 	
 	/**
@@ -357,6 +400,14 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 	 */
 	public void setPatientReference( Reference reference ) {
 		getFhirResource().setPatient( reference );
+	}
+
+	public boolean isHistorical() {
+		return isHistorical;
+	}
+
+	public void setHistorical(boolean isHistorical) {
+		this.isHistorical = isHistorical;
 	}
 
 }

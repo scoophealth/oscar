@@ -46,6 +46,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.oscarehr.caisi_integrator.util.MiscUtils;
 import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
 
@@ -479,7 +481,7 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 	 */
 	@Override
 	public boolean isImmunization() {
-		return ( getSnomedId() != null && getSnomedId().isEmpty() );
+		return ( getSnomedId() != null && ! getSnomedId().isEmpty() );
 	}
 
 	@Override
@@ -496,5 +498,13 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 	@Override
 	public void setProviderName(String providerName) {
 		addPreventionExt( ImmunizationProperty.providerName,providerName );
+	}
+	
+	@Override
+	public boolean isHistorical(int days) {
+		DateTime immunizationDate = new DateTime( getImmunizationDate() );
+		DateTime submissionDate =  new DateTime( System.currentTimeMillis() );		
+		int daysBetween = Days.daysBetween(immunizationDate, submissionDate).getDays();		
+		return ( daysBetween > days );
 	}
 }

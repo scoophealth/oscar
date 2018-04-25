@@ -28,6 +28,7 @@ organization.name=false
 organization.oranizationName=true
 
 immunization.annotation=false
+immunization.dateIsEstimated=true
 
 ## MandatoryFHIRAttribute 
 submittingpractitioner.practitionerNo=true

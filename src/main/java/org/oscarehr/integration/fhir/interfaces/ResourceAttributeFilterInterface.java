@@ -40,7 +40,8 @@ public interface ResourceAttributeFilterInterface {
 		workPhone, 
 		email,
 		qualification, 
-		otherphone
+		otherphone,
+		dateIsEstimated
 	}
 	
 	public enum MandatoryFHIRAttribute {
