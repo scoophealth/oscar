@@ -33,6 +33,8 @@ package org.oscarehr.integration.fhir.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.hl7.fhir.dstu3.model.BaseResource;
 import org.hl7.fhir.dstu3.model.MessageHeader.MessageDestinationComponent;
 import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
@@ -108,11 +110,11 @@ public final class Destination {
 		addFhirResource( organization );
 	}
 	
-	public void addOrganization( org.oscarehr.integration.fhir.model.Organization organization ) {		
+	public void addOrganization( org.oscarehr.integration.fhir.model.Organization<?> organization ) {		
 		addOscarFhirResource( organization );
 	}
 	
-	public void addOscarFhirResource( org.oscarehr.integration.fhir.model.Organization organization ) {
+	public void addOscarFhirResource( org.oscarehr.integration.fhir.model.Organization<?> organization ) {
 		addFhirResource( organization.getFhirResource() );
 		getOscarFhirResources().add( organization );
 	}
@@ -135,4 +137,8 @@ public final class Destination {
 	public void addFhirResource( BaseResource fhirResource ) {
 		getFhirResources().add( fhirResource );
 	}
+	
+	 public String toString() {
+	     return ReflectionToStringBuilder.toString(this);
+	 }
 }

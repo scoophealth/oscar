@@ -24,6 +24,7 @@ package org.oscarehr.integration.fhir.model;
  */
 
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.hl7.fhir.dstu3.model.MessageHeader.MessageSourceComponent;
 import org.oscarehr.common.model.Clinic;
 
@@ -76,12 +77,19 @@ public class Sender {
 		setMessageSourceComponent( new MessageSourceComponent() );
 	}
 	
+	public Sender( String vendorName, String softwareName, String versionSignature ) {
+		setMessageSourceComponent( new MessageSourceComponent() );
+		setVendorName(vendorName);
+		setSoftwareName(softwareName);
+		setVersionSignature(versionSignature);
+	}
+	
 	public Sender( String vendorName, String softwareName, String versionSignature, String endpoint ) {
 		setMessageSourceComponent( new MessageSourceComponent() );
 		setVendorName(vendorName);
 		setSoftwareName(softwareName);
 		setVersionSignature(versionSignature);
-		//setEndpoint(endpoint);
+		setEndpoint(endpoint);
 	}
 
 	public MessageSourceComponent getMessageSourceComponent() {
@@ -182,4 +190,7 @@ public class Sender {
 		this.senderName = senderName;
 	}
 
+	 public String toString() {
+	     return ReflectionToStringBuilder.toString(this);
+	 }
 }

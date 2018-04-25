@@ -45,6 +45,7 @@ import org.oscarehr.integration.fhir.model.Patient;
 import org.oscarehr.integration.fhir.model.PerformingPractitioner;
 import org.oscarehr.integration.fhir.model.Practitioner;
 import org.oscarehr.integration.fhir.model.SubmittingPractitioner;
+import org.oscarehr.integration.fhir.resources.Settings;
 import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
 import org.oscarehr.integration.fhir.resources.constants.Region;
 import org.oscarehr.util.LoggedInInfo;
@@ -188,7 +189,9 @@ public class FhirMessageBuilderTest {
 		loggedInInfo.setLoggedInProvider (provider );
 		loggedInInfo.setLoggedInSecurity(security);
 		
-		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, FhirDestination.BORN, Region.ON );
+		Settings settings = new Settings(FhirDestination.DHIR, Region.ON);
+		
+		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, settings );
 
 		// Patient
 		Patient patient = new Patient( demographic, configurationManager );
@@ -239,8 +242,11 @@ public class FhirMessageBuilderTest {
 		loggedInInfo.setLoggedInProvider (provider );
 		loggedInInfo.setLoggedInSecurity(security);
 		
+		Settings settings = new Settings(FhirDestination.DHIR, Region.ON);
+		settings.setIncludeSenderEndpoint( Boolean.FALSE );
+		
 		// set up the configuration for a DHIR type transmission.
-		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, FhirDestination.DHIR, Region.ON );
+		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, settings );
 		
 		Patient patient = new Patient( demographic, configurationManager );
 		

@@ -33,22 +33,22 @@ import org.oscarehr.integration.fhir.builder.FhirBundleBuilder;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.manager.OscarFhirResourceManager;
 import org.oscarehr.integration.fhir.model.OscarFhirResource;
+import org.oscarehr.integration.fhir.resources.Settings;
 import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
 import org.oscarehr.integration.fhir.resources.constants.Region;
 import org.oscarehr.util.LoggedInInfo;
 
 
 public class DHIR {
-	
-	private static final FhirDestination destination = FhirDestination.DHIR;
-	private static final Region region = Region.ON;
 
+	private static Settings settings = new Settings( FhirDestination.DHIR, Region.ON );
+	
 	/**
 	 * Get the FhirBundleBuilder Object for all immunizations
 	 * Useful for adding additional resources or adjusting the message structure.
 	 */
 	public static synchronized FhirBundleBuilder getFhirBundleBuilder( LoggedInInfo loggedInInfo, int demographicNo ) {
-		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, destination, region );
+		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, settings );
 		HashSet<OscarFhirResource<?,?>> resourceList = new HashSet<OscarFhirResource<?,?>>();
 		org.oscarehr.integration.fhir.model.Patient patient = OscarFhirResourceManager.getPatientByDemographicNumber( configurationManager, demographicNo );
 		
@@ -81,7 +81,10 @@ public class DHIR {
 	 */
 	public static synchronized FhirBundleBuilder getFhirBundleBuilder( LoggedInInfo loggedInInfo, int demographicNo, int preventionId ) {
 		
-		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, destination, region );
+		//TODO this will be set in a properties file later. The default is false anyway. 
+		settings.setIncludeSenderEndpoint( Boolean.FALSE ); 
+		
+		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, settings );
 		HashSet<OscarFhirResource<?,?>> resourceList = new HashSet<OscarFhirResource<?,?>>();
 		org.oscarehr.integration.fhir.model.Patient patient = OscarFhirResourceManager.getPatientByDemographicNumber( configurationManager, demographicNo );
 		org.oscarehr.integration.fhir.model.SubmittingPractitioner submittingPractitioner = new org.oscarehr.integration.fhir.model.SubmittingPractitioner( configurationManager.getLoggedInInfo().getLoggedInProvider(), configurationManager );

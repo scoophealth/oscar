@@ -479,21 +479,13 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 	 */
 	@Override
 	public boolean isImmunization() {
-		//TODO there needs to be a better method to identify an ISPA Immunization.  This "isImmunization" method can be changed
-		return getPreventionExtendedProperties().containsKey( ImmunizationProperty.dose.name() );
+		return ( getSnomedId() != null && getSnomedId().isEmpty() );
 	}
 
 	@Override
-	public String getStatus() {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean isComplete() {
+		return ( ! isNever() && ! isRefused() );
 	}
-
-	@Override
-	public void setStatus(String status) {
-		// TODO Auto-generated method stub		
-	}
-	
 
 	@Override
 	public String getProviderName() {
