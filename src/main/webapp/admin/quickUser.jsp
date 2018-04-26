@@ -228,6 +228,22 @@
                               	<input name="password" type="password" size="25" placeholder="Password"/>&nbsp;&nbsp;
                                 <input name="confirmPassword" type="password" size="25" placeholder="Confirm Password"/><br/>
                        </div>
+                       
+                        <div class="controls">
+                              	<input name="billingNo" type="text" size="25" placeholder="Provincial Billing #"/> 
+                              	<%if("true".equals(oscar.OscarProperties.getInstance().getProperty("quickUser.showGenerateBillingNo","false"))) { %>
+                              	<input type="checkbox" name="generateBillingNo"/>Generate Random Billing #<br/>
+                              	<% } else { %>
+                              		<br/>
+                              	<% } %>
+                                <input name="thirdPartyBillingNo" type="text" size="25" placeholder="3rd Party Billing #"/>
+                                <%if("true".equals(oscar.OscarProperties.getInstance().getProperty("quickUser.showGenerateThirdPartyBillingNo","false"))) { %>                              	
+                                <input type="checkbox" name="generateThirdPartyBillingNo"/>Generate Random 3rd Party Billing #<br/>
+                               	<% } else { %>
+                              		<br/>
+                              	<% } %>
+                       </div>
+                       
                        <div class="controls">
                        		<b>Force Password Reset:</b>
                              <select name="forcePasswordReset">
@@ -245,7 +261,10 @@
                                		<option value="<%=p.getProviderNo()%>"><%=p.getFormattedName() %></option>
                                	<%} %>
                                </select>
-                              
+                               &nbsp;
+                             
+                              <input type="checkbox" name="includeDrugFavourites"/>Include Drug Favourites<br/>
+                               
                        </div>
                        
                </div>

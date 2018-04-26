@@ -35,7 +35,11 @@ public class CreateQuickUserBean extends ActionForm {
 	private String copyProviderNo;
 	private String pin;
 	private String forcePasswordReset;
-		
+	private String billingNo;
+	private String thirdPartyBillingNo;
+	private boolean generateBillingNo;
+	private boolean generateThirdPartyBillingNo;
+	private boolean includeDrugFavourites;
 	
 	public String getFirstName() {
 		return firstName;
@@ -108,7 +112,46 @@ public class CreateQuickUserBean extends ActionForm {
 	public void setForcePasswordReset(String forcePasswordReset) {
 		this.forcePasswordReset = forcePasswordReset;
 	}
-	
+
+	public String getBillingNo() {
+		return billingNo;
+	}
+
+	public void setBillingNo(String billingNo) {
+		this.billingNo = billingNo;
+	}
+
+	public String getThirdPartyBillingNo() {
+		return thirdPartyBillingNo;
+	}
+
+	public void setThirdPartyBillingNo(String thirdPartyBillingNo) {
+		this.thirdPartyBillingNo = thirdPartyBillingNo;
+	}
+
+	public boolean isGenerateBillingNo() {
+		return generateBillingNo;
+	}
+
+	public void setGenerateBillingNo(boolean generateBillingNo) {
+		this.generateBillingNo = generateBillingNo;
+	}
+
+	public boolean isGenerateThirdPartyBillingNo() {
+		return generateThirdPartyBillingNo;
+	}
+
+	public void setGenerateThirdPartyBillingNo(boolean generateThirdPartyBillingNo) {
+		this.generateThirdPartyBillingNo = generateThirdPartyBillingNo;
+	}
+
+	public boolean isIncludeDrugFavourites() {
+		return includeDrugFavourites;
+	}
+
+	public void setIncludeDrugFavourites(boolean includeDrugFavourites) {
+		this.includeDrugFavourites = includeDrugFavourites;
+	}
 	
 	
 }

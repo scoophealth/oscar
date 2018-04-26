@@ -28,18 +28,23 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.SecUserRoleDao;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.PMmodule.service.ProgramManager;
+import org.oscarehr.common.dao.FavoritesDao;
+import org.oscarehr.common.model.Favorites;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Security;
 import org.oscarehr.managers.ProviderManager2;
@@ -60,6 +65,32 @@ public class CreateQuickUserAction extends DispatchAction {
 	SecUserRoleDao secUserRoleDao = SpringUtils.getBean(SecUserRoleDao.class);
 	ProgramManager programManager = SpringUtils.getBean(ProgramManager.class);
 	SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	FavoritesDao favoritesDao = SpringUtils.getBean(FavoritesDao.class);
+	
+	private String generateBillingNo() {
+		
+		String val = null;
+			
+		do {
+			Random rand = new Random();
+			long  n = rand.nextInt(9999999) + 1000000;
+			val = String.valueOf(n);
+		} while(providerDao.getProviderByBillingNo(val).size()>0);
+		return val;
+	}
+	
+	private String generateThirdPartyBillingNo() {
+		String val = null;
+		
+		do {
+			Random rand = new Random();
+			long  n = rand.nextInt(9999999) + 1000000;
+			val = String.valueOf(n);
+		} while(providerDao.getProviderByThirdPartyBillingNo(val).size()>0);
+		return val;
+	}
+	
 	
 	public ActionForward checkUsername(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException  {
 		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
@@ -130,6 +161,15 @@ public class CreateQuickUserAction extends DispatchAction {
 		p.setEmail("");
 		p.setLastUpdateUser(loggedInInfo.getLoggedInProviderNo());
 		p.setLastUpdateDate(new Date());
+		p.setBillingNo(userForm.getBillingNo());
+		p.setRmaNo(userForm.getThirdPartyBillingNo());
+		
+		if(userForm.isGenerateBillingNo()) {
+			p.setBillingNo(generateBillingNo());
+		}
+		if(userForm.isGenerateThirdPartyBillingNo()) {
+			p.setRmaNo(generateThirdPartyBillingNo());
+		}
 		
 		try {
 			providerManager.saveProvider(loggedInInfo,p);
@@ -216,6 +256,21 @@ public class CreateQuickUserAction extends DispatchAction {
 		}
 		
 		
+		//copy drug favorites
+		if(userForm.isIncludeDrugFavourites()) {
+			List<Favorites> favorites = favoritesDao.findByProviderNo(userForm.getCopyProviderNo());
+			for(Favorites from: favorites) {
+				Favorites to = new Favorites();
+				try {
+					BeanUtils.copyProperties(to, from);
+					to.setId(null);
+					to.setProviderNo(p.getProviderNo());
+					favoritesDao.persist(to);
+				}catch(Exception e) {
+					MiscUtils.getLogger().warn("Error copying favorite " + from.getId());
+				}
+			}
+		}
 		
 		return mapping.findForward("success");
 	}
