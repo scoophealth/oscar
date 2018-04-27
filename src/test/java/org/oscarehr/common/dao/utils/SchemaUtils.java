@@ -136,7 +136,7 @@ public class SchemaUtils
 			Statement s=c.createStatement();
 			
 			if(!skipDbInit) {
-				s.executeUpdate("create database "+schema);				
+				s.executeUpdate("create database "+schema+" DEFAULT CHARACTER SET utf8  DEFAULT COLLATE utf8_general_ci");
 			}
 			s.executeUpdate("use "+schema);
 

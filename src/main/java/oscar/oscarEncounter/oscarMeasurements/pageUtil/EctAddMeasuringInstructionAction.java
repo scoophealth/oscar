@@ -26,12 +26,14 @@
 package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -46,6 +48,8 @@ import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.oscarEncounter.oscarMeasurements.bean.EctTypeDisplayNameBeanHandler;
+import oscar.oscarEncounter.oscarMeasurements.bean.EctValidationsBeanHandler;
 import oscar.oscarMessenger.util.MsgStringQuote;
 
 
@@ -72,6 +76,7 @@ public class EctAddMeasuringInstructionAction extends Action {
         String typeDisplayName = frm.getTypeDisplayName();
         String measuringInstrc = frm.getMeasuringInstrc();
         String validation = frm.getValidation();
+       
         boolean isValid = true;
         
         ActionMessages errors = new ActionMessages();  
@@ -108,10 +113,12 @@ public class EctAddMeasuringInstructionAction extends Action {
         	String typeDesc = mt.getTypeDescription();
         	
         	MeasurementType m = new MeasurementType();
-        	m.setType(typeDesc);
+        	m.setType(type);
         	m.setTypeDisplayName(typeDisplayName);
+        	m.setTypeDescription(typeDesc);
         	m.setMeasuringInstruction(measuringInstrc);
         	m.setValidation(validation);
+        	
         	dao.persist(m);
         	
         	requestId = m.getId().toString();
@@ -120,7 +127,18 @@ public class EctAddMeasuringInstructionAction extends Action {
         MessageResources mr = getResources(request);
         String msg = mr.getMessage("oscarEncounter.oscarMeasurements.AddMeasuringInstruction.successful", "!");
         messages.add(msg);
-        request.setAttribute("messages", messages);                
+        request.setAttribute("messages", messages);               
+        
+        EctTypeDisplayNameBeanHandler typeHd = new EctTypeDisplayNameBeanHandler();
+        Collection typeDisplayNameList = typeHd.getTypeDisplayNameVector();
+ 
+        EctValidationsBeanHandler validationHd = new EctValidationsBeanHandler();
+        Collection validationsList = validationHd.getValidationsVector();
+        
+        HttpSession session = request.getSession();
+        session.setAttribute( "typeDisplayNames", typeDisplayNameList );
+        session.setAttribute( "validations", validationsList );    
+        
         return mapping.findForward("success");
         
 		}else{
