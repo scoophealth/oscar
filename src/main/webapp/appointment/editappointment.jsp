@@ -729,12 +729,17 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
         <li class="row weak">
             <div class="label"><bean:message key="Appointment.formReason" />:</div>
             <div class="input">
-				<select name="reasonCode">				
+				<select name="reasonCode">
+				<%
+				String rCode = bFirstDisp?appt.getReasonCode().toString():request.getParameter("reasonCode");
+				pageContext.setAttribute("rCode",rCode);
+				
+				%>				
 					<c:choose>
 	                	<c:when test="${ not empty reasonCodes  }">
 	                		<c:forEach items="${ reasonCodes.items }" var="reason" >
 	                		<c:if test="${ reason.active }">
-	                			<option value="${ reason.id }" id="${ reason.value }" ${ appointment.reasonCode eq reason.id ? 'selected="selected"' : '' } >
+	                			<option value="${ reason.id }" id="${ reason.value }" ${ rCode eq reason.id ? 'selected="selected"' : '' } >
 	                				<c:out value="${ reason.label }" />
 	                			</option>
 	                		</c:if>
