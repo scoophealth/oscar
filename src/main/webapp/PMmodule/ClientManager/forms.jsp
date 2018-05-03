@@ -394,7 +394,7 @@ New User Created Form:&nbsp;
 				CdsClientForm cdsForm=(CdsClientForm)request.getAttribute("form");
 				String admissionString=ClientManagerAction.getEscapedAdmissionSelectionDisplay(cdsForm.getAdmissionId());
 			%>
-			<td><%=ClientManagerAction.getEscapedDateDisplay(cdsForm.getCreated())%></td>
+			<td><%=(cdsForm.getCreated() != null)?ClientManagerAction.getEscapedDateDisplay(cdsForm.getCreated()):"N/A"%></td>
 			<td><%=ClientManagerAction.getEscapedProviderDisplay(cdsForm.getProviderNo())%></td>
 			<td><%=cdsForm.isSigned()?"signed":"unsigned"%></td>
 			<td><%=admissionString%></td>
@@ -436,7 +436,7 @@ New User Created Form:&nbsp;
 				String admissionString=ClientManagerAction.getEscapedAdmissionSelectionDisplay(cbiForm.getAdmissionId());
 			%>
 			<td><%=cbiForm.getId()%></td>
-			<td><%=ClientManagerAction.getEscapedDateDisplay(cbiForm.getCreated())%></td>
+			<td><%=(cbiForm.getCreated() != null) ? ClientManagerAction.getEscapedDateDisplay(cbiForm.getCreated()) : "N/A"%></td>
 			<td><%=ClientManagerAction.getEscapedProviderDisplay(cbiForm.getProviderNo())%></td>
 			<td><%=cbiForm.isSigned()?"signed":"unsigned"%></td>
 			<td><%=admissionString%></td>
