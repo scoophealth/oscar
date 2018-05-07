@@ -491,7 +491,6 @@ public class LabPDFCreator extends PdfPageEventHelper{
 			cell.setPhrase(new Phrase(handler.getOBXComment(1, 1, 1)
 					.replaceAll("<br\\s*/*>", "\n"), font));
 			table.addCell(cell);
-
 		} else {
 			for (int j = 0; j < obrCount; j++) {
 				boolean obrFlag = false;
@@ -642,7 +641,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 								
 								boolean isLongText =false;
 								
-								if(handler.getMsgType().equals("ExcellerisON")) {
+								if(handler.getMsgType().equals("ExcellerisON") || handler.getMsgType().equals("PATHL7")) {
 									if("FT".equals(handler.getOBXValueType(j,k))) {
 										isLongText=true;
 									}
@@ -650,31 +649,47 @@ public class LabPDFCreator extends PdfPageEventHelper{
 								
 								if( handler.getMsgType().equals("PATHL7") ){
 									
-									cell.setPhrase(new Phrase(handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n").replace("\t","\u00a0\u00a0\u00a0\u00a0"), lineFont));
-									//if this PATHL7 result is from CDC/SG and is greater than 100 characters
-									if((handler.getOBXResult(j, k).length() > 100) && (handler.getPatientLocation().equals("SG") || handler.getPatientLocation().equals("CDC"))){
+									if(handler.getOBXValueType(j,k).equals("ED")) {
+										if("PDF".equals(handler.getOBXIdentifier(j,k))) {
+											embeddedDocumentsToAppend.add(((PATHL7Handler)handler).getLegacyOBXResult(j, k));
+										} else {
+											embeddedDocumentsToAppend.add(handler.getOBXResult(j, k));
+										}
+											
+										cell.setPhrase(new Phrase("PDF Report (Appended to end of Laboratory Report)", lineFont));
+										table.addCell(cell);
+									} else {
+										cell.setPhrase(new Phrase(handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n").replace("\t","\u00a0\u00a0\u00a0\u00a0"), lineFont));
+										//if this PATHL7 result is from CDC/SG and is greater than 100 characters
+										if((handler.getOBXResult(j, k).length() > 100) && (handler.getPatientLocation().equals("SG") || handler.getPatientLocation().equals("CDC"))){
 
-										//if the Abn, Reference Range and Units are empty or equal to null, give the long result the use of those columns
-										if(( handler.getOBXAbnormalFlag(j, k) == null ||handler.getOBXAbnormalFlag(j, k).isEmpty()) &&
-										( handler.getOBXReferenceRange(j, k) == null || handler.getOBXReferenceRange(j, k).isEmpty()) &&
-										(handler.getOBXUnits(j, k) == null || handler.getOBXUnits(j, k).isEmpty())){
-											isLongText = true;
-											cell.setColspan(4);
-											table.addCell(cell);
+											//if the Abn, Reference Range and Units are empty or equal to null, give the long result the use of those columns
+											if(( handler.getOBXAbnormalFlag(j, k) == null ||handler.getOBXAbnormalFlag(j, k).isEmpty()) &&
+											( handler.getOBXReferenceRange(j, k) == null || handler.getOBXReferenceRange(j, k).isEmpty()) &&
+											(handler.getOBXUnits(j, k) == null || handler.getOBXUnits(j, k).isEmpty())){
+												isLongText = true;
+												cell.setColspan(4);
+												table.addCell(cell);
+											}else{
+												//else use the 6 remaining columns, and add a new empty cell that takes the first two columns(Test & Results). 
+												//This will allow the corresponding Abn, RR and Units to be printed beneath the long result in the appropriate columns
+												cell.setColspan(6);
+												table.addCell(cell);
+												cell.setPhrase(new Phrase("", lineFont));
+												cell.setColspan(2);
+												table.addCell(cell);
+											}
 										}else{
-											//else use the 6 remaining columns, and add a new empty cell that takes the first two columns(Test & Results). 
-											//This will allow the corresponding Abn, RR and Units to be printed beneath the long result in the appropriate columns
-											cell.setColspan(6);
-											table.addCell(cell);
-											cell.setPhrase(new Phrase("", lineFont));
-											cell.setColspan(2);
+											if(isLongText) {
+												cell.setColspan(4);
+											}
+											// cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 											table.addCell(cell);
 										}
-									}else{
-										// cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-										table.addCell(cell);
+										cell.setColspan(1);
 									}
-									cell.setColspan(1);
+									
+									
 									
 								} else { // end PATHHL7 labs
 									
@@ -976,6 +991,12 @@ public class LabPDFCreator extends PdfPageEventHelper{
         rInfoTable.addCell(cell);
         cell.setPhrase(new Phrase(handler.getAccessionNum(), font));
         rInfoTable.addCell(cell);
+        if(handler.getMsgType().equals("ExcellerisON") && !((ExcellerisOntarioHandler)handler).getAlternativePatientIdentifier().isEmpty()) {
+        	cell.setPhrase(new Phrase("Reference #: ", boldFont));
+            rInfoTable.addCell(cell);
+            cell.setPhrase(new Phrase(((ExcellerisOntarioHandler)handler).getAlternativePatientIdentifier(), font));
+            rInfoTable.addCell(cell);
+        }
 
         //Create client table
         float[] clientWidths = {2f, 3f};

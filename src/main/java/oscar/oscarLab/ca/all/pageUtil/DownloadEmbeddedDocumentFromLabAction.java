@@ -38,6 +38,7 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
+import oscar.oscarLab.ca.all.parsers.PATHL7Handler;
 
 public class DownloadEmbeddedDocumentFromLabAction extends Action {
 
@@ -48,7 +49,8 @@ public class DownloadEmbeddedDocumentFromLabAction extends Action {
 		String labNo = request.getParameter("labNo");
 		String segment = request.getParameter("segment");
 		String group = request.getParameter("group");
-
+		String legacy = request.getParameter("legacy");
+		
 		if (!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_lab", "r", null)) {
 			throw new SecurityException("missing required security object (_lab)");
 		}
@@ -57,7 +59,12 @@ public class DownloadEmbeddedDocumentFromLabAction extends Action {
 
 		MessageHandler handler = oscar.oscarLab.ca.all.parsers.Factory.getHandler(labNo);
 
-		String result = handler.getOBXResult(Integer.parseInt(segment), Integer.parseInt(group));
+		String result = null;
+		if(legacy != null && "true".equals(legacy)) {
+			result = ((PATHL7Handler)handler).getLegacyOBXResult(Integer.parseInt(segment), Integer.parseInt(group));
+		} else {
+			result = handler.getOBXResult(Integer.parseInt(segment), Integer.parseInt(group));
+		}
 
 		byte[] decodedData = Base64.decodeBase64(result);
 

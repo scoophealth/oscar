@@ -51,6 +51,7 @@ import ca.uhn.hl7v2.model.v231.datatype.CX;
 import ca.uhn.hl7v2.model.v231.datatype.ST;
 import ca.uhn.hl7v2.model.v231.datatype.XCN;
 import ca.uhn.hl7v2.model.v231.datatype.XPN;
+import ca.uhn.hl7v2.model.v231.group.ORU_R01_PIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI;
 import ca.uhn.hl7v2.model.v231.message.ORU_R01;
 import ca.uhn.hl7v2.parser.Parser;
 import ca.uhn.hl7v2.parser.PipeParser;
@@ -95,7 +96,16 @@ public class ExcellerisOntarioHandler implements MessageHandler {
         return(formatDateTime(getString(msg.getMSH().getDateTimeOfMessage().getTimeOfAnEvent().getValue())));
     }
 
-  
+
+    public String getAlternativePatientIdentifier() {
+    	CX[] alternateList = msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getPIDPD1NK1NTEPV1PV2().getPID().getPid4_AlternatePatientIDPID();
+    	if(alternateList != null && alternateList.length>0) {
+    		CX item = alternateList[0];
+    		return getString(item.getCx1_ID().getValue());
+    	}
+    	return "";
+    }
+    
     public String getPatientName(){
         return(getFirstName()+" "+getMiddleName()+" "+getLastName());
     }
@@ -335,9 +345,22 @@ X = deleted (available on request; not always preceded by non-X OBRs in an earli
      * @see oscar.oscarLab.ca.all.parsers.MessageHandler#getOrderStatus()
      */
     public String getOrderStatus(){
+    	String orderStatus = null;
         try{
-            String orderStatus = getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(0).getOBR().getResultStatus().getValue());
-            
+        	for(int x=0;x<msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTIReps();x++) {
+        		ORU_R01_PIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI items =  msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI(x);
+        		for(int y=0;y<items.getORCOBRNTEOBXNTECTIReps();y++) {
+        			String status = items.getORCOBRNTEOBXNTECTI(y).getOBR().getResultStatus().getValue();
+        			if(orderStatus == null && status != null) {
+            			orderStatus = status;
+            		}
+            		if("C".equals(status)) {
+            			return "Corrected";
+            		}
+        		}
+        		
+        	}
+        	
             if("P".equals(orderStatus)) {
             	return "Preliminary";
             }
