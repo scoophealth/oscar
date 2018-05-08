@@ -25,6 +25,8 @@
 package org.oscarehr.ws.rest;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.UserDSMessagePrefsDao;
+import org.oscarehr.common.model.UserDSMessagePrefs;
 import org.oscarehr.managers.DrugLookUp;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.rx.util.DrugrefUtil;
@@ -41,7 +43,10 @@ import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.oscarRx.util.RxUtil;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -61,6 +66,9 @@ public class RxLookupService extends AbstractServiceImpl {
 
     @Autowired
     protected DrugLookUp drugLookUpManager;
+    
+    @Autowired
+    protected UserDSMessagePrefsDao  dsmessageDao;
 
     /**
      * Performs a search in the drug product database for a drug that matches in input parameter.
@@ -224,5 +232,29 @@ public class RxLookupService extends AbstractServiceImpl {
     		return drugDSResponse;
     }
 
+    
+    @POST
+    @Path("/hideWarning")
+    @Consumes("application/json")
+    public Response hideWarning(RxDsMessageTo1 dsMessageToHide){
+
+        String provider = getLoggedInInfo().getLoggedInProviderNo();
+        
+        String postId = dsMessageToHide.getId();
+        Date date = dsMessageToHide.getUpdated_at();
+        
+        UserDSMessagePrefs pref = new UserDSMessagePrefs();
+
+        pref.setProviderNo(provider);
+        pref.setRecordCreated(new Date());
+        pref.setResourceId(postId);
+        pref.setResourceType(UserDSMessagePrefs.MYDRUGREF);
+        pref.setResourceUpdatedDate(date);
+        pref.setArchived(Boolean.FALSE);
+       
+        dsmessageDao.saveProp(pref);
+        
+    		return Response.ok("true").build();
+    }
 
 }

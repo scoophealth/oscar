@@ -66,6 +66,41 @@ const RxComponent = {
  		}
  	}
  	
+ 	
+ 	rxComp.showAlert = function(alert){
+ 		var al = alert;
+ 		var modalInstance = $uibModal.open({
+				component: 'dsviewComponent',
+				size: 'lg',
+				resolve: {
+				alert: function (){
+						return al;
+					}
+				}
+			});
+			
+			modalInstance.result.then(function (selectedItem) {
+				console.log("hide item",selectedItem);
+				rxService.hideDSMessages(selectedItem).then(function(data){
+					rxComp.shortDSMessage();
+				},
+				function(errorMessage){
+				      console.log("error hiding ds message ++"+errorMessage);
+				      rxComp.error=errorMessage;
+			    	}
+				);
+			}, function () {
+				console.log('Modal dismissed at: ' + new Date());
+			});
+ 	} 
+ 	
+ 	rxComp.checkIfHidden = function(alert){
+ 		if(alert.hidden){
+ 			return true;
+ 		}
+ 		return false;
+ 	}
+ 	
  	rxComp.getDSMessages = function(demo,medsList){
  		
  		meds = [];
@@ -178,6 +213,10 @@ const RxComponent = {
 	    d.applyFavorite(m);
 	    console.log("Fav drug",d,fav);
 	    rxComp.toRxList.push(d);
+ 	}
+ 	
+ 	rxComp.hideWarning = function(alert){ 		
+ 		console.log("hidewarning",alert);
  	}
  	
  	rxComp.medSelected = function(med){

@@ -100,11 +100,11 @@
 						</form>
 			    </div>
 			  	<div class="col-sm-4">
-				  	<div uib-alert ng-repeat="alert in $ctrl.page.dsMessageHash[med.atc]" class="alert"  ng-class="'alert-' + ($ctrl.getAlertStyl(alert) || 'warning')"  style="padding: 9px;margin-bottom: 3px;" <%-- uib-popover-html="{{alert.body}}" popover-trigger="'mouseenter'"  --%>  >
-		 		    {{alert.interactStr}}
-		 			{{alert.name}}
-		 			<br>
-		 			<small>From:{{alert.author}}</small>
+				  	<div uib-alert ng-repeat="alert in $ctrl.page.dsMessageHash[med.atc]" class="alert"  ng-class="'alert-' + ($ctrl.getAlertStyl(alert) || 'warning')"  style="padding: 9px;margin-bottom: 3px;"  ng-hide="$ctrl.checkIfHidden(alert)" >  <%-- uib-popover-html="{{alert.body}}" popover-trigger="'mouseenter'"  --%>
+		 		   		{{alert.heading}}<br>
+	 			   		{{alert.summary | limitTo: 150 }}{{alert.summary.length > 150 ? '...' : ''}}
+	 			   		<br>
+	 			     	<small>From:{{alert.author}}</small>
 		 			</div>
 	 			</div>
 	 			
@@ -125,13 +125,17 @@
     </div><!-- middleSpace -->
 
 
-	 <div class="col-sm-3" ng-click="checkAction($event)" ng-keypress="checkAction($event)">
+	 <div class="col-sm-3">
 	    <fieldset>
-       		<legend style="margin-bottom:0px;">Alerts</legend>
+       		<legend style="margin-bottom:0px;">Alerts <small> <a ng-click="$ctrl.shortDSMessage()"><span class="glyphicon glyphicon-refresh"></span></a></small></legend>
        		
-	 		<div uib-alert ng-repeat="alert in $ctrl.page.dsMessageList" class="alert"  ng-class="'alert-' + ($ctrl.getAlertStyl(alert) || 'warning')"  style="padding: 9px;margin-bottom: 3px;" <%-- uib-popover-html="{{alert.body}}" popover-trigger="'mouseenter'" --%> >
-	 		    {{alert.interactStr}}
-	 			{{alert.name}}
+	 		<div uib-alert ng-repeat="alert in $ctrl.page.dsMessageList" class="alert"
+	 		    ng-click="$ctrl.showAlert(alert)"  
+	 			ng-class="'alert-' + ($ctrl.getAlertStyl(alert) || 'warning')"  
+	 			ng-hide="$ctrl.checkIfHidden(alert)"
+	 			style="padding: 9px;margin-bottom: 3px;" > <%-- uib-popover-html="{{alert.body}}" popover-trigger="'mouseenter'" --%>
+	 		    {{alert.heading}}<br>
+	 			{{alert.summary | limitTo: 150 }}{{alert.summary.length > 150 ? '...' : ''}}
 	 			<br>
 	 			<small>From:{{alert.author}}</small>
 	 			

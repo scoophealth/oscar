@@ -396,6 +396,21 @@ angular.module("rxServices", [])
 
                 return deferred.promise;
 
+            },
+
+            hideDSMessages : function(dsMessage){
+
+                var deferred = $q.defer();
+                var queryPath = this.apiPath + "lookup/hideWarning";
+                console.log("hideDSMessages",dsMessage);
+                $http.post(queryPath,dsMessage).then(function (data) {
+                    deferred.resolve(data);
+                },function () {
+                    deferred.reject("An error occurred while attempting to get medication details");
+                });
+
+                return deferred.promise;
+
             }
         };
     });

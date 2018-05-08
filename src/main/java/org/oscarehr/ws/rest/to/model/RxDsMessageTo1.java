@@ -50,6 +50,9 @@ public class RxDsMessageTo1 implements Serializable {
 	   int significance = Integer.valueOf(significanceStr);
 	 */
 	private String id;
+	private String summary;
+	private String heading;
+	private String messageSource;
 	private String significanceStr = "0";
 	private String evidence;
 	private int significance = 0;
@@ -71,6 +74,9 @@ public class RxDsMessageTo1 implements Serializable {
     private Integer created_by;
     private String reference;
     private String body;
+    private String management;
+    private String copyright;
+    private boolean hidden =false;
     	
     //	RETURNED [{drugs=[], atc=C09AA01, , updated_by=7, trusted=true, atc2=M04AA01, created_by=7, reference=Holbrook Interactions, comments=[], drug2=ALLOPURINOL, agree=false, effect=A, id=2458, evidence=P, name=CAPTOPRIL, }, {drugs=[], atc=M04AA01, created_at=Fri Jun 19 18:01:15 EDT 2009, significance=2, type=Interaction, author=David Chan, updated_by=7, trusted=true, atc2=B01AA03, created_by=7, reference=Holbrook Interactions, comments=[], drug2=WARFARIN, body=, agree=false, effect=A, id=1693, evidence=P, name=ALLOPURINOL, updated_at=Wed Jun 24 21:02:42 EDT 2009}, {drugs=[], atc=M04AA01, created_at=Fri Oct 26 16:41:29 EDT 2007, significance=2, type=Interaction, author=David Chan, updated_by=1, trusted=true, atc2=B01AA03, created_by=7, reference=Holbrook Drug Interactions, comments=[], drug2=WARFARIN, body=., agree=false, effect=A, id=1469, evidence=P, name=ALLOPURINOL, updated_at=Wed Jun 24 21:03:05 EDT 2009}]
 
@@ -114,6 +120,10 @@ public class RxDsMessageTo1 implements Serializable {
     			else if(effect.equals(" "))
     				effect=mr.getString("oscarRx.interactions.msgUnknownEffect");
     			interactStr=ht.get("name")+" "+effect+" "+ht.get("drug2");
+    		}else {
+    			if(ht.containsKey("effectdesc")) {
+    				effect=(String) ht.get("effectdesc");
+    			}
     		}
     		
     		MiscUtils.getLogger().error("WHATS inn ht"+ht);
@@ -410,6 +420,54 @@ public class RxDsMessageTo1 implements Serializable {
 
 		public void setAgree(Boolean agree) {
 			this.agree = agree;
+		}
+
+		public String getSummary() {
+			return summary;
+		}
+
+		public void setSummary(String summary) {
+			this.summary = summary;
+		}
+
+		public String getManagement() {
+			return management;
+		}
+
+		public void setManagement(String management) {
+			this.management = management;
+		}
+
+		public String getCopyright() {
+			return copyright;
+		}
+
+		public void setCopyright(String copyright) {
+			this.copyright = copyright;
+		}
+
+		public boolean isHidden() {
+			return hidden;
+		}
+
+		public void setHidden(boolean hidden) {
+			this.hidden = hidden;
+		}
+
+		public String getHeading() {
+			return heading;
+		}
+
+		public void setHeading(String heading) {
+			this.heading = heading;
+		}
+
+		public String getMessageSource() {
+			return messageSource;
+		}
+
+		public void setMessageSource(String messageSource) {
+			this.messageSource = messageSource;
 		}
 
    }   
