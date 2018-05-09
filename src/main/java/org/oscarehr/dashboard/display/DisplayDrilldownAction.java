@@ -33,6 +33,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.IndicatorTemplate;
 import org.oscarehr.dashboard.display.beans.DrilldownBean;
 import org.oscarehr.dashboard.handler.IndicatorTemplateHandler;
@@ -97,6 +98,11 @@ public class DisplayDrilldownAction extends DispatchAction  {
 		if(StringUtils.isBlank(metricLabel)) {
 			metricLabel = "null";
 		} 
+		
+		ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+		if(!providerDao.providerExists(providerNo)){
+			return mapping.findForward("error");
+		}
 		
 		List<IndicatorTemplate> sharedIndicatorTemplates = null;
 		IndicatorTemplate indicatorTemplate = null;
