@@ -2090,7 +2090,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		logger.info("creating document zip file");
 		
 		try {
-			ProcessBuilder processBuilder = new ProcessBuilder(parentDir + File.separator + "build_doc_zip.sh",parentFile).inheritIO();
+			ProcessBuilder processBuilder = new ProcessBuilder(parentDir + File.separator + "build_doc_zip.sh",parentFile);
 			
 			Process process = processBuilder.start();
 			

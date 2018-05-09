@@ -240,24 +240,25 @@
 	if( OscarProperties.getInstance().getBooleanProperty("USE_NEW_PATIENT_CONSENT_MODULE", "true") ) {
 		// Retrieve and set patient consents.
 		PatientConsentManager patientConsentManager = SpringUtils.getBean( PatientConsentManager.class );
-		List<ConsentType> consentTypes = patientConsentManager.getActiveConsentTypes();
-
-		if (consentTypes != null)
+		List<ConsentType> consentTypes = patientConsentManager.getActiveConsentTypes();			
+		boolean explicitConsent = Boolean.TRUE;	
+				
+		for( ConsentType consentType : consentTypes ) 
 		{
-		for( ConsentType consentType : consentTypes ) {
-
-			String consentRecord = request.getParameter( consentType.getType() );
-			Boolean optOut = null;
-			Boolean explicitConsent = Boolean.TRUE;
-
+			String type = consentType.getType();
+			String consentRecord = request.getParameter(type);
+			int deleteme = Integer.parseInt(request.getParameter("deleteConsent_" + type));
+			
 			if( consentRecord != null )
 			{
 				//either opt-in or opt-out is selected
-				optOut = Integer.parseInt(consentRecord) == 1;
+				boolean optOut = Integer.parseInt(consentRecord) == 1;
+				patientConsentManager.addEditConsentRecord(loggedInInfo, demographic.getDemographicNo(), consentType.getId(), explicitConsent, optOut);
+			} 
+			else if(deleteme == 1)
+			{
+				patientConsentManager.deleteConsent(loggedInInfo, demographic.getDemographicNo(), consentType.getId());
 			}
-
-			patientConsentManager.addEditConsentRecord(loggedInInfo, demographic.getDemographicNo(), consentType.getId(), explicitConsent, optOut);
-		}
 		}
 	}
 	
