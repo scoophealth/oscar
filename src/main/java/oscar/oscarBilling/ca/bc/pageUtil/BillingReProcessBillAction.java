@@ -96,7 +96,15 @@ public class BillingReProcessBillAction extends Action {
     String providerNo = frm.getProviderNo(); //f
     String demographicFirstName = demo.getFirstName(); //d
     String demographicLastName = demo.getLastName(); //d
-    String name_verify = demographicFirstName.substring(0, 1) + " " +demographicLastName.substring(0, 2); //d
+   
+    if (demographicLastName.length() < 2){
+    	demographicLastName += "   ";
+     }
+     if (demographicFirstName.length() < 1){
+    	 demographicFirstName += "   ";
+     }
+     
+    String name_verify = demographicFirstName.substring(0, 1) + " " + demographicLastName.substring(0, 2); //d
     String billingGroupNo = billform.getGroupNo(providerNo);
     String practitionerNo = billform.getPracNo(providerNo); //p
 
