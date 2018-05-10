@@ -711,6 +711,14 @@ Varicella Immunoglobulin	VarIg
 		private="sexualHealth"
 		resultDesc=""
 		desc=""
+		name="Yeast"
+		layout="PAPMAM"
+		showIfMinRecordNum="1" />
+
+	<item
+		private="sexualHealth"
+		resultDesc=""
+		desc=""
 		name="CT NAAT Throat"
 		layout="PAPMAM"
 		showIfMinRecordNum="1" />
