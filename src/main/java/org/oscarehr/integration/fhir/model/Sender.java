@@ -69,7 +69,7 @@ public class Sender {
 	private String versionSignature;
 	private String endpoint;
 	private String senderName;
-	private OscarFhirResource<org.hl7.fhir.dstu3.model.Organization, ?> oscarFhirResource;
+	private AbstractOscarFhirResource<org.hl7.fhir.dstu3.model.Organization, Clinic> oscarFhirResource;
 	private org.hl7.fhir.dstu3.model.Organization organization;
 	private Clinic clinic;
 	
@@ -168,17 +168,20 @@ public class Sender {
 	}
 
 	public void setClinic( org.oscarehr.common.model.Clinic clinic ) {
-		setSenderName( clinic.getClinicName() );
+		if(clinic != null) {
+			setSenderName( clinic.getClinicName() );
+			setOscarFhirResource(new Organization<Clinic>(clinic));
+		}
 		this.clinic = clinic;
 	}
 	
-	public OscarFhirResource<org.hl7.fhir.dstu3.model.Organization, ?> getOscarFhirResource() {
+	public AbstractOscarFhirResource<org.hl7.fhir.dstu3.model.Organization, Clinic> getOscarFhirResource() {
 		return oscarFhirResource;
 	}
 
-	public void setOscarFhirResource( OscarFhirResource<org.hl7.fhir.dstu3.model.Organization, ?> oscarFhirResource ) {
-		setOrganization( this.oscarFhirResource.getFhirResource() );
-		setClinic( (Clinic) this.oscarFhirResource.getOscarResource() );
+	public void setOscarFhirResource( AbstractOscarFhirResource<org.hl7.fhir.dstu3.model.Organization, Clinic> oscarFhirResource ) {
+		this.organization = oscarFhirResource.getFhirResource();
+		this.clinic = oscarFhirResource.getOscarResource();
 		this.oscarFhirResource = oscarFhirResource;
 	}
 

@@ -36,7 +36,7 @@ import org.oscarehr.common.model.LookupListItem;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.integration.fhir.model.Immunization;
-import org.oscarehr.integration.fhir.model.OscarFhirResource;
+import org.oscarehr.integration.fhir.model.AbstractOscarFhirResource;
 import org.oscarehr.integration.fhir.model.PerformingPractitioner;
 import org.oscarehr.integration.fhir.resources.types.PublicHealthUnitType;
 import org.oscarehr.managers.DemographicManager;
@@ -203,7 +203,7 @@ public class OscarFhirResourceManager {
 	 * - SubmittingPractitioner
 	 * - PerformingPractitioner
 	 */
-	public static final HashSet<OscarFhirResource<?,?>> getImmunizationResourceBundle( OscarFhirConfigurationManager configurationManager, org.oscarehr.integration.fhir.model.Patient patient, HashSet<OscarFhirResource<?,?>> resourceList ) {
+	public static final HashSet<AbstractOscarFhirResource<?,?>> getImmunizationResourceBundle( OscarFhirConfigurationManager configurationManager, org.oscarehr.integration.fhir.model.Patient patient, HashSet<AbstractOscarFhirResource<?,?>> resourceList ) {
 		
 		List< org.oscarehr.integration.fhir.model.Immunization<Prevention> > immunizations = OscarFhirResourceManager.getImmunizationsByDemographicNo( configurationManager, patient.getOscarResource().getDemographicNo() );
 		if( immunizations != null ) {
@@ -221,7 +221,7 @@ public class OscarFhirResourceManager {
 	 * - SubmittingPractitioner
 	 * - PerformingPractitioner
 	 */
-	public static final HashSet<OscarFhirResource<?,?>> getImmunizationResourceBundle( OscarFhirConfigurationManager configurationManager, org.oscarehr.integration.fhir.model.Patient patient, int preventionId, HashSet<OscarFhirResource<?,?>> resourceList ) {
+	public static final HashSet<AbstractOscarFhirResource<?,?>> getImmunizationResourceBundle( OscarFhirConfigurationManager configurationManager, org.oscarehr.integration.fhir.model.Patient patient, int preventionId, HashSet<AbstractOscarFhirResource<?,?>> resourceList ) {
 		
 		org.oscarehr.integration.fhir.model.Immunization<Prevention> immunization = OscarFhirResourceManager.getImmunizationById( configurationManager, preventionId);
 		if( immunization != null) {
@@ -241,10 +241,10 @@ public class OscarFhirResourceManager {
 	 * @param resourceList
 	 * @return HashSet<OscarFhirResource<?,?>>
 	 */
-	private static final HashSet<OscarFhirResource<?,?>> setPerformingPractitionerAndPatient( 
+	private static final HashSet<AbstractOscarFhirResource<?,?>> setPerformingPractitionerAndPatient( 
 			OscarFhirConfigurationManager configurationManager, 
 			org.oscarehr.integration.fhir.model.Immunization<Prevention> immunization, 
-			org.oscarehr.integration.fhir.model.Patient patient, HashSet<OscarFhirResource<?,?>> resourceList) {
+			org.oscarehr.integration.fhir.model.Patient patient, HashSet<AbstractOscarFhirResource<?,?>> resourceList) {
 		
 		String performingProviderNo = immunization.getOscarResource().getProviderNo();
 		PerformingPractitioner performingPractitioner = OscarFhirResourceManager.getPerformingPractitionerByProviderNumber( configurationManager, performingProviderNo );
@@ -268,10 +268,10 @@ public class OscarFhirResourceManager {
 	 * @param resourceList
 	 * @return HashSet<OscarFhirResource<?,?>>
 	 */
-	private static final HashSet<OscarFhirResource<?,?>> setPerformingPractitionerAndPatient( 
+	private static final HashSet<AbstractOscarFhirResource<?,?>> setPerformingPractitionerAndPatient( 
 			OscarFhirConfigurationManager configurationManager, 
 			List<org.oscarehr.integration.fhir.model.Immunization<Prevention>> immunizations, 
-			org.oscarehr.integration.fhir.model.Patient patient, HashSet<OscarFhirResource<?,?>> resourceList ) {
+			org.oscarehr.integration.fhir.model.Patient patient, HashSet<AbstractOscarFhirResource<?,?>> resourceList ) {
 
 		if( immunizations != null && ! immunizations.isEmpty() ) {		
 			for( Immunization<Prevention> immunization : immunizations ) {				

@@ -37,7 +37,7 @@ import org.oscarehr.util.MiscUtils;
 public class ImmunizationTest {
 	private static Logger logger = MiscUtils.getLogger();
 	private static Prevention immunization;
-	private static OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, Prevention> oscarFhirResource;
+	private static AbstractOscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, Prevention> oscarFhirResource;
 	private static final String testJSON = "";
 	private static final String testXML = "";
 	private static Date date = new Date(System.currentTimeMillis());

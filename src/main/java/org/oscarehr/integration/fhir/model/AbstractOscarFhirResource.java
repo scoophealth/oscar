@@ -34,7 +34,7 @@ import org.hl7.fhir.dstu3.model.Resource;
 import ca.uhn.fhir.context.FhirContext;
 
 
-public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.BaseResource, OSCAR extends AbstractModel<?> > 
+public abstract class AbstractOscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.BaseResource, OSCAR extends AbstractModel<?> > 
 		implements ResourceAttributeFilterInterface {
 
 	private static FhirContext fhirContext = FhirContext.forDstu3();
@@ -55,23 +55,23 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 	 */
 	protected abstract void mapAttributes( OSCAR oscarResource );
 
-	protected OscarFhirResource() {
+	protected AbstractOscarFhirResource() {
 		//default constructor
 	}
 	
-	protected OscarFhirResource( OSCAR to, FHIR from ){
+	protected AbstractOscarFhirResource( OSCAR to, FHIR from ){
 		setResource( to, from );
 	}
 	
-	protected OscarFhirResource( FHIR to, OSCAR from ) {
+	protected AbstractOscarFhirResource( FHIR to, OSCAR from ) {
 		setResource( to, from );
 	}
 	
-	protected OscarFhirResource( OscarFhirConfigurationManager configurationManager ) {
+	protected AbstractOscarFhirResource( OscarFhirConfigurationManager configurationManager ) {
 		this.configurationManager = configurationManager;
 	}
 
-	protected OscarFhirResource( FHIR to, OSCAR from, OscarFhirConfigurationManager configurationManager ) {
+	protected AbstractOscarFhirResource( FHIR to, OSCAR from, OscarFhirConfigurationManager configurationManager ) {
 		this.configurationManager = configurationManager;
 		setResource( to, from );
 	}
@@ -126,7 +126,7 @@ public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.B
 	}
 	
 	public static void setFhirContext(FhirContext fhirContext) {
-		OscarFhirResource.fhirContext = fhirContext;
+		AbstractOscarFhirResource.fhirContext = fhirContext;
 	}
 	
 	public String getFhirJSON() {

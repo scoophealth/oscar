@@ -93,7 +93,7 @@ import org.oscarehr.util.SpringUtils;
  *
  */
 public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterface > 
-	extends OscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, T> {
+	extends AbstractOscarFhirResource< org.hl7.fhir.dstu3.model.Immunization, T> {
 
 	private static final Pattern measurementValuePattern = Pattern.compile("^([0-9])*(\\.)*([0-9])*");
 	private boolean isHistorical;

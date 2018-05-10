@@ -33,7 +33,7 @@ import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.Bundle.BundleType;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.model.Destination;
-import org.oscarehr.integration.fhir.model.OscarFhirResource;
+import org.oscarehr.integration.fhir.model.AbstractOscarFhirResource;
 import org.oscarehr.integration.fhir.model.Sender;
 
 /*
@@ -76,7 +76,7 @@ import org.oscarehr.integration.fhir.model.Sender;
  * 
  */
 
-public class FhirBundleBuilder extends FhirMessageBuilder {
+public class FhirBundleBuilder extends AbstractFhirMessageBuilder<Bundle> {
 
 	/**
 	 * Build a bundle without the header.  
@@ -101,7 +101,7 @@ public class FhirBundleBuilder extends FhirMessageBuilder {
 	}
 
 	public Bundle getBundle() {
-		return (Bundle) getWrapper();
+		return getWrapper();
 	}
 
 	private void setBundle( Bundle bundle ) {
@@ -116,8 +116,8 @@ public class FhirBundleBuilder extends FhirMessageBuilder {
 		addResource( messageHeader );
 	}
 	
-	public void addResources( HashSet< OscarFhirResource< ?,? > > oscarFhirResources ) {
-		for( OscarFhirResource< ?,? > oscarFhirResource :  oscarFhirResources ) {
+	public void addResources( HashSet< AbstractOscarFhirResource< ?,? > > oscarFhirResources ) {
+		for( AbstractOscarFhirResource< ?,? > oscarFhirResource :  oscarFhirResources ) {
 			addResource( oscarFhirResource );
 		}
 	}

@@ -33,7 +33,7 @@
 <%@page import="org.hl7.fhir.dstu3.model.Patient"%>
 <%@page import="org.hl7.fhir.dstu3.model.Bundle.BundleEntryComponent"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
-<%@page import="org.oscarehr.integration.fhir.builder.FhirMessageBuilder"%>
+<%@page import="org.oscarehr.integration.fhir.builder.AbstractFhirMessageBuilder"%>
 <%@page import="org.hl7.fhir.dstu3.model.Bundle"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.io.InputStream"%>
@@ -79,7 +79,7 @@
 	String oneIdEmail = session.getAttribute("oneIdEmail") != null ? session.getAttribute("oneIdEmail").toString() : "";
 
 	String delegateOneIdEmail = session.getAttribute("delegateOneIdEmail") != null
-			? session.getAttribute("delegateOneIdEmail").toString() : "";
+	? session.getAttribute("delegateOneIdEmail").toString() : "";
 	String providerEmail = oneIdEmail;
 
 	//If there is a delegateOneIdEmail then it is used as the normal oneId email and the current user is the delegate as they are delegating for that person
@@ -103,30 +103,27 @@
 	
 	for(BundleEntryComponent bec : bundle.getEntry()) {
 		if(bec.getResource().fhirType().equals("Patient")) {
-			Patient patient  = (Patient)bec.getResource();
-			demographicNo = patient.getId();
+	Patient patient  = (Patient)bec.getResource();
+	demographicNo = patient.getId();
 		}	
 	}
 	
 	for(BundleEntryComponent bec : bundle.getEntry()) {
 		if(bec.getResource().fhirType().equals("Immunization")) {
-			Immunization i = (Immunization)bec.getResource();
+	Immunization i = (Immunization)bec.getResource();
 	
-			DHIRSubmissionLog log = new DHIRSubmissionLog();
-			log.setDateCreated(new java.util.Date());
-			log.setDemographicNo(Integer.parseInt(demographicNo));
-			log.setPreventionId(Integer.parseInt(i.getId()));
-			log.setStatus("pending");
-			log.setSubmitterProviderNo(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo());
-			log.setBundleId(bundle.getId());
-			submissionManager.save(log);
-			
-			logs.add(log);
+	DHIRSubmissionLog log = new DHIRSubmissionLog();
+	log.setDateCreated(new java.util.Date());
+	log.setDemographicNo(Integer.parseInt(demographicNo));
+	log.setPreventionId(Integer.parseInt(i.getId()));
+	log.setStatus("pending");
+	log.setSubmitterProviderNo(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo());
+	log.setBundleId(bundle.getId());
+	submissionManager.save(log);
+	
+	logs.add(log);
 		}
 	}
-	
-	
-	
 %>
 
 
@@ -138,7 +135,7 @@
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
 
-<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="../share/calendar/calendar.js" ></script>
 <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>
 <script type="text/javascript" src="../share/calendar/calendar-setup.js" ></script>
@@ -275,51 +272,50 @@ clear: left;
             <td valign="top" class="MainTableRightColumn">
             
 <%
-	try {	
-		String theString = FhirMessageBuilder.getFhirContext().newJsonParser().setPrettyPrint(true).encodeResourceToString(bundle);
-		JSONObject jbundle = new JSONObject(theString);
-		
-				
-        HttpPost httpPost = new HttpPost(url);
-        
-        String oneIdToken = (String)session.getAttribute("oneid_token");
-        logger.debug("oneid_token is " + oneIdToken);
-        
-        httpPost.addHeader("x-oneid-email", providerEmail);
-        httpPost.addHeader("x-access-token", oneIdToken);
-        
-        JSONObject obj = new JSONObject();
-        obj.put("url","https://wsgateway.pst.ehealthontario.ca:9443/API/FHIR/Immunizations/v3/partner/clinician/$process-message");
-        obj.put("service","DHIR");
-        obj.put("body",jbundle);
-        
-        HttpEntity reqEntity = new ByteArrayEntity(obj.toString().getBytes("UTF-8"));
-        httpPost.setEntity(reqEntity);
-        httpPost.setHeader("Content-type", "application/json");
-        
-        HttpClient httpClient = getHttpClient();
-        HttpResponse httpResponse = httpClient.execute(httpPost);
-        String entity = EntityUtils.toString(httpResponse.getEntity());
-        
-        JSONObject object = new JSONObject(entity);
-        logger.info("object="+object.toString());
-        
-        Integer code = (Integer)object.get("code");
-        
-        if(code >= 200 && code < 300) {
-        	String val = null;
-        	if(object != null) {
-        		JSONObject headers = new JSONObject((String)object.get("headers"));
-        		val = (String)headers.get("hialTxId");
-        	}
-        	
-        	for(DHIRSubmissionLog log : logs) {
-        		log.setStatus("complete");
-        		log.setTransactionId(val);
-        		submissionManager.update(log);
-        	}
-        	
-        	%>
+            	try {	
+            		String theString = AbstractFhirMessageBuilder.getFhirContext().newJsonParser().setPrettyPrint(true).encodeResourceToString(bundle);
+            		JSONObject jbundle = new JSONObject(theString);
+            		
+            		
+                    HttpPost httpPost = new HttpPost(url);
+                    
+                    String oneIdToken = (String)session.getAttribute("oneid_token");
+                    logger.debug("oneid_token is " + oneIdToken);
+                    
+                    httpPost.addHeader("x-oneid-email", providerEmail);
+                    httpPost.addHeader("x-access-token", oneIdToken);
+                    
+                    JSONObject obj = new JSONObject();
+                    obj.put("url","https://wsgateway.pst.ehealthontario.ca:9443/API/FHIR/Immunizations/v3/partner/clinician/$process-message");
+                    obj.put("service","DHIR");
+                    obj.put("body",jbundle);
+                    
+                    HttpEntity reqEntity = new ByteArrayEntity(obj.toString().getBytes("UTF-8"));
+                    httpPost.setEntity(reqEntity);
+                    httpPost.setHeader("Content-type", "application/json");
+                    
+                    HttpClient httpClient = getHttpClient();
+                    HttpResponse httpResponse = httpClient.execute(httpPost);
+                    String entity = EntityUtils.toString(httpResponse.getEntity());
+                    
+                    JSONObject object = new JSONObject(entity);
+                    logger.info("object="+object.toString());
+                    
+                    Integer code = (Integer)object.get("code");
+                    
+                    if(code >= 200 && code < 300) {
+                    	String val = null;
+                    	if(object != null) {
+                    		JSONObject headers = new JSONObject((String)object.get("headers"));
+                    		val = (String)headers.get("hialTxId");
+                    	}
+                    	
+                    	for(DHIRSubmissionLog log : logs) {
+                    		log.setStatus("complete");
+                    		log.setTransactionId(val);
+                    		submissionManager.update(log);
+                    	}
+            %>
         		<h2>Message was successfully received by DHIR - transaction ID is <%=val %> </h2>
         		<input type="button" value="Close Window" onClick="window.close()"/>
         	<%
@@ -404,9 +400,7 @@ clear: left;
 
 
 
-<%!
-
-private HttpClient getHttpClient() throws NoSuchAlgorithmException, KeyManagementException {
+<%!private HttpClient getHttpClient() throws NoSuchAlgorithmException, KeyManagementException {
     //Gets the SSLContext instance for SSL and initializes it
     SSLContext sslContext = SSLContext.getInstance("SSL");
     sslContext.init(null, new TrustManager[] {new CxfClientUtils.TrustAllManager()}, new SecureRandom());
@@ -419,5 +413,4 @@ private HttpClient getHttpClient() throws NoSuchAlgorithmException, KeyManagemen
     ClientConnectionManager ccm = new PoolingClientConnectionManager(registry);
 
     return new DefaultHttpClient(ccm);
-}
-%>
+}%>

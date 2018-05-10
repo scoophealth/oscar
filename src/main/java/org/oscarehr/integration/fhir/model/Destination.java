@@ -51,16 +51,20 @@ import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
 public final class Destination {
 	
 	private List<MessageDestinationComponent> messageDestinationComponents;
-	private List<OscarFhirResource<?,?>> oscarFhirResource;
 	private List<FhirDestination> destinations;
+	private List<AbstractOscarFhirResource<?,?>> oscarFhirResource;
 	private List<BaseResource> fhirResources;
-	
-	public Destination() {
-		// default constructor.
+
+	public Destination(FhirDestination destination) {
+		addDestination( destination );
 	}
 	
 	public Destination(String name, String endpoint) {
 		addDestination( name, endpoint );
+	}
+	
+	public Destination(List<FhirDestination> destinations) {
+		setDestinations( destinations );
 	}
 	
 	public List<MessageDestinationComponent> getMessageDestinationComponents() {
@@ -75,7 +79,6 @@ public final class Destination {
 	 * Multiple destinations can be added. 
 	 */
 	private void addMessageDestinationComponent( MessageDestinationComponent messageDestinationComponent ){
-		toOrganization( messageDestinationComponent );
 		getMessageDestinationComponents().add( messageDestinationComponent );
 	}
 
@@ -103,25 +106,18 @@ public final class Destination {
 		addMessageDestinationComponent( messageDestinationComponent );
 	}
 
-	private void toOrganization( MessageDestinationComponent messageDestinationComponent ) {
-		org.hl7.fhir.dstu3.model.Organization organization = new org.hl7.fhir.dstu3.model.Organization();
-		organization.setName( messageDestinationComponent.getName() );
-		organization.addEndpoint().setDisplay( messageDestinationComponent.getEndpoint() );
-		addFhirResource( organization );
-	}
-	
 	public void addOrganization( org.oscarehr.integration.fhir.model.Organization<?> organization ) {		
-		addOscarFhirResource( organization );
-	}
-	
-	public void addOscarFhirResource( org.oscarehr.integration.fhir.model.Organization<?> organization ) {
 		addFhirResource( organization.getFhirResource() );
 		getOscarFhirResources().add( organization );
 	}
 	
-	public List<OscarFhirResource<?,?>> getOscarFhirResources() {
+	public void addOrganization( org.hl7.fhir.dstu3.model.Organization organization ) {
+		addFhirResource(organization);
+	}
+	
+	public List<AbstractOscarFhirResource<?,?>> getOscarFhirResources() {
 		if( oscarFhirResource == null ) {
-			oscarFhirResource = new ArrayList<OscarFhirResource<?,?>>();
+			oscarFhirResource = new ArrayList<AbstractOscarFhirResource<?,?>>();
 		}
 		return oscarFhirResource;
 	}
@@ -131,14 +127,13 @@ public final class Destination {
 			fhirResources = new ArrayList<BaseResource>();
 		}
 		return fhirResources;
-
 	}
 	
 	public void addFhirResource( BaseResource fhirResource ) {
 		getFhirResources().add( fhirResource );
-	}
+	}	
 	
-	 public String toString() {
-	     return ReflectionToStringBuilder.toString(this);
-	 }
+	public String toString() {
+	    return ReflectionToStringBuilder.toString(this);
+	}
 }

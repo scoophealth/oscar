@@ -32,7 +32,7 @@ import org.oscarehr.caisi_integrator.util.MiscUtils;
 import org.oscarehr.integration.fhir.builder.FhirBundleBuilder;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.manager.OscarFhirResourceManager;
-import org.oscarehr.integration.fhir.model.OscarFhirResource;
+import org.oscarehr.integration.fhir.model.AbstractOscarFhirResource;
 import org.oscarehr.integration.fhir.resources.Settings;
 import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
 import org.oscarehr.integration.fhir.resources.constants.Region;
@@ -41,15 +41,15 @@ import org.oscarehr.util.LoggedInInfo;
 
 public class DHIR {
 
-	private static Settings settings = new Settings( FhirDestination.DHIR, Region.ON );
+	private static Settings SETTINGS = new Settings( FhirDestination.DHIR, Region.ON );
 	
 	/**
 	 * Get the FhirBundleBuilder Object for all immunizations
 	 * Useful for adding additional resources or adjusting the message structure.
 	 */
 	public static synchronized FhirBundleBuilder getFhirBundleBuilder( LoggedInInfo loggedInInfo, int demographicNo ) {
-		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, settings );
-		HashSet<OscarFhirResource<?,?>> resourceList = new HashSet<OscarFhirResource<?,?>>();
+		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, SETTINGS );
+		HashSet<AbstractOscarFhirResource<?,?>> resourceList = new HashSet<AbstractOscarFhirResource<?,?>>();
 		org.oscarehr.integration.fhir.model.Patient patient = OscarFhirResourceManager.getPatientByDemographicNumber( configurationManager, demographicNo );
 		
 		// The patient is the focus resource for this type of bundle. A reference link will be inserted into the MessageHeader.focus
@@ -82,10 +82,10 @@ public class DHIR {
 	public static synchronized FhirBundleBuilder getFhirBundleBuilder( LoggedInInfo loggedInInfo, int demographicNo, int preventionId ) {
 		
 		//TODO this will be set in a properties file later. The default is false anyway. 
-		settings.setIncludeSenderEndpoint( Boolean.FALSE ); 
+		SETTINGS.setIncludeSenderEndpoint( Boolean.FALSE ); 
 		
-		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, settings );
-		HashSet<OscarFhirResource<?,?>> resourceList = new HashSet<OscarFhirResource<?,?>>();
+		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, SETTINGS );
+		HashSet<AbstractOscarFhirResource<?,?>> resourceList = new HashSet<AbstractOscarFhirResource<?,?>>();
 		org.oscarehr.integration.fhir.model.Patient patient = OscarFhirResourceManager.getPatientByDemographicNumber( configurationManager, demographicNo );
 		org.oscarehr.integration.fhir.model.SubmittingPractitioner submittingPractitioner = new org.oscarehr.integration.fhir.model.SubmittingPractitioner( configurationManager.getLoggedInInfo().getLoggedInProvider(), configurationManager );
 		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( configurationManager );
@@ -140,7 +140,5 @@ public class DHIR {
 	public static MessageHeader getMessageHeader( LoggedInInfo loggedInInfo, int demographicNo, int preventionId) {
 		return DHIR.getFhirBundleBuilder( loggedInInfo, demographicNo, preventionId).getMessageHeader();
 	}
-	
-
 
 }

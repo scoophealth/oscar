@@ -45,7 +45,8 @@ public final class OscarFhirConfigurationManager {
 	private Settings settings;
 
 	/**
-	 * Every configuration Object is set based on the FHIR destination.
+	 * Inject a Settings Object and all the configuration Objects will be instantiated automatically. 
+	 * Including the Sender and Destination Objects. 
 	 */
 	public OscarFhirConfigurationManager( LoggedInInfo loggedInInfo, Settings settings ) {
 		

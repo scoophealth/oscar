@@ -38,8 +38,8 @@ import org.hl7.fhir.dstu3.model.MessageHeader;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
+import org.oscarehr.integration.fhir.model.AbstractOscarFhirResource;
 import org.oscarehr.integration.fhir.model.Destination;
-import org.oscarehr.integration.fhir.model.OscarFhirResource;
 import org.oscarehr.integration.fhir.model.Sender;
 import org.oscarehr.integration.fhir.resources.constants.ActorType;
 import org.oscarehr.util.MiscUtils;
@@ -49,7 +49,7 @@ import ca.uhn.fhir.context.FhirContext;
 /**
  * Builds a FHIR message with the given OscarFhirResources.
  */
-public abstract class FhirMessageBuilder {
+public abstract class AbstractFhirMessageBuilder<T extends BaseResource> {
 
 	private static Logger logger = MiscUtils.getLogger();
 	private static FhirContext fhirContext = FhirContext.forDstu3();
@@ -57,8 +57,8 @@ public abstract class FhirMessageBuilder {
 	private MessageHeader messageHeader;
 	private Sender sender;
 	private Destination destination; 
-	private List<OscarFhirResource< ?,? > > resources;
-	private BaseResource wrapper;
+	private List<AbstractOscarFhirResource< ?,? > > resources;
+	private T wrapper;
 	private HashMap< ReferenceKey, Reference > references;
 	private OscarFhirConfigurationManager oscarFhirConfigurationManager;
 
@@ -70,11 +70,11 @@ public abstract class FhirMessageBuilder {
 	 * information
 	 * @throws Exception 
 	 */
-	protected FhirMessageBuilder( Sender sender, Destination destination ) {
+	protected AbstractFhirMessageBuilder( Sender sender, Destination destination ) {
 		setEndpointParameters( sender, destination );				
 	}
 	
-	protected FhirMessageBuilder( OscarFhirConfigurationManager oscarFhirConfigurationManager ) {
+	protected AbstractFhirMessageBuilder( OscarFhirConfigurationManager oscarFhirConfigurationManager ) {
 		setEndpointParameters( oscarFhirConfigurationManager.getSender(), oscarFhirConfigurationManager.getDestination() );
 		this.oscarFhirConfigurationManager = oscarFhirConfigurationManager;
 	}
@@ -83,7 +83,7 @@ public abstract class FhirMessageBuilder {
 	 * The MessageHeader is a requirement because there are often some reference 
 	 * links that need to be added after they are created. 
 	 */
-	protected FhirMessageBuilder( MessageHeader messageHeader ) {
+	protected AbstractFhirMessageBuilder( MessageHeader messageHeader ) {
 		setMessageHeader( messageHeader );
 	}
 		
@@ -101,11 +101,11 @@ public abstract class FhirMessageBuilder {
 		}
 	}
 
-	protected BaseResource getWrapper() {
+	protected T getWrapper() {
 		return wrapper;
 	}
 	
-	protected void setWrapper(BaseResource wrapper) {
+	protected void setWrapper(T wrapper) {
 		this.wrapper = wrapper;
 	}
 
@@ -113,7 +113,7 @@ public abstract class FhirMessageBuilder {
 		return fhirContext;
 	}
 	public static void setFhirContext(FhirContext fhirContext) {
-		FhirMessageBuilder.fhirContext = fhirContext;
+		AbstractFhirMessageBuilder.fhirContext = fhirContext;
 	}
 	
 	/**
@@ -255,15 +255,15 @@ public abstract class FhirMessageBuilder {
 	/**
 	 * Get a List of Resources that were contained in this message bundle.
 	 */
-	public List< OscarFhirResource< ?,? > > getResources() {
+	public List< AbstractOscarFhirResource<?,?> > getResources() {
 		if( this.resources == null ) {
-			resources = new ArrayList<OscarFhirResource< ?,? > >();
+			resources = new ArrayList<AbstractOscarFhirResource<?,?> >();
 		}
 		return resources;
 	}
 		
 	//TODO this will need to be set in a properties. ie: DHIR = MessageHeader.focus = Patient Resource
-	private void resourceFilter( OscarFhirResource< ?,? > oscarFhirResource ) {
+	private void resourceFilter( AbstractOscarFhirResource< ?,? > oscarFhirResource ) {
 		
 		if( oscarFhirResource.isFocusResource() ) {
 			
@@ -277,13 +277,13 @@ public abstract class FhirMessageBuilder {
 		}
 	}
 	
-	public void addResources( List< OscarFhirResource< ?,? > > oscarFhirResources ) {
-		for( OscarFhirResource< ?,? > oscarFhirResource :  oscarFhirResources ) {
+	public void addResources( List< AbstractOscarFhirResource< ?,? > > oscarFhirResources ) {
+		for( AbstractOscarFhirResource< ?,? > oscarFhirResource :  oscarFhirResources ) {
 			addResource( oscarFhirResource );
 		}
 	}
 	
-	public void addResource( OscarFhirResource< ?,? > oscarFhirResource ) {
+	public void addResource( AbstractOscarFhirResource< ?,? > oscarFhirResource ) {
 		resourceFilter( oscarFhirResource );
 		getResources().add( oscarFhirResource );		
 		BaseResource resource = oscarFhirResource.getFhirResource();
@@ -347,7 +347,7 @@ public abstract class FhirMessageBuilder {
 		getReferences().put( referenceKey, reference );		
 	}
 	
-	private void addReference( OscarFhirResource< ?,? > oscarFhirResource ) {		
+	private void addReference( AbstractOscarFhirResource< ?,? > oscarFhirResource ) {		
 		addReference( oscarFhirResource.getReference() );		
 	}
 	

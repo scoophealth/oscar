@@ -88,7 +88,7 @@ import org.oscarehr.integration.fhir.utils.FhirUtils;
 } 
 */
 
-public class Patient extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient, org.oscarehr.common.model.Demographic > {
+public class Patient extends AbstractOscarFhirResource< org.hl7.fhir.dstu3.model.Patient, org.oscarehr.common.model.Demographic > {
 
 	public Patient( org.oscarehr.common.model.Demographic from ) {
 		super( new org.hl7.fhir.dstu3.model.Patient(), from );

@@ -26,7 +26,7 @@ package org.oscarehr.integration.fhir.builder;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.integration.fhir.model.Sender;
 import org.oscarehr.integration.fhir.resources.Settings;
-import org.oscarehr.util.SpringUtils;
+// import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 
@@ -35,7 +35,8 @@ public final class SenderFactory {
 
 	private static String buildName = OscarProperties.getInstance().getProperty("buildtag", "UNKNOWN");
 	private static String senderEndpoint = OscarProperties.getInstance().getProperty("ws_endpoint_url_base", "UNKNOWN");
-	private static ClinicDAO clinicDao = SpringUtils.getBean( ClinicDAO.class );
+	private static ClinicDAO clinicDao; 
+	//= SpringUtils.getBean( ClinicDAO.class );
 	private static String vendorName = "Oscar EMR";
 	private static String softwareName = "Oscar";
 
@@ -45,7 +46,7 @@ public final class SenderFactory {
 	}
 	
 	public static final Sender getSender( Settings settings ) {
-		return init( settings );
+		return init(settings);
 	}
 	
 	private static Sender init( Settings settings ) {
