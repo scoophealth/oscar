@@ -85,7 +85,12 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 	
 	if(!dateFound && dates.size()>0) {
 		sessionDateStr = dates.get(0);
-		System.out.println("resetting date");
+	}
+	
+	String errorStr = null;
+	
+	if(!dateFound && dates.size() == 0) {
+		errorStr = "No dates found!";	
 	}
 		
 	
@@ -93,6 +98,7 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 	UserProperty facilitatorUp = userPropertyDao.getProp(targetProviderNo, "session_" + sessionDateStr + "_facilitator");
 	UserProperty facilitator2Up = userPropertyDao.getProp(targetProviderNo, "session_" + sessionDateStr + "_facilitator2");
 	UserProperty sessionSiteUp = userPropertyDao.getProp(targetProviderNo, "session_" + sessionDateStr + "_site");
+	UserProperty sessionNoteUp = userPropertyDao.getProp(targetProviderNo, "session_" + sessionDateStr + "_note");
 	
 	List<UserProperty> topics = new ArrayList<UserProperty>();
 	UserProperty numTopicsUp = userPropertyDao.getProp(targetProviderNo, "session_" + sessionDateStr + "_num_topics");
@@ -337,7 +343,7 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 	                    		   guests = a.guests;
 	                    	   }
 	                    	   
-	                    	   var newData = "<tr><td><input type='checkbox' id='checked_"+a.appointmentNo+"' name='checked' value='"+a.appointmentNo+"'/></td>" + 
+	                    	   var newData = "<tr><td><a href='javascript:void()' onClick='deleteParticipant("+a.appointmentNo+",\""+a.name+"\")'><img src='../images/close16.png' border='0'></a><input type='checkbox' id='checked_"+a.appointmentNo+"' name='checked' value='"+a.appointmentNo+"'/></td>" + 
 	                    	   "<td style='width:20%'>" +a.name + "</td>"+
 	                    	   "<td>"+arrivedButton+"&nbsp;"+noShowButton+"</td>"+
 	                    	   "<td><input type='button' value='Remove from series' onClick='removeFromSeries("+a.appointmentNo+")'/></td>"+
@@ -351,6 +357,22 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 	                       }
 	            }, "json"
 	        );	
+	}
+	
+	function deleteParticipant(appointmentNo, patientName) {
+		if(confirm('Are you sure you want to delete ' + patientName + ' from this series?')) {
+			jQuery.post("<%=request.getContextPath()%>/groupAppointment.do" , {method: 'deleteParticipant',appointmentNo:appointmentNo,currentSession:'<%=sessionDateStr%>'},
+		            function(xml)
+		            {
+						if(xml.error) {
+							alert("ERROR:" + xml.error);
+						} else {
+							window.location.href='<%=request.getContextPath()%>/appointment/groupProperties.jsp?provider_no=<%=targetProviderNo%>&date=<%=sessionDateStr%>';
+						}
+		            }, "json"
+			);
+		}
+		
 	}
 	
 	function updateDay() {
@@ -392,11 +414,63 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 	            }, "json"
 		);
 	}
+	
+	function cancelSession() {
+		jQuery.post("<%=request.getContextPath()%>/groupAppointment.do" , {method: 'cancelSession',currentSession:'<%=sessionDateStr%>',providerNo:'<%=targetProviderNo%>'},
+	            function(xml)
+	            {
+					if(xml.error) {
+						alert("ERROR:" + xml.error);
+					} else {
+						window.close();
+					}
+	            }, "json"
+		);
+	}
+	
+	function transferParticipants() {
+		var appts = "";
+		jQuery("input[name='checked']:checked").each(function(index,value){
+			if(appts.length>0)
+				appts = appts + "," + value.value;
+			else 
+				appts = value.value;
+		});
+		
+		if(appts.length == 0) {
+			alert('No participants have been selected!');
+			return;
+		}
+		
+		var transferTo = jQuery("#transferTo").val();
+		
+		if(transferTo == '') {
+			alert('Must choose a destination series');
+			return;
+		}
+//		alert(appts);
+//		alert(transferTo);
+		
+		jQuery.post("<%=request.getContextPath()%>/groupAppointment.do" , {method: 'transferParticipants',currentSession:'<%=sessionDateStr%>',providerNo:'<%=targetProviderNo%>',toProviderNo:transferTo,participants:appts},
+	            function(xml)
+	            {
+					if(xml.error) {
+						alert("ERROR:" + xml.error);
+					} else {
+						window.close();
+					}
+	            }, "json"
+		);
+		
+	}
+	
 	</script>
 </head>
 
 
 <body bgproperties="fixed"  topmargin="0"leftmargin="0" rightmargin="0" style="font-family:sans-serif">
+
+<%if(errorStr == null) { %>
 	<FORM NAME = "myForm" METHOD="post" ACTION="groupPropertiesSave.jsp">
 	<input type="hidden" id="topics_num" name="topics_num" value="0"/>
 	<input type="hidden" id="provider_no" name="provider_no" value="<%=targetProviderNo%>"/>
@@ -556,6 +630,16 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 			</tr>
 			
 			<tr>
+				<td class="preferenceLabel" width="10%">
+					Notes:
+				</td>
+				<td class="preferenceValue">
+					<textarea name="sessionNote" rows="10" style="width:80%"><%=(sessionNoteUp != null)?sessionNoteUp.getValue():""%></textarea>
+				</td>
+			</tr>
+			
+			
+			<tr>
 				<td colspan="2" style="height:10px"></td>
 			</tr>
 			
@@ -590,7 +674,29 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 			<tr>
 				<td colspan="2">Add new participant: <input type="hidden" name="demographic_no" id="demographic_no" value="" /><input type="text" name="demo" id="demo" size="35"/></td>
 			</tr>
-			
+			<tr>
+				<td colspan="2">Transfer participant(s) to:
+					&nbsp; 
+					<select name="transferTo" id="transferTo">
+						<option value="">Select Below</option>
+						<%
+							//get a list of all providers that are uncompleted series!
+							for(UserProperty g : userPropertyDao.getPropValues("groupModule","true")) {
+								String pn = g.getProviderNo();
+								UserProperty completedUp1 = userPropertyDao.getProp(pn, "completed");
+								if(completedUp1 == null || (completedUp1 != null && "false".equals(completedUp1.getValue()))) {
+									Provider p = providerDao.getProvider(pn);
+									if(p != null && !p.getProviderNo().equals(targetProviderNo)) {
+										%><option value="<%=p.getProviderNo()%>"><%=p.getFormattedName() %></option><%
+									}
+								}
+							}
+						%>
+					</select>
+					&nbsp;
+					<input type="button" value="Transfer" onClick="transferParticipants()"/>
+				</td>
+			</tr>
 		</table>
 		
 		<div style="background-color:white;height:20px"></div>
@@ -616,6 +722,8 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 		
 		<br/><br/>
 		
+		<input type="button" value="Cancel Session" onClick="cancelSession()"/>
+		
 		
 		<input name="close" type="button" value="Close Window" onClick="window.close()"/>
 		
@@ -629,6 +737,10 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 				Calendar.setup({ inputField : "pdate2", ifFormat : "%Y-%m-%d", showsTime :false, button : "pdate2_cal", singleClick : true, step : 1 });
 	   </script>	
 
+
+<% } else { %>
+	<h3 style="color:red"><%=errorStr %></h3>
+<% } %>
 </body>
 
 

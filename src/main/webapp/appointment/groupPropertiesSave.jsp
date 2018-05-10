@@ -62,10 +62,12 @@
     String facilitator = request.getParameter("facilitator");
     String facilitator2 = request.getParameter("facilitator2");
     String sessionSite = request.getParameter("sessionSite");
-    
+    String sessionNote = request.getParameter("sessionNote");
+     
     saveOrUpdateProperty(providerNo,facilitator,"session_" + sessionDateStr + "_facilitator");
     saveOrUpdateProperty(providerNo,facilitator2,"session_" + sessionDateStr + "_facilitator2");
     saveOrUpdateProperty(providerNo,sessionSite,"session_" + sessionDateStr + "_site");
+    saveOrUpdateProperty(providerNo,sessionNote,"session_" + sessionDateStr + "_note");
      
     deleteExistingTopics(providerNo,sessionDateStr);
     saveOrUpdateMaxTopics(providerNo,request.getParameter("topics_num"),sessionDateStr);

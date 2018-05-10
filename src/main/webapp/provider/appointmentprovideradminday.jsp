@@ -1550,9 +1550,14 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
           <b><a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=<%=day%>&view=0&displaymode=day&dboperation=searchappointmentday"><%=formatDate%></a></b>
       <%
       	} else {
+      		UserPropertyDAO upDao = SpringUtils.getBean(UserPropertyDAO.class);
+      		String groupModule = upDao.getStringValue(curProvider_no[nProvider], "GroupModule");
+      		boolean hasGroupModule = groupModule != null && "true".equals(groupModule);
       %>
   <b>
+  <%if(hasGroupModule) { %>
   <input type='button' value="G" name='groupProps' onClick="launchGroupProperties('<%=curProvider_no[nProvider]%>')" title="Manage Group Series Attributes" style="color:black" class="noprint">
+  <% } %>
   <input type='button' value="<bean:message key="provider.appointmentProviderAdminDay.weekLetter"/>" name='weekview' onClick=goWeekView('<%=curProvider_no[nProvider]%>') title="<bean:message key="provider.appointmentProviderAdminDay.weekView"/>" style="color:black" class="noprint">
 	  <input type='button' value="<bean:message key="provider.appointmentProviderAdminDay.searchLetter"/>" name='searchview' onClick=goSearchView('<%=curProvider_no[nProvider]%>') title="<bean:message key="provider.appointmentProviderAdminDay.searchView"/>" style="color:black" class="noprint">
           <b><input type='radio' name='flipview' class="noprint" onClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="Flip view"  >

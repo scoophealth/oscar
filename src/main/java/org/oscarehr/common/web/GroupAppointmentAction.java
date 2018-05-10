@@ -26,6 +26,8 @@ package org.oscarehr.common.web;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -52,6 +54,7 @@ import org.oscarehr.common.dao.ScheduleDateDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.DemographicExt;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.ScheduleDate;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.managers.AppointmentManager;
@@ -94,6 +97,11 @@ public class GroupAppointmentAction extends DispatchAction {
 		if(response1.get("error") == null) {
 			List<Appointment> currentAppts = appointmentDao.findByDateAndProvider(d, providerNo);
 			
+			Collections.sort(currentAppts, new Comparator<Appointment>() {
+				public int compare(Appointment a1, Appointment a2) {
+					return a1.getName().compareTo(a2.getName());
+				}
+			});
 			JSONArray arr = new JSONArray();
 			
 			for(Appointment appt: currentAppts) {
@@ -294,14 +302,58 @@ public class GroupAppointmentAction extends DispatchAction {
 				addSessionLevelAttribute(providerNo, date, "facilitator2", getSessionLevelAttribute(providerNo, currentDate, "facilitator2"));
 				addSessionLevelAttribute(providerNo, date, "site", getSessionLevelAttribute(providerNo, currentDate, "site"));
 				
-				int numTopics = getNumTopicsForSession(providerNo,currentDate);
-				addSessionLevelAttribute(providerNo,date,"num_topics",String.valueOf(numTopics));
-				for(int x=1;x<=numTopics;x++) {
-					addSessionLevelAttribute(providerNo,date,"topic"+x, getSessionLevelAttribute(providerNo, currentDate, "topic"+x));
+				Integer numTopics = getNumTopicsForSession(providerNo,currentDate);
+				if(numTopics != null) {
+					addSessionLevelAttribute(providerNo,date,"num_topics",String.valueOf(numTopics));
+					for(int x=1;x<=numTopics;x++) {
+						addSessionLevelAttribute(providerNo,date,"topic"+x, getSessionLevelAttribute(providerNo, currentDate, "topic"+x));
+					}
 				}
 				
 			} else  {
 				response1.put("error", "There's already a session on that day!");
+			}
+		}
+		
+		response1.write(response.getWriter());
+		return null;
+	}
+	
+	public ActionForward cancelSession(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		JSONObject response1 = new JSONObject();
+		String date = getRequiredParameter(request, "currentSession", response1);
+		String providerNo = getRequiredParameter(request, "providerNo", response1);
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Date dt = parseDate(date, formatter, response1);
+	
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_appointment", "w", null)) {
+        	response1.put("error","missing required security object (_appointment)");
+        }
+		
+		if(response1.get("error") == null) {
+			ScheduleDate sd = scheduleDateDao.findByProviderNoAndDate(providerNo, dt) ;
+			sd.setStatus('D');
+			scheduleDateDao.merge(sd);
+			
+			//get all appointments for today
+			for(Appointment a: appointmentDao.findByProviderAndDate(providerNo, dt)) {
+				a.setStatus("C");
+				a.setReason(a.getReason() + "\n" + "Cancelled Session");
+				apptManager.updateAppointment(LoggedInInfo.getLoggedInInfoFromSession(request), a);
+			}
+			
+			//move all session level attributes
+			removeSessionLevelAttribute(providerNo,date,"facilitator");
+			removeSessionLevelAttribute(providerNo,date,"facilitator2");
+			removeSessionLevelAttribute(providerNo,date,"site");
+			Integer numTopics = getNumTopicsForSession(providerNo,date);
+			removeSessionLevelAttribute(providerNo,date,"num_topics");
+			if(numTopics != null) {
+				for(int x=1;x<=numTopics;x++) {
+					removeSessionLevelAttribute(providerNo,date,"topic"+x);
+				}
 			}
 		}
 		
@@ -317,6 +369,16 @@ public class GroupAppointmentAction extends DispatchAction {
 		if(up != null) {
 			up.setName("session_" + newDate + "_" + attributeName);
 			dao.merge(up);
+		}
+	}
+	
+	private void removeSessionLevelAttribute(String providerNo, String date, String attributeName) {
+		UserPropertyDAO dao = SpringUtils.getBean(UserPropertyDAO.class);
+		
+		UserProperty up = dao.getProp(providerNo, "session_" + date + "_" + attributeName);
+		
+		if(up != null) {
+			dao.remove(up.getId());
 		}
 	}
 	
@@ -353,6 +415,10 @@ public class GroupAppointmentAction extends DispatchAction {
 	
 	
 	private void addSessionLevelAttribute(String providerNo, String date, String attributeName, String attributeValue) {
+		if(attributeValue == null) {
+			return;
+		}
+		
 		UserPropertyDAO dao = SpringUtils.getBean(UserPropertyDAO.class);
 		
 		UserProperty up = new UserProperty();
@@ -494,6 +560,91 @@ public class GroupAppointmentAction extends DispatchAction {
 		}
 		response1.write(response.getWriter());
 		
+		return null;
+	}
+	
+	public ActionForward deleteParticipant(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		JSONObject response1 = new JSONObject();
+		String appointmentNo = getRequiredParameter(request, "appointmentNo", response1);
+		String currentSession = getRequiredParameter(request, "currentSession", response1);
+		
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);	
+		SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd");
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_appointment", "w", null)) {
+        	response1.put("error","missing required security object (_appointment)");
+        }
+
+		if(response1.get("error") == null) {
+			Date d = parseDate(currentSession,formatter,response1);
+			
+			Appointment appt = appointmentDao.find(Integer.parseInt(appointmentNo));
+			if(appt != null) {
+				int demographicNo = appt.getDemographicNo();
+				String providerNo = appt.getProviderNo();
+				
+				for(Appointment a :appointmentDao.findByProviderAndDemographic(demographicNo,providerNo)) {
+					appointmentDao.remove(a.getId());
+				}
+				
+			}
+		}
+		
+		response1.write(response.getWriter());
+		return null;
+	}
+	
+	public ActionForward transferParticipants(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		JSONObject response1 = new JSONObject();
+		String apptListP = getRequiredParameter(request, "participants", response1);
+		String providerNo = getRequiredParameter(request, "providerNo", response1);
+		String date = getRequiredParameter(request,"currentSession",response1);
+		String destinationProvider = getRequiredParameter(request, "toProviderNo", response1);
+		
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);	
+		SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd");
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_appointment", "w", null)) {
+        	response1.put("error","missing required security object (_appointment)");
+        }
+
+		Date d = parseDate(date,formatter,response1);
+		
+		Provider currentProvider = providerDao.getProvider(providerNo);
+		
+		String reason = "Transfer from " + currentProvider.getFormattedName() + " on " + formatter.format(new Date());
+		
+		if(response1.get("error") == null) {
+			for(String apptNoP : apptListP.split(",")) {
+				Appointment appt = appointmentDao.find(Integer.parseInt(apptNoP));
+				int demographicNo =appt.getDemographicNo(); 
+				
+				//remove from the current provider - ie..cancel future appts
+				//remove patient from all future appointments with this provider..ie CANCEL them
+				List<Appointment> apptList = appointmentDao.findFutureAppointmentsWithProvider(demographicNo,providerNo,d);
+				for(Appointment tmp:apptList) {
+					tmp.setStatus("C");
+					if(!StringUtils.isEmpty(reason)) {
+						tmp.setReason(reason);
+					}
+					apptManager.updateAppointment(loggedInInfo, tmp);
+				}
+				
+				//add to new provider - new appts from today onward
+				List<ScheduleDate> sdList = scheduleDateDao.findActiveByProviderAndHour(destinationProvider,"Group Series");
+				
+				for(ScheduleDate sd:sdList) {
+					if(sd.getDate().equals(d) ||  sd.getDate().after(d)) {
+						Integer apptNo = addParticipantToSession(LoggedInInfo.getLoggedInInfoFromSession(request),demographicNo,destinationProvider,sd.getDate());
+						if(apptNo == null) {
+							response1.put("error", "Operation Failed");
+						}
+					}
+				}	
+			}
+		}
+		
+		response1.write(response.getWriter());
 		return null;
 	}
 	
