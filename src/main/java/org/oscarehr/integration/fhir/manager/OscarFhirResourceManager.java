@@ -24,6 +24,7 @@ package org.oscarehr.integration.fhir.manager;
  */
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
@@ -38,6 +39,7 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.integration.fhir.model.Immunization;
 import org.oscarehr.integration.fhir.model.AbstractOscarFhirResource;
 import org.oscarehr.integration.fhir.model.PerformingPractitioner;
+import org.oscarehr.integration.fhir.model.Practitioner;
 import org.oscarehr.integration.fhir.resources.types.PublicHealthUnitType;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.LookupListManager;
@@ -155,6 +157,28 @@ public class OscarFhirResourceManager {
 		return patientList;
 	}
 	
+	public static final org.oscarehr.integration.fhir.model.Practitioner getDemographicMostResponsiblePractitioner( OscarFhirConfigurationManager configurationManager, int demographic_no ) {
+		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
+		Demographic demographic = demographicManager.getDemographic(configurationManager.getLoggedInInfo(), demographic_no);
+		Provider mrp = demographic.getProvider();
+		List<Provider> providerList = Collections.emptyList();
+		Practitioner practitioner = null;
+		
+		if(mrp == null) {
+			providerList = demographicManager.getDemographicMostResponsibleProviders(configurationManager.getLoggedInInfo(), demographic_no);
+		}
+		
+		if(! providerList.isEmpty()) {
+			mrp = providerList.get(0); 
+		}
+		
+		if(mrp != null) {
+			practitioner = new Practitioner(mrp, configurationManager);
+		}
+		
+		return practitioner;
+	}
+	
 	/**
 	 * 
 	 * @param configurationManager
@@ -207,7 +231,7 @@ public class OscarFhirResourceManager {
 		
 		List< org.oscarehr.integration.fhir.model.Immunization<Prevention> > immunizations = OscarFhirResourceManager.getImmunizationsByDemographicNo( configurationManager, patient.getOscarResource().getDemographicNo() );
 		if( immunizations != null ) {
-			 OscarFhirResourceManager.setPerformingPractitionerAndPatient( configurationManager, immunizations, patient, resourceList );
+			 OscarFhirResourceManager.linkPerformingPractitionerAndPatient( configurationManager, immunizations, patient, resourceList );
 		}
 		
 		return resourceList;
@@ -225,60 +249,10 @@ public class OscarFhirResourceManager {
 		
 		org.oscarehr.integration.fhir.model.Immunization<Prevention> immunization = OscarFhirResourceManager.getImmunizationById( configurationManager, preventionId);
 		if( immunization != null) {
-			OscarFhirResourceManager.setPerformingPractitionerAndPatient( configurationManager, immunization, patient, resourceList  );
+			OscarFhirResourceManager.linkPerformingPractitionerAndPatient( configurationManager, immunization, patient, resourceList  );
 		} else {
 			MiscUtils.getLogger().warn( "Requested Immunization id " + preventionId + " was not found.");
 		}
-		return resourceList;
-	}
-	
-	/**
-	 * Helper method intended for use from inside the class.
-	 * 
-	 * @param configurationManager
-	 * @param immunization
-	 * @param patient
-	 * @param resourceList
-	 * @return HashSet<OscarFhirResource<?,?>>
-	 */
-	private static final HashSet<AbstractOscarFhirResource<?,?>> setPerformingPractitionerAndPatient( 
-			OscarFhirConfigurationManager configurationManager, 
-			org.oscarehr.integration.fhir.model.Immunization<Prevention> immunization, 
-			org.oscarehr.integration.fhir.model.Patient patient, HashSet<AbstractOscarFhirResource<?,?>> resourceList) {
-		
-		String performingProviderNo = immunization.getOscarResource().getProviderNo();
-		PerformingPractitioner performingPractitioner = OscarFhirResourceManager.getPerformingPractitionerByProviderNumber( configurationManager, performingProviderNo );
-		if( performingPractitioner != null ) {
-			immunization.addPerformingPractitioner( performingPractitioner.getReference() );
-			resourceList.add( performingPractitioner );
-		}
-		immunization.setPatientReference( patient.getReference() );
-		resourceList.add( patient );
-		resourceList.add( immunization );
-		
-		return resourceList;
-	}
-	
-	/**
-	 * Helper method. Intended for use inside the class.
-	 * 
-	 * @param configurationManager
-	 * @param immunizations
-	 * @param patient
-	 * @param resourceList
-	 * @return HashSet<OscarFhirResource<?,?>>
-	 */
-	private static final HashSet<AbstractOscarFhirResource<?,?>> setPerformingPractitionerAndPatient( 
-			OscarFhirConfigurationManager configurationManager, 
-			List<org.oscarehr.integration.fhir.model.Immunization<Prevention>> immunizations, 
-			org.oscarehr.integration.fhir.model.Patient patient, HashSet<AbstractOscarFhirResource<?,?>> resourceList ) {
-
-		if( immunizations != null && ! immunizations.isEmpty() ) {		
-			for( Immunization<Prevention> immunization : immunizations ) {				
-				setPerformingPractitionerAndPatient( configurationManager, immunization, patient, resourceList );			
-			}
-		}
-		
 		return resourceList;
 	}
 	
@@ -311,6 +285,60 @@ public class OscarFhirResourceManager {
 		}	
 		
 		return organization;
+	}
+	
+	
+	/******* PRIVATE HELPER METHODS BELOW THIS LINE *******/
+	
+	
+	/**
+	 * Helper method intended for use from inside the class.
+	 * 
+	 * @param configurationManager
+	 * @param immunization
+	 * @param patient
+	 * @param resourceList
+	 * @return HashSet<OscarFhirResource<?,?>>
+	 */
+	private static final HashSet<AbstractOscarFhirResource<?,?>> linkPerformingPractitionerAndPatient( 
+			OscarFhirConfigurationManager configurationManager, 
+			org.oscarehr.integration.fhir.model.Immunization<Prevention> immunization, 
+			org.oscarehr.integration.fhir.model.Patient patient, HashSet<AbstractOscarFhirResource<?,?>> resourceList) {
+		
+		String performingProviderNo = immunization.getOscarResource().getProviderNo();
+		PerformingPractitioner performingPractitioner = OscarFhirResourceManager.getPerformingPractitionerByProviderNumber( configurationManager, performingProviderNo );
+		if( performingPractitioner != null ) {
+			immunization.addPerformingPractitioner( performingPractitioner.getReference() );
+			resourceList.add( performingPractitioner );
+		}
+		immunization.setPatientReference( patient.getReference() );
+		resourceList.add( patient );
+		resourceList.add( immunization );
+		
+		return resourceList;
+	}
+	
+	/**
+	 * Helper method. Intended for use inside the class.
+	 * 
+	 * @param configurationManager
+	 * @param immunizations
+	 * @param patient
+	 * @param resourceList
+	 * @return HashSet<OscarFhirResource<?,?>>
+	 */
+	private static final HashSet<AbstractOscarFhirResource<?,?>> linkPerformingPractitionerAndPatient( 
+			OscarFhirConfigurationManager configurationManager, 
+			List<org.oscarehr.integration.fhir.model.Immunization<Prevention>> immunizations, 
+			org.oscarehr.integration.fhir.model.Patient patient, HashSet<AbstractOscarFhirResource<?,?>> resourceList ) {
+
+		if( immunizations != null && ! immunizations.isEmpty() ) {		
+			for( Immunization<Prevention> immunization : immunizations ) {				
+				linkPerformingPractitionerAndPatient( configurationManager, immunization, patient, resourceList );			
+			}
+		}
+		
+		return resourceList;
 	}
 	
 	/**

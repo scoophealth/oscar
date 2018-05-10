@@ -1,10 +1,14 @@
 package org.oscarehr.integration.fhir.api;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
+import org.hl7.fhir.dstu3.model.Communication;
+import org.oscarehr.integration.born.BORNWbXmlGenerator;
 import org.oscarehr.integration.fhir.builder.FhirCommunicationBuilder;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
-import org.oscarehr.integration.fhir.model.AbstractOscarFhirResource;
+import org.oscarehr.integration.fhir.manager.OscarFhirResourceManager;
 import org.oscarehr.integration.fhir.resources.Settings;
 import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
 import org.oscarehr.integration.fhir.resources.constants.Region;
@@ -37,22 +41,70 @@ import org.oscarehr.util.LoggedInInfo;
 public class BORN {
 	private static Settings SETTINGS = new Settings( FhirDestination.BORN, Region.ON );
 	
+	public static synchronized Set<Communication> getCommunicationResources(LoggedInInfo loggedInInfo, int[] demographicNos) {
+		Set<Communication> communicationSet = null;
+		Communication communication = null;
+		
+		for(int demographicNo : demographicNos) {			
+			communication = getCommunication(loggedInInfo, demographicNo);
+			
+			if(communicationSet == null) {
+				communicationSet = new HashSet<Communication>();
+			}
+			
+			if(communication != null) {
+				communicationSet.add(communication);
+			}
+		}
+		
+		if(communicationSet == null) {
+			communicationSet = Collections.emptySet();
+		}
+		
+		return communicationSet;
+	}
+	
+	/**
+	 * Returns a complete Communication resource for transmission through the BORN BIS
+	 */
+	public static synchronized Communication getCommunication(LoggedInInfo loggedInInfo, int demographicNo) {
+		Communication communication = null;
+		FhirCommunicationBuilder fhirCommunicationBuilder = getFhirCommunicationBuilder(loggedInInfo, demographicNo);
+		
+		if(fhirCommunicationBuilder != null) {
+			communication = fhirCommunicationBuilder.getCommunication();
+		}
+		
+		return communication;
+	}
+	
 	public static synchronized FhirCommunicationBuilder getFhirCommunicationBuilder(LoggedInInfo loggedInInfo, int demographicNo) {
-		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, SETTINGS );
-		HashSet<AbstractOscarFhirResource<?,?>> resourceList = new HashSet<AbstractOscarFhirResource<?,?>>();
+		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, SETTINGS );		
 		FhirCommunicationBuilder fhirCommunicationBuilder = new FhirCommunicationBuilder(configurationManager);
-		// Get BORN resource bundle 
+
+		// Get BORN resource bundle from the resource manager. 
+		
+		// HashSet<AbstractOscarFhirResource<?,?>> resourceList = new HashSet<AbstractOscarFhirResource<?,?>>();
 		
 		// Patient
+		org.oscarehr.integration.fhir.model.Patient patient = OscarFhirResourceManager.getPatientByDemographicNumber( configurationManager, demographicNo );
 		
 		// Practitioner
+		org.oscarehr.integration.fhir.model.Practitioner practitioner = OscarFhirResourceManager.getDemographicMostResponsiblePractitioner(configurationManager, demographicNo);
 		
-		// Sender (Organization)
+		patient.addGeneralPractitioner(practitioner);
+		fhirCommunicationBuilder.setSubject(patient);
 		
 		// Clinical Data
+		BORNWbXmlGenerator xmlGenerator = new BORNWbXmlGenerator();
+		xmlGenerator.init(demographicNo);
 		
-		// BORN Identifier
+		//TODO: HIN Cannot be NULL or Empty
 		
+		//TODO: bla bla bla...
+		
+		// fhirCommunicationBuilder.addAttachment(xmlGenerator // get stream etc...);
+
 		return fhirCommunicationBuilder;
 	}
 }
