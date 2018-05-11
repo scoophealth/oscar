@@ -566,6 +566,30 @@ function isCanadian(){
     }
     return true;
 }
+
+function consentClearBtn(radioBtnName)
+{
+	
+	if( confirm("Proceed to clear all record of this consent?") ) 
+	{
+
+	    //clear out opt-in/opt-out radio buttons
+	    var ele = document.getElementsByName(radioBtnName);
+	    for(var i=0;i<ele.length;i++)
+	    {
+	    	ele[i].checked = false;
+	    }
+	
+	    //hide consent date field from displaying
+	    var consentDate = document.getElementById("consentDate_" + radioBtnName);
+	
+	    if (consentDate)
+	    {
+	        consentDate.style.display = "none";
+	    }
+
+	}
+}
 </script>
 </head>
 <!-- Databases have alias for today. It is not necessary give the current date -->
@@ -1438,30 +1462,49 @@ document.forms[1].r_doctor_ohip.value = refNo;
 		  			  	
 			<% } %>
 
-		  	<%-- This block of code was designed to eventually manage all of the patient consents. --%>
-			<oscar:oscarPropertiesCheck property="USE_NEW_PATIENT_CONSENT_MODULE" value="true" >
+		<oscar:oscarPropertiesCheck property="USE_NEW_PATIENT_CONSENT_MODULE" value="true" >
 			
 				<c:forEach items="${ consentTypes }" var="consentType" varStatus="count">
-				
-					<tr class="privacyConsentRow" id="${ count.index }" valign="top">
-						<td class="alignLeft" colspan="2" width="20%" >
-							<label style="font-weight:bold;" valign="center" for="${ consentType.type }" >
-							
-								<input type="checkbox" name="${ consentType.type }" id="${ consentType.type }" value="${ consentType.id }"  />
-		
+					<c:set var="patientConsent" value="" />
+					<c:forEach items="${ patientConsents }" var="consent" >
+						<c:if test="${ consent.consentType.id eq consentType.id }">
+							<c:set var="patientConsent" value="${ consent }" />
+						</c:if>													
+					</c:forEach>
+					<tr class="privacyConsentRow" id="${ count.index }" >
+						<td class="alignRight" style="width:16%;vertical-align:top;">
+							<div style="font-weight:bold;white-space:nowrap;" >
 								<c:out value="${ consentType.name }" />
-								
-							</label>
+							</div>
 						</td>
-						
-						<td class="alignLeft"  colspan="2"  width="80%" >
+												
+						<td colspan="2" style="padding-left:10px;vertical-align:top;">
 							<c:out value="${ consentType.description }" />
 						</td>
-		
+						
+						<td id="consentStatusDate" style="width:31%;vertical-align:top;" >	
+                            <input type="radio"
+                                   name="${ consentType.type }"
+                                   id="optin_${ consentType.type }"
+                                   value="0"
+                            />
+                            <label for="optin_${ consentType.type }" >Opt-In</label>
+                            <input type="radio"
+                                   name="${ consentType.type }"
+                                   id="optout_${ consentType.type }"
+                                   value="1"                         
+                            />
+                            <label for="optout_${ consentType.type }" >Opt-Out</label>
+                            <input type="button"
+                                   name="clearRadio_${consentType.type}_btn"
+                                   onclick="consentClearBtn('${consentType.type}')" value="Clear" />
+																						
+						</td>
+						
 					</tr>
 				</c:forEach>
 				
-			</oscar:oscarPropertiesCheck>
+		</oscar:oscarPropertiesCheck>
 
 </oscar:oscarPropertiesCheck>
 

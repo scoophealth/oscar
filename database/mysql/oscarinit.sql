@@ -12089,6 +12089,7 @@ CREATE TABLE `Consent` (
   `consent_date` datetime,
   `optout_date` datetime,
   `edit_date` datetime,
+  `deleted` tinyint(1),
   PRIMARY KEY (`id`)
 );
 

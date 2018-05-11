@@ -28,7 +28,7 @@ import javax.persistence.Query;
 import org.oscarehr.common.model.ConsentType;
 import org.springframework.stereotype.Repository;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Collections;
 
 @Repository
 public class ConsentTypeDao extends AbstractDao<ConsentType>{
@@ -47,19 +47,19 @@ public class ConsentTypeDao extends AbstractDao<ConsentType>{
         return consentType;
 	}
 
-        public List<ConsentType> findAllActive()
+    public List<ConsentType> findAllActive()
+    {
+        Query q = entityManager.createQuery("select ct from ConsentType ct where ct.active=?1  order by ct.type asc");
+        q.setParameter(1,true);
+
+        @SuppressWarnings("unchecked")
+        List<ConsentType> result = q.getResultList();
+
+        if (result == null)
         {
-            Query q = entityManager.createQuery("select ct from ConsentType ct where ct.active=?1  order by ct.type asc");
-            q.setParameter(1,true);
-
-            @SuppressWarnings("unchecked")
-            List<ConsentType> result = q.getResultList();
-
-            if (result == null)
-            {
-                result = new ArrayList <ConsentType> ();
-            }
-
-            return result;
+            result = Collections.emptyList();
         }
+
+        return result;
+    }
 }
