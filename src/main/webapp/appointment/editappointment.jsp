@@ -731,7 +731,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
             <div class="input">
 				<select name="reasonCode">
 				<%
-				String rCode = bFirstDisp?appt.getReasonCode().toString():request.getParameter("reasonCode");
+				String rCode = bFirstDisp && appt.getReasonCode() != null ?appt.getReasonCode().toString():request.getParameter("reasonCode");
 				pageContext.setAttribute("rCode",rCode);
 				
 				%>				
