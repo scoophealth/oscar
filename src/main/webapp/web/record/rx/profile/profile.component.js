@@ -4,7 +4,7 @@ const RxProfileComponent = {
   	reRx: '&'
 
   },
-  templateUrl: 'record/rx/profile/profile.template.jsp',
+  templateUrl: '../web/record/rx/profile/profile.template.jsp',
   controller: ['$stateParams','$state','$log','$timeout','summaryService','rxService','$filter',function($stateParams,$state,$log,$timeout,summaryService,rxService,$filter) {
   	rxProfileComp = this;
 

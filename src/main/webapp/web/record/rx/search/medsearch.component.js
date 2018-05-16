@@ -4,7 +4,7 @@ const MedsearchComponent = {
 	favSelected: '&',
   	medSelected: '&'
   },
-  templateUrl: 'record/rx/search/medsearch.template.jsp',
+  templateUrl: '../web/record/rx/search/medsearch.template.jsp',
   controller: ['$stateParams','$state','$log','$timeout','summaryService','rxService','$http','$filter',function($stateParams,$state,$log,$timeout,summaryService,rxService,$http,$filter) {
   	rxSearchComp = this;
 

@@ -3,7 +3,7 @@ const RxComponent = {
   	
 
   },
-  templateUrl: 'record/rx/rx.template.jsp',
+  templateUrl: '../web/record/rx/rx.template.jsp',
   controller: ['$stateParams','$state','$log','summaryService','rxService','$uibModal',function($stateParams,$state,$log,summaryService,rxService,$uibModal) {
   	rxComp = this;
 
