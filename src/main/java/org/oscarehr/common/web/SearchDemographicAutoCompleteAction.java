@@ -45,7 +45,6 @@ import org.oscarehr.common.model.DemographicCust;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.AppointmentUtil;
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import net.sf.json.JSONObject;
@@ -229,7 +228,7 @@ public class SearchDemographicAutoCompleteAction extends Action {
     	}    	
     		json.append("]");
 
-    	MiscUtils.getLogger().info(json.toString());
+    	//MiscUtils.getLogger().info(json.toString());
     	return json.toString();
     }
 

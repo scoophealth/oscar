@@ -436,6 +436,15 @@ for (int i=0; i<sites.size(); i++) {
 				key="admin.provider.formSlpPassword" />:</td>
 			<td><input type="text" name="xml_p_slppassword"></td>
 		</tr>
+		
+		<%if("true".equals(OscarProperties.getInstance().getProperty("groupModuleEnabled", "false"))) { %>
+		<tr>
+			<td align="right"><bean:message
+				key="admin.provider.groupModuleEnabled" />:</td>
+			<td><input type="checkbox" name="groupModule" value="true"/></td>
+		</tr>
+		<%} %>
+		
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formStatus" />:
 			</td>

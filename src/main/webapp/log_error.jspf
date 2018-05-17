@@ -11,7 +11,7 @@
 		{
 			String errorUri=errorData.getRequestURI();
 			if (errorUri!=null){
-                            logger.error("Errored Uri="+errorUri);
+                            logger.debug("Errored Uri="+errorUri);
                             if (debugOn){
                                 out.write("<h3> Error URI "+errorUri+"</h3>");
                             }
@@ -20,7 +20,7 @@
                         
 
 			int errorCode=errorData.getStatusCode();
-			logger.error("Status Code = "+errorCode);
+			logger.debug("Status Code = "+errorCode);
                         if(debugOn){
                             out.write("<h3> Status Code "+errorCode+"</h3>");
 			}

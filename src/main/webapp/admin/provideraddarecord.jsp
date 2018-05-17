@@ -23,6 +23,9 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.common.dao.UserPropertyDAO"%>
+<%@page import="org.oscarehr.common.model.UserProperty"%>
+<%@page import="org.oscarehr.casemgmt.model.ProviderExt"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -191,6 +194,21 @@ DBPreparedHandler dbObj = new DBPreparedHandler();
  	 isOk=true;
   }
 
+  
+  if(request.getParameter("groupModule") != null) {
+	String groupModuleEnabled =   request.getParameter("groupModule");
+	if("true".equals(groupModuleEnabled)) {
+		UserProperty up = new UserProperty();
+		up.setName("groupModule");
+		up.setProviderNo(p.getProviderNo());
+		up.setValue("true");
+		
+		UserPropertyDAO upDao = SpringUtils.getBean(UserPropertyDAO.class);
+		upDao.saveEntity(up);
+	}
+	
+  }
+  
 if (isOk && org.oscarehr.common.IsPropertiesOn.isMultisitesEnable()) {
 	String[] sites = request.getParameterValues("sites");
 	if (sites!=null)
