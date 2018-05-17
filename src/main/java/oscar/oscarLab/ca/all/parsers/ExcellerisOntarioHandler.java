@@ -46,9 +46,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.v23.datatype.ED;
-import ca.uhn.hl7v2.model.v23.datatype.XCN;
-import ca.uhn.hl7v2.model.v23.message.ORU_R01;
+import ca.uhn.hl7v2.model.Varies;
+import ca.uhn.hl7v2.model.v231.datatype.CX;
+import ca.uhn.hl7v2.model.v231.datatype.ST;
+import ca.uhn.hl7v2.model.v231.datatype.XCN;
+import ca.uhn.hl7v2.model.v231.datatype.XPN;
+import ca.uhn.hl7v2.model.v231.group.ORU_R01_PIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI;
+import ca.uhn.hl7v2.model.v231.message.ORU_R01;
 import ca.uhn.hl7v2.parser.Parser;
 import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.util.Terser;
@@ -56,13 +60,9 @@ import ca.uhn.hl7v2.validation.impl.NoValidation;
 import oscar.util.UtilDateUtilities;
 
 
-/**
- *
- * @author wrighd
- */
-public class PATHL7Handler implements MessageHandler {
+public class ExcellerisOntarioHandler implements MessageHandler {
 
-    Logger logger = Logger.getLogger(PATHL7Handler.class);
+    Logger logger = Logger.getLogger(ExcellerisOntarioHandler.class);
     ORU_R01 msg = null;
 
 	private static List<String> labDocuments = Arrays.asList("BCCACSP","BCCASMP","BLOODBANKT",
@@ -72,8 +72,8 @@ public class PATHL7Handler implements MessageHandler {
 	public static final String VIHARTF = "CELLPATHR";
 	public static enum OBX_DATA_TYPES {NM,ST,CE,TX,FT} // Numeric, String, Coded Element, Text, String
 
-    /** Creates a new instance of CMLHandler */
-    public PATHL7Handler(){
+    /** Creates a new instance */
+    public ExcellerisOntarioHandler() {
     }
 
     public void init(String hl7Body) throws HL7Exception {
@@ -83,46 +83,64 @@ public class PATHL7Handler implements MessageHandler {
     }
 
     public String getMsgType(){
-        return("PATHL7");
+        return("ExcellerisON");
     }
 
     public String getMsgPriority(){
         return("");
     }
-    /*
-     *  MSH METHODS
-     */
+   
 
+    //MSH-7 (ex 20180213045636-0800)
     public String getMsgDate(){
-        //try {
         return(formatDateTime(getString(msg.getMSH().getDateTimeOfMessage().getTimeOfAnEvent().getValue())));
-        //return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue())));
-        //} catch (HL7Exception ex) {
-        //    return ("");
-        //}
     }
 
-    /*
-     *  PID METHODS
-     */
+
+    public String getAlternativePatientIdentifier() {
+    	CX[] alternateList = msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getPIDPD1NK1NTEPV1PV2().getPID().getPid4_AlternatePatientIDPID();
+    	if(alternateList != null && alternateList.length>0) {
+    		CX item = alternateList[0];
+    		return getString(item.getCx1_ID().getValue());
+    	}
+    	return "";
+    }
+    
     public String getPatientName(){
         return(getFirstName()+" "+getMiddleName()+" "+getLastName());
     }
 
+    //PID-5-1
     public String getFirstName(){
-        return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientName().getGivenName().getValue()));
+    	XPN[] names = msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getPIDPD1NK1NTEPV1PV2().getPID().getPatientName();
+    	if(names.length>0) {
+    		return (getString(names[0].getGivenName().getValue()));
+    	}
+       return "";
     }
 
+    //PID-5-3
     public String getMiddleName(){
-    	return (getString(msg.getRESPONSE().getPATIENT().getPID().getPatientName().getXpn3_MiddleInitialOrName().getValue()));
+    	XPN[] names = msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getPIDPD1NK1NTEPV1PV2().getPID().getPatientName();
+    	if(names.length>0) {
+    		return (getString(names[0].getMiddleInitialOrName().getValue()));
+    	}
+       return "";
     }
+    
+    //PID-5-0
     public String getLastName(){
-        return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientName().getFamilyName().getValue()));
+    	XPN[] names = msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getPIDPD1NK1NTEPV1PV2().getPID().getPatientName();
+    	if(names.length>0) {
+    		return (getString(names[0].getFamilyLastName().getFamilyName().getValue()));
+    	}
+       return "";
     }
 
+    //PID-7
     public String getDOB(){
         try{
-            return(formatDateTime(getString(msg.getRESPONSE().getPATIENT().getPID().getDateOfBirth().getTimeOfAnEvent().getValue())).substring(0, 10));
+            return(formatDateTime(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getPIDPD1NK1NTEPV1PV2().getPID().getPid7_DateTimeOfBirth().getTimeOfAnEvent().getValue())).substring(0, 10));
         }catch(Exception e){
             return("");
         }
@@ -145,23 +163,41 @@ public class PATHL7Handler implements MessageHandler {
         return age;
     }
 
+    //PID-8
     public String getSex(){
-        return(getString(msg.getRESPONSE().getPATIENT().getPID().getSex().getValue()));
+        return(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getPIDPD1NK1NTEPV1PV2().getPID().getSex().getValue()));
     }
 
+    //(PID-3-11) 1111111111^^^^JHN^^^^ON&Ontario&HL70347^^AB
     public String getHealthNum(){
-        return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientIDExternalID().getID().getValue()));
+    	CX[] data = msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getPIDPD1NK1NTEPV1PV2().getPID().getPid3_PatientIdentifierList();
+    	if(data.length>0) {
+    		CX cx = data[0];
+    		String hin = cx.getCx1_ID().getValue();
+    		String type = cx.getCx5_IdentifierTypeCode().getValue();
+    		String ver = "";
+    		if(cx.getExtraComponents() != null && cx.getExtraComponents().numComponents() == 5) {
+    			Varies v = cx.getExtraComponents().getComponent(4);
+    			ver = v.getData().toString();
+    		}
+    		
+    		return(getString(hin + ver));
+    	}
+    	return "";
+        
     }
 
+    
+    //PID-13, comma separated list
     public String getHomePhone(){
         String phone = "";
         int i=0;
         try{
-            while(!getString(msg.getRESPONSE().getPATIENT().getPID().getPhoneNumberHome(i).get9999999X99999CAnyText().getValue()).equals("")){
+            while(!getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getPIDPD1NK1NTEPV1PV2().getPID().getPhoneNumberHome(i).get9999999X99999CAnyText().getValue()).equals("")){
                 if (i==0){
-                    phone = getString(msg.getRESPONSE().getPATIENT().getPID().getPhoneNumberHome(i).get9999999X99999CAnyText().getValue());
+                    phone = getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getPIDPD1NK1NTEPV1PV2().getPID().getPhoneNumberHome(i).get9999999X99999CAnyText().getValue());
                 }else{
-                    phone = phone + ", " + getString(msg.getRESPONSE().getPATIENT().getPID().getPhoneNumberHome(i).get9999999X99999CAnyText().getValue());
+                    phone = phone + ", " + getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getPIDPD1NK1NTEPV1PV2().getPID().getPhoneNumberHome(i).get9999999X99999CAnyText().getValue());
                 }
                 i++;
             }
@@ -173,15 +209,16 @@ public class PATHL7Handler implements MessageHandler {
         }
     }
 
+    //PID-14
     public String getWorkPhone(){
         String phone = "";
         int i=0;
         try{
-            while(!getString(msg.getRESPONSE().getPATIENT().getPID().getPhoneNumberBusiness(i).get9999999X99999CAnyText().getValue()).equals("")){
+            while(!getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getPIDPD1NK1NTEPV1PV2().getPID().getPhoneNumberBusiness(i).get9999999X99999CAnyText().getValue()).equals("")){
                 if (i==0){
-                    phone = getString(msg.getRESPONSE().getPATIENT().getPID().getPhoneNumberBusiness(i).get9999999X99999CAnyText().getValue());
+                    phone = getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getPIDPD1NK1NTEPV1PV2().getPID().getPhoneNumberBusiness(i).get9999999X99999CAnyText().getValue());
                 }else{
-                    phone = phone + ", " + getString(msg.getRESPONSE().getPATIENT().getPID().getPhoneNumberBusiness(i).get9999999X99999CAnyText().getValue());
+                    phone = phone + ", " + getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getPIDPD1NK1NTEPV1PV2().getPID().getPhoneNumberBusiness(i).get9999999X99999CAnyText().getValue());
                 }
                 i++;
             }
@@ -193,17 +230,18 @@ public class PATHL7Handler implements MessageHandler {
         }
     }
 
+    //MSH-4 ???
     public String getPatientLocation(){
-        return(getString(msg.getMSH().getSendingFacility().getNamespaceID().getValue()));
+        return(getString(msg.getMSH().getSendingFacility().getHd2_UniversalID().getValue()));
     }
 
-    /*
-     *  OBC METHODS
-     */
+    
+    //ORC-3
+    //Order ID of lab performing tests (accession number-test code-tiebreaker)
     public String getAccessionNum(){
         try{
 
-            String str=msg.getRESPONSE().getORDER_OBSERVATION(0).getORC().getFillerOrderNumber().getEntityIdentifier().getValue();
+            String str=msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(0).getORC().getFillerOrderNumber().getEntityIdentifier().getValue();
 
             String accessionNum = getString(str);
 
@@ -227,30 +265,34 @@ public class PATHL7Handler implements MessageHandler {
         }
     }
 
-    /*
-     *  OBR METHODS
-     */
-
+   
+    
     public int getOBRCount(){
-        return(msg.getRESPONSE().getORDER_OBSERVATIONReps());
+    	
+    	
+        return(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTIReps());
     }
 
+    //OBR-4 TestCode^TestName
     public String getOBRName(int i){
         try{
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getUniversalServiceIdentifier().getText().getValue()));
+            return(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBR().getObr4_UniversalServiceID().getText().getValue()));
         }catch(Exception e){
             return("");
         }
     }
 
+    //OBR-24
+    //Laboratory Section Codes; expanded names available
     public String getObservationHeader(int i, int j){
         try{
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getDiagnosticServiceSectionID().getValue()));
+            return(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBR().getObr24_DiagnosticServSectID().getValue()));
         }catch(Exception e){
             return("");
         }
     }
 
+    
     public int getOBRCommentCount(int i){
         try {
             if ( !getOBRComment(i, 0).equals("") ){
@@ -263,65 +305,100 @@ public class PATHL7Handler implements MessageHandler {
         }
     }
 
+    //NTE-3 for OBR group
     public String getOBRComment(int i, int j){
         try {
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getNTE(j).getComment(0).getValue()));
+            return(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getNTE(j).getComment(0).getValue()));
         } catch (Exception e) {
             return("");
         }
     }
 
+    //OBR-7
     public String getServiceDate(){
         try{
-            return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue())));
-            //return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue())));
+            return(formatDateTime(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(0).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue())));
         }catch(Exception e){
             return("");
         }
     }
 
+    //OBR-6
     public String getRequestDate(int i){
         try{
-            return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getRequestedDateTime().getTimeOfAnEvent().getValue())));
+            return(formatDateTime(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBR().getRequestedDateTime().getTimeOfAnEvent().getValue())));
         }catch(Exception e){
             return("");
         }
     }
 
+    //OBR-25
+    /*
+     * I  = pending
+P = preliminary
+A = partial results
+F = complete
+R = Retransmitted
+C = corrected
+X = deleted (available on request; not always preceded by non-X OBRs in an earlier transmission)
+
+     * @see oscar.oscarLab.ca.all.parsers.MessageHandler#getOrderStatus()
+     */
     public String getOrderStatus(){
+    	String orderStatus = null;
         try{
-            String orderStatus = getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getResultStatus().getValue());
-            int obrCount = getOBRCount();
-            int obxCount;
-            int count = 0;
-            for (int i=0; i < obrCount; i++){
-                obxCount = getOBXCount(i);
-                for (int j=0; j < obxCount; j++){
-                    String obxStatus = getOBXResultStatus(i, j);
-                    if (obxStatus.equalsIgnoreCase("C"))
-                        count++;
-                }
+        	for(int x=0;x<msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTIReps();x++) {
+        		ORU_R01_PIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI items =  msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI(x);
+        		for(int y=0;y<items.getORCOBRNTEOBXNTECTIReps();y++) {
+        			String status = items.getORCOBRNTEOBXNTECTI(y).getOBR().getResultStatus().getValue();
+        			if(orderStatus == null && status != null) {
+            			orderStatus = status;
+            		}
+            		if("C".equals(status)) {
+            			return "Corrected";
+            		}
+        		}
+        		
+        	}
+        	
+            if("P".equals(orderStatus)) {
+            	return "Preliminary";
             }
-            if(count >= 1){//if any of the OBX's have been corrected, mark the entire report as corrected
-            	orderStatus = "C";
-            	return orderStatus;
-            }else{
-            	return orderStatus;
+            if("I".equals(orderStatus)) {
+            	return "Pending";
+            }
+            if("A".equals(orderStatus)) {
+            	return "Partial results";
+            }
+            if("F".equals(orderStatus)) {
+            	return "Complete";
+            }
+            if("R".equals(orderStatus)) {
+            	return "Retransmitted";
+            }
+            if("C".equals(orderStatus)) {
+            	return "Corrected";
+            }
+            if("X".equals(orderStatus)) {
+            	return "Deleted";
             }
         }catch(Exception e){
             return("");
         }
+        
+        return "N/A";
     }
 
+    //OBR-16
     public String getClientRef(){
         String docNum = "";
         int i=0;
         try{
-            while(!getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getOrderingProvider(i).getIDNumber().getValue()).equals("")){
+            while(!getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(0).getOBR().getOrderingProvider(i).getIDNumber().getValue()).equals("")){
                 if (i==0){
-                    docNum = getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getOrderingProvider(i).getIDNumber().getValue());
+                    docNum = getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(0).getOBR().getOrderingProvider(i).getIDNumber().getValue());
                 }else{
-                    docNum = docNum + ", " + getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getOrderingProvider(i).getIDNumber().getValue());
+                    docNum = docNum + ", " + getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(0).getOBR().getOrderingProvider(i).getIDNumber().getValue());
                 }
                 i++;
             }
@@ -333,15 +410,16 @@ public class PATHL7Handler implements MessageHandler {
         }
     }
 
+    //OBR-16
     public String getDocName(){
         String docName = "";
         int i=0;
         try{
-            while(!getFullDocName(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getOrderingProvider(i)).equals("")){
+            while(!getFullDocName(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(0).getOBR().getOrderingProvider(i)).equals("")){
                 if (i==0){
-                    docName = getFullDocName(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getOrderingProvider(i));
+                    docName = getFullDocName(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(0).getOBR().getOrderingProvider(i));
                 }else{
-                    docName = docName + ", " + getFullDocName(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getOrderingProvider(i));
+                    docName = docName + ", " + getFullDocName(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(0).getOBR().getOrderingProvider(i));
                 }
                 i++;
             }
@@ -353,15 +431,16 @@ public class PATHL7Handler implements MessageHandler {
         }
     }
 
+    //OBR-28
     public String getCCDocs(){
         String docName = "";
         int i=0;
         try{
-            while(!getFullDocName(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getResultCopiesTo(i)).equals("")){
+            while(!getFullDocName(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(0).getOBR().getResultCopiesTo(i)).equals("")){
                 if (i==0){
-                    docName = getFullDocName(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getResultCopiesTo(i));
+                    docName = getFullDocName(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(0).getOBR().getResultCopiesTo(i));
                 }else{
-                    docName = docName + ", " + getFullDocName(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getResultCopiesTo(i));
+                    docName = docName + ", " + getFullDocName(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(0).getOBR().getResultCopiesTo(i));
                 }
                 i++;
             }
@@ -373,17 +452,18 @@ public class PATHL7Handler implements MessageHandler {
         }
     }
 
+    //OBR-16
     public ArrayList<String> getDocNums(){
         ArrayList<String> docNums = new ArrayList<String>();
         String id;
         int i;
 
         try{
-            String providerId = msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getOrderingProvider(0).getIDNumber().getValue();
+            String providerId = msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(0).getOBR().getOrderingProvider(0).getIDNumber().getValue();
             docNums.add(providerId);
 
             i=0;
-            while((id = msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getResultCopiesTo(i).getIDNumber().getValue()) != null){
+            while((id = msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(0).getOBR().getResultCopiesTo(i).getIDNumber().getValue()) != null){
                 if (!id.equals(providerId))
                     docNums.add(id);
                 i++;
@@ -403,11 +483,10 @@ public class PATHL7Handler implements MessageHandler {
     public int getOBXCount(int i){
         int count = 0;
         try{
-            count = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps();
+            count = msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBXNTEReps();
             // if count is 1 there may only be an nte segment and no obx segments so check
             if (count == 1){
-                String test = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(0).getOBX().getObservationIdentifier().getIdentifier().getValue();
-              // logger.info("name: "+test);
+                String test = msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBXNTE(0).getOBX().getObservationIdentifier().getText().getValue();
                 if (test == null)
                     count = 0;
             }
@@ -418,57 +497,37 @@ public class PATHL7Handler implements MessageHandler {
         return count;
     }
 
+    //OBX-3
     public String getOBXIdentifier(int i, int j){
         try{
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getIdentifier().getValue()));
+            return(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBXNTE(j).getOBX().getObservationIdentifier().getIdentifier().getValue()));
         }catch(Exception e){
             return("");
         }
     }
 
+    //OBX-2
     public String getOBXValueType(int i, int j){
         try{
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getValueType().getValue()));
+            return(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBXNTE(j).getOBX().getValueType().getValue()));
         }catch(Exception e){
             return("");
         }
     }
 
+    //OBX-3
     public String getOBXName(int i, int j){
         try{
-        	//legacy PDF is "special"
-        	if("PDF".equals(getOBXIdentifier(i,j))) {
-        		return getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getUniversalServiceIdentifier().getText().getValue());
-        	}
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getText().getValue()));
+            return(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBXNTE(j).getOBX().getObservationIdentifier().getText().getValue()));
         }catch(Exception e){
             return("");
         }
     }
 
-    public String getOBXResult(int i, int j){
-    	try{
-    		if("ED".equals(getOBXValueType(i,j))) {
-    			ED ed = (ED)msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObx5_ObservationValue()[0].getData();
-    			if(ed.getData() != null) {
-    				return ed.getData().getValue();
-    			}
-    		}
-            return(getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1)));
-        }catch(Exception e){
-            return("");
-        }
-    }
     
-    public String getLegacyOBXResult(int i, int j){
-    	try{
-    		if("ED".equals(getOBXValueType(i,j))) {
-    			ED ed = (ED)msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObx5_ObservationValue()[0].getData();
-    			if(ed.getSourceApplication() != null) {
-    				return ed.getSourceApplication().getNamespaceID().getValue();
-    			}
-    		}
-            return(getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1)));
+    public String getOBXResult(int i, int j){
+        try{
+            return(getString(Terser.get(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBXNTE(j).getOBX(),5,0,1,1)));
         }catch(Exception e){
             return("");
         }
@@ -477,33 +536,37 @@ public class PATHL7Handler implements MessageHandler {
     /**
      * Get the sub id for this obx line
      */
+    //OBX-4
     public String getOBXSubId( int i, int j ) {
         try{
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObx4_ObservationSubID().getValue() ) );
+            return(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBXNTE(j).getOBX().getObx4_ObservationSubID().getValue() ) );
         }catch(Exception e){
             return(null);
         }
     }
 
+    //OBX-7
     public String getOBXReferenceRange(int i, int j){
         try{
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getReferencesRange().getValue()));
+            return(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBXNTE(j).getOBX().getReferencesRange().getValue()));
         }catch(Exception e){
             return("");
         }
     }
 
+    //OBX-6
     public String getOBXUnits(int i, int j){
         try{
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getUnits().getIdentifier().getValue()));
+            return(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBXNTE(j).getOBX().getUnits().getIdentifier().getValue()));
         }catch(Exception e){
             return("");
         }
     }
 
+    //OBX-11
     public String getOBXResultStatus(int i, int j){
         try{
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservResultStatus().getValue()));
+            return(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBXNTE(j).getOBX().getObx11_ObservationResultStatus().getValue()));
         }catch(Exception e){
             return("");
         }
@@ -534,9 +597,10 @@ public class PATHL7Handler implements MessageHandler {
         return count;
     }
 
+    //OBX-14
     public String getTimeStamp(int i, int j){
         try{
-            return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getDateTimeOfTheObservation().getTimeOfAnEvent().getValue())));
+            return(formatDateTime(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBXNTE(j).getOBX().getDateTimeOfTheObservation().getTimeOfAnEvent().getValue())));
         }catch(Exception e){
             return("");
         }
@@ -558,7 +622,7 @@ public class PATHL7Handler implements MessageHandler {
 
     public String getOBXAbnormalFlag(int i, int j){
         try{
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getAbnormalFlags(0).getValue()));
+            return(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBXNTE(j).getOBX().getAbnormalFlags(0).getValue()));
         }catch(Exception e){
             logger.error("Error retrieving obx abnormal flag", e);
             return("");
@@ -579,13 +643,45 @@ public class PATHL7Handler implements MessageHandler {
 
     public String getOBXComment(int i, int j, int k){
         try {
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTE(k).getComment(0).getValue()));
+            return(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBXNTE(j).getNTE(k).getComment(0).getValue()));
         } catch (Exception e) {
             return("");
         }
     }
 
-
+    //5687^LifeLabs&100 International Blvd.&&Toronto&Ontario&M9W 6J6&Canada&B
+    public String getLabLicenseNo(int i, int j) {
+    	 try{
+             return(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBXNTE(j).getOBX().getProducerSID().getCe1_Identifier().getValue()));
+         }catch(Exception e){
+             logger.error("Error retrieving obx abnormal flag", e);
+             return("");
+         }
+    }
+    
+    
+    public String getLabLicenseName(int i, int j) {
+   	 try{
+   		 String licenseNo = getLabLicenseNo(i, j);
+   		
+   		 ST field = msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBXNTE(j).getOBX().getProducerSID().getCe2_Text();
+   		 
+   		 StringBuilder s = new StringBuilder();
+   		 s.append(licenseNo);
+   		 s.append(" - ");
+   		 s.append(field.getValue());
+   		 for(int x=0;x<field.getExtraComponents().numComponents();x++) {
+   			 if(field.getExtraComponents().getComponent(x).getData() != null && field.getExtraComponents().getComponent(x).getData().toString() != null && 
+   					 field.getExtraComponents().getComponent(x).getData().toString().length()>0 && !"null".equals(field.getExtraComponents().getComponent(x).getData().toString())) { 
+   				 s.append(" " + field.getExtraComponents().getComponent(x).getData());
+   			 }
+   		 }
+   		 return s.toString();
+   	 }catch(Exception e){
+            logger.error("Error retrieving obx abnormal flag", e);
+            return("");
+        }
+   }
 
 
 
@@ -601,12 +697,12 @@ public class PATHL7Handler implements MessageHandler {
         String currentHeader;
 
         try{
-            for (i=0; i < msg.getRESPONSE().getORDER_OBSERVATIONReps(); i++){
+            for (i=0; i < msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTIReps(); i++){
 
                 currentHeader = getObservationHeader(i, 0);
                 arraySize = headers.size();
                 if (arraySize == 0 || !currentHeader.equals(headers.get(arraySize-1))){
-                    //logger.info("Adding header: '"+currentHeader+"' to list");
+                    logger.debug("Adding header: '"+currentHeader+"' to list");
                     headers.add(currentHeader);
                 }
 
@@ -644,8 +740,8 @@ public class PATHL7Handler implements MessageHandler {
         }
         if(docSeg.getMiddleInitialOrName().getValue() != null)
             docName = docName +" "+ docSeg.getMiddleInitialOrName().getValue();
-        if(docSeg.getFamilyName().getValue() != null)
-            docName = docName +" "+ docSeg.getFamilyName().getValue();
+        if(docSeg.getFamilyLastName().getFamilyName().getValue() != null)
+            docName = docName +" "+ docSeg.getFamilyLastName().getFamilyName().getValue();
         if(docSeg.getSuffixEgJRorIII().getValue() != null)
             docName = docName +" "+ docSeg.getSuffixEgJRorIII().getValue();
         if(docSeg.getDegreeEgMD().getValue() != null)
@@ -656,11 +752,17 @@ public class PATHL7Handler implements MessageHandler {
 
 
     private String formatDateTime(String plain){
+    	String stringFormat = "yyyy-MM-dd HH:mm:ss";
+        
     	if (plain==null || plain.trim().equals("")) return "";
 
+    	if(plain.length() == 19) {
+    		Date date = UtilDateUtilities.StringToDate(plain, "yyyyMMddHHmmssZ");
+    		return UtilDateUtilities.DateToString(date, stringFormat);
+    	}
+    	
         String dateFormat = "yyyyMMddHHmmss";
         dateFormat = dateFormat.substring(0, plain.length());
-        String stringFormat = "yyyy-MM-dd HH:mm:ss";
         stringFormat = stringFormat.substring(0, stringFormat.lastIndexOf(dateFormat.charAt(dateFormat.length()-1))+1);
 
         Date date = UtilDateUtilities.StringToDate(plain, dateFormat);
@@ -712,15 +814,8 @@ public class PATHL7Handler implements MessageHandler {
 	 * 
 	 */
 	public boolean isReportData() {		
-		boolean result = true;
-		for(int x=0;x<getOBRCount();x++) {
-			for(int y=0;y<getOBXCount(x);y++) {
-				if(!OBX_DATA_TYPES.TX.name().equals( getOBXValueType(x, y))) {
-					result=false;
-				}
-			}
-		}
-		return result;
+		return ( OBX_DATA_TYPES.TX.name().equals( getOBXValueType(0, 0) ) 
+				|| OBX_DATA_TYPES.FT.name().equals( getOBXValueType(0, 0) )  );		
 	}
     
 }
