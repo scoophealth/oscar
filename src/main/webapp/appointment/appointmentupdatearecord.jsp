@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -111,7 +112,10 @@
 			appt.setRemarks(request.getParameter("remarks"));
 			appt.setUpdateDateTime(new java.util.Date());
 			appt.setUrgency((request.getParameter("urgency")!=null)?request.getParameter("urgency"):"");
-			appt.setReasonCode(Integer.parseInt(request.getParameter("reasonCode")));
+			String rc = request.getParameter("reasonCode");
+			if(!StringUtils.isEmpty(rc)) {
+				appt.setReasonCode(Integer.parseInt(rc));
+			}
 			
 			appointmentDao.merge(appt);
 			rowsAffected=1;
