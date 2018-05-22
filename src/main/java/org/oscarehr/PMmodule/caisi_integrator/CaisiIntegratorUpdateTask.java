@@ -33,6 +33,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
@@ -982,10 +983,26 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	private void pushDemographicConsent(ObjectOutputStream out,List<IntegratorConsent> tempConsents ) throws IOException {
 		for (IntegratorConsent tempConsent : tempConsents) {
 			if (tempConsent.getClientConsentStatus() == ConsentStatus.GIVEN || tempConsent.getClientConsentStatus() == ConsentStatus.REVOKED) {
+				
 				SetConsentTransfer consentTransfer = CaisiIntegratorManager.makeSetConsentTransfer2(tempConsent);
-				out.writeUnshared(consentTransfer);
-				logger.debug("pushDemographicConsent:" + tempConsent.getId() + "," + tempConsent.getFacilityId() + "," + tempConsent.getDemographicId());
-				// return;
+				
+				try {
+					out.writeUnshared(consentTransfer);
+					logger.debug("pushDemographicConsent:" + tempConsent.getId() + "," + tempConsent.getFacilityId() + "," + tempConsent.getDemographicId());
+				} catch (IOException e)
+				{
+					if( e instanceof NotSerializableException) {
+						logger.error(SetConsentTransfer.class.getName() 
+								+ " is not Serializable. Consent data for Demographic" 
+								+ consentTransfer.demographicId
+								+ " was not written to file.", e);
+					}
+					else 
+					{
+						throw e;
+					}
+				}
+				
 			}
 		}
 	}
@@ -2090,15 +2107,21 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		logger.info("creating document zip file");
 		
 		try {
-			ProcessBuilder processBuilder = new ProcessBuilder(parentDir + File.separator + "build_doc_zip.sh",parentFile);
 			
-			Process process = processBuilder.start();
-			
-			process.waitFor();
-			
-			//BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-		   //     String data = br.readLine();
-		   //     logger.debug(data);
+			File processFile = new File(parentDir + File.separator + "build_doc_zip.sh");
+			if(processFile.exists()) {
+				// is this method secure? It loads and executes a shell script from the user accessible 
+				// OscarDocuments directory. 
+				ProcessBuilder processBuilder = new ProcessBuilder(processFile.getAbsolutePath(),parentFile);
+				
+				Process process = processBuilder.start();
+				
+				process.waitFor();
+				
+				//BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			   //     String data = br.readLine();
+			   //     logger.debug(data);
+			}
 		}catch(Exception e) {
 			logger.error("Error",e);
 		} finally {
@@ -2240,12 +2263,20 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	   return sb.toString();
 	}
 
+	/**
+	 * Defaults to DOCUMENT_DIR when INTEGRATOR_OUTPUT_DIR is not set.
+	 * @return
+	 */
 	public static String getOutputDirectory() {
 		String integratorOutputDirectory = OscarProperties.getInstance().getProperty("INTEGRATOR_OUTPUT_DIR");
 		if(StringUtils.isNotEmpty(integratorOutputDirectory)) {
-			return integratorOutputDirectory;
+			outputDirectory = integratorOutputDirectory;
 		}
-		//default to DOCUMENT_DIR
+		
+		if(outputDirectory.endsWith(File.separator)) {
+			outputDirectory = outputDirectory.substring(0, outputDirectory.length() -1);
+		}
+		
 		return outputDirectory;
 	}
 
