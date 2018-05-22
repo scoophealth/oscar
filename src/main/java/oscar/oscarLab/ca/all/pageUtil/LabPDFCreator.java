@@ -35,7 +35,10 @@ package oscar.oscarLab.ca.all.pageUtil;
 import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -43,19 +46,15 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
+import org.apache.tika.io.IOUtils;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-
-import oscar.oscarLab.ca.all.Hl7textResultsData;
-import oscar.oscarLab.ca.all.parsers.CLSHandler;
-import oscar.oscarLab.ca.all.parsers.Factory;
-import oscar.oscarLab.ca.all.parsers.MEDITECHHandler;
-import oscar.oscarLab.ca.all.parsers.MessageHandler;
-import oscar.oscarLab.ca.all.parsers.PATHL7Handler;
-import oscar.util.UtilDateUtilities;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
@@ -75,6 +74,16 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.rtf.RtfWriter2;
+
+import oscar.oscarLab.ca.all.Hl7textResultsData;
+import oscar.oscarLab.ca.all.parsers.CLSHandler;
+import oscar.oscarLab.ca.all.parsers.ExcellerisOntarioHandler;
+import oscar.oscarLab.ca.all.parsers.Factory;
+import oscar.oscarLab.ca.all.parsers.MEDITECHHandler;
+import oscar.oscarLab.ca.all.parsers.MessageHandler;
+import oscar.oscarLab.ca.all.parsers.PATHL7Handler;
+import oscar.util.ConcatPDF;
+import oscar.util.UtilDateUtilities;
 
 
 /**
@@ -97,7 +106,10 @@ public class LabPDFCreator extends PdfPageEventHelper{
     private Font font;
     private Font boldFont;
     private String dateLabReceived;
-
+    
+    private List<String> embeddedDocumentsToAppend = new ArrayList<String>();
+    List<String> allLicenseNames = new ArrayList<String>();
+	
 	public static byte[] getPdfBytes(String segmentId, String providerNo) throws IOException, DocumentException
     {
     	ByteArrayOutputStream baos=new ByteArrayOutputStream();
@@ -180,11 +192,12 @@ public class LabPDFCreator extends PdfPageEventHelper{
         document = new Document();
         PdfWriter writer = PdfWriterFactory.newInstance(document, os, FontSettings.HELVETICA_10PT);
 
+       
         //Set page event, function onEndPage will execute each time a page is finished being created
         writer.setPageEvent(this);
 
         document.setPageSize(PageSize.LETTER);
-        document.addTitle("Title of the Document");
+        document.addTitle("OSCAR Laboratory Report");
         document.addCreator("OSCAR");
         document.open();
 
@@ -220,6 +233,8 @@ public class LabPDFCreator extends PdfPageEventHelper{
                 addLabCategory( extraHeaders.get(i) , extraHandler);
         }
 
+    
+        
         	       
         // add end of report table
         PdfPTable table = new PdfPTable(1);
@@ -242,11 +257,46 @@ public class LabPDFCreator extends PdfPageEventHelper{
         table.addCell(cell);
         document.add(table);
 
+        if(handler.getMsgType().equals("ExcellerisON")) {
+        	PdfPTable table2 = new PdfPTable(1);
+        	 table2.setWidthPercentage(100);
+        	 for(String x : allLicenseNames) {
+	             PdfPCell cell2 = new PdfPCell();
+	             cell2.setBorder(0);
+	             cell2.setPhrase(new Phrase(x,new Font(bf, 9, Font.NORMAL)));
+	             table2.addCell(cell2);
+        	 }
+        	 document.add(table2);
+        }
+        
+       
         document.close();
 
         os.flush();
     }
-	 		
+	 
+    public void addEmbeddedDocuments(File currentPDF, OutputStream os) {
+    	List<Object> alist = new ArrayList<Object>();
+    	
+    	InputStream mainPDF = null;
+    	try {
+    		
+    		mainPDF = new FileInputStream(currentPDF);
+    		
+    		alist.add(mainPDF);
+    		
+    		for(String data : embeddedDocumentsToAppend) {
+    			InputStream tmp = new ByteArrayInputStream(	Base64.decodeBase64(data));
+    			alist.add(tmp);
+    		}
+    	
+    		ConcatPDF.concat(alist, os);
+    	} catch(Exception e) {
+    		MiscUtils.getLogger().error("Error", e);
+    	} finally {
+    		IOUtils.closeQuietly(mainPDF);
+    	}
+    }
 
     /*
 	 * Given the name of a lab category this method will add the category
@@ -261,6 +311,8 @@ public class LabPDFCreator extends PdfPageEventHelper{
     }
     
 	private void addLabCategory(String header, MessageHandler extraHandler, String specimenSource, String specimenDescription ) throws DocumentException {
+		String currentLicenseNo = null, lastLicenseNo = null;
+		
 		MessageHandler handler = (extraHandler!=null)?extraHandler:this.handler;
 		if(handler.getMsgType().equals("PATHL7")){
 			this.isUnstructuredDoc = ((PATHL7Handler) handler).unstructuredDocCheck(header);
@@ -292,7 +344,11 @@ public class LabPDFCreator extends PdfPageEventHelper{
 					mainTableWidths = new float[] { 5f, 12f, 3f};
 				}
 			}else{
-				mainTableWidths = new float[] {5f, 3f, 1f, 3f, 2f, 4f, 2f };
+				if(handler.getMsgType().equals("ExcellerisON")) {
+					mainTableWidths = new float[] {5f, 3f, 1f, 3f, 2f, 4f, 2f,2f };
+				} else {
+					mainTableWidths = new float[] {5f, 3f, 1f, 3f, 2f, 4f, 2f };
+				}
 			}
 		
 			table = new PdfPTable(mainTableWidths);
@@ -312,7 +368,11 @@ public class LabPDFCreator extends PdfPageEventHelper{
 				cell.setPadding(3);
 				cell.setPhrase(new Phrase("  "));				
 				cell.setBorder(0);				
-				cell.setColspan(7);
+				if(handler.getMsgType().equals("ExcellerisON")) {
+					cell.setColspan(8);
+				} else { 
+					cell.setColspan(7);
+				}
 				table.addCell(cell);
 				
 				// lab title. ie: PT Panel, CBC
@@ -326,7 +386,11 @@ public class LabPDFCreator extends PdfPageEventHelper{
 				// place holder after lab title
 				cell.setPhrase(new Phrase("  "));
 				cell.setBorder(0);
-				cell.setColspan(5);
+				if(handler.getMsgType().equals("ExcellerisON")) {
+					cell.setColspan(6);
+				} else {
+					cell.setColspan(5);
+				}
 				table.addCell(cell);
 			}
 
@@ -358,7 +422,12 @@ public class LabPDFCreator extends PdfPageEventHelper{
 				if( (handler instanceof MEDITECHHandler) && ( "MIC".equals( ( (MEDITECHHandler) handler ).getSendingApplication() ) ) ) {
 
 					cell.setPhrase(new Phrase(specimenSource, boldFont));
-					cell.setColspan(7);
+					if(handler.getMsgType().equals("ExcellerisON")) {
+						cell.setColspan(8);
+					} else {
+						cell.setColspan(7);
+					}
+					
 					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 					table.addCell(cell);
 					cell.setColspan(1);
@@ -395,6 +464,12 @@ public class LabPDFCreator extends PdfPageEventHelper{
 				table.addCell(cell);
 				cell.setPhrase(new Phrase("Status", boldFont));
 				table.addCell(cell); 
+				
+				if(handler.getMsgType().equals("ExcellerisON")) { 
+					cell.setPhrase(new Phrase("Lab Lic #", boldFont));
+					table.addCell(cell);
+				}
+				
 			}
 		} // end alternate to Meditech Unstructured doc.
 		
@@ -416,15 +491,26 @@ public class LabPDFCreator extends PdfPageEventHelper{
 			cell.setPhrase(new Phrase(handler.getOBXComment(1, 1, 1)
 					.replaceAll("<br\\s*/*>", "\n"), font));
 			table.addCell(cell);
-
 		} else {
 			for (int j = 0; j < obrCount; j++) {
 				boolean obrFlag = false;
 				int obxCount = handler.getOBXCount(j);
 				for (int k = 0; k < obxCount; k++) {
 					
+					if(handler.getMsgType().equals("ExcellerisON")) {
+						lastLicenseNo = currentLicenseNo;
+						currentLicenseNo = ((ExcellerisOntarioHandler)handler).getLabLicenseNo(j, k);
+						String licenseName = ((ExcellerisOntarioHandler)handler).getLabLicenseName(j, k);
+						if(!allLicenseNames.contains(licenseName)) {
+							allLicenseNames.add(licenseName);
+						}
+					}
+					
 					cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-					cell.setBorder( Rectangle.BOTTOM );
+					cell.setBorder(Rectangle.BOTTOM);
+					if (handler.getOBXCommentCount(j, k) > 0) {
+						cell.setBorder( Rectangle.NO_BORDER );
+					}
 					cell.setBorderColor( Color.lightGray );
 					cell.setBackgroundColor( Color.white );
 					
@@ -451,7 +537,11 @@ public class LabPDFCreator extends PdfPageEventHelper{
 									&& ( !(obxName.contains(obrName) && obxCount < 2 && !isUnstructuredDoc) ) ) {
 	
 								cell.setPhrase(new Phrase(obrName, boldFont));
-								cell.setColspan(7);
+								if(handler.getMsgType().equals("ExcellerisON")) { 
+									cell.setColspan(8);
+								} else {
+									cell.setColspan(7);
+								}
 								cell.setBorderColor(Color.black);
 								table.setWidthPercentage(100);
 								table.addCell(cell);
@@ -497,7 +587,11 @@ public class LabPDFCreator extends PdfPageEventHelper{
 										cell.setPhrase(new Phrase("", lineFont));
 										table.addCell(cell);
 									}else {
-										cell.setPhrase(new Phrase((obrFlag ? "   " : "")+ obxName, lineFont));
+										String indent = "   ";
+										if(handler.getMsgType().equals("ExcellerisON")) {
+											indent="";
+										}
+										cell.setPhrase(new Phrase((obrFlag ? indent : "")+ obxName, lineFont));
 										table.addCell(cell);
 									}
 								}
@@ -521,6 +615,10 @@ public class LabPDFCreator extends PdfPageEventHelper{
 									table.addCell(cell);
 								}
 							
+								if(handler.getMsgType().equals("ExcellerisON")) { 
+									cell.setPhrase(new Phrase(!currentLicenseNo.equals(lastLicenseNo)?currentLicenseNo:"", lineFont));
+									table.addCell(cell);
+								}
 								cell.setBorder(Rectangle.BOTTOM);
 								cell.setPadding(5);
 							} else {
@@ -533,44 +631,80 @@ public class LabPDFCreator extends PdfPageEventHelper{
 									cell.setPhrase(new Phrase("", lineFont));
 									table.addCell(cell);
 								}else{
-									cell.setPhrase(new Phrase((obrFlag ? "   " : "") + obxName, lineFont));
+									String indent = "   ";
+									if(handler.getMsgType().equals("ExcellerisON")) {
+										indent="";
+									}
+									cell.setPhrase(new Phrase((obrFlag ? indent : "") + obxName, lineFont));
 									table.addCell(cell);
 								}
 								
 								boolean isLongText =false;
 								
+								if(handler.getMsgType().equals("ExcellerisON") || handler.getMsgType().equals("PATHL7")) {
+									if("FT".equals(handler.getOBXValueType(j,k))) {
+										isLongText=true;
+									}
+								}
+								
 								if( handler.getMsgType().equals("PATHL7") ){
 									
-									cell.setPhrase(new Phrase(handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n").replace("\t","\u00a0\u00a0\u00a0\u00a0"), lineFont));
-									//if this PATHL7 result is from CDC/SG and is greater than 100 characters
-									if((handler.getOBXResult(j, k).length() > 100) && (handler.getPatientLocation().equals("SG") || handler.getPatientLocation().equals("CDC"))){
+									if(handler.getOBXValueType(j,k).equals("ED")) {
+										if("PDF".equals(handler.getOBXIdentifier(j,k))) {
+											embeddedDocumentsToAppend.add(((PATHL7Handler)handler).getLegacyOBXResult(j, k));
+										} else {
+											embeddedDocumentsToAppend.add(handler.getOBXResult(j, k));
+										}
+											
+										cell.setPhrase(new Phrase("PDF Report (Appended to end of Laboratory Report)", lineFont));
+										table.addCell(cell);
+									} else {
+										cell.setPhrase(new Phrase(handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n").replace("\t","\u00a0\u00a0\u00a0\u00a0"), lineFont));
+										//if this PATHL7 result is from CDC/SG and is greater than 100 characters
+										if((handler.getOBXResult(j, k).length() > 100) && (handler.getPatientLocation().equals("SG") || handler.getPatientLocation().equals("CDC"))){
 
-										//if the Abn, Reference Range and Units are empty or equal to null, give the long result the use of those columns
-										if(( handler.getOBXAbnormalFlag(j, k) == null ||handler.getOBXAbnormalFlag(j, k).isEmpty()) &&
-										( handler.getOBXReferenceRange(j, k) == null || handler.getOBXReferenceRange(j, k).isEmpty()) &&
-										(handler.getOBXUnits(j, k) == null || handler.getOBXUnits(j, k).isEmpty())){
-											isLongText = true;
-											cell.setColspan(4);
-											table.addCell(cell);
+											//if the Abn, Reference Range and Units are empty or equal to null, give the long result the use of those columns
+											if(( handler.getOBXAbnormalFlag(j, k) == null ||handler.getOBXAbnormalFlag(j, k).isEmpty()) &&
+											( handler.getOBXReferenceRange(j, k) == null || handler.getOBXReferenceRange(j, k).isEmpty()) &&
+											(handler.getOBXUnits(j, k) == null || handler.getOBXUnits(j, k).isEmpty())){
+												isLongText = true;
+												cell.setColspan(4);
+												table.addCell(cell);
+											}else{
+												//else use the 6 remaining columns, and add a new empty cell that takes the first two columns(Test & Results). 
+												//This will allow the corresponding Abn, RR and Units to be printed beneath the long result in the appropriate columns
+												cell.setColspan(6);
+												table.addCell(cell);
+												cell.setPhrase(new Phrase("", lineFont));
+												cell.setColspan(2);
+												table.addCell(cell);
+											}
 										}else{
-											//else use the 6 remaining columns, and add a new empty cell that takes the first two columns(Test & Results). 
-											//This will allow the corresponding Abn, RR and Units to be printed beneath the long result in the appropriate columns
-											cell.setColspan(6);
-											table.addCell(cell);
-											cell.setPhrase(new Phrase("", lineFont));
-											cell.setColspan(2);
+											if(isLongText) {
+												cell.setColspan(4);
+											}
+											// cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
 											table.addCell(cell);
 										}
-									}else{
-										// cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-										table.addCell(cell);
+										cell.setColspan(1);
 									}
-									cell.setColspan(1);
+									
+									
 									
 								} else { // end PATHHL7 labs
 									
-									cell.setPhrase(new Phrase(handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n"), lineFont));
-									table.addCell(cell);
+									if(isLongText) {
+										cell.setColspan(4);
+									}
+									if(handler instanceof ExcellerisOntarioHandler &&  handler.getOBXValueType(j,k).equals("ED")) {
+										embeddedDocumentsToAppend.add(handler.getOBXResult(j, k));
+										cell.setPhrase(new Phrase("PDF Report (Appended to end of Laboratory Report)", lineFont));
+										table.addCell(cell);
+									} else {
+										cell.setPhrase(new Phrase(handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n"), lineFont));
+										table.addCell(cell);
+									}
+									cell.setColspan(1);
 								}
 
 								String abnFlag = handler.getOBXAbnormalFlag(j, k);
@@ -584,6 +718,8 @@ public class LabPDFCreator extends PdfPageEventHelper{
 												handler.getOBXAbnormalFlag(j, k) :
 												""),
 											lineFont));
+									} else if("ExcellerisON".equals(handler.getMsgType())) {
+										cell.setPhrase(new Phrase(StringUtils.trimToEmpty(abnFlag), lineFont));
 									} else {
 										if (abnFlag == null || abnFlag.trim().equals(""))
 											abnFlag = "N";
@@ -601,17 +737,32 @@ public class LabPDFCreator extends PdfPageEventHelper{
 								table.addCell(cell);
 								cell.setPhrase(new Phrase(handler.getOBXResultStatus(j, k), lineFont));
 								table.addCell(cell);
+								
+								if(handler.getMsgType().equals("ExcellerisON")) { 
+									cell.setPhrase(new Phrase(!currentLicenseNo.equals(lastLicenseNo)?currentLicenseNo:"", lineFont));
+									table.addCell(cell);
+									
+								}
 							} // end else not unstructured.
 							
 							if(!handler.getMsgType().equals("PFHT")) {
 								// add obx comments
 								if (handler.getOBXCommentCount(j, k) > 0) {
-
-									cell.setColspan(7);
-									cell.setBorderColor(Color.white);
+									cell.setBorder(Rectangle.BOTTOM);
+									
+								//	cell.setBorderColor(Color.white);
 
 									for (int l = 0; l < handler.getOBXCommentCount(j, k); l++) {
 	
+										cell.setPhrase(new Phrase("",font));
+										cell.setColspan(1);
+										table.addCell(cell);
+										
+										if(handler.getMsgType().equals("ExcellerisON")) { 
+											cell.setColspan(8);
+										} else {
+											cell.setColspan(7);
+										}
 										cell.setPhrase(new Phrase(handler.getOBXComment(j, k, l).replaceAll("<br\\s*/*>", "\n"), font));
 										table.addCell(cell);
 	
@@ -655,7 +806,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 							cell.setColspan(1);
 							
 							if (handler.getOBXCommentCount(j, k) > 0) {
-
+								cell.setBorder(Rectangle.BOTTOM);
 								cell.setColspan(7);
 
 								for (int l = 0; l < handler.getOBXCommentCount(
@@ -675,7 +826,11 @@ public class LabPDFCreator extends PdfPageEventHelper{
 					} else {
 						if (handler.getOBXCommentCount(j, k) > 0) {
 
-							cell.setColspan(7);
+							if(handler.getMsgType().equals("ExcellerisON")) { 
+								cell.setColspan(8);
+							} else {
+								cell.setColspan(7);
+							}
 
 							for (int l = 0; l < handler
 									.getOBXCommentCount(j, k); l++) {
@@ -695,7 +850,11 @@ public class LabPDFCreator extends PdfPageEventHelper{
 			if (!handler.getMsgType().equals("PFHT")) {
 				// add obr comments
 				if (handler.getObservationHeader(j, 0).equals(header)) {
-					cell.setColspan(7);
+					if(handler.getMsgType().equals("ExcellerisON")) { 
+						cell.setColspan(8);
+					} else {
+						cell.setColspan(7);
+					}
 					// cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 					for (int k = 0; k < handler.getOBRCommentCount(j); k++) {
 						// the obrName should only be set if it has not been
@@ -799,7 +958,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
         pInfoTable.addCell(cell);
         cell.setPhrase(new Phrase(handler.getHealthNum(), font));
         pInfoTable.addCell(cell);
-        cell.setPhrase(new Phrase("Patient Location: ", boldFont));
+        cell.setPhrase(new Phrase(handler.getMsgType().equals("ExcellerisON")?"Reported by: ":"Patient Location: ", boldFont));
         pInfoTable.addCell(cell);
         cell.setPhrase(new Phrase(handler.getPatientLocation(), font));
         pInfoTable.addCell(cell);
@@ -820,7 +979,9 @@ public class LabPDFCreator extends PdfPageEventHelper{
         	cell.setPhrase(new Phrase((handler.getOrderStatus().equals("F") ? "Final" : (handler.getOrderStatus().equals("C") ? "Corrected" : "Preliminary")), font));
         	rInfoTable.addCell(cell);
         }else{
-        cell.setPhrase(new Phrase((handler.getOrderStatus().equals("F") ? "Final" : (handler.getOrderStatus().equals("C") ? "Corrected" : "Partial")), font));
+        	//(  handler.getOrderStatus().equals("X") ? "DELETED": handler.getOrderStatus())
+        	
+        cell.setPhrase(new Phrase((handler.getOrderStatus().equals("F") ? "Final" : (handler.getOrderStatus().equals("C") ? "Corrected" :  handler.getOrderStatus().equals("P") ? "Partial": handler.getOrderStatus().equals("X") ? "DELETED": handler.getOrderStatus())), font));
         rInfoTable.addCell(cell);}
         cell.setPhrase(new Phrase("Client Ref. #: ", boldFont));
         rInfoTable.addCell(cell);
@@ -830,6 +991,12 @@ public class LabPDFCreator extends PdfPageEventHelper{
         rInfoTable.addCell(cell);
         cell.setPhrase(new Phrase(handler.getAccessionNum(), font));
         rInfoTable.addCell(cell);
+        if(handler.getMsgType().equals("ExcellerisON") && !((ExcellerisOntarioHandler)handler).getAlternativePatientIdentifier().isEmpty()) {
+        	cell.setPhrase(new Phrase("Reference #: ", boldFont));
+            rInfoTable.addCell(cell);
+            cell.setPhrase(new Phrase(((ExcellerisOntarioHandler)handler).getAlternativePatientIdentifier(), font));
+            rInfoTable.addCell(cell);
+        }
 
         //Create client table
         float[] clientWidths = {2f, 3f};
@@ -915,7 +1082,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
         patientInfo.add(clientPhrase);
         
         clientPhrase = new Phrase();
-        clientPhrase.add(new Chunk("Patient Location: ", boldFont));
+        clientPhrase.add(new Chunk(handler.getMsgType().equals("ExcellerisON")?"Reported by: ":"Patient Location: ", boldFont));
         clientPhrase.add(new Chunk(handler.getPatientLocation()+"\n", font));
         patientInfo.add(clientPhrase);
         
