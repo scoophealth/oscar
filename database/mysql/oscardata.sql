@@ -2889,4 +2889,4 @@ INSERT INTO `OscarJob` VALUES (null,'OSCAR Message Review','',(select id from Os
 
 INSERT INTO  `secObjectName` (`objectName`) VALUES ('_caisi.documentationWarning ') ON DUPLICATE KEY UPDATE objectName='_caisi.documentationWarning ' ;
 
-
+insert into `secObjectName` (`objectName`) values ('_admin.auditLogPurge');
