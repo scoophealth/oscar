@@ -92,9 +92,14 @@ public class DocumentUploadAction extends DispatchAction {
 
                         } else
                         {
-                            writeToIncomingDocs(docFile, queueId, destFolder, fileName);
-                            map.put("name", docFile.getFileName());
-                            map.put("size", docFile.getFileSize());
+                            boolean success = writeToIncomingDocs(docFile, queueId, destFolder, fileName);
+                            if(!success) {
+                            	map.put("error", "Failed to write file. Please contact administrator");
+                            	MiscUtils.getLogger().error("Failed to write file to " + destFolder);
+                            } else {
+                            	map.put("name", docFile.getFileName());
+                            	map.put("size", docFile.getFileSize());
+                            }
                         }
                         request.getSession().setAttribute("preferredQueue", queueId);
                         if (docFile != null) {
@@ -219,7 +224,13 @@ public class DocumentUploadAction extends DispatchAction {
 				fos.close();
 		}
 	}
-        private void writeToIncomingDocs(FormFile docFile, String queueId, String PdfDir, String fileName) throws Exception {
+        private boolean writeToIncomingDocs(FormFile docFile, String queueId, String PdfDir, String fileName) throws Exception {
+        	
+        String parentPath = IncomingDocUtil.getIncomingDocumentFilePath(queueId,PdfDir);
+        if(!new File(parentPath).exists()) {
+        	return false;
+        }
+        	
 		InputStream fis = null;
 		FileOutputStream fos = null;
 		try {
@@ -229,6 +240,7 @@ public class DocumentUploadAction extends DispatchAction {
                         IOUtils.copy(fis, fos);
 		} catch (Exception e) {
 			logger.debug(e.toString());
+			return false;
 		} finally {
 			if (fis != null)
                         {
@@ -239,6 +251,7 @@ public class DocumentUploadAction extends DispatchAction {
 				fos.close();
                         }
 		}
+		return true;
 	}
 
         public ActionForward setUploadDestination(ActionMapping mapping, ActionForm form, HttpServletRequest request,

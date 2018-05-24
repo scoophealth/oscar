@@ -1,0 +1,3 @@
+## OptionalFHIRAttribute 
+patient.workPhone=false
+patient.namePrefix=false

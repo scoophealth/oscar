@@ -28,13 +28,15 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
 
+import org.oscarehr.util.MiscUtils;
+
 /**
  * This is the object class that relates to the provider table. Any customizations belong here.
  */
-public class Provider implements Serializable, Comparable<Provider>{
+public class Provider extends AbstractModel<String> implements Comparable<Provider> {
 
 	public static final String SYSTEM_PROVIDER_NO = "-1";
-
+	private int hashCode = Integer.MIN_VALUE;// primary key
 	private String providerNo;
 	private String comments;
 	private String phone;
@@ -60,6 +62,7 @@ public class Provider implements Serializable, Comparable<Provider>{
 	private String rmaNo;
     private Date SignedConfidentiality;
     private String practitionerNo;
+    private String practitionerNoType;
     private String email;
     private String title;
     private String lastUpdateUser;
@@ -72,6 +75,15 @@ public class Provider implements Serializable, Comparable<Provider>{
 
 	public void setPractitionerNo(String practitionerNo) {
 		this.practitionerNo = practitionerNo;
+	}
+
+	
+	public String getPractitionerNoType() {
+		return practitionerNoType;
+	}
+
+	public void setPractitionerNoType(String practitionerNoType) {
+		this.practitionerNoType = practitionerNoType;
 	}
 
 	// constructors
@@ -119,6 +131,7 @@ public class Provider implements Serializable, Comparable<Provider>{
 		rmaNo = provider.rmaNo;
 		SignedConfidentiality = provider.SignedConfidentiality;
 		practitionerNo = provider.practitionerNo;
+		practitionerNoType = provider.practitionerNoType;
 		email = provider.email;
 		title = provider.title;
 		lastUpdateUser = provider.lastUpdateUser;
@@ -141,6 +154,7 @@ public class Provider implements Serializable, Comparable<Provider>{
 
 	public void setProviderNo(String providerNo) {
 		this.providerNo = providerNo;
+		this.hashCode = Integer.MIN_VALUE;
 	}
 
 	public String getComments() {
@@ -333,18 +347,33 @@ public class Provider implements Serializable, Comparable<Provider>{
 		return new ComparatorName();
 	}
 
-	public boolean equals(Provider provider) {
-		try {
-			return (providerNo.equals(provider.providerNo));
-		} catch (Exception e) {
-			return (false);
-		}
-	}
-
 	@Override
-    public int hashCode() {
-		if (providerNo==null) return(super.hashCode());
-		else return(providerNo.hashCode());
+	public boolean equals( Object provider ) {
+		
+		if( this.getProviderNo() == null ) {
+			// do nothing, warn everyone.
+			MiscUtils.getLogger().warn( OBJECT_NOT_YET_PERISTED, new Exception() );
+		}
+		
+		return ( provider != null
+				&& provider instanceof Provider
+				&& this.getProviderNo() != null 
+				&& this.getProviderNo().equals( ( (Provider) provider ).providerNo ) ); 
+
+	}
+	
+	@Override
+	public int hashCode() {
+		if ( Integer.MIN_VALUE == this.hashCode ) {			
+			if ( null == this.getProviderNo() ) {
+				// do nothing, warn everyone.
+				MiscUtils.getLogger().warn(OBJECT_NOT_YET_PERISTED, new Exception());
+			} else {
+				String hashStr = this.getClass().getName() + ":" + this.getProviderNo().hashCode();
+				this.hashCode = hashStr.hashCode();
+			}			
+		}
+		return this.hashCode;
 	}
 
 	public class ComparatorName implements Comparator<Provider>, Serializable {
@@ -363,5 +392,10 @@ public class Provider implements Serializable, Comparable<Provider>{
 		if (providerNo==null) return(0);
 	    return(providerNo.compareTo(o.providerNo));
     }
+
+	@Override
+	public String getId() {
+		return providerNo;
+	}
 
 }

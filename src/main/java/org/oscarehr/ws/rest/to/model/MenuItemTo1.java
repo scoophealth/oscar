@@ -37,6 +37,7 @@ public class MenuItemTo1 implements Serializable {
     private String label;
     private String extra;
     private String url;
+    private String newWindowName = null;
     private String state;
     private List<MenuItemTo1> dropdownItems;
     private Boolean dropdown = false;
@@ -113,5 +114,13 @@ public class MenuItemTo1 implements Serializable {
 	public void setDropdown(Boolean dropdown) {
 	    this.dropdown = dropdown;
     }
+
+	public String getNewWindowName() {
+		return newWindowName;
+	}
+
+	public void setNewWindowName(String newWindowName) {
+		this.newWindowName = newWindowName;
+	}
 
 }

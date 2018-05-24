@@ -195,7 +195,7 @@ public class BillingSaveBillingAction extends Action {
 
         ActionForward af = mapping.findForward("success");
         if (frm.getSubmit().equals("Another Bill")) {
-            bean.setBillForm("GP");   //Todo: is this what this should be?
+            bean.setBillForm( OscarProperties.getInstance().getProperty("default_view", "GP") );
             af = mapping.findForward("anotherBill");
 
         } else if (frm.getSubmit().equals("Save & Print Receipt")) {
@@ -311,7 +311,25 @@ public class BillingSaveBillingAction extends Action {
     }
     private Billingmaster saveBill(String billingid, String billingAccountStatus, String dataCenterId, String billedAmount, String paymentMode, BillingSessionBean bean, String billingUnit,String serviceCode) {
         Billingmaster bill = new Billingmaster();
+        
+        String timeCall = bean.getTimeCall();
+        String startTime = bean.getStartTime();
+        String endTime = bean.getEndTime();
+        
+        if( timeCall != null && timeCall.contains(":") ) {
+        	timeCall = timeCall.replace(":", "");
+        }
+        
+        if( startTime != null && startTime.contains(":") ) {
+        	startTime = startTime.replace(":", "");
+        }
+        
+        if( endTime != null && endTime.contains(":") ) {
+        	endTime = endTime.replace(":", "");
+        }
 
+        log.debug("Time Call: " + timeCall + " Start Time: " + startTime + " End Time: " + endTime );
+        
         bill.setBillingNo(Integer.parseInt(billingid));
         bill.setCreatedate(new Date());
         bill.setBillingstatus(billingAccountStatus);
@@ -352,9 +370,11 @@ public class BillingSaveBillingAction extends Action {
         bill.setReferralNo1(bean.getReferral1());
         bill.setReferralFlag2(bean.getReferType2());
         bill.setReferralNo2(bean.getReferral2());
-        bill.setTimeCall(bean.getTimeCall());
-        bill.setServiceStartTime(bean.getStartTime());
-        bill.setServiceEndTime(bean.getEndTime());
+        
+        bill.setTimeCall( timeCall );
+        bill.setServiceStartTime( startTime );
+        bill.setServiceEndTime( endTime );
+        
         bill.setBirthDate(convertDate8Char(bean.getPatientDoB()));
         bill.setOfficeNumber("");
         bill.setCorrespondenceCode(bean.getCorrespondenceCode());

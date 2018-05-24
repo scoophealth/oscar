@@ -23,6 +23,10 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.common.model.LookupListItem"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.common.model.LookupList"%>
+<%@page import="org.oscarehr.managers.LookupListManager"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi"%>
@@ -109,6 +113,33 @@ jQuery(document).ready( function() {
  ); 
 
 //-->
+
+function onsub() {
+  if(document.updatearecord.provider_no.value=="" ||
+		     document.updatearecord.last_name.value=="" ||
+			 document.updatearecord.first_name.value=="" ||
+		     document.updatearecord.provider_type.value==""  ) {
+		     alert("<bean:message key="global.msgInputKeyword"/>");
+		     return false;
+		  }
+		  
+		  
+		  if(document.updatearecord.practitionerNo.value != "") {
+			  var val = document.updatearecord.practitionerNoType.options[document.updatearecord.practitionerNoType.selectedIndex].value;
+			  if(val == "") {
+				  alert("Please choose a CPSID Type");
+				  return false;
+			  } 
+		  }
+		  if(!(document.updatearecord.provider_no.value=="-new-" || document.updatearecord.provider_no.value.match(/^[1-9]\d*$/))){
+		  		alert("Provider No. must be a number.");
+		  		return false;
+		  }
+		  else {
+		    	return true;
+		  }
+}
+
 </script>
 </head>
 
@@ -142,7 +173,7 @@ jQuery(document).ready( function() {
 	</tr>
 </table>
 
-<form method="post" action="providerupdate.jsp" name="updatearecord">
+<form method="post" action="providerupdate.jsp" name="updatearecord" onsubmit="return onsub()">
 
 <%
 	String keyword = request.getParameter("keyword");
@@ -402,6 +433,39 @@ for (int i=0; i<sites.size(); i++) {
 				value="<%= SxmlMisc.getXmlContent(provider.getComments(),"xml_p_billinggroup_no")==null ? "" : SxmlMisc.getXmlContent(provider.getComments(),"xml_p_billinggroup_no") %>"
 				datafld='xml_p_billinggroup_no'></td>
 		</tr>
+		<tr>
+			<td align="right"><bean:message key="admin.provider.formCPSIDType" />:
+			</td>
+			<td>
+				<select name="practitionerNoType" id="practitionerNoType">
+					<option value="">Select Below</option>
+					<%
+						LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
+						LookupList ll = lookupListManager.findLookupListByName(LoggedInInfo.getLoggedInInfoFromSession(request), "practitionerNoType");
+						
+						if(ll != null) {
+							for(LookupListItem llItem : ll.getItems()) {
+								String selected="";
+								if(provider.getPractitionerNoType().equals(llItem.getValue())) {
+									selected = " selected=\"selected\" ";
+								}
+								%>
+									
+									<option value="<%=llItem.getValue()%>" <%=selected %>><%=llItem.getLabel()%></option>
+								<%
+							}
+						} else {
+							%>
+							
+							<option value="" >None Available</option>
+						<%
+						}
+					
+					%>
+				</select>
+				
+			</td>
+		</tr>		
 		<tr>
 			<td align="right"><bean:message key="admin.provider.formCPSID" />:
 			</td>

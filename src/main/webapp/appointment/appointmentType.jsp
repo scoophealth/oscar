@@ -17,6 +17,7 @@
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 --%>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*, oscar.appt.*, org.oscarehr.common.dao.AppointmentTypeDao, org.oscarehr.common.model.AppointmentType, org.oscarehr.util.SpringUtils" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%
@@ -39,7 +40,7 @@ var names = '';
 		loc = loc + '<%= types.get(j).getLocation() %>'+',';
 		notes = notes + '<%= types.get(j).getNotes() %>'+',';
 		resources = resources + '<%= types.get(j).getResources() %>'+',';
-		names = names + '<%= types.get(j).getName() %>'+',';
+		names = names + '<%=StringEscapeUtils.escapeJavaScript(types.get(j).getName()) %>'+',';
 <%   } %>
 	var durArray = dur.split(",");
 	var reasonArray = reason.split(",");

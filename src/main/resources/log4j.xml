@@ -28,6 +28,7 @@
 		</layout>
 	</appender>
 	
+
 	<!-- Example gmail appender (can be used for any smtp ssl) -->
 	<!-- 
 	<appender name="GMAIL" class="org.oscarehr.util.Log4JGmailErrorAppender">
@@ -66,7 +67,7 @@
 	</category>
 
 	<category name="org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorUpdateTask" additivity="false">
-		<level value="DEBUG" />
+		<level value="INFO" />
 		<appender-ref ref="INTEGRATOR_FILE" />
 	</category>
 	

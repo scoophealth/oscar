@@ -79,7 +79,8 @@ public class EctViewConsultationRequestsUtil {
       apptDate = new Vector<String>();
       followUpDate = new Vector<String>();
       boolean verdict = true;
-
+      consultProvider = new Vector();
+      
       try {
           ConsultationRequestDao consultReqDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
           DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
@@ -153,6 +154,9 @@ public class EctViewConsultationRequestsUtil {
               else {
                 followUpDate.add(DateFormatUtils.ISO_DATE_FORMAT.format(date1));
               }
+              
+              Provider cProv = providerDao.getProvider(consult.getProviderNo());
+              consultProvider.add(cProv);
           }
       } catch(Exception e) {            
          MiscUtils.getLogger().error("Error", e);            
@@ -172,6 +176,8 @@ public class EctViewConsultationRequestsUtil {
       this.patientWillBook = new Vector<String>();
       urgency = new Vector<String>();
       apptDate = new Vector<String>();
+      consultProvider = new Vector();
+      
       boolean verdict = true;      
       try {                           
 
@@ -209,6 +215,9 @@ public class EctViewConsultationRequestsUtil {
               urgency.add(consult.getUrgency());
               patientWillBook.add(""+consult.isPatientWillBook());
               date.add(DateFormatUtils.ISO_DATE_FORMAT.format(consult.getReferralDate()));
+              
+              Provider cProv = providerDao.getProvider(consult.getProviderNo());
+              consultProvider.add(cProv);
           }
       } catch(Exception e) {         
          MiscUtils.getLogger().error("Error", e);         
@@ -233,5 +242,5 @@ public class EctViewConsultationRequestsUtil {
    public Vector<String> followUpDate;
    public Vector<String> providerNo;   
    public Vector<String> siteName;
-   
+   public Vector consultProvider;
 }

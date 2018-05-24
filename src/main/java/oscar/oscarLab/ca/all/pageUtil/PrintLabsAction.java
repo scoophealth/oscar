@@ -32,6 +32,8 @@
 
 package oscar.oscarLab.ca.all.pageUtil;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,10 +48,12 @@ import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
+import com.lowagie.text.DocumentException;
+
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
-
-import com.lowagie.text.DocumentException;
 
 /**
  *
@@ -70,6 +74,8 @@ public class PrintLabsAction extends Action{
 			throw new SecurityException("missing required security object (_lab)");
 		}
     	
+    	LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, request.getParameter("segmentID"), request.getRemoteAddr(),"");
+    	 
         try {
             MessageHandler handler = Factory.getHandler(request.getParameter("segmentID"));
             if(handler.getHeaders().get(0).equals("CELLPATHR")){//if it is a VIHA RTF lab
@@ -80,8 +86,13 @@ public class PrintLabsAction extends Action{
             } else {
 	            response.setContentType("application/pdf");  //octet-stream
 	            response.setHeader("Content-Disposition", "attachment; filename=\""+handler.getPatientName().replaceAll("\\s", "_")+"_LabReport.pdf\"");
-	            LabPDFCreator pdf = new LabPDFCreator(request, response.getOutputStream());
+	            
+	            //first write to a file
+	            File f = File.createTempFile(request.getParameter("segmentID"),"pdf");
+	            FileOutputStream fos = new FileOutputStream(f);
+	            LabPDFCreator pdf = new LabPDFCreator(request,fos);
 	            pdf.printPdf();
+	            pdf.addEmbeddedDocuments(f,response.getOutputStream());
             }
         }catch(DocumentException de) {
             logger.error("DocumentException occured insided PrintLabsAction", de);

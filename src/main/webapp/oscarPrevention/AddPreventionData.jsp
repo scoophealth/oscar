@@ -24,6 +24,13 @@
 
 --%>
 
+<%@page import="org.oscarehr.common.model.CVCMapping"%>
+<%@page import="org.oscarehr.common.dao.CVCImmunizationDao"%>
+<%@page import="org.oscarehr.common.dao.CVCMappingDao"%>
+<%@page import="org.oscarehr.common.model.CVCMedicationLotNumber"%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="org.oscarehr.common.model.CVCImmunization"%>
+<%@page import="org.oscarehr.managers.CanadianVaccineCatalogueManager"%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@page import="oscar.oscarProvider.data.ProviderData"%>
 <%@ page import="oscar.oscarDemographic.data.DemographicData,java.text.SimpleDateFormat, java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*"%>
@@ -54,10 +61,15 @@ if(!authed) {
 
 <%
   DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
-      		
+  CanadianVaccineCatalogueManager cvcManager = SpringUtils.getBean(CanadianVaccineCatalogueManager.class);
+  CVCMappingDao cvcMappingDao = SpringUtils.getBean(CVCMappingDao.class);
+  CVCImmunizationDao cvcImmunizationDao = SpringUtils.getBean(CVCImmunizationDao.class);
+  
+   LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+  
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
-  //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
   String demographic_no = request.getParameter("demographic_no");
+  String snomedId = request.getParameter("snomedId");
   String id = request.getParameter("id");
   Map<String,Object> existingPrevention = null;
 
@@ -71,11 +83,15 @@ if(!authed) {
   String summary = "";
   String creatorProviderNo = "";
   String creatorName = "";
+  String expiryDate = "";
+  
   boolean never = false;
   Map<String,String> extraData = new HashMap<String,String>();
 	boolean hasImportExtra = false;
 	String annotation_display = CaseManagementNoteLink.DISP_PREV;
 
+	
+	
   if (id != null){
 
      existingPrevention = PreventionData.getPreventionById(id);
@@ -85,10 +101,8 @@ if(!authed) {
      provider = (String) existingPrevention.get("provider_no");
      creatorProviderNo = (String) existingPrevention.get("creator");
      
-     if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("1") ){
-        completed = "1";
-     }else if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("2") ){
-        completed = "2";
+     if ( existingPrevention.get("refused") != null ){
+        completed = (String)existingPrevention.get("refused");
      }
      if ( existingPrevention.get("never") != null && ((String)existingPrevention.get("never")).equals("1") ){
         never = true;
@@ -100,28 +114,84 @@ if(!authed) {
      summary = (String) existingPrevention.get("summary");
      extraData = PreventionData.getPreventionKeyValues(id);
      lot = (String) extraData.get("lot");
-     
+     expiryDate = (String) extraData.get("expiryDate");
 	CaseManagementManager cmm = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
 	List<CaseManagementNoteLink> cml = cmm.getLinkByTableId(CaseManagementNoteLink.PREVENTIONS, Long.valueOf(id));
 	hasImportExtra = (cml.size()>0);
+	 snomedId = (String) existingPrevention.get("snomedId");
+	
   }
 
   String prevention = request.getParameter("prevention");
   if (prevention == null && existingPrevention != null){
       prevention = (String) existingPrevention.get("preventionType");
   }
+  
+ 
 
   PreventionsLotNrsDao PreventionsLotNrsDao = (PreventionsLotNrsDao)SpringUtils.getBean(PreventionsLotNrsDao.class);
   List<String> lotNrList = PreventionsLotNrsDao.findLotNrs(prevention, false);
   
   String prevResultDesc = request.getParameter("prevResultDesc");
 
+  String errorsToShow = "";
+  boolean foundByLotNumber = false;
+  CVCImmunization brandName = null;
+  CVCImmunization generic = null;
+  
+  String addByLotNbr = request.getParameter("lotNumber");
+  if(StringUtils.isNotEmpty(addByLotNbr)) {
+	  CVCMedicationLotNumber medLot =  cvcManager.findByLotNumber(loggedInInfo, addByLotNbr);
+	  if(medLot != null) {
+		  String snomedCodeForMedication = medLot.getMedication().getSnomedCode();
+		  brandName = cvcManager.getBrandNameImmunizationBySnomedCode(loggedInInfo,snomedCodeForMedication);
+		  generic = cvcManager.getBrandNameImmunizationBySnomedCode(loggedInInfo, brandName.getParentConceptId());
+		  //Is there an OSCAR mapping for the prevention type
+		  CVCMapping mapping1 = cvcMappingDao.findBySnomedId(generic.getSnomedConceptId());
+		  if(mapping1 != null) {
+			prevention = mapping1.getOscarName();  
+		  } else {
+		  	prevention = generic.getPicklistName();
+		  }
+		  snomedId = generic.getSnomedConceptId();
+		  foundByLotNumber = true;
+	  } else {
+		  errorsToShow="Could not find this lot number in the system.";
+	  }
+  }
+  
+  String addByLotNbr2 = request.getParameter("search");
+  if(StringUtils.isNotEmpty(addByLotNbr2)) {
+	  String brandSnomedId = request.getParameter("brandSnomedId");
+	  
+	  generic = cvcManager.getBrandNameImmunizationBySnomedCode(loggedInInfo, snomedId);
+	  if(generic != null) {
+	  	brandName = cvcManager.getBrandNameImmunizationBySnomedCode(loggedInInfo, brandSnomedId);
+	  	prevention = generic.getPicklistName();
+	  	CVCMapping mapping1 = cvcMappingDao.findBySnomedId(generic.getSnomedConceptId());
+		  if(mapping1 != null) {
+			prevention = mapping1.getOscarName();  
+		  } else {
+		  	prevention = generic.getPicklistName();
+		  }
+	  	foundByLotNumber = true;
+	  } else {
+		  errorsToShow="Could not find this prevention in the system.";
+	  }
+  }
+  
+  boolean isCvc = false;
+	isCvc = snomedId != null;
+  
   PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
   HashMap<String,String> prevHash = pdc.getPrevention(prevention);
 
-  String layoutType = prevHash.get("layout");
-  if ( layoutType == null){
-      layoutType = "default";
+  String layoutType = "default";
+  if(prevHash != null) {
+	  layoutType = prevHash.get("layout");
+	  if ( layoutType == null){
+	      layoutType = "default";
+	  }
   }
 
   List<Map<String, String>>  providers = ProviderData.getProviderList();
@@ -162,6 +232,7 @@ if(!authed) {
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
 
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="../share/calendar/calendar.js" ></script>
 <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>
 <script type="text/javascript" src="../share/calendar/calendar-setup.js" ></script>
@@ -185,6 +256,8 @@ if(!authed) {
 </style>
 
 <SCRIPT LANGUAGE="JavaScript">
+
+var isCvc = <%=isCvc%>;
 
 function showHideItem(id){
     if(document.getElementById(id).style.display == 'none')
@@ -219,6 +292,7 @@ function disableifchecked(ele,nextDate){
        document.getElementById(nextDate).disabled = false;
     }
 }
+
 </SCRIPT>
 
 <style type="text/css">
@@ -382,6 +456,15 @@ clear: left;
 
 var warnOnWindowClose=true;
 
+function copyLot() {
+	
+	var cvcName = $("#cvcName option:selected").val();
+	if(cvcName !== undefined && cvcName != -1 && $("#cvcLot").is(":visible")) {
+		$("#lot").val($("#cvcLot").val());
+		$("#name").val($("#cvcName option:selected").text());	
+	}
+}
+
 function cancelCloseWarning(){
 warnOnWindowClose=false;
 }
@@ -393,6 +476,98 @@ function displayCloseWarning(){
 		return 'Are you sure you want to close this window?';
 	}
 }
+
+//{"lotNumber":"M042476","expiryDate":{"date":22,"day":5,"hours":0,"minutes":0,"month":2,"nanos":0,"seconds":0,"time":1553227200000,"timezoneOffset":240,"year":119}}
+
+var lots;
+var startup = false, startup2 = false;
+
+function changeCVCName() {
+	lots = null;
+	
+	 var snomedId = $("#cvcName").val();
+	 if(snomedId == "-1") {
+		 $("#lot").show();
+		 $("#cvcLot").hide();
+		 $("#expiryDate").val('');
+		 $("#unknownName").show();
+	 } else if(snomedId == "0") {
+		 $("#name").show();
+	 } else {
+		 $("#unknownName").hide();
+		 $.ajax({
+             type: "POST",
+             url: "<%=request.getContextPath()%>/cvc.do",
+             data: { method : "getLotNumberAndExpiryDates", snomedConceptId: snomedId},
+             dataType: 'json',
+             success: function(data,textStatus) {
+            	 if(data != null && data instanceof Array && data.length > 0) {
+            		 $("#lot").hide();
+            		 $("#cvcLot").show();
+            		 $("#cvcLot").find("option").remove().end();
+            		 
+            		 $("#cvcLot").append('<option value=""></option>');
+         			
+            		 for(var x=0;x<data.length;x++) {
+            			 var item = data[x];
+            			 //console.log(JSON.stringify(item));
+            			 var d = new Date(data[x].expiryDate.time);
+            			// console.log(d);
+            			var month = ((d.getMonth()+1) > 9) ? (d.getMonth()+1) : ("0" + (d.getMonth()+1));
+            			var day = ((d.getDate()) > 9) ? (d.getDate()) : ("0" + (d.getDate()));
+            			var output = d.getFullYear() + "-" + month + "-" + day;
+            			 
+            			
+            			if(startup2 && item.lotNumber == '<%=addByLotNbr %>') {
+            				$("#cvcLot").append('<option selected="selected" value="'+item.lotNumber+'" expiryDate="'+output+'">'+item.lotNumber+'</option>');
+            				startup2=false;
+            			} else if(startup && item.lotNumber == '<%=(existingPrevention != null)?existingPrevention.get("lot"):"" %>') {
+            				$("#cvcLot").append('<option selected="selected" value="'+item.lotNumber+'" expiryDate="'+output+'">'+item.lotNumber+'</option>');
+            				startup=false;
+            			} else {
+            				$("#cvcLot").append('<option value="'+item.lotNumber+'" expiryDate="'+output+'">'+item.lotNumber+'</option>');
+            			}
+            			updateCvcLot();        			 
+            		 }            		 
+            	 } else {
+            		 $("#cvcLot").hide();
+            		 $("#cvcLot").find("option").remove().end();
+            		 
+            		// $("#lot").val('');
+            		 $("#lot").show();
+            	 }
+             }
+          });
+	 }
+}
+
+function updateCvcLot() {
+	var lotNumber = $("#cvcLot").find(":selected");
+	$("#expiryDate").val(lotNumber.attr('expiryDate'));
+}
+
+
+<%
+	if(foundByLotNumber) {
+%>
+	$(document).ready(function(){
+		startup2=true;
+		changeCVCName();
+	});
+	
+<%
+	}
+%>
+
+
+<% if(existingPrevention != null && snomedId != null && existingPrevention.get("brandSnomedId") != null) { %>
+$(document).ready(function(){
+	startup = true;
+	$("#cvcName").val('<%=existingPrevention.get("brandSnomedId")%>');
+	changeCVCName();
+});
+<% } %>
+
 </script>
 </head>
 
@@ -439,12 +614,19 @@ function displayCloseWarning(){
 -->
             </td>
             <td valign="top" class="MainTableRightColumn">
-               <html:form action="/oscarPrevention/AddPrevention" onsubmit="return cancelCloseWarning()">
+            <% if(prevHash == null) { %>
+            	<h3 style="color:red">Prevention not found!</h3>
+            <%} else { %>
+               <html:form action="/oscarPrevention/AddPrevention" onsubmit="copyLot();return cancelCloseWarning()">
                <input type="hidden" name="prevention" value="<%=prevention%>"/>
                <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>
+               <%if(snomedId != null) {%>
+               	<input type="hidden" name="snomedId" value="<%=snomedId %>" />
+               <%} %>
                <% if ( id != null ) { %>
                <input type="hidden" name="id" value="<%=id%>"/>
                <input type="hidden" name="layoutType" value="<%=layoutType%>"/>
+               
 	       <div class="prevention">
 		   <fieldset>
 		       <legend>Summary</legend>
@@ -460,12 +642,14 @@ function displayCloseWarning(){
                <div class="prevention">
                    <fieldset>
                       <legend>Prevention : <%=prevention%></legend>
-                         <div style="float:left;">
+                         <div>
                             <input name="given" type="radio" value="given"      <%=checked(completed,"0")%>>Completed</input><br/>
+                            <input name="given" type="radio" value="given_ext"  <%=checked(completed,"3")%>>Completed externally</input><br/>
                             <input name="given" type="radio" value="refused"    <%=checked(completed,"1")%>>Refused</input><br/>
                             <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input>
                          </div>
-                         <div style="float:left;margin-left:30px;">
+                         <div>&nbsp;</div>
+                         <div style="margin-left:30px;">
                             <label for="prevDate" class="fields" >Date:</label>    <input readonly='readonly' type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="15" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
                             <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName" value="<%=providerName%>"/>
                                   <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
@@ -481,10 +665,55 @@ function displayCloseWarning(){
                    </fieldset>
                    <fieldset >
                       <legend >Result</legend>
-             			 <label for="name">Name:</label> <input type="text" name="name" value="<%=str((extraData.get("name")),"")%>"/> <br/>
-                         <label for="location">Location:</label> <input type="text" name="location" value="<%=str((extraData.get("location")),"")%>"/> <br/>
+             			 
+             			 <%if(snomedId != null) {
+             				List<CVCImmunization> tnList = cvcManager.getImmunizationsByParent(snomedId);
+             				if(tnList != null && tnList.size() > 0) {
+             					%>
+             				
+             					<label for="cvcName">Trade Name:</label> 
+   	             			 <select id="cvcName" name="cvcName" onChange="changeCVCName()">
+   	             			 	<option value="-1">Select Below</option>
+   	             			 	<%
+   	             			 		//get the tradenames associated with this generic
+   	             			 		for(CVCImmunization tn:tnList) {
+   	             			 			String selected = "";
+   	             						if(existingPrevention != null) {
+   		             			 			String brandSnomedId = (String) existingPrevention.get("brandSnomedId");	
+   		             			 			if(brandSnomedId != null && brandSnomedId.equals(tn.getSnomedConceptId())) {
+   		             			 				selected = "selected=\"selected\"";
+   		             			 			}
+   	             						}
+   	             						if(foundByLotNumber) {
+   		             			 			String brandSnomedId = brandName.getSnomedConceptId();
+   		             			 			if(brandSnomedId != null && brandSnomedId.equals(tn.getSnomedConceptId())) {
+   		             			 				selected = "selected=\"selected\"";
+   		             			 			}
+   	             						}
+   	             			 			%><option value="<%=tn.getSnomedConceptId()%>" <%=selected%>><%=tn.getDisplayName() %></option><%
+   	             			 		}
+   	             			 	%>
+   	             		
+   	             			 </select>
+   	             			 
+   	             			 <br/>	
+   	             				 <span id="unknownName" style="display:block"><label for="name">Name</label> <input type="text" id="name" name="name" value="<%=str((extraData.get("name")),"")%>"/> <br/><br/></span>
+             		<%			
+             				} else {
+             					%>  <label for="name">Name:</label> <input type="text" id="name" name="name" value="<%=str((extraData.get("name")),"")%>"/> <br/> <%
+             				}
+                        
+             			 } else {
+             			 	%>  <label for="name">Name:</label> <input type="text" id="name" name="name" value="<%=str((extraData.get("name")),prevention)%>"/> <br/>
+             			 
+             			<% } %> 
+             			 
+             			 
+             			 
+             			 <label for="location">Location:</label> <input type="text" name="location" value="<%=str((extraData.get("location")),"")%>"/> <br/>
                          <label for="route">Route:</label> <input type="text" name="route"   value="<%=str((extraData.get("route")),"")%>"/><br/>
                          <label for="dose">Dose:</label> <input type="text" name="dose"  value="<%=str((extraData.get("dose")),"")%>"/><br/>
+                        <%if(!isCvc) { %>
                          <label for="lot">Lot:</label>  <input type="text" name="lot" id="lot" value="<%=str(lot,"")%>" />
                         <select onchange="javascript:updateLotNr(this);" id="lotDrop" name="lotItem" >
                              <%for(String lotnr:lotNrList) {
@@ -493,6 +722,16 @@ function displayCloseWarning(){
                              <%}%>
                              <option value="-1"  >Other</option>
                          </select><br/>
+                         <%} else { %>
+                         <div id="cvcLotDiv">
+                         <label for="cvcLot">Lot:</label> 
+                          <input type="text" name="lot" id="lot" value="<%=str(lot,"")%>" style="display:block" />
+                          
+                         <select onchange="javascript:updateCvcLot();" id="cvcLot" name="cvcLot" style="display:none;">
+                             
+                         </select></div>
+                         <label for="expiryDate">Expiry Date:</label> <input type="text" name="expiryDate" id="expiryDate"  value="<%=str((extraData.get("expiryDate")),"")%>"/><br/>
+                         <% } %>
                          <label for="manufacture">Manufacture:</label> <input type="text" name="manufacture" id="manufacture"  value="<%=str((extraData.get("manufacture")),"")%>"/><br/>
                    </fieldset>
                    <fieldset >
@@ -510,12 +749,14 @@ function displayCloseWarning(){
                <div class="prevention">
                    <fieldset>
                       <legend>Prevention : <%=prevention%></legend>
-                         <div style="float:left;">
+                         <div>
                             <input name="given" type="radio" value="given"      <%=checked(completed,"0")%>>Completed</input><br/>
+                            <input name="given" type="radio" value="given_ext"  <%=checked(completed,"3")%>>Completed externally</input><br/>
                             <input name="given" type="radio" value="refused"    <%=checked(completed,"1")%>>Refused</input><br/>
                             <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input>
                          </div>
-                         <div style="float:left;margin-left:30px;">
+                         <div>&nbsp;</div>
+                         <div style="margin-left:30px;">
                             <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
                             <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName" value="<%=providerName%>"/>
                                   <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
@@ -605,12 +846,14 @@ function displayCloseWarning(){
                <div class="prevention">
                    <fieldset>
                       <legend>Prevention : <%=prevention%></legend>
-                         <div style="float:left;">
-                            <input name="given" type="radio" value="given"   <%=checked(completed,"0")%>  >Completed</input><br/>
-                            <input name="given" type="radio" value="refused" <%=checked(completed,"1")%>>Refused</input><br/>
-                            <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input><br/>
+                         <div>
+                            <input name="given" type="radio" value="given"      <%=checked(completed,"0")%>>Completed</input><br/>
+                            <input name="given" type="radio" value="given_ext"  <%=checked(completed,"3")%>>Completed externally</input><br/>
+                            <input name="given" type="radio" value="refused"    <%=checked(completed,"1")%>>Refused</input><br/>
+                            <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input>
                          </div>
-                         <div style="float:left;margin-left:30px;">
+                         <div>&nbsp;</div>
+                         <div style="margin-left:30px;">
                             <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
                             <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName"/>
                                   <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
@@ -689,6 +932,7 @@ function displayCloseWarning(){
                <input type="submit" name="delete" value="Delete"/>
                <% } %>
                </html:form>
+               <% } %>
             </td>
         </tr>
         <tr>
@@ -700,10 +944,12 @@ function displayCloseWarning(){
             </td>
         </tr>
     </table>
+    <%if(prevHash != null) { %>
 <script type="text/javascript">
 Calendar.setup( { inputField : "prevDate", ifFormat : "%Y-%m-%d %H:%M", showsTime :true, button : "date", singleClick : true, step : 1 } );
 Calendar.setup( { inputField : "nextDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "nextDateCal", singleClick : true, step : 1 } );
 </script>
+<% } %>
 </body>
 </html:html>
 <%!

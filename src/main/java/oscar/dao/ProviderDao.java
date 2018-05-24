@@ -95,7 +95,7 @@ public class ProviderDao extends OscarSuperDao {
 			{"cl_demographic_query_roster","select last_name, first_name, sex, month_of_birth, date_of_birth, CAST((DATE_FORMAT(NOW(), '%Y') - DATE_FORMAT(concat(year_of_birth,month_of_birth,date_of_birth), '%Y') - (DATE_FORMAT(NOW(), '00-%m-%d') < DATE_FORMAT(concat(year_of_birth,month_of_birth,date_of_birth), '00-%m-%d'))) as UNSIGNED INTEGER) as age from demographic where demographic_no=? AND roster_status=?"},
 			{"cl_last_appt","select max(appointment_date) from appointment where appointment_date < now() and demographic_no=?"},
 			{"cl_next_appt","select min(appointment_date) from appointment where appointment_date > now() and demographic_no=?"},
-			{"cl_num_appts","select count(*) from appointment where demographic_no=? and appointment_date > curdate() - 365"},
+			{"cl_num_appts","select count(*) from appointment where demographic_no=? and appointment_date > DATE(NOW()-INTERVAL 1 YEAR)"},
 			{"cl_new_labs","select count(*) from providerLabRouting left join patientLabRouting using (lab_no) where providerLabRouting.lab_type='HL7' and status='N' and provider_no=? and demographic_no=?"},
 			{"cl_new_docs","select count(*) from providerLabRouting left join patientLabRouting using (lab_no) where providerLabRouting.lab_type='DOC' and status='N' and provider_no=? and demographic_no=?"},
 			{"cl_new_ticklers","select count(*) from tickler where status='A' and demographic_no=?"},

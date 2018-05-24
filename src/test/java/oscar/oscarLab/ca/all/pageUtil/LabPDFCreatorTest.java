@@ -40,7 +40,7 @@ import java.util.zip.ZipFile;
 import org.apache.commons.io.IOUtils;
 // import org.junit.Before;
 import org.junit.BeforeClass;
-// import org.junit.Test;
+import org.junit.Test;
 
 import com.lowagie.text.DocumentException;
 
@@ -79,7 +79,7 @@ public class LabPDFCreatorTest {
 	/**
 	 * HL7 format used by most of the rural Ontario health authorities 
 	 */
-	// @Test
+	 @Test
 	public void testPrintMeditech() {		
 
 		Enumeration<?> zipFile = openZipFile( "MEDITECH_test_data.zip" );
@@ -95,7 +95,7 @@ public class LabPDFCreatorTest {
 	 * HL7 format used by most of the rural BC Health Authorities. Specifically the
 	 * Interior Health Authority.
 	 */
-	//@Test
+	@Test
 	public void testPrintIHAPOI() {
 		Enumeration<?> zipFile = openZipFile( "IHAPOI_test_data.zip" );
 
@@ -109,7 +109,7 @@ public class LabPDFCreatorTest {
 	/**
 	 * Format used by Excelleris in both BC and Ontario
 	 */
-	//@Test
+	@Test
 	public void testPrintPathHl7() {
 
 		Enumeration<?> zipFile = openZipFile( "excelleris_test_lab_data.zip" );

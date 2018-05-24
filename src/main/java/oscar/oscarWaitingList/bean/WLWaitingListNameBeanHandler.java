@@ -29,7 +29,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.oscarehr.common.dao.MyGroupDao;
 import org.oscarehr.common.dao.WaitingListNameDao;
 import org.oscarehr.common.model.WaitingListName;
 import org.oscarehr.util.SpringUtils;
@@ -40,15 +39,19 @@ public class WLWaitingListNameBeanHandler {
     List<String> waitingListNames = new ArrayList<String>();
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     
-    private MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
+  //  private MyGroupDao myGroupDao = SpringUtils.getBean(MyGroupDao.class);
     private WaitingListNameDao waitingListNameDao = SpringUtils.getBean(WaitingListNameDao.class);
+  //  private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
     
     public WLWaitingListNameBeanHandler(String groupNo, String providerNo) {
         init(groupNo, providerNo);
     }
 
     public boolean init(String groupNo, String providerNo) {
-        List<WaitingListName> wlNames = waitingListNameDao.findByMyGroups(providerNo, myGroupDao.getProviderGroups(providerNo));
+    	List<WaitingListName> wlNames = null;
+    	
+    	wlNames = waitingListNameDao.findCurrentByGroup(groupNo);
+    	
     	for(WaitingListName tmp:wlNames) {
     		WLWaitingListNameBean wLBean =
     				new WLWaitingListNameBean(String.valueOf(tmp.getId()), tmp.getName(), tmp.getGroupNo(), tmp.getProviderNo(), formatter.format(tmp.getCreateDate()));                   

@@ -293,20 +293,24 @@
 
        dem = demographic.getDemographicNo().toString();
        
-       // Save the patient consent values.
-	   if( OscarProperties.getInstance().getBooleanProperty("USE_NEW_PATIENT_CONSENT_MODULE", "true") ) {
-	
+		if( OscarProperties.getInstance().getBooleanProperty("USE_NEW_PATIENT_CONSENT_MODULE", "true") ) {
+			// Retrieve and set patient consents.
 			PatientConsentManager patientConsentManager = SpringUtils.getBean( PatientConsentManager.class );
-			List<ConsentType> consentTypes = patientConsentManager.getConsentTypes();
-			String consentTypeId = null;
-			int patientConsentIdInt = 0; 
+			List<ConsentType> consentTypes = patientConsentManager.getActiveConsentTypes();			
+			boolean explicitConsent = Boolean.TRUE;	
+					
+			for( ConsentType consentType : consentTypes ) 
+			{
+				String type = consentType.getType();
+				String consentRecord = request.getParameter(type);
+
+				if( consentRecord != null )
+				{
+					//either opt-in or opt-out is selected
+					boolean optOut = Integer.parseInt(consentRecord) == 1;
+					patientConsentManager.addEditConsentRecord(loggedInInfo, demographic.getDemographicNo(), consentType.getId(), explicitConsent, optOut);
+				} 
 			
-			for( ConsentType consentType : consentTypes ) {
-				consentTypeId = request.getParameter( consentType.getType() );
-				// checked box means add or edit consent. 
-				if( consentTypeId != null ) {		
-					patientConsentManager.addConsent(loggedInInfo, demographic.getDemographicNo(), Integer.parseInt( consentTypeId ) );
-				} 	
 			}
 		}
 
@@ -330,6 +334,7 @@
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "informedConsent", request.getParameter("informedConsent"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "HasPrimaryCarePhysician", request.getParameter("HasPrimaryCarePhysician"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "EmploymentStatus", request.getParameter("EmploymentStatus"), "");
+       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "PHU", request.getParameter("PHU"), "");
        //for the IBD clinic
 		OtherIdManager.saveIdDemographic(dem, "meditech_id", request.getParameter("meditech_id"));
 

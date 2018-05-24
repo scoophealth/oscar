@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.managers.LookupListManager"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -237,7 +238,7 @@ if(!authed) {
 	// get a list of programs the patient has consented to. 
 	if( oscarProps.getBooleanProperty("USE_NEW_PATIENT_CONSENT_MODULE", "true") ) {
 	    PatientConsentManager patientConsentManager = SpringUtils.getBean( PatientConsentManager.class );
-		pageContext.setAttribute( "consentTypes", patientConsentManager.getConsentTypes() );
+		pageContext.setAttribute( "consentTypes", patientConsentManager.getActiveConsentTypes() );
 		pageContext.setAttribute( "patientConsents", patientConsentManager.getAllConsentsByDemographic( loggedInInfo, Integer.parseInt(demographic_no) ) );
 	}
 
@@ -782,6 +783,37 @@ jQuery(document).ready(function() {
        });
 });
 
+function consentClearBtn(radioBtnName)
+{
+	
+	if( confirm("Proceed to clear all record of this consent?") ) 
+	{
+
+	    //clear out opt-in/opt-out radio buttons
+	    var ele = document.getElementsByName(radioBtnName);
+	    var preset = document.getElementById("consentPreset_" + radioBtnName).value;
+
+	    for(var i=0;i<ele.length;i++)
+	    {
+	    	ele[i].checked = false;
+	    }
+	
+	    //hide consent date field from displaying
+	    var consentDate = document.getElementById("consentDate_" + radioBtnName);
+	
+	    if (consentDate)
+	    {
+	        consentDate.style.display = "none";
+	    }
+	    
+	    // is the user trying to clear an old consent or are they just curious what the clear button does.
+	    if(preset === "true") 
+	    {   
+		    // set the delete parameter to update the deleted status in the database entry.
+		    document.getElementById("deleteConsent_" + radioBtnName).value = 1;
+	    }
+	}
+}
 </script>
 
 </head>
@@ -1611,6 +1643,27 @@ if ( Dead.equals(PatStat) ) {%>
                                                             key="demographic.demographiceditdemographic.formEndDate" />:</span>
                                                         <span class="info"><%=MyDateFormat.getMyStandardDate(demographic.getEndDate())%></span>
 							</li>
+							
+							<li><span class="label">
+								<bean:message key="demographic.demographiceditdemographic.formPHU" />:</span>
+								<%
+									String phuName = null;
+									String phu = demoExt.get("PHU");
+									
+									LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
+									LookupList ll = lookupListManager.findLookupListByName(LoggedInInfo.getLoggedInInfoFromSession(request), "phu");
+									if(ll != null) {
+										LookupListItem phuItem =  lookupListManager.findLookupListItemByLookupListIdAndValue(loggedInInfo, ll.getId(), phu);
+										
+										if(phuItem != null) {
+											phuName = phuItem.getLabel();	
+										}
+									}
+									
+								%>
+                                <span class="info"><%=StringUtils.trimToEmpty(phuName)%></span>
+                            </li>
+                                                        
 						</ul>
 						</div>
 
@@ -1708,11 +1761,13 @@ if ( Dead.equals(PatStat) ) {%>
 <oscar:oscarPropertiesCheck property="USE_NEW_PATIENT_CONSENT_MODULE" value="true" >
 		                          	
                           		<c:forEach items="${ patientConsents }" var="patientConsent" >
+						<c:if test="${ not empty patientConsent.optout}">
                           		<li>
+							<c:if test="${ patientConsent.consentType.active }">
                           			<span class="popup label" onmouseover="nhpup.popup(${ patientConsent.consentType.description },{'width':350} );" >
 										<c:out value="${ patientConsent.consentType.name }" />
 									</span>
-                          			
+
                           			<c:choose>
 										<c:when test="${ patientConsent.optout }">
 											<span class="info" style="color:red;"> Opted Out:<c:out value="${ patientConsent.optoutDate }" /></span>
@@ -1723,7 +1778,9 @@ if ( Dead.equals(PatStat) ) {%>
 										</c:otherwise>				
 									</c:choose>		
                           				
+							</c:if>
                           		</li>	
+						</c:if>
                           		</c:forEach>	                              	
 </oscar:oscarPropertiesCheck>
 <%-- END ENABLE NEW PATIENT CONSENT MODULE --%>
@@ -3048,8 +3105,26 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								</td>
                                                         </tr>
                                                         <tr>
-                                                                <td>&nbsp;</td>
-                                                                
+                                <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formPHU" />:</b></td>
+                                <td align="left">
+		                                <select id="PHU" name="PHU" >
+										<option value="">Select Below</option>
+										<%
+											if(ll != null) {
+												for(LookupListItem llItem : ll.getItems()) {
+													String selected = "";
+													if(llItem.getValue().equals(StringUtils.trimToEmpty(demoExt.get("PHU")))) {
+														selected = " selected=\"selected\" ";	
+													}
+													%>
+														<option value="<%=llItem.getValue()%>" <%=selected%>><%=llItem.getLabel()%></option>
+													<%
+												}
+											}
+										
+										%>
+									</select>
+                                </td>                                
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formChartNo" />:</b></td>
 								<td align="left"><input type="text" name="chart_no"
@@ -3151,7 +3226,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 					
 <tr valign="top"><td colspan="4">
 	<table id="privacyConsentTable" >	
-			<tr id="privacyConsentHeading" style="display:none;">
+			<tr id="privacyConsentHeading" class="category_table_heading" style="display:none;">
 				<th class="alignLeft" colspan="4" >Privacy Consent</th>
 			</tr>
 			
@@ -3188,7 +3263,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 			</tr>
 			<% } %>
 			  			
-			<%-- This block of code was designed to eventually manage all of the patient consents. --%>
+		<%-- This block of code was designed to eventually manage all of the patient consents. --%>
 			<oscar:oscarPropertiesCheck property="USE_NEW_PATIENT_CONSENT_MODULE" value="true" >
 			
 				<c:forEach items="${ consentTypes }" var="consentType" varStatus="count">
@@ -3198,39 +3273,62 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 							<c:set var="patientConsent" value="${ consent }" />
 						</c:if>													
 					</c:forEach>
-					<tr class="privacyConsentRow" id="${ count.index }" valign="top">
-						<td class="alignLeft" width="30%" >
-							<label style="font-weight:bold;" valign="center" for="${ consentType.type }" >
-							
-								<input type="checkbox" 
-									name="${ consentType.type }" 
-									id="${ consentType.type }" 
-									value="${ consentType.id }" 
-									${ not empty patientConsent and patientConsent.patientConsented ? 'checked' : '' } />
-								
-								<input type="hidden" name="${ consentType.type }_id" 
-									value="${ not empty patientConsent and patientConsent.id gt 0 ? patientConsent.id : 0 }" />
-									
+					<tr class="privacyConsentRow" id="${ count.index }" >
+						<td class="alignRight" style="width:16%;vertical-align:top;">
+							<div style="font-weight:bold;white-space:nowrap;" >
 								<c:out value="${ consentType.name }" />
-								
-							</label>
+							</div>
+							
+							<c:if test="${ not empty patientConsent and not empty patientConsent.optout }" >
+								<c:choose>
+									<c:when test="${ patientConsent.optout }">
+										<div id="consentDate_${consentType.type}" style="color:red;white-space:nowrap;">
+											Opted Out:<c:out value="${ patientConsent.optoutDate }" />
+										</div>
+									</c:when>					
+									<c:otherwise>
+										<div id="consentDate_${consentType.type}" style="color:green;white-space:nowrap;">
+											Consented:<c:out value="${ patientConsent.consentDate }" />
+										</div>
+									</c:otherwise>				
+								</c:choose>															
+							</c:if>	
 						</td>
-						
-						<td class="alignLeft" colspan="2" width="40%" >
+												
+						<td colspan="2" style="padding-left:10px;vertical-align:top;">
 							<c:out value="${ consentType.description }" />
 						</td>
 						
-						<td class="alignLeft" id="consentStatusDate" width="25%" >	
-							<c:if test="${ not empty patientConsent }" >
-								<c:choose>
-									<c:when test="${ patientConsent.optout }">
-										<span class="info" style="color:red;">Opted Out:<c:out value="${ patientConsent.optoutDate }" /></span>
-									</c:when>					
-									<c:otherwise>
-										<span class="info" style="color:green;">Consented:<c:out value="${ patientConsent.consentDate }" /></span>
-									</c:otherwise>				
-								</c:choose>															
-							</c:if>																														
+						<td id="consentStatusDate" style="width:31%;vertical-align:top;" >	
+                            <input type="radio"
+                                   name="${ consentType.type }"
+                                   id="optin_${ consentType.type }"
+                                   value="0"
+                                   <c:if test="${ not empty patientConsent and not empty patientConsent.optout and not patientConsent.optout }">
+                                       <c:out value="checked" />
+                                   </c:if>
+                            />
+                            <label for="optin_${ consentType.type }" >Opt-In</label>
+                            <input type="radio"
+                                   name="${ consentType.type }"
+                                   id="optout_${ consentType.type }"
+                                   value="1"
+                                   <c:if test="${ not empty patientConsent and not empty patientConsent.optout and patientConsent.optout }">
+                                       <c:out value="checked" />
+                                   </c:if>
+                            />
+                            <label for="optout_${ consentType.type }" >Opt-Out</label>
+                            <input type="button"
+                                   name="clearRadio_${consentType.type}_btn"
+                                   onclick="consentClearBtn('${consentType.type}')" value="Clear" />
+                             
+                            <%-- Was this consent set by the user? Or by the database?  --%>
+                            <input type="hidden" name="consentPreset_${consentType.type}" id="consentPreset_${consentType.type}" 
+                            	value="${ not empty patientConsent }" /> 
+                            
+                            <%-- This consent will be labeled for delete when the clear button is clicked. --%>   
+                            <input type="hidden" name="deleteConsent_${consentType.type}" id="deleteConsent_${consentType.type}" value="0" />
+																													
 						</td>
 						
 					</tr>
@@ -3283,7 +3381,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								<td colspan="4">
 								<table border="0" cellspacing="0" cellpadding="0" width="100%" id="waitingListTable">
 								
-								<tr id="waitingListHeading" style="display:none;">
+								<tr id="waitingListHeading" class="category_table_heading" style="display:none;">
 									<th colspan="4" class="alignLeft" >Waiting List</th>
 								</tr>
 									<tr>
@@ -3509,31 +3607,46 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 
 
 <tr valign="top">
-<td nowrap colspan="4">
-<b><bean:message key="demographic.demographiceditdemographic.rxInteractionWarningLevel" /></b>
-<input type="hidden" name="rxInteractionWarningLevelOrig"
-									value="<%=StringUtils.trimToEmpty(demoExt.get("rxInteractionWarningLevel"))%>" />
-					<select id="rxInteractionWarningLevel" name="rxInteractionWarningLevel">
-						<option value="0" <%=(warningLevel.equals("0")?"selected=\"selected\"":"") %>>Not Specified</option>
-						<option value="1" <%=(warningLevel.equals("1")?"selected=\"selected\"":"") %>>Low</option>
-						<option value="2" <%=(warningLevel.equals("2")?"selected=\"selected\"":"") %>>Medium</option>
-						<option value="3" <%=(warningLevel.equals("3")?"selected=\"selected\"":"") %>>High</option>
-						<option value="4" <%=(warningLevel.equals("4")?"selected=\"selected\"":"") %>>None</option>
-					</select>
-					<oscar:oscarPropertiesCheck property="INTEGRATOR_LOCAL_STORE" value="yes">
-					<b><bean:message key="demographic.demographiceditdemographic.primaryEMR" />:</b>
-
-				    <%
-				       	String primaryEMR = demoExt.get("primaryEMR");
-				       	if(primaryEMR==null) primaryEMR="0";
-				    %>
-					<input type="hidden" name="primaryEMROrig" value="<%=StringUtils.trimToEmpty(demoExt.get("primaryEMR"))%>" />
-					<select id="primaryEMR" name="primaryEMR">
-						<option value="0" <%=(primaryEMR.equals("0")?"selected=\"selected\"":"") %>>No</option>
-						<option value="1" <%=(primaryEMR.equals("1")?"selected=\"selected\"":"") %>>Yes</option>
-					</select>
-					</oscar:oscarPropertiesCheck>
-
+<td colspan="4">
+<table id="rxinteractionTable" style="width:100%;" >
+	<tr class="category_table_heading">
+		<th class="alignLeft"  colspan="4">
+		<bean:message key="demographic.demographiceditdemographic.rxInteractionWarningLevel" /></th>
+	</tr>
+	<tr>
+		<td class="alignRight" style="vertical-align:top;font-weight:bold;" >
+			Level
+		</td>
+		<td style="vertical-align:top;">
+			<input type="hidden" name="rxInteractionWarningLevelOrig"
+							value="<%=StringUtils.trimToEmpty(demoExt.get("rxInteractionWarningLevel"))%>" />
+			<select id="rxInteractionWarningLevel" name="rxInteractionWarningLevel">
+				<option value="0" <%=(warningLevel.equals("0")?"selected=\"selected\"":"") %>>Not Specified</option>
+				<option value="1" <%=(warningLevel.equals("1")?"selected=\"selected\"":"") %>>Low</option>
+				<option value="2" <%=(warningLevel.equals("2")?"selected=\"selected\"":"") %>>Medium</option>
+				<option value="3" <%=(warningLevel.equals("3")?"selected=\"selected\"":"") %>>High</option>
+				<option value="4" <%=(warningLevel.equals("4")?"selected=\"selected\"":"") %>>None</option>
+			</select>
+		</td>
+		
+		<oscar:oscarPropertiesCheck property="INTEGRATOR_LOCAL_STORE" value="yes">
+			<td class="alignRight" style="width:16%;vertical-align:top;">	
+				<b><bean:message key="demographic.demographiceditdemographic.primaryEMR" />:</b>
+			</td>
+			<td>
+		    <%
+		       	String primaryEMR = demoExt.get("primaryEMR");
+		       	if(primaryEMR==null) primaryEMR="0";
+		    %>
+			<input type="hidden" name="primaryEMROrig" value="<%=StringUtils.trimToEmpty(demoExt.get("primaryEMR"))%>" />
+			<select id="primaryEMR" name="primaryEMR">
+				<option value="0" <%=(primaryEMR.equals("0")?"selected=\"selected\"":"") %>>No</option>
+				<option value="1" <%=(primaryEMR.equals("1")?"selected=\"selected\"":"") %>>Yes</option>
+			</select>
+			</td>
+		</oscar:oscarPropertiesCheck>
+	</tr>
+</table>
 </td>
 </tr> 
 <%-- PATIENT NOTES MODULE --%>		

@@ -5,7 +5,7 @@ delete from `demographic`;
 INSERT INTO `demographic` VALUES (1,'MR','CLEESE','JOHN','1234 Street','city','BC','A1B 2C3','250-000-0001','250-000-0002','test@test.com',NULL,'1940','09','25','448000001','','',NULL,NULL,'','AC','2013-09-25','2013-09-25','','English','','999998','M',NULL,NULL,NULL,'BC',NULL,'<rdohip></rdohip><rd></rd>',NULL,NULL,NULL,NULL,NULL,'','-1','Unknown',NULL,'999998','2013-09-26');
 INSERT INTO `demographic` VALUES (2,'MR','SUBJECT','MISSING',NULL,NULL,NULL,NULL,NULL,'',NULL,NULL,'1970','09','25','448000002','','',NULL,NULL,'','AC','2013-09-25','2013-09-25','','English','','999998','M',NULL,NULL,NULL,'BC',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'','-1','Unknown',NULL,'999998','2013-09-26');
 delete from `provider`;
-INSERT INTO `provider` VALUES ('999998','oscardoc','doctor','doctor',null,'','','','0001-01-01','','250-999-9998','250-999-9999','ohip','','billing','','1','','','cpsid','','','test2@test2.com','','','0001-01-01 00:00:00','0001-01-01 00:00:00');
+INSERT INTO `provider` VALUES ('999998','oscardoc','doctor','doctor',null,'','','','0001-01-01','','250-999-9998','250-999-9999','ohip','','billing','','1','','','cpsid','','','test2@test2.com','','','0001-01-01 00:00:00','0001-01-01 00:00:00','');
 
 -- Allergies
 TRUNCATE TABLE `allergies`;
@@ -48,9 +48,9 @@ INSERT INTO `casemgmt_note_ext` VALUES (5,7,'Treatment','Test Treatment',NULL);
 
 -- Immunizations
 TRUNCATE TABLE `preventions`;
-INSERT INTO `preventions` VALUES (1,1,'2013-09-27 14:01:22','2012-09-01','999998',NULL,'Td','0','0','2015-06-10','0',999998,'2013-09-27 14:01:22');
-INSERT INTO `preventions` VALUES (2,1,'2013-09-27 14:01:44','2009-02-01','999998',NULL,'Flu','0','0','2014-02-01','0',999998,'2013-09-27 14:01:44');
-INSERT INTO `preventions` VALUES (3,1,'2013-09-27 14:02:19','2012-10-31','999998',NULL,'Pneumovax','0','0','2013-10-31','0',999998,'2013-09-27 14:02:19');
+INSERT INTO `preventions` VALUES (1,1,'2013-09-27 14:01:22','2012-09-01','999998',NULL,'Td','0','0','2015-06-10','0',999998,'2013-09-27 14:01:22',NULL);
+INSERT INTO `preventions` VALUES (2,1,'2013-09-27 14:01:44','2009-02-01','999998',NULL,'Flu','0','0','2014-02-01','0',999998,'2013-09-27 14:01:44',NULL);
+INSERT INTO `preventions` VALUES (3,1,'2013-09-27 14:02:19','2012-10-31','999998',NULL,'Pneumovax','0','0','2013-10-31','0',999998,'2013-09-27 14:02:19',NULL);
 TRUNCATE TABLE `preventionsExt`;
 INSERT INTO `preventionsExt` VALUES (1,1,'location','clinic'),(2,1,'lot','1234'),(3,1,'route','left deltoid'),(4,1,'dose',''),(5,1,'comments','comment'),(6,1,'neverReason','test'),(7,1,'manufacture',''),(8,1,'name','');
 INSERT INTO `preventionsExt` VALUES (9,2,'location',''),(10,2,'lot',''),(11,2,'route',''),(12,2,'dose',''),(13,2,'comments',''),(14,2,'neverReason','allergic'),(15,2,'manufacture',''),(16,2,'name','');

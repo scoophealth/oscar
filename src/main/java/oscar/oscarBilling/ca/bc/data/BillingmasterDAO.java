@@ -97,7 +97,11 @@ public class BillingmasterDAO {
 		Query query = entityManager.createQuery("select b from Billingmaster b where b.billingmasterNo = (:billingmasterNo)");
 		query.setParameter("billingmasterNo", billingmasterNo);
 		List<Billingmaster> list = query.getResultList();
-		return list.get(0);
+		if(list.size()>0) {
+			return list.get(0);
+		}
+		MiscUtils.getLogger().info("Unable to retrieve a billingmaster record with billingmasterNo = " + billingmasterNo);
+		return null;
 	}
 
 	public void save(Billingmaster bm) {
@@ -300,5 +304,10 @@ public class BillingmasterDAO {
 		return query.getResultList();
     }
 
+	public List<Object[]> getRecentReferralDoctors(Integer demographicNo) {
+		Query query = entityManager.createQuery("SELECT referralNo1, referralNo2 FROM Billingmaster WHERE demographic_no = ? AND (referralNo1!='' OR referralNo2!='') ORDER BY billingmasterNo DESC");
+		query.setParameter(1, demographicNo);
+		return query.setMaxResults(3).getResultList();
+	}
 
 }

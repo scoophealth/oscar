@@ -879,13 +879,13 @@ public class ManageDocumentAction extends DispatchAction {
 			File file = new File(documentDir, d.getDocfilename());
 			filename = d.getDocfilename();
                         
-                        if (contentType != null) {
-                            if (file.exists()) {
-                            	contentBytes = FileUtils.readFileToByteArray(file);
-                            } else {
-                            	throw new IllegalStateException("Local document doesn't exist for eDoc (ID " + d.getId() + "): " + file.getAbsolutePath());
-                            }
-                        }
+            if (contentType != null) {
+                if (file.exists()) {
+                	contentBytes = FileUtils.readFileToByteArray(file);
+                } /*else {
+                	throw new IllegalStateException("Local document doesn't exist for eDoc (ID " + d.getId() + "): " + file.getAbsolutePath());
+                }*/
+            }
 		} else // remote document
 		{
 			FacilityIdIntegerCompositePk remotePk = new FacilityIdIntegerCompositePk();
@@ -929,6 +929,8 @@ public class ManageDocumentAction extends DispatchAction {
 		}
 
 		if (docxml != null && !docxml.trim().equals("")) {
+			response.setHeader("Content-Disposition","attachment; filename="+filename+";");
+			
 			ServletOutputStream outs = response.getOutputStream();
 			outs.write(docxml.getBytes());
 			outs.flush();

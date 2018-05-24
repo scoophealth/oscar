@@ -56,6 +56,19 @@ public class MenuTo1 implements Serializable {
 		return this;
 	}
 	
+	public MenuTo1 add(Integer id, String label, String extra, String url,String newWindowName) {
+		MenuItemTo1 item = new MenuItemTo1();
+		item.setId(id);
+		item.setLabel(label);
+		item.setExtra(extra);
+		item.setUrl(url);
+		item.setNewWindowName(newWindowName);
+		
+		getItems().add(item);
+		
+		return this;
+	}
+	
 	public MenuTo1 addWithState(Integer id, String label, String extra, String state) {
 		MenuItemTo1 item = new MenuItemTo1();
 		item.setId(id);

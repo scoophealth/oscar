@@ -129,7 +129,41 @@ GregorianCalendar now=new GregorianCalendar();
 -->
 </style>
       <script language="JavaScript">
-<!--
+
+    Date.prototype.addDays = function(days) {
+    	  var dat = new Date(this.valueOf());
+    	  dat.setDate(dat.getDate() + days);
+    	  return dat;
+    }
+
+    Date.prototype.addMonths = function(months) {
+  	  var dat = new Date(this.valueOf());
+  	  dat.setMonth(dat.getMonth() + months);
+  	  return dat;
+  }
+
+    function addMonths(months) {
+  	  var d = new Date();
+  	  d = d.addMonths(months);
+  	  var mth = ((d.getMonth()+1)<10)? ("0"+(d.getMonth()+1)) : (d.getMonth()+1);
+  	  var day =  d.getDate() > 10 ? d.getDate() : ("0" + d.getDate());
+  	  var newD = d.getFullYear() + "-" + mth + "-" + day;
+        document.serviceform.xml_appointment_date.value = newD;
+    }
+    
+      
+      function addDays(numDays) {
+    	  var d = new Date();
+    	  d = d.addDays(numDays);  
+    	  var mth = ((d.getMonth()+1)<10)? ("0"+(d.getMonth()+1)) : (d.getMonth()+1);
+    	  var day =  d.getDate() > 10 ? d.getDate() : ("0" + d.getDate());
+    	  var newD = d.getFullYear() + "-" + mth + "-" + day;
+          document.serviceform.xml_appointment_date.value = newD;
+      }
+    	
+   
+      
+      <!--
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
   var page = "" + varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
@@ -192,65 +226,6 @@ function refresh() {
     history.go(0);
   }
 }
-
-
-
-
-
-function DateAdd(startDate, numDays, numMonths, numYears)
-{
-	var returnDate = new Date(startDate.getTime());
-	var yearsToAdd = numYears;
-	
-	var month = returnDate.getMonth()	+ numMonths;
-	if (month > 11)
-	{
-		yearsToAdd = Math.floor((month+1)/12);
-		month -= 12*yearsToAdd;
-		yearsToAdd += numYears;
-	}
-	returnDate.setMonth(month);
-	returnDate.setFullYear(returnDate.getFullYear()	+ yearsToAdd);
-	
-	returnDate.setTime(returnDate.getTime()+60000*60*24*numDays);
-	
-	return returnDate;
-
-}
-
-function YearAdd(startDate, numYears)
-{
-		return DateAdd(startDate,0,0,numYears);
-}
-
-function MonthAdd(startDate, numMonths)
-{
-		return DateAdd(startDate,0,numMonths,0);
-}
-
-function DayAdd(startDate, numDays)
-{
-		return DateAdd(startDate,numDays,0,0);
-}
-
-
-function addMonth(no)
-{       var gCurrentDate = new Date();
-	var newDate = DateAdd(gCurrentDate, 0, no,0 );
-var newYear = newDate.getFullYear() 
-var newMonth = newDate.getMonth()+1;
-var newDay = newDate.getDate();
-var newD = newYear + "-" + newMonth + "-" + newDay;
-	document.serviceform.xml_appointment_date.value = newD;
-}
-
-
-
-
-
-
-
-
 
 //-->
 </script>
@@ -328,8 +303,27 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
       <td><input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>"> 
         <font color="#003366" size="1" face="Verdana, Arial, Helvetica, sans-serif">
         <a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')"><bean:message key="tickler.ticklerAdd.btnCalendarLookup"/></a> &nbsp; &nbsp; 
-        <a href="#" onClick="addMonth(6)"><bean:message key="tickler.ticklerAdd.btn6Month"/></a>&nbsp; &nbsp;
-        <a href="#" onClick="addMonth(12)"><bean:message key="tickler.ticklerAdd.btn1Year"/></a></font> </td>
+         
+         <a href="#" onClick="addDays(14)">14d</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonths(1)">1m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonths(2)">2m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonths(3)">3m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonths(4)">4m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonths(5)">5m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonths(6)">6m</a>&nbsp; &nbsp;
+         <a href="#" onClick="addMonths(7)">7m</a>&nbsp; &nbsp;
+         <a href="#" onClick="addMonths(8)">8m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonths(9)">9m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonths(10)">10m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonths(11)">11m</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonths(12)">1yr</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonths(24)">2yr</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonths(36)">3yr</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonths(60)">5yr</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonths(96)">8yr</a>&nbsp; &nbsp;
+        <a href="#" onClick="addMonths(120)">10yr</a></font> </td>
+        
+        
       <td>&nbsp;</td>
     </tr>
     <tr> 

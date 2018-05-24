@@ -162,7 +162,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
     			sb.append(",");
     		sb.append(p.getId());
     	}
-		String sql = "select a.demographicNo SELECT a FROM Appointment a WHERE a.updateDateTime > ? and program_id in ("+sb.toString()+") ORDER BY a.id";
+		String sql = "select a.demographicNo FROM Appointment a WHERE a.updateDateTime > ? and program_id in ("+sb.toString()+") ORDER BY a.id";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, 	lastUpdateDate);
 

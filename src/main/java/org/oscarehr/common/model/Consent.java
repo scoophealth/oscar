@@ -55,6 +55,9 @@ public class Consent extends AbstractModel<Integer> {
 	private Integer consentTypeId;
 	
 	private boolean explicit;
+	
+	// NOTE: primitive types (ie: boolean) are often used for a very good reason. 
+	// Please avoid changing any types to non-primitive (ie: Boolean). 
 	private boolean optout;
 	
 	@Column(name = "last_entered_by")
@@ -71,6 +74,8 @@ public class Consent extends AbstractModel<Integer> {
 	@Temporal( TemporalType.TIMESTAMP )
 	@Column(name = "edit_date")
 	private Date editDate;
+
+	private boolean deleted;
 	
 	@OneToOne(optional=true)
     @JoinColumn(name = "consent_type_id", referencedColumnName="id", insertable=false, updatable=false) 
@@ -79,10 +84,6 @@ public class Consent extends AbstractModel<Integer> {
 	@Override
 	public Integer getId() {
 		return this.id;
-	}
-	
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public Integer getDemographicNo() {
@@ -109,7 +110,8 @@ public class Consent extends AbstractModel<Integer> {
 		this.explicit = explicit;
 	}
 
-	public boolean isOptout() {
+	public boolean isOptout()
+	{
 		return optout;
 	}
 
@@ -158,9 +160,17 @@ public class Consent extends AbstractModel<Integer> {
 		this.editDate = editDate;
 	}
 
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
 	@Transient
 	public boolean getPatientConsented() {
-		return ( getConsentTypeId() > 0 && ! isOptout() );
+		return ( ! isDeleted() && ! isOptout() );
 	}
 
 }

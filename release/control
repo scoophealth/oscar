@@ -1,12 +1,12 @@
 Source: oscar-emr
 Package: oscar-emr
-Version: 8-x.x
+Version: 15-71~691
 Section: base
 Installed-Size: 348160
 Priority: optional
 Architecture: all
 Pre-depends:  curl
-Depends: tomcat7, mysql-server (>= 5.0), libmysql-java (>= 5.0),  unzip 
+Depends: tomcat7 | tomcat8, mysql-server (>= 5.0) | mariadb-server, libmysql-java (>= 5.0),  unzip 
 Recommends: xfonts-75dpi, firefox | chromium-browser , wkhtmltopdf
 Maintainer: Peter Hutten-Czapski <phc@srpc.ca>
 Homepage: http://oscarmanual.org

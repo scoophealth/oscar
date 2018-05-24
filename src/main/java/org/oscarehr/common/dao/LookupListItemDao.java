@@ -51,5 +51,16 @@ public class LookupListItemDao extends AbstractDao<LookupListItem> {
 
 		return result;
 	}
+	
+	public LookupListItem findByLookupListIdAndValue(int lookupListId, String value) {
+		Query q = entityManager.createQuery("select l from LookupListItem l where l.lookupListId=? and l.value=?");
+
+		q.setParameter(1,lookupListId);
+		q.setParameter(2,value);
+
+		LookupListItem item = this.getSingleResultOrNull(q);
+		
+		return item;
+	}
 
 }

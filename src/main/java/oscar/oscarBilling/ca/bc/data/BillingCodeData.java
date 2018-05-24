@@ -103,7 +103,7 @@ public final class BillingCodeData implements Comparable      {
 
      boolean retval = true;
      BillingService  billingService = billingServiceDao.find(Integer.parseInt(codeId));
-     billingServiceDao.remove(billingService);
+     billingServiceDao.remove(billingService.getId());
      return retval;
    }
 

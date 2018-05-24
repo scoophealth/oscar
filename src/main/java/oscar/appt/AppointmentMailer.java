@@ -42,9 +42,11 @@ import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.utility.DateUtils;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.OscarAppointmentDao;
+import  org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.Demographic;
+import  org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.springframework.mail.MailSender;
@@ -89,17 +91,47 @@ public class AppointmentMailer implements MessageMailer{
         this.demographic = demographic;
     }
     
-    private void setMessageHeader() {
-        
-        if (this.message == null) {
+    private void setMessageHeader()
+    {
+        if (this.message == null)
+        {
             Properties op = oscar.OscarProperties.getInstance();
-            String msgTemplatePath = op.getProperty("appt_reminder_template");
-            String msgMime = op.getProperty("appt_reminder_mime");  
-            if (msgTemplatePath != null) { 
-                if ((msgMime == null) || msgMime.equalsIgnoreCase("no")){
+
+            String msgTemplatePath = "";
+            Appointment appt = dao.find(this.apptNo);
+
+            if(appt != null)
+            {
+                ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+
+                Provider apptProvider = providerDao.getProvider(appt.getProviderNo());
+
+                if (apptProvider != null)
+                {
+                    String providerTeam = apptProvider.getTeam();
+
+                    if (providerTeam != null && !providerTeam.isEmpty())
+                    {
+                        msgTemplatePath = op.getProperty("appt_reminder_template." + providerTeam.toLowerCase());
+                    }
+                }
+            }
+
+            if (msgTemplatePath == null || msgTemplatePath.isEmpty())
+            {
+               msgTemplatePath = op.getProperty("appt_reminder_template");
+            }
+
+            if (msgTemplatePath != null)
+            {
+                String msgMime = op.getProperty("appt_reminder_mime");
+
+                if ((msgMime == null) || msgMime.equalsIgnoreCase("no"))
+                {
                     this.message = new SimpleMailMessage();
                 }
-                else {
+                else
+                {
                     //TODO
                 }
 

@@ -450,6 +450,28 @@ public class CaisiIntegratorManager {
 
 		return (consentTransfer);
 	}
+	
+	protected static org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer makeSetConsentTransfer2(IntegratorConsent consent) {
+		org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer consentTransfer = new org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer();
+		consentTransfer.consentStatus = consent.getClientConsentStatus().name();
+		consentTransfer.createdDate = consent.getCreatedDate();
+		consentTransfer.demographicId =consent.getDemographicId();
+		consentTransfer.excludeMentalHealthData = consent.isExcludeMentalHealthData();
+		consentTransfer.expiry = consent.getExpiry();
+
+		List<org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer.FacilityConsentPair> pairList = new ArrayList<org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer.FacilityConsentPair>();
+		for (Entry<Integer, Boolean> entry : consent.getConsentToShareData().entrySet()) {
+			org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer.FacilityConsentPair pair = new org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer.FacilityConsentPair();
+			pair.remoteFacilityId = entry.getKey();
+			pair.shareData = entry.getValue();
+			pairList.add(pair);
+			
+		}
+		
+		consentTransfer.consentToShareData = pairList.toArray(new org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer.FacilityConsentPair[pairList.size()] );
+
+		return (consentTransfer);
+	}
 
     public static List<CachedDemographicNote> getLinkedNotes(LoggedInInfo loggedInInfo, Integer demographicNo) throws MalformedURLException 
     {
