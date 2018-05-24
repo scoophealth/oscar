@@ -361,9 +361,6 @@ String curProvider_no = (String)session.getAttribute("user");
 								key="admin.admin.btnFluBillingReport" /></a></li>
 					<li><a href="${ctx}/oscarReport/obec.jsp" class="contentLink">Overnight
 							Batch</a></li>
-					<li><a href="${ctx}/oscarSurveillance/ReportSurveillance.jsp"
-						class="contentLink"><bean:message
-								key="admin.admin.report.SurveillanceReport" /></a></li>
 					<li><a href="${ctx}/oscarReport/oscarReportRehabStudy.jsp" class="contentLink"><bean:message
 								key="admin.admin.rehabStudy" /></a></li>
 								

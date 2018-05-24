@@ -491,9 +491,7 @@ div.logoutBox {
 				onclick='popupPage(600,1000,&quot;<html:rewrite page="/oscarReport/obec.jsp"/>&quot;);return false;'><bean:message
 				key="admin.admin.btnOvernightChecking" /></a></li>
 
-			<li><a href="#"
-				onclick="popupPage(600,900,&quot;<html:rewrite page="/oscarSurveillance/ReportSurveillance.jsp"/>&quot;)"><bean:message
-				key="admin.admin.report.SurveillanceReport" /></a></li>
+	
 			<li><a href="#"
 				onclick="popupPage(600,900,&quot;<html:rewrite page="/oscarReport/oscarReportRehabStudy.jsp"/>&quot;)"><bean:message key="admin.admin.rehabStudy"/></a></li>
 			<li><a href="#"
