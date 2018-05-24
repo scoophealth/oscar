@@ -2049,7 +2049,8 @@ start_time += iSm + ":00";
 <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
      &#124; <a href=# onClick="popupWithApptNo(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>','rx',<%=appointment.getId()%>)" title="<bean:message key="global.prescriptions"/>"><bean:message key="global.rx"/>
       </a>
-
+	&#124; <a href=# onClick="popupWithApptNo(700,1027,'../webp/#!/record/<%=demographic_no%>/rx','rx',<%=appointment.getId()%>)" title="<bean:message key="global.prescriptions"/>"><bean:message key="global.rx"/>2
+      </a>
 
 <!-- doctor color -->
 <oscar:oscarPropertiesCheck property="ENABLE_APPT_DOC_COLOR" value="yes">
