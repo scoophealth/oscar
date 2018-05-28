@@ -60,7 +60,13 @@ public class SurveyData extends AbstractModel<Integer> {
 
 	private String answer;
 
-	private int processed;
+	private Integer processed= 0;
+	
+	private Integer period;
+	
+	private Integer randomness;
+	
+	private Integer version = 2;
 
 	public Integer getId() {
     	return id;
@@ -125,6 +131,30 @@ public class SurveyData extends AbstractModel<Integer> {
 	public void setProcessed(int processed) {
     	this.processed = processed;
     }
+
+	public int getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(int period) {
+		this.period = period;
+	}
+
+	public int getRandomness() {
+		return randomness;
+	}
+
+	public void setRandomness(int randomness) {
+		this.randomness = randomness;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
 
 
 }

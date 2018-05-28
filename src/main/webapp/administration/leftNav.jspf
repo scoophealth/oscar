@@ -361,9 +361,6 @@ String curProvider_no = (String)session.getAttribute("user");
 								key="admin.admin.btnFluBillingReport" /></a></li>
 					<li><a href="${ctx}/oscarReport/obec.jsp" class="contentLink">Overnight
 							Batch</a></li>
-					<li><a href="${ctx}/oscarSurveillance/ReportSurveillance.jsp"
-						class="contentLink"><bean:message
-								key="admin.admin.report.SurveillanceReport" /></a></li>
 					<li><a href="${ctx}/oscarReport/oscarReportRehabStudy.jsp" class="contentLink"><bean:message
 								key="admin.admin.rehabStudy" /></a></li>
 								
@@ -904,7 +901,8 @@ String curProvider_no = (String)session.getAttribute("user");
 		                        %>		
 			
 					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/updateDrugref.jsp" ><bean:message key="admin.admin.UpdateDrugref"/></a></li>	
-					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/Know2actConfiguration.jsp" ><bean:message key="admin.admin.Know2ActConfig"/></a></li>		
+					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/Know2actConfiguration.jsp" ><bean:message key="admin.admin.Know2ActConfig"/></a></li>
+					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/surveillanceConfiguration.jsp" ><bean:message key="admin.admin.surveillanceConfig"/></a></li>		
 					<li><a  href='javascript:void(0);' class="xlink" rel="${ctx}/admin/integratorPushStatus.jsp"><bean:message key="admin.admin.integratorPush" /></a></li>
 					<li><a  href='javascript:void(0);' class="xlink" rel="${ctx}/admin/born.jsp"><bean:message key="admin.admin.born" /></a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/clinicalconnect.jsp"><bean:message key="admin.admin.ClinicalConnectConfig" /></a></li>

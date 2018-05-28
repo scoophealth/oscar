@@ -26,14 +26,22 @@
 package oscar.oscarSurveillance;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.SurveillanceDataDao;
 import org.oscarehr.common.dao.SurveyDataDao;
+import org.oscarehr.common.model.SurveillanceData;
 import org.oscarehr.common.model.SurveyData;
+import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -47,7 +55,7 @@ import oscar.oscarDB.DBHandler;
 public class ProcessSurveyFile{
    private static Logger log = MiscUtils.getLogger();
    
-   private SurveyDataDao dao = SpringUtils.getBean(SurveyDataDao.class);
+   private static SurveyDataDao dao = SpringUtils.getBean(SurveyDataDao.class);
    
    
    private int maxProcessed(String surveyId){
@@ -55,7 +63,7 @@ public class ProcessSurveyFile{
       return dao.getMaxProcessed(surveyId);
    }
    
-   private void setProcessed(String surveyDataId, int processedId){
+   private static void setProcessed(String surveyDataId, int processedId){
 	   SurveyData s = dao.find(Integer.parseInt(surveyDataId));
 	   if(s != null) {
 		   s.setProcessed(processedId);
@@ -63,7 +71,7 @@ public class ProcessSurveyFile{
 	   }
    }
                
-   String replaceAllValues(String guideString,ResultSet rs) throws SQLException{      
+   static String replaceAllValues(String guideString,ResultSet rs) throws SQLException{      
       String processString = getFirstVal(guideString);
       while (processString != null){         
          String replaceVal = oscar.Misc.getString(rs,processString);   
@@ -74,7 +82,7 @@ public class ProcessSurveyFile{
       return guideString;
    }
    
-   public String getFirstVal(String s){
+   public static String getFirstVal(String s){
       String firstString = null;
       int start = s.indexOf("${");
       int end = s.indexOf("}");      
@@ -84,7 +92,65 @@ public class ProcessSurveyFile{
       return firstString;
    }
    
-   public synchronized String processSurveyFile(String surveyId){
+   
+   public static synchronized String processSurveyFile(String surveyId){
+	      String sStatus = null;
+	      SurveillanceDataDao surveillanceDataDao = SpringUtils.getBean(SurveillanceDataDao.class);
+	      try{
+	    	  
+	    	  	SurveillanceMaster sm = SurveillanceMaster.getInstance();
+	    	  	Survey survey = sm.getSurveyById(surveyId);
+	    	  	String sql = survey.getExportQuery() ;
+            log.debug("sql "+sql);
+            String exp = survey.getExportString();
+            log.debug("xp "+exp);
+            
+            PreparedStatement ps = DbConnectionFilter.getThreadLocalDbConnection().prepareStatement(sql);
+        		ps.setString(1, surveyId);
+        		ResultSet rs = ps.executeQuery();    
+                
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+	        List<String> surveyDataIdProcessed = new ArrayList<String>();
+	        int counter = 0;
+	        /*try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(baos))) {
+	        		while(rs.next()){ 
+                    String surveyDataId = oscar.Misc.getString(rs, "surveyDataId");
+                    String writeString = replaceAllValues(exp, rs);                     
+                    writer.write(writeString+'\n');     
+                    surveyDataIdProcessed.add(surveyDataId);
+                    counter++;
+                 } 
+	        	}
+	        	*/
+	        
+        		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(baos)); 
+        		while(rs.next()){ 
+                String surveyDataId = oscar.Misc.getString(rs, "surveyDataId");
+                String writeString = replaceAllValues(exp, rs);                     
+                writer.write(writeString+'\n');     
+                surveyDataIdProcessed.add(surveyDataId);
+                counter++;
+             } 
+        		writer.close();
+	        
+	        rs.close();
+	        if(counter>0) {
+	        		SurveillanceData sd = new SurveillanceData();
+	        		sd.setSurveyId(surveyId);
+	        		sd.setData(baos.toByteArray());
+	        		surveillanceDataDao.persist(sd);
+	        		for(String surveyDataId : surveyDataIdProcessed) {
+	        			setProcessed(surveyDataId,sd.getId());
+	        		} 
+	        }
+	      }catch(Exception e){
+	         MiscUtils.getLogger().error("Error", e);
+	      }
+	      return sStatus;
+	   }
+   
+   
+   public synchronized String processSurveyFile2(String surveyId){
       String sStatus = null;
       int numRecordsToProcess = 0;
       SurveyDataDao dao = SpringUtils.getBean(SurveyDataDao.class);
