@@ -12,7 +12,7 @@
   		<footer>Source: {{$ctrl.alert.messageSource}} Author: {{$ctrl.alert.author}}</footer>
 		</blockquote>
 		<div class="lead"></div>
-		<pre>{{$ctrl.alert.body}}</pre>
+		<div class="well" ng-bind-html="$ctrl.alert.body"></div>
 		<hr>
 		<%-- pre>{{$ctrl.alert | json}}</pre> --%>
 	</div>

@@ -265,6 +265,7 @@ font-size:20px
 	<script src="../library/hogan-2.0.0.js"></script>
 	<script src="../library/typeahead.js/typeahead.min.js"></script>
 	<script src="../library/angular.min.js"></script>
+	<script src="../library/angular-sanitize.min.js"></script>
 	<!-- script src="../library/angular-route.min.js"></script  -->
 	<script src="../library/angular-ui-router.js"></script>
  	<script src="../library/angular-resource.min.js"></script>

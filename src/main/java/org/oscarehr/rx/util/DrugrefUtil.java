@@ -38,6 +38,9 @@ import java.util.Vector;
 
 
 import org.apache.log4j.Logger;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.oscarehr.PMmodule.caisi_integrator.RemoteDrugAllergyHelper;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
@@ -128,8 +131,14 @@ public class DrugrefUtil {
 		        		dsMessage.setAtc((String) ht.get("atc"));
 		        		dsMessage.setAtc2((String) ht.get("atc2"));	            
 	            		dsMessage.setCreated_by((Integer) ht.get("created_by"));	       
-	            		dsMessage.setReference((String) ht.get("reference"));	           
-	            	    dsMessage.setBody((String) ht.get("bodyMarkdown"));	       
+	            		dsMessage.setReference((String) ht.get("reference"));	 
+	            		String bodyMarkDown = (String) ht.get("bodyMarkdown");
+	            		Parser parser = Parser.builder().build();
+	            		Node document = parser.parse(bodyMarkDown);
+	            	    HtmlRenderer renderer = HtmlRenderer.builder().build();
+	            		String bodyHtml = renderer.render(document); 
+	            		
+	            	    dsMessage.setBody(bodyHtml);	       
 	            		dsMessage.setDrug2((String) ht.get("drug2"));
 	            		dsMessage.setCreated_at((Date) ht.get("created_at"));	       
 	            		dsMessage.setTrustedResource(true);
