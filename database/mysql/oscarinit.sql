@@ -9951,7 +9951,14 @@ create table BornTransmissionLog(
         id integer not null auto_increment,
         submitDateTime timestamp not null,
         success tinyint(1) default 0,
-        filename varchar(100) not null,
+        filename varchar(100),
+	demographicNo int,
+	type varchar(20),
+	httpCode varchar(20),
+	httpResult mediumtext,
+	httpHeaders text,
+	hialTransactionId varchar(255),
+	contentLocation varchar(255),
         primary key(id)
 );
 

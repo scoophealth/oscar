@@ -48,7 +48,9 @@ public class DemographicExtDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("demographicExt");
+		//SchemaUtils.restoreTable("demographicExt","lst_gender","demographic_merged","admission");
+		SchemaUtils.restoreTable("demographic", "lst_gender", "admission", "demographic_merged", "program", 
+                                "health_safety", "provider", "providersite", "site", "program_team","log", "Facility","demographicExt");
 	}
 
 
@@ -67,7 +69,7 @@ public class DemographicExtDaoTest extends DaoTestFixtures {
 		entity = (DemographicExt)EntityDataGenerator.generateTestDataForModelClass(entity);
 		dao.persist(entity);
 		
-		DemographicExt foundEntity = dao.getDemographicExt(1);
+		DemographicExt foundEntity = dao.getDemographicExt(entity.getId());
 		assertEquals(entity, foundEntity);
 	}
 	@Test
