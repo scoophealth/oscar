@@ -89,6 +89,12 @@ public class AddPreventionAction  extends Action {
          String id = request.getParameter("id");
          String delete = request.getParameter("delete");
          
+         String action = request.getParameter("action");
+         
+         boolean submitToDhir = false;
+         if(action != null && "Save & Submit".equals(action)) {
+        	 submitToDhir = true;
+         }
          MiscUtils.getLogger().debug("id "+id+"  delete "+ delete);
          
          MiscUtils.getLogger().debug("prevention Type "+preventionType);
@@ -194,31 +200,33 @@ public class AddPreventionAction  extends Action {
          MiscUtils.getLogger().debug("Given "+given+" prevDate "+prevDate+" providerName "+providerName+" provider "+providerNo);
 
          
-         //should we be sending this?
-         CVCImmunization imm =  cvcImmunizationDao.findBySnomedConceptId(snomedId);
-         Consent dhirConsent =  consentDao.findByDemographicAndConsentType(Integer.parseInt(demographic_no), "dhir_non_ispa_consent");
-			
-         if(imm != null && (imm.isIspa() || (dhirConsent != null && !dhirConsent.isOptout()))) {
-        	 
-        	 if("given".equals(given) || "given_ext".equals(given)) {
-        	
-        	FhirBundleBuilder fbb = DHIR.getFhirBundleBuilder(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.parseInt(demographic_no), preventionId);
-        	 
-        	Bundle bundle = fbb.getBundle();
-        	request.setAttribute("bundle", bundle);
-        	
-        	Map<String,Bundle> bundles = (Map<String,Bundle>)request.getSession().getAttribute("bundles");
-        	if(bundles == null) {
-        		 bundles = new HashMap<String,Bundle>();
-        	}
-        	bundles.put(bundle.getId(), bundle);
-        	request.getSession().setAttribute("bundles", bundles);
-        	
-        	MiscUtils.getLogger().info(fbb.getMessageJson());
-        	
-        	 return mapping.findForward("review");
-
-		}
+         if(submitToDhir) {
+	         CVCImmunization imm =  cvcImmunizationDao.findBySnomedConceptId(snomedId);
+	         Consent dhirConsent =  consentDao.findByDemographicAndConsentType(Integer.parseInt(demographic_no), "dhir_non_ispa_consent");
+				
+	         if(imm != null && (imm.isIspa() || (dhirConsent != null && !dhirConsent.isOptout()))) {
+	        	 
+	        	 if("given".equals(given) || "given_ext".equals(given)) {
+	        	
+		        	FhirBundleBuilder fbb = DHIR.getFhirBundleBuilder(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.parseInt(demographic_no), preventionId);
+		        	 
+		        	Bundle bundle = fbb.getBundle();
+		        	request.setAttribute("bundle", bundle);
+		        	
+		        	Map<String,Bundle> bundles = (Map<String,Bundle>)request.getSession().getAttribute("bundles");
+		        	if(bundles == null) {
+		        		 bundles = new HashMap<String,Bundle>();
+		        	}
+		        	bundles.put(bundle.getId(), bundle);
+		        	request.getSession().setAttribute("bundles", bundles);
+		        	
+		        	MiscUtils.getLogger().info(fbb.getMessageJson());
+		        	
+		        	request.setAttribute("preventionId", preventionId);
+		        	request.setAttribute("demographicNo", demographic_no);
+		        	return mapping.findForward("review");
+	        	 }
+	         }
          }
          
          

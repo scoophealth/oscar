@@ -41,7 +41,7 @@ public class ResourceAttributeFilter implements ResourceAttributeFilterInterface
 	public ResourceAttributeFilter(  String filterURL ) {
 		properties = new Properties();
 		try {
-			logger.info( "Loading FHIR resource filter from " + filterURL );
+			logger.debug( "Loading FHIR resource filter from " + filterURL );
 			readFromFile( filterURL );
 		} catch (IOException e) {
 			return;
@@ -68,14 +68,14 @@ public class ResourceAttributeFilter implements ResourceAttributeFilterInterface
 	@Override
 	public final boolean include( OptionalFHIRAttribute attribute ) {
 		boolean value = validate( attribute.name() );
-		logger.info( "Filtering optional attribute " + attribute.name() + "=" + value );
+		logger.debug( "Filtering optional attribute " + attribute.name() + "=" + value );
 		return value;
 	}
 	
 	@Override
 	public final boolean isMandatory( MandatoryFHIRAttribute attribute ) {
 		boolean value = validate( attribute.name() );
-		logger.info( "Filtering mandatory attribute " + attribute.name() + "=" + value );
+		logger.debug( "Filtering mandatory attribute " + attribute.name() + "=" + value );
 		return value;
 	}
 

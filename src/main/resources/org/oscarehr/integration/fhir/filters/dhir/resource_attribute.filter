@@ -20,6 +20,8 @@ patient.nameUse=false
 patient.workPhone=false
 patient.namePrefix=false
 patient.email=false
+patient.mrn=false
+patient.language=false
 
 organization.address=false 
 organization.telecom=false 

@@ -103,7 +103,8 @@ public class ClinicalImpression extends AbstractOscarFhirResource< org.hl7.fhir.
 		fhirResource.setStatus( ClinicalImpressionStatus.COMPLETED );
 
 		if( ! getAnnotation().isEmpty() ) {
-			setEncodedBytes( getAnnotation() );			
+			//setEncodedBytes( getAnnotation() );
+			this.encodedBytes = getAnnotation();
 		} else if ( getCaseManagementNote() != null ) {
 			setEncodedBytes( getCaseManagementNote().getNote() );
 		}

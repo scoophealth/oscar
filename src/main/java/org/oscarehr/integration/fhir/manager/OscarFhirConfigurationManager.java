@@ -50,7 +50,7 @@ public final class OscarFhirConfigurationManager {
 	 */
 	public OscarFhirConfigurationManager( LoggedInInfo loggedInInfo, Settings settings ) {
 		
-		logger.info( "Setting Oscar FHIR Configuration Manager with settings file: " + settings );
+		logger.debug( "Setting Oscar FHIR Configuration Manager with settings file: " + settings );
 		
 		this.loggedInInfo = loggedInInfo;
 		

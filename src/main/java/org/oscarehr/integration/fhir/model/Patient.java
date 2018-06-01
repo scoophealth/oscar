@@ -26,13 +26,17 @@ package org.oscarehr.integration.fhir.model;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
+
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.Address.AddressUse;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.HumanName.NameUse;
+import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.oscarehr.common.Gender;
@@ -110,6 +114,7 @@ public class Patient extends AbstractOscarFhirResource< org.hl7.fhir.dstu3.model
 		setAddress( demographic );
 		setTelecom( demographic );
 		setBirthdate( demographic );
+		setLanguage(demographic);
 	}
 	
 	@Override
@@ -120,6 +125,7 @@ public class Patient extends AbstractOscarFhirResource< org.hl7.fhir.dstu3.model
 		setAddress( patient );
 		setTelecom( patient );
 		setBirthdate( patient );
+		setLanguage(patient);
 	}
 	
 	@Override
@@ -168,14 +174,36 @@ public class Patient extends AbstractOscarFhirResource< org.hl7.fhir.dstu3.model
 		demographic.setSex( EnumMappingUtil.administrativeGenderToGender( gender ).name() );
 	}
 	
-	private void setAddress( org.hl7.fhir.dstu3.model.Patient patient ) {
-		patient.addAddress()
-			.setUse( AddressUse.HOME )				
-			.addLine( getOscarResource().getAddress() )
-			.setCity( getOscarResource().getCity() )
-			.setState( getOscarResource().getProvince() )
-			.setPostalCode( getOscarResource().getPostal() );
+	private void setLanguage( org.hl7.fhir.dstu3.model.Patient patient ) {
+		if( include( OptionalFHIRAttribute.language ) ) {	
+			//if("English".equals(getOscarResource().getOfficialLanguage()) || "".equals(getOscarResource().getOfficialLanguage()) ) {
+				CodeableConcept cc = new CodeableConcept();
+				Coding c = cc.addCoding();
+				c.setSystem("https://www.hl7.org/fhir/valueset-languages.html");
+				c.setCode("en-US");
+				patient.addCommunication().setLanguage(cc);
+			//}
+		}
 	}
+	private void setLanguage( Demographic demographic ) {
+		if(getFhirResource().getCommunication() != null && !getFhirResource().getCommunication().isEmpty()) {
+			String language = getFhirResource().getCommunication().get(0).getLanguage().getCoding().get(0).getCode();
+			if(language != null && language.startsWith("en-")) {
+				demographic.setOfficialLanguage("English");
+			}
+		}
+	}
+	
+	private void setAddress( org.hl7.fhir.dstu3.model.Patient patient ) {
+		if( include( OptionalFHIRAttribute.address ) ) {	
+			patient.addAddress()
+				.setUse( AddressUse.HOME )				
+				.addLine( getOscarResource().getAddress() )
+				.setCity( getOscarResource().getCity() )
+				.setState( getOscarResource().getProvince() )
+				.setPostalCode( getOscarResource().getPostal() );
+		}
+	}	
 	
 	private void setAddress( Demographic demographic ) {
 		Address address = getFhirResource().getAddressFirstRep();
@@ -223,8 +251,18 @@ public class Patient extends AbstractOscarFhirResource< org.hl7.fhir.dstu3.model
 	
 	private void setPatientIdentifier( org.hl7.fhir.dstu3.model.Patient patient ) {		
 		patient.addIdentifier()
-			.setSystem( "http://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-patient-hcn" )
+			.setSystem( "https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-patient-hcn" )
 			.setValue( getOscarResource().getHin() );
+		
+		if( include( OptionalFHIRAttribute.mrn ) ) {	
+			Identifier id = patient.addIdentifier();
+			id.setSystem("2.16.840.1.113883.3.239.23.269");
+			CodeableConcept type = new CodeableConcept();
+			type.addCoding().setSystem("http://hl7.org/fhir/v2/0203").setCode("MR");
+			id.setType(type);
+			id.setValue(getOscarResource().getId().toString());
+			
+		}
 	}
 
 	private void setPatientIdentifier( Demographic demographic ) {

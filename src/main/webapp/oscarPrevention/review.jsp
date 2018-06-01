@@ -91,6 +91,8 @@ if(!authed) {
  Bundle bundle = (Bundle)request.getAttribute("bundle");
  String errorMsg = (String)request.getAttribute("error");
  
+ Integer preventionId = (Integer)request.getAttribute("preventionId");
+ String demographicNo = (String)request.getAttribute("demographicNo");
  String submittingProviderNo = null;
  String sender = null;
  String sourceName = null;
@@ -754,6 +756,8 @@ clear: left;
 				<input type="hidden" name="uuid" value="<%=bundle.getId()%>"/>
 				<input type="submit" value="Submit" />
 				&nbsp;&nbsp;
+				<input type="button" value="Edit Prevention" onClick="window.location.href='<%=request.getContextPath()%>/oscarPrevention/AddPreventionData.jsp?id=<%=preventionId %>&demographic_no=<%=demographicNo%>'"/>
+				&nbsp;&nbsp;
 				<input type="button" value="Cancel" onClick="window.close()"/>
 			</form>
             </td>
@@ -810,7 +814,7 @@ clear: left;
 	String getHIN(Patient p) {
 		if (p == null || p.getIdentifier() == null) {return null;}
 		for(Identifier i : p.getIdentifier()) {
-			if("http://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-patient-hcn".equals(i.getSystem())) {
+			if("https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-patient-hcn".equals(i.getSystem())) {
 				return i.getValue();				
 			}
 		}

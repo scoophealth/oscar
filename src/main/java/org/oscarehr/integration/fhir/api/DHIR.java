@@ -82,7 +82,7 @@ public class DHIR {
 	public static synchronized FhirBundleBuilder getFhirBundleBuilder( LoggedInInfo loggedInInfo, int demographicNo, int preventionId ) {
 		
 		//TODO this will be set in a properties file later. The default is false anyway. 
-		SETTINGS.setIncludeSenderEndpoint( Boolean.FALSE ); 
+		SETTINGS.setIncludeSenderEndpoint( Boolean.TRUE ); 
 		
 		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, SETTINGS );
 		HashSet<AbstractOscarFhirResource<?,?>> resourceList = new HashSet<AbstractOscarFhirResource<?,?>>();

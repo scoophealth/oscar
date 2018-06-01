@@ -24,6 +24,8 @@
 
 --%>
 
+<%@page import="org.oscarehr.common.model.Consent"%>
+<%@page import="org.oscarehr.common.dao.ConsentDao"%>
 <%@page import="org.oscarehr.common.model.CVCMapping"%>
 <%@page import="org.oscarehr.common.dao.CVCImmunizationDao"%>
 <%@page import="org.oscarehr.common.dao.CVCMappingDao"%>
@@ -951,7 +953,17 @@ $(document).ready(function(){
                    </fieldset>
                </div>
                <br/>
-               <input type="submit" value="Save">
+               <input type="submit" value="Save" name="action">
+               <%
+   					ConsentDao consentDao = SpringUtils.getBean(ConsentDao.class);
+   					Consent dhirConsent =  consentDao.findByDemographicAndConsentType(Integer.parseInt(demographic_no), "dhir_non_ispa_consent");
+   					
+   					boolean ispa = Boolean.valueOf((String)prevHash.get("ispa"));
+   					
+   					if(ispa || (dhirConsent != null && !dhirConsent.isOptout())) {
+               %>
+               <input type="submit" value="Save & Submit" name="action" >
+                <% } %>
                <% if ( id != null ) { %>
                <input type="submit" name="delete" value="Delete"/>
                <% } %>

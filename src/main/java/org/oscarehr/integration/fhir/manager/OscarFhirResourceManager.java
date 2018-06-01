@@ -306,11 +306,20 @@ public class OscarFhirResourceManager {
 			org.oscarehr.integration.fhir.model.Patient patient, HashSet<AbstractOscarFhirResource<?,?>> resourceList) {
 		
 		String performingProviderNo = immunization.getOscarResource().getProviderNo();
-		PerformingPractitioner performingPractitioner = OscarFhirResourceManager.getPerformingPractitionerByProviderNumber( configurationManager, performingProviderNo );
-		if( performingPractitioner != null ) {
+		if(performingProviderNo != null && !"-1".equals(performingProviderNo) ) {
+			PerformingPractitioner performingPractitioner = OscarFhirResourceManager.getPerformingPractitionerByProviderNumber( configurationManager, performingProviderNo );
+			if( performingPractitioner != null ) {
+				immunization.addPerformingPractitioner( performingPractitioner.getReference() );
+				resourceList.add( performingPractitioner );
+			}	
+		} else if (performingProviderNo != null && "-1".equals(performingProviderNo)) {
+			Provider provider = new Provider();
+			provider.setProviderNo(UUID.randomUUID().toString().substring(0,8));
+			PerformingPractitioner performingPractitioner = new org.oscarehr.integration.fhir.model.PerformingPractitioner( provider, configurationManager );
 			immunization.addPerformingPractitioner( performingPractitioner.getReference() );
 			resourceList.add( performingPractitioner );
 		}
+		
 		immunization.setPatientReference( patient.getReference() );
 		resourceList.add( patient );
 		resourceList.add( immunization );

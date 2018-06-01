@@ -42,9 +42,11 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
+import org.oscarehr.common.model.DHIRSubmissionLog;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
+import org.oscarehr.managers.DHIRSubmissionManager;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -529,6 +531,13 @@ public class PreventionData {
 				if (ext.containsKey("comments") && !ext.get("comments").equals("")) {
 					addToHashIfNotNull(h, "comments", ext.get("comments"));
 					summary += "\nComments: " + ext.get("comments");
+				}
+				
+				DHIRSubmissionManager dhirSubmissionManager = SpringUtils.getBean(DHIRSubmissionManager.class);
+				List<DHIRSubmissionLog> dhirLogs =  dhirSubmissionManager.findByPreventionId(prevention.getId());
+				if(!dhirLogs.isEmpty()) {
+					summary += "\n\nDHIR Submission Transaction ID: " + dhirLogs.get(0).getTransactionId();
+					summary += "\nDHIR Submission Location ID: " + dhirLogs.get(0).getBundleId();
 				}
 				addToHashIfNotNull(h, "summary", summary);
 				log.debug("1" + h.get("preventionType") + " " + h.size());

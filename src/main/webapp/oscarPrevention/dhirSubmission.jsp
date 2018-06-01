@@ -86,7 +86,7 @@
 	if (!delegateOneIdEmail.equals("")) {
 		providerEmail = delegateOneIdEmail;
 	}
-	logger.debug("providerEmail is " + providerEmail);
+	//logger.debug("providerEmail is " + providerEmail);
 	
 	String backendEconsultUrl = OscarProperties.getInstance().getProperty("backendEconsultUrl");
 	
@@ -116,7 +116,7 @@
 	log.setDateCreated(new java.util.Date());
 	log.setDemographicNo(Integer.parseInt(demographicNo));
 	log.setPreventionId(Integer.parseInt(i.getId()));
-	log.setStatus("pending");
+	log.setStatus("Error");
 	log.setSubmitterProviderNo(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo());
 	log.setBundleId(bundle.getId());
 	submissionManager.save(log);
@@ -303,7 +303,7 @@ clear: left;
                     
                     Integer code = (Integer)object.get("code");
                     
-                    if(code >= 200 && code < 300) {
+                    if(code >= 200 && code < 300) { 
                     	String val = null;
                     	if(object != null) {
                     		JSONObject headers = new JSONObject((String)object.get("headers"));
@@ -311,12 +311,12 @@ clear: left;
                     	}
                     	
                     	for(DHIRSubmissionLog log : logs) {
-                    		log.setStatus("complete");
+                    		log.setStatus("Submitted");
                     		log.setTransactionId(val);
                     		submissionManager.update(log);
                     	}
             %>
-        		<h2>Message was successfully received by DHIR - transaction ID is <%=val %> </h2>
+        		<h2>Your submission was accepted by the Digital Health Immunization Repository (DHIR). </h2>
         		<input type="button" value="Close Window" onClick="window.close()"/>
         	<%
         }
@@ -331,7 +331,7 @@ clear: left;
         	
         	
         	for(DHIRSubmissionLog log : logs) {
-        		log.setStatus("error");
+        		log.setStatus("Error");
         		log.setTransactionId(val);
         		log.setResponse(entity != null ? entity : "");
         		submissionManager.update(log);
@@ -355,7 +355,7 @@ clear: left;
         	}
         	
         	for(DHIRSubmissionLog log : logs) {
-        		log.setStatus("error");
+        		log.setStatus("Error");
         		log.setTransactionId(val);
         		log.setResponse(entity != null ? entity : "");
         		submissionManager.update(log);

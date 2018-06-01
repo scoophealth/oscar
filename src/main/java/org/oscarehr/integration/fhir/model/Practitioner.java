@@ -33,7 +33,7 @@ import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
 
 public class Practitioner extends AbstractOscarFhirResource<org.hl7.fhir.dstu3.model.Practitioner, org.oscarehr.common.model.Provider> {
 
-	public enum LicenseType { CPSO, CNO, DEFAULT }
+	public enum LicenseType { CPSO, CNO, OCP, DEFAULT }
 
 	public Practitioner( Provider provider ) {
 		super( new org.hl7.fhir.dstu3.model.Practitioner(), provider );
@@ -122,6 +122,8 @@ public class Practitioner extends AbstractOscarFhirResource<org.hl7.fhir.dstu3.m
 			break;
 		case CPSO: setDoctorIdentifier( fhirResource, practitionerNumber );
 			break;
+		case OCP: setPharmacistIdentifier( fhirResource, practitionerNumber );
+			break;
 		case DEFAULT: fhirResource.addIdentifier().setSystem( "" ).setValue( practitionerNumber );
 			break;		
 		}
@@ -140,6 +142,12 @@ public class Practitioner extends AbstractOscarFhirResource<org.hl7.fhir.dstu3.m
 		.setValue( practitionerNumber );
 	}
 	
+	protected void setPharmacistIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource, String practitionerNumber ) {
+		fhirResource.addIdentifier()
+		.setSystem( "https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-pharmacist" )
+		.setValue( practitionerNumber );
+	}
+	
 	protected void setQualification( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
 		
 		//TODO these codes cannot be hard coded like this. Temporary hack
@@ -153,11 +161,17 @@ public class Practitioner extends AbstractOscarFhirResource<org.hl7.fhir.dstu3.m
 		if( LicenseType.CPSO.name().equals( licensetype ) ) {
 			designation = "MD";
 		}
-				
-		fhirResource.addQualification().getCode().addCoding()
-			.setSystem("https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-immunizations-practitioner-designation")
-			.setCode( designation )
-			.setDisplay( designation );
+		
+		if( LicenseType.OCP.name().equals( licensetype ) ) {
+			designation = "PHARM";
+		}
+		
+		if(designation != null) {
+			fhirResource.addQualification().getCode().addCoding()
+				.setSystem("https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-immunizations-practitioner-designation")
+				.setCode( designation )
+				.setDisplay( designation );
+		}
 	}
 	
 	

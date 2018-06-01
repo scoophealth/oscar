@@ -31,15 +31,15 @@ import org.hl7.fhir.dstu3.model.Attachment;
 import org.hl7.fhir.dstu3.model.BaseResource;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Communication;
-import org.hl7.fhir.dstu3.model.Reference;
-import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.Communication.CommunicationPayloadComponent;
 import org.hl7.fhir.dstu3.model.Communication.CommunicationStatus;
 import org.hl7.fhir.dstu3.model.Organization;
+import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.Resource;
 import org.oscarehr.common.model.Clinic;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
-import org.oscarehr.integration.fhir.model.Destination;
 import org.oscarehr.integration.fhir.model.AbstractOscarFhirResource;
+import org.oscarehr.integration.fhir.model.Destination;
 import org.oscarehr.integration.fhir.model.Sender;
 
 /**
@@ -59,17 +59,43 @@ public class FhirCommunicationBuilder extends AbstractFhirMessageBuilder<Communi
 	}
 	
 	private void setCommunication( org.hl7.fhir.dstu3.model.Communication communication ) {
-		
 		Date timestamp = new Date( System.currentTimeMillis() );
+		
+		// Sender : The Sender Organization (Organization)
+		AbstractOscarFhirResource<?,?> senderOscarFhirResource = getSender().getOscarFhirResource();
+		if( senderOscarFhirResource != null ) {
+			communication.getSender().setReference( senderOscarFhirResource.getContainedReferenceLink() );
+			communication.getContained().add( (Resource) senderOscarFhirResource.getFhirResource() );
+		} else {
+			communication.getSender().setReference("#Organization" + getSender().getClinic().getId());
+		}
+		
+		
+		// Destination: The Destination as an Organization Resource.
+		List<AbstractOscarFhirResource<?,?>> oscarFhirResources = this.getDestination().getOscarFhirResources();
+		for(AbstractOscarFhirResource<?,?> oscarFhirResource : oscarFhirResources) {
+			communication.addRecipient().setReference( oscarFhirResource.getContainedReferenceLink() );
+			communication.getContained().add( (Resource) oscarFhirResource.getFhirResource() );
+		}
+	
+		// Communication version Meta tag
 		communication.getMeta().setLastUpdated( timestamp );
+		
+		// TODO Need to feed Oscar's URI into this. ID is random UUID for now.
+		//Identifier id = communication.addIdentifier();
+		//id.setSystem("http://hl7.org/fhir/v2/0203")
+		//	.setValue( UUID.randomUUID().toString() ); 
+		
+		// Timestamp Sent
 		communication.setSent( timestamp );
 		setWrapper( communication );
 		setID( UUID.randomUUID().toString() );
 		setEndpointIdentifier(UUID.randomUUID().toString());
 		
 		// Initial communication status is INPROGRESS
-		setStatus( CommunicationStatus.INPROGRESS );
+		setStatus( CommunicationStatus.COMPLETED );
 		
+		//communication.setLanguage("en-US");
 		// set the sender attribute automatically from the preset Sender Resource.
 		setContainedSender(getSender());
 		
@@ -167,7 +193,7 @@ public class FhirCommunicationBuilder extends AbstractFhirMessageBuilder<Communi
 	public void setEndpointIdentifier(String identifier) {
 		getCommunication()
 			.addIdentifier()
-			.setSystem( getSender().getEndpoint() ) //TODO should the sender endpoint be optional?
+			.setSystem("http://hl7.org/fhir/v2/0203")
 			.setValue(identifier); 
 	}
 
