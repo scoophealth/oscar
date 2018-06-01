@@ -2929,6 +2929,8 @@
 		<action path="/admin/AuditLogPurge" type="org.oscarehr.admin.web.AuditLogPurgeAction" parameter="method">
 			<forward name="success" path="/admin/auditLogPurge.jsp" />
 		</action>
+		<action path="/lab/DownloadEmbeddedDocumentFromLab" type="oscar.oscarLab.ca.all.pageUtil.DownloadEmbeddedDocumentFromLabAction" >
+		</action>
 		
 		<action path="/dhir/submit" type="org.oscarehr.integration.dhir.SubmitImmunizationAction" parameter="method" scope="request">
 			<forward name="success" path="/oscarPrevention/dhirSubmission.jsp"/>

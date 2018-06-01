@@ -785,21 +785,34 @@ jQuery(document).ready(function() {
 
 function consentClearBtn(radioBtnName)
 {
-    //clear out opt-in/opt-out radio buttons
-    var ele = document.getElementsByName(radioBtnName);
+	
+	if( confirm("Proceed to clear all record of this consent?") ) 
+	{
 
-    for(var i=0;i<ele.length;i++)
-    {
-        ele[i].checked = false;
-    }
+	    //clear out opt-in/opt-out radio buttons
+	    var ele = document.getElementsByName(radioBtnName);
+	    var preset = document.getElementById("consentPreset_" + radioBtnName).value;
 
-    //hide consent date field from displaying
-    var consentDate = document.getElementById("consentDate");
-
-    if (consentDate && consentDate.style.display === "block")
-    {
-        consentDate.style.display = "none";
-    }
+	    for(var i=0;i<ele.length;i++)
+	    {
+	    	ele[i].checked = false;
+	    }
+	
+	    //hide consent date field from displaying
+	    var consentDate = document.getElementById("consentDate_" + radioBtnName);
+	
+	    if (consentDate)
+	    {
+	        consentDate.style.display = "none";
+	    }
+	    
+	    // is the user trying to clear an old consent or are they just curious what the clear button does.
+	    if(preset === "true") 
+	    {   
+		    // set the delete parameter to update the deleted status in the database entry.
+		    document.getElementById("deleteConsent_" + radioBtnName).value = 1;
+	    }
+	}
 }
 </script>
 
@@ -3213,7 +3226,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 					
 <tr valign="top"><td colspan="4">
 	<table id="privacyConsentTable" >	
-			<tr id="privacyConsentHeading" style="display:none;">
+			<tr id="privacyConsentHeading" class="category_table_heading" style="display:none;">
 				<th class="alignLeft" colspan="4" >Privacy Consent</th>
 			</tr>
 			
@@ -3250,7 +3263,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 			</tr>
 			<% } %>
 			  			
-			<%-- This block of code was designed to eventually manage all of the patient consents. --%>
+		<%-- This block of code was designed to eventually manage all of the patient consents. --%>
 			<oscar:oscarPropertiesCheck property="USE_NEW_PATIENT_CONSENT_MODULE" value="true" >
 			
 				<c:forEach items="${ consentTypes }" var="consentType" varStatus="count">
@@ -3260,55 +3273,62 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 							<c:set var="patientConsent" value="${ consent }" />
 						</c:if>													
 					</c:forEach>
-					<tr class="privacyConsentRow" id="${ count.index }" valign="top">
-						<td class="alignLeft" width="30%" >
-							<label style="font-weight:bold;" valign="center" for="${ consentType.type }" >
+					<tr class="privacyConsentRow" id="${ count.index }" >
+						<td class="alignRight" style="width:16%;vertical-align:top;">
+							<div style="font-weight:bold;white-space:nowrap;" >
 								<c:out value="${ consentType.name }" />
-							</label>
-						</td>
-						
-						<td class="alignLeft" colspan="2" width="40%" >
-							<c:out value="${ consentType.description }" />
-						</td>
-						
-						<td class="alignLeft" id="consentStatusDate" width="25%" >	
-                                                    <input type="radio"
-                                                                name="${ consentType.type }"
-                                                                id="${ consentType.type }"
-                                                                value="0"
-                                                                <c:if test="${ not empty patientConsent and not empty patientConsent.optout and not patientConsent.optout }">
-                                                                    <c:out value="checked" />
-                                                                </c:if>
-                                                    />
-                                                    <span>Opt-In</span>
-
-                                                    <input type="radio"
-                                                                name="${ consentType.type }"
-                                                                id="${ consentType.type }"
-                                                                value="1"
-                                                                <c:if test="${  not empty patientConsent  and not empty patientConsent.optout and patientConsent.optout }">
-                                                                    <c:out value="checked" />
-                                                                </c:if>
-                                                    />
-                                                    <span>Opt-Out</span>
-
-                                                    <input type="button"
-                                                           name="clearRadio_${consentType.type}_btn"
-                                                           onclick="consentClearBtn('${consentType.type}')" value="Clear"/>
-
-                                                    <br/>
+							</div>
+							
 							<c:if test="${ not empty patientConsent and not empty patientConsent.optout }" >
 								<c:choose>
 									<c:when test="${ patientConsent.optout }">
-										<span id="consentDate" class="info" style="display: block; color:red;">Opted Out:<c:out value="${ patientConsent.optoutDate }" /></span>
-
+										<div id="consentDate_${consentType.type}" style="color:red;white-space:nowrap;">
+											Opted Out:<c:out value="${ patientConsent.optoutDate }" />
+										</div>
 									</c:when>					
 									<c:otherwise>
-										<span id="consentDate" class="info" style="display: block; color:green;">Consented:<c:out value="${ patientConsent.consentDate }" /></span>
-
+										<div id="consentDate_${consentType.type}" style="color:green;white-space:nowrap;">
+											Consented:<c:out value="${ patientConsent.consentDate }" />
+										</div>
 									</c:otherwise>				
 								</c:choose>															
-							</c:if>																														
+							</c:if>	
+						</td>
+												
+						<td colspan="2" style="padding-left:10px;vertical-align:top;">
+							<c:out value="${ consentType.description }" />
+						</td>
+						
+						<td id="consentStatusDate" style="width:31%;vertical-align:top;" >	
+                            <input type="radio"
+                                   name="${ consentType.type }"
+                                   id="optin_${ consentType.type }"
+                                   value="0"
+                                   <c:if test="${ not empty patientConsent and not empty patientConsent.optout and not patientConsent.optout }">
+                                       <c:out value="checked" />
+                                   </c:if>
+                            />
+                            <label for="optin_${ consentType.type }" >Opt-In</label>
+                            <input type="radio"
+                                   name="${ consentType.type }"
+                                   id="optout_${ consentType.type }"
+                                   value="1"
+                                   <c:if test="${ not empty patientConsent and not empty patientConsent.optout and patientConsent.optout }">
+                                       <c:out value="checked" />
+                                   </c:if>
+                            />
+                            <label for="optout_${ consentType.type }" >Opt-Out</label>
+                            <input type="button"
+                                   name="clearRadio_${consentType.type}_btn"
+                                   onclick="consentClearBtn('${consentType.type}')" value="Clear" />
+                             
+                            <%-- Was this consent set by the user? Or by the database?  --%>
+                            <input type="hidden" name="consentPreset_${consentType.type}" id="consentPreset_${consentType.type}" 
+                            	value="${ not empty patientConsent }" /> 
+                            
+                            <%-- This consent will be labeled for delete when the clear button is clicked. --%>   
+                            <input type="hidden" name="deleteConsent_${consentType.type}" id="deleteConsent_${consentType.type}" value="0" />
+																													
 						</td>
 						
 					</tr>
@@ -3361,7 +3381,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								<td colspan="4">
 								<table border="0" cellspacing="0" cellpadding="0" width="100%" id="waitingListTable">
 								
-								<tr id="waitingListHeading" style="display:none;">
+								<tr id="waitingListHeading" class="category_table_heading" style="display:none;">
 									<th colspan="4" class="alignLeft" >Waiting List</th>
 								</tr>
 									<tr>
@@ -3587,31 +3607,46 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 
 
 <tr valign="top">
-<td nowrap colspan="4">
-<b><bean:message key="demographic.demographiceditdemographic.rxInteractionWarningLevel" /></b>
-<input type="hidden" name="rxInteractionWarningLevelOrig"
-									value="<%=StringUtils.trimToEmpty(demoExt.get("rxInteractionWarningLevel"))%>" />
-					<select id="rxInteractionWarningLevel" name="rxInteractionWarningLevel">
-						<option value="0" <%=(warningLevel.equals("0")?"selected=\"selected\"":"") %>>Not Specified</option>
-						<option value="1" <%=(warningLevel.equals("1")?"selected=\"selected\"":"") %>>Low</option>
-						<option value="2" <%=(warningLevel.equals("2")?"selected=\"selected\"":"") %>>Medium</option>
-						<option value="3" <%=(warningLevel.equals("3")?"selected=\"selected\"":"") %>>High</option>
-						<option value="4" <%=(warningLevel.equals("4")?"selected=\"selected\"":"") %>>None</option>
-					</select>
-					<oscar:oscarPropertiesCheck property="INTEGRATOR_LOCAL_STORE" value="yes">
-					<b><bean:message key="demographic.demographiceditdemographic.primaryEMR" />:</b>
-
-				    <%
-				       	String primaryEMR = demoExt.get("primaryEMR");
-				       	if(primaryEMR==null) primaryEMR="0";
-				    %>
-					<input type="hidden" name="primaryEMROrig" value="<%=StringUtils.trimToEmpty(demoExt.get("primaryEMR"))%>" />
-					<select id="primaryEMR" name="primaryEMR">
-						<option value="0" <%=(primaryEMR.equals("0")?"selected=\"selected\"":"") %>>No</option>
-						<option value="1" <%=(primaryEMR.equals("1")?"selected=\"selected\"":"") %>>Yes</option>
-					</select>
-					</oscar:oscarPropertiesCheck>
-
+<td colspan="4">
+<table id="rxinteractionTable" style="width:100%;" >
+	<tr class="category_table_heading">
+		<th class="alignLeft"  colspan="4">
+		<bean:message key="demographic.demographiceditdemographic.rxInteractionWarningLevel" /></th>
+	</tr>
+	<tr>
+		<td class="alignRight" style="vertical-align:top;font-weight:bold;" >
+			Level
+		</td>
+		<td style="vertical-align:top;">
+			<input type="hidden" name="rxInteractionWarningLevelOrig"
+							value="<%=StringUtils.trimToEmpty(demoExt.get("rxInteractionWarningLevel"))%>" />
+			<select id="rxInteractionWarningLevel" name="rxInteractionWarningLevel">
+				<option value="0" <%=(warningLevel.equals("0")?"selected=\"selected\"":"") %>>Not Specified</option>
+				<option value="1" <%=(warningLevel.equals("1")?"selected=\"selected\"":"") %>>Low</option>
+				<option value="2" <%=(warningLevel.equals("2")?"selected=\"selected\"":"") %>>Medium</option>
+				<option value="3" <%=(warningLevel.equals("3")?"selected=\"selected\"":"") %>>High</option>
+				<option value="4" <%=(warningLevel.equals("4")?"selected=\"selected\"":"") %>>None</option>
+			</select>
+		</td>
+		
+		<oscar:oscarPropertiesCheck property="INTEGRATOR_LOCAL_STORE" value="yes">
+			<td class="alignRight" style="width:16%;vertical-align:top;">	
+				<b><bean:message key="demographic.demographiceditdemographic.primaryEMR" />:</b>
+			</td>
+			<td>
+		    <%
+		       	String primaryEMR = demoExt.get("primaryEMR");
+		       	if(primaryEMR==null) primaryEMR="0";
+		    %>
+			<input type="hidden" name="primaryEMROrig" value="<%=StringUtils.trimToEmpty(demoExt.get("primaryEMR"))%>" />
+			<select id="primaryEMR" name="primaryEMR">
+				<option value="0" <%=(primaryEMR.equals("0")?"selected=\"selected\"":"") %>>No</option>
+				<option value="1" <%=(primaryEMR.equals("1")?"selected=\"selected\"":"") %>>Yes</option>
+			</select>
+			</td>
+		</oscar:oscarPropertiesCheck>
+	</tr>
+</table>
 </td>
 </tr> 
 <%-- PATIENT NOTES MODULE --%>		

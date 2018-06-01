@@ -1085,7 +1085,7 @@ for (ClinicNbr clinic : nbrs) {
 
         if (bFlag) {
             BillingONService billingONService = (BillingONService) SpringUtils.getBean("billingONService"); 
-            List<BillingONItem> bItems = new ArrayList<>();
+            List<BillingONItem> bItems = new ArrayList<BillingONItem>();
             
             if (bCh1 != null)
             {

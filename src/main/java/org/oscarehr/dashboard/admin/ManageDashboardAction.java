@@ -26,6 +26,7 @@ package org.oscarehr.dashboard.admin;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
@@ -40,6 +44,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.upload.FormFile;
+import org.dom4j.Document;
+import org.dom4j.io.SAXReader;
+import org.dom4j.io.SAXValidator;
+import org.dom4j.util.XMLErrorHandler;
 import org.oscarehr.common.model.Dashboard;
 import org.oscarehr.common.model.IndicatorTemplate;
 import org.oscarehr.managers.DashboardManager;
@@ -104,8 +112,41 @@ public class ManageDashboardAction extends DispatchAction {
 		// The DashboarManager will contain a method. This class will return an error to the user.
 		
 		if( filebytes != null ) {
-			message = dashboardManager.importIndicatorTemplate( loggedInInfo, filebytes );
-			json = JSONObject.fromObject(message);
+			Boolean isOscarXml = false;
+			URL schemaSource = Thread.currentThread().getContextClassLoader().getResource("indicatorXMLTemplates/IndicatorXMLTemplateSchema.xsd");
+
+			try {
+				XMLErrorHandler errorHandler = new XMLErrorHandler();
+				SAXParserFactory factory = SAXParserFactory.newInstance();
+				factory.setValidating(true);
+				factory.setNamespaceAware(true);
+				SAXParser parser = factory.newSAXParser();
+				SAXReader xmlReader = new SAXReader();
+				Document xmlDocument = (Document) xmlReader.read(formFile.getInputStream());
+				parser.setProperty(  
+	                    "http://java.sun.com/xml/jaxp/properties/schemaLanguage",  
+	                    "http://www.w3.org/2001/XMLSchema");
+				parser.setProperty(  
+	                    "http://java.sun.com/xml/jaxp/properties/schemaSource",  
+	                    "file:" + schemaSource.getPath());
+				SAXValidator validator = new SAXValidator(parser.getXMLReader());
+				validator.setErrorHandler(errorHandler);
+				validator.validate(xmlDocument);
+				if (!errorHandler.getErrors().hasContent()) {
+					isOscarXml = true;
+				}
+			} catch (Exception e) {		
+				MiscUtils.getLogger().error("Failed to transfer file. ", e);
+			}
+			
+			if(isOscarXml){
+				message = dashboardManager.importIndicatorTemplate( loggedInInfo, filebytes );
+				json = JSONObject.fromObject(message);
+			}else{
+				json = new JSONObject();
+				json.put("status", "error");
+				json.put("message", "There is a validation error");
+			}
 		}
 
 		Map<String, String> messageMap = new HashMap<String, String>();

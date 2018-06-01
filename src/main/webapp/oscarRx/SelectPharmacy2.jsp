@@ -83,7 +83,9 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 .ui-autocomplete {
 	background-color: #CEF6CE;
 	border: 3px outset #2EFE2E;
-	width:300px;
+    width:300px;
+    overflow-y: auto;
+    max-height: 500px;
 }
 
 .ui-menu-item:hover {

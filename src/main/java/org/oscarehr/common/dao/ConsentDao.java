@@ -40,12 +40,12 @@ public class ConsentDao extends AbstractDao<Consent> {
 	}
 	
 	/**
-	 * This query should never return more than one consentType. 
+	 * This query should never return more than one consentType. Returns consents that are not deleted only. 
 	 * @param int demographic_no
 	 * @param int consentTypeId
 	 */
 	public Consent findByDemographicAndConsentTypeId( int demographic_no, int consentTypeId ) {
-		String sql = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 and x.consentTypeId=?2";
+		String sql = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 and x.consentTypeId=?2 AND x.deleted=0";
     	Query query = entityManager.createQuery(sql);
     	query.setParameter( 1, demographic_no );
     	query.setParameter( 2, consentTypeId );
@@ -66,7 +66,7 @@ public class ConsentDao extends AbstractDao<Consent> {
 	
 	
 	public List<Consent> findByDemographic( int demographic_no ) {
-		String sql = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1";
+		String sql = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 AND x.deleted=0";
     	Query query = entityManager.createQuery(sql);
     	query.setParameter( 1, demographic_no );
 
@@ -79,7 +79,7 @@ public class ConsentDao extends AbstractDao<Consent> {
 		String sql = "SELECT x FROM " 
 					+ modelClass.getSimpleName() 
 					+ " x WHERE x.consentTypeId = ?1"
-					+ " AND x.editDate  > ?2 ";
+					+ " AND x.editDate  > ?2 AND x.deleted=0";
 		
     	Query query = entityManager.createQuery(sql);
     	query.setParameter( 1, consentTypeId );

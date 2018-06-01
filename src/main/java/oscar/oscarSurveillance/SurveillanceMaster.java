@@ -35,12 +35,15 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import org.apache.commons.digester.Digester;
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.ResourceStorageDao;
+import org.oscarehr.common.model.ResourceStorage;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.xml.sax.SAXException;
 
 import oscar.OscarProperties;
+import java.util.List;
 
 /**
  * Manages Surveys currently loaded
@@ -50,6 +53,7 @@ public   class SurveillanceMaster {
     private static Logger log = MiscUtils.getLogger();
 
    static SurveillanceMaster surveillanceMaster = new SurveillanceMaster();
+   static ResourceStorageDao resourceStorageDao = SpringUtils.getBean(ResourceStorageDao.class);
    static boolean loaded = false;
    static ArrayList<Survey> surveyList = null;
    static Hashtable surveyTable = null;
@@ -64,6 +68,13 @@ public   class SurveillanceMaster {
          isLoaded = false;
       }
       return isLoaded;
+   }
+   
+   public static SurveillanceMaster reInit() {
+	   loaded = false;
+	   surveyList = null;
+	   surveyTable = null;
+	   return getInstance();
    }
 
    /**
@@ -100,7 +111,7 @@ public   class SurveillanceMaster {
       return surveyList;
    }
 
-   private void clearSurveys(){
+   private static void clearSurveys(){
       surveyList = null;
       surveyTable = null;
       surveyList = new ArrayList<Survey>();
@@ -111,7 +122,7 @@ public   class SurveillanceMaster {
     * Add a survey to the list of currently run surveys
     * @param s Survey
     */
-   public void addSurvey(Survey s){
+   public static void addSurvey(Survey s){
       log.debug("addSurvey(Survey s) gets called");
       if (surveyList == null){
          clearSurveys();
@@ -189,56 +200,49 @@ public   class SurveillanceMaster {
     *   value........Short form of the question answer.  Used to run queries on results.
     */
    public static void initSurvey(){
-      Digester digester = new Digester();
-      digester.push(surveillanceMaster); // Push controller servlet onto the stack
-      digester.setValidating(false);
-
-      digester.addObjectCreate("surveillance-config/survey",Survey.class);
-      digester.addSetProperties("surveillance-config/survey");
-      digester.addBeanPropertySetter("surveillance-config/survey/surveyQuestion","surveyQuestion");
-      digester.addBeanPropertySetter("surveillance-config/survey/patientCriteria","patientCriteria");
-      digester.addBeanPropertySetter("surveillance-config/survey/exportQuery","exportQuery");
-      digester.addBeanPropertySetter("surveillance-config/survey/exportString","exportString");
-      digester.addCallMethod("surveillance-config/survey/provider","addProvider",0);
-      digester.addCallMethod("surveillance-config/survey/answer","addAnswer",3);
-      digester.addCallParam("surveillance-config/survey/answer",0);
-      digester.addCallParam("surveillance-config/survey/answer",1,"value");
-      digester.addCallParam("surveillance-config/survey/answer",2,"status");
-      digester.addSetNext("surveillance-config/survey","addSurvey");
-
-
 
       String filename = OscarProperties.getInstance().getProperty("surveillance_config_file");
       if (filename != null){
          FileInputStream input = null;
          try{
             input = new FileInputStream(filename) ;
+            Survey survey = Survey.fromStream(input);
+            addSurvey(survey);
          }catch(Exception eio){
             if (input == null){
                log.error("OSCAR SURVEILLANCE ERROR:  could not find file :"+filename,eio);
             }
-            surveyList = new ArrayList<Survey>();
-            surveyTable = new Hashtable();
+            surveyList = null;
          }
-
-         try {
-            digester.parse(input);
-            input.close();
-         }
-         catch (SAXException e) { log.error("filename :"+filename,e); }
-         catch(Exception eio2){ log.error("filename :"+filename,eio2); }
-
 
          if(surveyList == null){
-            surveyList  = new ArrayList<Survey>();
-            surveyTable = new Hashtable();
             log.error("OSCAR SURVEILLANCE ERROR: could not load from file "+filename);
          }
       }else{
-         log.debug("OSCAR SURVEILLANCE -- module not initialized");
-         surveyList  = new ArrayList<Survey>();
-         surveyTable = new Hashtable();
+    	log.info("Trying to load Surveillance from DATABASE");  
+    	List<ResourceStorage> resourceStorageList = resourceStorageDao.findActiveAll(ResourceStorage.SURVEILLANCE_CONFIGURATION);
+    	log.info("Trying to load Surveillance from DATABASE"+resourceStorageList.size());  
+      	for(ResourceStorage resourceStorage: resourceStorageList){
+      		//InputStream is = new ByteArrayInputStream(resourceStorage.getFileContents());
+      		log.info("loading surveillance file from resource storage id"+resourceStorage.getId());
+      		try {
+      			Survey survey =  Survey.createSurvey(resourceStorage.getFileContents());
+      			addSurvey(survey);
+      		
+             }
+             catch (SAXException e) { log.error("resource name :"+resourceStorage.getResourceName(),e); }
+             catch(Exception eio2){ log.error("resource name :"+resourceStorage.getResourceName(),eio2); }
+      		 
+      	}
+        
+
       }
+      
+      if(surveyList == null){
+        surveyList  = new ArrayList<Survey>();
+        surveyTable = new Hashtable();
+      }
+      	
       log.debug(numSurveys());
       displaySurveys();
 

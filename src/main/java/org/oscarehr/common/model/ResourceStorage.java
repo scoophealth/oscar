@@ -34,6 +34,8 @@ public class ResourceStorage extends AbstractModel<Integer> {
 
 	public static final String LU_CODES = "LU_CODES";
 	
+	public static final String SURVEILLANCE_CONFIGURATION = "SURVEILLANCE_CONFIGURATION";
+	
 	/*create table ResourceStorage (
 			id int(10)  NOT NULL auto_increment primary key,
 			resourceType varchar(100),
@@ -53,7 +55,31 @@ public class ResourceStorage extends AbstractModel<Integer> {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date uploadDate;
+	
+	@Column(name="update_date")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date updateDate = new Date();
 
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public Date getReferenceDate() {
+		return referenceDate;
+	}
+
+	public void setReferenceDate(Date referenceDate) {
+		this.referenceDate = referenceDate;
+	}
+
+	@Column(name="reference_date")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date referenceDate;
+	
 	private String resourceType = null; 
 	private String resourceName = null;
 	private String uuid = null;

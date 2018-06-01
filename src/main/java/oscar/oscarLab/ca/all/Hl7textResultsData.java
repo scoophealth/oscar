@@ -34,7 +34,6 @@ import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.dao.ConsultResponseDocDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
-import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.MeasurementMapDao;
 import org.oscarehr.common.dao.MeasurementsDeletedDao;
@@ -68,7 +67,6 @@ public class Hl7textResultsData {
 	private static ConsultDocsDao consultDocsDao = SpringUtils.getBean(ConsultDocsDao.class);
 	private static ConsultResponseDocDao consultResponseDocDao = SpringUtils.getBean(ConsultResponseDocDao.class);
 	private static Hl7TextInfoDao hl7TxtInfoDao = SpringUtils.getBean(Hl7TextInfoDao.class);
-	private static Hl7TextMessageDao hl7TxtMsgDao = SpringUtils.getBean(Hl7TextMessageDao.class);
 	private static PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
 
 	private Hl7textResultsData() {
@@ -645,7 +643,10 @@ public class Hl7textResultsData {
 			}
 
 			lbData.accessionNumber = accessionNum;
-			lbData.healthNumber = health_no;
+			if(health_no != null && health_no.equals("null")) {
+				health_no = "";
+			}
+			lbData.healthNumber = StringUtils.trimToEmpty(health_no);
 			lbData.patientName = last_name + ", " + first_name;
 			lbData.sex = sex;
 			lbData.label = label;

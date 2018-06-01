@@ -209,6 +209,25 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 				}
 				
 				letterheadName = firstName + " " + letterheadNameProvider.getSurname();
+
+				if (OscarProperties.getInstance().getBooleanProperty("consultation_display_practitioner_no", "true"))
+				{
+					ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+					String providerNo = letterheadNameProvider.getProviderNo();
+					if (providerNo != null)
+					{
+						org.oscarehr.common.model.Provider provider = providerDao.getProvider(letterheadNameProvider.getProviderNo());
+						if (provider != null)
+						{
+							String ohipNo = provider.getOhipNo();
+
+							if ( ohipNo != null && !ohipNo.isEmpty())
+							{
+								letterheadName += " (" + ohipNo + ")";
+							}
+						}
+					}
+				}
 			}else{
 				letterheadName = clinic.getClinicName();
 			}
