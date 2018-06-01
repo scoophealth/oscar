@@ -69,7 +69,8 @@ public class ProviderViewAction extends DispatchAction {
 
          String view_name = request.getParameter("view_name");
          String role = (String)request.getSession().getAttribute("userrole");
-         Map<String,View> map = this.userViewDAO.getView(view_name,role);
+	 String providerNo = (String) request.getSession().getAttribute("user");
+         Map<String,View> map = this.userViewDAO.getView(view_name,role, providerNo);
 
          String [] names = request.getParameterValues("name");
          String [] values = request.getParameterValues("value");
@@ -91,6 +92,7 @@ public class ProviderViewAction extends DispatchAction {
              v.setRole(role);
              v.setValue(values[idx]);
              v.setView_name(view_name);
+	     v.setProviderNo(providerNo);
              this.userViewDAO.saveView(v);
          }
 

@@ -41,10 +41,16 @@ public class ViewDao extends AbstractDao<View>{
 		super(View.class);
 	}
 
-    public Map<String, View> getView(String view, String role) {
-    	Query query = entityManager.createQuery("select v from View v where v.view_name=? and v.role=?");
+    public Map<String, View> getView(String view, String role)
+    {
+	return getView(view, role, null);
+    }
+
+    public Map<String, View> getView(String view, String role, String providerNo) {
+    	Query query = entityManager.createQuery("select v from View v where v.view_name=? and v.role=? and v.providerNo = ?");
     	query.setParameter(1, view);
     	query.setParameter(2, role);
+	query.setParameter(3, providerNo);
 
         @SuppressWarnings("unchecked")
         List<View> list = query.getResultList();
@@ -57,15 +63,20 @@ public class ViewDao extends AbstractDao<View>{
         return map;
     }
 
-    public void saveView(View v) {
-       if(v.getId() != null && v.getId().intValue()>0) {
+    public void saveView(View v)
+    {
+       if(v != null && v.getId() != null && v.getId() > 0)
+       {
     	   merge(v);
-       } else {
+       }
+       else
+       {
     	   persist(v);
        }
     }
 
-    public void delete(View v) {
+    public void delete(View v) 
+    {
         remove(v.getId());
     }
 }
