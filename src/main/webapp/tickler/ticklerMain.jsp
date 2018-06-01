@@ -81,7 +81,7 @@
      TicklerLinkDao ticklerLinkDao = (TicklerLinkDao) SpringUtils.getBean("ticklerLinkDao");
 
      String createReport = request.getParameter("Submit");
-     boolean doCreateReport = createReport != null && createReport.equals("Create+Report");
+     boolean doCreateReport = createReport != null && createReport.equals("Create Report");
 
      ViewDao viewDao = (ViewDao) SpringUtils.getBean("viewDao");
      String userRole = (String) session.getAttribute("userrole");
