@@ -313,17 +313,7 @@ $(document).ready( function() {
 			alert("Select at least 1 row to assign a Tickler.");
 		}
 	});
-	
-	//--> Export the drilldown query results to csv
-	$(".exportResults").on('click', function(){
 
-    	var url = "/web/dashboard/display/ExportResults.do";
-    	var data = new Object();
-    	data.indicatorId = (this.id).split("_")[1];
-     
-    	sendData(url, data, null)
-	})
-	
 	//--> Execute the tickler assignment - save
 	$("#saveTicklerBtn").on('click', function(event) {
 		event.preventDefault();
