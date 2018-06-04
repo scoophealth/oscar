@@ -104,7 +104,7 @@ public class ExportQueryHandler extends AbstractQueryHandler {
 		for( Object value : line ) {
 			
 			String stringValue = value + "";			
-			stringBuilder.append( filterQuotes( stringValue ) );
+			stringBuilder.append( filterSeparators(filterQuotes(stringValue)) );
 			stringBuilder.append( SEPARATOR );			
 		}
 		
@@ -122,4 +122,11 @@ public class ExportQueryHandler extends AbstractQueryHandler {
 		return value;
 	}
 	
+	private static String filterSeparators(String value) {
+		if (value.contains(SEPARATOR + "")) {
+			value = "\"" + value + "\"";
+		}
+		return value;
+	}
+
 }
