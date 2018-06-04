@@ -306,7 +306,7 @@ clear: left;
                     if(code >= 200 && code < 300) { 
                     	String val = null;
                     	if(object != null) {
-                    		JSONObject headers = new JSONObject((String)object.get("headers"));
+                    		JSONObject headers = (JSONObject)object.get("headers");
                     		val = (String)headers.get("hialTxId");
                     	}
                     	
@@ -325,7 +325,7 @@ clear: left;
         if((code >=300 && code < 400) || code == 500) {
         	String val = null;
         	if(object != null) {
-        		JSONObject headers = new JSONObject((String)object.get("headers"));
+        		JSONObject headers = (JSONObject)object.get("headers");
         		val = (String)headers.get("hialTxId");
         	}
         	
@@ -350,7 +350,7 @@ clear: left;
         if(code >=400 && code < 500) {
         	String val = null;
         	if(object != null) {
-        		JSONObject headers = new JSONObject((String)object.get("headers"));
+        		JSONObject headers = (JSONObject)object.get("headers");
         		val = (String)headers.get("hialTxId");
         	}
         	

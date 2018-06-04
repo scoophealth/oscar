@@ -45,7 +45,7 @@ public class SubmitImmunizationAction extends DispatchAction {
 	
 		return null;
 		*/
-		return new ActionForward("success");
+		return mapping.findForward("success");
 	}
 	
 }
