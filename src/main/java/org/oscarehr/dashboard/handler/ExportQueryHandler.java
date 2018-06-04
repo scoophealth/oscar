@@ -23,12 +23,11 @@
  */
 package org.oscarehr.dashboard.handler;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.dashboard.query.Column;
 import org.oscarehr.util.MiscUtils;
 
 public class ExportQueryHandler extends AbstractQueryHandler {
@@ -38,6 +37,8 @@ public class ExportQueryHandler extends AbstractQueryHandler {
 	
 	private String csvFile;
 	
+	private String[] columnNames;
+
 	public ExportQueryHandler() {
 		// default
 	}
@@ -58,39 +59,42 @@ public class ExportQueryHandler extends AbstractQueryHandler {
 		super.setQuery( finalQuery );
 	}
 
+	@Override
+	public void setColumns(List<Column> columns) {
+		columnNames = new String[columns.size()];
+
+		for (int i = 0; i < columns.size(); i++) {
+			columnNames[i] = columns.get(i).getTitle();
+		}
+		super.setColumns(columns);
+	}
+
 	public String getCsvFile() {
 		return csvFile;
 	}
 
 	@SuppressWarnings("unchecked")
 	private void setCsvFile( List<?> results ) {
-		
+		if (columnNames == null) {
+			this.csvFile = "";
+		}
+
 		StringBuilder stringBuilder = new StringBuilder();
-		
-		stringBuilder.append( writeHeadings( results ) );
-		
-		for( Object object : results ) {
-			
-			Map<String, ?> result = (Map<String, ?>) object;
-			Collection<?> resultCollection = result.values();
-			Object[] resultArray = new Object[ resultCollection.size() ];
-			resultCollection.toArray( resultArray );
-			
-			stringBuilder.append( writeLine( resultArray ) );
+
+		stringBuilder.append(writeLine(columnNames));
+
+		for (int rowIndex = 0; rowIndex < results.size(); rowIndex++) {
+			Map<String, ?> result = (Map<String, ?>) results.get(rowIndex);
+			Object[] resultArray = new Object[columnNames.length];
+
+			for (int columnIndex = 0; columnIndex < columnNames.length; columnIndex++) {
+				resultArray[columnIndex] = result.get(columnNames[columnIndex]);
+			}
+
+			stringBuilder.append(writeLine(resultArray));
 		}
 
 		this.csvFile = stringBuilder.toString();
-	}
-	
-	@SuppressWarnings("unchecked")
-	private static String writeHeadings( List<?> results ) {
-		
-		Map<String, ?> firstRow = (Map<String, ?>) results.get(0);
-		Set<String> keySet = firstRow.keySet();		
-		String[] headingArray = new String[ keySet.size() ];
-		keySet.toArray( headingArray );
-		
-		return writeLine( headingArray );
 	}
 
 	private static String writeLine( Object[] line ) {
