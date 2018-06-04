@@ -30,14 +30,12 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.caisi_integrator.util.MiscUtils;
-
-import com.google.common.io.CharStreams;
 
 public class SubmitImmunizationAction extends DispatchAction {
 
 	//for testing.
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		/*
 		MiscUtils.getLogger().info("MARC3 ==============================================");
 		 if ("POST".equalsIgnoreCase(request.getMethod())) {
 		        String test = CharStreams.toString(request.getReader());
@@ -46,6 +44,8 @@ public class SubmitImmunizationAction extends DispatchAction {
 		 }
 	
 		return null;
+		*/
+		return new ActionForward("success");
 	}
 	
 }
