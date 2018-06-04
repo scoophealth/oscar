@@ -32,12 +32,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.util.SpringUtils;
 
+@Ignore
 public class DemographicExtDaoTest extends DaoTestFixtures {
 
 	protected DemographicExtDao dao = SpringUtils.getBean(DemographicExtDao.class);
