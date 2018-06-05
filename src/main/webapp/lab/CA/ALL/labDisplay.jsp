@@ -1659,7 +1659,7 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                            <%
                                        			lastObxSetId = ((AlphaHandler)handler).getObxSetId(j,k);
                                     	  
-                                           } else if(handler instanceof PATHL7Handler && "FT".equals(handler.getOBXValueType(j, k))){ 
+                                           } else if(handler instanceof PATHL7Handler && "FT".equals(handler.getOBXValueType(j, k)) && handler.getOBXReferenceRange(j,k).isEmpty()){ 
                                         	  %> <td colspan="4"><%= handler.getOBXResult( j, k) %></td> <%
                                            } else { %> 
                                            <%
@@ -1785,7 +1785,8 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                        <%obrFlag = true;
                                    }%>
                                <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
-                                   <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBRComment(j, k)%></pre></td>
+                              	 <td valign="top" align="left" colspan="1"></td>
+                                   <td valign="top" align="left" colspan="7"><pre  style="margin:0px 0px 0px 0px;"><%=handler.getOBRComment(j, k)%></pre></td>
                                </tr>
                                <% if  (!handler.getMsgType().equals("HHSEMR") || !handler.getMsgType().equals("TRUENORTH")) {
                                		if(handler.getOBXName(j,k).equals("")){

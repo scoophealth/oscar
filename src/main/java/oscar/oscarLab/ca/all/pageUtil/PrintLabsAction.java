@@ -88,7 +88,7 @@ public class PrintLabsAction extends Action{
 	            response.setHeader("Content-Disposition", "attachment; filename=\""+handler.getPatientName().replaceAll("\\s", "_")+"_LabReport.pdf\"");
 	            
 	            //first write to a file
-	            File f = File.createTempFile(request.getParameter("segmentID"),"pdf");
+	            File f = File.createTempFile("lab"+request.getParameter("segmentID"),"pdf");
 	            FileOutputStream fos = new FileOutputStream(f);
 	            LabPDFCreator pdf = new LabPDFCreator(request,fos);
 	            pdf.printPdf();

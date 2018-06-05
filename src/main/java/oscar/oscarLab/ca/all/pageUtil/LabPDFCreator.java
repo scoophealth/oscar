@@ -569,8 +569,12 @@ public class LabPDFCreator extends PdfPageEventHelper{
 									cell.setPhrase( new Phrase( handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", " "), lineFont ) );
 									infoTable.addCell(cell);
 									table.addCell(infoTable);
-								} else {				
-									cell.setPhrase( new Phrase( handler.getOBXResult(j, k).replaceAll("<br\\s*/*>", "\n"), lineFont ) );
+								} else {		
+									String data = handler.getOBXResult(j, k);
+									if("".equals(handler.getOBXResult(j, k))) {
+										data = "\n";
+									}
+									cell.setPhrase( new Phrase( data.replaceAll("<br\\s*/*>", "\n"), lineFont ) );
 									table.addCell(cell);
 								}
 	
@@ -591,8 +595,13 @@ public class LabPDFCreator extends PdfPageEventHelper{
 										if(handler.getMsgType().equals("ExcellerisON")) {
 											indent="";
 										}
+										if(!StringUtils.isEmpty(indent)) {
+											cell.setPaddingLeft(3);
+											indent="";
+										}
 										cell.setPhrase(new Phrase((obrFlag ? indent : "")+ obxName, lineFont));
 										table.addCell(cell);
+										cell.setPaddingLeft(0);
 									}
 								}
 								
@@ -635,13 +644,19 @@ public class LabPDFCreator extends PdfPageEventHelper{
 									if(handler.getMsgType().equals("ExcellerisON")) {
 										indent="";
 									}
+									if(!StringUtils.isEmpty(indent)) {
+										cell.setPaddingLeft(3);
+										indent="";
+									}
 									cell.setPhrase(new Phrase((obrFlag ? indent : "") + obxName, lineFont));
 									table.addCell(cell);
+									cell.setPaddingLeft(0);
+									
 								}
 								
 								boolean isLongText =false;
 								
-								if(handler.getMsgType().equals("ExcellerisON") || handler.getMsgType().equals("PATHL7")) {
+								if((handler.getMsgType().equals("ExcellerisON") || handler.getMsgType().equals("PATHL7")) && StringUtils.isEmpty(handler.getOBXReferenceRange(j, k)) ) {
 									if("FT".equals(handler.getOBXValueType(j,k))) {
 										isLongText=true;
 									}
@@ -885,6 +900,11 @@ public class LabPDFCreator extends PdfPageEventHelper{
 					        }
 							
 						} else {
+							int colSpan = cell.getColspan();
+							cell.setColspan(1);
+							cell.setPhrase(new Phrase("",font));
+							table.addCell(cell);
+							cell.setColspan(colSpan-1);
 							cell.setPhrase(new Phrase(handler.getOBRComment(j, k)
 									.replaceAll("<br\\s*/*>", "\n"), font));
 						}
