@@ -63,7 +63,10 @@ public class ViewDaoTest extends DaoTestFixtures {
 		
 		String role1 = "alpha";
 		String role2 = "bravo";
-		
+
+		String providerNo1 = "000000";
+		String providerNo2 = "111111";
+
 		String viewName1 = "sigma";
 		String viewName2 = "delta";
 		
@@ -75,6 +78,7 @@ public class ViewDaoTest extends DaoTestFixtures {
 		view1.setRole(role1);
 		view1.setView_name(viewName1);
 		view1.setName(name1);
+		view1.setProviderNo(providerNo1);
 		dao.persist(view1);
 		
 		View view2 = new View();
@@ -82,6 +86,7 @@ public class ViewDaoTest extends DaoTestFixtures {
 		view2.setRole(role2);
 		view2.setView_name(viewName2);
 		view2.setName(name2);
+		view2.setProviderNo(providerNo2);
 		dao.persist(view2);
 		
 		Map<String,View> expectedResult = new HashMap<String,View>();
