@@ -1,8 +1,8 @@
 
-alter table resourcestorage add column update_date datetime;
-alter table resourcestorage add column reference_date datetime;
+alter table ResourceStorage add column update_date datetime;
+alter table ResourceStorage add column reference_date datetime;
 
-create index ResourceStorage_resourceType_uuid on resourcestorage(uuid);
+create index ResourceStorage_resourceType_uuid on ResourceStorage(uuid);
 
 alter table surveyData modify column surveyId varchar(40);
 
