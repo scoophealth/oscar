@@ -30,6 +30,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.Column;
 
 /**
  *
@@ -49,7 +50,9 @@ public class View extends AbstractModel<Integer> {
     private String name;
     private String value;
     private String role;
-    private String providerNo;
+
+    @Column(nullable=true)
+    private String providerNo = null;
 
     /** Creates a new instance of View */
     public View() {

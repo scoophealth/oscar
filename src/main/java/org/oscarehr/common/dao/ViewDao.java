@@ -43,7 +43,11 @@ public class ViewDao extends AbstractDao<View>{
 
     public Map<String, View> getView(String view, String role)
     {
-	return getView(view, role, null);
+	Query query = entityManager.createQuery("select v from View v where v.view_name=? and v.role=? and v.providerNo is null");
+	query.setParameter(1, view);
+    	query.setParameter(2, role);
+	
+	return getView(query);
     }
 
     public Map<String, View> getView(String view, String role, String providerNo) {
@@ -52,7 +56,12 @@ public class ViewDao extends AbstractDao<View>{
     	query.setParameter(2, role);
 	query.setParameter(3, providerNo);
 
-        @SuppressWarnings("unchecked")
+        return getView(query);
+    }
+
+    private Map<String, View> getView(Query query)
+    {
+	@SuppressWarnings("unchecked")
         List<View> list = query.getResultList();
         Map<String,View>map = new HashMap<String,View>();
 
