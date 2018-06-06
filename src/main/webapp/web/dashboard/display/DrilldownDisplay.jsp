@@ -70,11 +70,14 @@
 		 	Print
 		 </button>	
 		 
-		  <button class="btn btn-default exportResults" type="button" id="exportResults_${ drilldown.id }" >
-		  	<span class="glyphicon glyphicon-download-alt text-center" aria-hidden="true"></span>
-		 	Export
-		 </button> 
-		 
+		<form action="${ pageContext.request.contextPath }/web/dashboard/display/ExportResults.do" method="POST" class="inlineForm">
+			<input type="hidden" name="indicatorId" value="${ drilldown.id }">
+			<button class="btn btn-default exportResults" type="submit" id="exportResults_${ drilldown.id }" >
+				<span class="glyphicon glyphicon-download-alt text-center" aria-hidden="true"></span>
+				Export
+			</button>
+		</form>
+
 		 <button class="btn btn-default" type="button" data-toggle="modal" data-target="#indicatorInfo">
 			 <span class="glyphicon glyphicon-info-sign text-center" aria-hidden="true"></span>
 			 Details
