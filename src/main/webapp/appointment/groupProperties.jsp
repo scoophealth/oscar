@@ -68,7 +68,14 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 	UserProperty seriesSiteUp = userPropertyDao.getProp(targetProviderNo,"seriesSite");
 	UserProperty seriesNoteUp = userPropertyDao.getProp(targetProviderNo,"seriesNote");
 	UserProperty completedUp = userPropertyDao.getProp(targetProviderNo,"completed");
+	UserProperty dropInUp = userPropertyDao.getProp(targetProviderNo,"dropIn");
 	
+	//is this a drop in
+	boolean dropIn=false;
+	if(dropInUp != null) {
+		dropIn = Boolean.valueOf(dropInUp.getValue());
+	}
+			
 	//setup dates for this series
 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 	ScheduleDateDao scheduleDateDao = SpringUtils.getBean(ScheduleDateDao.class);
@@ -112,6 +119,18 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 		}
 	}
 	
+	List<UserProperty> trackers = new ArrayList<UserProperty>();
+	UserProperty numTrackersUp = userPropertyDao.getProp(targetProviderNo, "series_num_trackers");
+	if(numTrackersUp != null) {
+		int numTrackers = Integer.parseInt(numTrackersUp.getValue());
+		for(int x=1;x<=numTrackers;x++) {
+			UserProperty tmp = userPropertyDao.getProp(targetProviderNo,"series_tracker" + x);
+			if(tmp != null) {
+				trackers.add(tmp);
+			}
+		}
+	}
+	
 %>
 <html:html locale="true">
 
@@ -148,6 +167,22 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 		jQuery("#topic_"+id).remove();
 	}
 	
+	function addTracker() {
+		var total = jQuery("#trackers_num").val();
+		total++;
+		jQuery("#trackers_num").val(total);
+		jQuery.ajax({url:'group_tracker.jsp?id='+total,async:false, success:function(data) {
+			  jQuery("#tracker_container").append(data);
+		}});
+	}
+	
+	function deleteTracker(id) {
+		var trackerId = jQuery("input[name='tracker_"+id+".id']").val();
+		jQuery("form[name='myForm']").append("<input type=\"hidden\" name=\"tracker.delete\" value=\""+trackerId+"\"/>");
+		jQuery("#tracker_"+id).remove();
+	}
+	
+	
 	function setSelect(id,type,name,val) {
 		jQuery("select[name='"+type+"_"+id+"."+name+"']").each(function() {
 			jQuery(this).val(val);
@@ -169,6 +204,16 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 					setInput(num,'topic','text','<%=up.getValue()%>');
 				<%
 			}
+		
+		for(UserProperty up : trackers) {
+			%>
+				addTracker();
+				var num = jQuery("#trackers_num").val();
+				
+				setInput(num,'tracker','text','<%=up.getValue().split("\\|")[0]%>');
+				setSelect(num,'tracker','type','<%=up.getValue().split("\\|")[1]%>');
+			<%
+		}
 		%>
 	});
 	
@@ -195,6 +240,23 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 	});
 	
 	function addDemographicToSession(demographicNo) {
+		
+		<% if(dropIn) {%>
+		jQuery.post("<%=request.getContextPath()%>/groupAppointment.do" , {method: 'addParticipantToSession',demographicNo:demographicNo,providerNo:'<%=targetProviderNo%>',date:'<%=sessionDateStr%>'},
+	            function(xml)
+	            {
+					if(xml.error) {
+						alert("ERROR:" + xml.error);
+						jQuery("#demo").val('');
+						jQuery("#demographic_no").val('');
+					} else {
+						jQuery("#demo").val('');
+						jQuery("#demographic_no").val('');
+						updateParticipants();
+					}
+	            }, "json"
+	        );	
+		<%} else {%>
 		jQuery.post("<%=request.getContextPath()%>/groupAppointment.do" , {method: 'addParticipantToSeries',demographicNo:demographicNo,providerNo:'<%=targetProviderNo%>',date:'<%=sessionDateStr%>'},
 	            function(xml)
 	            {
@@ -209,6 +271,10 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 					}
 	            }, "json"
 	        );	
+		<%}%>
+		
+		
+		
 	}
 	
 	function setStatus(appointmentNo, status) {
@@ -269,16 +335,30 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 	}
 	
 	function saveValues(appointmentNo) {
-		
-		var bus_tickets = jQuery("#bus_ticket_" + appointmentNo).html();
-		var vouchers = jQuery("#voucher_" + appointmentNo).html();
-		var guests = jQuery("#guests_" + appointmentNo).val();
-		
 		var providerNo = '<%=targetProviderNo%>';
 		var d = '<%=sessionDateStr%>';
 		
 		
-		jQuery.post("<%=request.getContextPath()%>/groupAppointment.do" , {method: 'saveParticipantAttributes',appointmentNo:appointmentNo,providerNo:providerNo,date:d,bus_tickets:bus_tickets,vouchers:vouchers,guests:guests},
+	
+		var data = {method:'saveParticipantAttributes',appointmentNo:appointmentNo,providerNo:providerNo,date:d};
+		<%
+		for(UserProperty up:trackers) {
+			String type = up.getValue().split("\\|")[1];
+			String ccName = org.apache.commons.text.CaseUtils.toCamelCase(up.getValue().split("\\|")[0],false);
+			
+			if("counter".equals(type)) {
+			%>
+			data.<%=ccName%> = jQuery("#<%=ccName%>_" + appointmentNo).html();
+			<%
+			} else {
+				%>
+				data.<%=ccName%> = jQuery("#<%=ccName%>_" + appointmentNo).val();
+				<%
+			}
+		}
+		%>
+		
+		jQuery.post("<%=request.getContextPath()%>/groupAppointment.do" ,data,
 	            function(xml)
 	            {
 					if(xml.error) {
@@ -329,28 +409,63 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 	                    		  arrivedButton =  "<input type='button' value='Arrived' style='background-color:orange;font-weight:bold'/>";
 	                    	   }
 	                    	   
-	                    	   var bus_tickets = '0';
-	                    	   var vouchers = '0';
-	                    	   var guests = '';
+	                    	   var atts = new Object();
+	                    	   <%
+	                    	   	for(UserProperty up:trackers) {
+	                    	   		String ccName = org.apache.commons.text.CaseUtils.toCamelCase(up.getValue().split("\\|")[0],false);
+	                    	   		String type = up.getValue().split("\\|")[1];
+	                    	   		
+	                    	   		%>
+	                    	   			if(a.<%=ccName%> != null) {
+	                    	   				atts['<%=ccName%>'] = a.<%=ccName%>;
+	                    	   			} else {
+	                    	   				<%
+	                    	   				
+	                    	   				if("counter".equals(type)) {
+	                        	   				%>
+	                        	   				atts['<%=ccName%>'] = 0;
+	                        	   				<%
+	                        	   			} else {
+	                        	   				%>atts['<%=ccName%>']='';<%
+	                        	   			}
+	                    	   				
+	                    	   				%>
+	                    	   				
+	                    	   			}
+	                    	   			
+	                    	   		<%
+	                    	   			
+	                    	   	}
+	                    	   %>
 	                    	   
-	                    	   if(a.bus_tickets != null) {
-	                    		   bus_tickets = a.bus_tickets;
-	                    	   }
-	                    	   if(a.vouchers != null) {
-	                    		   vouchers = a.vouchers;
-	                    	   }
-	                    	   if(a.guests != null) {
-	                    		   guests = a.guests;
-	                    	   }
 	                    	   
-	                    	   var newData = "<tr><td><a href='javascript:void()' onClick='deleteParticipant("+a.appointmentNo+",\""+a.name+"\")'><img src='../images/close16.png' border='0'></a><input type='checkbox' id='checked_"+a.appointmentNo+"' name='checked' value='"+a.appointmentNo+"'/></td>" + 
+	                    	   var newData = "<tr><td><a href='javascript:void()' onClick='deleteParticipant("+a.appointmentNo+",\""+a.name+"\")'><img src='../images/close16.png' border='0'></a><input type='checkbox' id='checked_"+a.appointmentNo+"' name='checked' value='"+a.appointmentNo+"' onChange='updateCheckbox(this)'/></td>" + 
 	                    	   "<td style='width:20%'>" +a.name + "</td>"+
-	                    	   "<td>"+arrivedButton+"&nbsp;"+noShowButton+"</td>"+
-	                    	   "<td><input type='button' value='Remove from series' onClick='removeFromSeries("+a.appointmentNo+")'/></td>"+
-	                    	   "<td><a href='javascript:void()' onClick='adjustValue(-1,\"bus_ticket_"+a.appointmentNo+"\")'><img src='../images/back_enabled.png'/></a><span id='bus_ticket_"+a.appointmentNo+"'>"+bus_tickets+"</span><a href='javascript:void()' onClick='adjustValue(1,\"bus_ticket_"+a.appointmentNo+"\")'><img src='../images/forward_enabled.png'/></a></td>"+
-	                    	   "<td><a href='javascript:void()' onClick='adjustValue(-1,\"voucher_"+a.appointmentNo+"\")'><img src='../images/back_enabled.png'/></a><span id='voucher_"+a.appointmentNo+"'>"+vouchers+"</span><a href='javascript:void()' onClick='adjustValue(1,\"voucher_"+a.appointmentNo+"\")'><img src='../images/forward_enabled.png'/></a></td>"+
-	                    	   "<td><textarea cols='3' style='width:100%' id='guests_"+a.appointmentNo+"'>"+guests+"</textarea></td>"+
-	                    	   "<td style='text-align:center'><input type='Button' value='Save' style='width:100%' onClick='saveValues("+a.appointmentNo+")'/></td>" + 
+	                    	   "<td>"+arrivedButton+"&nbsp;"+noShowButton+"</td>";
+	                    	   
+	                    	   <%
+	                    	   if(!dropIn) { %>
+	                    	   newData +="<td><input type='button' value='Remove from series' onClick='removeFromSeries("+a.appointmentNo+")'/></td>";
+	                    	  <% } %>
+	                    	   <%
+	                    	  
+	       						for(UserProperty up:trackers) {
+	       							String type = up.getValue().split("\\|")[1];
+	       							String ccName = org.apache.commons.text.CaseUtils.toCamelCase(up.getValue().split("\\|")[0],false);
+       								
+	       							if("counter".equals(type)) {
+	       								%>newData += "<td><a href='javascript:void()' onClick='adjustValue(-1,\"<%=ccName%>_"+a.appointmentNo+"\")'><img src='../images/back_enabled.png'/></a><span id='<%=ccName%>_"+a.appointmentNo+"'>"+atts['<%=ccName%>']+"</span><a href='javascript:void()' onClick='adjustValue(1,\"<%=ccName%>_"+a.appointmentNo+"\")'><img src='../images/forward_enabled.png'/></a></td>";<%
+	       							} else if("textarea".equals(type)) {
+	       								%>newData += "<td><textarea cols='3' style='width:100%' name='<%=ccName%>_"+a.appointmentNo+"' id='<%=ccName%>_"+a.appointmentNo+"'>"+atts['<%=ccName%>']+"</textarea></td>";<%
+	       							} else if("textfield".equals(type)) {
+	       								%>newData += "<td><input type='text' name='<%=ccName%>_"+a.appointmentNo+"'  id='<%=ccName%>_"+a.appointmentNo+"'/ value='"+atts['<%=ccName%>']+"'></td>";<%
+	       							}
+	       							
+	       						}
+	       			
+	                    	   %>
+	                    	   
+	                    	   newData += "<td style='text-align:center'><input type='Button' value='Save' style='width:100%' onClick='saveValues("+a.appointmentNo+")'/></td>" + 
 	                    	   "</tr>";
 	                    	   
 	                    	   jQuery("#participantList tbody").append(newData);
@@ -358,6 +473,7 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 	            }, "json"
 	        );	
 	}
+	
 	
 	function deleteParticipant(appointmentNo, patientName) {
 		if(confirm('Are you sure you want to delete ' + patientName + ' from this series?')) {
@@ -464,6 +580,33 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 		
 	}
 	
+	function updateCheckbox(el) {
+		if(!jQuery("#"+el.id).is(":checked")) {
+			jQuery("#check_all").prop('checked',false);
+		} else {
+			var flag=true;
+			jQuery("[name='checked']").each(function() {
+				if(!jQuery(this).is(":checked")) {
+					flag=false;
+				}
+			});
+			if(flag) {
+				jQuery("#check_all").prop('checked',true);
+			}
+		}
+	}
+	
+	jQuery(document).ready(function(){
+		jQuery("#check_all").change(function(){
+			if(jQuery(this).is(":checked")) {
+				jQuery("[name='checked']").prop('checked', true);
+			} else {
+				jQuery("[name='checked']").prop('checked', false);
+			}
+		});
+		
+		
+	});
 	</script>
 </head>
 
@@ -473,6 +616,7 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 <%if(errorStr == null) { %>
 	<FORM NAME = "myForm" METHOD="post" ACTION="groupPropertiesSave.jsp">
 	<input type="hidden" id="topics_num" name="topics_num" value="0"/>
+	<input type="hidden" id="trackers_num" name="trackers_num" value="0"/>
 	<input type="hidden" id="provider_no" name="provider_no" value="<%=targetProviderNo%>"/>
 	<input type="hidden" name="date" value="<%=sessionDateStr%>"/>
 		<div style="background-color:<%=deepcolor%>;text-align:center;font-weight:bold;font-size:18pt">
@@ -529,6 +673,40 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 					<input name="completed" type="checkbox" <%=checked %> />
 				</td>
 			</tr>
+			
+			<tr>
+				<td class="preferenceLabel" width="10%">
+					Drop In:
+				</td>
+				<td class="preferenceValue">
+				<%
+					String checked1="";
+					if(dropInUp != null && "true".equals(dropInUp.getValue())) {
+						checked1 = " checked=\"checked\" ";
+					}
+				%>
+					<input name="dropIn" type="checkbox" <%=checked1 %> />
+				</td>
+			</tr>
+			
+			
+			<tr>
+				
+				<td class="preferenceLabel">
+					Trackers:
+				</td>
+				<td class="preferenceValue">
+					<a href="#" onclick="addTracker();">[Add]</a>
+				</td>
+			</tr>
+			
+			<tr>
+				<td></td>
+				<td>
+					<div id="tracker_container"></div>
+				</td>
+			</tr>		
+			
 			
 		
 		</table>
@@ -651,18 +829,23 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 		<div style="background-color:white;height:20px"></div>
 
 		<div style="background-color:<%=deepcolor%>;text-align:left;font-weight:bold">
-			Manage Participants
+			Manage Participants <input type="button" value="Create New Patient" onClick="window.open('<%=request.getContextPath()%>/demographic/demographicaddarecordhtm.jsp','new_pt_from_group',800,1000);"/>
 		</div>
 		
 		<table id="participantList" class="preferenceTable" style=width:100%;border:1border-collapse:collapse;background-color:<%=weakcolor%>;">
 			<thead style="background-color:<%=deepcolor%>;text-align:left">
-				<th width="1%"></th>
+				<th width="1%"><input type="checkbox" id="check_all"/></th>
 				<th>Name</th>
 				<th>Attendance Status</th>
+				<%if(!dropIn) { %>
 				<th>Group Status</th>
-				<th>Bus Tickets</th>
-				<th>Vouchers</th>
-				<th>Guests</th>
+				<% } %>
+				
+				<%
+					for(UserProperty up:trackers) {
+						%><th><%=up.getValue().split("\\|")[0] %></th><%
+					}
+				%>
 				<th></th>
 			</thead>
 			<tbody></tbody>

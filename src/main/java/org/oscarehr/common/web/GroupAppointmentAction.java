@@ -25,10 +25,13 @@ package org.oscarehr.common.web;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.text.CaseUtils;
 import org.apache.cxf.common.util.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -78,7 +82,7 @@ public class GroupAppointmentAction extends DispatchAction {
 	DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 	CaseManagementManager cmManager = SpringUtils.getBean(CaseManagementManager.class);
 	ProgramProviderDAO programProviderDao = SpringUtils.getBean(ProgramProviderDAO.class);
-	
+	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 	
 	public ActionForward getParticipantsForSession(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		JSONObject response1 = new JSONObject();
@@ -102,6 +106,20 @@ public class GroupAppointmentAction extends DispatchAction {
 					return a1.getName().compareTo(a2.getName());
 				}
 			});
+			
+			//load trackers//loop dates
+			List<UserProperty> trackers = new ArrayList<UserProperty>();
+			UserProperty numTrackersUp = userPropertyDao.getProp(providerNo, "series_num_trackers");
+			if(numTrackersUp != null) {
+				int numTrackers = Integer.parseInt(numTrackersUp.getValue());
+				for(int x=1;x<=numTrackers;x++) {
+					UserProperty tmp = userPropertyDao.getProp(providerNo,"series_tracker" + x);
+					if(tmp != null) {
+						trackers.add(tmp);
+					}
+				}
+			}
+			
 			JSONArray arr = new JSONArray();
 			
 			for(Appointment appt: currentAppts) {
@@ -109,9 +127,12 @@ public class GroupAppointmentAction extends DispatchAction {
 				a.put("appointmentNo", appt.getId());
 				a.put("name", appt.getName());
 				a.put("status", appt.getStatus());
-				a.put("bus_tickets", loadAttribute(appt,providerNo,date,"bus_tickets"));
-				a.put("vouchers", loadAttribute(appt,providerNo,date,"vouchers"));
-				a.put("guests", loadAttribute(appt,providerNo,date,"guests"));
+				
+				for(UserProperty tracker:trackers) {
+					String ccName = CaseUtils.toCamelCase(tracker.getValue().split("\\|")[0],false);	
+					a.put(ccName, loadAttribute(appt,providerNo,date,ccName));
+				}
+				
 				arr.add(a);
 			}
 			response1.put("appointments", arr);
@@ -128,9 +149,6 @@ public class GroupAppointmentAction extends DispatchAction {
 		String providerNo = getRequiredParameter(request, "providerNo", response1);
 		String date = getRequiredParameter(request,"date",response1);
 		
-		String busTickets = request.getParameter("bus_tickets");
-		String vouchers = request.getParameter("vouchers");
-		String guests = request.getParameter("guests");
 		
 		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", null)) {
 			response1.put("error","missing required security object (_demographic)");
@@ -142,9 +160,16 @@ public class GroupAppointmentAction extends DispatchAction {
 		}
 
 		if(response1.get("error") == null) {
-			saveAttributeAsDemographicExt(a,providerNo,date,"bus_tickets",busTickets);
-			saveAttributeAsDemographicExt(a,providerNo,date,"vouchers",vouchers);
-			saveAttributeAsDemographicExt(a,providerNo,date,"guests",guests);
+			List<String> IGNORES = Arrays.asList(new String[] {"appointmentNo","providerNo","date","method"});
+			
+			Enumeration<String> en =  request.getParameterNames();
+			while(en.hasMoreElements()) {
+				String key = en.nextElement();
+				if(!IGNORES.contains(key)) {
+					saveAttributeAsDemographicExt(a,providerNo,date,key,request.getParameter(key));
+				}
+			}
+			
 		}
 		
 		response1.write(response.getWriter());
