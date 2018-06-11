@@ -257,22 +257,6 @@ if(!authed) {
 		String apProviderNo = immunization.getPractitioner().get(0).getActor().getReference().split("/")[1];
 		Practitioner performer = performingPractitioners.get(apProviderNo);
 		
-		if(performer == null) {
-			validationErrors.add("Missing Performing Practitioner for immunization");
-		} else {
-			if(getPractitionerCollegeIdType(performer) == null || getPractitionerCollegeId(performer) == null) {
-				validationErrors.add("Set college ID and Type for performing practitioner");
-			}
-		
-			if(getPractitionerName(performer) == null) {
-				validationErrors.add("Name required for performing practitioner");
-			}
-			
-			if(getPractitionerQualification(performer) == null) {
-				validationErrors.add("Missing qualifications for performing practitioner");
-			}
-		}
-		
 		
 		if(immunization == null) {
 			validationErrors.add("Missing Immunization");
@@ -315,6 +299,24 @@ if(!authed) {
 			
 			if(ispa && !historical && !external && immunization.getExplanation() == null) {
 				validationErrors.add("Explanation is required for current ISPA immunizations");
+			}
+			
+			if(performer == null) {
+				validationErrors.add("Missing Performing Practitioner for immunization");
+			} else {
+				if(ispa && !historical && !external) {
+					if(getPractitionerCollegeIdType(performer) == null || getPractitionerCollegeId(performer) == null) {
+						validationErrors.add("Set college ID and Type for performing practitioner");
+					}
+				
+					if(getPractitionerName(performer) == null) {
+						validationErrors.add("Name required for performing practitioner");
+					}
+					
+					if(getPractitionerQualification(performer) == null) {
+						validationErrors.add("Missing qualifications for performing practitioner");
+					}
+				} 
 			}
 		}
 	}
@@ -754,7 +756,8 @@ clear: left;
 			
 			<form action="<%=request.getContextPath()%>/dhir/submit.do">
 				<input type="hidden" name="uuid" value="<%=bundle.getId()%>"/>
-				<input type="submit" value="Submit" />
+				
+				<input type="submit" value="Submit" <%=(!validationErrors.isEmpty())?" disabled=\"disabled\" ":"" %>/>
 				&nbsp;&nbsp;
 				<input type="button" value="Edit Prevention" onClick="window.location.href='<%=request.getContextPath()%>/oscarPrevention/AddPreventionData.jsp?id=<%=preventionId %>&demographic_no=<%=demographicNo%>'"/>
 				&nbsp;&nbsp;
@@ -867,6 +870,9 @@ clear: left;
 			}
 			if("https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-physician".equals(id.getSystem())) {
 				return "CPSO";
+			}
+			if("https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-pharmacist".equals(id.getSystem())) {
+				return "OCP";
 			}
 		}
 		return null;

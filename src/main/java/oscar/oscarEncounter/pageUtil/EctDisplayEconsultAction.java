@@ -36,7 +36,6 @@ import java.text.SimpleDateFormat;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -137,13 +136,7 @@ public class EctDisplayEconsultAction extends EctDisplayAction {
                     //Creates an HttpGet with the url to get eConsults and sets a header for the oneIdEmail
                     HttpGet httpGet = new HttpGet(url);
 
-                    String oneIdToken = "";
-                    for (Cookie cookie : request.getCookies()) {
-                        if (cookie.getName().equals("oneid_token")) {
-                            oneIdToken = cookie.getValue();
-                            break;
-                        }
-                    }
+                    String oneIdToken = (String)session.getAttribute("oneid_token");
                     
                     httpGet.addHeader("x-oneid-email", encodedOneIdEmail);
                     httpGet.addHeader("x-access-token", oneIdToken);

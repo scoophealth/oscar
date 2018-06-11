@@ -412,5 +412,7 @@ clear: left;
     //Creates a new ClientConnectionManager with the registry and creates the httpClient to use
     ClientConnectionManager ccm = new PoolingClientConnectionManager(registry);
 
-    return new DefaultHttpClient(ccm);
+    DefaultHttpClient httpClient = new DefaultHttpClient(ccm);
+    
+    return httpClient;
 }%>

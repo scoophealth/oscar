@@ -474,6 +474,9 @@ text-align:left;
 <body class="BodyStyle">
 <!--  -->
 <%=WebUtilsOld.popErrorAndInfoMessagesAsHtml(session)%>
+<%
+List<String> OTHERS = Arrays.asList(new String[]{"DTaP-Hib","TdP-IPV-Hib","HBTmf"});
+%>
 <table class="MainTable" id="scrollNumber1">
 	<tr class="MainTableTopRow">
 		<td class="MainTableTopRowLeftColumn"><bean:message key="oscarprevention.index.oscarpreventiontitre" /></td>
@@ -498,39 +501,95 @@ text-align:left;
 		<div class="leftBox">
 		<h3>&nbsp;Preventions</h3>
 		<div style="background-color: #EEEEFF;">
+		<p>Screenings</p>
 		<ul>
 			<%for (int i = 0 ; i < prevList.size(); i++){
 				HashMap<String,String> h = prevList.get(i);
                 String prevName = h.get("name");
                 String snomedId = h.get("snomedConceptCode") != null ? h.get("snomedConceptCode") : null;
-                           
+                String hcType = h.get("healthCanadaType");
+            	if(hcType == null) {
+		            if(!preventionManager.hideItem(prevName) && !OTHERS.contains(prevName)){
+		            	List<CVCMapping> mappings = cvcMappingDao.findMultipleByOscarName(prevName);
+			            if(mappings != null && mappings.size()>1) {%>
+			            	<li style="margin-top: 2px;"><a
+								href="javascript: function myFunction() {return false; }"
+								onclick="javascript:popup(600,900,'AddPreventionDataDisambiguate.jsp?<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
+							<%=prevName%> </a></li>
+			          <%  } else {
+			            %>
+							<li style="margin-top: 2px;"><a
+								href="javascript: function myFunction() {return false; }"
+								onclick="javascript:popup(600,900,'AddPreventionData.jsp?4=4&<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
+							<%=prevName%> </a></li>
+						<%
+			            }
+		            }
+            	}
+			}
+	        %>
+		
+		</ul>
+		<p>Immunizations</p>
+		<ul>
+			<%for (int i = 0 ; i < prevList.size(); i++){
+				HashMap<String,String> h = prevList.get(i);
+                String prevName = h.get("name");
+                String snomedId = h.get("snomedConceptCode") != null ? h.get("snomedConceptCode") : null;
+                String hcType = h.get("healthCanadaType");
+            	if(hcType != null) {
+		            if(!preventionManager.hideItem(prevName) && !OTHERS.contains(prevName)){
+		            	List<CVCMapping> mappings = cvcMappingDao.findMultipleByOscarName(prevName);
+			            if(mappings != null && mappings.size()>1) {%>
+			            	<li style="margin-top: 2px;"><a
+								href="javascript: function myFunction() {return false; }"
+								onclick="javascript:popup(600,900,'AddPreventionDataDisambiguate.jsp?<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
+							<%=prevName%> </a></li>
+			          <%  } else {
+			            %>
+							<li style="margin-top: 2px;"><a
+								href="javascript: function myFunction() {return false; }"
+								onclick="javascript:popup(600,900,'AddPreventionData.jsp?4=4&<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
+							<%=prevName%> </a></li>
+						<%
+			            }
+		            }
+            	}
+			}
+	        %>
+		</ul>
+		<p>Other</p>
+		<ul>
+			<%
+			for (int i = 0 ; i < prevList.size(); i++){
+				HashMap<String,String> h = prevList.get(i);
+                String prevName = h.get("name");
+                String snomedId = h.get("snomedConceptCode") != null ? h.get("snomedConceptCode") : null;
+                String hcType = h.get("healthCanadaType");
+            	
 	            if(!preventionManager.hideItem(prevName)){
 	            	
-	            	//if it's a CVC terms that's been mapped , don't show it
-	            	//if(snomedId != null  && cvcMappingDao.findBySnomedId(snomedId) != null) {
-	            	//	continue;
-	            	//}
+	            	if(OTHERS.contains(prevName)) {
 	            	
-	            	//need to determine if ambiguous
-		           	List<CVCMapping> mappings = cvcMappingDao.findMultipleByOscarName(prevName);
-		            if(mappings != null && mappings.size()>1) {%>
-		            	<li style="margin-top: 2px;"><a
-							href="javascript: function myFunction() {return false; }"
-							onclick="javascript:popup(600,900,'AddPreventionDataDisambiguate.jsp?<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
-						<%=prevName%> </a></li>
-		          <%  } else {
-		            %>
-						<li style="margin-top: 2px;"><a
-							href="javascript: function myFunction() {return false; }"
-							onclick="javascript:popup(600,900,'AddPreventionData.jsp?4=4&<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
-						<%=prevName%> </a></li>
-					<%
+		            	List<CVCMapping> mappings = cvcMappingDao.findMultipleByOscarName(prevName);
+			            if(mappings != null && mappings.size()>1) {%>
+			            	<li style="margin-top: 2px;"><a
+								href="javascript: function myFunction() {return false; }"
+								onclick="javascript:popup(600,900,'AddPreventionDataDisambiguate.jsp?<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
+							<%=prevName%> </a></li>
+			          <%  } else {
+			            %>
+							<li style="margin-top: 2px;"><a
+								href="javascript: function myFunction() {return false; }"
+								onclick="javascript:popup(600,900,'AddPreventionData.jsp?4=4&<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
+							<%=prevName%> </a></li>
+						<%
+			            }
 		            }
-				}
+	            }
 			}
-			%>
-		</ul>
-
+	        %>
+		</ul>	
 		</div>
 		</div>
 		<oscar:oscarPropertiesCheck property="IMMUNIZATION_IN_PREVENTION"

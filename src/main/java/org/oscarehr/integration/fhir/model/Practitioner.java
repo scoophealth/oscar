@@ -152,7 +152,7 @@ public class Practitioner extends AbstractOscarFhirResource<org.hl7.fhir.dstu3.m
 		
 		//TODO these codes cannot be hard coded like this. Temporary hack
 		String licensetype = getOscarResource().getPractitionerNoType();
-		String designation = "OD";
+		String designation = null;
 		
 		if( LicenseType.CNO.name().equals( licensetype ) ) {
 			designation =  "RN";
