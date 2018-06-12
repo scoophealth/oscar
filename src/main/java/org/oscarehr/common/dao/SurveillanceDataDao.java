@@ -26,42 +26,33 @@
 package org.oscarehr.common.dao;
 
 
+
 import java.util.List;
 
 import javax.persistence.Query;
 
-import org.oscarehr.common.model.ResourceStorage;
+import org.oscarehr.common.model.SurveillanceData;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ResourceStorageDao extends AbstractDao<ResourceStorage> {
+public class SurveillanceDataDao extends AbstractDao<SurveillanceData> {
 
-	public ResourceStorageDao() {
-		super(ResourceStorage.class);
+	public SurveillanceDataDao() {
+		super(SurveillanceData.class);
 	}
 
-	public ResourceStorage findActive(String resourceType){
-		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " r WHERE r.resourceType = :resourceType AND r.active = true");
-		query.setParameter("resourceType", resourceType);
-		return getSingleResultOrNull(query);
-	}
-	
-	public List<ResourceStorage> findActiveAll(String resourceType){
-		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " r WHERE r.resourceType = :resourceType AND r.active = true");
-		query.setParameter("resourceType", resourceType);
-		return query.getResultList();
-	}
-
-	public List<ResourceStorage> findAll(String resourceType){
-		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " r WHERE r.resourceType = :resourceType ");
-		query.setParameter("resourceType", resourceType);
+	public List<SurveillanceData> findExportDataBySurveyId(String surveyId){
+		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " r WHERE r.surveyId = :surveyId order by r.createDate desc");
+		query.setParameter("surveyId", surveyId);
 		return query.getResultList();
 	}
 	
-	public List<ResourceStorage> findByUUID(String uuid){
-		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " r WHERE r.uuid = :uuid ");
-		query.setParameter("uuid", uuid);
+	public List<SurveillanceData> findUnSentBySurveyId(String surveyId){
+		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " r WHERE r.surveyId = :surveyId and r.sent = false");
+		query.setParameter("surveyId", surveyId);
 		return query.getResultList();
 	}
+	
+	
 	
 }

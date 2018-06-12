@@ -42,6 +42,7 @@ import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.common.dao.BillingONExtDao;
 import org.oscarehr.common.dao.BillingONPaymentDao;
 import org.oscarehr.common.dao.BillingONRepoDao;
+import org.oscarehr.common.dao.BillingPaymentTypeDao;
 import org.oscarehr.common.dao.BillingServiceDao;
 import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.BillingONExt;
@@ -50,6 +51,7 @@ import org.oscarehr.common.model.BillingONPayment;
 import org.oscarehr.common.model.BillingService;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.service.BillingONService;
+import org.oscarehr.common.model.BillingPaymentType;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -67,6 +69,7 @@ public class BillingCorrectionAction extends DispatchAction{
     private BillingONPaymentDao bPaymentDao = (BillingONPaymentDao) SpringUtils.getBean("billingONPaymentDao");        
     private BillingONCHeader1Dao bCh1Dao = (BillingONCHeader1Dao) SpringUtils.getBean("billingONCHeader1Dao");     
     private  BillingONExtDao billExtDao = (BillingONExtDao) SpringUtils.getBean("billingONExtDao");
+    private final BillingPaymentTypeDao billingPaymentTypeDao = SpringUtils.getBean(BillingPaymentTypeDao.class);
         
     public ActionForward add3rdPartyPayment(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
         
@@ -92,17 +95,8 @@ public class BillingCorrectionAction extends DispatchAction{
                         
             //Validate pay Method
             String payMethod = request.getParameter("payMethod");
-            if (  (payMethod == null) ||
-                  (!payMethod.equals("1")//Cash
-                 &&!payMethod.equals("2")//Cheque
-                 &&!payMethod.equals("3")//Visa
-                 &&!payMethod.equals("4")//Mastercard
-                 &&!payMethod.equals("5")//Amex
-                 &&!payMethod.equals("6")//Electronic
-                 &&!payMethod.equals("7")//Debit                
-                 &&!payMethod.equals("8")//Alternate
-                  )
-               ) 
+	    BillingPaymentType paymentType = billingPaymentTypeDao.find(payMethod);
+            if (paymentType == null)
             {
                 MiscUtils.getLogger().error("3rd party pay method not valid");  
                 return mapping.findForward("closeReload");
@@ -270,7 +264,10 @@ public class BillingCorrectionAction extends DispatchAction{
             payProgram = "NOT";	
         else
             payProgram = request.getParameter("payProgram");
-                    
+
+	boolean nowMohPayProgram = ("HCP".equals(payProgram) || "RMB".equals(payProgram) || "WCB".equals(payProgram));
+	boolean was3rdPartyPayProgram = request.getParameter("oldStatus").equals("thirdParty");
+
         if (hasInvoiceChanged(bCh1, request)){
                                                                          
             //Add Existing state of Invoice to Billing Repository
@@ -303,6 +300,28 @@ public class BillingCorrectionAction extends DispatchAction{
             Provider provider = providerDao.getProvider(bCh1.getProviderNo());
                                                            
             bCh1.setStatus(status);
+
+	    if (!(was3rdPartyPayProgram || nowMohPayProgram))
+	    {
+		/*
+		 * from Ministry of Health Pay Program  to 3rd Party Pay Program
+		 * so default payee to the first pay method in the list
+		*/
+		List<BillingPaymentType> paymentTypes = billingPaymentTypeDao.findAll();
+		if (paymentTypes != null)
+		{
+		    bCh1.setPayee(String.valueOf(paymentTypes.get(0).getId()));
+		}
+	    }
+	    else if (was3rdPartyPayProgram && nowMohPayProgram)
+	    {
+		/*
+		 * from 3rd Party Pay Program to Ministry of Health Pay Program
+		 * so default payee to "P"
+		*/
+		bCh1.setPayee(BillingDataHlp.CLAIMHEADER1_PAYEE);
+	    }
+
             bCh1.setPayProgram(payProgram);
             bCh1.setRefNum(request.getParameter("rdohip"));
             bCh1.setVisitType(request.getParameter("visittype"));            
@@ -320,10 +339,8 @@ public class BillingCorrectionAction extends DispatchAction{
             bCh1.setProvince(request.getParameter("hc_type"));
             bCh1.setLocation(request.getParameter("xml_slicode"));                        
         }
-        
-        boolean mohPayProgram = ("HCP".equals(payProgram) || "RMB".equals(payProgram) || "WCB".equals(payProgram));
-        
-        if( request.getParameter("oldStatus").equals("thirdParty") && mohPayProgram) {
+
+        if( was3rdPartyPayProgram && nowMohPayProgram) {
             /* 
              * If status has been changed from 3rd Party Pay Program to Ministry of Health Pay Program, 
              * AND there has been 3rd party payments already received, refund an amount equal to the
@@ -344,7 +361,7 @@ public class BillingCorrectionAction extends DispatchAction{
             if (doReverse > 0) {
                 bPaymentDao.createPayment(bCh1, locale, BillingONPayment.REFUND, reversedFunds, "",providerNo);                                        
             }
-        } else if (statusChangedToSettled && !mohPayProgram) {
+        } else if (statusChangedToSettled && !nowMohPayProgram) {
             /*
              * If the invoice has just been settled for a 3rd party invoice,
              * Then any amount outstanding is now paid in full.
