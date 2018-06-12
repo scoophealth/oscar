@@ -33,7 +33,6 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
@@ -108,7 +107,6 @@ import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityWs;
 import org.oscarehr.caisi_integrator.ws.transfer.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.transfer.ProviderTransfer;
-import org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
@@ -158,7 +156,6 @@ import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.IntegratorConsent;
-import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.common.model.IntegratorFileLog;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementMap;
@@ -193,7 +190,6 @@ import oscar.log.LogAction;
 import oscar.oscarLab.ca.all.web.LabDisplayHelper;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
-import oscar.util.DateUtils;
 
 public class CaisiIntegratorUpdateTask extends TimerTask {
 
@@ -305,10 +301,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			return;
 		}
 		
-		// If "push all patients that have consented" is set in the Integrator properties
-		// this will ensure that only consenting patients will be pushed.
-		// Note: the consent module must be activated in the Oscar properties file; and the Integrator Patient Consent program
-		// must be set in Provider Properties database table.
+		// If "push all patients that have consented" is set in the Integrator properties - this will ensure that only consenting patients will be pushed.
+		// Note: the consent module must be activated in the Oscar properties file; and the Integrator Patient Consent program must be set in Provider Properties database table.
 		if( OscarProperties.getInstance().getBooleanProperty("USE_NEW_PATIENT_CONSENT_MODULE", "true") &&  userPropertyDao.getProp( UserProperty.INTEGRATOR_PATIENT_CONSENT ) != null ) {
 			CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE = "1".equals( userPropertyDao.getProp( UserProperty.INTEGRATOR_PATIENT_CONSENT ).getValue() );
 			// consenttype is the consent type from the patient consent manager used for this module .
@@ -376,6 +370,11 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		FacilityWs service = CaisiIntegratorManager.getFacilityWs(loggedInInfo, facility);
 		org.oscarehr.caisi_integrator.ws.CachedFacility cachedFacility = service.getMyFacility();
 
+		// Sync Oscar and Integrator Consent tables via web services. This is required before pushing any patient data. 
+		// This is important because a patient file is NOT pushed if the consent is revoked - and therefore will not be updated with Integrator. 
+		if( CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE ) {
+			this.pushPatientConsentTable(loggedInInfo, lastDataUpdated, facility);
+		}
 
 		// this needs to be set now, before we do any sends, this will cause anything updated after now to be resent twice but it's better than items being missed that were updated after this started.
 		Date currentUpdateDate = new Date();
@@ -408,15 +407,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			pushProviders(out,lastDataUpdated, facility);
 			pushPrograms(out,lastDataUpdated, facility);
 			
-			// sync the Patient Consent tables. See method signature for details.
-			if( CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE ) {
-				this.pushPatientConsentTable(out, loggedInInfo, lastDataUpdated, facility);
-			}
-			
 			IOUtils.closeQuietly(out);
 			out = new ObjectOutputStream(new FileOutputStream(new File(documentDir + File.separator + filename + ".2.ser")));
-			
-			
 			
 			int currentFileNumber = pushAllDemographics(documentDir + File.separator + filename,loggedInInfo, facility, lastDataUpdated,cachedFacility,programs);
 			///////////////////////////////
@@ -447,7 +439,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			throw new IOException(e);
 		}
 		
-		//creates a zip (.zipTemp) and returns the checksum for th elog
+		//creates a zip (.zipTemp) and returns the checksum for the log
 		String checksum = null;
 		try {
 			checksum = completeFile(documentDir,filename);
@@ -753,7 +745,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				pushDemographic(demoOut,lastDataUpdated, facility, demographicId,rid);
 				benchTimer.tag("pushDemographic");
 				
-				// see new method pushPatientConsentTable() for reason.
+				// Use alternate method for patient consents if the Patient Consent Module is off. 
 				if( ! CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE ) {
 					pushDemographicConsent(demoOut,lastDataUpdated, facility, demographicId);
 					benchTimer.tag("pushDemographicConsent");
@@ -949,64 +941,32 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	 * 
 	 * This method ensures that the all current consents from the Patient Consent Module ()  
 	 */
-	private void pushPatientConsentTable(ObjectOutputStream out, LoggedInInfo loggedinInfo, Date lastDataUpdated, Facility facility ) throws IOException{
-		
-		List<Consent> consents = null;
-		List<IntegratorConsent> tempConsents = null;
-			
-		consents = patientConsentManager.getConsentsByTypeAndEditDate( loggedinInfo, this.consentType, lastDataUpdated );
-		tempConsents = new ArrayList<IntegratorConsent>();
-		
+	private void pushPatientConsentTable(LoggedInInfo loggedinInfo, Date lastDataUpdated, Facility facility ) {
+		List<Consent> consents = patientConsentManager.getConsentsByTypeAndEditDate( loggedinInfo, this.consentType, lastDataUpdated );
 		logger.debug("Updating last edited consent list after " +  lastDataUpdated);
-		
-		// Convert a Consent object into an IntegratorConsent object so that it 
-		// the IntegratorConsent object can be converted to a transfer object to 
-		// be consumed by the webservice.
-		for( Consent consent : consents ) {
-			
-			logger.debug("Updating consent id: " +  consent.getId() );
-			IntegratorConsent integratorConsent = CaisiIntegratorManager.makeIntegratorConsent(consent);
-			integratorConsent.setFacilityId( facility.getId() );
-			tempConsents.add( integratorConsent );
-		}
-		
-		if( tempConsents != null && tempConsents.size() > 0 ) {
-			pushDemographicConsent( out, tempConsents );
+
+		if(consents != null) {
+			for( Consent consent : consents ) {				
+				try {
+					CaisiIntegratorManager.pushConsent(loggedinInfo, facility, consent);
+					logger.debug("pushDemographicConsent:" + consent.getId() + "," + facility.getId() + "," + consent.getDemographicNo());
+				} catch (MalformedURLException e) {
+					logger.error("Error while pushing consent via webservices. Consent ID: " + consent.getId(), e);
+					continue;
+				}
+			}
 		}
 	}
 
 	private void pushDemographicConsent(ObjectOutputStream out, Date lastUpdatedData, Facility facility,  Integer demographicId) throws IOException {
 		// find the latest relevant consent that needs to be pushed.
-		pushDemographicConsent(out, integratorConsentDao.findByFacilityAndDemographicSince(facility.getId(), demographicId,lastUpdatedData) );		
-	}
-	
-	private void pushDemographicConsent(ObjectOutputStream out,List<IntegratorConsent> tempConsents ) throws IOException {
-		for (IntegratorConsent tempConsent : tempConsents) {
-			if (tempConsent.getClientConsentStatus() == ConsentStatus.GIVEN || tempConsent.getClientConsentStatus() == ConsentStatus.REVOKED) {
-				
-				SetConsentTransfer consentTransfer = CaisiIntegratorManager.makeSetConsentTransfer2(tempConsent);
-				
-				try {
-					out.writeUnshared(consentTransfer);
-					logger.debug("pushDemographicConsent:" + tempConsent.getId() + "," + tempConsent.getFacilityId() + "," + tempConsent.getDemographicId());
-				} catch (IOException e)
-				{
-					if( e instanceof NotSerializableException) {
-						logger.error(SetConsentTransfer.class.getName() 
-								+ " is not Serializable. Consent data for Demographic" 
-								+ consentTransfer.demographicId
-								+ " was not written to file.", e);
-					}
-					else 
-					{
-						throw e;
-					}
-				}
-				
-			}
+		List<IntegratorConsent> integratorConsentList = integratorConsentDao.findByFacilityAndDemographicSince(facility.getId(), demographicId, lastUpdatedData);
+		for(IntegratorConsent integratorConsent : integratorConsentList) {
+			org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer consentTransfer = CaisiIntegratorManager.makeSetConsentTransfer2(integratorConsent);
+			out.writeUnshared(consentTransfer);
 		}
+		
 	}
-	
 
 	private void pushDemographicIssues(ObjectOutputStream out, Date lastDataUpdated, Facility facility, List<Program> programsInFacility, Integer demographicId, org.oscarehr.caisi_integrator.ws.CachedFacility cachedFacility) throws IOException {
 		logger.debug("pushing demographicIssues facilityId:" + facility.getId() + ", demographicId:" + demographicId);
@@ -1205,7 +1165,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		wrapper = null;
 	}
 
-	private void pushDocuments(ObjectOutputStream out,LoggedInInfo loggedInInfo, Date lastDataUpdated, Facility facility, Integer demographicId) throws IOException  {
+	private void pushDocuments(ObjectOutputStream out,LoggedInInfo loggedInInfo, Date lastDataUpdated, Facility facility, Integer demographicId) throws IOException, ParseException  {
 		logger.debug("pushing demographicDocuments facilityId:" + facility.getId() + ", demographicId:" + demographicId);
 
 		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.documents.disabled", "false"))) {
@@ -1222,7 +1182,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		conformanceTestLog(facility, "EDoc", sentIds.toString());
 	}
 
-	private void sendSingleDocument(ObjectOutputStream out, EDoc eDoc, Integer demographicId) throws IOException  {
+	private void sendSingleDocument(ObjectOutputStream out, EDoc eDoc, Integer demographicId) throws IOException, ParseException  {
 		
 		// send this document
 		CachedDemographicDocument cachedDemographicDocument = new CachedDemographicDocument();
@@ -1240,7 +1200,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		cachedDemographicDocument.setDocType(eDoc.getType());
 		cachedDemographicDocument.setDocXml(eDoc.getHtml());
 		cachedDemographicDocument.setNumberOfPages(eDoc.getNumberOfPages());
-		cachedDemographicDocument.setObservationDate(DateUtils.toGregorianCalendarDate(eDoc.getObservationDate()).getTime());
+		cachedDemographicDocument.setObservationDate( org.oscarehr.util.DateUtils.parseIsoDateAsCalendar(eDoc.getObservationDate()).getTime() );
 		cachedDemographicDocument.setProgramId(eDoc.getProgramId());
 		cachedDemographicDocument.setPublic1(Integer.parseInt(eDoc.getDocPublic()));
 		cachedDemographicDocument.setResponsible(eDoc.getResponsibleId());
@@ -1258,8 +1218,9 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 		out.writeUnshared(cachedDemographicDocument);
 
-		//TODO: fix here
-		//out.writeUnshared(new ByteWrapper(contents));
+		//TODO: fix here. 
+		out.writeUnshared(new ByteWrapper(contents));
+		
 		
 		documentMetaWriter.println( cachedDemographicDocument.getId().getCaisiItemId() + "," + cachedDemographicDocument.getCaisiDemographicId() + "," + cachedDemographicDocument.getDocFilename()  );
 		contents = null;
