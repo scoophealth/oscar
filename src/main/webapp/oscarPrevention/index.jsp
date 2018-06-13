@@ -537,6 +537,13 @@ List<String> OTHERS = Arrays.asList(new String[]{"DTaP-Hib","TdP-IPV-Hib","HBTmf
                 String prevName = h.get("name");
                 String snomedId = h.get("snomedConceptCode") != null ? h.get("snomedConceptCode") : null;
                 String hcType = h.get("healthCanadaType");
+                String ispaStr = h.get("ispa");
+                boolean ispa = ispaStr != null && "true".equals(ispaStr);
+                String ispa1 = "";
+                if(ispa) {
+                	ispa1 = "*";
+                }
+                
             	if(hcType != null) {
 		            if(!preventionManager.hideItem(prevName) && !OTHERS.contains(prevName)){
 		            	List<CVCMapping> mappings = cvcMappingDao.findMultipleByOscarName(prevName);
@@ -544,13 +551,13 @@ List<String> OTHERS = Arrays.asList(new String[]{"DTaP-Hib","TdP-IPV-Hib","HBTmf
 			            	<li style="margin-top: 2px;"><a
 								href="javascript: function myFunction() {return false; }"
 								onclick="javascript:popup(600,900,'AddPreventionDataDisambiguate.jsp?<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
-							<%=prevName%> </a></li>
+							<%=prevName%><%=ispa1 %> </a></li>
 			          <%  } else {
 			            %>
 							<li style="margin-top: 2px;"><a
 								href="javascript: function myFunction() {return false; }"
 								onclick="javascript:popup(600,900,'AddPreventionData.jsp?4=4&<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(prevName) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs(prevName.hashCode()) %>')" title="<%=h.get("desc")%>">
-							<%=prevName%> </a></li>
+							<%=prevName%><%=ispa1 %> </a></li>
 						<%
 			            }
 		            }
@@ -755,7 +762,10 @@ List<String> OTHERS = Arrays.asList(new String[]{"DTaP-Hib","TdP-IPV-Hib","HBTmf
 		<%
 		 String snomedId = h.get("snomedConceptCode") != null ? h.get("snomedConceptCode") : null;
          boolean ispa = h.get("ispa") != null ? Boolean.valueOf(h.get("ispa")) : false;
-         
+         String ispa1="";
+         if(ispa) {
+        	 ispa1 = "*";
+         }
                     if( alist.size() > 0 ) {
                  
                     %>
@@ -774,12 +784,12 @@ List<String> OTHERS = Arrays.asList(new String[]{"DTaP-Hib","TdP-IPV-Hib","HBTmf
         if(mappings != null && mappings.size()>1) {%>
         <a href="javascript: function myFunction() {return false; }"
 			onclick="javascript:popup(600,900,'AddPreventionDataDisambiguate.jsp?1=1&<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs( ( h.get("name")).hashCode() ) %>')">
-		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%></span>
+		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%><%=ispa1%></span>
 		</a>
 		<% } else { %>
 		<a href="javascript: function myFunction() {return false; }"
 			onclick="javascript:popup(600,900,'AddPreventionData.jsp?1=1&<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs( ( h.get("name")).hashCode() ) %>')">
-		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%></span>
+		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%><%=ispa1 %></span>
 		</a>
 		<% } %>
 		<br />
@@ -849,13 +859,16 @@ List<String> OTHERS = Arrays.asList(new String[]{"DTaP-Hib","TdP-IPV-Hib","HBTmf
 		<span style="display: none;" name="printSp">&nbsp;</span> <%}
 		 String snomedId = h.get("snomedConceptCode") != null ? h.get("snomedConceptCode") : null;
 		 boolean ispa = h.get("ispa") != null ? Boolean.valueOf(h.get("ispa")) : false;
-		 
+		 String ispa1="";
+         if(ispa) {
+        	 ispa1 = "*";
+         }
 		%>
 		</div>
 		<div class="headPrevention">
 		<p><a href="javascript: function myFunction() {return false; }"
 			onclick="javascript:popup(600,900,'AddPreventionData.jsp?2=2&<%=snomedId != null ? "snomedId=" + snomedId + "&" : ""%>prevention=<%= java.net.URLEncoder.encode(h.get("name")) %>&amp;demographic_no=<%=demographic_no%>&amp;prevResultDesc=<%= java.net.URLEncoder.encode(h.get("resultDesc")) %>','addPreventionData<%=Math.abs( ( h.get("name")).hashCode() ) %>')">
-		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%></span>
+		<span title="<%=h.get("desc")%>" style="font-weight: bold;"><%=h.get("name")%><%=ispa1 %></span>
 		</a>
 		
 		<br />
