@@ -121,7 +121,7 @@ $(function(){
 				<label for="ticklerTime" class="control-label" > Time:</label>
 				<div class="controls">
 					<div class="input-group">
-						<input type="time" name="serviceTime" id="ticklerTime" class="time-picker form-control required" />
+						<input type="text" name="serviceTime" id="ticklerTime" class="time-picker form-control required" />
 						<label for="ticklerTime" class="input-group-addon btn">
 							<span class="glyphicon glyphicon-time"></span>
 						</label>
