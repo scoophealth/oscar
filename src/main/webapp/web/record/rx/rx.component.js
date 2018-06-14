@@ -188,6 +188,21 @@ const RxComponent = {
  		});
  	}
  	
+ 	rxComp.checkForQuantityError = function(med){
+ 		if(angular.isDefined(med.quantityNULL) && med.quantityNULL){
+ 			return "has-error";
+ 		}
+ 		return "";
+ 	}
+ 	
+ 	rxComp.manualQuantityEntry = function(med){
+		if(angular.isDefined(med.quantityNULL)){
+			if(med.quantity.replace(/^\s+/g, '').length){ //quantity has value now
+				delete med.quantityNULL;
+			}
+		}
+	} 	
+ 	
  	rxComp.reRx = function(drug){
  		console.log("reRx in comp",drug);
  		rxService.getMedication(drug.drugId).then(function (resp) {
@@ -237,6 +252,7 @@ const RxComponent = {
  	            newMed = new Drug($stateParams.demographicNo);
  	            newMed.name = med.name;
  	            newMed.newMed = true;
+ 	            newMed.repeat = 0;
  	            //if(angular.isDefined(newMed.id)){
  	            //   delete newMed.id;
  	            //}

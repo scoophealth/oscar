@@ -84,11 +84,12 @@
 						  <div class="form-group">
 						    <input type="text" class="form-control" id="instructionsInput" placeholder="Instructions" ng-blur="$ctrl.parseInstr(med)" ng-model="med.instructions" auto-focus>
 						  </div>
-						  <div class="form-group">
+						  <div class="form-group ">
 						  	<div class="row">
-							  <div class="col-xs-6">
-								<label for="quantityInput">Qty/Mitte</label> 
-						    		<input type="text" class="form-control" id="quantityInput" placeholder="Qty/Mitte" ng-model="med.quantity">
+							  <div class="col-xs-6" ng-class="$ctrl.checkForQuantityError(med)">
+								<label  class="control-label" for="quantityInput">Qty/Mitte</label> 
+						    		<input type="text" class="form-control" id="quantityInput" placeholder="Qty/Mitte" ng-model="med.quantity" ng-change="$ctrl.manualQuantityEntry(med)">
+						    		<span ng-if="$ctrl.checkForQuantityError(med)" id="helpBlock2" class="help-block">Quantity was not calculated. Manual Calculation required</span>
 							  </div>
 							  <div class="col-xs-6">
 								<label for="repeatsInput">Repeat</label>   

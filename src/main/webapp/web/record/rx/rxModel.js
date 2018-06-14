@@ -571,6 +571,10 @@ Drug.prototype.applyFavorite = function(f){
 
 Drug.prototype.setQuantity = function(){
 	this.quantity = calculateQuantity(this.frequency, this.duration, this.durationUnit, this.takeMax || this.takeMin);
+	if(this.quantity === null){
+		console.log("setting quantity null",this);
+		this.quantityNULL = true;
+	}
 }
 
 /**
