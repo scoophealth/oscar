@@ -574,6 +574,9 @@ Drug.prototype.setQuantity = function(){
 	if(this.quantity === null){
 		console.log("setting quantity null",this);
 		this.quantityNULL = true;
+	}else if(this.quantity != null && this.quantityNULL){
+		console.log("quantityNull true but quantity is not null");
+		delete this.quantityNULL;
 	}
 }
 
