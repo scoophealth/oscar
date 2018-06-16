@@ -112,6 +112,7 @@ import org.oscarehr.caisi_integrator.util.CodeType;
 import org.oscarehr.caisi_integrator.util.Role;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityWs;
+import org.oscarehr.caisi_integrator.ws.ImportLog;
 import org.oscarehr.caisi_integrator.ws.transfer.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.transfer.ProviderTransfer;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
@@ -364,23 +365,22 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			logger.warn("Integrator is enabled but information is incomplete. facilityId=" + facility.getId() + ", user=" + user + ", password=" + password + ", url=" + integratorBaseUrl);
 			return;
 		}
-
+		
+		FacilityWs facilityWs = CaisiIntegratorManager.getFacilityWs(loggedInInfo, facility);
+		org.oscarehr.caisi_integrator.ws.CachedFacility cachedFacility = facilityWs.getMyFacility();
+		
+		// sync the integrator logs and the most recent entry
+		IntegratorFileLog lastFile = updateLogs(loggedInInfo, facility);
 
 		// start at the beginning of time (aka jan 1, 1970) so by default everything is pushed
 		Date lastDataUpdated = new Date(0);
-		
-		//TODO get the last SUCESSFULL update log.
-		IntegratorFileLog lastFile = integratorFileLogManager.getLastFileData();
+
+		// set the date threshold.
 		if (lastFile != null && lastFile.getCurrentDate() != null){
 			lastDataUpdated = lastFile.getCurrentDate();
 		}
 		
 		logger.info("Last data snapshot date " + lastDataUpdated);
-		
-		FacilityWs service = CaisiIntegratorManager.getFacilityWs(loggedInInfo, facility);
-		org.oscarehr.caisi_integrator.ws.CachedFacility cachedFacility = service.getMyFacility();
-		
-		//TODO update the file log status from the last push.
 
 		// Sync Oscar and Integrator Consent tables via web services. This is required before pushing any patient data. 
 		// This is important because a patient file is NOT pushed if the consent is revoked - and therefore will not be updated with Integrator. 
@@ -2355,6 +2355,43 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		CaisiIntegratorUpdateTask.outputDirectory = outputDirectory;
 	}
 	
-	
+	private final IntegratorFileLog updateLogs(final LoggedInInfo loggedInInfo, final Facility facility) {
+				
+		// get the date from the last log entry 
+		IntegratorFileLog lastFile = null;
+		List<IntegratorFileLog> integratorFileLogList = integratorFileLogManager.getStatusNotCompleteOrError(loggedInInfo);
+		FacilityWs facilityWs = null;
+		
+		if(! integratorFileLogList.isEmpty()) {
+			lastFile = integratorFileLogList.get(0);
+		}
+		
+		try {
+			facilityWs = CaisiIntegratorManager.getFacilityWs(loggedInInfo, facility);
+		} catch (MalformedURLException e) {
+			logger.error("Connection error while syncing file logs", e);
+		} 
+
+		// sort out the current status' in the integrator file log with the integrator log.
+		for(IntegratorFileLog integratorFileLog : integratorFileLogList) {
+			List<ImportLog> importLogList = null;
+			
+			if(facilityWs != null) {
+				importLogList = facilityWs.getImportLogByFilenameAndChecksum(integratorFileLog.getFilename(), integratorFileLog.getChecksum());
+			}
+			
+			if(importLogList == null) {
+				continue;
+			}
+			
+			for(ImportLog importLog : importLogList) {
+				integratorFileLog.setIntegratorStatus(importLog.getStatus());
+				integratorFileLogManager.updateIntegratorFileLog(loggedInInfo, integratorFileLog);
+			}
+		}
+
+		return lastFile;
+	}
+
 }
 
