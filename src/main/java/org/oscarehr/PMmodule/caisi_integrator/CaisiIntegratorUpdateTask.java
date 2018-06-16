@@ -434,6 +434,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			out = new ObjectOutputStream(new FileOutputStream(new File(documentDir + File.separator + filename + "."+(++currentFileNumber)+".ser")));
 			
 			IntegratorFileFooter footer =new IntegratorFileFooter();
+
 			out.writeUnshared(footer);
 			
 		}catch(IOException e) {
@@ -452,21 +453,13 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			throw new IOException(e);
 		}
 		
-		//create the DocumentZip
-	
-		String docChecksum = null;
+		//TODO is there any need to log or transmit a checksum for the documents? Technically the manifest should confirm them all?
 		try {
-			docChecksum = completeDocumentFile(documentDir, filename, documentPaths);
+			completeDocumentFile(documentDir, filename, documentPaths);
 		} catch(Exception e) {
 			throw new IOException(e);
 		}
-		
-		if(docChecksum != null) {
-			//TODO Is there any interest in confirming or recording the document checksum
-			// integratorFileLogManager.saveNewFileData(filename + COMPRESSED_DOCUMENTS_APPENDAGE + ".zip", docChecksum, lastDataUpdated,currentUpdateDate);		
-			logger.info("Document attachment created " + filename + COMPRESSED_DOCUMENTS_APPENDAGE + ".zip" + " MD5: " + docChecksum );
-		}
-		
+				
 		//save this log
 		integratorFileLogManager.saveNewFileData(filename + ".zip",checksum,lastDataUpdated,currentUpdateDate);
 		
@@ -1219,7 +1212,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 					+ "," 
 					+ demographicId 
 					+ "," 
-					+ "\"" + documentPath.getFileName() + "\"" );
+					+ documentPath.getFileName());
 
 			sentIds.append("," + eDoc.getDocId());
 		}
