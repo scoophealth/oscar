@@ -755,9 +755,11 @@ public class ContactAction extends DispatchAction {
 					city = addressArray[1].trim();
 					province = addressArray[2].trim();
 					country = addressArray[3].trim();
-				} else {
+				} else if(addressArray.length == 3){
 					province = addressArray[1].trim();
 					country = addressArray[2].trim();
+				} else {
+					province = addressArray[1];
 				}
 			}
 			
