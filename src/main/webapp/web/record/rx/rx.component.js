@@ -240,6 +240,10 @@ const RxComponent = {
 			});
 
 		}
+		
+		rxComp.cancelMed = function(med,idx){
+			rxComp.toRxList.splice(idx, 1);
+		};
 
 		rxComp.favSelected = function(fav) {
 			var m = {};

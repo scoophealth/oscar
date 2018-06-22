@@ -79,6 +79,7 @@
 			  <li class="list-group-item <%--active--%>" ng-repeat="med in $ctrl.toRxList">
 			  <div class="row" >
 			  	<div class="col-sm-8">
+			  		<span class="pull-right"><a ng-click="$ctrl.cancelMed(med,$index)"><span class="glyphicon glyphicon-remove-circle"></span></a></span>
 				    <h4 class="list-group-item-heading">{{med.getName()}}</h4>
 				    		<form>
 						  <div class="form-group">
@@ -106,6 +107,7 @@
 						</form>
 			    </div>
 			  	<div class="col-sm-4">
+			  		
 				  	<div uib-alert ng-repeat="alert in $ctrl.page.dsMessageHash[med.atc]" class="alert"  ng-class="'alert-' + ($ctrl.getAlertStyl(alert) || 'warning')"  style="padding: 9px;margin-bottom: 3px;"  ng-hide="$ctrl.checkIfHidden(alert)" >  <%-- uib-popover-html="{{alert.body}}" popover-trigger="'mouseenter'"  --%>
 		 		   		{{alert.heading}}<br>
 	 			   		{{alert.summary | limitTo: 150 }}{{alert.summary.length > 150 ? '...' : ''}}
