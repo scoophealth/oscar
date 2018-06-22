@@ -93,8 +93,13 @@
 							  </div>
 							  <div class="col-xs-6">
 								<label for="repeatsInput">Repeat</label>   
-						    		<input type="text" class="form-control" id="repeatsInput" placeholder="Repeats" ng-model="med.repeats">    
+						    		<input type="text" class="form-control" id="repeatsInput" placeholder="Repeats" ng-model="med.repeats" ng-change="$ctrl.repeatsUpdated(med)">    
 							  </div>
+						  	</div>
+						  	<div class="row" ng-if="med.duration != null" >
+						  		<div class="col-xs-12 has-error">
+						  			Duration was calculated to  {{med.rxDurationInDays()}} days.  <a ng-click="$ctrl.changeEndDate(med)">Change?</a>
+						  		</div>
 						  	</div>
 						  </div>
 						 

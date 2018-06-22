@@ -369,7 +369,7 @@ Drug.prototype.applyInstructions = function (x) {
 
     if (x.drug.takeMax) this.takeMax = x.drug.takeMax;
     
-    if (x.drug.duration) this.duration = x.drug.duration;
+    if (x.drug.duration != null) this.duration = x.drug.duration;
     
     if (x.drug.durationUnit) this.durationUnit = x.drug.durationUnit;
 
@@ -380,6 +380,12 @@ Drug.prototype.applyInstructions = function (x) {
     this.prn = x.drug.prn || this.prn;
 
     if (x.drug.route) this.route = x.drug.route.toUpperCase();
+    
+    console.log("x.drug.duration",x.drug.duration, this.duration);
+    
+    if(x.drug.duration === null){
+    		console.log("x.drug.duration is null");
+    }
 
     // Call this to update the instruction field to reflect
     // the retrieved instructions.
@@ -569,6 +575,28 @@ Drug.prototype.applyFavorite = function(f){
 
 };
 
+Drug.prototype.refreshEndDate = function(){
+	if(this.rxDate == null){
+		this.rxDate = new Date();
+	}
+	
+    this.endDate = calculateEndDate(
+        {
+            start : this.rxDate,
+            duration : this.duration,
+            durationUnit : this.durationUnit,
+            repeats : this.repeats
+        }
+    );
+}
+
+
+Drug.prototype.rxDurationInDays = function(){
+	console.log("rxDur",this.endDate,this.rxDate,(this.endDate-this.rxDate), ((this.endDate-this.rxDate)/(1000*60*60*24)),(Math.round((this.endDate-this.rxDate)/(1000*60*60*24))));
+	return Math.round((this.endDate-this.rxDate)/(1000*60*60*24));
+};
+
+
 Drug.prototype.setQuantity = function(){
 	this.quantity = calculateQuantity(this.frequency, this.duration, this.durationUnit, this.takeMax || this.takeMin);
 	if(this.quantity === null){
@@ -697,6 +725,7 @@ function calculateQuantity(freq, dur, durUnit, numPerDose){
 function calculateEndDate(obj){
 
     if(!obj.start || !obj.durationUnit){
+    		console.log("End Date was not calculated");
         return null;
     }
 
