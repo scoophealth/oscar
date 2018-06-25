@@ -960,7 +960,7 @@ $(document).ready(function(){
    					
    					boolean ispa = Boolean.valueOf((String)prevHash.get("ispa"));
    					
-   					if(ispa || (dhirConsent != null && !dhirConsent.isOptout())) {
+   					if(session.getAttribute("oneIdEmail") != null && (ispa || (dhirConsent != null && !dhirConsent.isOptout()))) {
                %>
                <input type="submit" value="Save & Submit" name="action" >
                 <% } %>

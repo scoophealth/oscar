@@ -234,20 +234,27 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 	private void setVaccineCode( org.hl7.fhir.dstu3.model.Immunization immunization ){
 		CVCImmunizationDao cvcImmDao = SpringUtils.getBean(CVCImmunizationDao.class);
 	
-		
-		if(!StringUtils.isEmpty(getOscarResource().getVaccineCode())) {
-			String display = getOscarResource().getName().trim();
-			if(StringUtils.isEmpty(display) || !StringUtils.isEmpty(getOscarResource().getVaccineCode2())) {
-				CVCImmunization cvcImm = cvcImmDao.findBySnomedConceptId(getOscarResource().getVaccineCode());
-				if(cvcImm != null) {
-					display = cvcImm.getDisplayName();
-				}
-			}
-			
+		if(!StringUtils.isEmpty(getOscarResource().getVaccineCode2())) {
 			immunization.getVaccineCode().addCoding()
 			.setSystem("http://snomed.info/sct")
-			.setCode( getOscarResource().getVaccineCode() )
-			.setDisplay( display );
+			.setCode( getOscarResource().getVaccineCode2() )
+			.setDisplay((getOscarResource().getName()).trim());
+		} else {
+				
+			if(!StringUtils.isEmpty(getOscarResource().getVaccineCode())) {
+				String display = getOscarResource().getName().trim();
+				if(StringUtils.isEmpty(display) || !StringUtils.isEmpty(getOscarResource().getVaccineCode2())) {
+					CVCImmunization cvcImm = cvcImmDao.findBySnomedConceptId(getOscarResource().getVaccineCode());
+					if(cvcImm != null) {
+						display = cvcImm.getDisplayName();
+					}
+				}
+				
+				immunization.getVaccineCode().addCoding()
+				.setSystem("http://snomed.info/sct")
+				.setCode( getOscarResource().getVaccineCode() )
+				.setDisplay( display );
+			}
 		}
 	}
 
@@ -259,16 +266,18 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 	 * SNOMED is a fixed (static) system in Oscar.
 	 */
 	private void setVaccineCode2( org.hl7.fhir.dstu3.model.Immunization immunization ){
+		/*
 		if(!StringUtils.isEmpty(getOscarResource().getVaccineCode2())) {
 			immunization.getVaccineCode().addCoding()
 			.setSystem("http://snomed.info/sct")
 			.setCode( getOscarResource().getVaccineCode2() )
 			.setDisplay((getOscarResource().getName()).trim());
 		}
+		*/
 	}
 
 	private void setVaccineCode2( ImmunizationInterface immunization ){
-		immunization.setVaccineCode2( getFhirResource().getVaccineCode().getCoding().get(1).getCode() );
+		//immunization.setVaccineCode2( getFhirResource().getVaccineCode().getCoding().get(1).getCode() );
 	}
 	
 

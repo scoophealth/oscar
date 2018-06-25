@@ -643,20 +643,12 @@ clear: left;
 				</tr>
 				-->
 				<tr>
-					<td width="15%"><b>Generic Code:</b></td>
+					<td width="15%"><b>Vaccine Code:</b></td>
 					<td><%=getVaccineCode(immunization,0)%></td>
 				</tr>
 				<tr>
-					<td width="15%"><b>Generic Code Display:</b></td>
+					<td width="15%"><b>Vaccine Code Display:</b></td>
 					<td><%=getVaccineCodeDisplay(immunization,0)%></td>
-				</tr>
-				<tr>
-					<td width="15%"><b>Brand Code:</b></td>
-					<td><%=getVaccineCode(immunization,1) != null ? getVaccineCode(immunization,1) : "N/A"%></td>
-				</tr>
-				<tr>
-					<td width="15%"><b>Brand Code Display:</b></td>
-					<td><%=getVaccineCodeDisplay(immunization,1) != null ? getVaccineCodeDisplay(immunization,1) : "N/A"%></td>
 				</tr>
 				
 				<tr>
