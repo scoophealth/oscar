@@ -235,18 +235,19 @@ public final class SSOLoginAction extends MappingDispatchAction {
     	//Gets the ssoKey parameter
     	oneIdKey = request.getParameter("nameId");
     	oneIdEmail = request.getParameter("email");
-        requestStartTime = request.getParameter("loginStart");
+        requestStartTime = request.getParameter("ts");
         String encryptedOneIdToken = request.getParameter("encryptedOneIdToken");
         
         String signature = request.getParameter("signature");
-  
+        String ts = request.getParameter("ts");
+        
         if(!StringUtils.isEmpty(signature)) {
         	logger.info("Found signature " + signature);
         	try {
         		Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
         		SecretKeySpec secret_key = new SecretKeySpec(OscarProperties.getInstance().getProperty("oneid.encryptionKey").getBytes("UTF-8"), "HmacSHA256");
         		sha256_HMAC.init(secret_key);
-        		String ourSig = Hex.encodeHexString(sha256_HMAC.doFinal((oneIdKey + oneIdEmail + encryptedOneIdToken).getBytes("UTF-8")));
+        		String ourSig = Hex.encodeHexString(sha256_HMAC.doFinal((oneIdKey + oneIdEmail + encryptedOneIdToken + ts).getBytes("UTF-8")));
         		if(!ourSig.equals(signature)) {
         			logger.warn("SSO Login: invalid HMAC signature");
                 	ActionRedirect redirect = new ActionRedirect(mapping.findForward("ssoLoginError"));
