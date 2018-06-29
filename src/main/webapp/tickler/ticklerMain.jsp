@@ -80,60 +80,89 @@
 
      TicklerLinkDao ticklerLinkDao = (TicklerLinkDao) SpringUtils.getBean("ticklerLinkDao");
 
-     String providerview;
-     String assignedTo;
-     String mrpview;
-     if( request.getParameter("providerview")==null ) {
-             providerview = "all";
+     String createReport = request.getParameter("Submit");
+     boolean doCreateReport = createReport != null && createReport.equals("Create Report");
+
+     ViewDao viewDao = (ViewDao) SpringUtils.getBean("viewDao");
+     String userRole = (String) session.getAttribute("userrole");
+     Map<String, View> ticklerView = viewDao.getView("tickler", userRole, user_no);
+
+     String providerview = "all";
+     View providerView = ticklerView.get("providerview");
+
+     if( providerView != null  && !doCreateReport)
+     {
+         providerview = providerView.getValue();
      }
-     else {
+     else if (request.getParameter("providerview") != null)
+     {
          providerview = request.getParameter("providerview");
      }
 
-     if( request.getParameter("assignedTo") == null ) {
-             assignedTo = "all";
+     String assignedTo = "all";
+     View assignedToView = ticklerView.get("assignedTo");
+
+     if( assignedToView != null && !doCreateReport)
+     {
+         assignedTo = assignedToView.getValue();
      }
-     else {
+     else if (request.getParameter("assignedTo") != null)
+     {
          assignedTo = request.getParameter("assignedTo");
      }
-     
-     if( request.getParameter("mrpview") == null ) {
-   	  mrpview = "all";
+
+     String mrpview = "all";
+     View mrpView = ticklerView.get("mrpview");
+
+     if( mrpView != null && !doCreateReport)
+     {
+   	  mrpview = mrpView.getValue();
      }
-     else {
-   	  mrpview = request.getParameter("mrpview");
+     else if (request.getParameter("mrpview") != null)
+     {
+         mrpview = request.getParameter("mrpview");
      }
 
-     Calendar now=Calendar.getInstance();
-  int curYear = now.get(Calendar.YEAR);
-  int curMonth = (now.get(Calendar.MONTH)+1);
-  int curDay = now.get(Calendar.DAY_OF_MONTH);
+    String ticklerview = "A";
+    View statusView = ticklerView.get("ticklerview");
 
-	String ticklerview;
-   if( request.getParameter("ticklerview") == null ) {
-          ticklerview = "A";
-  }
-  else {
-      ticklerview = request.getParameter("ticklerview");
-  }
+    if( statusView != null && !doCreateReport)
+    {
+       ticklerview = statusView.getValue();
+    }
+     else if (request.getParameter("ticklerview") != null)
+     {
+         ticklerview = request.getParameter("ticklerview");
+     }
 
+    String xml_vdate = "";
+    View beginDateView = ticklerView.get("dateBegin");
 
-  String xml_vdate;
-   if( request.getParameter("xml_vdate") == null ) {
-          xml_vdate = "";
-  }
-  else {
-      xml_vdate = request.getParameter("xml_vdate");
-  }
+    if( beginDateView != null && !doCreateReport)
+    {
+        xml_vdate = beginDateView.getValue();
+    }
+    else if (request.getParameter("xml_vdate") != null)
+    {
+         xml_vdate = request.getParameter("xml_vdate");
+    }
 
-  String xml_appointment_date;
-   if( request.getParameter("xml_appointment_date") == null ) {
-          xml_appointment_date = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
-  }
-  else {
-      xml_appointment_date = request.getParameter("xml_appointment_date");
-  }
+    Calendar now=Calendar.getInstance();
+    int curYear = now.get(Calendar.YEAR);
+    int curMonth = (now.get(Calendar.MONTH)+1);
+    int curDay = now.get(Calendar.DAY_OF_MONTH);
 
+    String xml_appointment_date = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
+    View endDateView = ticklerView.get("dateEnd");
+
+    if( endDateView != null && !doCreateReport)
+    {
+        xml_appointment_date = endDateView.getValue();
+    }
+    else if (request.getParameter("xml_appointment_date") != null)
+    {
+        xml_appointment_date = request.getParameter("xml_appointment_date");
+    }
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -427,7 +456,8 @@ var beginD = "1900-01-01"
 
         var url = "<c:out value="${ctx}"/>/saveWorkView.do";
         var role = "<%=(String)session.getAttribute("userrole")%>";
-        var params = "method=save&view_name=tickler&userrole=" + role + "&name=ticklerview&value=" + $F("ticklerview") + "&name=dateBegin&value=" + $F("xml_vdate") + "&name=dateEnd&value=" + $F("xml_appointment_date") + "&name=providerview&value=" + encodeURI($F("providerview")) + "&name=assignedTo&value=" + encodeURI($F("assignedTo"));
+        var provider_no = "<%=(String) session.getAttribute("user")%>";
+        var params = "method=save&view_name=tickler&userrole=" + role + "&providerno=" + provider_no + "&name=ticklerview&value=" + $F("ticklerview") + "&name=dateBegin&value=" + $F("xml_vdate") + "&name=dateEnd&value=" + $F("xml_appointment_date") + "&name=providerview&value=" + encodeURI($F("providerview")) + "&name=assignedTo&value=" + encodeURI($F("assignedTo"))  + "&name=mrpview&value=" + encodeURI($F("mrpview"));
         var sortables = document.getElementsByClassName('tableSortArrow');
 
         var attrib = null;
