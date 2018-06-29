@@ -193,7 +193,8 @@ const RxComponent = {
 		    if (numDaysTillEnd != null) {
 		    		var d = new Date(med.rxDate);
 		    		console.log("d: "+d.getDate() + " numDaysTillEnd: "+ numDaysTillEnd+" med.endDate "+med.endDate+  "calc "+(+d.getDate() + +numDaysTillEnd));
-		        med.endDate.setDate(+d.getDate() + +numDaysTillEnd);
+		    		d.setDate(+d.getDate() + +numDaysTillEnd);
+		        med.endDate = d;
 		        console.log("med.rxDate.getDate(): "+d.getDate() + " numDaysTillEnd: "+ numDaysTillEnd+ "END "+med.endDate);
 		        
 		    }	
