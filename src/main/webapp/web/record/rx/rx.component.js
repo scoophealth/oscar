@@ -311,12 +311,12 @@ const RxComponent = {
 		};
 
 		function getRightItems() {
-			summaryService.getSummaryHeaders($stateParams.demographicNo, 'right').then(function(data) {
-				console.log("right", data);
+			summaryService.getSummaryHeaders($stateParams.demographicNo, 'rxRight').then(function(data) {
+				console.log("rxRight", data);
 				rxComp.page.columnThree.modules = data;
 				fillItems(rxComp.page.columnThree.modules);
 			}, function(errorMessage) {
-				console.log("left" + errorMessage);
+				console.log("rxRight" + errorMessage);
 				rxComp.error = errorMessage;
 			});
 		};

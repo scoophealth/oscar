@@ -332,6 +332,12 @@ public class RecordUxService extends AbstractServiceImpl {
 				summaryList.add(new SummaryTo1("Allergies",count++,SummaryTo1.ALLERGIES));  
 			}
 
+		}else if("rxRight".equals(summaryName )){
+			summaryList = new ArrayList<SummaryTo1>();
+			
+			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.decisionSupportAlerts", "r", null) && preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.DS_SUPPORT_POS)) {
+				summaryList.add(new SummaryTo1("Decision Support",count++,SummaryTo1.DECISIONSUPPORT_CODE)); 
+			}
 		}
 		return summaryList;
 	}
