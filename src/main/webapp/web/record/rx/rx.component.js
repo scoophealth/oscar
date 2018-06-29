@@ -280,7 +280,7 @@ const RxComponent = {
 									newMed = new Drug($stateParams.demographicNo);
 									newMed.name = med.name;
 									newMed.newMed = true;
-									newMed.repeat = 0;
+									newMed.repeats = 0;
 									// if(angular.isDefined(newMed.id)){
 									// delete newMed.id;
 									// }
