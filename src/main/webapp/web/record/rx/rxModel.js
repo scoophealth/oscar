@@ -731,15 +731,21 @@ function calculateEndDate(obj){
 
     var d = new Date(obj.start);
 
+    var repeatMultiplier  = obj.repeats;
+    if (isNaN(repeatMultiplier) || repeatMultiplier < 0){
+    		obj.repeats = 0 
+    		repeatMultiplier = 1;
+	}
+    
     switch(obj.durationUnit){
         case 'D':
-            d.setDate(d.getDate() + obj.duration * (obj.repeats <= 0 ? 1 : obj.repeats) );
+            d.setDate(d.getDate() + obj.duration * (repeatMultiplier <= 0 ? 1 : repeatMultiplier) );
             break;
         case 'W':
-            d.setDate(d.getDate() + 7 * obj.duration * (obj.repeats <= 0 ? 1 : obj.repeats));
+            d.setDate(d.getDate() + 7 * obj.duration * (repeatMultiplier <= 0 ? 1 : repeatMultiplier));
             break;
         case 'M':
-            d.setMonth(d.getMonth() + obj.duration * (obj.repeats <= 0 ? 1 : obj.repeats));
+            d.setMonth(d.getMonth() + obj.duration * (repeatMultiplier <= 0 ? 1 : repeatMultiplier));
             break;
         default:
             break;
