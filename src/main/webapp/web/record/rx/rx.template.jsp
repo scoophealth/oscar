@@ -27,24 +27,8 @@
 	<div class="col-sm-3">
        <fieldset ng-repeat="mod in $ctrl.page.columnOne.modules">
        		<legend style="margin-bottom:0px;"> 
-
-		<a href="javascript:void(0)" style="font-size:12px;color:#333;padding-top:10px" class="pull-right" ng-click="openPreventions(demographicNo)" ng-show="mod.summaryCode=='preventions'">
-		<span class="glyphicon glyphicon-plus-sign" title="{{mod.summaryCode}}"></span>
-		</a>
-
-		<a href="javascript:void(0)" style="font-size:12px;color:#333;padding-top:10px" class="pull-right" ng-click="gotoState('add', mod)" ng-disabled="page.cannotAdd" ng-hide="mod.summaryCode=='meds' || mod.summaryCode=='assessments' || mod.summaryCode=='allergies' || mod.summaryCode=='preventions' || page.cannotAdd">
-			<span class="glyphicon glyphicon-plus-sign" title="{{mod.summaryCode}}"></span>
-		</a> 
-
-		<a href="javascript:void(0)" style="font-size:12px;color:#333;padding-top:10px" class="pull-right" ng-click="openRx(demographicNo)" ng-show="mod.summaryCode=='meds'">
-		<span class="glyphicon glyphicon-plus-sign" title="{{mod.summaryCode}}"></span>
-		</a>
 		
-		<a href="javascript:void(0)" style="font-size:12px;color:#333;padding-top:10px" class="pull-right" ng-click="openAllergies(demographicNo)" ng-show="mod.summaryCode=='allergies'">
-		<span class="glyphicon glyphicon-plus-sign" title="{{mod.summaryCode}}"></span>
-		</a>
-
-		<a href="#/record/{{demographicNo}}/forms" style="font-size:12px;color:#333;padding-top:10px" class="pull-right" ng-show="mod.summaryCode=='assessments'">
+		<a href="javascript:void(0)" style="font-size:12px;color:#333;padding-top:10px" class="pull-right" ng-click="$ctrl.openAllergies()" ng-show="mod.summaryCode=='allergies'">
 		<span class="glyphicon glyphicon-plus-sign" title="{{mod.summaryCode}}"></span>
 		</a>
 
@@ -54,11 +38,7 @@
         	<ul style="padding-left:12px;">
         	<%-- href="{{item.action}}" --%>
         	<li ng-repeat="item in mod.summaryItem" ng-show="$index < mod.displaySize"><span class="pull-right">{{item.date | date : 'dd-MMM-yyyy'}}</span><a ng-click="gotoState(item,mod,item.id)" href="javascript:void(0)" ng-class="item.indicatorClass" popover="{{item.displayName}} {{item.warning}}" popover-trigger="'mouseenter'">{{item.displayName | limitTo: 34 }} {{item.displayName.length > 34 ? '...' : '' }}<small ng-show="item.classification">({{item.classification}})</small></a> </li> 			
-			<a href="javascript:void(0)" class="text-muted add-summary" ng-if="mod.summaryItem==null" ng-click="openPreventions(demographicNo)" ng-show="mod.summaryCode=='preventions'"><bean:message key="global.btnAdd"/> {{mod.displayName}}</a>
-			<a href="javascript:void(0)" class="text-muted add-summary" ng-if="mod.summaryItem==null" ng-click="gotoState('add', mod)" ng-hide="mod.summaryCode=='meds' || mod.summaryCode=='assessments' || mod.summaryCode=='allergies' || mod.summaryCode=='preventions' || page.cannotAdd"><bean:message key="global.btnAdd"/> {{mod.displayName}}</a>
-			<a href="javascript:void(0)" class="text-muted add-summary" ng-if="mod.summaryItem==null" ng-click="openRx(demographicNo)" ng-show="mod.summaryCode=='meds'"><bean:message key="global.btnAdd"/> {{mod.displayName}}</a>
-			<a href="javascript:void(0)" class="text-muted add-summary" ng-if="mod.summaryItem==null" ng-click="openAllergies(demographicNo)" ng-show="mod.summaryCode=='allergies'"><bean:message key="global.btnAdd"/> {{mod.displayName}}</a>
-			<a href="#/record/{{demographicNo}}/forms" class="text-muted add-summary" ng-if="mod.summaryItem==null" ng-show="mod.summaryCode=='assessments'"><bean:message key="global.btnAdd"/> {{mod.displayName}}</a>
+			<a href="javascript:void(0)" class="text-muted add-summary" ng-if="mod.summaryItem==null" ng-click="$ctrl.openAllergies()" ng-show="mod.summaryCode=='allergies'"><bean:message key="global.btnAdd"/> {{mod.displayName}}</a>
         	</ul>
 
 		<span ng-class="showMoreItemsSymbol(mod)" ng-click="toggleList(mod)" ng-show="showMoreItems(mod)"></span>

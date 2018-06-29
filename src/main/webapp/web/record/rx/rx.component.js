@@ -258,6 +258,13 @@ const RxComponent = {
 		rxComp.hideWarning = function(alert) {
 			console.log("hidewarning", alert);
 		}
+		
+		rxComp.openAllergies = function(){
+			win = "Allergy"+$stateParams.demographicNo;
+			var url = "../oscarRx/showAllergy.do?demographicNo=" + $stateParams.demographicNo;
+			window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");   
+			return false;
+	   	}
 
 		rxComp.medSelected = function(med) {
 			console.log("med", med);
