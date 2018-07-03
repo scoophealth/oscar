@@ -85,6 +85,7 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
             d.setTakeMin(t.getTakeMin());
             d.setRxDate(t.getRxDate());
             d.setEndDate(t.getEndDate());
+            d.setWrittenDate(t.getWrittenDate());
             d.setFreqCode(t.getFrequency());
             d.setDuration(convertToStringOrNull(t.getDuration())); // Cast to string.
             d.setDurUnit(t.getDurationUnit());

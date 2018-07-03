@@ -227,6 +227,7 @@ Drug.prototype.toDrugTransferObject = function (drugKey) {
             quantity:this.quantity,
             endDate: tempEndDate.toISOString(),
             rxDate: tempStartDate.toISOString(),
+            writtenDate: this.writtenDate,
 
             longTerm: this.longTerm || false,
             noSubstitutions: this.noSubs || false,

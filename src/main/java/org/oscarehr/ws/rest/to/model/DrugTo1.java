@@ -58,6 +58,8 @@ public class DrugTo1 implements Serializable {
     private Date rxDate;
 
     private Date endDate;
+    
+    private Date writtenDate;
 
     private String frequency;
 
@@ -336,4 +338,12 @@ public class DrugTo1 implements Serializable {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+
+	public Date getWrittenDate() {
+		return writtenDate;
+	}
+
+	public void setWrittenDate(Date writtenDate) {
+		this.writtenDate = writtenDate;
+	}
 }

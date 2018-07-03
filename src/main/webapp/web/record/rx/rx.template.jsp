@@ -59,7 +59,11 @@
 			  <li class="list-group-item <%--active--%>" ng-repeat="med in $ctrl.toRxList">
 			  <div class="row" >
 			  	<div class="col-sm-8">
-			  		<span class="pull-right"><a ng-click="$ctrl.cancelMed(med,$index)"><span class="glyphicon glyphicon-remove-circle"></span></a></span>
+			  		<span class="pull-right">
+			  			<a ng-click="$ctrl.showMore(med);">
+			  			<span ng-if="med.showmore == null">More</span><span ng-if="med.showmore">Less</span> 
+			  			</a>
+			  			<a ng-click="$ctrl.cancelMed(med,$index)"><span class="glyphicon glyphicon-remove-circle"></span></a></span>
 				    <h4 class="list-group-item-heading">{{med.getName()}}</h4>
 				    		<form>
 						  <div class="form-group">
@@ -83,7 +87,29 @@
 						  		</div>
 						  	</div>
 						  </div>
-						 
+						  <div class="form-group" ng-if="med.showmore">
+						  	<div class="row">
+							  <div class="col-xs-6">
+								<label for="repeatsInput">Written Date</label>  
+								<div class="input-group">
+									<input type="text" class="form-control"   
+									ng-model="med.writtenDate" 
+									uib-datepicker-popup="yyyy-MM-dd" 
+									uib-datepicker-append-to-body="false" 
+									is-open="startDatePicker" 
+									ng-click="startDatePicker = true" 
+									placeholder="YYYY-MM-DD"
+									/>
+									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+								</div>
+								
+								
+								 
+						    		
+							  </div>
+						  	</div>
+						  </div>
+
 						</form>
 			    </div>
 			  	<div class="col-sm-4">

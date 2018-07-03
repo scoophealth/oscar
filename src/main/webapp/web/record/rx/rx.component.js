@@ -265,6 +265,15 @@ const RxComponent = {
 			window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");   
 			return false;
 	   	}
+	   	
+		
+		rxComp.showMore = function(med){
+			if(angular.isDefined(med.showmore) && med.showmore){
+				delete med.showmore;
+				return
+			}
+			med.showmore = true;
+		}
 
 		rxComp.medSelected = function(med) {
 			console.log("med", med);
@@ -273,6 +282,7 @@ const RxComponent = {
 				m.drug = med;
 				var d = new Drug();
 				d.applyFavorite(m);
+				d.writtenDate = new Date();
 				// if(angular.isDefined(d.id)){
 				// delete d.id;
 				// }
@@ -288,6 +298,7 @@ const RxComponent = {
 									newMed.name = med.name;
 									newMed.newMed = true;
 									newMed.repeats = 0;
+									newMed.writtenDate = new Date();
 									// if(angular.isDefined(newMed.id)){
 									// delete newMed.id;
 									// }
