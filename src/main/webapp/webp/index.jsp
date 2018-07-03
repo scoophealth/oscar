@@ -197,6 +197,16 @@ li.cpp-note-list:last-child{
 color: #FF0000;
 }
 
+.mild, .mild{
+color: #FFFF33;
+}
+
+.moderate, .moderate{
+color: #FF6600;
+}
+.severe, .severe{
+color: #CC0000;
+}
 
 .refused, .refused:hover{
 color: #EAACAC;
