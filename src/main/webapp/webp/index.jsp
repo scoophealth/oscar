@@ -216,6 +216,10 @@ color: #EAACAC;
 color: #FFCC24;
 }
 
+.deletedItem {
+	text-decoration: line-through;
+}
+
 .pending, .pending:hover{
 color: #FF00FF;
 }

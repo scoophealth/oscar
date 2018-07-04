@@ -221,6 +221,10 @@ color: #FFCC24;
 color: #FF00FF;
 }
 
+.deletedItem {
+	text-decoration: line-through;
+}
+
 /*think of changing this to be consistent*/
 .abnormal-prev, .abnormal-prev:hover{
 color: #FF4D4D;

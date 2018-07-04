@@ -115,11 +115,22 @@ const RxProfileComponent = {
   	/*Action Drop Box methods*/
   	rxProfileComp.discontinue = function(drug){
   		alert("Not Implemented Yet");
-  		console.log("Not Implemented Yet",drug);
+  		//discontinueMedication : function(demo, medId, reason)
+  		console.log("Not Implemented Yet",drug,$stateParams);
   	}
     rxProfileComp.delete = function(drug){
-  		alert("Not Implemented Yet");
-  		console.log("Not Implemented Yet",drug);
+  		if (confirm("Are you sure you wish to delete the selected prescriptions?")) {
+  			rxService.discontinueMedication(drug.demographicNo,drug.drugId,"deleted").then(
+					function(d) {
+						console.log("delete success",drug,d);
+						drug.archived = true;
+					},
+					function(errorMessage) {
+						console.log("Error parsing Intruction",errorMessage);
+					}
+				);
+		}
+  		console.log("deleting",drug);
   	}
     rxProfileComp.addReason = function(drug){
   		alert("Not Implemented Yet");
