@@ -5,7 +5,7 @@ const RxProfileComponent = {
 
   },
   templateUrl: '../web/record/rx/profile/profile.template.jsp',
-  controller: ['$stateParams','$state','$log','$timeout','summaryService','rxService','$filter',function($stateParams,$state,$log,$timeout,summaryService,rxService,$filter) {
+  controller: ['$stateParams','$state','$log','$timeout','summaryService','rxService','$filter','$window',function($stateParams,$state,$log,$timeout,summaryService,rxService,$filter,$window) {
   	rxProfileComp = this;
 
   	
@@ -133,9 +133,19 @@ const RxProfileComponent = {
   		console.log("deleting",drug);
   	}
     rxProfileComp.addReason = function(drug){
-  		alert("Not Implemented Yet");
+  		var winX = (document.all)?window.screenLeft:window.screenX;
+        var winY = (document.all)?window.screenTop:window.screenY;
+
+        var top = winY+70;
+        var left = winX+110;
+        var url = "../oscarRx/SelectReason.jsp?demographicNo="+drug.demographicNo+"&drugId="+drug.drugId;
+        windowName = 'windowNameRxReason'+drug.demographicNo;
+        
+        windowprops = "height=575,width=650,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=" + top + ",left=" + left;
+  	  	var reasonWindow = $window.open(url, windowName, windowprops);
   		console.log("Not Implemented Yet",drug);
   	}
+    
     rxProfileComp.setAsLongTermMed = function(drug){
   		alert("Not Implemented Yet");
   		console.log("Not Implemented Yet",drug);
