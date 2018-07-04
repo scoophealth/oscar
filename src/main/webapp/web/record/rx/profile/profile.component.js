@@ -103,6 +103,7 @@ const RxProfileComponent = {
   	
 
   	rxProfileComp.print = function(){
+  		//http://localhost:8080/oscar/oscarRx/PrintDrugProfile2.jsp
   		alert("Not Implemented Yet");
   	}
     rxProfileComp.rePrint= function(){
@@ -151,15 +152,38 @@ const RxProfileComponent = {
   		console.log("Not Implemented Yet",drug);
   	}
     rxProfileComp.annotate = function(drug){
-  		alert("Not Implemented Yet");
-  		console.log("Not Implemented Yet",drug);
+    	    
+    		var winX = (document.all)?window.screenLeft:window.screenX;
+        var winY = (document.all)?window.screenTop:window.screenY;
+
+        var top = winY+70;
+        var left = winX+110;
+        var url = "../annotation/annotation.jsp?display=Prescriptions&amp;table_id="+drug.drugId+"&amp;demo="+drug.demographicNo+"+&amp;drugSpecial="+drug.instructions;
+        
+        windowName = 'windowNameRxAnnotation'+drug.demographicNo;
+        
+        windowprops = "height=575,width=650,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=" + top + ",left=" + left;
+  	  	var annotationWindow = $window.open(url, windowName, windowprops);
+  		
   	}
     rxProfileComp.hideFromCPP = function(drug){
   		alert("Not Implemented Yet");
+  		/*
+  		 function(event) {
+		  var val = $('hidecpp_242').checked;
+		  new Ajax.Request('/oscar/oscarRx/hideCpp.do?method=update&prescriptId=242&value=' + val, {
+		    method: 'get',
+		    onSuccess: function(transport) {}
+		  });
+		
+		} 
+  		  
+  		 */
   		console.log("Not Implemented Yet",drug);
   	}
     rxProfileComp.moveUpInList = function(drug){
   		alert("Not Implemented Yet");
+  		//http://localhost:8080/oscar/oscarRx/reorderDrug.do?method=update&direction=down&drugId=544&swapDrugId=543&demographicNo=153&rand=7177
   		console.log("Not Implemented Yet",drug);
   	}
     rxProfileComp.moveDownInList = function(drug){
