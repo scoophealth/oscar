@@ -225,6 +225,14 @@ color: #FF00FF;
 	text-decoration: line-through;
 }
 
+.greyedOut {
+	background-color: grey;
+}
+
+.favourite {
+	background-color: fuchsia;
+}
+
 /*think of changing this to be consistent*/
 .abnormal-prev, .abnormal-prev:hover{
 color: #FF4D4D;

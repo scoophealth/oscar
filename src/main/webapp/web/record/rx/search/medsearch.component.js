@@ -36,18 +36,8 @@ const MedsearchComponent = {
      		console.log("label  blank",med);
         		return '';
      	}
- 
-     	var fav = "";
-     	var styleClass="";
-     	if(angular.isDefined(med.fav) && med.fav == true){
-     		fav = "<span class='glyphicon glyphicon-star'></span>";
-     		styleClass="favHeader";
-     	}
-     	if(angular.isDefined(med.active) && med.active == false){
-     		styleClass="inactiveHeader";
-     	}
      	
-     	var label = fav+" "+med.name+" ";
+     	var label = med.name+" ";
      	console.log("label ",label);
     		return label;
 	}

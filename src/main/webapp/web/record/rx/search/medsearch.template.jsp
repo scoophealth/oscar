@@ -14,8 +14,9 @@
 </style>
 
 <script type="text/ng-template" id="customTemplate.html">
-   <a>
-      <span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
+   <a ng-class="{'favourite': match.model.fav,'greyedOut': (!match.model.active && !match.model.fav) }" >
+	  <span ng-if="match.model.fav"  class='glyphicon glyphicon-star'></span>
+      <span ng-class="{'deletedItem': (!match.model.active && !match.model.fav)}" ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
    </a>
 </script>
 

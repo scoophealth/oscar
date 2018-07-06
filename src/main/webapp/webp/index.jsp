@@ -220,6 +220,14 @@ color: #FFCC24;
 	text-decoration: line-through;
 }
 
+.greyedOut {
+	background-color: grey;
+}
+
+.favourite {
+	background-color: fuchsia;
+}
+
 .pending, .pending:hover{
 color: #FF00FF;
 }
