@@ -735,8 +735,9 @@ function calculateEndDate(obj){
     var repeatMultiplier  = obj.repeats;
     if (isNaN(repeatMultiplier) || repeatMultiplier < 0){
     		obj.repeats = 0 
-    		repeatMultiplier = 1;
+    		repeatMultiplier = 0;
 	}
+    repeatMultiplier++;
     
     switch(obj.durationUnit){
         case 'D':
