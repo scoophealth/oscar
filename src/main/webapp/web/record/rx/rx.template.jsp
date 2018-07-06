@@ -37,7 +37,7 @@
 
         	<ul style="padding-left:12px;">
         	<%-- href="{{item.action}}" --%>
-        	<li ng-repeat="item in mod.summaryItem" ng-show="$index < mod.displaySize">
+        	<li ng-repeat="item in mod.summaryItem | orderBy: displayName" ng-show="$index < mod.displaySize">
         		<span class="pull-right">{{item.date | date : 'dd-MMM-yyyy'}}</span>
         		<a ng-click="$ctrl.gotoState(item,mod,item.id)" href="javascript:void(0)" ng-class="item.indicatorClass" popover="{{item.displayName}} {{item.warning}}" popover-trigger="'mouseenter'">{{item.displayName | limitTo: 34 }} {{item.displayName.length > 34 ? '...' : '' }}<small ng-show="item.classification">({{item.classification}})</small></a> 
         	</li> 			
