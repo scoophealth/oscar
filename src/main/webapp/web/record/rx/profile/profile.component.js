@@ -5,7 +5,7 @@ const RxProfileComponent = {
 
   },
   templateUrl: '../web/record/rx/profile/profile.template.jsp',
-  controller: ['$stateParams','$state','$log','$timeout','summaryService','rxService','$filter','$window',function($stateParams,$state,$log,$timeout,summaryService,rxService,$filter,$window) {
+  controller: ['$stateParams','$state','$log','$timeout','summaryService','rxService','$filter','$window','$uibModal',function($stateParams,$state,$log,$timeout,summaryService,rxService,$filter,$window,$uibModal) {
   	rxProfileComp = this;
 
   	
@@ -115,10 +115,37 @@ const RxProfileComponent = {
   	
   	/*Action Drop Box methods*/
   	rxProfileComp.discontinue = function(drug){
-  		alert("Not Implemented Yet");
-  		//discontinueMedication : function(demo, medId, reason)
+  		
+  		
+		var dr = drug;
+		var modalInstance = $uibModal.open({
+			component : 'discontinueComponent',
+			size : 'lg',
+			resolve : {
+				drug : function() {
+					return dr;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(selectedItem) {
+			console.log("discontinue item", selectedItem);
+			rxService.discontinueMedication(selectedItem.drug.demographicNo,selectedItem.drug.drugId,selectedItem.reason).then(
+					function(d) {
+						console.log("discontinue success",drug,d);
+						dr.archived = true;
+					},
+					function(errorMessage) {
+						console.log("Error parsing Intruction",errorMessage);
+					}
+				);
+		}, function() {
+			console.log('Modal dismissed at: ' + new Date());
+		});
+	
   		console.log("Not Implemented Yet",drug,$stateParams);
   	}
+  	
     rxProfileComp.delete = function(drug){
   		if (confirm("Are you sure you wish to delete the selected prescriptions?")) {
   			rxService.discontinueMedication(drug.demographicNo,drug.drugId,"deleted").then(
@@ -133,6 +160,7 @@ const RxProfileComponent = {
 		}
   		console.log("deleting",drug);
   	}
+    
     rxProfileComp.addReason = function(drug){
   		var winX = (document.all)?window.screenLeft:window.screenX;
         var winY = (document.all)?window.screenTop:window.screenY;
