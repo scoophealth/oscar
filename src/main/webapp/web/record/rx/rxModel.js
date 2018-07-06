@@ -674,9 +674,9 @@ frequencyLookupTable = {
 // Conversion table that contains ratios for
 // translating between time units.
 timeUnitConversionTable = {
-    'D': {  'D': 1,       'W': 7,      'M': 28 },
+    'D': {  'D': 1,       'W': 7,      'M': 30 },
     'W': {  'D': 1 / 7,   'W': 1,      'M': 4  },
-    'M': {  'D': 1 / 28,  'W': 4 / 28, 'M': 1  }
+    'M': {  'D': 1 / 30,  'W': 4 / 30, 'M': 1  }
 };
 
 /**
@@ -747,7 +747,7 @@ function calculateEndDate(obj){
             d.setDate(d.getDate() + 7 * obj.duration * (repeatMultiplier <= 0 ? 1 : repeatMultiplier));
             break;
         case 'M':
-            d.setMonth(d.getMonth() + obj.duration * (repeatMultiplier <= 0 ? 1 : repeatMultiplier));
+            d.setDate(d.getDate() + 30 + obj.duration * (repeatMultiplier <= 0 ? 1 : repeatMultiplier));
             break;
         default:
             break;
