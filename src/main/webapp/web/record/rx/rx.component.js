@@ -265,6 +265,12 @@ const RxComponent = {
 			window.open(url,win,"scrollbars=yes, location=no, width=900, height=600","");   
 			return false;
 	   	}
+		
+		rxComp.gotoState = function(item,mod,itemid){
+			//Only module available right now.
+			console.log("GotoState,",item,mod);
+			rxComp.openAllergies();
+		}
 	   	
 		
 		rxComp.showMore = function(med){
