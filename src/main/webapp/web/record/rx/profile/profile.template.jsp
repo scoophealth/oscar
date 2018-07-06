@@ -42,9 +42,9 @@
 					    <li><a ng-click="$ctrl.addReason(drug)" >Add Reason</a></li>
 					    <li><a ng-click="$ctrl.setAsLongTermMed(drug)" >Set as Long Term Med</a></li>
 					    <li><a ng-click="$ctrl.annotate(drug)" >Annotate</a></li>
-					    <li><a ng-click="$ctrl.hideFromCPP(drug)" >Hide From CPP</a></li>
+					    <%-- Kunal says these are no longer required for ontario md li><a ng-click="$ctrl.hideFromCPP(drug)" >Hide From CPP</a></li>
 					    <li><a ng-click="$ctrl.moveUpInList(drug)" >Move up in list</a></li>
-					    <li><a ng-click="$ctrl.moveDownInList(drug)" >Move down in list</a></li>
+					    <li><a ng-click="$ctrl.moveDownInList(drug)" >Move down in list</a></li  --%>
 					</ul>
 				</div>
 			</td>
