@@ -26,7 +26,7 @@
 		</tr>
 		<tr ng-repeat="drug in $ctrl.rxComp.drugs | filter:$ctrl.drugProfileFilter">
 			<td ng-class="{ 'deletedItem': drug.archived }">
-				{{drug.instructions}}
+				<a ng-click="$ctrl.medhistory(drug)">{{drug.instructions}}</a>
 			</td>
 			<td>{{drug.rxDate}}</td>
 			<td>{{$ctrl.daysToExp(drug)}}</td>

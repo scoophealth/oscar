@@ -243,24 +243,23 @@ angular.module("rxServices", [])
                     cb(null);
                 }
 
-                this._history(drug.id, demo).then(function(resp){
-
-                    if(resp && resp.drug){
+                this._history(drug.drugId, demo).then(function(resp){
+                    if(resp && resp.data){
 
                         var drugList = [];
                         var tempDrug = null;
 
-                        if(resp.drug instanceof Array){
+                        if(resp.data.content instanceof Array){
                             // several drugs returned in history
-                            for(var i = 0; i < resp.drug.length; i++){
+                            for(var i = 0; i < resp.data.content.length; i++){
                                 tempDrug = new Drug();
-                                tempDrug.fromDrugTransferObject(resp.drug[i]);
+                                tempDrug.fromDrugTransferObject(resp.data.content[i]);
                                 drugList.push(tempDrug);
                             }
                         }else{
                             // only one drug
                             tempDrug = new Drug();
-                            tempDrug.fromDrugTransferObject(resp.drug);
+                            tempDrug.fromDrugTransferObject(resp.data.content);
                             drugList.push(tempDrug);
                         }
 

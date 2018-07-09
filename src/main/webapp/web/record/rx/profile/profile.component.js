@@ -112,6 +112,28 @@ const RxProfileComponent = {
     rxProfileComp.timeline = function(){
   		alert("Not Implemented Yet");
   	}
+    
+rxProfileComp.medhistory = function(drug){
+		var dr = drug;
+		var modalInstance = $uibModal.open({
+			component : 'drughistoryComponent',
+			size : 'lg',
+			resolve : {
+				drug : function() {
+					return dr;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(selectedItem) {
+			console.log("history item", selectedItem);
+			
+		}, function() {
+			console.log('Modal dismissed at: ' + new Date());
+		});
+	
+  		console.log("Not Implemented Yet",drug,$stateParams);
+  	}
   	
   	/*Action Drop Box methods*/
   	rxProfileComp.discontinue = function(drug){
