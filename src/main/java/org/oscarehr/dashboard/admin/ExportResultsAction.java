@@ -69,11 +69,13 @@ public class ExportResultsAction extends Action  {
 		if( csvFile != null ) {
 			
 			response.setContentType("text/csv");
-			response.setHeader("Content-Disposition","attachment;filename=" + indicatorName );
+			response.setHeader("Content-Disposition","attachment; filename=\"" + indicatorName + "\"");
+			response.setContentLength(csvFile.length());
 	
 			try {
 				outputStream = response.getOutputStream();
 				outputStream.write( csvFile.getBytes() );
+				response.setStatus(HttpServletResponse.SC_OK);
 			} catch (IOException e) {
 				logger.error("Failed to export CSV file: " + indicatorName, e );
 			} finally {
