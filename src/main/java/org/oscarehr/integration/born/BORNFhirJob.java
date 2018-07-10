@@ -75,6 +75,7 @@ import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.jobs.OscarRunnable;
 import org.oscarehr.common.model.BornTransmissionLog;
 import org.oscarehr.common.model.Clinic;
+import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.common.model.EForm;
 import org.oscarehr.common.model.EFormData;
@@ -340,7 +341,7 @@ public class BORNFhirJob implements OscarRunnable {
 		log.setDemographicNo(demographicNo);
 		log.setHialTransactionId(hialTransactionId);
 		log.setHttpCode(String.valueOf(code));
-		log.setHttpHeaders(headers.toString());
+		log.setHttpHeaders(headers != null ? headers.toString() : null);
 		log.setHttpResult(data != null ? data.toString() : null);
 		log.setSubmitDateTime(new Date());
 		log.setType(type);
@@ -464,7 +465,16 @@ public class BORNFhirJob implements OscarRunnable {
 			}
 		}	
 		
-		return demoIds;
+		
+		List<Integer> validatedIds = new ArrayList<Integer>();
+		for(Integer i : demoIds) {
+			Demographic d = demographicDao.getDemographicById(i);
+			if(d != null && d.getAgeInYears() < 18 && d.getHin() != null && !d.getHin().isEmpty()) {
+				validatedIds.add(i);
+			}
+		}
+		
+		return validatedIds;
 	}
 	
 	private List<Integer> getWBDemographicNos() {

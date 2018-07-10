@@ -12277,6 +12277,8 @@ CREATE TABLE DHIRSubmissionLog (
     transactionId varchar(100),
     bundleId varchar(255),
     response mediumtext,
+    clientRequestId varchar(100),
+    clientResponseId varchar(100),
     PRIMARY KEY(id)
 );
 

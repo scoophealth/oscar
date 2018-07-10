@@ -139,6 +139,8 @@ public class AddPreventionAction  extends Action {
          ArrayList<Map<String,String>> extraData = new ArrayList<Map<String,String>>();
                   
          addHashtoArray(extraData,request.getParameter("location"),"location");
+         addHashtoArray(extraData,request.getParameter("location2"),"location2");
+         
          String lotItem = request.getParameter("lotItem");
          if (lotItem != null && !lotItem.equals("-1") && !lotItem.equals("0"))
     	 {
@@ -150,7 +152,13 @@ public class AddPreventionAction  extends Action {
          }
                          
          addHashtoArray(extraData,request.getParameter("route"),"route");
-         addHashtoArray(extraData,request.getParameter("dose"),"dose");
+         
+         String dose = request.getParameter("dose");
+         String doseUnit = request.getParameter("doseUnit");
+         if(doseUnit != null && doseUnit.length()>0) {
+        	 dose = (dose + " " + doseUnit).trim();
+         }
+         addHashtoArray(extraData,dose,"dose");
          addHashtoArray(extraData,request.getParameter("comments"),"comments");                 
          addHashtoArray(extraData,request.getParameter("result"),"result");                 
          addHashtoArray(extraData,request.getParameter("reason"),"reason");           
@@ -202,9 +210,14 @@ public class AddPreventionAction  extends Action {
          
          if(submitToDhir) {
 	         CVCImmunization imm =  cvcImmunizationDao.findBySnomedConceptId(snomedId);
-	         Consent dhirConsent =  consentDao.findByDemographicAndConsentType(Integer.parseInt(demographic_no), "dhir_non_ispa_consent");
+	         Consent ispaConsent =  consentDao.findByDemographicAndConsentType(Integer.parseInt(demographic_no), "dhir_ispa_consent");
+			 Consent nonIspaConsent =  consentDao.findByDemographicAndConsentType(Integer.parseInt(demographic_no), "dhir_non_ispa_consent");
+			 boolean hasIspaConsent = ispaConsent != null && !ispaConsent.isOptout();
+			 boolean hasNonIspaConsent = nonIspaConsent != null && !nonIspaConsent.isOptout();
+
+			 boolean ispa = Boolean.valueOf(imm != null && imm.isIspa());
 				
-	         if(imm != null && (imm.isIspa() || (dhirConsent != null && !dhirConsent.isOptout()))) {
+			 if((ispa && hasIspaConsent) || (!ispa && hasNonIspaConsent)) {
 	        	 
 	        	 if("given".equals(given) || "given_ext".equals(given)) {
 	        	

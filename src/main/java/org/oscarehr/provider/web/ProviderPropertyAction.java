@@ -2690,7 +2690,105 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 
 		return actionmapping.findForward("genBornPrefs");
 	}
+
+   
+    private UserProperty loadProperty(String providerNo, String name) {
+    	
+    	UserProperty prop = this.userPropertyDAO.getProp(providerNo, name);
+
+		String propValue="";
+		if (prop == null){
+			prop = new UserProperty();
+		}else{
+			propValue=prop.getValue();
+		}
+
+		boolean checked;
+		if(propValue.equals("true"))
+			checked=true;
+		else
+			checked=false;
+
+		prop.setChecked(checked);
+		
+		return prop;
+    }
     
+    
+    public ActionForward viewPreventionPrefs(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request, HttpServletResponse response) {
+    	DynaActionForm frm = (DynaActionForm)actionform;
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+		
+		UserProperty prop = loadProperty(providerNo, UserProperty.PREVENTION_SSO_WARNING);
+		UserProperty prop2 = loadProperty(providerNo, UserProperty.PREVENTION_ISPA_WARNING);
+		UserProperty prop3 = loadProperty(providerNo, UserProperty.PREVENTION_NON_ISPA_WARNING);
+		
+		request.setAttribute("preventionSSOWarningProperty", prop);
+		request.setAttribute("preventionISPAWarningProperty", prop);
+		request.setAttribute("preventionNonISPAWarningProperty", prop);
+		
+		request.setAttribute("providertitle","provider.preventionPrefs.title"); 
+		request.setAttribute("providermsgPrefs","provider.preventionPrefs.msgPrefs"); //=Preferences
+		request.setAttribute("providerbtnSubmit","provider.preventionPrefs.btnSubmit"); //=Save
+		request.setAttribute("providerbtnCancel","provider.preventionPrefs.btnCancel"); //=Cancel
+		request.setAttribute("method","savePreventionPrefs");
+
+		frm.set("preventionSSOWarningProperty", prop);
+		frm.set("preventionISPAWarningProperty", prop2);
+		frm.set("preventionNonISPAWarningProperty", prop3);
+
+		return actionmapping.findForward("genPreventionPrefs");
+    }
+
+    
+    private UserProperty saveProperty(DynaActionForm frm, String providerNo, String formName, String name) {
+    	
+    	UserProperty Uprop=(UserProperty)frm.get(formName);
+
+		boolean checked=false;
+		if(Uprop!=null)
+			checked = Uprop.isChecked();
+		UserProperty prop=this.userPropertyDAO.getProp(providerNo, name);
+		if(prop==null){
+			prop=new UserProperty();
+			prop.setName(name);
+			prop.setProviderNo(providerNo);
+		}
+		String propValue="false";
+		if(checked) propValue="true";
+
+		prop.setValue(propValue);
+		this.userPropertyDAO.saveProp(prop);
+		
+		return prop;
+
+    }
+    
+    public ActionForward savePreventionPrefs(ActionMapping actionmapping,ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {
+    	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo=loggedInInfo.getLoggedInProviderNo();
+    	DynaActionForm frm=(DynaActionForm)actionform;
+    	
+    	
+    	UserProperty prop = saveProperty(frm, providerNo, "preventionSSOWarningProperty" ,UserProperty.PREVENTION_SSO_WARNING);
+    	UserProperty prop2 = saveProperty(frm, providerNo,"preventionISPAWarningProperty", UserProperty.PREVENTION_ISPA_WARNING);
+    	UserProperty prop3 = saveProperty(frm, providerNo, "preventionNonISPAWarningProperty",UserProperty.PREVENTION_NON_ISPA_WARNING);
+    	
+		request.setAttribute("status", "success");
+		request.setAttribute("preventionSSOWarningProperty",prop);
+		request.setAttribute("preventionISPAWarningProperty",prop2);
+		request.setAttribute("preventionNonISPAWarningProperty",prop3);
+		
+		request.setAttribute("providertitle","provider.preventionPrefs.title"); 
+		request.setAttribute("providermsgPrefs","provider.preventionPrefs.msgPrefs"); //=Preferences
+		request.setAttribute("providerbtnClose","provider.preventionPrefs.btnClose"); //=Close
+		
+		request.setAttribute("method","savePreventionPrefs");
+
+		return actionmapping.findForward("genPreventionPrefs");
+	}
+
     /**
      * Creates a new instance of ProviderPropertyAction
      */

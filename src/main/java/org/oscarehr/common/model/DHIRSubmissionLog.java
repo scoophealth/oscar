@@ -56,6 +56,10 @@ public class DHIRSubmissionLog extends AbstractModel<Integer> {
 	
 	private String response;
 	
+	private String clientRequestId;
+	
+	private String clientResponseId;
+	
 	@Override
 	public Integer getId() {
 		return id;
@@ -155,6 +159,30 @@ public class DHIRSubmissionLog extends AbstractModel<Integer> {
 
 	public void setResponse(String response) {
 		this.response = response;
+	}
+
+
+
+	public String getClientRequestId() {
+		return clientRequestId;
+	}
+
+
+
+	public void setClientRequestId(String clientRequestId) {
+		this.clientRequestId = clientRequestId;
+	}
+
+
+
+	public String getClientResponseId() {
+		return clientResponseId;
+	}
+
+
+
+	public void setClientResponseId(String clientResponseId) {
+		this.clientResponseId = clientResponseId;
 	}
 	
 	

@@ -310,13 +310,66 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 	 */
 	private void setSite( org.hl7.fhir.dstu3.model.Immunization immunization ){
 		if(!StringUtils.isEmpty(getOscarResource().getSite())) {
-			immunization.getSite().setText( getOscarResource().getSite() );
+			immunization.getSite().setText( mapSite(getOscarResource().getSite()));
 		}
+	}
+	
+	private String mapSite(String oscarSite) {
+		return oscarSite;
+		/*
+		if(oscarSite == null) {
+			return "";
+		}
+		
+		if("Superior Deltoid Lt".equals(oscarSite)) {
+			return "JiON_LID";
+		} else if("Inferior Deltoid Lt".equals(oscarSite)) {
+			return "JiON_LLD";
+		} else if("Anterolateral Thigh Lt".equals(oscarSite)) {
+			return "LATH";
+		} else if("Gluteal Lt".equals(oscarSite)) {
+			return "LDG";
+		} else if("Superior Deltoid Rt".equals(oscarSite)) {
+			return "JiON_RID";
+		} else if("Inferior Deltoid Rt".equals(oscarSite)) {
+			return "JiON_RLD";
+		} else if("Anterolateral Thigh Rt".equals(oscarSite)) {
+			return "RATH";
+		} else if("Gluteal Rt".equals(oscarSite)) {
+			return "RDG";
+		} else if("Arm Lt".equals(oscarSite)) {
+			return "JiON_AL";
+		} else if("Arm Rt".equals(oscarSite)) {
+			return "JiON_AR";
+		} else if("Unknown".equals(oscarSite)) {
+			return "UK";
+		} else if("Mouth".equals(oscarSite)) {
+			return "MOUTH";
+		} else if("Deltoid Lt".equals(oscarSite)) {
+			return "JiON_LD";
+		} else if("Deltoid Rt".equals(oscarSite)) {
+			return "JiON_RD";
+		} else if("Naris Lt".equals(oscarSite)) {
+			return "JiON_LN";
+		} else if("Naris Rt".equals(oscarSite)) {
+			return "JiON_RN";
+		} else if("Forearm Lt".equals(oscarSite)) {
+			return "JiON_LFA";
+		} else if("Forearm Rt".equals(oscarSite)) {
+			return "JiON_RFA";
+		} else if("Other".equals(oscarSite)) {
+			return "JiON_OTHER";
+		} else if("Nares (Lt and Rt)".equals(oscarSite)) {
+			return "JiON_Nares_L";
+		}
+			
+		return oscarSite;
+		*/
 	}
 
 	private void setSite(  ImmunizationInterface immunization ){
 		if(!StringUtils.isEmpty(getFhirResource().getSite().getText())) {
-			immunization.setSite( getFhirResource().getSite().getText() );
+			immunization.setSite( mapSite(getFhirResource().getSite().getText()) );
 		}
 	}
 
@@ -348,28 +401,34 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 			
 			String oscarRouteCode = getOscarResource().getRoute();
 			String code = oscarRouteCode;
+			String display = getOscarResource().getRoute();
 			if("ID".equals(oscarRouteCode)) {
 				code = "372464004";
+				display = "Intradermal: ID";
 			} else if("IM".equals(oscarRouteCode)) {
 				code = "78421000";
+				display="Intramuscular: IM";
 			} else if("IN".equals(oscarRouteCode)) {
 				code = "46713006";
+				display="Intranasal: IN";
 			} else if("PO".equals(oscarRouteCode)) {
 				code = "26643006";
+				display="Oral: PO";
 			} else if("SC".equals(oscarRouteCode)) {
 				code = "34206005";
+				display="Subcutaneous: SC";
 			}
 			
 			immunization.getRoute().addCoding()
 			.setSystem("http://snomed.info/sct")
 			.setCode( code )
-			.setDisplay( getOscarResource().getRoute() );		
+			.setDisplay( display );		
 		}
 	}
-
+	
 	private void setRoute( ImmunizationInterface immunization ){
 		if(!StringUtils.isEmpty(getFhirResource().getRoute().getText())) {
-			immunization.setSite( getFhirResource().getRoute().getText() );
+			immunization.setRoute( getFhirResource().getRoute().getText() );
 		}
 	}
 

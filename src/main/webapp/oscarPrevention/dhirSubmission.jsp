@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="java.util.Random"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="org.oscarehr.common.model.DHIRSubmissionLog"%>
@@ -276,7 +277,10 @@ clear: left;
             		String theString = AbstractFhirMessageBuilder.getFhirContext().newJsonParser().setPrettyPrint(true).encodeResourceToString(bundle);
             		JSONObject jbundle = new JSONObject(theString);
             		
-            		
+            		Random rand = new Random();
+                    int num = rand.nextInt(9000000) + 1000000;
+
+          		
                     HttpPost httpPost = new HttpPost(url);
                     
                     String oneIdToken = (String)session.getAttribute("oneid_token");
@@ -289,6 +293,8 @@ clear: left;
                     obj.put("url","https://wsgateway.pst.ehealthontario.ca:9443/API/FHIR/Immunizations/v3/partner/clinician/$process-message");
                     obj.put("service","DHIR");
                     obj.put("body",jbundle);
+                    obj.put("client-request-id",String.valueOf(num));
+                    obj.put("client-app-desc","OSCAR-" + OscarProperties.getInstance().getProperty("buildtag","v15"));
                     
                     HttpEntity reqEntity = new ByteArrayEntity(obj.toString().getBytes("UTF-8"));
                     httpPost.setEntity(reqEntity);
@@ -305,14 +311,26 @@ clear: left;
                     
                     if(code >= 200 && code < 300) { 
                     	String val = null;
+                    	String clientId = null;
                     	if(object != null) {
                     		JSONObject headers = (JSONObject)object.get("headers");
-                    		val = (String)headers.get("hialTxId");
+                    		try {
+                    			val = (String)headers.get("hialTxId");
+                    		}catch(JSONException je) {
+                    			
+                    		}
+                    		try {
+                    			clientId = (String)headers.get("client-response-id");
+                    		}catch(JSONException je) {
+                    			
+                    		}
                     	}
                     	
                     	for(DHIRSubmissionLog log : logs) {
                     		log.setStatus("Submitted");
                     		log.setTransactionId(val);
+                    		log.setClientResponseId(clientId);
+                    		log.setClientRequestId(String.valueOf(num));
                     		submissionManager.update(log);
                     	}
             %>
@@ -324,9 +342,20 @@ clear: left;
         
         if((code >=300 && code < 400) || code == 500) {
         	String val = null;
+        	String clientId = null;
+        	
         	if(object != null) {
         		JSONObject headers = (JSONObject)object.get("headers");
-        		val = (String)headers.get("hialTxId");
+        		try {
+        			val = (String)headers.get("hialTxId");
+        		}catch(JSONException je) {
+        			
+        		}
+        		try {
+        			clientId = (String)headers.get("client-response-id");
+        		}catch(JSONException je) {
+        			
+        		}
         	}
         	
         	
@@ -334,6 +363,8 @@ clear: left;
         		log.setStatus("Error");
         		log.setTransactionId(val);
         		log.setResponse(entity != null ? entity : "");
+        		log.setClientResponseId(clientId);
+        		log.setClientRequestId(String.valueOf(num));
         		submissionManager.update(log);
         	}
         	
@@ -349,15 +380,27 @@ clear: left;
         
         if(code >=400 && code < 500) {
         	String val = null;
+        	String clientId = null;
         	if(object != null) {
         		JSONObject headers = (JSONObject)object.get("headers");
-        		val = (String)headers.get("hialTxId");
+        		try {
+        			val = (String)headers.get("hialTxId");
+        		}catch(JSONException je) {
+        			
+        		}
+        		try {
+        			clientId = (String)headers.get("client-response-id");
+        		}catch(JSONException je) {
+        			
+        		}
         	}
         	
         	for(DHIRSubmissionLog log : logs) {
         		log.setStatus("Error");
         		log.setTransactionId(val);
         		log.setResponse(entity != null ? entity : "");
+        		log.setClientResponseId(clientId);
+        		log.setClientRequestId(String.valueOf(num));
         		submissionManager.update(log);
         	}
         	

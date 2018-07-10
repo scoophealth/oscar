@@ -24,6 +24,8 @@
 
 --%>
 
+<%@page import="org.oscarehr.common.model.UserProperty"%>
+<%@page import="org.oscarehr.common.dao.UserPropertyDAO"%>
 <%@page import="org.oscarehr.common.model.CVCMapping"%>
 <%@page import="org.oscarehr.common.dao.CVCMappingDao"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
@@ -65,7 +67,8 @@ if(!authed) {
 <%
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 	DHIRSubmissionManager submissionManager = SpringUtils.getBean(DHIRSubmissionManager.class);
-
+	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
+	
   //int demographic_no = Integer.parseInt(request.getParameter("demographic_no"));
   String demographic_no = request.getParameter("demographic_no");
   DemographicData demoData = new DemographicData();
@@ -105,6 +108,25 @@ if(!authed) {
   ArrayList recomendations = p.getReminder();
 
   boolean printError = request.getAttribute("printError") != null;
+  
+
+	ConsentDao consentDao = SpringUtils.getBean(ConsentDao.class);
+	Consent ispaConsent =  consentDao.findByDemographicAndConsentType(demographicId, "dhir_ispa_consent");
+	Consent nonIspaConsent =  consentDao.findByDemographicAndConsentType(demographicId, "dhir_non_ispa_consent");
+
+	boolean isSSOLoggedIn = session.getAttribute("oneIdEmail") != null;
+	boolean hasIspaConsent = ispaConsent != null && !ispaConsent.isOptout();
+	boolean hasNonIspaConsent = nonIspaConsent != null && !nonIspaConsent.isOptout();
+
+	UserProperty ssoWarningUp = userPropertyDao.getProp(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo(), UserProperty.PREVENTION_SSO_WARNING);
+	boolean hideSSOWarning = ssoWarningUp != null && "true".equals(ssoWarningUp.getValue());
+	
+	UserProperty ispaWarningUp = userPropertyDao.getProp(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo(), UserProperty.PREVENTION_ISPA_WARNING);
+	boolean hideISPAWarning = ispaWarningUp != null && "true".equals(ispaWarningUp.getValue());
+	
+	UserProperty nonIspaWarningUp = userPropertyDao.getProp(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo(), UserProperty.PREVENTION_NON_ISPA_WARNING);
+	boolean hideNonISPAWarning = nonIspaWarningUp != null && "true".equals(nonIspaWarningUp.getValue());
+	
 %>
 
 <%!
@@ -469,6 +491,51 @@ text-align:left;
 </style>
 <![endif]-->
 
+<script>
+function disableSSOWarning() {
+	if(confirm("Are you sure you would like to permanently disable this warning?\nYou may re-enable it from your preferences")) {
+        jQuery.ajax({
+            type: "POST",
+            url:  '<%=request.getContextPath()%>/ws/rs/persona/updatePreference',
+            dataType:'json',
+            contentType:'application/json',
+            data: JSON.stringify({key:'prevention_sso_warning',value:'true'}),
+            success: function (data) {
+               $("#ssoWarning").hide();
+            }
+		});
+	}
+}
+function disableISPAWarning() {
+	if(confirm("Are you sure you would like to permanently disable this warning?\nYou may re-enable it from your preferences")) {
+        jQuery.ajax({
+            type: "POST",
+            url:  '<%=request.getContextPath()%>/ws/rs/persona/updatePreference',
+            dataType:'json',
+            contentType:'application/json',
+            data: JSON.stringify({key:'prevention_ispa_warning',value:'true'}),
+            success: function (data) {
+               $("#ispaWarning").hide();
+            }
+		});
+	}
+}
+
+function disableNonISPAWarning() {
+	if(confirm("Are you sure you would like to permanently disable this warning?\nYou may re-enable it from your preferences")) {
+		jQuery.ajax({
+            type: "POST",
+            url:  '<%=request.getContextPath()%>/ws/rs/persona/updatePreference',
+            dataType:'json',
+            contentType:'application/json',
+            data: JSON.stringify({key:'prevention_non_ispa_warning',value:'true'}),
+            success: function (data) {
+               $("#nonIspaWarning").hide();
+            }
+		});
+	}
+}
+</script>
 </head>
 
 <body class="BodyStyle">
@@ -611,28 +678,24 @@ List<String> OTHERS = Arrays.asList(new String[]{"DTaP-Hib","TdP-IPV-Hib","HBTmf
 			action="<rewrite:reWrite jspPage="printPrevention.do"/>">
 		<td valign="top" class="MainTableRightColumn">
 		
-		<%
-			if(session.getAttribute("oneIdEmail") == null) {
-		%>
-		<div style="width:100%;background-color:pink;text-align:center;font-weight:bold;font-size:13pt">
-			Warning: You are not logged into OneId and will not be able to submit data to DHIR
+		<%if(!isSSOLoggedIn && !hideSSOWarning) {%>
+		<div style="width:100%;background-color:pink;text-align:left;font-weight:bold;font-size:13pt;border-style:solid" id="ssoWarning">
+			<span><a href="javascript:void()" onClick="disableSSOWarning()">[x]</a></span> Warning: You are not logged into OneId and will not be able to submit data to DHIR	
 		</div>
 		<% } %>
 		
-		<%
-			ConsentDao consentDao = SpringUtils.getBean(ConsentDao.class);
-			Consent dhirConsent =  consentDao.findByDemographicAndConsentType(demographicId, "dhir_non_ispa_consent");
-			
-			if(dhirConsent == null || dhirConsent.isOptout() ) {
-		%>
-		<div style="width:100%;background-color:pink;text-align:center;font-weight:bold;font-size:13pt">
-			Warning: Patient has not consented to send non-ISPA data to DHIR.
+		<%if(!hasIspaConsent && !hideISPAWarning) {%>
+		<div style="width:100%;background-color:pink;text-align:left;font-weight:bold;font-size:13pt;border-style:solid" id="ispaWarning">
+			<span><a href="javascript:void()" onClick="disableISPAWarning()">[x]</a></span> Warning: This patient has not consented to send ISPA vaccines to DHIR	
 		</div>
-		<% } else if (dhirConsent != null && !dhirConsent.isOptout()) { %>
-			<div style="width:100%;background-color:rgb(30, 240, 239);text-align:center;font-weight:bold;font-size:13pt">
-				Patient has consented to send non-ISPA data to DHIR.
-			</div>
 		<% } %>
+		
+		<%if(!hasNonIspaConsent && !hideNonISPAWarning) {%>
+		<div style="width:100%;background-color:pink;text-align:left;font-weight:bold;font-size:13pt;border-style:solid" id="nonIspaWarning">
+			<span><a href="javascript:void()" onClick="disableNonISPAWarning()">[x]</a></span> Warning: This patient has not consented to send non-ISPA vaccines to DHIR	
+		</div>
+		<% } %>
+
 		
 		<a href="#" onclick="popup(600,800,'http://www.phac-aspc.gc.ca/im/is-cv/index-eng.php')">Immunization Schedules - Public Health Agency of Canada</a>
 
@@ -728,8 +791,11 @@ List<String> OTHERS = Arrays.asList(new String[]{"DTaP-Hib","TdP-IPV-Hib","HBTmf
 			legend_builder +="<td> <table class='colour_codes' style=\"white-space:nowrap;\" bgcolor='"+ColourCodesArray[iLegend]+"'><tr><td> </td></tr></table> </td> <td align='center' style=\"white-space:nowrap;\">"+lblCodesArray[iLegend]+"</td>";
 
 		}
+	 	
+	 	legend_builder +="<td> <table class='colour_codes' style=\"white-space:nowrap;border:none\" bgcolor='white'><tr><td>*</td></tr></table> </td> <td align='center' style=\"white-space:nowrap;\">ISPA</td>";
 
-	 	String legend = "<table class='legend' cellspacing='0'><tr><td><b>"+legend_title+"</b></td>"+legend_builder+" </tr></table>";
+
+	 	String legend = "<table class='legend' cellspacing='0'><tr><td><b>"+legend_title+"</b></td>"+legend_builder+"</tr></table>";
 
 		out.print(legend);
 %>
@@ -824,7 +890,7 @@ List<String> OTHERS = Arrays.asList(new String[]{"DTaP-Hib","TdP-IPV-Hib","HBTmf
          	%> <span class="footnote" style="background-color:black;color:white"><%=dhirLogs.get(0).getStatus()%></span> <%
          	} else {
          		if(!StringUtils.isEmpty(snomedId)) {
-	         		if(ispa || (dhirConsent != null && !dhirConsent.isOptout())) {
+	         		if((ispa && hasIspaConsent) || (!ispa && hasNonIspaConsent)) {
 	         			%><span class="footnote" style="background-color:orange;color:black;white-space:nowrap">Not Submitted</span> <%
 	         		}
          		}
@@ -897,7 +963,7 @@ List<String> OTHERS = Arrays.asList(new String[]{"DTaP-Hib","TdP-IPV-Hib","HBTmf
          	%> <span class="footnote" style="background-color:black;color:white"><%=dhirLogs.get(0).getStatus()%></span> <%
          	} else {
          		if(!StringUtils.isEmpty(snomedId)) {
-	         		if(ispa || (dhirConsent != null && !dhirConsent.isOptout())) {
+         			if((ispa && hasIspaConsent) || (!ispa && hasNonIspaConsent)) {
 	         			%><span class="footnote" style="background-color:orange;color:black">Not Submitted</span> <%
 	         		}
          		}
