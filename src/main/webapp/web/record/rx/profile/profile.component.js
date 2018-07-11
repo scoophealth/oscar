@@ -24,6 +24,10 @@ const RxProfileComponent = {
   		var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
   		var endDate = Date.parse(drug.endDate);
   	    var now = new Date();
+  	    
+  	    if(now > endDate){ // if it's after the end date then it's already expired
+  	    		return 0;
+  	    }
   	    return Math.round(Math.abs((now.getTime() - endDate)/(oneDay)));
   	}
   	
