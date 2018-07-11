@@ -747,7 +747,7 @@ function calculateEndDate(obj){
             d.setDate(d.getDate() + 7 * obj.duration * (repeatMultiplier <= 0 ? 1 : repeatMultiplier));
             break;
         case 'M':
-            d.setDate(d.getDate() + 30 + obj.duration * (repeatMultiplier <= 0 ? 1 : repeatMultiplier));
+            d.setDate(d.getDate() + 30 * obj.duration * (repeatMultiplier <= 0 ? 1 : repeatMultiplier));
             break;
         default:
             break;
