@@ -1659,7 +1659,7 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                            <%
                                        			lastObxSetId = ((AlphaHandler)handler).getObxSetId(j,k);
                                     	  
-                                           } else if(handler instanceof PATHL7Handler && "FT".equals(handler.getOBXValueType(j, k)) && handler.getOBXReferenceRange(j,k).isEmpty()){ 
+                                           } else if(handler instanceof PATHL7Handler && "FT".equals(handler.getOBXValueType(j, k)) && (handler.getOBXReferenceRange(j,k).isEmpty() && handler.getOBXUnits(j,k).isEmpty())){ 
                                         	  %> <td colspan="4"><%= handler.getOBXResult( j, k) %></td> <%
                                            } else { %> 
                                            <%
@@ -1667,7 +1667,11 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                           	//for pathl7, if it is an SG/CDC result greater than 100 characters, left justify it
                                            	if((handler.getOBXResult(j, k) != null && handler.getOBXResult(j, k).length() > 100) && (isSGorCDC)){
                                            		align="left";
-                                           	}%>
+                                           	}
+                                           	if(handler instanceof PATHL7Handler && "FT".equals(handler.getOBXValueType(j, k))) {
+                                           		align="left";
+                                           	}
+                                           	%>
                  	
                                            	<%
                                            		//CLS textual results - use 4 columns.

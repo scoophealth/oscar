@@ -49,6 +49,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tika.io.IOUtils;
+import org.jfree.ui.Align;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.printing.FontSettings;
@@ -328,7 +329,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 		if( ( handler instanceof MEDITECHHandler && ((MEDITECHHandler) handler).isReportData() ) 
 				|| ( handler instanceof PATHL7Handler && ((PATHL7Handler) handler).isReportData() ) ) {
 			
-			table = new PdfPTable(1);
+			table = new PdfPTable(2);
 			table.setWidthPercentage(100);
 			this.isReportData = Boolean.TRUE;
 
@@ -554,7 +555,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 							Font lineFont = new Font(bf, 9, Font.NORMAL, getTextColor(handler,handler.getOBXAbnormalFlag(j,k)));
 
 							if( this.isReportData ) {
-								cell.setColspan(1);
+								cell.setColspan(2);
 								cell.setBorder(Rectangle.NO_BORDER);
 								cell.setBorderColor(Color.white);
 								cell.setPadding(0);
@@ -574,8 +575,24 @@ public class LabPDFCreator extends PdfPageEventHelper{
 									if("".equals(handler.getOBXResult(j, k))) {
 										data = "\n";
 									}
-									cell.setPhrase( new Phrase( data.replaceAll("<br\\s*/*>", "\n"), lineFont ) );
-									table.addCell(cell);
+									int colspan = cell.getColspan();
+									
+									if(j == 0 && k == 0) {
+										cell.setColspan(colspan-1);
+										cell.setPhrase( new Phrase(data.replaceAll("<br\\s*/*>", "\n"), lineFont ) );
+										table.addCell(cell);
+										
+										cell.setColspan(1);
+										int ha = cell.getHorizontalAlignment();
+										cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+										cell.setPhrase( new Phrase(handler.getTimeStamp(j, k), lineFont ) );
+										table.addCell(cell);
+										cell.setHorizontalAlignment(ha);
+									} else {
+										cell.setPhrase( new Phrase(data.replaceAll("<br\\s*/*>", "\n"), lineFont ) );
+										table.addCell(cell);
+									}
+									
 								}
 	
 							} else if( isUnstructuredDoc ){
@@ -657,7 +674,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 								boolean isLongText =false;
 								
 								if((handler.getMsgType().equals("ExcellerisON") || handler.getMsgType().equals("PATHL7")) && StringUtils.isEmpty(handler.getOBXReferenceRange(j, k)) ) {
-									if("FT".equals(handler.getOBXValueType(j,k))) {
+									if("FT".equals(handler.getOBXValueType(j,k)) && (handler.getOBXReferenceRange(j,k).isEmpty() && handler.getOBXUnits(j,k).isEmpty())) {
 										isLongText=true;
 									}
 								}
