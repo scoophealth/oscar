@@ -12,14 +12,18 @@
 			<th>Provider</th>
 			<th>Start Date</th>
 			<th>End Date</th>
+			<th>Written Date</th>
 			<th>Medication Details</th>
+			<th>Long Term</th>
 			<th>&nbsp;</th>
 		</tr>
 		<tr ng-repeat="drug in $ctrl.druglist">
-				<td>{{drug.provider}}</td>
+				<td title="{{drug.id}}">{{drug.provider}}</td>
 				<td>{{drug.rxDate | date:'yyyy-MM-dd'}}</td>
 				<td>{{drug.endDate | date:'yyyy-MM-dd'}}</td>
+				<td>{{drug.writtenDate | date:'yyyy-MM-dd'}}</td>
 				<td>{{drug.instructions}}</td>
+				<td>{{drug.longTerm}}</td>
 				<td>&nbsp;</td>
 		</tr>
 	
