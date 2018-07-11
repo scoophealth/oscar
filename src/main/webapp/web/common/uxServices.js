@@ -48,7 +48,7 @@ angular.module("uxServices", [])
                 deferred.resolve(response.data);
             },function(){
           	  console.log("error fetching items");
-              deferred.reject("An error occured while fetching items");
+              deferred.reject({"msg": "An error occured while fetching items", "summaryCode": summaryCode});
             });
        
             return deferred.promise;

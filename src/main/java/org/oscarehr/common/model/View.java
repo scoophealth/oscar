@@ -30,6 +30,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.Column;
 
 /**
  *
@@ -40,7 +41,7 @@ import javax.persistence.Transient;
 @Table(name="view")
 public class View extends AbstractModel<Integer> {
 
-	@Transient
+    @Transient
     public static final String TICKLER_VIEW = "tickler";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,6 +50,9 @@ public class View extends AbstractModel<Integer> {
     private String name;
     private String value;
     private String role;
+
+    @Column(nullable=true)
+    private String providerNo = null;
 
     /** Creates a new instance of View */
     public View() {
@@ -92,5 +96,15 @@ public class View extends AbstractModel<Integer> {
 
     public String getRole() {
         return this.role;
+    }
+
+    public String getProviderNo()
+    {
+	return this.providerNo;
+    }
+
+    public void setProviderNo(String providerNo)
+    {
+	this.providerNo = providerNo;
     }
 }
