@@ -17,7 +17,7 @@
 			<th>Long Term</th>
 			<th>&nbsp;</th>
 		</tr>
-		<tr ng-repeat="drug in $ctrl.druglist">
+		<tr ng-repeat="drug in $ctrl.druglist | orderBy: '-rxDate'">
 				<td title="{{drug.id}}">{{drug.provider}}</td>
 				<td>{{drug.rxDate | date:'yyyy-MM-dd'}}</td>
 				<td>{{drug.endDate | date:'yyyy-MM-dd'}}</td>
