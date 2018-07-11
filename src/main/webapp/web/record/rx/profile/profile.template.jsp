@@ -24,7 +24,47 @@
 			<th>reRx</th>
 			<th>Action</th>
 		</tr>
-		<tr ng-repeat="drug in $ctrl.rxComp.drugs | filter:$ctrl.drugProfileFilter">
+		<tr ng-repeat="drug in $ctrl.rxComp.drugs | filter:$ctrl.drugProfileFilter" 
+		    ng-class="{'danger' : ($ctrl.daysToExp(drug) === 0 && drug.longTerm), 'warning': ($ctrl.daysToExp(drug) < 31 && $ctrl.daysToExp(drug) > 0)}"  
+		    ng-if="$ctrl.daysToExp(drug) > 0 || drug.longTerm">
+		<%--  --%>
+			<td ng-class="{ 'deletedItem': drug.archived }">
+				<a ng-click="$ctrl.medhistory(drug)">{{drug.instructions}}</a>
+			</td>
+			<td>{{drug.rxDate}}</td>
+			<td>{{$ctrl.daysToExp(drug)}}</td>
+			<td><a ng-click="$ctrl.reRx({'drug':drug})">rx</a></td>
+			<td>
+				<div class="btn-group">
+					<button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Actions<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+					    <li><a ng-click="$ctrl.discontinue(drug)" >Discontinue</a></li>
+					    <li><a ng-click="$ctrl.delete(drug)" >Delete</a></li>
+					    <li><a ng-click="$ctrl.addReason(drug)" >Add Reason</a></li>
+					    <li><a ng-click="$ctrl.setAsLongTermMed(drug)" >Set as Long Term Med</a></li>
+					    <li><a ng-click="$ctrl.annotate(drug)" >Annotate</a></li>
+					    <%-- Kunal says these are no longer required for ontario md li><a ng-click="$ctrl.hideFromCPP(drug)" >Hide From CPP</a></li>
+					    <li><a ng-click="$ctrl.moveUpInList(drug)" >Move up in list</a></li>
+					    <li><a ng-click="$ctrl.moveDownInList(drug)" >Move down in list</a></li  --%>
+					</ul>
+				</div>
+			</td>
+		</tr>	
+	</table>
+	<h3>Expired Medications</h3>
+	<table class="table table-condensed table-striped">
+		<tr>
+			<th>Medication</th>
+			<th>Start Date</th>
+			<th>Days To Exp</th>
+			<th>reRx</th>
+			<th>Action</th>
+		</tr>
+		<tr ng-repeat="drug in $ctrl.rxComp.drugs | filter:$ctrl.drugProfileFilter"
+			ng-if="$ctrl.daysToExp(drug) == 0 && !drug.longTerm">
+			
 			<td ng-class="{ 'deletedItem': drug.archived }">
 				<a ng-click="$ctrl.medhistory(drug)">{{drug.instructions}}</a>
 			</td>
