@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.common.model.Consent"%>
 <%@page import="org.oscarehr.common.dao.ConsentDao"%>
 <%@page import="org.oscarehr.common.model.CVCMapping"%>
@@ -481,6 +482,16 @@ function displayCloseWarning(){
 
 //{"lotNumber":"M042476","expiryDate":{"date":22,"day":5,"hours":0,"minutes":0,"month":2,"nanos":0,"seconds":0,"time":1553227200000,"timezoneOffset":240,"year":119}}
 
+function escapeHtml(unsafe1) {
+	var unsafe = String(unsafe1);
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+ }
+ 
 var lots;
 var startup = false, startup2 = false;
 
@@ -520,14 +531,14 @@ function changeCVCName() {
             			var output = d.getFullYear() + "-" + month + "-" + day;
             			 
             			
-            			if(startup2 && item.lotNumber == '<%=addByLotNbr %>') {
+            			if(startup2 && escapeHtml(item.lotNumber) == '<%=addByLotNbr %>') {
             				$("#cvcLot").append('<option selected="selected" value="'+item.lotNumber+'" expiryDate="'+output+'">'+item.lotNumber+'</option>');
             				startup2=false;
-            			} else if(startup && item.lotNumber == '<%=(existingPrevention != null)?existingPrevention.get("lot"):"" %>') {
-            				$("#cvcLot").append('<option selected="selected" value="'+item.lotNumber+'" expiryDate="'+output+'">'+item.lotNumber+'</option>');
+            			} else if(startup && escapeHtml(item.lotNumber) == '<%=(existingPrevention != null)?existingPrevention.get("lot"):"" %>') {
+            				$("#cvcLot").append('<option selected="selected" value="'+escapeHtml(item.lotNumber)+'" expiryDate="'+output+'">'+escapeHtml(item.lotNumber)+'</option>');
             				startup=false;
             			} else {
-            				$("#cvcLot").append('<option value="'+item.lotNumber+'" expiryDate="'+output+'">'+item.lotNumber+'</option>');
+            				$("#cvcLot").append('<option value="'+escapeHtml(item.lotNumber)+'" expiryDate="'+output+'">'+escapeHtml(item.lotNumber)+'</option>');
             			}
             			updateCvcLot();        			 
             		 }            		 
@@ -594,7 +605,7 @@ function changeSite(el) {
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-                            <%=nameage%>
+                            <%=StringEscapeUtils.escapeHtml(nameage)%>
                         </td>
                         <td  >&nbsp;
 
@@ -1087,7 +1098,7 @@ String str(String first,String second){
     }else if ( second != null){
        ret = second;
     }
-    return ret;
+    return StringEscapeUtils.escapeHtml(ret);
   }
 
 String checked(String first,String second){
