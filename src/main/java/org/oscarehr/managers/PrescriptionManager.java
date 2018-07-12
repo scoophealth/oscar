@@ -40,6 +40,7 @@ import oscar.log.LogAction;
 import oscar.oscarProvider.data.ProSignatureData;
 import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxProviderData;
+import oscar.util.DateUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -340,4 +341,36 @@ public class PrescriptionManager {
 		return drugDao.findLongTermDrugsByDemographic(demographicId);
 	}
 
+	
+	public List<Prescription> getPrescriptions(LoggedInInfo loggedInInfo, Integer demographicId ) {
+		return prescriptionDao.findByDemographicId(demographicId);
+	}
+	
+	public boolean print(LoggedInInfo loggedInInfo,int scriptNo) {
+		
+		org.oscarehr.common.model.Prescription prescription = prescriptionDao.find(scriptNo);
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
+
+		if (prescription == null) return false;
+		
+		if(prescription.getDatePrinted() == null) {
+    			prescription.setDatePrinted(new Date());
+    			prescriptionDao.merge(prescription);
+	    }else{
+			String dates_reprinted = prescription.getDatesReprinted();
+			String now = DateUtils.format("yyyy-MM-dd HH:mm:ss", new Date());
+			if (dates_reprinted != null && dates_reprinted.length() > 0) {
+				dates_reprinted += "," + now + ";" + providerNo;
+			} else {
+				dates_reprinted = now + ";" + providerNo;
+			}
+			prescription.setDatesReprinted(dates_reprinted);
+			prescriptionDao.merge(prescription);
+	    }
+		
+
+		return true;
+
+	}
+	
 }

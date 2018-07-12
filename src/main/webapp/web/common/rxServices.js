@@ -303,6 +303,52 @@ angular.module("rxServices", [])
                 );
 
             },
+            
+            getPrescriptions : function(demo){
+
+                var deferred = $q.defer();
+                var queryPath = this.apiPath + "/prescriptions";
+                queryPath += "?demographicNo=" + demo;
+               
+
+                $http.get(queryPath).then(function (data) {
+                    deferred.resolve(data);
+                },function () {
+                    deferred.reject("An error occurred while attempting to get history");
+                });
+
+                return deferred.promise;
+
+            },
+
+            recordPrescriptionPrint : function(scriptNo){
+
+                var deferred = $q.defer();
+                var queryPath = this.apiPath + "/recordPrescriptionPrint/"+scriptNo;
+                
+                $http.get(queryPath).then(function (data) {
+                    deferred.resolve(data);
+                },function () {
+                    deferred.reject("An error occurred while attempting to get history");
+                });
+
+                return deferred.promise;
+
+            },
+
+            
+            addFavorite : function(fav, cb){
+
+                var obj = {favorite : fav.toTransferObject()};
+
+                this._addFavorite(obj).then(
+                    function(resp){
+                        console.log(resp);
+                        cb(resp);
+                    }
+                );
+
+            },
 
             /**
              * Makes a call to API to add a new favorite drug.

@@ -111,13 +111,51 @@ const RxProfileComponent = {
   		alert("Not Implemented Yet");
   	}
     rxProfileComp.rePrint= function(){
-  		alert("Not Implemented Yet");
+    		var dr = $stateParams.demographicNo;
+		var modalInstance = $uibModal.open({
+			component : 'reprintComponent',
+			size : 'lg',
+			resolve : {
+				drug : function() {
+					return dr;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(selectedItem) {
+			console.log("reprint item", selectedItem);
+			callPrint(selectedItem);
+		}, function() {
+			console.log('Modal dismissed at: ' + new Date());
+		});
   	}
     rxProfileComp.timeline = function(){
   		alert("Not Implemented Yet");
   	}
     
-rxProfileComp.medhistory = function(drug){
+    
+    callPrint = function(scriptNo){
+    		var scriptNoId = scriptNo;
+    		var modalInstance = $uibModal.open({
+			component : 'rxPrintComponent',
+			size : 'lg',
+			resolve : {
+				scriptId : function() {
+					return scriptNoId;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(selectedItem) {
+			console.log(selectedItem);
+			
+		}, function() {
+			console.log('Modal dismissed at: ' + new Date());
+		});
+    	
+    }
+    
+    rxProfileComp.medhistory = function(drug){
 		var dr = drug;
 		var modalInstance = $uibModal.open({
 			component : 'drughistoryComponent',

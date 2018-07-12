@@ -5,7 +5,7 @@ const RxPrintComponent = {
 	  resolve: '<',
   },
   templateUrl: '../web/record/rx/print/print.template.jsp',
-  controller: ['$stateParams','$state','$uibModal','$log',function($stateParams,$state,$uibModal,$log) {
+  controller: ['$stateParams','$state','$uibModal','$log','rxService',function($stateParams,$state,$uibModal,$log,rxService) {
 	  
 	/*
 	 Options on the print page:
@@ -32,6 +32,7 @@ const RxPrintComponent = {
  		rxPrint.printId = this.resolve.scriptId;
  		rxPrint.pharamacyId = null;
  		rxPrint.scriptURL = "../web/record/rx/print/PrintView.jsp?scriptId="+rxPrint.printId+"&rePrint=false&pharmacyId="+rxPrint.pharamacyId;
+ 		rxService.recordPrescriptionPrint(rxPrint.printId);
  	}
  	
  	

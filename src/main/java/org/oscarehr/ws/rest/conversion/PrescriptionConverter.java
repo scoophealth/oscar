@@ -98,6 +98,7 @@ public class PrescriptionConverter extends AbstractConverter<Prescription, Presc
             t.setDatePrescribed(p.getDatePrescribed());
             t.setDatePrinted(p.getDatePrinted());
             t.setTextView(p.getTextView());
+            t.setReprintCount(p.getReprintCount());
 
         }catch(RuntimeException e){
 

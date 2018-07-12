@@ -37,6 +37,7 @@ import org.oscarehr.common.exception.AccessDeniedException;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Favorite;
+import org.oscarehr.common.model.Prescription;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.PrescriptionManager;
 import org.oscarehr.managers.RxManager;
@@ -51,6 +52,7 @@ import org.oscarehr.ws.rest.conversion.PrescriptionConverter;
 import org.oscarehr.ws.rest.to.*;
 import org.oscarehr.ws.rest.to.model.DrugTo1;
 import org.oscarehr.ws.rest.to.model.FavoriteTo1;
+import org.oscarehr.ws.rest.to.model.PrescriptionTo1;
 import org.oscarehr.ws.rest.to.model.PrintPointTo1;
 import org.oscarehr.ws.rest.to.model.PrintRxTo1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -437,6 +439,48 @@ public class RxWebService extends AbstractServiceImpl {
         resp.setContent(drugConverter.getAllAsTransferObjects(info, drugs));
 
         return resp;
+    }
+    
+    
+    @Path("/prescriptions")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<PrescriptionTo1> getPrescriptions(@QueryParam("demographicNo") int demographicNo){
+
+        LoggedInInfo info = getLoggedInInfo();
+
+        // Determine if the user has privileges to view this data.
+        if (!securityInfoManager.hasPrivilege(info, "_rx", "r", demographicNo)) {
+            throw new AccessDeniedException("_rx", "r", demographicNo);
+        }
+        
+        List<Prescription> prescriptions = prescriptionManager.getPrescriptions(info, demographicNo);
+        List<PrescriptionTo1> retPrescriptions = prescriptionConverter.getAllAsTransferObjects(info, prescriptions);
+       
+		return retPrescriptions;
+    }
+    
+    @Path("/recordPrescriptionPrint/{scriptNo}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public PrescriptionTo1 recordPrescriptionPrint(@PathParam("scriptNo") int scriptNo){
+
+        LoggedInInfo info = getLoggedInInfo();
+
+        // Determine if the user has privileges to view this data.
+        //if (!securityInfoManager.hasPrivilege(info, "_rx", "r", demographicNo)) {
+        //    throw new AccessDeniedException("_rx", "r", demographicNo);
+        //}
+        
+        
+        prescriptionManager.print(info,scriptNo);
+        
+        Prescription prescription = prescriptionManager.getPrescription(info,scriptNo);
+        
+        
+        PrescriptionTo1 retPrescriptions = prescriptionConverter.getAsTransferObject(info, prescription);
+       
+		return retPrescriptions;
     }
 
     @Path("/favorites")

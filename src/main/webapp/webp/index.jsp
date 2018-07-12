@@ -332,6 +332,7 @@ font-size:20px
 	<script src="../web/record/rx/dsview/dsview.component.js"></script>
 	<script src="../web/record/rx/discontinue/discontinue.component.js"></script>
 	<script src="../web/record/rx/history/history.component.js"></script>
+	<script src="../web/record/rx/reprint/reprint.component.js"></script>
 	<script src="app.js.jsp"></script>
 	
 	<script src="../web/oscarController.js"></script>
