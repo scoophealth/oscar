@@ -790,4 +790,14 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		
 		return result;
 	}
+	
+	public int findNumberOfAppointments(String providerNo) {
+		
+		String sql = "select a from Appointment a where a.providerNo = ?";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, providerNo);
+		List<Appointment> result = query.getResultList();
+		
+		return result.size();
+	}
 }

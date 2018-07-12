@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.common.dao.OscarAppointmentDao"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="org.oscarehr.common.model.ScheduleDate"%>
 <%@page import="org.oscarehr.common.dao.ScheduleDateDao"%>
@@ -219,6 +220,7 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 	
 	jQuery(document).ready(function(){
 	
+		
 	        var url = "<%= request.getContextPath() %>/demographic/SearchDemographic.do?jqueryJSON=true&activeOnly=true";
 	
 	        jQuery("#demo").autocomplete( {
@@ -253,6 +255,7 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 						jQuery("#demo").val('');
 						jQuery("#demographic_no").val('');
 						updateParticipants();
+						updateDropInCheckbox();
 					}
 	            }, "json"
 	        );	
@@ -268,6 +271,7 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 						jQuery("#demo").val('');
 						jQuery("#demographic_no").val('');
 						updateParticipants();
+						updateDropInCheckbox();
 					}
 	            }, "json"
 	        );	
@@ -285,6 +289,7 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 						alert("ERROR:" + xml.error);
 					}
 					updateParticipants();
+					updateDropInCheckbox();
 	            }, "json"
 		);
 	}
@@ -383,14 +388,30 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 						alert("ERROR:" + xml.error);
 					}
 					updateParticipants();
+					updateDropInCheckbox();
 	            }, "json"
+		);
+	}
+	
+	function updateDropInCheckbox() {
+		jQuery.post("<%=request.getContextPath()%>/groupAppointment.do" , {method: 'getNumParticipantsForSeries',providerNo:'<%=targetProviderNo%>'},
+	            function(xml)
+	            {	
+					if(xml.numAppointments > 0) {
+						jQuery("#dropInCheckbox").attr('disabled','disabled');
+						jQuery("#dropInCheckbox").attr('readonly','readonly');
+					} else {
+						jQuery("#dropInCheckbox").removeAttr('disabled');
+						jQuery("#dropInCheckbox").removeAttr('readonly');
+					}
+	            } ,'json'
 		);
 	}
 	
 	function updateParticipants() {
 		jQuery.post("<%=request.getContextPath()%>/groupAppointment.do" , {method: 'getParticipantsForSession',providerNo:'<%=targetProviderNo%>',date:'<%=sessionDateStr%>'},
 	            function(xml)
-	            {
+	            {		
 	                     //  console.log(JSON.stringify(xml));
 	                       jQuery("#participantList tbody").empty();
 	                       for(var x=0;x<xml.appointments.length;x++) {
@@ -440,11 +461,11 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 	                    	   
 	                    	   
 	                    	   var newData = "<tr><td><a href='javascript:void()' onClick='deleteParticipant("+a.appointmentNo+",\""+a.name+"\")'><img src='../images/close16.png' border='0'></a><input type='checkbox' id='checked_"+a.appointmentNo+"' name='checked' value='"+a.appointmentNo+"' onChange='updateCheckbox(this)'/></td>" + 
-	                    	   "<td style='width:20%'>" +a.name + "</td>"+
-	                    	   "<td>"+arrivedButton+"&nbsp;"+noShowButton+"</td>";
+	                    	   "<td style='width:20%'>" +a.name + "</td>";
 	                    	   
 	                    	   <%
 	                    	   if(!dropIn) { %>
+	                    	   newData += "<td>"+arrivedButton+"&nbsp;"+noShowButton+"</td>";	                    
 	                    	   newData +="<td><input type='button' value='Remove from series' onClick='removeFromSeries("+a.appointmentNo+")'/></td>";
 	                    	  <% } %>
 	                    	   <%
@@ -498,6 +519,7 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 	
 	jQuery(document).ready(function(){
 		updateParticipants();
+		updateDropInCheckbox();
 	});
 	
 	
@@ -607,6 +629,20 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 		
 		
 	});
+	
+	function updateDropIn() {
+		
+		if(confirm('Are you sure you would like to change this critical setting? Changes will be saved immediately')) {
+			jQuery("#dropIn").val('');
+			if(jQuery("#dropInCheckbox").is(":checked")) {
+				jQuery("#dropIn").val('on');
+			}
+			
+			jQuery("#myForm").submit();
+		} else {
+			jQuery("#dropInCheckbox").prop("checked", !jQuery("#dropInCheckbox").prop("checked"));
+		}
+	}
 	</script>
 </head>
 
@@ -614,7 +650,7 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 <body bgproperties="fixed"  topmargin="0"leftmargin="0" rightmargin="0" style="font-family:sans-serif">
 
 <%if(errorStr == null) { %>
-	<FORM NAME = "myForm" METHOD="post" ACTION="groupPropertiesSave.jsp">
+	<FORM NAME = "myForm" id="myForm" METHOD="post" ACTION="groupPropertiesSave.jsp">
 	<input type="hidden" id="topics_num" name="topics_num" value="0"/>
 	<input type="hidden" id="trackers_num" name="trackers_num" value="0"/>
 	<input type="hidden" id="provider_no" name="provider_no" value="<%=targetProviderNo%>"/>
@@ -654,11 +690,11 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 					Notes:
 				</td>
 				<td class="preferenceValue">
-					<textarea name="seriesNote" rows="10" style="width:80%"><%=(seriesNoteUp != null)?seriesNoteUp.getValue():""%></textarea>
+					<textarea name="seriesNote" rows="5" style="width:80%"><%=(seriesNoteUp != null)?seriesNoteUp.getValue():""%></textarea>
 				</td>
 			</tr>
 			
-			
+			<!-- 
 			<tr>
 				<td class="preferenceLabel" width="10%">
 					Completed:
@@ -670,10 +706,10 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 						checked = " checked=\"checked\" ";
 					}
 				%>
-					<input name="completed" type="checkbox" <%=checked %> />
+					 <input name="completed" type="checkbox" <% //checked %> /> 
 				</td>
 			</tr>
-			
+			-->
 			<tr>
 				<td class="preferenceLabel" width="10%">
 					Drop In:
@@ -684,8 +720,16 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 					if(dropInUp != null && "true".equals(dropInUp.getValue())) {
 						checked1 = " checked=\"checked\" ";
 					}
+					OscarAppointmentDao appointmentDao = SpringUtils.getBean(OscarAppointmentDao.class);
+					int numParticipants = appointmentDao.findNumberOfAppointments(targetProviderNo);
+					String readonly="";
+					if(numParticipants>0) {
+						readonly = "  disabled=\"disabled\" readonly=\"readonly\" ";
+					}
 				%>
-					<input name="dropIn" type="checkbox" <%=checked1 %> />
+					<input name="dropIn1" type="checkbox" <%=checked1 %> <%=readonly %> id="dropInCheckbox" onChange="updateDropIn()"/>
+					<input type="hidden" name="dropIn" value="on" id="dropIn" />
+					
 				</td>
 			</tr>
 			
@@ -812,7 +856,7 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 					Notes:
 				</td>
 				<td class="preferenceValue">
-					<textarea name="sessionNote" rows="10" style="width:80%"><%=(sessionNoteUp != null)?sessionNoteUp.getValue():""%></textarea>
+					<textarea name="sessionNote" rows="5" style="width:80%"><%=(sessionNoteUp != null)?sessionNoteUp.getValue():""%></textarea>
 				</td>
 			</tr>
 			
@@ -836,8 +880,8 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 			<thead style="background-color:<%=deepcolor%>;text-align:left">
 				<th width="1%"><input type="checkbox" id="check_all"/></th>
 				<th>Name</th>
-				<th>Attendance Status</th>
 				<%if(!dropIn) { %>
+				<th>Attendance Status</th>
 				<th>Group Status</th>
 				<% } %>
 				
@@ -889,7 +933,7 @@ UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 		</div>
 		<div style="background-color:white;height:5px"></div>
 		
-		<textarea rows="20" style="width:95%;display:block;margin-left:auto;margin-right:auto" id="groupNote"></textarea>
+		<textarea rows="5" style="width:95%;display:block;margin-left:auto;margin-right:auto" id="groupNote"></textarea>
 		<input type="button" value="Apply Group Note to Selected Participants" onClick="applyGroupNote()"/>
 		
 		<br/><br/>
