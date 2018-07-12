@@ -51,11 +51,13 @@
     String seriesSite = request.getParameter("seriesSite");
     String seriesNote = request.getParameter("seriesNote");
     String completed = request.getParameter("completed");
+    String dropIn = request.getParameter("dropIn");
     
     saveOrUpdateProperty(providerNo,seriesName,"seriesName");
     saveOrUpdateProperty(providerNo,seriesSite,"seriesSite");
     saveOrUpdateProperty(providerNo,seriesNote,"seriesNote");
 	saveOrUpdateCompleted(providerNo,completed);
+	saveOrUpdateDropIn(providerNo,dropIn);
     
     
     //session level attributes
@@ -103,6 +105,49 @@
    			}
    		}
    	}
+   	
+   	
+   	//Trackers
+   	deleteExistingTrackers(providerNo);
+    saveOrUpdateMaxTrackers(providerNo,request.getParameter("trackers_num"));
+    int maxTracker = Integer.parseInt(request.getParameter("trackers_num"));
+    for(int x=1;x<=maxTracker;x++) {
+    	String id = request.getParameter("tracker_"+x+".id");
+  		if(id != null) {
+  			String text = request.getParameter("tracker_"+x+".text");
+  			String typeX = request.getParameter("tracker_"+x+".type");
+  			
+  			UserProperty up = new UserProperty();
+  			if(id.length()>0 && Integer.parseInt(id)>0) {
+        		up = userPropertyDao.find(Integer.parseInt(id));
+        	} else {
+        		up.setProviderNo(providerNo);
+        		up.setName("series_tracker" + x);
+        	}
+        	up.setValue(text + "|" + typeX);
+        	
+  			
+ 			if(up.getId() == null)
+ 				userPropertyDao.persist(up);
+ 			else
+ 				userPropertyDao.merge(up);
+ 			
+ 			String type = request.getParameter("tracker_"+x+".type");
+ 			
+ 		}
+  		
+	}
+
+   	//handle removes
+   	String[] ids2 = request.getParameterValues("tracker.delete");
+   	if(ids2 != null) {
+   		for(String id:ids2) {
+   			if(id.length()>0) {
+       			int trackerId = Integer.parseInt(id);
+       			userPropertyDao.remove(trackerId);    				
+   			}
+   		}
+   	}
 %>
 
 <%!
@@ -132,6 +177,19 @@
 		userPropertyDao.saveEntity(up);
 	}
 	
+	void saveOrUpdateDropIn(String providerNo, String dropIn) {
+		UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
+		UserProperty up = userPropertyDao.getProp(providerNo, "dropIn");
+		if(up == null) {
+			up = new UserProperty();
+			up.setName("dropIn");
+			up.setProviderNo(providerNo);
+		}
+		up.setValue(dropIn != null && "on".equals(dropIn)? "true" :"false");
+		
+		userPropertyDao.saveEntity(up);
+	}
+	
 	void saveOrUpdateMaxTopics(String providerNo, String value, String sessionDateStr) {
 		UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 		UserProperty up = userPropertyDao.getProp(providerNo, "session_" + sessionDateStr + "_num_topics");
@@ -154,6 +212,35 @@
 			
 			for(int x=1;x<=val;x++) {
 				UserProperty tmp = userPropertyDao.getProp(providerNo,"session_" + sessionDateStr + "_topic" + x);
+				if(tmp != null) {
+					userPropertyDao.remove(tmp.getId());
+				}
+			}
+		}
+	}
+	
+	void saveOrUpdateMaxTrackers(String providerNo, String value) {
+		UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
+		UserProperty up = userPropertyDao.getProp(providerNo, "series_num_trackers");
+		if(up == null) {
+			up = new UserProperty();
+			up.setName("series_num_trackers");
+			up.setProviderNo(providerNo);
+		}
+		up.setValue(value);
+		
+		userPropertyDao.saveEntity(up);
+	}
+	
+	void deleteExistingTrackers(String providerNo) {
+		UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
+		   
+		UserProperty up = userPropertyDao.getProp(providerNo, "series_num_trackers");
+		if(up != null) {
+			int val = Integer.parseInt(up.getValue());
+			
+			for(int x=1;x<=val;x++) {
+				UserProperty tmp = userPropertyDao.getProp(providerNo,"series_tracker" + x);
 				if(tmp != null) {
 					userPropertyDao.remove(tmp.getId());
 				}
