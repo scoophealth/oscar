@@ -84,6 +84,24 @@ public class GroupAppointmentAction extends DispatchAction {
 	ProgramProviderDAO programProviderDao = SpringUtils.getBean(ProgramProviderDAO.class);
 	UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
 	
+	public ActionForward getNumParticipantsForSeries(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		JSONObject response1 = new JSONObject();
+		String providerNo = getRequiredParameter(request, "providerNo", response1);
+		
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_appointment", "r", null)) {
+        	response1.put("error","missing required security object (_appointment)");
+        }
+		
+		if(response1.get("error") == null) {
+			int num = appointmentDao.findNumberOfAppointments(providerNo);
+			response1.put("numAppointments", num);
+		}
+		
+		response1.write(response.getWriter());
+		
+		return null;
+	}
+	
 	public ActionForward getParticipantsForSession(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		JSONObject response1 = new JSONObject();
 		SimpleDateFormat formatter =new SimpleDateFormat("yyyy-MM-dd");
@@ -686,6 +704,13 @@ public class GroupAppointmentAction extends DispatchAction {
         	response1.put("error","missing required security object (_appointment)");
         }
 
+		//is this a drop in?
+		UserProperty up = userPropertyDao.getProp(providerNo, "dropIn");
+		boolean dropIn = false;
+		if(up != null && "true".equals(up.getValue())) {
+			dropIn = true;
+		}
+		
 		Date d = parseDate(date,formatter,response1);
 		
 		if(response1.get("error") == null) {
@@ -693,7 +718,11 @@ public class GroupAppointmentAction extends DispatchAction {
 			
 			if(apptNo == null) {
 				response1.put("error","appointment not created");
-			}	
+			} else {
+				if(dropIn) {
+					apptManager.updateAppointmentStatus(loggedInInfo, apptNo, "H");
+				}
+			}
 		}
 		
 		response1.write(response.getWriter());
