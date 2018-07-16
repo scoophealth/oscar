@@ -647,6 +647,19 @@ function changeSite(el) {
 		</div>
 		<% } %>
 
+<%
+	if(request.getAttribute("errors") != null) {
+		List<String> errorList = (List<String>)request.getAttribute("errors");
+		%><ul style="color:red"><% 
+		for(String error:errorList) {
+			%>
+			<li><%=error %></li>
+			<% 
+		}
+		%></ul><%
+	}
+
+%>
 
             <% if(prevHash == null) { %>
             	<h3 style="color:red">Prevention not found!</h3>
@@ -807,19 +820,34 @@ function changeSite(el) {
                          		String d1 = "";
                          		String d2 = "";
                          		if(dose.split(" ").length == 2) {
-                         			d1 = dose.split(" ")[0];
-                         			d2 = dose.split(" ")[1];
+                         			String d3 = dose.split(" ")[1];
+                         			if(d3 != 'UoM' && d3 != 'mL' && d3 != 'mg' && d3 != 'g' && d3 != 'capsule' && d3 != 'vial' && d3 != 'units') {
+                         				d1 = dose;
+                         			} else {
+                         				d1 = dose.split(" ")[0];
+                             			d2 = dose.split(" ")[1];
+                         			}
                          		} else {
                          			d1 = dose;
                          		}
                          		
                          		if("".equals(dose)) {
-                         			d2 = "CC";
+                         			d2 = "mL";
                          		}
                          	%>
                          <label for="dose">Dose:</label> <input type="text" name="dose"  value="<%=d1%>"/>
                          <br>
-                          <label for="doseUnit">Dose Unit:</label><input type="text" name="doseUnit"  value="<%=d2%>"/>
+                          <label for="doseUnit">Dose Unit:</label>
+                          <select name="doseUnit">
+                          	<option value="UoM" <%="UoM".equals(d2)?"selected=\"selected\" " %>>UoM</option>
+                          	<option value="mL" <%="mL".equals(d2)?"selected=\"selected\" " %>>mL</option>
+                          	<option value="mg" <%="mg".equals(d2)?"selected=\"selected\" " %>>mg</option>
+                          	<option value="g" <%="g".equals(d2)?"selected=\"selected\" " %>>g</option>
+                          	<option value="capsule" <%="capsule".equals(d2)?"selected=\"selected\" " %>>capsule</option>
+                          	<option value="vial" <%="vial".equals(d2)?"selected=\"selected\" " %>>vial</option>
+                          	<option value="units" <%="units".equals(d2)?"selected=\"selected\" " %>>units</option>
+                          </select>
+                          <input type="text" name="doseUnit"  value="<%=d2%>"/>
                           <br/>
                         <%if(!isCvc) { %>
                          <label for="lot">Lot:</label>  <input type="text" name="lot" id="lot" value="<%=str(lot,"")%>" />

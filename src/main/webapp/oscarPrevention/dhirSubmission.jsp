@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="java.util.UUID"%>
 <%@page import="java.util.Random"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.ArrayList"%>
@@ -277,8 +278,7 @@ clear: left;
             		String theString = AbstractFhirMessageBuilder.getFhirContext().newJsonParser().setPrettyPrint(true).encodeResourceToString(bundle);
             		JSONObject jbundle = new JSONObject(theString);
             		
-            		Random rand = new Random();
-                    int num = rand.nextInt(9000000) + 1000000;
+            		String clientRequestId = UUID.randomUUID().toString();
 
           		
                     HttpPost httpPost = new HttpPost(url);
@@ -293,8 +293,8 @@ clear: left;
                     obj.put("url","https://wsgateway.pst.ehealthontario.ca:9443/API/FHIR/Immunizations/v3/partner/clinician/$process-message");
                     obj.put("service","DHIR");
                     obj.put("body",jbundle);
-                    obj.put("client-request-id",String.valueOf(num));
-                    obj.put("client-app-desc","OSCAR-" + OscarProperties.getInstance().getProperty("buildtag","v15"));
+                    obj.put("client-request-id",clientRequestId);
+                    obj.put("client-app-desc","EMR");
                     
                     HttpEntity reqEntity = new ByteArrayEntity(obj.toString().getBytes("UTF-8"));
                     httpPost.setEntity(reqEntity);
@@ -330,11 +330,11 @@ clear: left;
                     		log.setStatus("Submitted");
                     		log.setTransactionId(val);
                     		log.setClientResponseId(clientId);
-                    		log.setClientRequestId(String.valueOf(num));
+                    		log.setClientRequestId(clientRequestId);
                     		submissionManager.update(log);
                     	}
             %>
-        		<h2>Your submission was accepted by the Digital Health Immunization Repository (DHIR). </h2>
+        		<h2>Submission send for review. You may find the reference number in the prevention's Summary field. </h2>
         		<input type="button" value="Close Window" onClick="window.close()"/>
         	<%
         }
@@ -364,7 +364,7 @@ clear: left;
         		log.setTransactionId(val);
         		log.setResponse(entity != null ? entity : "");
         		log.setClientResponseId(clientId);
-        		log.setClientRequestId(String.valueOf(num));
+        		log.setClientRequestId(clientRequestId);
         		submissionManager.update(log);
         	}
         	
@@ -400,7 +400,7 @@ clear: left;
         		log.setTransactionId(val);
         		log.setResponse(entity != null ? entity : "");
         		log.setClientResponseId(clientId);
-        		log.setClientRequestId(String.valueOf(num));
+        		log.setClientRequestId(clientRequestId);
         		submissionManager.update(log);
         	}
         	

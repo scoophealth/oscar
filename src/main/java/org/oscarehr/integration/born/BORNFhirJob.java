@@ -624,7 +624,10 @@ public class BORNFhirJob implements OscarRunnable {
 	
 	private HttpClient getHttpClient() throws NoSuchAlgorithmException, KeyManagementException {
 	    //Gets the SSLContext instance for SSL and initializes it
-	    SSLContext sslContext = SSLContext.getInstance("SSL");
+	    //SSLContext sslContext = SSLContext.getInstance("SSL");
+	    SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+	    //sslContext.init(null, null, null);
+	    
 	    sslContext.init(null, new TrustManager[] {new CxfClientUtils.TrustAllManager()}, new SecureRandom());
 	    //Creates a new SocketFactory to bypass the SSL verifiers
 	    SSLSocketFactory sf = new SSLSocketFactory(sslContext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);

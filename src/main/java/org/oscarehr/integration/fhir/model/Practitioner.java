@@ -33,7 +33,7 @@ import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
 
 public class Practitioner extends AbstractOscarFhirResource<org.hl7.fhir.dstu3.model.Practitioner, org.oscarehr.common.model.Provider> {
 
-	public enum LicenseType { CPSO, CNO, OCP, DEFAULT }
+	public enum LicenseType { CPSO, CNORNP, CNORN, CNORPN, OCP, DEFAULT, CMO }
 
 	public Practitioner( Provider provider ) {
 		super( new org.hl7.fhir.dstu3.model.Practitioner(), provider );
@@ -118,11 +118,16 @@ public class Practitioner extends AbstractOscarFhirResource<org.hl7.fhir.dstu3.m
 		}
 
 		switch( LicenseType.valueOf( licensetype ) ) {
-		case CNO: setNurseIdentifier( fhirResource, practitionerNumber );
+		case CNORN:
+		case CNORPN:
+		case CNORNP:
+			setNurseIdentifier( fhirResource, practitionerNumber );
 			break;
 		case CPSO: setDoctorIdentifier( fhirResource, practitionerNumber );
 			break;
 		case OCP: setPharmacistIdentifier( fhirResource, practitionerNumber );
+			break;
+		case CMO: setMidwifeIdentifier( fhirResource, practitionerNumber );
 			break;
 		case DEFAULT: fhirResource.addIdentifier().setSystem( "" ).setValue( practitionerNumber );
 			break;		
@@ -148,14 +153,28 @@ public class Practitioner extends AbstractOscarFhirResource<org.hl7.fhir.dstu3.m
 		.setValue( practitionerNumber );
 	}
 	
+	protected void setMidwifeIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource, String practitionerNumber ) {
+		fhirResource.addIdentifier()
+		.setSystem( "https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-midwife" )
+		.setValue( practitionerNumber );
+	}
+	
 	protected void setQualification( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
 		
 		//TODO these codes cannot be hard coded like this. Temporary hack
 		String licensetype = getOscarResource().getPractitionerNoType();
 		String designation = null;
 		
-		if( LicenseType.CNO.name().equals( licensetype ) ) {
+		if( LicenseType.CNORN.name().equals( licensetype ) ) {
 			designation =  "RN";
+		}
+		
+		if( LicenseType.CNORPN.name().equals( licensetype ) ) {
+			designation =  "RPN";
+		}
+		
+		if( LicenseType.CNORNP.name().equals( licensetype ) ) {
+			designation =  "RNP";
 		}
 		
 		if( LicenseType.CPSO.name().equals( licensetype ) ) {
@@ -165,6 +184,11 @@ public class Practitioner extends AbstractOscarFhirResource<org.hl7.fhir.dstu3.m
 		if( LicenseType.OCP.name().equals( licensetype ) ) {
 			designation = "PHARM";
 		}
+		
+		if( LicenseType.CMO.name().equals( licensetype ) ) {
+			designation = "RM";
+		}
+		
 		
 		if(designation != null) {
 			fhirResource.addQualification().getCode().addCoding()

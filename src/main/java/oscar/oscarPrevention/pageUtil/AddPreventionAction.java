@@ -26,6 +26,7 @@
 package oscar.oscarPrevention.pageUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,6 +44,7 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.LookupListDao;
 import org.oscarehr.common.dao.LookupListItemDao;
+import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.model.CVCImmunization;
 import org.oscarehr.common.model.Consent;
 import org.oscarehr.integration.fhir.api.DHIR;
@@ -54,6 +56,8 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarPrevention.PreventionData;
+import oscar.oscarPrevention.PreventionDisplayConfig;
+import oscar.util.UtilDateUtilities;
 /**
  *
  * @author Jay Gallagher
@@ -188,6 +192,15 @@ public class AddPreventionAction  extends Action {
         	 addHashtoArray(extraData,request.getParameter("cvcName"),"brandSnomedId");
          }
          
+         
+         //let's do some validation
+         List<String> valid = validate(preventionType,demographic_no,id,delete,action,submitToDhir,given,prevDate,providerNo,nextDate,neverWarn,
+        		 snomedId,refused,extraData,lotItem,dose,doseUnit);
+         if(valid != null && valid.size()>0) {
+        	 request.setAttribute("errors", valid);
+        	 return mapping.findForward("form");
+         }
+         
          Integer preventionId = id != null ? Integer.parseInt(id) : null;
          String operation = null;
          
@@ -247,6 +260,37 @@ public class AddPreventionAction  extends Action {
    }
    
          
+  private List<String> validate(String preventionType,String demographic_no,String id,String delete,String action,
+		  boolean submitToDhir,String given,String prevDate, String providerNo,String nextDate,
+		  String neverWarn,String snomedId,String refused,ArrayList<Map<String,String>> extraData,String lotItem,String dose,String doseUnit) {
+	  List<String> result = new ArrayList<String>();
+	  
+	  PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();	 
+	  HashMap<String,String> prevention = pdc.getPrevention(preventionType);
+	  if(prevention == null) {
+		  result.add("Invalid Prevention Type");
+	  }
+	  
+	  DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+	  if(!demographicDao.clientExists(Integer.parseInt(demographic_no))) {
+		  result.add("Patient not found");
+	  }
+	  
+	  if(id != null) {
+		  PreventionDao preventionDao = SpringUtils.getBean(PreventionDao.class);
+		  if(preventionDao.find(Integer.parseInt(id)) == null) {
+			  result.add("Prevention record not found");
+		  }
+	  }
+	  
+	  if(UtilDateUtilities.StringToDate(prevDate, "yyyy-MM-dd HH:mm") == null) {
+		  result.add("Prevention date not valid");
+	  }
+	  
+	  
+	  return result;
+  }
+  
   private void addHashtoArray(ArrayList<Map<String,String>> list,String s,String key){
      if ( s != null && key != null){
         Map<String,String> h = new HashMap<String,String>();
