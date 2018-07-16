@@ -18,7 +18,7 @@
 			<th>&nbsp;</th>
 		</tr>
 		<tr ng-repeat="drug in $ctrl.druglist | orderBy: '-rxDate'">
-				<td title="{{drug.id}}">{{drug.provider}}</td>
+				<td title="{{drug.id}}"><providername provider-no="drug.provider"></providername></td>
 				<td>{{drug.rxDate | date:'yyyy-MM-dd'}}</td>
 				<td>{{drug.endDate | date:'yyyy-MM-dd'}}</td>
 				<td>{{drug.writtenDate | date:'yyyy-MM-dd'}}</td>

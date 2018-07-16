@@ -193,6 +193,7 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
 		
 }]).component('rxComponent',RxComponent)
    .component('medsearch',MedsearchComponent)
+   .component('providername',ProviderNameComponent)
    .component('rxPrintComponent',RxPrintComponent)
    .component('rxProfile',RxProfileComponent)
    .component('dsviewComponent',DsviewComponent)
