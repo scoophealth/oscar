@@ -255,6 +255,19 @@ const RxComponent = {
 			rxComp.toRxList.push(d);
 		}
 
+		rxComp.customRx =function(nam){
+			console.log("customRx name",nam);
+			var d = new Drug($stateParams.demographicNo);
+				d.writtenDate = new Date();
+				d.rxDate = new Date();
+				d.custom = true;
+				d.repeats = 0;
+				// if(angular.isDefined(d.id)){
+				// delete d.id;
+				// }
+			rxComp.toRxList.push(d);
+		} 
+		
 		rxComp.hideWarning = function(alert) {
 			console.log("hidewarning", alert);
 		}

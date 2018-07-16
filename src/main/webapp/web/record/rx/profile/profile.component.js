@@ -54,14 +54,19 @@ const RxProfileComponent = {
   		profileObject.profileHash = {};
   		profileObject.profileList = [];
   		for(i=0; i < drugList.length; i++){
-	  			//console.log("here1."+i+" ",drugList[i]);
-	  			if(angular.isDefined(profileObject.profileHash[drugList[i].atc])){
-	  				profileObject.profileHash[drugList[i].atc].push(drugList[i]);
-	  			}else{
-	  				profileObject.profileHash[drugList[i].atc] = [];
-	  				profileObject.profileHash[drugList[i].atc].push(drugList[i]);
-	  				profileObject.profileList.push(drugList[i]);
-	  			}			
+	  			//Group drugs by ATC code, if ATC code is blank treat as separate drugs
+  				if(drugList[i].atc == null || drugList[i].atc === ""){
+  					profileObject.profileList.push(drugList[i]);
+  				}else{
+  			
+		  			if(angular.isDefined(profileObject.profileHash[drugList[i].atc])){
+		  				profileObject.profileHash[drugList[i].atc].push(drugList[i]);
+		  			}else{
+		  				profileObject.profileHash[drugList[i].atc] = [];
+		  				profileObject.profileHash[drugList[i].atc].push(drugList[i]);
+		  				profileObject.profileList.push(drugList[i]);
+		  			}	
+  				}
 	  	}
   		return profileObject;
   	}

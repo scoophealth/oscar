@@ -41,6 +41,8 @@ public class DrugTo1 implements Serializable {
     private String brandName;
 
     private String genericName;
+    
+    private String customName;
 
     private String atc;
 
@@ -345,5 +347,13 @@ public class DrugTo1 implements Serializable {
 
 	public void setWrittenDate(Date writtenDate) {
 		this.writtenDate = writtenDate;
+	}
+
+	public String getCustomName() {
+		return customName;
+	}
+
+	public void setCustomName(String customName) {
+		this.customName = customName;
 	}
 }

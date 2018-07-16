@@ -2,7 +2,8 @@ const MedsearchComponent = {
   bindings: {
 	favouriteMeds: '<',
 	favSelected: '&',
-  	medSelected: '&'
+  	medSelected: '&',
+  	customRx: '&'
   },
   templateUrl: '../web/record/rx/search/medsearch.template.jsp',
   controller: ['$stateParams','$state','$log','$timeout','summaryService','rxService','$http','$filter',function($stateParams,$state,$log,$timeout,summaryService,rxService,$http,$filter) {
@@ -18,7 +19,7 @@ const MedsearchComponent = {
   	}
   	
   	rxSearchComp.customDrug = function(){
-  		alert("Not Implemented Yet");
+  		rxSearchComp.customRx();
   	}
     rxSearchComp.customNote = function(){
     		alert("Not Implemented Yet");

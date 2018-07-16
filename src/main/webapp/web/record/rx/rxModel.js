@@ -202,6 +202,7 @@ Drug.prototype.toDrugTransferObject = function (drugKey) {
             drugId : this.id,
             brandName: this.name || this.brandName,
             genericName: generic,
+            customName: this.customName,
             atc: this.atc,
             regionalIdentifier: this.regionalIdentifier,
 
@@ -237,6 +238,9 @@ Drug.prototype.toDrugTransferObject = function (drugKey) {
             archivedDate: this.archivedDate
     };
 
+    
+    console.log("drugKEy? ",obj);
+    
     return drugKey ? {drug : obj} : obj ;
 
 };
@@ -255,6 +259,7 @@ Drug.prototype.fromDrugTransferObject = function (obj) {
 
     this.brandName = obj.brandName;
     this.genericName = obj.genericName;
+    this.customName = obj.customName;
     this.atc = obj.atc;
     this.regionalIdentifier = obj.regionalIdentifier;
     this.provider = obj.providerNo;
@@ -444,7 +449,8 @@ Drug.prototype.getInstructionLine = function(){
 
     var s = "";
 
-    s += (this.name || this.brandName) +  " - ";
+    console.log("getInstructionLine ",this.name,this.brandName,this.customName);
+    s += (this.name || this.brandName || this.customName) +  " - ";
 
     if(this.method) s += this.method + " ";
     
@@ -483,7 +489,8 @@ Drug.prototype.getInstructionLine2 = function(){
 
     var s = "";
 
-    s += (this.name || this.brandName) +  " \n";
+    console.log("getInstructionLine ",this.name,this.brandName,this.customName);
+    s += (this.name || this.brandName || this.customName) +  " \n";
     
     console.log("getInstructionLine 2",this);
     
@@ -593,7 +600,7 @@ Drug.prototype.refreshEndDate = function(){
 
 
 Drug.prototype.rxDurationInDays = function(){
-	console.log("rxDur",this.endDate,this.rxDate,(this.endDate-this.rxDate), ((this.endDate-this.rxDate)/(1000*60*60*24)),(Math.round((this.endDate-this.rxDate)/(1000*60*60*24))));
+	//console.log("rxDur",this.endDate,this.rxDate,(this.endDate-this.rxDate), ((this.endDate-this.rxDate)/(1000*60*60*24)),(Math.round((this.endDate-this.rxDate)/(1000*60*60*24))));
 	return Math.round((this.endDate-this.rxDate)/(1000*60*60*24));
 };
 
@@ -834,6 +841,7 @@ Favorite.prototype.fromDrug = function(d, name){
 
     this.drug.brandName = d.brandName;
     this.drug.genericName = d.genericName;
+    this.drug.customName = d.customName;
     this.drug.atc = d.atc;
     this.drug.regionalIdentifier = d.regionalIdentifier;
     this.drug.form = d.form;

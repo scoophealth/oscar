@@ -64,58 +64,65 @@
 			  	<div class="col-sm-8">
 			  		<span class="pull-right">
 			  			<a ng-click="$ctrl.showMore(med);">
-			  			<span ng-if="med.showmore == null">More</span><span ng-if="med.showmore">Less</span> 
+			  				<span ng-if="med.showmore == null">More</span><span ng-if="med.showmore">Less</span> 
 			  			</a>
-			  			<a ng-click="$ctrl.cancelMed(med,$index)"><span class="glyphicon glyphicon-remove-circle"></span></a></span>
-				    <h4 class="list-group-item-heading">{{med.getName()}}</h4>
-				    		<form>
-						  <div class="form-group">
-						    <input type="text" class="form-control" id="instructionsInput" placeholder="Instructions" ng-blur="$ctrl.parseInstr(med)" ng-model="med.instructions" auto-focus>
+			  			<a ng-click="$ctrl.cancelMed(med,$index)"><span class="glyphicon glyphicon-remove-circle"></span></a>
+			  		</span>
+				    	<h4 class="list-group-item-heading">{{med.getName()}}</h4>
+				    	<form>
+				    	  <div class="form-group">
+					    <input type="text" class="form-control" ng-if="med.custom" id="customInput" placeholder="Custom Drug Name" ng-model="med.customName" auto-focus>
+					  </div>	
+					  <div class="form-group">
+					    <input type="text" class="form-control" id="instructionsInput" placeholder="Instructions" ng-blur="$ctrl.parseInstr(med)" ng-model="med.instructions" auto-focus>
+					  </div>
+					  <div class="form-group ">
+						<div class="row">
+						  <div class="col-xs-6" ng-class="$ctrl.checkForQuantityError(med)">
+							<label  class="control-label" for="quantityInput">Qty/Mitte</label> 
+					    		<input type="text" class="form-control" id="quantityInput" placeholder="Qty/Mitte" ng-model="med.quantity" ng-change="$ctrl.manualQuantityEntry(med)">
+					    		<span ng-if="$ctrl.checkForQuantityError(med)" id="helpBlock2" class="help-block">Quantity was not calculated. Manual Calculation required</span>
 						  </div>
-						  <div class="form-group ">
-						  	<div class="row">
-							  <div class="col-xs-6" ng-class="$ctrl.checkForQuantityError(med)">
-								<label  class="control-label" for="quantityInput">Qty/Mitte</label> 
-						    		<input type="text" class="form-control" id="quantityInput" placeholder="Qty/Mitte" ng-model="med.quantity" ng-change="$ctrl.manualQuantityEntry(med)">
-						    		<span ng-if="$ctrl.checkForQuantityError(med)" id="helpBlock2" class="help-block">Quantity was not calculated. Manual Calculation required</span>
-							  </div>
-							  <div class="col-xs-6">
-								<label for="repeatsInput">Repeat</label>   
-						    		<input type="text" class="form-control" id="repeatsInput" placeholder="Repeats" ng-model="med.repeats" ng-change="$ctrl.repeatsUpdated(med)">    
-							  </div>
-						  	</div>
-						  	<div class="row" ng-if="med.duration != null" >
-						  		<div class="col-xs-12 has-error">
-						  			Duration was calculated to  {{med.rxDurationInDays()}} days.  <a ng-click="$ctrl.changeEndDate(med)">Change?</a>
-						  		</div>
-						  	</div>
+						  <div class="col-xs-6">
+							<label for="repeatsInput">Repeat</label>   
+					    		<input type="text" class="form-control" id="repeatsInput" placeholder="Repeats" ng-model="med.repeats" ng-change="$ctrl.repeatsUpdated(med)">    
 						  </div>
-						  <div class="form-group" ng-if="med.showmore">
-						  	<div class="row">
-							  <div class="col-xs-6">
-								<label for="repeatsInput">Written Date</label>  
-								<div class="input-group">
-									<input type="text" class="form-control"   
-									ng-model="med.writtenDate" 
-									uib-datepicker-popup="yyyy-MM-dd" 
-									uib-datepicker-append-to-body="false" 
-									is-open="startDatePicker" 
-									ng-click="startDatePicker = true" 
-									placeholder="YYYY-MM-DD"
-									/>
-									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-								</div>
-								
-								
-								 
-						    		
-							  </div>
-						  	</div>
+						</div>
+					  	<div class="row" ng-if="med.duration != null" >
+					  		<div class="col-xs-12 has-error">
+					  			Duration was calculated to  {{med.rxDurationInDays()}} days.  <a ng-click="$ctrl.changeEndDate(med)">Change?</a>
+					  		</div>
+					  	</div>
+					  </div>
+					  <div class="form-group" ng-if="med.showmore">
+					  	<div class="row">
+						  <div class="col-xs-6">
+							<label for="repeatsInput">Written Date</label>  
+							<div class="input-group">
+								<input type="text" class="form-control"   
+								ng-model="med.writtenDate" 
+								uib-datepicker-popup="yyyy-MM-dd" 
+								uib-datepicker-append-to-body="false" 
+								is-open="startDatePicker" 
+								ng-click="startDatePicker = true" 
+								placeholder="YYYY-MM-DD"
+								/>
+								<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
 						  </div>
-
-						</form>
+					  	</div>
+					  </div>
+					</form>
 			    </div>
 			  	<div class="col-sm-4">
+			  		<div class="alert alert-danger" ng-if="med.custom"><b>Warning</b> you will lose the following functionality:
+			  			<ul style="padding:10px;">
+					     <li>  Known Dosage Forms / Routes </li>
+					     <li>  Drug Allergy Information </li>
+					     <li>  Drug-Drug Interaction Information </li>
+					     <li>  Drug Information </li>
+					     </ul>
+					</div>
 			  		
 				  	<div uib-alert ng-repeat="alert in $ctrl.page.dsMessageHash[med.atc]" class="alert"  ng-class="'alert-' + ($ctrl.getAlertStyl(alert) || 'warning')"  style="padding: 9px;margin-bottom: 3px;"  ng-hide="$ctrl.checkIfHidden(alert)" >  <%-- uib-popover-html="{{alert.body}}" popover-trigger="'mouseenter'"  --%>
 		 		   		{{alert.heading}}<br>
@@ -128,7 +135,7 @@
 			    </div>
 			  </li>
 			</div>
-        		<medsearch med-selected="$ctrl.medSelected(med)" fav-selected="$ctrl.favSelected(fav)" favourite-meds="$ctrl.page.favouriteDrugs"></medsearch>	
+        		<medsearch med-selected="$ctrl.medSelected(med)" fav-selected="$ctrl.favSelected(fav)" favourite-meds="$ctrl.page.favouriteDrugs" custom-rx="$ctrl.customRx(nam)"></medsearch>	
         		<button type="button" class="btn btn-primary btn-block" style="margin-top:3px;" ng-click="$ctrl.saveAndPrint()">Save And Print</button>
 		</div>
 		<hr>

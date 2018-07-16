@@ -72,6 +72,7 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
             d.setId(t.getDrugId());
             d.setBrandName(t.getBrandName());
             d.setGenericName(t.getGenericName());
+            d.setCustomName(t.getCustomName());
             d.setDemographicId(t.getDemographicNo());
             if(t.getProviderNo() == null) {
             	  d.setProviderNo(loggedInInfo.getLoggedInProviderNo());
@@ -157,6 +158,7 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
         t.setDrugId(d.getId());
         t.setBrandName(d.getBrandName());
         t.setGenericName(d.getGenericName());
+        t.setCustomName(d.getCustomName());
         t.setAtc(d.getAtc());
         t.setRegionalIdentifier(d.getRegionalIdentifier());
         t.setDemographicNo(d.getDemographicId());
