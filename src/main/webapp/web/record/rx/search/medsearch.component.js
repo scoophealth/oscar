@@ -22,7 +22,7 @@ const MedsearchComponent = {
   		rxSearchComp.customRx();
   	}
     rxSearchComp.customNote = function(){
-    		alert("Not Implemented Yet");
+    		rxSearchComp.customRx();
     }
     rxSearchComp.DrugOfChoice = function(){
     		alert("Not Implemented Yet");
