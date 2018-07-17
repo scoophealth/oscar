@@ -821,7 +821,7 @@ function changeSite(el) {
                          		String d2 = "";
                          		if(dose.split(" ").length == 2) {
                          			String d3 = dose.split(" ")[1];
-                         			if(d3 != 'UoM' && d3 != 'mL' && d3 != 'mg' && d3 != 'g' && d3 != 'capsule' && d3 != 'vial' && d3 != 'units') {
+                         			if(!d3.equals("UoM") && !d3.equals("mL") && !d3.equals("mg") && !d3.equals("g") && !d3.equals("capsule") && !d3.equals("vial") && !d3.equals("units") ) {
                          				d1 = dose;
                          			} else {
                          				d1 = dose.split(" ")[0];
@@ -839,13 +839,15 @@ function changeSite(el) {
                          <br>
                           <label for="doseUnit">Dose Unit:</label>
                           <select name="doseUnit">
-                          	<option value="UoM" <%="UoM".equals(d2)?"selected=\"selected\" " %>>UoM</option>
-                          	<option value="mL" <%="mL".equals(d2)?"selected=\"selected\" " %>>mL</option>
-                          	<option value="mg" <%="mg".equals(d2)?"selected=\"selected\" " %>>mg</option>
-                          	<option value="g" <%="g".equals(d2)?"selected=\"selected\" " %>>g</option>
-                          	<option value="capsule" <%="capsule".equals(d2)?"selected=\"selected\" " %>>capsule</option>
-                          	<option value="vial" <%="vial".equals(d2)?"selected=\"selected\" " %>>vial</option>
-                          	<option value="units" <%="units".equals(d2)?"selected=\"selected\" " %>>units</option>
+							<option value="UoM" <%="UoM".equals(d2)?"selected=\"selected\" ":"" %>>UoM</option>
+							<option value="mL" <%="mL".equals(d2)?"selected=\"selected\" ":"" %>>mL</option>
+							<option value="mg" <%="mg".equals(d2)?"selected=\"selected\" ":"" %>>mg</option>
+							<option value="g" <%="g".equals(d2)?"selected=\"selected\" ":"" %>>g</option>
+							<option value="capsule" <%="capsule".equals(d2)?"selected=\"selected\" ":"" %>>capsule</option>
+							<option value="vial" <%="vial".equals(d2)?"selected=\"selected\" ":"" %>>vial</option>
+							<option value="units" <%="units".equals(d2)?"selected=\"selected\" ":"" %>>units</option>
+                          
+                        
                           </select>
                           <input type="text" name="doseUnit"  value="<%=d2%>"/>
                           <br/>
