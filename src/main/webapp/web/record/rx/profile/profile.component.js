@@ -113,6 +113,18 @@ const RxProfileComponent = {
 
   	rxProfileComp.print = function(){
   		//http://localhost:8080/oscar/oscarRx/PrintDrugProfile2.jsp
+  		var winX = (document.all)?window.screenLeft:window.screenX;
+        var winY = (document.all)?window.screenTop:window.screenY;
+
+        var top = winY+70;
+        var left = winX+110;
+        var url = "../web/record/rx/print/PrintDrugProfile2.jsp?demographicNo="+$stateParams.demographicNo;
+        windowName = 'windowNameProfilePrint'+$stateParams.demographicNo;
+        
+        windowprops = "height=575,width=650,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=" + top + ",left=" + left;
+  	  	var reasonWindow = $window.open(url, windowName, windowprops);
+  		console.log("Not Implemented Yet",drug);
+  		
   		alert("Not Implemented Yet");
   	}
     rxProfileComp.rePrint= function(){
