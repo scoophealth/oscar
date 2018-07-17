@@ -206,7 +206,38 @@ angular.module("rxServices", [])
                 return deferred.promise;
 
             },
+            search : function(s){
 
+                var deferred = $q.defer();
+                var queryPath = this.apiPath + "lookup/fullSearch?string="+s;
+
+                $http.get(queryPath).then(function (data) {
+                    deferred.resolve(data);
+                    console.log(data);
+                },function () {
+                    deferred.reject("An error occurred while attempting to search for medication");
+                });
+
+                return deferred.promise;
+
+            },
+            searchByElement: function(s){
+
+                var deferred = $q.defer();
+                var queryPath = this.apiPath + "lookup/searchByElement?string="+s;
+
+                $http.get(queryPath).then(function (data) {
+                    deferred.resolve(data);
+                    console.log(data);
+                },function () {
+                    deferred.reject("An error occurred while attempting to search for medication");
+                });
+
+                return deferred.promise;
+
+            },
+
+            
             getMedicationDetails : function(s){
 
                 var deferred = $q.defer();

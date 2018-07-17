@@ -199,7 +199,8 @@ oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider,
    .component('dsviewComponent',DsviewComponent)
    .component('discontinueComponent',DiscontinueComponent)
    .component('drughistoryComponent',DrughistoryComponent)
-   .component('reprintComponent',ReprintComponent);
+   .component('reprintComponent',ReprintComponent)
+   .component('fullsearchComponent',FullSearchComponent);
 
 // For debugging purposes
 /*

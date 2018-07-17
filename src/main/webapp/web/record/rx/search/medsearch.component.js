@@ -6,7 +6,7 @@ const MedsearchComponent = {
   	customRx: '&'
   },
   templateUrl: '../web/record/rx/search/medsearch.template.jsp',
-  controller: ['$stateParams','$state','$log','$timeout','summaryService','rxService','$http','$filter',function($stateParams,$state,$log,$timeout,summaryService,rxService,$http,$filter) {
+  controller: ['$stateParams','$state','$log','$timeout','summaryService','rxService','$http','$filter','$uibModal',function($stateParams,$state,$log,$timeout,summaryService,rxService,$http,$filter,$uibModal) {
   	rxSearchComp = this;
 
   	rxSearchComp.$onInit = function(){
@@ -14,8 +14,25 @@ const MedsearchComponent = {
  	}
   	
   	rxSearchComp.fullSearch = function(){
-  		alert("Not Implemented Yet");
   		console.log("Would search for ",rxSearchComp.selected);
+  		var dr = $stateParams.demographicNo;
+		var modalInstance = $uibModal.open({
+			component : 'fullsearchComponent',
+			size : 'lg',
+			resolve : {
+				drug : function() {
+					return dr;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(selectedItem) {
+			console.log("reprint item", selectedItem);
+			rxSearchComp.medSelected({med:selectedItem});
+		}, function() {
+			console.log('Modal dismissed at: ' + new Date());
+		});
+  		
   	}
   	
   	rxSearchComp.customDrug = function(){

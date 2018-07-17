@@ -110,6 +110,77 @@ public class RxLookupService extends AbstractServiceImpl {
         return resp;
 
     }
+    
+    
+    @GET
+    @Path("/fullSearch")
+    @Produces("application/json")
+    public DrugLookupResponse fullSearch(@QueryParam("string") String s) {
+
+        DrugLookupResponse resp = new DrugLookupResponse();
+
+        List<DrugSearchTo1> drugs;
+
+        try {
+
+            drugs = this.drugLookUpManager.fullSearch(s);
+
+            if (drugs != null) {
+
+                resp.setDrugs(drugs);
+                resp.setSuccess(true);
+
+            } else {
+
+                resp.setMessage("Failed to find drugs that match: " + s);
+                resp.setSuccess(false);
+
+            }
+
+        } catch (Exception e) {
+            logger.error(e.getStackTrace());
+            resp.setSuccess(false);
+            resp.setMessage("Failed to complete lookup!");
+        }
+
+        return resp;
+
+    }
+    
+    @GET
+    @Path("/searchByElement")
+    @Produces("application/json")
+    public DrugLookupResponse searchByElement(@QueryParam("string") String s) {
+
+        DrugLookupResponse resp = new DrugLookupResponse();
+
+        List<DrugSearchTo1> drugs;
+
+        try {
+
+            drugs = this.drugLookUpManager.searchByElement(s);
+
+            if (drugs != null) {
+
+                resp.setDrugs(drugs);
+                resp.setSuccess(true);
+
+            } else {
+
+                resp.setMessage("Failed to find drugs that match: " + s);
+                resp.setSuccess(false);
+
+            }
+
+        } catch (Exception e) {
+            logger.error(e.getStackTrace());
+            resp.setSuccess(false);
+            resp.setMessage("Failed to complete lookup!");
+        }
+
+        return resp;
+
+    }
 
     /**
      * Gets details of a specific drug product
