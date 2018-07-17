@@ -24,35 +24,75 @@
 
 package org.oscarehr.dashboard.handler;
 
-import java.util.HashMap;
+//import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+//import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicExtDao;
+import org.oscarehr.util.LoggedInInfo;
+//import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+
+import net.sf.json.JSONArray;
 
 public class ExcludeDemographicHandler {
 	
+//	private static Logger logger = MiscUtils.getLogger();
+	
 	static DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 	List<Integer> demoIds;
+	private LoggedInInfo loggedInInfo;
+	private String excludeIndicator = "excludeIndicator";
 	
 	public List<Integer> getDemoIds(String indicatorName) {
-		demoIds = demographicExtDao.findDemographicIdsByKeyVal("excludeIndicator", indicatorName);
+		demoIds = demographicExtDao.findDemographicIdsByKeyVal(excludeIndicator, indicatorName);
 		return demoIds;
 	}
 	
-	public Map<Integer,Boolean> getDemoIdMap() {
-		Map<Integer,Boolean> map = new HashMap<Integer,Boolean>();
-		for(Integer demoId:demoIds) {
-			if(true) { //patientScreenedInLastYear(demoId)) {
-				map.put(demoId, true);
-			}
+	public void excludeDemoId(Integer demographicNo, String indicatorName) {
+		if (demographicNo == null || indicatorName == null || indicatorName.isEmpty()) return;
+		String providerNo = null;
+		if (loggedInInfo != null) {
+			providerNo = getLoggedinInfo().getLoggedInProviderNo();
 		}
-		//r.setAboriginalScreened1yr(map.keySet().size());
-		return map;
+		demographicExtDao.saveDemographicExt(demographicNo, excludeIndicator, indicatorName);
 	}
 	
-	public void excludeDemoId(Integer demographicNo, String indicatorName) {
-		demographicExtDao.saveDemographicExt(demographicNo, "excludeIndicator", indicatorName);
+	public void excludeDemoIds(List<Integer> demographicNos, String indicatorName) {
+		if (demographicNos == null || demographicNos.isEmpty() || indicatorName == null || indicatorName.isEmpty()) return;
+		String providerNo = null;
+		if (loggedInInfo != null) {
+			providerNo = getLoggedinInfo().getLoggedInProviderNo();
+		}
+		for (Integer demographicNo: demographicNos) {
+			demographicExtDao.addKey(providerNo, demographicNo, excludeIndicator, indicatorName);
+		}
 	}
+	
+	public void excludeDemoIds( String jsonString, String indicatorName ) {
+		String providerNo = null;
+		if (loggedInInfo != null) {
+			providerNo = getLoggedinInfo().getLoggedInProviderNo();
+		}
+		if( jsonString == null || jsonString.isEmpty() || indicatorName == null || indicatorName.isEmpty()) return;
+		if( ! jsonString.startsWith("[")) {
+			jsonString = "[" + jsonString;
+		}
+		if( ! jsonString.endsWith("]")) {
+			jsonString = jsonString + "]";
+		}
+		JSONArray jsonArray = JSONArray.fromObject( jsonString );
+		Integer arraySize = jsonArray.size();
+		for (int i = 0; i < arraySize; i++) {
+			demographicExtDao.addKey(providerNo, jsonArray.getInt(i), excludeIndicator, indicatorName);
+		}
+	}
+	
+	public LoggedInInfo getLoggedinInfo() {
+		return loggedInInfo;
+	}
+
+	public void setLoggedinInfo(LoggedInInfo loggedInInfo) {
+		this.loggedInInfo = loggedInInfo;
+	}	
 }
