@@ -495,7 +495,7 @@ public class Immunization<T extends AbstractModel<Integer> & ImmunizationInterfa
 			}
 		}
 		
-		if( "provider".equals(provider) ) {
+		if( "provider".equals(provider)  && !StringUtils.isEmpty(getOscarResource().getProviderName())) {
 			display = getOscarResource().getProviderName();
 		}
 		
