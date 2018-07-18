@@ -24,23 +24,26 @@
 
 package org.oscarehr.dashboard.handler;
 
+import java.util.ArrayList;
 //import java.util.ArrayList;
 import java.util.List;
 
-//import org.apache.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DemographicExtDao;
+import org.oscarehr.common.model.DemographicExt;
 import org.oscarehr.util.LoggedInInfo;
-//import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import net.sf.json.JSONArray;
 
 public class ExcludeDemographicHandler {
 	
-//	private static Logger logger = MiscUtils.getLogger();
+	private static Logger logger = MiscUtils.getLogger();
 	
 	static DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 	List<Integer> demoIds;
+	List<DemographicExt> demoExts;
 	private LoggedInInfo loggedInInfo;
 	private String excludeIndicator = "excludeIndicator";
 	
@@ -49,13 +52,28 @@ public class ExcludeDemographicHandler {
 		return demoIds;
 	}
 	
+	public List<DemographicExt> getDemoExts(String indicatorName) {
+		demoExts = new ArrayList<DemographicExt>();
+		List<DemographicExt> allProviderExts = demographicExtDao.getDemographicExtByKeyAndValue(excludeIndicator, indicatorName);
+		String providerNo = null;
+		if (loggedInInfo != null) {
+			providerNo = getLoggedinInfo().getLoggedInProviderNo();
+		}
+		for (DemographicExt e: allProviderExts) {
+			if (e.getProviderNo().equals(providerNo)) {
+				demoExts.add(e);
+			}
+		}
+		return demoExts;
+	}
+	
 	public void excludeDemoId(Integer demographicNo, String indicatorName) {
 		if (demographicNo == null || indicatorName == null || indicatorName.isEmpty()) return;
 		String providerNo = null;
 		if (loggedInInfo != null) {
 			providerNo = getLoggedinInfo().getLoggedInProviderNo();
 		}
-		demographicExtDao.saveDemographicExt(demographicNo, excludeIndicator, indicatorName);
+		demographicExtDao.addKey(providerNo, demographicNo, excludeIndicator, indicatorName);
 	}
 	
 	public void excludeDemoIds(List<Integer> demographicNos, String indicatorName) {
@@ -66,6 +84,23 @@ public class ExcludeDemographicHandler {
 		}
 		for (Integer demographicNo: demographicNos) {
 			demographicExtDao.addKey(providerNo, demographicNo, excludeIndicator, indicatorName);
+			logger.info("demo: " + demographicNo + "excluded from indicatorTemplate " + indicatorName);
+		}
+	}
+	
+	public void unExcludeDemoIds(List<Integer> demographicNos, String indicatorName) {
+		if (demographicNos == null || demographicNos.isEmpty() || indicatorName == null || indicatorName.isEmpty()) return;
+		List<DemographicExt> allProvidersExts = demographicExtDao.getDemographicExtByKeyAndValue(excludeIndicator, indicatorName);
+		String providerNo = null;
+		if (loggedInInfo != null) {
+			providerNo = getLoggedinInfo().getLoggedInProviderNo();
+		}
+		for (DemographicExt e: allProvidersExts) {
+			// remove exclusion if provider_no matches or is null and the demongraphic_no matches
+			if (e.getProviderNo().equals(providerNo) && demographicNos.contains(e.getDemographicNo())) {
+				demographicExtDao.removeDemographicExt(e.getId());
+				logger.info("demo: " + e.getDemographicNo() + "unexcluded from indicatorTemplate " + indicatorName);
+			}
 		}
 	}
 	
@@ -86,6 +121,25 @@ public class ExcludeDemographicHandler {
 		for (int i = 0; i < arraySize; i++) {
 			demographicExtDao.addKey(providerNo, jsonArray.getInt(i), excludeIndicator, indicatorName);
 		}
+	}
+	
+	public void unExcludeDemoIds( String jsonString, String indicatorName ) {
+		String providerNo = null;
+		if (loggedInInfo != null) {
+			providerNo = getLoggedinInfo().getLoggedInProviderNo();
+		}
+		if( jsonString == null || jsonString.isEmpty() || indicatorName == null || indicatorName.isEmpty()) return;
+		if( ! jsonString.startsWith("[")) {
+			jsonString = "[" + jsonString;
+		}
+		if( ! jsonString.endsWith("]")) {
+			jsonString = jsonString + "]";
+		}
+		JSONArray jsonArray = JSONArray.fromObject( jsonString );
+//		Integer arraySize = jsonArray.size();
+//		for (int i = 0; i < arraySize; i++) {
+//			demographicExtDao.addKey(providerNo, jsonArray.getInt(i), excludeIndicator, indicatorName);
+//		}
 	}
 	
 	public LoggedInInfo getLoggedinInfo() {
