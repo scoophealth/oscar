@@ -24,9 +24,9 @@
 			<th>reRx</th>
 			<th>Action</th>
 		</tr>
-		<tr ng-repeat="drug in $ctrl.rxComp.drugs | filter:$ctrl.drugProfileFilter" 
+		<tr ng-repeat="drug in $ctrl.rxComp.drugs | filter:$ctrl.drugProfileFilter | orderBy: '-rxDate'" 
 		    ng-class="{'danger' : ($ctrl.daysToExp(drug) === 0 && drug.longTerm), 'warning': ($ctrl.daysToExp(drug) < 31 && $ctrl.daysToExp(drug) > 0)}"  
-		    ng-if="$ctrl.daysToExp(drug) > 0 || drug.longTerm">
+		    ng-if="drug.longTerm || $ctrl.daysToExp(drug) > 0">
 		<%--  --%>
 			<td ng-class="{ 'deletedItem': drug.archived }">
 				<a ng-click="$ctrl.medhistory(drug)">{{drug.instructions}}</a>
@@ -62,7 +62,7 @@
 			<th>reRx</th>
 			<th>Action</th>
 		</tr>
-		<tr ng-repeat="drug in $ctrl.rxComp.drugs | filter:$ctrl.drugProfileFilter"
+		<tr ng-repeat="drug in $ctrl.rxComp.drugs | filter:$ctrl.drugProfileFilter | orderBy: '-rxDate'"
 			ng-if="$ctrl.daysToExp(drug) == 0 && !drug.longTerm">
 			
 			<td ng-class="{ 'deletedItem': drug.archived }">

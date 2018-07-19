@@ -55,6 +55,7 @@ const RxProfileComponent = {
   		profileObject.profileList = [];
   		for(i=0; i < drugList.length; i++){
 	  			//Group drugs by ATC code, if ATC code is blank treat as separate drugs
+  				console.log(drugList[i].drugId+": drugname "+drugList[i].brandName+"  --  "+drugList[i].rxDate,drugList[i].longTerm);
   				if(drugList[i].atc == null || drugList[i].atc === ""){
   					profileObject.profileList.push(drugList[i]);
   				}else{
@@ -76,7 +77,7 @@ const RxProfileComponent = {
   		if(angular.isDefined(changesObj.fulldrugs)){
   			console.log("was defined");
   			drugList = changesObj.fulldrugs.currentValue;
-  			fullDrugList = $filter('orderBy')(drugList, 'rxDate', true);
+  			fullDrugList = drugList;//$filter('orderBy')(drugList, 'rxDate', true);
   			rxProfileComp.processList(fullDrugList);
   		}
   	}
@@ -257,8 +258,20 @@ const RxProfileComponent = {
   	}
     
     rxProfileComp.setAsLongTermMed = function(drug){
-  		alert("Not Implemented Yet");
-  		console.log("Not Implemented Yet",drug);
+    	if (confirm("Are you sure you want to set this medication to long term?")) {
+    			drug.longTerm = true;
+  			rxService.updateMedication(drug.demographicNo,drug).then(
+					function(d) {
+						
+						console.log("d",d)
+					},
+					function(errorMessage) {
+						console.log("Error parsing Intruction",errorMessage);
+					}
+				);
+		}
+  		
+  		
   	}
     rxProfileComp.annotate = function(drug){
     	    
