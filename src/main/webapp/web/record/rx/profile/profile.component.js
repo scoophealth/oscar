@@ -55,7 +55,7 @@ const RxProfileComponent = {
   		profileObject.profileList = [];
   		for(i=0; i < drugList.length; i++){
 	  			//Group drugs by ATC code, if ATC code is blank treat as separate drugs
-  				console.log(drugList[i].drugId+": drugname "+drugList[i].brandName+"  --  "+drugList[i].rxDate,drugList[i].longTerm);
+  				
   				if(drugList[i].atc == null || drugList[i].atc === ""){
   					profileObject.profileList.push(drugList[i]);
   				}else{
@@ -69,6 +69,14 @@ const RxProfileComponent = {
 		  			}	
   				}
 	  	}
+  		newList = [];
+  		for(i=0; i < profileObject.profileList.length; i++){
+  			console.log(i+":"+profileObject.profileList.length+"  -- archived"+drugList[i].drugId+": drugname "+drugList[i].brandName+"  --  "+drugList[i].rxDate,drugList[i].longTerm);
+			if(!profileObject.profileList[i].archived){
+				newList.push(profileObject.profileList[i]);
+			}
+  		}
+  		profileObject.profileList = newList;
   		return profileObject;
   	}
   	
