@@ -273,6 +273,24 @@ const RxProfileComponent = {
   		
   		
   	}
+    
+    rxProfileComp.unsetAsLongTermMed = function(drug){
+    	if (confirm("Are you sure you want to unset this medication as long term?")) {
+			drug.longTerm = false;
+			rxService.updateMedication(drug.demographicNo,drug).then(
+				function(d) {
+					
+					console.log("d",d)
+				},
+				function(errorMessage) {
+					console.log("Error parsing Intruction",errorMessage);
+				}
+			);
+	}
+		
+		
+	}
+    
     rxProfileComp.annotate = function(drug){
     	    
     		var winX = (document.all)?window.screenLeft:window.screenX;

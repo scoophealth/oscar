@@ -43,7 +43,8 @@
 					    <li><a ng-click="$ctrl.discontinue(drug)" >Discontinue</a></li>
 					    <li><a ng-click="$ctrl.delete(drug)" >Delete</a></li>
 					    <li><a ng-click="$ctrl.addReason(drug)" >Add Reason</a></li>
-					    <li><a ng-click="$ctrl.setAsLongTermMed(drug)" >Set as Long Term Med</a></li>
+					    <li ng-if="!drug.longTerm"><a ng-click="$ctrl.setAsLongTermMed(drug)" >Set as Long Term Med</a></li>
+					    <li ng-if="drug.longTerm"><a ng-click="$ctrl.unsetAsLongTermMed(drug)" >Unset as Long Term Med</a></li>
 					    <li><a ng-click="$ctrl.annotate(drug)" >Annotate</a></li>
 					    <%-- Kunal says these are no longer required for ontario md li><a ng-click="$ctrl.hideFromCPP(drug)" >Hide From CPP</a></li>
 					    <li><a ng-click="$ctrl.moveUpInList(drug)" >Move up in list</a></li>
