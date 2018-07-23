@@ -93,7 +93,7 @@ public class DemographicContactDao extends AbstractDao<DemographicContact>{
 	public List<DemographicContact> findAllByDemographicNoAndCategoryAndType(int demographicNo, String category, int type) {
 		String sql = "select x from " + this.modelClass.getName() + " x where x.demographicNo = ? and x.category = ? and x.type = ? and x.active=1 and deleted=false";
 		Query query = entityManager.createQuery(sql);
-		query.setParameter(1, demographicNo+"");
+		query.setParameter(1, demographicNo);
 		query.setParameter(2, category);
 		query.setParameter(3, type);
 		
