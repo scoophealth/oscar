@@ -54,7 +54,13 @@
 
 		{{mod.displayName}}
 		</legend>
-
+		   <div ng-if="mod.status === 'loading'">
+			   Loading...
+		   </div>
+		   <div ng-if="mod.status === 'error'" style="color:red;">
+			   Server Connection Error
+		   </div>
+		   <div ng-if="mod.status === 'ok'">
         	<ul style="padding-left:12px;">
         	<%-- href="{{item.action}}" --%>
         	<li ng-repeat="item in mod.summaryItem" ng-show="$index < mod.displaySize"><span class="pull-right">{{item.date | date : 'dd-MMM-yyyy'}}</span><a ng-click="gotoState(item,mod,item.id)" href="javascript:void(0)" ng-class="item.indicatorClass" popover="{{item.displayName}} {{item.warning}}" popover-trigger="mouseenter">{{item.displayName | limitTo: 34 }} {{item.displayName.length > 34 ? '...' : '' }}<small ng-show="item.classification">({{item.classification}})</small></a> </li> 			
@@ -66,6 +72,7 @@
         	</ul>
 
 		<span ng-class="showMoreItemsSymbol(mod)" ng-click="toggleList(mod)" ng-show="showMoreItems(mod)"></span>
+		   </div>
        </fieldset>   
     </div>
     
@@ -125,12 +132,20 @@
 					<input type="text" class="form-control search-query" ng-model="incomingQ" placeholder="Search">
 				</div>
 			</legend>
+			<div ng-if="mod.status === 'loading'">
+				Loading...
+			</div>
+			<div ng-if="mod.status === 'error'" style="color:red;">
+				Server Connection Error
+			</div>
+			<div ng-if="mod.status === 'ok'">
         	<ul style="padding-left:12px;">
         	<%-- href="{{item.action}}" --%>
         	<li ng-repeat="item in mod.summaryItem | filter:incomingQ" ng-show="$index < mod.displaySize"  ><span class="pull-right">{{item.date | date : 'dd-MMM-yyyy'}}</span><a ng-click="gotoState(item)" class="hand-hover" ng-class="{true: 'abnormal', false: ''}[item.abnormalFlag]">{{item.displayName}}<small ng-show="item.classification">({{item.classification}})</small></a> </li> 
         	</ul>
         	       	
         	<span ng-class="showMoreItemsSymbol(mod)" ng-click="toggleList(mod)" ng-show="showMoreItems(mod)"></span>
+			</div>
        </fieldset>
 	 	
 	 <%-- 

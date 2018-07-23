@@ -1,6 +1,6 @@
 <eformap-config>
 
-<!-- Date information -->
+<!-- DATE INFORMATION -->
     <databaseap>
         <ap-name>today</ap-name>
         <ap-sql>SELECT curdate()</ap-sql>
@@ -11,104 +11,7 @@
         <ap-sql>SELECT curtime()</ap-sql>
         <ap-output>${curtime()}</ap-output>
     </databaseap>
-    
-    <databaseap>
-        <ap-name>appt_date</ap-name>
-        <ap-sql>SELECT appointment_date from appointment WHERE appointment_no=${appt_no}</ap-sql>
-        <ap-output>${appointment_date}</ap-output>
-    </databaseap>
-
-<!-- Current eform information -->
-    <databaseap>
-        <ap-name>current_form_id</ap-name>
-        <ap-sql>SELECT '${fid}' AS fid</ap-sql>
-        <ap-output>${fid}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>current_form_data_id</ap-name>
-        <ap-sql>SELECT '${fdid}' AS fdid</ap-sql>
-        <ap-output>${fdid}</ap-output>
-    </databaseap>
-
-<!-- Current user information -->
-    <databaseap>
-        <ap-name>current_user</ap-name>
-        <ap-sql>SELECT provider.first_name, provider.last_name FROM provider WHERE provider.provider_no='${provider}' </ap-sql>
-        <ap-output>${last_name}, ${first_name}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>current_user_fname_lname</ap-name>
-        <ap-sql>SELECT provider.first_name, provider.last_name FROM provider WHERE provider.provider_no='${provider}' </ap-sql>
-        <ap-output>${first_name} ${last_name}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>current_user_ohip_no</ap-name>
-        <ap-sql>SELECT provider.ohip_no FROM provider WHERE provider.provider_no='${provider}' </ap-sql>
-        <ap-output>${ohip_no}</ap-output>
-    </databaseap>
-     <databaseap>
-        <ap-name>current_user_specialty_code</ap-name>
-        <ap-sql>SELECT
-                 MID( comments,
-                       INSTR(comments,'&lt;xml_p_specialty_code&gt;')+22,
-                       INSTR(comments,'&lt;/xml_p_specialty_code&gt;')-INSTR(comments,'&lt;xml_p_specialty_code&gt;')-22
-                 ) AS specialty_code
-               FROM provider WHERE provider_no='${provider}' </ap-sql>
-        <ap-output>${specialty_code}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>current_user_cpsid</ap-name>
-        <ap-sql>SELECT provider.practitionerNo FROM provider WHERE provider.provider_no='${provider}' </ap-sql>
-        <ap-output>${practitionerNo}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>current_user_id</ap-name>
-        <ap-sql>SELECT '${provider}' AS providerId</ap-sql>
-        <ap-output>${providerId}</ap-output>
-    </databaseap>
-    <databaseap>
-	<ap-name>current_user_signature</ap-name>
-	<ap-sql>SELECT providerExt.signature FROM providerExt WHERE providerExt.provider_no='${provider}' </ap-sql>
-	<ap-output>${signature}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>current_user_address</ap-name>
-        <ap-sql>SELECT address FROM provider WHERE provider_no='${provider}' </ap-sql>
-        <ap-output>${address}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>current_user_phone</ap-name>
-        <ap-sql>SELECT phone FROM provider WHERE provider_no='${provider}' </ap-sql>
-        <ap-output>${phone}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>current_user_workphone</ap-name>
-        <ap-sql>SELECT work_phone FROM provider WHERE provider_no='${provider}' </ap-sql>
-        <ap-output>${work_phone}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>current_user_email</ap-name>
-        <ap-sql>SELECT email FROM provider WHERE provider_no='${provider}' </ap-sql>
-        <ap-output>${email}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>current_user_fax</ap-name>
-        <ap-sql>SELECT
-            MID( comments,
-                INSTR(comments,'&lt;xml_p_fax&gt;')+11,
-                INSTR(comments,'&lt;/xml_p_fax&gt;')-INSTR(comments,'&lt;xml_p_fax&gt;')-11
-            ) AS fax
-            FROM provider WHERE provider_no='${provider}' </ap-sql>
-        <ap-output>${fax}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>current_user_team</ap-name>
-        <ap-sql>SELECT team FROM provider WHERE provider_no='${provider}' </ap-sql>
-        <ap-output>${team}</ap-output>
-    </databaseap>
-
-    
-<!-- Patient demographic information -->
+<!-- PATIENT DEMOGRAPHICS -->
     <databaseap>
         <ap-name>patient_name</ap-name>
         <ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
@@ -139,6 +42,11 @@
         <ap-output>${alias}</ap-output>
         <ap-insql>UPDATE demographic SET alias='${value}' WHERE demographic_no=${demographic}</ap-insql>
         <archive>demographic</archive>
+    </databaseap>
+    <databaseap>
+        <ap-name>patient_title</ap-name>
+        <ap-sql>SELECT title FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${title}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>patient_id</ap-name>
@@ -200,6 +108,11 @@
         <ap-sql>SELECT date_of_birth, month_of_birth, year_of_birth FROM demographic WHERE demographic_no=${demographic}</ap-sql>
         <ap-output>${month_of_birth}/${date_of_birth}/${year_of_birth}</ap-output>
     </databaseap>
+    <databaseap>
+        <ap-name>dob_MONTH-dd-yyyy</ap-name>
+        <ap-sql>SELECT date_of_birth, month_of_birth, year_of_birth, SUBSTRING(MONTHNAME(concat(year_of_birth,"-",month_of_birth,"-",date_of_birth)),1,3) as month_name FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${month_name}-${date_of_birth}-${year_of_birth}</ap-output>
+    </databaseap>
      <databaseap>
         <ap-name>dob_year</ap-name>
         <ap-sql>SELECT year_of_birth FROM demographic WHERE demographic_no=${demographic}</ap-sql>
@@ -235,6 +148,12 @@
         <ap-sql>SELECT ver FROM demographic WHERE demographic_no=${demographic}</ap-sql>
         <ap-output>${ver}</ap-output>
     </databaseap>
+	<databaseap>
+		<ap-name>hc_type</ap-name>
+		<ap-sql>SELECT hc_type FROM demographic WHERE
+			demographic_no=${demographic}</ap-sql>
+		<ap-output>${hc_type}</ap-output>
+	</databaseap>
     <databaseap>
         <ap-name>hc_renew_date</ap-name>
         <ap-sql>SELECT hc_renew_date FROM demographic WHERE demographic_no=${demographic}</ap-sql>
@@ -244,6 +163,11 @@
         <ap-name>chartno</ap-name>
         <ap-sql>SELECT chart_no FROM demographic WHERE demographic_no=${demographic}</ap-sql>
         <ap-output>${chart_no}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>email</ap-name>
+        <ap-sql>SELECT email FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${email}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>phone</ap-name>
@@ -286,13 +210,56 @@
                 (IF ( (((YEAR(CURRENT_DATE) - 1) * 12 + MONTH(CURRENT_DATE)) - ((YEAR(@bdate) - 1) * 12 + MONTH(@bdate))) - (MID(@bdate, 9, 2) &lt;  MID(@bdate, 9, 2))&lt; 3,
                 (IF ( FLOOR((TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate))/7)&lt; 5,
                 (IF ( (TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate))&lt; 2,
-                'newborn', CONCAT((TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate)),' day old'))), CONCAT(FLOOR((TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate))/7),' week old'))), CONCAT((((YEAR(CURRENT_DATE) - 1) * 12 + MONTH(CURRENT_DATE)) - ((YEAR(@bdate) - 1) * 12 + MONTH(@bdate))) - (MID(@bdate, 9, 2) &lt;  MID(@bdate, 9, 2)),' month old'))), CONCAT((YEAR(CURRENT_DATE) - YEAR(@bdate)) - (MID(CURRENT_DATE, 6, 5) &lt;  MID(CURRENT_DATE, 6, 5)),' year old'))) as ageComplex from (SELECT @bdate:=
+                'newborn', CONCAT((TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate)),' day old'))), CONCAT(FLOOR((TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate))/7),' week old'))), CONCAT((((YEAR(CURRENT_DATE) - 1) * 12 + MONTH(CURRENT_DATE)) - ((YEAR(@bdate) - 1) * 12 + MONTH(@bdate))) - (MID(@bdate, 9, 2) &lt;  MID(@bdate, 9, 2)),' month old'))), CONCAT(TIMESTAMPDIFF(YEAR,@bdate,CURRENT_DATE),' year old'))) as ageComplex from (SELECT @bdate:=
                 DATE_FORMAT(CONCAT((demographic.year_of_birth), '-', (demographic.month_of_birth), '-', (demographic.date_of_birth)),'%Y-%m-%d') AS birthdate FROM demographic WHERE demographic_no=${demographic}) as t</ap-sql>
         <ap-output>${ageComplex}</ap-output>
     </databaseap>
+	<databaseap>
+		<ap-name>ageComplex2</ap-name>
+		<ap-sql>SELECT
+			(IF ( (TO_DAYS(CURRENT_DATE) - TO_DAYS(@bdate))&lt; 365,<!--IF Less than 
+				one year Old -->
+			(IF ((TO_DAYS(CURRENT_DATE)-TO_DAYS(@bdate))&lt; 31,<!-- {IF less than 
+				31 days old -->
+			CONCAT((TO_DAYS(CURRENT_DATE)-TO_DAYS(@bdate)), ' days old'),<!-- {Print 
+				Age in Days} -->
+			(IF ((DAY(CURRENT_DATE)-DAY(@bdate))&lt;0,<!-- ELSE { print in months 
+				and week}} -->
+			CONCAT((((YEAR(CURRENT_DATE) - 1) * 12 + MONTH(CURRENT_DATE)-1) -
+			((YEAR(@bdate) - 1) * 12 + MONTH(@bdate))) - (MID(@bdate, 9, 2) &lt;
+			MID(@bdate, 9, 2)),' months ',FLOOR((DAY(CURRENT_DATE)/7)),' weeks
+			old'),
+			CONCAT((((YEAR(CURRENT_DATE) - 1) * 12 + MONTH(CURRENT_DATE)) - ((YEAR(@bdate) - 1) * 12 +
+			MONTH(@bdate))) - (MID(@bdate, 9, 2) &lt; MID(@bdate, 9, 2)),' month
+			old ',FLOOR(((DAY(CURRENT_DATE)-DAY(@bdate))/7)),' weeks old'))))),
+			CONCAT(TIMESTAMPDIFF(YEAR,@bdate,CURRENT_DATE)," years
+			",MOD(TIMESTAMPDIFF(MONTH,@bdate,CURRENT_DATE),12)," Months"))) as
+			ageComplex2 from (SELECT @bdate:=
+			DATE_FORMAT(CONCAT((demographic.year_of_birth), '-',
+			(demographic.month_of_birth), '-',
+			(demographic.date_of_birth)),'%Y-%m-%d') AS birthdate FROM
+			demographic WHERE demographic_no=${demographic}) as t
+		</ap-sql>
+		<ap-output>${ageComplex2}</ap-output>
+	</databaseap>
     <databaseap>
         <ap-name>sex</ap-name>
         <ap-sql>SELECT sex FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${sex}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>She_He</ap-name>
+        <ap-sql>SELECT IF(sex='M', 'He', 'She') as sex FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${sex}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>her_him</ap-name>
+        <ap-sql>SELECT IF(sex='M', 'him', 'her') as sex FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${sex}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>her_his</ap-name>
+        <ap-sql>SELECT IF(sex='M', 'his', 'her') as sex FROM demographic WHERE demographic_no=${demographic}</ap-sql>
         <ap-output>${sex}</ap-output>
     </databaseap>
     <databaseap>
@@ -300,154 +267,82 @@
         <ap-sql>SELECT sin FROM demographic WHERE demographic_no=${demographic}</ap-sql>
         <ap-output>${sin}</ap-output>
     </databaseap>
+
+<!-- PATIENT'S PARTNER -->
     <databaseap>
-        <ap-name>date_joined</ap-name>
-        <ap-sql>SELECT date_joined FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-        <ap-output>${date_joined}</ap-output>
+        <ap-name>partner_nameL</ap-name>
+        <ap-sql>SELECT last_name FROM demographic WHERE demographic_no IN (SELECT relation_demographic_no FROM relationships WHERE demographic_no=${demographic} AND relation in ('Partner', 'Husband', 'Wife') AND (deleted='0' or deleted is null) ) LIMIT 1</ap-sql>
+        <ap-output>${last_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>partner_nameF</ap-name>
+        <ap-sql>SELECT first_name FROM demographic WHERE demographic_no IN (SELECT relation_demographic_no FROM relationships WHERE demographic_no=${demographic} AND relation in ('Partner', 'Husband', 'Wife')  AND (deleted='0' or deleted is null) ) LIMIT 1</ap-sql>
+        <ap-output>${first_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>partner_dob</ap-name>
+        <ap-sql>SELECT date_of_birth, month_of_birth, year_of_birth FROM demographic WHERE demographic_no IN (SELECT relation_demographic_no FROM relationships WHERE demographic_no=${demographic} AND relation in ('Partner', 'Husband', 'Wife') AND (deleted='0' or deleted is null) ) LIMIT 1</ap-sql>
+        <ap-output>${date_of_birth}/${month_of_birth}/${year_of_birth} (d/m/y)</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>partner_dobc2</ap-name>
+        <ap-sql>SELECT date_of_birth, month_of_birth, year_of_birth FROM demographic WHERE demographic_no IN (SELECT relation_demographic_no FROM relationships WHERE demographic_no=${demographic} AND relation in ('Partner', 'Husband', 'Wife') AND (deleted='0' or deleted is null) ) LIMIT 1</ap-sql>
+        <ap-output>${year_of_birth}/${month_of_birth}/${date_of_birth}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>partner_hin</ap-name>
+        <ap-sql>SELECT hin, ver FROM demographic WHERE demographic_no IN (SELECT relation_demographic_no FROM relationships WHERE demographic_no=${demographic} AND relation in ('Partner', 'Husband', 'Wife') AND (deleted='0' or deleted is null) ) LIMIT 1</ap-sql>
+        <ap-output>${hin} ${ver}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>partner_phone</ap-name>
+        <ap-sql>SELECT phone FROM demographic WHERE demographic_no IN (SELECT relation_demographic_no FROM relationships WHERE demographic_no=${demographic} AND relation in ('Partner', 'Husband', 'Wife') AND (deleted='0' or deleted is null) ) LIMIT 1</ap-sql>
+        <ap-output>${phone}</ap-output>
     </databaseap>
 
-
-<!-- Patient medical information -->
+<!-- PATIENTS MRP -->
     <databaseap>
-        <ap-name>medical_history</ap-name>
-        <ap-sql>SELECT GROUP_CONCAT(t.medicalHistory SEPARATOR ', ') as medicalHistories FROM( SELECT notes.note as medicalHistory FROM (SELECT cn.position, iss.id, iss.demographic_no as demo, iss.issue_id, cin.note_id, cn.note
-		FROM casemgmt_issue iss, casemgmt_issue_notes cin, casemgmt_note cn, issue i
-		WHERE iss.id = cin.id AND iss.issue_id=i.issue_id AND i.code='MedHistory' AND cin.note_id = cn.note_id AND iss.demographic_no =${demographic} 
-		ORDER BY cn.note_id DESC) as notes GROUP BY notes.position) AS t</ap-sql>
-        <ap-output>${medicalHistories}</ap-output>
+        <ap-name>doctor_title</ap-name>
+        <ap-sql>SELECT provider.title FROM provider, demographic WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+        <ap-output>${title}</ap-output>
     </databaseap>
-    <databaseap>
-        <ap-name>other_medications_history</ap-name>
-        <ap-sql>SELECT GROUP_CONCAT(t.omed SEPARATOR ', ') as omeds FROM( SELECT notes.note as omed FROM (SELECT cn.position, iss.id, iss.demographic_no as demo, iss.issue_id, cin.note_id, cn.note
-		FROM casemgmt_issue iss, casemgmt_issue_notes cin, casemgmt_note cn, issue i
-		WHERE iss.id = cin.id AND iss.issue_id=i.issue_id AND i.code='OMeds' AND cin.note_id = cn.note_id AND iss.demographic_no =${demographic} 
-		ORDER BY cn.note_id DESC) as notes GROUP BY notes.position) AS t</ap-sql>
-        <ap-output>${omeds}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>social_family_historyc</ap-name>
-        <ap-sql>SELECT GROUP_CONCAT(t.socialHistory SEPARATOR ', ') as socialHistories FROM( SELECT notes.note as socialHistory FROM (SELECT cn.position, iss.id, iss.demographic_no as demo, iss.issue_id, cin.note_id, cn.note
-		FROM casemgmt_issue iss, casemgmt_issue_notes cin, casemgmt_note cn, issue i
-		WHERE iss.id = cin.id AND iss.issue_id=i.issue_id AND i.code='SocHistory' AND cin.note_id = cn.note_id AND iss.demographic_no =${demographic} 
-		ORDER BY cn.note_id DESC) as notes GROUP BY notes.position) AS t</ap-sql>
-        <ap-output>${socialHistories}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>ongoingconcerns</ap-name>
-        <ap-sql>SELECT GROUP_CONCAT(t.concern SEPARATOR ', ') as concerns FROM( SELECT notes.note as concern FROM (SELECT cn.position, iss.id, iss.demographic_no as demo, iss.issue_id, cin.note_id, cn.note
-		FROM casemgmt_issue iss, casemgmt_issue_notes cin, casemgmt_note cn, issue i
-		WHERE iss.id = cin.id AND iss.issue_id=i.issue_id AND i.code='Concerns' AND cin.note_id = cn.note_id AND iss.demographic_no =${demographic} 
-		ORDER BY cn.note_id DESC) as notes GROUP BY notes.position) AS t</ap-sql>
-        <ap-output>${concerns}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>reminders</ap-name>
-        <ap-sql>SELECT GROUP_CONCAT(t.reminder SEPARATOR ', ') as reminders FROM( SELECT notes.note as reminder FROM (SELECT cn.position, iss.id, iss.demographic_no as demo, iss.issue_id, cin.note_id, cn.note
-		FROM casemgmt_issue iss, casemgmt_issue_notes cin, casemgmt_note cn, issue i
-		WHERE iss.id = cin.id AND iss.issue_id=i.issue_id AND i.code='Reminders' AND cin.note_id = cn.note_id AND iss.demographic_no =${demographic} 
-		ORDER BY cn.note_id DESC) as notes GROUP BY notes.position) AS t</ap-sql>
-        <ap-output>${reminders}</ap-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>risk_factors_json</ap-name>
-        <ap-sql>select s1.note as note from casemgmt_note s1, (select max(cn.note_id) as note_id from casemgmt_note cn, casemgmt_issue_notes cin 
-                where cn.note_id = cin.note_id and cin.id = (select id from casemgmt_issue 
-                where demographic_no=${demographic} and issue_id = (select issue_id from issue where code='riskfactors' limit 1) limit 1) group by cn.uuid) s2 
-                where s1.note_id = s2.note_id and s1.archived=0;
-        </ap-sql>
-        <ap-output>${note}</ap-output>
-        <ap-json-output>true</ap-json-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>family_history_json</ap-name>
-        <ap-sql>select s1.note as note from casemgmt_note s1, (select max(cn.note_id) as note_id from casemgmt_note cn, casemgmt_issue_notes cin 
-                where cn.note_id = cin.note_id and cin.id = (select id from casemgmt_issue 
-                where demographic_no=${demographic} and issue_id = (select issue_id from issue where code='famhistory' limit 1) limit 1) group by cn.uuid) s2 
-                where s1.note_id = s2.note_id and s1.archived=0;
-        </ap-sql>
-        <ap-output>${note}</ap-output>
-        <ap-json-output>true</ap-json-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>dxregistry</ap-name>
-    	<ap-sql>SELECT GROUP_CONCAT(icd9.description SEPARATOR ', ') AS dxlist FROM icd9, dxresearch WHERE status='A' AND coding_system='icd9' AND icd9.icd9=dxresearch.dxresearch_code AND demographic_no=${demographic};</ap-sql>
-    	<ap-output>${dxlist}</ap-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>OHIPdxCode</ap-name>
-    	<ap-sql>SELECT GROUP_CONCAT(DISTINCT billing_on_item.dx) AS ohipdxc FROM billing_on_item, billing_on_cheader1 WHERE billing_on_cheader1.id=billing_on_item.ch1_id AND billing_on_cheader1.demographic_no=${demographic};</ap-sql>
-    	<ap-output>${ohipdxc}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>allergies_des</ap-name>
-        <ap-sql>SELECT IF ((SELECT COUNT(*) FROM allergies, demographic	WHERE ( demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no AND allergies.archived=1))>0, 
-			CONCAT((SELECT GROUP_CONCAT(allergies.DESCRIPTION SEPARATOR ', ') FROM allergies, demographic WHERE demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no AND allergies.archived != 1),' \n','archived allergies:',(SELECT GROUP_CONCAT(allergies.DESCRIPTION SEPARATOR ', ') FROM allergies, demographic WHERE demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no AND allergies.archived = 1)), 
-			(SELECT GROUP_CONCAT(allergies.DESCRIPTION SEPARATOR ', ') FROM allergies, demographic WHERE demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no AND allergies.archived != 1)) 
-			as allergy</ap-sql>
-		<ap-output>${allergy}</ap-output>
-    </databaseap>
-    <databaseap>
-		<ap-name>allergies_des_no_archived</ap-name>
-		<ap-sql>SELECT GROUP_CONCAT(allergies.DESCRIPTION SEPARATOR ', ')as allergy FROM allergies, demographic
-				WHERE demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no AND allergies.archived != 1</ap-sql>
-		<ap-output>${allergy}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>recent_rx</ap-name>
-        <ap-sql>SELECT GROUP_CONCAT(CONCAT(p.date_prescribed,' ',SUBSTRING_INDEX(p.textView, '\n\n', -1)),' \n' ORDER BY p.date_prescribed DESC SEPARATOR '') AS rx FROM prescription p WHERE p.demographic_no=${demographic} </ap-sql>
-        <ap-output>${rx}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>today_rx</ap-name>
-        <ap-sql>SELECT GROUP_CONCAT(CONCAT(p.date_prescribed,' ',SUBSTRING_INDEX(p.textView, '\n\n', -1)),' \n' ORDER BY p.date_prescribed DESC SEPARATOR '') AS rx FROM prescription p WHERE p.demographic_no=${demographic} and p.date_prescribed=LEFT(now(),10) </ap-sql>
-        <ap-output>${rx}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>druglist_generic</ap-name>
-        <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, GN, d.customName) , if(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , if(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR ' \n' ) AS rxgen
-                FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK) AND d.archived='0';</ap-sql>
-        <ap-output>${rxgen}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>druglist_trade</ap-name>
-        <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, BN, d.customName) , if(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , if(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR ' \n' ) AS rxlist
-                FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK) AND d.archived='0';</ap-sql>
-        <ap-output>${rxlist}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>druglist_line</ap-name>
-        <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, CONCAT(UCASE(SUBSTRING(d.BN, 1, 1)),LOWER(SUBSTRING(d.BN, 2))), d.customName) , IF(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , IF(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR ', ' ) AS rxlist
-                FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK) AND d.archived='0';</ap-sql>
-        <ap-output>${rxlist}</ap-output>
-    </databaseap>
-
-<!-- Prenatal information -->
-    <databaseap>
-        <ap-name>onGTPAL</ap-name>
-        <ap-sql>SELECT  CONCAT('G',c_gravida,' T', c_term,' P' , c_prem,' A', c_abort ,' L', c_living) as onGTPAL FROM formONAREnhancedRecord f where demographic_no=${demographic} order by ID desc limit 1;</ap-sql>
-        <ap-output>${onGTPAL}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>onEDB</ap-name>
-        <ap-sql>SELECT  c_finalEDB FROM formONAREnhancedRecord f where demographic_no=${demographic} order by ID desc limit 1;</ap-sql>
-        <ap-output>${c_finalEDB}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>bcGTPAL</ap-name>
-        <ap-sql>SELECT CONCAT('G',pg1_gravida,' T', pg1_term ,' P',  pg1_preterm ,' A',  pg1_abortion, ' L', pg1_living ) AS bcGTPAL FROM formBCAR2012 where demographic_no=${demographic} ORDER BY ID DESC LIMIT 1;</ap-sql>
-        <ap-output>${bcGTPAL}</ap-output>
-    </databaseap>
-    <databaseap>
-        <ap-name>bcEDD</ap-name>
-        <ap-sql>SELECT  c_EDD FROM formBCAR2012 f where demographic_no=${demographic} order by ID desc limit 1;</ap-sql>
-        <ap-output>${c_EDD}</ap-output>
-    </databaseap>
-
-<!-- Doctor information -->
     <databaseap>
         <ap-name>doctor</ap-name>
         <ap-sql>SELECT provider.first_name, provider.last_name  FROM provider, demographic WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
         <ap-output>${last_name}, ${first_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>doctor_last_name</ap-name>
+        <ap-sql>SELECT provider.last_name  FROM provider, demographic WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+        <ap-output>${last_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>doctor_first_name</ap-name>
+        <ap-sql>SELECT provider.first_name  FROM provider, demographic WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+        <ap-output>${first_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>doctor_work_phone</ap-name>
+        <ap-sql>SELECT provider.work_phone FROM provider, demographic
+                WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+        <ap-output>${work_phone}</ap-output>
+    </databaseap>
+	<databaseap>
+		<ap-name>doctor_fax</ap-name>
+		<ap-sql>SELECT SUBSTR(p.comments,
+			LOCATE('&lt;xml_p_fax&gt;', p.comments )+11,
+			LOCATE('&lt;/xml_p_fax&gt;', p.comments )-(LOCATE('&lt;xml_p_fax&gt;', p.comments )+11)
+			) as fax
+			FROM provider p JOIN demographic d ON(d.provider_no=p.provider_no)
+			WHERE d.demographic_no = ${demographic};
+		</ap-sql>
+		<ap-output>${fax}</ap-output>
+	</databaseap>
+    <databaseap>
+        <ap-name>doctor_signature</ap-name>
+        <ap-sql>SELECT providerExt.signature FROM providerExt, demographic
+	WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=providerExt.provider_no</ap-sql>
+        <ap-output>${signature}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>doctor_provider_no</ap-name>
@@ -477,15 +372,40 @@
         <ap-output>${practitionerNo}</ap-output>
     </databaseap>
     <databaseap>
-	<ap-name>doctor_title</ap-name>
-	<ap-sql>SELECT provider.title FROM provider, demographic WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
-	<ap-output>${title}</ap-output>
+        <ap-name>audiologist_crn</ap-name>
+        <ap-sql>SELECT provider.practitionerNo FROM provider, demographiccust
+                WHERE demographiccust.demographic_no=${demographic} AND demographiccust.cust4=provider.provider_no</ap-sql>
+        <ap-output>${practitionerNo}</ap-output>
     </databaseap>
     <databaseap>
-        <ap-name>provider_name</ap-name>
-        <ap-sql>SELECT provider.last_name, provider.first_name FROM provider, demographic
-                WHERE demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+        <ap-name>audiologist_adp</ap-name>
+        <ap-sql>SELECT provider.hso_no FROM provider, demographiccust
+                WHERE demographiccust.demographic_no=${demographic} AND demographiccust.cust4=provider.provider_no</ap-sql>
+        <ap-output>${hso_no}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>audiologist_name</ap-name>
+        <ap-sql>SELECT provider.last_name, provider.first_name FROM provider, demographiccust
+                WHERE demographiccust.demographic_no=${demographic} AND demographiccust.cust4=provider.provider_no</ap-sql>
         <ap-output>${last_name}, ${first_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>audiologist_first_name</ap-name>
+        <ap-sql>SELECT provider.first_name FROM provider, demographiccust
+                WHERE demographiccust.demographic_no=${demographic} AND demographiccust.cust4=provider.provider_no</ap-sql>
+        <ap-output>${first_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>audiologist_last_name</ap-name>
+        <ap-sql>SELECT provider.last_name FROM provider, demographiccust
+                WHERE demographiccust.demographic_no=${demographic} AND demographiccust.cust4=provider.provider_no</ap-sql>
+        <ap-output>${last_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>audiologist_work_phone</ap-name>
+        <ap-sql>SELECT provider.work_phone FROM provider, demographiccust
+                WHERE demographiccust.demographic_no=${demographic} AND demographiccust.cust4=provider.provider_no</ap-sql>
+        <ap-output>${work_phone}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>provider_name_first_init</ap-name>
@@ -493,18 +413,24 @@
                 WHERE demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
         <ap-output>${first_init}. ${last_name}</ap-output>
     </databaseap>
+
+<!-- APPOINTMENTS -->
     <databaseap>
-        <ap-name>doctor_work_phone</ap-name>
-        <ap-sql>SELECT provider.work_phone FROM provider, demographic
-                WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
-        <ap-output>${work_phone}</ap-output>
-    </databaseap>
-    <databaseap>
-	<ap-name>doctor_signature</ap-name>
-	<ap-sql>SELECT providerExt.signature FROM providerExt, demographic
-	WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=providerExt.provider_no</ap-sql>
-	<ap-output>${signature}</ap-output>
-    </databaseap>
+        <ap-name>appt_date</ap-name>
+        <ap-sql>SELECT appointment_date from appointment WHERE appointment_no=${appt_no} </ap-sql>
+        <ap-output>${appointment_date}</ap-output>
+    </databaseap>   
+ 	<databaseap>
+        <ap-name>appt_time</ap-name>
+        <ap-sql>SELECT start_time from appointment WHERE appointment_no=${appt_no}</ap-sql>
+        <ap-output>${start_time}</ap-output>
+    </databaseap> 
+	<databaseap>
+		<ap-name>appt_end_time</ap-name>
+		<ap-sql>SELECT end_time from appointment WHERE
+			appointment_no=${appt_no}</ap-sql>
+		<ap-output>${end_time}</ap-output>
+	</databaseap>  
     <databaseap>
         <ap-name>appt_provider_name</ap-name>
         <ap-sql>SELECT p.last_name, p.first_name FROM provider p, appointment a
@@ -516,92 +442,83 @@
         <ap-sql>SELECT provider_no FROM appointment WHERE appointment_no=${appt_no}</ap-sql>
         <ap-output>${provider_no}</ap-output>
     </databaseap>
+	<databaseap>
+		<ap-name>appt_provider_ohip_no</ap-name>
+		<ap-sql>SELECT p.ohip_no
+			FROM provider p INNER JOIN appointment a ON (p.provider_no=a.provider_no)
+			WHERE a.appointment_no=${appt_no}
+		</ap-sql>
+		<ap-output>${ohip_no}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>appt_provider_specialty</ap-name>
+		<ap-sql>SELECT provider.specialty FROM provider, appointment
+			WHERE appointment.appointment_no=${appt_no} AND
+			appointment.provider_no=provider.provider_no
+		</ap-sql>
+		<ap-output>${specialty}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>appt_provider_cpsid</ap-name>
+		<ap-sql>SELECT provider.practitionerNo FROM provider, appointment
+			WHERE appointment.appointment_no=${appt_no} AND
+			appointment.provider_no=provider.provider_no
+		</ap-sql>
+		<ap-output>${practitionerNo}</ap-output>
+	</databaseap>
     <databaseap>
         <ap-name>appt_no</ap-name>
         <ap-sql>SELECT ${appt_no} as appt_no</ap-sql>
         <ap-output>${appt_no}</ap-output>
     </databaseap>
-
-<!-- Referral information -->
+    <databaseap>
+        <ap-name>next_appt_provider_id</ap-name>
+        <ap-sql>SELECT appointment_date, provider_no FROM appointment 
+                WHERE demographic_no=${demographic}
+                AND	appointment_date >= CURDATE( )
+			    ORDER BY appointment_date LIMIT 1 
+        </ap-sql>
+        <ap-output>${provider_no}</ap-output>
+    </databaseap>
+     <databaseap>
+        <ap-name>next_appt_provider_name</ap-name>
+        <ap-sql>SELECT a.appointment_date, p.last_name, p.first_name FROM provider p, appointment a
+                WHERE a.demographic_no=${demographic} AND p.provider_no=a.provider_no 
+                AND	appointment_date >= CURDATE( )
+			    ORDER BY appointment_date LIMIT 1 
+        </ap-sql>
+        <ap-output>${last_name}, ${first_name}</ap-output>
+    </databaseap>  
 	<databaseap>
-		<ap-name>referral_name</ap-name>
-		<ap-sql>SELECT professionalSpecialists.lName, professionalSpecialists.fName
-				FROM professionalSpecialists, demographic
-                		WHERE demographic.demographic_no=${demographic} AND LENGTH(professionalSpecialists.referralNo) > 0 
-				AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referralNo)))=professionalSpecialists.referralNo</ap-sql>
-                <ap-output>${lName}, ${fName}</ap-output>
+		<ap-name>next_appt_date</ap-name>
+		<ap-sql>SELECT appointment_date, start_time from appointment WHERE
+			demographic_no = ${demographic} AND `status` NOT IN('C', 'N', 'NS')
+			AND appointment_date >= CURDATE( )
+			ORDER BY appointment_date LIMIT 1
+		</ap-sql>
+		<ap-output>${appointment_date}, ${start_time}</ap-output>
 	</databaseap>
 	<databaseap>
-		<ap-name>referral_address</ap-name>
-		<ap-sql>SELECT professionalSpecialists.address AS raddress
-				FROM professionalSpecialists, demographic
-                		WHERE demographic.demographic_no=${demographic} AND LENGTH(professionalSpecialists.referralNo) > 0 
-				AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referralNo)))=professionalSpecialists.referralNo</ap-sql>
-                <ap-output>${raddress}</ap-output>
+		<ap-name>next_appt_time</ap-name>
+		<ap-sql>SELECT LEFT(start_time,5) AS start_time from appointment WHERE
+			demographic_no = ${demographic} AND `status` NOT IN('C', 'N', 'NS')
+			AND appointment_date >= CURDATE( )
+			ORDER BY appointment_date LIMIT 1
+		</ap-sql>
+		<ap-output>${start_time}</ap-output>
 	</databaseap>
 	<databaseap>
-		<ap-name>referral_phone</ap-name>
-		<ap-sql>SELECT professionalSpecialists.phone
-				FROM professionalSpecialists, demographic
-                		WHERE demographic.demographic_no=${demographic} AND LENGTH(professionalSpecialists.referralNo) > 0 
-				AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referralNo)))=professionalSpecialists.referralNo</ap-sql>
-                <ap-output>${phone}</ap-output>
+		<ap-name>nextf_appt_date</ap-name>
+		<ap-sql>SELECT DATE_FORMAT(appointment_date, '%Y-%b-%d' ) as
+			nextf_appt_date from appointment WHERE demographic_no =
+			${demographic} AND `status` NOT IN('C', 'N', 'NS') AND
+			appointment_date >= CURDATE( )
+			ORDER BY appointment_date LIMIT 1
+		</ap-sql>
+		<ap-output>${nextf_appt_date}</ap-output>
 	</databaseap>
-	<databaseap>
-		<ap-name>referral_fax</ap-name>
-		<ap-sql>SELECT professionalSpecialists.fax 
-				FROM professionalSpecialists, demographic
-                		WHERE demographic.demographic_no=${demographic} AND LENGTH(professionalSpecialists.referralNo) > 0 
-				AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referralNo)))=professionalSpecialists.referralNo</ap-sql>
-                <ap-output>${fax}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>bc_referral_name</ap-name>
-		<ap-sql>SELECT billingreferral.last_name, billingreferral.first_name
-				FROM billingreferral, demographic
-				WHERE demographic.demographic_no=${demographic}
-				AND LENGTH(billingreferral.referral_no) > 0
-				AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
-		<ap-output>${last_name}, ${first_name}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>bc_referral_address</ap-name>
-		<ap-sql>SELECT CONCAT( b.address1, IF( b.address1 ='', '', '\n' ), b.address2, IF( b.address2 ='', '',  '\n' ) , b.city, ' ', b.province, ' ', b.postal ) AS raddress
-				FROM billingreferral b, demographic d
-				WHERE d.demographic_no=${demographic}
-				AND LENGTH(b.referral_no) > 0
-				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referral_no)))=b.referral_no</ap-sql>
-                <ap-output>${raddress}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>bc_referral_phone</ap-name>
-		<ap-sql>SELECT b.phone
-				FROM billingreferral b, demographic d
-				WHERE d.demographic_no=${demographic}
-				AND LENGTH(b.referral_no) > 0
-				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referral_no)))=b.referral_no</ap-sql>
-                <ap-output>${phone}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>bc_referral_fax</ap-name>
-		<ap-sql>SELECT b.fax
-				FROM billingreferral b, demographic d
-				WHERE d.demographic_no=${demographic}
-				AND LENGTH(b.referral_no) > 0
-				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referral_no)))=b.referral_no</ap-sql>
-                <ap-output>${fax}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>bc_referral_no</ap-name>
-		<ap-sql>SELECT b.referral_no
-				FROM billingreferral b, demographic d
-				WHERE d.demographic_no=${demographic}
-				AND LENGTH(b.referral_no) > 0
-				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referral_no)))=b.referral_no</ap-sql>
-		<ap-output>${referral_no}</ap-output>
-	</databaseap>
-
-<!-- Clinic information -->
+  
+ <!-- CLINIC INFORMATION -->
     <databaseap>
         <ap-name>clinic_name</ap-name>
         <ap-sql>SELECT clinic_name FROM clinic</ap-sql>
@@ -651,7 +568,1636 @@
         <ap-name>clinic_postal</ap-name>
         <ap-sql>SELECT * FROM clinic</ap-sql>
         <ap-output>${clinic_postal}</ap-output>
+    </databaseap> 
+	<databaseap>
+		<ap-name>clinic_multi_phone</ap-name>
+		<ap-sql>SELECT clinic_delim_phone AS clinic_multi_phone FROM clinic</ap-sql>
+		<ap-output>${clinic_multi_phone}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>clinic_multi_fax</ap-name>
+		<ap-sql>SELECT clinic_delim_fax AS clinic_multi_fax FROM clinic</ap-sql>
+		<ap-output>${clinic_multi_fax}</ap-output>
+	</databaseap>   
+    <!-- Multisite Information -->
+	<databaseap>
+		<ap-name>multisite_name_list</ap-name>
+		<ap-sql>SELECT GROUP_CONCAT(REPLACE(name,';','') SEPARATOR ';') AS
+			name_list FROM site WHERE status=1 ORDER BY site_id;
+		</ap-sql>
+		<ap-output>${name_list}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>multisite_fax_list</ap-name>
+		<ap-sql>SELECT GROUP_CONCAT(REPLACE(fax,';','') SEPARATOR ';') AS
+			fax_list FROM site WHERE status=1 ORDER BY site_id;
+		</ap-sql>
+		<ap-output>${fax_list}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>multisite_phone_list</ap-name>
+		<ap-sql>SELECT GROUP_CONCAT(REPLACE(phone,';','') SEPARATOR ';') AS
+			phone_list FROM site WHERE status=1 ORDER BY site_id;
+		</ap-sql>
+		<ap-output>${phone_list}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>multisite_full_address_list</ap-name>
+		<ap-sql>SELECT GROUP_CONCAT(
+			REPLACE(address,';',''), ' ',
+			REPLACE(city,';',''), ' ',
+			REPLACE(province,';',''), ' ',
+			REPLACE(postal,';','')
+			SEPARATOR ';') AS address_list
+			FROM site
+			WHERE status=1
+			ORDER BY site_id;
+		</ap-sql>
+		<ap-output>${address_list}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>multisite_address_list</ap-name>
+		<ap-sql>SELECT GROUP_CONCAT(
+			REPLACE(address,';','')
+			SEPARATOR ';') AS address_list
+			FROM site
+			WHERE status=1
+			ORDER BY site_id;
+		</ap-sql>
+		<ap-output>${address_list}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>multisite_city_list</ap-name>
+		<ap-sql>SELECT GROUP_CONCAT(
+			REPLACE(city,';','')
+			SEPARATOR ';') AS city_list
+			FROM site
+			WHERE status=1
+			ORDER BY site_id;
+		</ap-sql>
+		<ap-output>${city_list}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>multisite_province_list</ap-name>
+		<ap-sql>SELECT GROUP_CONCAT(
+			REPLACE(province,';','')
+			SEPARATOR ';') AS province_list
+			FROM site
+			WHERE status=1
+			ORDER BY site_id;
+		</ap-sql>
+		<ap-output>${province_list}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>multisite_postal_list</ap-name>
+		<ap-sql>SELECT GROUP_CONCAT(
+			REPLACE(postal,';','')
+			SEPARATOR ';') AS postal_list
+			FROM site
+			WHERE status=1
+			ORDER BY site_id;
+		</ap-sql>
+		<ap-output>${postal_list}</ap-output>
+	</databaseap>
+    
+<!-- CURRENT USER -->
+    <databaseap>
+        <ap-name>current_user</ap-name>
+        <ap-sql>SELECT provider.first_name, provider.last_name FROM provider WHERE provider.provider_no='${provider}' </ap-sql>
+        <ap-output>${last_name}, ${first_name}</ap-output>
     </databaseap>
+    <databaseap>
+        <ap-name>current_user_fname_lname</ap-name>
+        <ap-sql>SELECT provider.first_name, provider.last_name FROM provider WHERE provider.provider_no='${provider}' </ap-sql>
+        <ap-output>${first_name} ${last_name}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>current_user_ohip_no</ap-name>
+        <ap-sql>SELECT provider.ohip_no FROM provider WHERE provider.provider_no='${provider}' </ap-sql>
+        <ap-output>${ohip_no}</ap-output>
+    </databaseap>
+     <databaseap>
+        <ap-name>current_user_specialty_code</ap-name>
+        <ap-sql>SELECT
+                 MID( comments,
+                       INSTR(comments,'&lt;xml_p_specialty_code&gt;')+22,
+                       INSTR(comments,'&lt;/xml_p_specialty_code&gt;')-INSTR(comments,'&lt;xml_p_specialty_code&gt;')-22
+                 ) AS specialty_code
+               FROM provider WHERE provider_no='${provider}' </ap-sql>
+        <ap-output>${specialty_code}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>current_user_cpsid</ap-name>
+        <ap-sql>SELECT provider.practitionerNo FROM provider WHERE provider.provider_no='${provider}' </ap-sql>
+        <ap-output>${practitionerNo}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>current_user_id</ap-name>
+        <ap-sql>SELECT '${provider}' AS providerId</ap-sql>
+        <ap-output>${providerId}</ap-output>
+    </databaseap>
+    <databaseap>
+		<ap-name>current_user_signature</ap-name>
+		<ap-sql>SELECT providerExt.signature FROM providerExt WHERE providerExt.provider_no='${provider}' </ap-sql>
+		<ap-output>${signature}</ap-output>
+    </databaseap>
+	<databaseap>
+		<ap-name>current_user_specialty</ap-name>
+		<ap-sql>SELECT provider.specialty FROM provider WHERE
+			provider.provider_no='${provider}'</ap-sql>
+		<ap-output>${specialty}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>current_user_specialty_code</ap-name>
+		<ap-sql>SELECT
+			MID( comments,
+			INSTR(comments,'&lt;xml_p_specialty_code&gt;')+22,
+			INSTR(comments,'&lt;/xml_p_specialty_code&gt;')-INSTR(comments,'&lt;xml_p_specialty_code&gt;')-22
+			) AS specialty_code
+			FROM provider WHERE provider_no='${provider}'
+		</ap-sql>
+		<ap-output>${specialty_code}</ap-output>
+	</databaseap>
+    <databaseap>
+        <ap-name>current_user_address</ap-name>
+        <ap-sql>SELECT provider.address FROM provider WHERE provider.provider_no='${provider}' </ap-sql>
+        <ap-output>${address}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>current_user_work_phone</ap-name>
+        <ap-sql>SELECT provider.work_phone FROM provider WHERE provider.provider_no='${provider}' </ap-sql>
+        <ap-output>${work_phone}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>current_user_email</ap-name>
+        <ap-sql>SELECT provider.email FROM provider WHERE provider.provider_no='${provider}' </ap-sql>
+        <ap-output>${email}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>current_user_fax</ap-name>
+        <ap-sql>SELECT
+                 MID( comments,
+                       INSTR(comments,'&lt;xml_p_fax&gt;')+11,
+                       INSTR(comments,'&lt;/xml_p_fax&gt;')-INSTR(comments,'&lt;xml_p_fax&gt;')-11
+                 ) AS fax
+               FROM provider WHERE provider_no='${provider}' </ap-sql>
+        <ap-output>${fax}</ap-output>
+    </databaseap>   
+<!-- REFFERAL INFORMATION -->
+	<databaseap>
+		<ap-name>referral_name</ap-name>
+		<ap-sql>SELECT professionalSpecialists.lName, professionalSpecialists.fName
+				FROM professionalSpecialists, demographic
+                		WHERE demographic.demographic_no=${demographic} AND LENGTH(professionalSpecialists.referralNo) > 0 
+				AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referralNo)))=professionalSpecialists.referralNo</ap-sql>
+                <ap-output>${lName}, ${fName}</ap-output>
+	</databaseap>
+	<databaseap>
+        <ap-name>referral_Last_name</ap-name>
+        <ap-sql>SELECT professionalSpecialists.lName FROM professionalSpecialists, demographic
+                WHERE demographic.demographic_no=${demographic} AND LENGTH(professionalSpecialists.referralNo) &gt; 0
+                AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referralNo)))=professionalSpecialists.referralNo</ap-sql>
+        <ap-output>${lName}</ap-output>
+    </databaseap>
+   	<databaseap>
+    	<ap-name>referral_first_name</ap-name>
+		<ap-sql>SELECT professionalSpecialists.fName FROM professionalSpecialists, demographic
+                WHERE demographic.demographic_no=${demographic} AND LENGTH(professionalSpecialists.referralNo) &gt; 0                AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referralNo)))=professionalSpecialists.referralNo</ap-sql>
+        <ap-output>${fName}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>dr_referral_name</ap-name>
+        <ap-sql>SELECT billingreferral.last_name, billingreferral.first_name FROM billingreferral, demographic
+                WHERE demographic.demographic_no=${demographic} AND LENGTH(billingreferral.referral_no) &gt; 0
+                AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
+        <ap-output>Dr. ${first_name}  ${last_name}</ap-output>
+    </databaseap>
+	<databaseap>
+		<ap-name>referral_address</ap-name>
+		<ap-sql>SELECT professionalSpecialists.address AS raddress
+				FROM professionalSpecialists, demographic
+                		WHERE demographic.demographic_no=${demographic} AND LENGTH(professionalSpecialists.referralNo) > 0 
+				AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referralNo)))=professionalSpecialists.referralNo</ap-sql>
+                <ap-output>${raddress}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>referral_phone</ap-name>
+		<ap-sql>SELECT professionalSpecialists.phone
+				FROM professionalSpecialists, demographic
+                		WHERE demographic.demographic_no=${demographic} AND LENGTH(professionalSpecialists.referralNo) > 0 
+				AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referralNo)))=professionalSpecialists.referralNo</ap-sql>
+                <ap-output>${phone}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>referral_fax</ap-name>
+		<ap-sql>SELECT professionalSpecialists.fax 
+				FROM professionalSpecialists, demographic
+                		WHERE demographic.demographic_no=${demographic} AND LENGTH(professionalSpecialists.referralNo) > 0 
+				AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referralNo)))=professionalSpecialists.referralNo</ap-sql>
+                <ap-output>${fax}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>referral_no</ap-name>
+		<ap-sql>SELECT professionalSpecialists.referralNo 
+				FROM professionalSpecialists, demographic
+                		WHERE demographic.demographic_no=${demographic} AND LENGTH(professionalSpecialists.referralNo) > 0 
+				AND SUBSTRING(demographic.family_doctor,9,(LENGTH(professionalSpecialists.referralNo)))=professionalSpecialists.referralNo</ap-sql>
+                <ap-output>${referralNo}</ap-output>
+	</databaseap>
+
+ <!-- BC referrals -->      
+	<databaseap>
+		<ap-name>bc_referral_name</ap-name>
+		<ap-sql>SELECT billingreferral.last_name, billingreferral.first_name
+				FROM billingreferral, demographic
+				WHERE demographic.demographic_no=${demographic}
+				AND LENGTH(billingreferral.referral_no) > 0
+				AND SUBSTRING(demographic.family_doctor,9,(LENGTH(billingreferral.referral_no)))=billingreferral.referral_no</ap-sql>
+		<ap-output>${last_name}, ${first_name}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>bc_referral_address</ap-name>
+		<ap-sql>SELECT CONCAT( b.address1, IF( b.address1 ='', '', '\n' ), b.address2, IF( b.address2 ='', '',  '\n' ) , b.city, ' ', b.province, ' ', b.postal ) AS raddress
+				FROM billingreferral b, demographic d
+				WHERE d.demographic_no=${demographic}
+				AND LENGTH(b.referral_no) > 0
+				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referral_no)))=b.referral_no</ap-sql>
+                <ap-output>${raddress}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>bc_referral_phone</ap-name>
+		<ap-sql>SELECT b.phone
+				FROM billingreferral b, demographic d
+				WHERE d.demographic_no=${demographic}
+				AND LENGTH(b.referral_no) > 0
+				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referral_no)))=b.referral_no</ap-sql>
+                <ap-output>${phone}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>bc_referral_fax</ap-name>
+		<ap-sql>SELECT b.fax
+				FROM billingreferral b, demographic d
+				WHERE d.demographic_no=${demographic}
+				AND LENGTH(b.referral_no) > 0
+				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referral_no)))=b.referral_no</ap-sql>
+                <ap-output>${fax}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>bc_referral_no</ap-name>
+		<ap-sql>SELECT b.referral_no
+				FROM billingreferral b, demographic d
+				WHERE d.demographic_no=${demographic}
+				AND LENGTH(b.referral_no) > 0
+				AND SUBSTRING(d.family_doctor,9,(LENGTH(b.referral_no)))=b.referral_no</ap-sql>
+		<ap-output>${referral_no}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>bc_family_doctor_name</ap-name>
+		<ap-sql>SELECT billingreferral.last_name, billingreferral.first_name
+			FROM billingreferral, demographic
+			WHERE demographic.demographic_no=${demographic}
+			AND LENGTH(billingreferral.referral_no) > 0
+			AND
+			EXTRACTVALUE(demographic.family_doctor_2, '/fd') = billingreferral.referral_no
+		</ap-sql>
+		<ap-output>${last_name}, ${first_name}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>bc_family_doctor_address</ap-name>
+		<ap-sql>SELECT CONCAT( b.address1, IF( b.address1 ='', '', '\n' ),
+			b.address2, IF( b.address2 ='', '', '\n' ) , b.city, ' ', b.province,
+			' ', b.postal ) AS raddress
+			FROM billingreferral b, demographic d
+			WHERE d.demographic_no=${demographic}
+			AND LENGTH(b.referral_no) > 0
+			AND EXTRACTVALUE(d.family_doctor_2, '/fd') = b.referral_no
+		</ap-sql>
+		<ap-output>${raddress}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>bc_family_doctor_phone</ap-name>
+		<ap-sql>SELECT b.phone
+			FROM billingreferral b, demographic d
+			WHERE d.demographic_no=${demographic}
+			AND LENGTH(b.referral_no) > 0
+			AND
+			EXTRACTVALUE(d.family_doctor_2, '/fd') = b.referral_no
+		</ap-sql>
+		<ap-output>${phone}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>bc_family_doctor_fax</ap-name>
+		<ap-sql>SELECT b.fax
+			FROM billingreferral b, demographic d
+			WHERE d.demographic_no=${demographic}
+			AND LENGTH(b.referral_no) > 0
+			AND
+			EXTRACTVALUE(d.family_doctor_2, '/fd') = b.referral_no
+		</ap-sql>
+		<ap-output>${fax}</ap-output>
+	</databaseap>
+	<databaseap>
+		<ap-name>bc_family_doctor_no</ap-name>
+		<ap-sql>SELECT b.referral_no
+			FROM billingreferral b, demographic d
+			WHERE d.demographic_no=${demographic}
+			AND LENGTH(b.referral_no) > 0
+			AND
+			EXTRACTVALUE(d.family_doctor_2, '/fd') = b.referral_no
+		</ap-sql>
+		<ap-output>${referral_no}</ap-output>
+	</databaseap>  
+    
+<!-- CPP PATIENT HISTORY -->
+	<databaseap>
+        <ap-name>social_family_history</ap-name>
+                <ap-sql>SELECT GROUP_CONCAT(CONCAT(IFNULL(note, "Please contact support"), "\n") SEPARATOR ' ') AS socialHistory,
+                                demographic_no FROM casemgmt_note WHERE note_id IN (SELECT max(note_id) FROM casemgmt_note WHERE note_id IN (SELECT cmgtin.note_id FROM casemgmt_issue_notes cmgtin,
+                                casemgmt_issue cmgti WHERE cmgtin.id=cmgti.id AND cmgti.issue_id=(SELECT issue_id FROM issue WHERE code='SocHistory')) AND demographic_no=${demographic} GROUP BY uuid) AND archived &lt;&gt; 1
+                                AND demographic_no=${demographic} GROUP BY demographic_no</ap-sql>
+	<ap-output>${socialHistory}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>social_family_history_ext</ap-name>
+        <ap-sql>select group_concat(cn.note order by cn.position,cn.observation_date desc separator '&lt;br&#47;&gt;') as socialHistory_ext from casemgmt_note cn inner join casemgmt_issue_notes cin on cin.note_id=cn.note_id inner join casemgmt_issue ci on ci.id=cin.id  where ci.issue_id in (select i.issue_id from issue i where i.code='SocHistory') and not exists (select * from casemgmt_note cn2 where cn2.uuid = cn.uuid and cn2.note_id>cn.note_id) and cn.demographic_no=${demographic} and cn.archived=0</ap-sql>
+        <ap-output>${socialHistory_ext}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>other_medications_history</ap-name>
+                <ap-sql>SELECT GROUP_CONCAT(CONCAT(IFNULL(note, "Please contact support"), "\n") SEPARATOR ' ') AS otherMedications,
+                                demographic_no FROM casemgmt_note WHERE note_id IN (SELECT max(note_id) FROM casemgmt_note WHERE note_id IN (SELECT cmgtin.note_id FROM casemgmt_issue_notes cmgtin,
+                                casemgmt_issue cmgti WHERE cmgtin.id=cmgti.id AND cmgti.issue_id=(SELECT issue_id FROM issue WHERE code='OMeds')) AND demographic_no=${demographic} GROUP BY uuid) AND archived &lt;&gt; 1
+                                AND demographic_no=${demographic} GROUP BY demographic_no</ap-sql>
+	<ap-output>${otherMedications}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>other_medications_history_ext</ap-name>
+        <ap-sql>select group_concat(cn.note order by cn.position,cn.observation_date desc separator '&lt;br&#47;&gt;') as OMeds_ext from casemgmt_note cn inner join casemgmt_issue_notes cin on cin.note_id=cn.note_id inner join casemgmt_issue ci on ci.id=cin.id  where ci.issue_id in (select i.issue_id from issue i where i.code='OMeds') and not exists (select * from casemgmt_note cn2 where cn2.uuid = cn.uuid and cn2.note_id>cn.note_id) and cn.demographic_no=${demographic} and cn.archived=0</ap-sql>
+        <ap-output>${OMeds_ext}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>family_history</ap-name>
+                <ap-sql>SELECT GROUP_CONCAT(CONCAT(IFNULL(note, "Please contact support"), "\n") SEPARATOR ' ') AS familyHistory,
+                                demographic_no FROM casemgmt_note WHERE note_id IN (SELECT max(note_id) FROM casemgmt_note WHERE note_id IN (SELECT cmgtin.note_id FROM casemgmt_issue_notes cmgtin,
+                                casemgmt_issue cmgti WHERE cmgtin.id=cmgti.id AND cmgti.issue_id=(SELECT issue_id FROM issue WHERE code='FamHistory')) AND demographic_no=${demographic} GROUP BY uuid) AND archived &lt;&gt; 1
+                                AND demographic_no=${demographic} GROUP BY demographic_no</ap-sql>
+	<ap-output>${familyHistory}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>family_history_ext</ap-name>
+        <ap-sql>select group_concat(cn.note order by cn.position,cn.observation_date desc separator '&lt;br&#47;&gt;') as family_history_ext from casemgmt_note cn inner join casemgmt_issue_notes cin on cin.note_id=cn.note_id inner join casemgmt_issue ci on ci.id=cin.id  where ci.issue_id in (select i.issue_id from issue i where i.code='FamHistory') and not exists (select * from casemgmt_note cn2 where cn2.uuid = cn.uuid and cn2.note_id>cn.note_id) and cn.demographic_no=${demographic} and cn.archived=0</ap-sql>
+        <ap-output>${family_history_ext}</ap-output>
+    </databaseap>
+   
+    <databaseap>
+        <ap-name>medical_history</ap-name>
+                <ap-sql>SELECT GROUP_CONCAT(CONCAT(IFNULL(note, "Please contact support"), "\n") SEPARATOR ' ') AS medicalHistory, demographic_no
+                                FROM casemgmt_note
+                                WHERE note_id IN (SELECT max(note_id)
+                                                                 FROM casemgmt_note
+                                                                 WHERE note_id IN (SELECT cmgtin.note_id
+                                                                                                   FROM casemgmt_issue_notes cmgtin, casemgmt_issue cmgti
+                                                                                                   WHERE cmgtin.id=cmgti.id AND cmgti.issue_id=(SELECT issue_id
+                                                                                                                                                FROM issue
+                                                                                                                                                WHERE code='MedHistory'))
+                                       AND demographic_no=${demographic} GROUP BY uuid)
+                      AND archived &lt;&gt; 1 AND demographic_no=${demographic}
+                GROUP BY demographic_no
+        </ap-sql>
+	<ap-output>${medicalHistory}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>medical_history_ext</ap-name>
+        <ap-sql>select group_concat(cn.note order by cn.position,cn.observation_date desc separator '&lt;br&#47;&gt;') as medicalHistory_ext from casemgmt_note cn inner join casemgmt_issue_notes cin on cin.note_id=cn.note_id inner join casemgmt_issue ci on ci.id=cin.id  where ci.issue_id in (select i.issue_id from issue i where i.code='MedHistory') and not exists (select * from casemgmt_note cn2 where cn2.uuid = cn.uuid and cn2.note_id>cn.note_id) and cn.demographic_no=${demographic} and cn.archived=0</ap-sql>
+        <ap-output>${medicalHistory_ext}</ap-output>
+    </databaseap>    
+
+    <databaseap>
+        <ap-name>ongoingconcerns</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(CONCAT(IFNULL(note, "Please contact support"), "\n") SEPARATOR ' ') AS ongoingConcerns,
+                                demographic_no FROM casemgmt_note WHERE note_id IN (SELECT max(note_id) FROM casemgmt_note WHERE note_id IN (SELECT cmgtin.note_id FROM casemgmt_issue_notes cmgtin,
+                                casemgmt_issue cmgti WHERE cmgtin.id=cmgti.id AND cmgti.issue_id=(SELECT issue_id FROM issue WHERE code='Concerns')) AND demographic_no=${demographic} GROUP BY uuid) AND archived &lt;&gt; 1
+                                AND demographic_no=${demographic} GROUP BY demographic_no</ap-sql>       
+		<ap-output>${ongoingConcerns}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>ongoingconcerns_ext</ap-name>
+        <ap-sql>select group_concat(cn.note order by cn.position,cn.observation_date desc separator '&lt;br&#47;&gt;') as ongoingConcerns_ext from casemgmt_note cn inner join casemgmt_issue_notes cin on cin.note_id=cn.note_id inner join casemgmt_issue ci on ci.id=cin.id  where ci.issue_id in (select i.issue_id from issue i where i.code='Concerns') and not exists (select * from casemgmt_note cn2 where cn2.uuid = cn.uuid and cn2.note_id>cn.note_id) and cn.demographic_no=${demographic} and cn.archived=0</ap-sql>
+        <ap-output>${ongoingConcerns_ext}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>past_ocular_history</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(CONCAT(IFNULL(note, "Please contact support"), "\n") SEPARATOR ' ') AS past_ocular_history,
+                                demographic_no FROM casemgmt_note WHERE note_id IN (SELECT max(note_id) FROM casemgmt_note WHERE note_id IN (SELECT cmgtin.note_id FROM casemgmt_issue_notes cmgtin,
+                                casemgmt_issue cmgti WHERE cmgtin.id=cmgti.id AND cmgti.issue_id=(SELECT issue_id FROM issue WHERE code='PastOcularHistory')) AND demographic_no=${demographic} GROUP BY uuid) AND archived &lt;&gt; 1
+                                AND demographic_no=${demographic} GROUP BY demographic_no</ap-sql>       
+		<ap-output>${past_ocular_history}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>past_ocular_history_ext</ap-name>
+        <ap-sql>select group_concat(cn.note order by cn.position,cn.observation_date desc separator '&lt;br&#47;&gt;') as past_ocular_history_ext from casemgmt_note cn inner join casemgmt_issue_notes cin on cin.note_id=cn.note_id inner join casemgmt_issue ci on ci.id=cin.id  where ci.issue_id in (select i.issue_id from issue i where i.code='PastOcularHistory') and not exists (select * from casemgmt_note cn2 where cn2.uuid = cn.uuid and cn2.note_id>cn.note_id) and cn.demographic_no=${demographic} and cn.archived=0</ap-sql>
+        <ap-output>${past_ocular_history_ext}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>reminders</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(t.reminder SEPARATOR ', ') as reminders FROM( SELECT notes.note as reminder FROM (SELECT cn.position, iss.id, iss.demographic_no as demo, iss.issue_id, cin.note_id, cn.note
+				FROM casemgmt_issue iss, casemgmt_issue_notes cin, casemgmt_note cn, issue i
+				WHERE iss.id = cin.id AND iss.issue_id=i.issue_id AND i.code='Reminders' AND cin.note_id = cn.note_id AND iss.demographic_no =${demographic} 
+				ORDER BY cn.note_id DESC) as notes GROUP BY notes.position) AS t</ap-sql>
+        <ap-output>${reminders}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>reminders_ext</ap-name>
+        <ap-sql>select group_concat(cn.note order by cn.position,cn.observation_date desc separator '&lt;br&#47;&gt;') as reminders_ext from casemgmt_note cn inner join casemgmt_issue_notes cin on cin.note_id=cn.note_id inner join casemgmt_issue ci on ci.id=cin.id  where ci.issue_id in (select i.issue_id from issue i where i.code='Reminders') and not exists (select * from casemgmt_note cn2 where cn2.uuid = cn.uuid and cn2.note_id>cn.note_id) and cn.demographic_no=${demographic} and cn.archived=0</ap-sql>
+        <ap-output>${reminders_ext}</ap-output>
+    </databaseap>
+	<databaseap>
+		<ap-name>risk_factors</ap-name>
+		<ap-sql>
+			SELECT GROUP_CONCAT(s1.note SEPARATOR ', ') AS risk_factors
+			FROM casemgmt_note s1
+			JOIN (
+				SELECT
+				MAX(cn.note_id) as note_id
+				FROM casemgmt_note cn, casemgmt_issue_notes cin
+				WHERE cn.note_id = cin.note_id
+				AND cin.id = (
+					SELECT id FROM casemgmt_issue
+					WHERE demographic_no = ${demographic}
+					AND issue_id = (
+						SELECT issue_id FROM issue WHERE code='riskfactors' LIMIT 1
+					) LIMIT 1
+				) GROUP BY cn.uuid
+			) s2 ON s1.note_id = s2.note_id
+			JOIN (
+				SELECT n1.uuid, n1.update_date
+				FROM casemgmt_note n1
+				LEFT JOIN casemgmt_note n2 on n1.uuid = n2.uuid and (n1.note_id &lt; n2.note_id)
+				AND n2.demographic_no=${demographic}
+				WHERE n2.note_id IS NULL
+				AND n1.demographic_no=${demographic}
+			) note_filter ON s1.uuid = note_filter.uuid
+			WHERE note_filter.update_date &lt;= s1.update_date
+			AND s1.demographic_no=${demographic}
+			AND s1.archived=0;
+		</ap-sql>
+		<ap-output>${risk_factors}</ap-output>
+	</databaseap>
+    <databaseap>
+        <ap-name>risk_factors_ext</ap-name>
+        <ap-sql>select group_concat(cn.note order by cn.position,cn.observation_date desc separator '&lt;br&#47;&gt;') as risk_factors_ext from casemgmt_note cn inner join casemgmt_issue_notes cin on cin.note_id=cn.note_id inner join casemgmt_issue ci on ci.id=cin.id  where ci.issue_id in (select i.issue_id from issue i where i.code='RiskFactors') and not exists (select * from casemgmt_note cn2 where cn2.uuid = cn.uuid and cn2.note_id>cn.note_id) and cn.demographic_no=${demographic} and cn.archived=0</ap-sql>
+        <ap-output>${risk_factors_ext}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>risk_factors_json</ap-name>
+        <ap-sql>select s1.note as note from casemgmt_note s1, (select max(cn.note_id) as note_id from casemgmt_note cn, casemgmt_issue_notes cin 
+                where cn.note_id = cin.note_id and cin.id = (select id from casemgmt_issue 
+                where demographic_no=${demographic} and issue_id = (select issue_id from issue where code='riskfactors' limit 1) limit 1) group by cn.uuid) s2 
+                where s1.note_id = s2.note_id and s1.archived=0;
+        </ap-sql>
+        <ap-output>${note}</ap-output>
+        <ap-json-output>true</ap-json-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>family_history_json</ap-name>
+        <ap-sql>select s1.note as note from casemgmt_note s1, (select max(cn.note_id) as note_id from casemgmt_note cn, casemgmt_issue_notes cin 
+                where cn.note_id = cin.note_id and cin.id = (select id from casemgmt_issue 
+                where demographic_no=${demographic} and issue_id = (select issue_id from issue where code='famhistory' limit 1) limit 1) group by cn.uuid) s2 
+                where s1.note_id = s2.note_id and s1.archived=0;
+        </ap-sql>
+        <ap-output>${note}</ap-output>
+        <ap-json-output>true</ap-json-output>
+    </databaseap>    
+    <databaseap>
+        <ap-name>allergies_des</ap-name>
+        <ap-sql>SELECT IF ((SELECT COUNT(*) FROM allergies, demographic	WHERE ( demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no AND allergies.archived=1))>0, 
+			CONCAT((SELECT GROUP_CONCAT(allergies.DESCRIPTION SEPARATOR ', ') FROM allergies, demographic WHERE demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no AND allergies.archived != 1),' \n','archived allergies:',(SELECT GROUP_CONCAT(allergies.DESCRIPTION SEPARATOR ', ') FROM allergies, demographic WHERE demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no AND allergies.archived = 1)), 
+			(SELECT GROUP_CONCAT(allergies.DESCRIPTION SEPARATOR ', ') FROM allergies, demographic WHERE demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no AND allergies.archived != 1)) 
+			as allergy</ap-sql>
+		<ap-output>${allergy}</ap-output>
+    </databaseap>
+    <databaseap>
+		<ap-name>allergies_des_no_archived</ap-name>
+		<ap-sql>SELECT GROUP_CONCAT(allergies.DESCRIPTION SEPARATOR ', ')as allergy FROM allergies, demographic
+				WHERE demographic.demographic_no=${demographic} AND allergies.demographic_no=demographic.demographic_no AND allergies.archived != 1</ap-sql>
+		<ap-output>${allergy}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>recent_rx</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(CONCAT(p.date_prescribed,' ',SUBSTRING_INDEX(p.textView, '\n\n', -1)),' \n' ORDER BY p.date_prescribed DESC SEPARATOR '') AS rx FROM prescription p WHERE p.demographic_no=${demographic} </ap-sql>
+        <ap-output>${rx}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>current_rx</ap-name>
+        <ap-sql>SELECT TRIM(GROUP_CONCAT(REPLACE(X.special, '\n', ' '), '\n' ORDER BY X.rx_date DESC SEPARATOR '')) AS rx FROM ((SELECT d.special AS special, d.rx_date AS rx_date, d.position AS position, d.drugid AS drugid FROM drugs d WHERE d.demographic_no = ${demographic} AND d.GCN_SEQNO &lt;&gt; 0 GROUP BY d.GCN_SEQNO ORDER BY d.position DESC, d.rx_date DESC, d.drugid DESC) UNION (SELECT d.special AS special, d.rx_date AS rx_date, d.position AS position, d.drugid AS drugid FROM drugs d WHERE d.demographic_no = ${demographic} AND d.GCN_SEQNO = 0 GROUP BY d.customName ORDER BY d.position DESC, d.rx_date DESC, d.drugid DESC)) AS X ORDER BY X.position DESC, X.rx_date DESC, X.drugid DESC</ap-sql>
+        <ap-output>${rx}</ap-output>
+    </databaseap>  
+    <databaseap>
+        <ap-name>current_rx_lt</ap-name>
+        <ap-sql>SELECT TRIM(GROUP_CONCAT(REPLACE(X.special, '\n', ' '), '\n' ORDER BY X.rx_date DESC SEPARATOR '')) AS rx FROM ((SELECT d.special AS special, d.rx_date AS rx_date, d.position AS position, d.drugid AS drugid FROM drugs d WHERE d.demographic_no = ${demographic} AND d.long_term=1 AND d.GCN_SEQNO &lt;&gt; 0 GROUP BY d.GCN_SEQNO ORDER BY d.position DESC, d.rx_date DESC, d.drugid DESC) UNION (SELECT d.special AS special, d.rx_date AS rx_date, d.position AS position, d.drugid AS drugid FROM drugs d WHERE d.demographic_no = ${demographic} AND d.long_term=1 AND d.GCN_SEQNO = 0 GROUP BY d.customName ORDER BY d.position DESC, d.rx_date DESC, d.drugid DESC)) AS X ORDER BY X.position DESC, X.rx_date DESC, X.drugid DESC</ap-sql>
+        <ap-output>${rx}</ap-output>
+    </databaseap> <databaseap>
+        <ap-name>today_rx</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(CONCAT(p.date_prescribed,' ',SUBSTRING_INDEX(p.textView, '\n\n', -1)),' \n' ORDER BY p.date_prescribed DESC SEPARATOR '') AS rx FROM prescription p WHERE p.demographic_no=${demographic} and p.date_prescribed=LEFT(now(),10) </ap-sql>
+        <ap-output>${rx}</ap-output>
+    </databaseap>   
+    <databaseap>
+        <ap-name>druglist</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT( DISTINCT if(LENGTH(freqcode) &gt; 1, CONCAT(BN,' ',freqcode), BN)  SEPARATOR '\n' ) AS rxgen FROM drugs d WHERE d.demographic_no=${demographic} AND d.archived='0';</ap-sql>
+        <ap-output>${rxgen}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>druglist_generic</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, GN, d.customName) , if(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , if(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR ' \n' ) AS rxgen
+                FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK);</ap-sql>
+        <ap-output>${rxgen}</ap-output>
+    </databaseap>  
+    <databaseap>
+        <ap-name>druglist_line</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(DISTINCT if(LENGTH(d.GN) &gt; 4, CONCAT(UCASE(SUBSTRING(d.BN, 1, 1)),LOWER(SUBSTRING(d.BN, 2))), d.customName) , IF(d.takemax &gt; d.takemin, CONCAT(' ',d.takemin,'-',d.takemax,' '), CONCAT(' ',d.takemin,' ')) , d.freqcode , IF(d.prn=1,' prn','') ORDER BY d.rx_date DESC SEPARATOR ', ' ) AS rxlist
+                FROM drugs d WHERE d.demographic_no=${demographic} AND d.end_date &gt; DATE_ADD(CURDATE(), INTERVAL -1 WEEK);</ap-sql>
+        <ap-output>${rxlist}</ap-output>
+    </databaseap>
+	<databaseap>
+	<!-- get the latest note uuid by observation_date. Then the latest revision 
+			by update_date -->
+		<ap-name>latest_echart_note</ap-name>
+		<ap-sql>SELECT cmn.note AS note FROM casemgmt_note cmn
+			JOIN (SELECT DISTINCT a.uuid FROM casemgmt_note a
+			WHERE a.demographic_no=${demographic}
+			AND a.include_issue_innote='0'
+			ORDER BY a.observation_date DESC LIMIT 1)
+			AS A ON (cmn.uuid = A.uuid)
+			WHERE cmn.demographic_no=${demographic}
+			AND include_issue_innote='0'
+			ORDER BY update_date
+			DESC LIMIT 1;
+		</ap-sql>
+		<ap-output>${note}</ap-output>
+	</databaseap>  <databaseap>
+    	<ap-name>dxregistry</ap-name>
+    	<ap-sql>SELECT GROUP_CONCAT(icd9.description SEPARATOR ', ') AS dxlist FROM icd9, dxresearch WHERE status='A' AND coding_system='icd9' AND icd9.icd9=dxresearch.dxresearch_code AND demographic_no=${demographic};</ap-sql>
+    	<ap-output>${dxlist}</ap-output></databaseap>    	
+    <databaseap>
+    	<ap-name>OHIPdxCode</ap-name>
+    	<ap-sql>SELECT GROUP_CONCAT(DISTINCT billing_on_item.dx) AS ohipdxc FROM billing_on_item, billing_on_cheader1 WHERE billing_on_cheader1.id=billing_on_item.ch1_id AND billing_on_cheader1.demographic_no=${demographic};</ap-sql>
+    	<ap-output>${ohipdxc}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>today_notes</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(CONCAT(IFNULL(note, "Please contact support"), "\n") SEPARATOR ' ') AS notes,
+                                demographic_no FROM casemgmt_note WHERE note_id IN (SELECT max(note_id) FROM casemgmt_note WHERE encounter_type='face to face encounter with client' AND update_date &gt; curdate() AND update_date &lt; CURDATE() + INTERVAL 1 DAY AND demographic_no=${demographic} AND archived &lt;&gt; 1 GROUP BY uuid) 
+                                AND demographic_no=${demographic} GROUP BY demographic_no</ap-sql>       
+		<ap-output>${notes}</ap-output>
+    </databaseap> 
+    <databaseap>
+        <ap-name>today_notes_ext</ap-name>
+        <ap-sql>select group_concat(cn.note order by cn.position,cn.observation_date desc separator '&lt;br&#47;&gt;') as notes_ext from casemgmt_note cn where cn.encounter_type='face to face encounter with client' AND cn.update_date &gt; curdate() AND cn.update_date &lt; CURDATE() + INTERVAL 1 DAY AND not exists (select * from casemgmt_note cn2 where cn2.uuid = cn.uuid and cn2.note_id>cn.note_id) and cn.demographic_no=${demographic} and cn.archived=0</ap-sql>
+        <ap-output>${notes_ext}</ap-output>
+    </databaseap>    
+	<databaseap>
+        <ap-name>document_list</ap-name>
+        <ap-sql>SELECT GROUP_CONCAT(aa.doc_list SEPARATOR ';') as doc_list from (select concat(d.document_no, ',', d.docdesc) as doc_list from document d join ctl_document c on d.document_no=c.document_no where c.module='demographic' and c.module_id=${demographic} ) as aa</ap-sql>
+        <ap-output>${doc_list}</ap-output>
+    </databaseap>
+
+<!-- PRENATAL -->
+    <databaseap>
+        <ap-name>onGTPAL</ap-name>
+        <ap-sql>SELECT  CONCAT('G',c_gravida,' T', c_term,' P' , c_prem,' A', c_abort ,' L', c_living) as onGTPAL FROM formONAREnhancedRecord f where demographic_no=${demographic} order by ID desc limit 1;</ap-sql>
+        <ap-output>${onGTPAL}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>onEDB</ap-name>
+        <ap-sql>SELECT  c_finalEDB FROM formONAREnhancedRecord f where demographic_no=${demographic} order by ID desc limit 1;</ap-sql>
+        <ap-output>${c_finalEDB}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>bcGTPAL</ap-name>
+        <ap-sql>SELECT CONCAT('G',pg1_gravida,' T', pg1_term ,' P',  pg1_preterm ,' A',  pg1_abortion, ' L', pg1_living ) AS bcGTPAL FROM formBCAR2012 where demographic_no=${demographic} ORDER BY ID DESC LIMIT 1;</ap-sql>
+        <ap-output>${bcGTPAL}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>bcEDD</ap-name>
+        <ap-sql>SELECT  c_EDD FROM formBCAR2012 f where demographic_no=${demographic} order by ID desc limit 1;</ap-sql>
+        <ap-output>${c_EDD}</ap-output>
+    </databaseap>
+       
+
+<!-- PREVENTIONS -->
+    <databaseap>
+        <ap-name>bcg_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'BCG' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>rmenb_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where (p.prevention_type = 'r' OR p.prevention_type = 'BEXSERO') and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>cholera_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'CHOLERA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>chol_ecol_o_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Chol-Ecol-O ' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>dpt_polio_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DPT POLIO' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>dptp_hib_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DPTP-Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>dt_ipv_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DT-IPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>dtap_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DTaP' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>dtap_hbv_ipv_hib_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DTaP-HBV-IPV-Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>dtap_hib_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DTaP-Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>dtap_ipv_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DTaP-IPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>dtap_ipv_hb_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DTaP-IPV-HB' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap> 
+    <databaseap>
+        <ap-name>dtap_ipv_hib_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DTaP-IPV-Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>dtap_ipv_hib_hb_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DTaP-IPV-Hib-HB' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>h1n1_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'H1N1' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>hbtmf_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HBTmf' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>hpv_vaccine_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HPV Vaccine' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>hpv_vaccine_9_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HPV Vaccine 9' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>hepa_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HepA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>hepab_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HepAB' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>hepb_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HepB' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>hib_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>ipv_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'IPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>je_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'JE' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>men_conj_acwy_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where (p.prevention_type = 'Men-C-ACYW-135' OR p.prevention_type = 'MEN-CONJ-ACWY') and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>mmr_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MMR' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>mmrv_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MMRV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>mr_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MR' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>mantoux_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Mantoux' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>measles_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where (p.prevention_type = 'Measles' OR  p.prevention_type = 'M') and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>men_p_ac_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Men-P-AC' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>men_p_acwy_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Men-P-ACWY' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>menb_b_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MenB-B' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>menc_c_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MenC-C' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>mumps_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Mumps' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>opv_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'OPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>otherA_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'OtherA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>pft_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'PFT' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>pediacel_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Pediacel' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>pneu_c_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where (p.prevention_type = 'Pneu-C' OR  p.prevention_type = 'Pneu-C' ) and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+     <databaseap>
+        <ap-name>pneumovax_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Pneumovax' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>prevnar_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Prevnar' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>prevnar_13_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Prevnar 13' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>prolia_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Prolia' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>RABIES_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'RABIES' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>rsv_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'RSV (Synagis)' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>rabies_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Rabies' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>rot_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Rot' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>rubella_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Rubella' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>shingles_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where (p.prevention_type = 'SHINGLES' OR p.prevention_type = 'HZV' OR p.prevention_type = 'RZV') and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>t_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'T' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>tbe_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'TBE' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>td_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Td' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>td_ipv_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Td-IPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>tdp_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'TdP' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>tdp_ipv_hib_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'TdP-IPV-Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>tdap_ipv_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Tdap-IPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>tuberculosis_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Tuberculosis' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>typh-o_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Typh-O' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>typhoid_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Typhoid' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>vz_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'VZ' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>varicella_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Varicella' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>yf_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'YF' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>dtap_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'dTap' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+       <databaseap>
+        <ap-name>bmd_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'BMD' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap> 
+     <databaseap>
+        <ap-name>bmd_immunization_last_value</ap-name>
+        <ap-sql>select pe.val from preventions p, preventionsExt pe where p.id=pe.prevention_id and p.prevention_type='BMD' and pe.keyval='result' and p.demographic_no=${demographic} order by pe.prevention_id desc limit 1;
+        </ap-sql>
+        <ap-output>${val}</ap-output>
+    </databaseap> 
+    <databaseap>
+        <ap-name>colonoscopy_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'COLONOSCOPY' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>   
+ 	<databaseap>
+        <ap-name>colonoscopy_immunization_last_value</ap-name>
+        <ap-sql>select pe.val from preventions p, preventionsExt pe where p.id=pe.prevention_id and p.prevention_type='COLONOSCOPY' and pe.keyval='result' and p.demographic_no=${demographic} order by pe.prevention_id desc limit 1;
+        </ap-sql>
+        <ap-output>${val}</ap-output>
+    </databaseap> 
+    <databaseap>
+        <ap-name>fobt_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'FOBT' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap> 
+     <databaseap>
+        <ap-name>fobt_immunization_last_value</ap-name>
+        <ap-sql>select pe.val from preventions p, preventionsExt pe where p.id=pe.prevention_id and p.prevention_type='FOBT' and pe.keyval='result' and p.demographic_no=${demographic} order by pe.prevention_id desc limit 1;
+        </ap-sql>
+        <ap-output>${val}</ap-output>
+    </databaseap>
+      <databaseap>
+        <ap-name>flu_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Flu' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+  <databaseap>
+        <ap-name>mam_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MAM' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap> 
+	<databaseap>
+        <ap-name>mam_immunization_data</ap-name>
+        <ap-sql>select m.val from preventions n,preventionsExt m where n.demographic_no = ${demographic} and n.prevention_type = 'MAM' and n.id = m.prevention_id and m.keyval = 'result'
+       </ap-sql>
+        <ap-output>${val}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>mam_immunization_last_value</ap-name>
+        <ap-sql>select pe.val from preventions p, preventionsExt pe where p.id=pe.prevention_id and p.prevention_type='MAM' and pe.keyval='result' and p.demographic_no=${demographic} order by pe.prevention_id desc limit 1;
+        </ap-sql>
+        <ap-output>${val}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>pap_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'PAP' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+	<databaseap>
+        <ap-name>pap_immunization_last_value</ap-name>
+        <ap-sql>select pe.val from preventions p, preventionsExt pe where p.id=pe.prevention_id and p.prevention_type='PAP' and pe.keyval='result' and p.demographic_no=${demographic} order by pe.prevention_id desc limit 1;
+        </ap-sql>
+        <ap-output>${val}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>psa_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'PSA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>psa_immunization_last_value</ap-name>
+        <ap-sql>select pe.val from preventions p, preventionsExt pe where p.id=pe.prevention_id and p.prevention_type='PSA' and pe.keyval='result' and p.demographic_no=${demographic} order by pe.prevention_id desc limit 1;
+        </ap-sql>
+        <ap-output>${val}</ap-output>
+    </databaseap> 
+    <databaseap>
+        <ap-name>abdo_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Abdo U/S for AAA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>bone_scan_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'BONE SCAN' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>cpx_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'CPX' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>ct_scan_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'CT Scan' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>cxr_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'CXR' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>chlamydia_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Chlamydia' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>ecg_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'ECG' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>eeg_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'EEG' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>ekg_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'EKG' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>emg_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'EMG' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>endoscopy_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'ENDOSCOPY' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>echo_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Echo' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>gonorrhea_pcr_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Gonorrhea PCR' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>hiv_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HIV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>hepa_screen_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HepA screen' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>hepb_screen_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HepB screen' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>hepc_screen_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HepC screen' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>mmse_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MMSE' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>mri_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MRI' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>moca_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MoCA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>otherB_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'OtherB' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>pet_scan_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'PET SCAN' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>sleep_study_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Sleep Study' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>stress_test_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Stress Test' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>ultrasound_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'ULTRASOUND' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>vdrl_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'VDRL' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>virtual_colonoscopy_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'VIRTUAL COLONOSCOPY' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>xrays_immunization_date</ap-name>
+        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'XRays' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+       </ap-sql>
+        <ap-output>${the_date}</ap-output>
+    </databaseap>   
+ 
+<!-- Patient Measurement Information --> 
+    <databaseap>
+    	<ap-name>bp_lastvalue</ap-name>
+        <ap-sql>select dataField from measurements where demographicNo= ${demographic} and type='BP' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dataField}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>bp_lastdate</ap-name>
+        <ap-sql>select dateEntered from measurements where demographicNo= ${demographic} and type='BP' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dateEntered}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>wt_lastvalue</ap-name>
+        <ap-sql>select dataField from measurements where demographicNo= ${demographic} and type='WT' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dataField}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>wt_lastdate</ap-name>
+        <ap-sql>select dateEntered from measurements where demographicNo= ${demographic} and type='WT' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dateEntered}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>ht_lastvalue</ap-name>
+        <ap-sql>select dataField from measurements where demographicNo= ${demographic} and type='HT' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dataField}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>ht_lastdate</ap-name>
+        <ap-sql>select dateEntered from measurements where demographicNo= ${demographic} and type='HT' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dateEntered}</ap-output>
+    </databaseap>
+	<databaseap>
+	    <ap-name>wc_lastvalue</ap-name>
+	    <ap-sql>select dataField from measurements where demographicNo= ${demographic} and type='WC' order by dateEntered desc limit 1
+	    </ap-sql>
+	    <ap-output>${dataField}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>wc_lastdate</ap-name>
+        <ap-sql>select dateEntered from measurements where demographicNo= ${demographic} and type='WC' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dateEntered}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>bmi_lastvalue</ap-name>
+        <ap-sql>select dataField from measurements where demographicNo= ${demographic} and type='BMI' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dataField}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>bmi_lastdate</ap-name>
+        <ap-sql>select dateEntered from measurements where demographicNo= ${demographic} and type='BMI' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dateEntered}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>gp_cp_lastvalue</ap-name>
+        <ap-sql>select dataField from measurements where demographicNo= ${demographic} and type='GP_CP' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dataField}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>gp_cp_lastdate</ap-name>
+        <ap-sql>select dateEntered from measurements where demographicNo= ${demographic} and type='GP_CP' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dateEntered}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>td_lastdate</ap-name>
+        <ap-sql>SELECT lastUpdateDate FROM preventions WHERE demographic_no= ${demographic} AND prevention_type='Td' ORDER BY lastUpdateDate DESC LIMIT 1
+        </ap-sql>
+        <ap-output>${lastUpdateDate}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>mmr_lastdate</ap-name>
+        <ap-sql>SELECT lastUpdateDate FROM preventions WHERE demographic_no= ${demographic} AND prevention_type='MMR' ORDER BY lastUpdateDate DESC LIMIT 1
+        </ap-sql>
+        <ap-output>${lastUpdateDate}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>tdap_ipv_lastdate</ap-name>
+        <ap-sql>SELECT lastUpdateDate FROM preventions WHERE demographic_no= ${demographic} AND prevention_type='Tdap-IPV' ORDER BY lastUpdateDate DESC LIMIT 1
+        </ap-sql>
+        <ap-output>${lastUpdateDate}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>td_ipv_lastdate</ap-name>
+        <ap-sql>SELECT lastUpdateDate FROM preventions WHERE demographic_no= ${demographic} AND prevention_type='Td_IPV' ORDER BY lastUpdateDate DESC LIMIT 1
+        </ap-sql>
+        <ap-output>${lastUpdateDate}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>vz_lastdate</ap-name>
+        <ap-sql>SELECT lastUpdateDate FROM preventions WHERE demographic_no= ${demographic} AND prevention_type='VZ' ORDER BY lastUpdateDate DESC LIMIT 1
+        </ap-sql>
+        <ap-output>${lastUpdateDate}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>hepb_lastdate</ap-name>
+        <ap-sql>SELECT lastUpdateDate FROM preventions WHERE demographic_no= ${demographic} AND prevention_type='HepB' ORDER BY lastUpdateDate DESC LIMIT 1
+        </ap-sql>
+        <ap-output>${lastUpdateDate}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>px_lastdate</ap-name>
+        <ap-sql>SELECT lastUpdateDate FROM preventions WHERE demographic_no= ${demographic} AND prevention_type='Pneumovax' ORDER BY lastUpdateDate DESC LIMIT 1
+        </ap-sql>
+        <ap-output>${lastUpdateDate}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>hepa_lastdate</ap-name>
+        <ap-sql>SELECT lastUpdateDate FROM preventions WHERE demographic_no= ${demographic} AND prevention_type='HepA' ORDER BY lastUpdateDate DESC LIMIT 1
+        </ap-sql>
+        <ap-output>${lastUpdateDate}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>flu_lastdate</ap-name>
+        <ap-sql>SELECT lastUpdateDate FROM preventions WHERE demographic_no= ${demographic} AND prevention_type='Flu' ORDER BY lastUpdateDate DESC LIMIT 1
+        </ap-sql>
+        <ap-output>${lastUpdateDate}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>hepab_lastdate</ap-name>
+        <ap-sql>SELECT lastUpdateDate FROM preventions WHERE demographic_no= ${demographic} AND prevention_type='HepAB' ORDER BY lastUpdateDate DESC LIMIT 1
+        </ap-sql>
+        <ap-output>${lastUpdateDate}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>fbs_lastvalue</ap-name>
+        <ap-sql>select dataField from measurements where demographicNo= ${demographic} and type='FBS' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dataField}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>hbai_lastvalue</ap-name>
+        <ap-sql>select dataField from measurements where demographicNo= ${demographic} and type='HbAi' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dataField}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>hba1_lastvalue</ap-name>
+        <ap-sql>SELECT pt.val FROM preventionsExt pt LEFT JOIN preventions ps ON pt.prevention_id = ps.id WHERE pt.keyval='dose' AND ps.demographic_no= ${demographic} AND ps.prevention_type='HbA1' AND NOT EXISTS (SELECT * FROM preventions pv WHERE ps.demographic_no=pv.demographic_no AND pv.prevention_type=ps.prevention_type AND ps.lastUpdateDate &lt; pv.lastUpdateDate )
+        </ap-sql>
+        <ap-output>${val}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>a1c_lastvalue</ap-name>
+        <ap-sql>select dataField from measurements where demographicNo= ${demographic} and type='A1C' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dataField}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>acr_lastvalue</ap-name>
+        <ap-sql>select dataField from measurements where demographicNo= ${demographic} and type='ACR' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dataField}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>tchl_lastvalue</ap-name>
+        <ap-sql>select dataField from measurements where demographicNo= ${demographic} and type='TCHL' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dataField}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>tg_lastvalue</ap-name>
+        <ap-sql>select dataField from measurements where demographicNo= ${demographic} and type='TG' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dataField}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>ldl_lastvalue</ap-name>
+        <ap-sql>select dataField from measurements where demographicNo= ${demographic} and type='LDL' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dataField}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>hdl_lastvalue</ap-name>
+        <ap-sql>select dataField from measurements where demographicNo= ${demographic} and type='HDL' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dataField}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>tchd_lastvalue</ap-name>
+        <ap-sql>select dataField from measurements where demographicNo= ${demographic} and type='TCHD' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dataField}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>trig_lastvalue</ap-name>
+        <ap-sql>SELECT pt.val FROM preventionsExt pt LEFT JOIN preventions ps ON pt.prevention_id = ps.id WHERE pt.keyval='dose' AND ps.demographic_no= ${demographic} AND ps.prevention_type='TRIG' AND NOT EXISTS (SELECT * FROM preventions pv WHERE ps.demographic_no=pv.demographic_no AND pv.prevention_type=ps.prevention_type AND ps.lastUpdateDate &lt; pv.lastUpdateDate )
+        </ap-sql>
+        <ap-output>${val}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>scr_lastvalue</ap-name>
+        <ap-sql>select dataField from measurements where demographicNo= ${demographic} and type='SCR' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dataField}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>egfr_lastvalue</ap-name>
+        <ap-sql>select dataField from measurements where demographicNo= ${demographic} and type='EGFR' order by dateEntered desc limit 1
+        </ap-sql>
+        <ap-output>${dataField}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>hiv_lastvalue</ap-name>
+        <ap-sql>SELECT pt.val FROM preventionsExt pt LEFT JOIN preventions ps ON pt.prevention_id = ps.id WHERE pt.keyval='dose' AND ps.demographic_no= ${demographic} AND ps.prevention_type='HIV' AND NOT EXISTS (SELECT * FROM preventions pv WHERE ps.demographic_no=pv.demographic_no AND pv.prevention_type=ps.prevention_type AND ps.lastUpdateDate &lt; pv.lastUpdateDate )
+        </ap-sql>
+        <ap-output>${val}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>hib_lastvalue</ap-name>
+        <ap-sql>SELECT pt.val FROM preventionsExt pt LEFT JOIN preventions ps ON pt.prevention_id = ps.id WHERE pt.keyval='dose' AND ps.demographic_no= ${demographic} AND ps.prevention_type='Hib' AND NOT EXISTS (SELECT * FROM preventions pv WHERE ps.demographic_no=pv.demographic_no AND pv.prevention_type=ps.prevention_type AND ps.lastUpdateDate &lt; pv.lastUpdateDate )
+        </ap-sql>
+        <ap-output>${val}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>hpbs_lastvalue</ap-name>
+        <ap-sql>SELECT pt.val FROM preventionsExt pt LEFT JOIN preventions ps ON pt.prevention_id = ps.id WHERE pt.keyval='dose' AND ps.demographic_no= ${demographic} AND ps.prevention_type='HpBS' AND NOT EXISTS (SELECT * FROM preventions pv WHERE ps.demographic_no=pv.demographic_no AND pv.prevention_type=ps.prevention_type AND ps.lastUpdateDate &lt; pv.lastUpdateDate )
+        </ap-sql>
+        <ap-output>${val}</ap-output>
+    </databaseap>
+	<databaseap>
+    	<ap-name>hpba_lastvalue</ap-name>
+        <ap-sql>SELECT pt.val FROM preventionsExt pt LEFT JOIN preventions ps ON pt.prevention_id = ps.id WHERE pt.keyval='dose' AND ps.demographic_no= ${demographic} AND ps.prevention_type='HpBA' AND NOT EXISTS (SELECT * FROM preventions pv WHERE ps.demographic_no=pv.demographic_no AND pv.prevention_type=ps.prevention_type AND ps.lastUpdateDate &lt; pv.lastUpdateDate )
+        </ap-sql>
+        <ap-output>${val}</ap-output>
+    </databaseap>
+	
+<!-- BILLING -->
+    <databaseap>
+    	<ap-name>service_date</ap-name>
+        <ap-sql>select billing_date from billing_on_cheader1 where id=${invoiceNo}
+        </ap-sql>
+        <ap-output>${billing_date}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>practitioner</ap-name>
+        <ap-sql>select CONCAT('Dr.',' ',p.first_name,' ', UPPER(p.last_name)) as provider_name from provider p, billing_on_cheader1 b where p.provider_no=b.provider_no and b.id=${invoiceNo}
+        </ap-sql>
+        <ap-output>${provider_name}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>ref_doctor</ap-name>
+        <ap-sql>select ref_num from billing_on_cheader1 where id=${invoiceNo}
+        </ap-sql>
+        <ap-output>${ref_num}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>fee_total</ap-name>
+        <ap-sql>select ifnull((select format(sum(fee),2) from billing_on_item where ch1_id=${invoiceNo} and status !='D'),'0.00') as fees
+        </ap-sql>
+        <ap-output>${fees}</ap-output>
+    </databaseap>
+     <databaseap>
+    	<ap-name>payment_total</ap-name>
+        <ap-sql>select ifnull((select format(sum(value),2) from billing_on_ext where billing_no=${invoiceNo} and status='1' and key_val='payment'),'0.00') as payment         </ap-sql>
+        <ap-output>${payment}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>refund_total</ap-name>
+        <ap-sql>select ifnull((select format(sum(value),2) from billing_on_ext where billing_no=${invoiceNo} and status='1' and key_val='refund'),'0.00') as refund
+        </ap-sql>
+        <ap-output>${refund}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>balance_owing</ap-name>
+        <ap-sql> select format((select ifnull((select format(sum(fee),2) as fees from billing_on_item where ch1_id=${invoiceNo} and status !='D'),'0.00') - (select ifnull((select format(sum(value),2) as payment from billing_on_ext where billing_no=${invoiceNo} and status='1' and key_val='payment'),'0.00')) - (select ifnull((select format(sum(value),2) as refund from billing_on_ext where billing_no=${invoiceNo} and status='1' and key_val='refund'),'0.00'))),2) as balance_owing
+        </ap-sql>
+        <ap-output>${balance_owing}</ap-output>
+    </databaseap>  <databaseap>
+    	<ap-name>bill_item_number</ap-name>
+        <ap-sql>select GROUP_CONCAT(id SEPARATOR '<![CDATA[<br/>]]>') as billing_id from billing_on_item where ch1_id=${invoiceNo} and status != 'D' order by id
+        </ap-sql>
+        <ap-output>${billing_id}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>bill_item_description</ap-name>
+        <ap-sql>select GROUP_CONCAT(description SEPARATOR '<![CDATA[<br/>]]>') as billing_desc from billingservice b, billing_on_item bi where b.service_code=bi.service_code and bi.ch1_id=${invoiceNo} and bi.status !='D' and b.billingservice_no = (select max(b2.billingservice_no) from billingservice b2 where b.service_code = b2.service_code and b2.billingservice_date &lt;= now()) order by bi.id
+        </ap-sql>
+        <ap-output>${billing_desc}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>bill_item_service_code</ap-name>
+        <ap-sql>select GROUP_CONCAT(service_code SEPARATOR '<![CDATA[<br/>]]>') as billing_service_code from billing_on_item where ch1_id=${invoiceNo} and status != 'D' order by id
+        </ap-sql>
+        <ap-output>${billing_service_code}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>bill_item_qty</ap-name>
+        <ap-sql>select GROUP_CONCAT(ser_num SEPARATOR '<![CDATA[<br/>]]>') as billing_qty from billing_on_item where ch1_id=${invoiceNo} and status != 'D' order by id
+        </ap-sql>
+        <ap-output>${billing_qty}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>bill_item_dx</ap-name>
+        <ap-sql>select GROUP_CONCAT(dx SEPARATOR '<![CDATA[<br/>]]>') as billing_dx from billing_on_item where ch1_id=${invoiceNo} and status != 'D' order by id
+        </ap-sql>
+        <ap-output>${billing_dx}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>bill_item_amount</ap-name>
+        <ap-sql>select GROUP_CONCAT(format(fee,2) SEPARATOR '<![CDATA[<br/>]]>') as billing_fee from billing_on_item where ch1_id=${invoiceNo} and status != 'D' order by id
+        </ap-sql>
+        <ap-output>${billing_fee}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>urine_tox_test_json</ap-name>
+        <ap-sql>select type, dataField, comments, dateObserved, dateEntered from measurements
+        		where demographicNo=${demographic}
+        		and (type="OPID" or type="MAMP" or type="BZD" or type="CANB" or type="Uetc")
+        		order by dateEntered;
+        </ap-sql>
+        <ap-output>${type}, ${dataField}, ${comments}, ${dateObserved}, ${dateEntered}</ap-output>
+        <ap-json-output>true</ap-json-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>methadone_induction_assessment_json</ap-name>
+        <ap-sql>select type, dataField, comments, dateObserved, dateEntered from measurements
+        		where demographicNo=${demographic}
+        		and (type="RHU" or type="ORDU" or type="MDD" or type="GWS")
+        		order by dateEntered;
+        </ap-sql>
+        <ap-output>${type}, ${dataField}, ${comments}, ${dateObserved}, ${dateEntered}</ap-output>
+        <ap-json-output>true</ap-json-output>
+    </databaseap>
+    <databaseap>
+        <ap-name>cytology_no</ap-name>
+        <ap-sql>select value from demographicExt d where d.key_val = 'cytolNum' and d.demographic_no = ${demographic};
+       </ap-sql>
+        <ap-output>${value}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>guardian_label</ap-name>
+        <ap-sql>select d.first_name, d.last_name, d.address, d.city, d.province, d.postal from relationships r, demographic d where r.relation_demographic_no = d.demographic_no and r.demographic_no = ${demographic}
+        </ap-sql>
+        <ap-output>${first_name} ${last_name} \n${address} \n${city} ${province} \n${postal}</ap-output>
+    </databaseap>
+    <databaseap>
+    	<ap-name>guardian_label2</ap-name>
+        <ap-sql>select d.first_name, d.last_name, d.address, d.city, d.province, d.postal from DemographicContact r, demographic d where r.contactId = d.demographic_no and r.sdm = 'true' and r.demographicNo =  ${demographic}
+        </ap-sql>
+        <ap-output>${first_name} ${last_name} \n${address} \n${city} ${province} \n${postal}</ap-output>
+    </databaseap>
+  
+<!-- OHSUPPORT-3539 - measurement info for WHO forms -->
+	<databaseap>
+		<ap-name>who_measurements</ap-name>
+		<ap-sql>SELECT GROUP_CONCAT(
+			REPLACE(CONCAT( IFNULL(Q.obsDate, ''),'|', IFNULL(Q.height, ''), '|',
+			IFNULL(Q.weight, ''), '|', IFNULL(Q.circ, ''), '|',
+			IFNULL(REPLACE(Q.comments,'|',''), '')),';','')
+			SEPARATOR ';') AS list FROM (
+			SELECT
+			DATE(m.dateObserved) AS obsDate,
+			MAX(IF(m.type='HT', m.dataField, NULL)) AS height,
+			MAX(IF(m.type='WT', m.dataField, NULL)) AS weight,
+			MAX(IF(m.type='HEAD', m.dataField, NULL)) AS circ,
+			MAX(m.comments) as comments
+
+			FROM measurements m
+			WHERE m.type IN ('HT', 'WT', 'HEAD')
+			AND m.demographicNo='${demographic}'
+			GROUP BY DATE(m.dateObserved)
+			) AS Q
+			ORDER BY Q.obsDate DESC
+		</ap-sql>
+		<ap-output>${list}</ap-output>
+	</databaseap>    
 
 <!-- Extended eform tags, cannot be directly called -->
     <databaseap>
@@ -772,163 +2318,5 @@
                 AND other_key='${other_key}' AND deleted=false ORDER BY id DESC LIMIT 1</ap-sql>
         <ap-output>${other_id}</ap-output>
     </databaseap>
-<!-- Extended eform tags end -->
-    
-    <databaseap>
-        <ap-name>dtap_immunization_date</ap-name>
-        <ap-sql>select prevention_date from preventions p where p.prevention_type = 'dtap-ipv-hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
-       </ap-sql>
-        <ap-output>${prevention_date}</ap-output>
-    </databaseap>
-
-     <databaseap>
-        <ap-name>flu_immunization_date</ap-name>
-        <ap-sql>select prevention_date from preventions p where p.prevention_type = 'Flu' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
-       </ap-sql>
-        <ap-output>${prevention_date}</ap-output>
-    </databaseap>
-
-    <databaseap>
-        <ap-name>fobt_immunization_date</ap-name>
-        <ap-sql>select prevention_date from preventions p where p.prevention_type = 'FOBT' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
-       </ap-sql>
-        <ap-output>${prevention_date}</ap-output>
-    </databaseap>
- 
-    <databaseap>
-        <ap-name>mammogram_immunization_date</ap-name>
-        <ap-sql>select prevention_date from preventions p where p.prevention_type = 'MAM' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
-       </ap-sql>
-        <ap-output>${prevention_date}</ap-output>
-    </databaseap>
-
-    <databaseap>
-        <ap-name>pap_immunization_date</ap-name>
-        <ap-sql>select prevention_date from preventions p where p.prevention_type = 'PAP' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
-       </ap-sql>
-        <ap-output>${prevention_date}</ap-output>
-    </databaseap>
-
-    <databaseap>
-        <ap-name>cytology_no</ap-name>
-        <ap-sql>select value from demographicExt d where d.key_val = 'cytolNum' and d.demographic_no = ${demographic};
-       </ap-sql>
-        <ap-output>${value}</ap-output>
-    </databaseap>
-    
-    <databaseap>
-    	<ap-name>guardian_label</ap-name>
-        <ap-sql>select d.first_name, d.last_name, d.address, d.city, d.province, d.postal from relationships r, demographic d where r.relation_demographic_no = d.demographic_no and r.demographic_no = ${demographic}
-        </ap-sql>
-        <ap-output>${first_name} ${last_name} \n${address} \n${city} ${province} \n${postal}</ap-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>guardian_label2</ap-name>
-        <ap-sql>select d.first_name, d.last_name, d.address, d.city, d.province, d.postal from DemographicContact r, demographic d where r.contactId = d.demographic_no and r.sdm = 'true' and r.demographicNo =  ${demographic}
-        </ap-sql>
-        <ap-output>${first_name} ${last_name} \n${address} \n${city} ${province} \n${postal}</ap-output>
-    </databaseap>
-     <databaseap>
-        <ap-name>email</ap-name>
-        <ap-sql>SELECT email FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-        <ap-output>${email}</ap-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>service_date</ap-name>
-        <ap-sql>select billing_date from billing_on_cheader1 where id=${invoiceNo}
-        </ap-sql>
-        <ap-output>${billing_date}</ap-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>practitioner</ap-name>
-        <ap-sql>select CONCAT('Dr.',' ',p.first_name,' ', UPPER(p.last_name)) as provider_name from provider p, billing_on_cheader1 b where p.provider_no=b.provider_no and b.id=${invoiceNo}
-        </ap-sql>
-        <ap-output>${provider_name}</ap-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>ref_doctor</ap-name>
-        <ap-sql>select ref_num from billing_on_cheader1 where id=${invoiceNo}
-        </ap-sql>
-        <ap-output>${ref_num}</ap-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>fee_total</ap-name>
-        <ap-sql>select ifnull((select format(sum(fee),2) from billing_on_item where ch1_id=${invoiceNo} and status !='D'),'0.00') as fees
-        </ap-sql>
-        <ap-output>${fees}</ap-output>
-    </databaseap>
-     <databaseap>
-    	<ap-name>payment_total</ap-name>
-        <ap-sql>select ifnull((select format(sum(value),2) from billing_on_ext where billing_no=${invoiceNo} and status='1' and key_val='payment'),'0.00') as payment       
-        </ap-sql>
-        <ap-output>${payment}</ap-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>refund_total</ap-name>
-        <ap-sql>select ifnull((select format(sum(value),2) from billing_on_ext where billing_no=${invoiceNo} and status='1' and key_val='refund'),'0.00') as refund
-        </ap-sql>
-        <ap-output>${refund}</ap-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>balance_owing</ap-name>
-        <ap-sql> select format((select ifnull((select format(sum(fee),2) as fees from billing_on_item where ch1_id=${invoiceNo} and status !='D'),'0.00') - (select ifnull((select format(sum(value),2) as payment from billing_on_ext where billing_no=${invoiceNo} and status='1' and key_val='payment'),'0.00')) - (select ifnull((select format(sum(value),2) as refund from billing_on_ext where billing_no=${invoiceNo} and status='1' and key_val='refund'),'0.00'))),2) as balance_owing
-        </ap-sql>
-        <ap-output>${balance_owing}</ap-output>
-    </databaseap>    
-    <databaseap>
-    	<ap-name>bill_item_number</ap-name>
-        <ap-sql>select GROUP_CONCAT(id SEPARATOR '<![CDATA[<br/>]]>') as billing_id from billing_on_item where ch1_id=${invoiceNo} and status != 'D' order by id
-        </ap-sql>
-        <ap-output>${billing_id}</ap-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>bill_item_description</ap-name>
-        <ap-sql>select GROUP_CONCAT(description SEPARATOR '<![CDATA[<br/>]]>') as billing_desc from billingservice b, billing_on_item bi where b.service_code=bi.service_code and bi.ch1_id=${invoiceNo} and bi.status !='D' and b.billingservice_no = (select max(b2.billingservice_no) from billingservice b2 where b.service_code = b2.service_code and b2.billingservice_date &lt;= now()) order by bi.id
-        </ap-sql>
-        <ap-output>${billing_desc}</ap-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>bill_item_service_code</ap-name>
-        <ap-sql>select GROUP_CONCAT(service_code SEPARATOR '<![CDATA[<br/>]]>') as billing_service_code from billing_on_item where ch1_id=${invoiceNo} and status != 'D' order by id
-        </ap-sql>
-        <ap-output>${billing_service_code}</ap-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>bill_item_qty</ap-name>
-        <ap-sql>select GROUP_CONCAT(ser_num SEPARATOR '<![CDATA[<br/>]]>') as billing_qty from billing_on_item where ch1_id=${invoiceNo} and status != 'D' order by id
-        </ap-sql>
-        <ap-output>${billing_qty}</ap-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>bill_item_dx</ap-name>
-        <ap-sql>select GROUP_CONCAT(dx SEPARATOR '<![CDATA[<br/>]]>') as billing_dx from billing_on_item where ch1_id=${invoiceNo} and status != 'D' order by id
-        </ap-sql>
-        <ap-output>${billing_dx}</ap-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>bill_item_amount</ap-name>
-        <ap-sql>select GROUP_CONCAT(format(fee,2) SEPARATOR '<![CDATA[<br/>]]>') as billing_fee from billing_on_item where ch1_id=${invoiceNo} and status != 'D' order by id
-        </ap-sql>
-        <ap-output>${billing_fee}</ap-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>urine_tox_test_json</ap-name>
-        <ap-sql>select type, dataField, comments, dateObserved, dateEntered from measurements
-        		where demographicNo=${demographic}
-        		and (type="OPID" or type="MAMP" or type="BZD" or type="CANB" or type="Uetc")
-        		order by dateEntered;
-        </ap-sql>
-        <ap-output>${type}, ${dataField}, ${comments}, ${dateObserved}, ${dateEntered}</ap-output>
-        <ap-json-output>true</ap-json-output>
-    </databaseap>
-    <databaseap>
-    	<ap-name>methadone_induction_assessment_json</ap-name>
-        <ap-sql>select type, dataField, comments, dateObserved, dateEntered from measurements
-        		where demographicNo=${demographic}
-        		and (type="RHU" or type="ORDU" or type="MDD" or type="GWS")
-        		order by dateEntered;
-        </ap-sql>
-        <ap-output>${type}, ${dataField}, ${comments}, ${dateObserved}, ${dateEntered}</ap-output>
-        <ap-json-output>true</ap-json-output>
-    </databaseap>
+<!-- Extended eform tags end -->   
 </eformap-config>

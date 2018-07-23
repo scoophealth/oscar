@@ -8759,6 +8759,7 @@ CREATE TABLE `view` (
   `name` varchar(255) NOT NULL default '',
   `value` text,
   `role` varchar(255) NOT NULL default '',
+  `providerNo` varchar(6),
   PRIMARY KEY  (`id`)
 );
 
