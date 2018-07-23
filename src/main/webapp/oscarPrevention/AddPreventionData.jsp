@@ -846,7 +846,7 @@ function changeSite(el) {
 							<option value="vial" <%="vial".equals(d2)?"selected=\"selected\" ":"" %>>vial</option>
                         
                           </select>
-                          <input type="text" name="doseUnit"  value="<%=d2%>"/>
+                         
                           <br/>
                         <%if(!isCvc) { %>
                          <label for="lot">Lot:</label>  <input type="text" name="lot" id="lot" value="<%=str(lot,"")%>" />

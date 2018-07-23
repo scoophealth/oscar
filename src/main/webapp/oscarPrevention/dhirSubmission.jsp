@@ -24,6 +24,11 @@
 
 --%>
 
+<%@page import="org.apache.http.impl.client.HttpClients"%>
+<%@page import="org.apache.http.impl.client.CloseableHttpClient"%>
+<%@page import="org.apache.http.client.config.RequestConfig"%>
+<%@page import="org.apache.http.conn.ssl.SSLConnectionSocketFactory"%>
+<%@page import="org.apache.http.conn.ssl.SSLContexts"%>
 <%@page import="java.util.UUID"%>
 <%@page import="java.util.Random"%>
 <%@page import="java.util.List"%>
@@ -300,7 +305,7 @@ clear: left;
                     httpPost.setEntity(reqEntity);
                     httpPost.setHeader("Content-type", "application/json");
                     
-                    HttpClient httpClient = getHttpClient();
+                    HttpClient httpClient = getHttpClient2();
                     HttpResponse httpResponse = httpClient.execute(httpPost);
                     String entity = EntityUtils.toString(httpResponse.getEntity());
                     
@@ -423,6 +428,8 @@ clear: left;
     	 logger.error("Failed to create an HttpClient that allows all SSL", e);
     }
    
+	bundles.put(uuid,null);
+
 
 %>
 
@@ -443,19 +450,25 @@ clear: left;
 
 
 
-<%!private HttpClient getHttpClient() throws NoSuchAlgorithmException, KeyManagementException {
-    //Gets the SSLContext instance for SSL and initializes it
-    SSLContext sslContext = SSLContext.getInstance("SSL");
-    sslContext.init(null, new TrustManager[] {new CxfClientUtils.TrustAllManager()}, new SecureRandom());
-    //Creates a new SocketFactory to bypass the SSL verifiers
-    SSLSocketFactory sf = new SSLSocketFactory(sslContext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-    //Makes a new SchemeRegistry using the SocketFactory so that HTTPS ssl is bypassed
-    SchemeRegistry registry = new SchemeRegistry();
-    registry.register(new Scheme("https", 443, sf));
-    //Creates a new ClientConnectionManager with the registry and creates the httpClient to use
-    ClientConnectionManager ccm = new PoolingClientConnectionManager(registry);
+<%!
 
-    DefaultHttpClient httpClient = new DefaultHttpClient(ccm);
-    
-    return httpClient;
-}%>
+protected HttpClient getHttpClient2() throws Exception {
+
+    //setup SSL
+    SSLContext sslcontext = SSLContexts.custom().build();
+    sslcontext.getDefaultSSLParameters().setNeedClientAuth(true);
+    sslcontext.getDefaultSSLParameters().setWantClientAuth(true);
+    SSLConnectionSocketFactory sf = new SSLConnectionSocketFactory(sslcontext);
+
+    //setup timeouts
+    int timeout = Integer.parseInt(OscarProperties.getInstance().getProperty("dhir.timeout", "60"));
+    RequestConfig config = RequestConfig.custom().setSocketTimeout(timeout * 1000).setConnectTimeout(timeout * 1000).build();
+
+    CloseableHttpClient httpclient3 = HttpClients.custom().setDefaultRequestConfig(config).setSSLSocketFactory(sf).build();
+
+    return httpclient3;
+
+}
+
+
+%>
