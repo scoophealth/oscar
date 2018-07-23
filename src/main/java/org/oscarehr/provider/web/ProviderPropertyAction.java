@@ -2725,8 +2725,8 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 		UserProperty prop3 = loadProperty(providerNo, UserProperty.PREVENTION_NON_ISPA_WARNING);
 		
 		request.setAttribute("preventionSSOWarningProperty", prop);
-		request.setAttribute("preventionISPAWarningProperty", prop);
-		request.setAttribute("preventionNonISPAWarningProperty", prop);
+		request.setAttribute("preventionISPAWarningProperty", prop2);
+		request.setAttribute("preventionNonISPAWarningProperty", prop3);
 		
 		request.setAttribute("providertitle","provider.preventionPrefs.title"); 
 		request.setAttribute("providermsgPrefs","provider.preventionPrefs.msgPrefs"); //=Preferences
