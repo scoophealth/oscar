@@ -31,7 +31,6 @@ import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.cxf.helpers.FileUtils;
@@ -48,14 +46,13 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.PoolingClientConnectionManager;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.apache.tika.io.IOUtils;
@@ -85,7 +82,6 @@ import org.oscarehr.common.model.Security;
 import org.oscarehr.integration.fhir.api.BIS;
 import org.oscarehr.integration.fhir.builder.AbstractFhirMessageBuilder;
 import org.oscarehr.integration.fhir.builder.FhirCommunicationBuilder;
-import org.oscarehr.util.CxfClientUtils;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -287,7 +283,7 @@ public class BORNFhirJob implements OscarRunnable {
 	       	 httpPost.setEntity(reqEntity);
 	       	 httpPost.setHeader("Content-type", "application/json+fhir");
 	           
-	       	 HttpClient httpClient = getHttpClient();
+	       	 HttpClient httpClient = getHttpClient2();
 	       	 HttpResponse httpResponse = httpClient.execute(httpPost);
 	       	 String entity = EntityUtils.toString(httpResponse.getEntity());
 	       	 logger.info("response=" + entity);
@@ -622,23 +618,24 @@ public class BORNFhirJob implements OscarRunnable {
 		return null;
 	}
 	
-	private HttpClient getHttpClient() throws NoSuchAlgorithmException, KeyManagementException {
-	    //Gets the SSLContext instance for SSL and initializes it
-	    //SSLContext sslContext = SSLContext.getInstance("SSL");
-	    SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-	    //sslContext.init(null, null, null);
-	    
-	    sslContext.init(null, new TrustManager[] {new CxfClientUtils.TrustAllManager()}, new SecureRandom());
-	    //Creates a new SocketFactory to bypass the SSL verifiers
-	    SSLSocketFactory sf = new SSLSocketFactory(sslContext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-	    //Makes a new SchemeRegistry using the SocketFactory so that HTTPS ssl is bypassed
-	    SchemeRegistry registry = new SchemeRegistry();
-	    registry.register(new Scheme("https", 443, sf));
-	    //Creates a new ClientConnectionManager with the registry and creates the httpClient to use
-	    ClientConnectionManager ccm = new PoolingClientConnectionManager(registry);
+	   protected HttpClient getHttpClient2() throws KeyManagementException, NoSuchAlgorithmException {
 
-	    return new DefaultHttpClient(ccm);
-	}
+	        //setup SSL
+	        SSLContext sslcontext = SSLContexts.custom().useTLS().build();
+	        sslcontext.getDefaultSSLParameters().setNeedClientAuth(true);
+	        sslcontext.getDefaultSSLParameters().setWantClientAuth(true);
+	        SSLConnectionSocketFactory sf = new SSLConnectionSocketFactory(sslcontext);
+
+	        //setup timeouts
+	        int timeout = Integer.parseInt(OscarProperties.getInstance().getProperty("BORNFhirJob.timeout", "60"));
+	        RequestConfig config = RequestConfig.custom().setSocketTimeout(timeout * 1000).setConnectTimeout(timeout * 1000).build();
+
+	        CloseableHttpClient httpclient3 = HttpClients.custom().setDefaultRequestConfig(config).setSSLSocketFactory(sf).build();
+
+	        return httpclient3;
+
+	    }
+	   
 	
 	protected FhirCommunicationBuilder getFhirCommunicationBuilder(LoggedInInfo loggedInInfo, Integer demographicNo, String type, Clinic clinic, String data) {
 		if("ar".equals(type)) {

@@ -295,7 +295,7 @@ clear: left;
                     httpPost.addHeader("x-access-token", oneIdToken);
                     
                     JSONObject obj = new JSONObject();
-                    obj.put("url","https://wsgateway.pst.ehealthontario.ca:9443/API/FHIR/Immunizations/v3/partner/clinician/$process-message");
+                    obj.put("url",OscarProperties.getInstance().getProperty("dhir.url"));
                     obj.put("service","DHIR");
                     obj.put("body",jbundle);
                     obj.put("client-request-id",clientRequestId);
@@ -455,7 +455,7 @@ clear: left;
 protected HttpClient getHttpClient2() throws Exception {
 
     //setup SSL
-    SSLContext sslcontext = SSLContexts.custom().build();
+    SSLContext sslcontext = SSLContexts.custom().useTLS().build();
     sslcontext.getDefaultSSLParameters().setNeedClientAuth(true);
     sslcontext.getDefaultSSLParameters().setWantClientAuth(true);
     SSLConnectionSocketFactory sf = new SSLConnectionSocketFactory(sslcontext);
