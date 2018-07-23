@@ -126,18 +126,7 @@ $(document).ready( function() {
 
     	sendData(url, data, null);
     });
-    
-    // Export Template button
-    $("#libraryTable tbody").on('click', ".exportTemplate", function(event) {
-    	// event.preventDefault();
-    	var url = "/web/dashboard/admin/DashboardManager.do";
-    	var data = new Object();
-    	data.indicatorId = (this.id).split("_")[1];
-    	data.method = (this.id).split("_")[0];  
 
-    	sendData(url, data, "reload");
-    });
-    
     // Back to dashboard button
     $(".backtoDashboardBtn").on('click', function(event) {
     	event.preventDefault();

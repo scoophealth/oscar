@@ -185,11 +185,15 @@
 						</label>
 					</td>
 					<td>
-						<button class="btn btn-default exportTemplate text-center" id="exportTemplate_${ indicator.id }" type="button">
-							<span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-							Export
-						</button>
+						<form action="${ pageContext.request.contextPath }/web/dashboard/admin/DashboardManager.do?method=exportTemplate"
+							method="POST" class="inlineForm">
 
+							<input type="hidden" name="indicatorId" value="${ indicator.id }">
+							<button class="btn btn-default exportTemplate text-center" id="exportTemplate_${ indicator.id }" type="submit">
+								<span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+								Export
+							</button>
+						</form>
 					</td>
 
 					<td>
