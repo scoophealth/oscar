@@ -38,6 +38,7 @@ import java.util.List;
 public class ExcludeDemographicHandlerTest {
 	
 	private static ExcludeDemographicHandler excludeDemographicHandler;
+	private static String indicatorName;
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -61,43 +62,44 @@ public class ExcludeDemographicHandlerTest {
     
     @Test
     public void getDemoIds() {
-    	//excludeDemographicHandler = new ExcludeDemographicHandler(); 
-    	assertEquals(0, excludeDemographicHandler.getDemoIds("indicatorName").size());
+    	indicatorName = "indicatorName_getDemoIds";
+    	assertEquals(0, excludeDemographicHandler.getDemoIds(indicatorName).size());
     }
     
     @Test
     public void getDemoExts() {
-    	assertEquals(0, excludeDemographicHandler.getDemoExts("indicatorName").size());
+    	indicatorName = "indicatorName_getDemoExts";
+    	assertEquals(0, excludeDemographicHandler.getDemoExts(indicatorName).size());
     }
     
     @Test
     public void setDemoId() {
-    	//excludeDemographicHandler = new ExcludeDemographicHandler();
-    	excludeDemographicHandler.excludeDemoId(20, "myIndicatorName1");
-    	assertEquals(1, excludeDemographicHandler.getDemoIds("myIndicatorName1").size());
-    	assertTrue(20 == excludeDemographicHandler.getDemoIds("myIndicatorName1").get(0));
+    	indicatorName = "myIndicatorName_setDemoId";
+    	excludeDemographicHandler.excludeDemoId(20, indicatorName);
+    	assertEquals(1, excludeDemographicHandler.getDemoIds(indicatorName).size());
+    	assertTrue(20 == excludeDemographicHandler.getDemoIds(indicatorName).get(0));
     }
     
     @Test
     public void setDemoIDList() {
-    	//excludeDemographicHandler = new ExcludeDemographicHandler();
+    	indicatorName = "myIndicatorName_setDemoIDList";
     	int[] array = {20,30,40,50};
     	List<Integer> list = new ArrayList<Integer>();
     	for (int el: array) {
     		list.add(el);
     	}
-    	excludeDemographicHandler.excludeDemoIds(list, "myIndicatorName2");
-    	assertEquals(array.length, excludeDemographicHandler.getDemoIds("myIndicatorName2").size());
+    	excludeDemographicHandler.excludeDemoIds(list, indicatorName);
+    	assertEquals(array.length, excludeDemographicHandler.getDemoIds(indicatorName).size());
     	int i = 0;
     	for (int el: array) {
-    		assertTrue(el == excludeDemographicHandler.getDemoIds("myIndicatorName2").get(i));
+    		assertTrue(el == excludeDemographicHandler.getDemoIds(indicatorName).get(i));
     		i++;
     	}
     }
     
     @Test
     public void unsetDemoIDList() {
-    	String indicatorName = "myIndicatorName3";
+    	indicatorName = "myIndicatorName_unsetDemoIDList";
     	int[] array = {20,30,40,50};
     	List<Integer> list = new ArrayList<Integer>();
     	for (int el: array) {
@@ -111,13 +113,27 @@ public class ExcludeDemographicHandlerTest {
     
     @Test
     public void setDemoIdJson() {
-    	//excludeDemographicHandler = new ExcludeDemographicHandler();
+    	indicatorName = "myIndicatorName_setDemoIdJson";
     	String jsonStr = "20,30,40,50";
-    	excludeDemographicHandler.excludeDemoIds(jsonStr, "myIndicatorName4");
+    	excludeDemographicHandler.excludeDemoIds(jsonStr, indicatorName);
     	int i = 0;
     	for (int el = 20; el < 60; el = el + 10) {
-    		assertTrue(el == excludeDemographicHandler.getDemoIds("myIndicatorName4").get(i));
+    		assertTrue(el == excludeDemographicHandler.getDemoIds(indicatorName).get(i));
     		i++;
     	}
+    }
+    
+    @Test
+    public void unsetDemoIdJson() {
+    	indicatorName = "myIndicatorName_unsetDemoIdJson";
+    	String jsonStr = "20,30,40,50";
+    	excludeDemographicHandler.excludeDemoIds(jsonStr, indicatorName);
+    	int i = 0;
+    	for (int el = 20; el < 60; el = el + 10) {
+    		assertTrue(el == excludeDemographicHandler.getDemoIds(indicatorName).get(i));
+    		i++;
+    	}
+    	excludeDemographicHandler.unExcludeDemoIds(jsonStr, indicatorName);
+    	assertEquals(0, excludeDemographicHandler.getDemoIds(indicatorName).size());
     }
 }
