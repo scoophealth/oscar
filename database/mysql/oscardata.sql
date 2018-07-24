@@ -1841,6 +1841,7 @@ insert into `secObjectName` (`objectName`) values ('_allergy');
 insert into `secObjectName` (`objectName`) values ('_eyeform');
 insert into `secObjectName` (`objectName`) values ('_appDefinition');
 insert into `secObjectName` (`objectName`) values ('_phr');
+insert into `secObjectName` (`objectName`) values ('_ehr');
 
 insert into `secObjectName`  (`objectName`,`description`,`orgapplicable`) values('_demographicExport', 'Export Demographic', 0);
 insert into `secObjectName` (`objectName`) values ('_admin.document');

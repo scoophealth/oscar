@@ -1088,7 +1088,7 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 	<%}%>
 	
 		<% if (request.getSession().getAttribute("oneIdEmail") != null && !request.getSession().getAttribute("oneIdEmail").equals("")) { %>
-				| <a href="<%=econsultUrl%>/SAML2/logout?oscarReturnURL=<%=URLEncoder.encode(oscarUrl + "/logout.jsp", "UTF-8")%>">Global Logout</a>
+				| <a href="../logoutSSO.jsp">Global Logout</a>
  		<% }
 		   else { %>
 				| <a href="../logout.jsp"><bean:message key="global.btnLogout"/>&nbsp;</a>
