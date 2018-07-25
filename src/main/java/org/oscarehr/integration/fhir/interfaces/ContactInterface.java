@@ -1,5 +1,4 @@
 package org.oscarehr.integration.fhir.interfaces;
-
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -25,17 +24,21 @@ package org.oscarehr.integration.fhir.interfaces;
  */
 
 
-import org.oscarehr.common.model.AbstractModel;
+import org.oscarehr.integration.fhir.resources.constants.ContactRelationship;
+import org.oscarehr.integration.fhir.resources.constants.ContactType;
 
 
 /**
  * An interface used for all contact types in Oscar. 
  */
-public interface ContactInterface< T extends AbstractModel<?> > {
-	
-//	public void setContactType()
+public interface ContactInterface {
 
-	public void setId( Integer id );
+	public void setContactRelationship(ContactRelationship contactRelationship);
+	public ContactRelationship getContactRelationship();
+	
+	public void setContactType(ContactType contactType);
+	public ContactType getContactType();
+
 	public Integer getId();
 	
 	public void setLocationCode( String locationCode ); 
@@ -70,6 +73,9 @@ public interface ContactInterface< T extends AbstractModel<?> > {
 	
 	public void setWorkPhone( String workphone );
 	public String getWorkPhone();
+	
+	public void setPhone( String phone );
+	public String getPhone();
 	
 	public void setProviderCpso( String providerCPSO );
 	public String getProviderCpso();

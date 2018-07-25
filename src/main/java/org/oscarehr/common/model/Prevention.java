@@ -33,6 +33,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -44,12 +45,15 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.oscarehr.caisi_integrator.util.MiscUtils;
 import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
 
 @Entity
 @Table(name = "preventions")
-public class Prevention extends AbstractModel<Integer> implements Serializable, ImmunizationInterface<Prevention> {
+public class Prevention extends AbstractModel<Integer> implements Serializable, ImmunizationInterface {
 
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
@@ -88,7 +92,7 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 	private Date lastUpdateDate = null;
 
 	// This is a bi-directional relationship
-	@OneToMany(mappedBy="prevention")
+	@OneToMany(mappedBy="prevention", fetch=FetchType.EAGER)
 	private List<PreventionExt> preventionExts;
 	
 	@Transient
@@ -100,12 +104,12 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 
 	private String snomedId = null;
 
-	public Integer getDemographicId() {
-		return demographicId;
-	}
-
 	public void setDemographicId(Integer demographicId) {
 		this.demographicId = demographicId;
+	}
+
+	public Integer getDemographicId() {
+		return this.demographicId;
 	}
 
 	public Date getPreventionDate() {
@@ -230,7 +234,6 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 
 	public void setPreventionExts(List<PreventionExt> preventionExts) {
 		this.preventionExts = preventionExts;
-		setPreventionExtendedProperties( new HashMap<String, String>() );
 	}
 
 	public PreventionExt addPreventionExt(PreventionExt preventionExt) {
@@ -241,7 +244,6 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 	}
 
 	public void addPreventionExt( ImmunizationProperty key, String value ) {
-		getPreventionExtendedProperties().put( key.name(), value );
 		PreventionExt preventionExt = new PreventionExt();
 		preventionExt.setKeyval( key.name() );
 		preventionExt.setVal( value );
@@ -262,15 +264,18 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 		}
 		return this.preventionExtendedProperties;
 	}
-	
-	public void setPreventionExtendedProperties( HashMap<String, String> preventionExtendedProperties ) {		
-		if( this.getPreventionExts() != null && preventionExtendedProperties.isEmpty() ) {
-			for( PreventionExt property : getPreventionExts() ) {
+
+	/**
+	 * There is no listener for this method. 
+	 * This method needs to be invoked "manually" after this entity is instantiated and loaded 
+	 * ie: Prevention.setPreventionExtendedProperties()
+	 */
+	public void setPreventionExtendedProperties() {		
+		if( this.getPreventionExts() != null ) {
+			for( PreventionExt property : preventionExts ) {
 				setPreventionExtendedProperty( property );
 			}
 		}
-		
-		this.preventionExtendedProperties = preventionExtendedProperties;
 	}
 	
 	public void setPreventionExtendedProperty( PreventionExt property ) {		
@@ -409,8 +414,25 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 		addPreventionExt( ImmunizationProperty.location, site );
 	}
 
+	
+	
+	@Override
+	public String getVaccineCode2() {
+		String brandSnomedId = getImmunizationProperty(ImmunizationProperty.brandSnomedId);
+		if(!StringUtils.isEmpty(brandSnomedId)) {
+			return brandSnomedId;
+		}
+		return null;
+	}
+
+	@Override
+	public void setVaccineCode2(String vaccineCode) {
+		addPreventionExt( ImmunizationProperty.brandSnomedId,vaccineCode );
+	}
+	
 	@Override
 	public String getVaccineCode() {
+		
 		return getSnomedId();
 	}
 
@@ -421,12 +443,12 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 
 	@Override
 	public boolean isPrimarySource() {
-		return isCompletedExternally();
+		return !isCompletedExternally();
 	}
 
 	@Override
 	public void setPrimarySource(boolean truefalse) {
-		setCompletedExternally( truefalse );	
+		setCompletedExternally( !truefalse );	
 	}
 
 	@Override
@@ -459,7 +481,30 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 	 */
 	@Override
 	public boolean isImmunization() {
-		return getPreventionExtendedProperties().containsKey( ImmunizationProperty.dose.name() );
+		return ( getSnomedId() != null && ! getSnomedId().isEmpty() );
 	}
 
+	@Override
+	public boolean isComplete() {
+		return ( ! isNever() && ! isRefused() );
+	}
+
+	@Override
+	public String getProviderName() {
+		return getImmunizationProperty( ImmunizationProperty.providerName );
+	}
+
+
+	@Override
+	public void setProviderName(String providerName) {
+		addPreventionExt( ImmunizationProperty.providerName,providerName );
+	}
+	
+	@Override
+	public boolean isHistorical(int days) {
+		DateTime immunizationDate = new DateTime( getImmunizationDate() );
+		DateTime submissionDate =  new DateTime( System.currentTimeMillis() );		
+		int daysBetween = Days.daysBetween(immunizationDate, submissionDate).getDays();		
+		return ( daysBetween > days );
+	}
 }

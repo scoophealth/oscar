@@ -54,7 +54,7 @@ import org.oscarehr.common.model.AbstractModel;
  * such as BORN transmissions. 
  * 
  */
-public class ClinicalImpression extends OscarFhirResource< org.hl7.fhir.dstu3.model.ClinicalImpression, AbstractModel<?> > {
+public class ClinicalImpression extends AbstractOscarFhirResource< org.hl7.fhir.dstu3.model.ClinicalImpression, AbstractModel<?> > {
 
 	private String annotation;
 	private CaseManagementNote caseManagementNote;
@@ -103,7 +103,8 @@ public class ClinicalImpression extends OscarFhirResource< org.hl7.fhir.dstu3.mo
 		fhirResource.setStatus( ClinicalImpressionStatus.COMPLETED );
 
 		if( ! getAnnotation().isEmpty() ) {
-			setEncodedBytes( getAnnotation() );			
+			//setEncodedBytes( getAnnotation() );
+			this.encodedBytes = getAnnotation();
 		} else if ( getCaseManagementNote() != null ) {
 			setEncodedBytes( getCaseManagementNote().getNote() );
 		}

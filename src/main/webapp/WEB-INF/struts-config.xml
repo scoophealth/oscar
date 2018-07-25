@@ -307,6 +307,9 @@
 			<form-property name="appointmentCardPhone" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="appointmentCardFax" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="dashboardShareProperty" type="org.oscarehr.common.model.UserProperty" />
+			<form-property name="preventionSSOWarningProperty" type="org.oscarehr.common.model.UserProperty" />
+			<form-property name="preventionISPAWarningProperty" type="org.oscarehr.common.model.UserProperty" />
+			<form-property name="preventionNonISPAWarningProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="clinicalConnectDisableCloseWindow" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="clinicalConnectDisableLogoutWarning" type="org.oscarehr.common.model.UserProperty" />
 		</form-bean>
@@ -1686,8 +1689,8 @@
             <forward name="genBornPrefs"     path="/provider/setBornPrefs.jsp"/>
              <forward name="genAppointmentCardPrefs"     path="/provider/setAppointmentCardPrefs.jsp"/>
              <forward name="genDashboardPrefs"     path="/provider/setDashboardPrefs.jsp"/>
+              <forward name="genPreventionPrefs"     path="/provider/setPreventionPrefs.jsp"/>
               <forward name="genClinicalConnectPrefs"     path="/provider/setClinicalConnectPrefs.jsp"/>
-              
         </action>
 		<action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
 			<forward name="success" path="/provider/providerIndivoIdSetter.jsp" />
@@ -1844,6 +1847,8 @@
 		<action name="createBillingReportActionForm" path="/billing/CA/BC/createBillingReportAction" scope="request" type="oscar.oscarBilling.ca.bc.MSP.CreateBillingReportAction" validate="false" />
 		<action input="/oscarPrevention/AddPreventionData.jsp" name="FrmForm" path="/oscarPrevention/AddPrevention" scope="request" type="oscar.oscarPrevention.pageUtil.AddPreventionAction">
 			<forward name="success" path="/oscarPrevention/close.jsp" />
+			<forward name="review" path="/oscarPrevention/review.jsp" />
+			<forward name="form" path="/oscarPrevention/AddPreventionData.jsp" />
 		</action>
 		<action input="/oscarPrevention/PreventionReporting.jsp" name="PreventionReportForm" path="/oscarPrevention/PreventionReport" scope="request" type="oscar.oscarPrevention.pageUtil.PreventionReportAction">
 			<forward name="success" path="/oscarPrevention/PreventionReporting.jsp" />
@@ -2934,6 +2939,11 @@
 			<forward name="success" path="/admin/auditLogPurge.jsp" />
 		</action>
 		<action path="/lab/DownloadEmbeddedDocumentFromLab" type="oscar.oscarLab.ca.all.pageUtil.DownloadEmbeddedDocumentFromLabAction" >
+		</action>
+		
+		<action path="/dhir/submit" type="org.oscarehr.integration.dhir.SubmitImmunizationAction" parameter="method" scope="request">
+			<forward name="success" path="/oscarPrevention/dhirSubmission.jsp"/>
+			<forward name="testresult" path="/oscarPrevention/test_case.jsp"/>
 		</action>
 		
 		<action path="/clinicalConnectEHRViewer" type="org.oscarehr.integration.clinicalconnect.ClinicalConnectViewerAction" parameter="method">

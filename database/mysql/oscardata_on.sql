@@ -15218,7 +15218,8 @@ insert into frm_labreq_preset (lab_type,prop_name,prop_value,status) values ("Pr
 
 INSERT INTO `LookupList` VALUES (\N,'practitionerNoType','Practitioner No Type List','Select list for disambiguating practitionerNo in provider record',NULL,1,'oscar',now());
 SET @lid = LAST_INSERT_ID();
-INSERT INTO `LookupListItem` VALUES (\N,@lid,'CPSO','College of Physicians and Surgeons of Ontario',3,1,'oscar',now()),(\N,@lid,'CNO','College of Nurses of Ontario (CNO)',3,1,'oscar',now());
+INSERT INTO `LookupListItem` VALUES (\N,@lid,'CPSO','College of Physicians and Surgeons of Ontario',3,1,'oscar',now()),(\N,@lid,'OCP','Ontario College of Pharmacists (OCP)',3,1,'oscar',now()),(\N,@lid,'CNORNP','RNP - College of Nurses of Ontario (CNO)',3,1,'oscar',now()),(\N,@lid,'CNORN','RN - College of Nurses of Ontario  (CNO)',3,1,'oscar',now()),(\N,@lid,'CNORPN','RPN - College of Nurses of Ontario  (CNO)',3,1,'oscar',now()),(\N,@lid,'CMO','College of Midwives of Ontario',3,1,'oscar',now());
+
 
 insert into LookupList values (\N,'phu','Public Health Units','Public Health Units - needed for DHIR submissions',NULL,1,'oscar',now());
 SET @lid = LAST_INSERT_ID();
@@ -15260,3 +15261,7 @@ insert into LookupListItem values (\N,@lid,'57','Durham Region Health Department
 insert into LookupListItem values (\N,@lid,'58','Windsor-Essex County Health Unit',36,1,'oscar',now());
 
 
+INSERT INTO `consentType` VALUES (\N,'dhir_non_ispa_consent','DHIR non-ISPA Vaccines','Patient consents to submitting immunization data not covered by ISPA to DHIR',1),(\N,'dhir_ispa_consent','DHIR ISPA Vaccines','Patient consents to submitting immunization data covered by ISPA to DHIR',1);
+
+INSERT INTO `OscarJobType` VALUES (\N,'CanadianVaccineCatalogueUpdater','Updates the local copy of the data','org.oscarehr.integration.born.CanadianVaccineCatalogueJob',1,now()),(\N,'BORN FHIR','','org.oscarehr.integration.born.BORNFhirJob',1,now());
+INSERT INTO `OscarJob` VALUES (\N,'CanadianVaccineCatalogueUpdater','Updates the CVC data',(select id from OscarJobType where name='CanadianVaccineCatalogueUpdater'),'0 * 0 * * *','999998',1,now()),(\N,'BORN FHIR','',(select id from OscarJobType where name='BORN FHIR'),'0 * * * * *','999998',1,now());

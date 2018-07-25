@@ -23,6 +23,8 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
 import javax.persistence.Query;
 
 import org.oscarehr.common.model.CVCMapping;
@@ -49,4 +51,11 @@ public class CVCMappingDao extends AbstractDao<CVCMapping> {
 		return this.getSingleResultOrNull(query);
 	}
 
+	public List<CVCMapping> findMultipleByOscarName(String oscarName) {
+		Query query = entityManager.createQuery("SELECT x FROM CVCMapping x WHERE x.oscarName = :oscarName");
+		query.setParameter("oscarName", oscarName);
+		
+		List<CVCMapping> results = query.getResultList();
+		return results;
+	}
 }

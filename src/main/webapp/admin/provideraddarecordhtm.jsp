@@ -124,7 +124,7 @@ function onsub() {
   if(document.searchprovider.practitionerNo.value != "") {
 	  var val = document.searchprovider.practitionerNoType.options[document.searchprovider.practitionerNoType.selectedIndex].value;
 	  if(val == "") {
-		  alert("Please choose a CPSID Type");
+		  alert("Please choose a College Type");
 		  return false;
 	  } 
   }

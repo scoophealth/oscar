@@ -1,4 +1,3 @@
-package org.oscarehr.integration.fhir.resources.constants;
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -22,7 +21,35 @@ package org.oscarehr.integration.fhir.resources.constants;
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.managers;
 
-public enum ProfessionalRelationship {
-	emergency, family, legal, friend, nurse, doctor
+import java.util.List;
+
+import org.oscarehr.common.dao.DHIRSubmissionLogDao;
+import org.oscarehr.common.model.DHIRSubmissionLog;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class DHIRSubmissionManager {
+
+	@Autowired DHIRSubmissionLogDao dhirSubmissionDao;
+	
+	
+	public void save(DHIRSubmissionLog submission) {
+		dhirSubmissionDao.persist(submission);
+	}
+	
+	public void update(DHIRSubmissionLog submission) {
+		dhirSubmissionDao.merge(submission);
+	}
+	
+	public DHIRSubmissionLog findLatestPendingByPreventionId(Integer preventionId) {
+		return dhirSubmissionDao.findLatestPendingByPreventionId(preventionId);
+	}
+	
+	public List<DHIRSubmissionLog> findByPreventionId(Integer preventionId) {
+		return dhirSubmissionDao.findByPreventionId(preventionId);
+	}
+	
 }

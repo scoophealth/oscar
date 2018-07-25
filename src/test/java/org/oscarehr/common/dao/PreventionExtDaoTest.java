@@ -40,6 +40,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.oscarehr.common.dao.utils.EntityDataGenerator;
 import org.oscarehr.common.dao.utils.SchemaUtils;
+import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -47,35 +48,43 @@ import org.oscarehr.util.SpringUtils;
 public class PreventionExtDaoTest extends DaoTestFixtures {
 	
 	protected PreventionExtDao dao = (PreventionExtDao)SpringUtils.getBean(PreventionExtDao.class);
-	
+	protected PreventionDao preventionDao = (PreventionDao)SpringUtils.getBean(PreventionDao.class);
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("preventionsExt");
+		SchemaUtils.restoreTable("preventions", "demographic_merged", "preventionsExt");
 	}
 
 	@Test
 	public void testFindByPreventionId() throws Exception {
 		
-		int preventionId1 = 100;
-		int preventionId2 = 200;
+	//	int preventionId1 = 100;
+	//	int preventionId2 = 200;
+		
+		Prevention prevention1 = new Prevention();
+		EntityDataGenerator.generateTestDataForModelClass(prevention1);
+		preventionDao.persist(prevention1);
+		
+		Prevention prevention2 = new Prevention();
+		EntityDataGenerator.generateTestDataForModelClass(prevention2);
+		preventionDao.persist(prevention2);
 		
 		PreventionExt prevenExt1 = new PreventionExt();
 		EntityDataGenerator.generateTestDataForModelClass(prevenExt1);
-		prevenExt1.setPreventionId(preventionId1);
+		prevenExt1.setPreventionId(prevention1.getId());
 		dao.persist(prevenExt1);
 		
 		PreventionExt prevenExt2 = new PreventionExt();
 		EntityDataGenerator.generateTestDataForModelClass(prevenExt2);
-		prevenExt2.setPreventionId(preventionId2);
+		prevenExt2.setPreventionId(prevention2.getId());
 		dao.persist(prevenExt2);
 		
 		PreventionExt prevenExt3 = new PreventionExt();
 		EntityDataGenerator.generateTestDataForModelClass(prevenExt3);
-		prevenExt3.setPreventionId(preventionId1);
+		prevenExt3.setPreventionId(prevention1.getId());
 		dao.persist(prevenExt3);
 		
 		List<PreventionExt> expectedResult = new ArrayList<PreventionExt>(Arrays.asList(prevenExt1, prevenExt3));
-		List<PreventionExt> result = dao.findByPreventionId(preventionId1);
+		List<PreventionExt> result = dao.findByPreventionId(prevention1.getId());
 
 		Logger logger = MiscUtils.getLogger();
 		
@@ -101,22 +110,35 @@ public class PreventionExtDaoTest extends DaoTestFixtures {
 		String keyVal1 = "alpha";
 		String keyVal2 = "bravo";
 		
+		Prevention prevention1 = new Prevention();
+		EntityDataGenerator.generateTestDataForModelClass(prevention1);
+		dao.persist(prevention1);
+
+		Prevention prevention2 = new Prevention();
+		EntityDataGenerator.generateTestDataForModelClass(prevention2);
+		dao.persist(prevention2);
+
+		
+		
 		PreventionExt prevenExt1 = new PreventionExt();
 		EntityDataGenerator.generateTestDataForModelClass(prevenExt1);
 		prevenExt1.setVal(val1);
 		prevenExt1.setKeyval(keyVal1);
+		prevenExt1.setPreventionId(prevention1.getId());
 		dao.persist(prevenExt1);
 		
 		PreventionExt prevenExt2 = new PreventionExt();
 		EntityDataGenerator.generateTestDataForModelClass(prevenExt2);
 		prevenExt2.setVal(val2);
 		prevenExt2.setKeyval(keyVal2);
+		prevenExt2.setPreventionId(prevention1.getId());
 		dao.persist(prevenExt2);
 		
 		PreventionExt prevenExt3 = new PreventionExt();
 		EntityDataGenerator.generateTestDataForModelClass(prevenExt3);
 		prevenExt3.setVal(val1);
 		prevenExt3.setKeyval(keyVal1);
+		prevenExt3.setPreventionId(prevention1.getId());
 		dao.persist(prevenExt3);
 		
 		List<PreventionExt> expectedResult = new ArrayList<PreventionExt>(Arrays.asList(prevenExt1, prevenExt3));
@@ -140,32 +162,37 @@ public class PreventionExtDaoTest extends DaoTestFixtures {
 	@Test
 	public void testFindByPreventionIdAndKey() throws Exception {
 		
-		int preventionId1 = 100;
-		int preventionId2 = 200;
-		
 		String keyVal1 = "alpha";
 		String keyVal2 = "bravo";
+		
+		Prevention prevention1 = new Prevention();
+		EntityDataGenerator.generateTestDataForModelClass(prevention1);
+		dao.persist(prevention1);
+		
+		Prevention prevention2 = new Prevention();
+		EntityDataGenerator.generateTestDataForModelClass(prevention2);
+		dao.persist(prevention2);
 				
 		PreventionExt prevenExt1 = new PreventionExt();
 		EntityDataGenerator.generateTestDataForModelClass(prevenExt1);
-		prevenExt1.setPreventionId(preventionId1);
+		prevenExt1.setPreventionId(prevention1.getId());
 		prevenExt1.setKeyval(keyVal1);
 		dao.persist(prevenExt1);
 		
 		PreventionExt prevenExt2 = new PreventionExt();
 		EntityDataGenerator.generateTestDataForModelClass(prevenExt2);
-		prevenExt2.setPreventionId(preventionId2);
+		prevenExt2.setPreventionId(prevention2.getId());
 		prevenExt2.setKeyval(keyVal2);
 		dao.persist(prevenExt2);
 		
 		PreventionExt prevenExt3 = new PreventionExt();
 		EntityDataGenerator.generateTestDataForModelClass(prevenExt3);
-		prevenExt3.setPreventionId(preventionId1);
+		prevenExt3.setPreventionId(prevention1.getId());
 		prevenExt3.setKeyval(keyVal1);
 		dao.persist(prevenExt3);
 		
 		List<PreventionExt> expectedResult = new ArrayList<PreventionExt>(Arrays.asList(prevenExt1, prevenExt3));
-		List<PreventionExt> result = dao.findByPreventionIdAndKey(preventionId1, keyVal1);
+		List<PreventionExt> result = dao.findByPreventionIdAndKey(prevention1.getId(), keyVal1);
 
 		Logger logger = MiscUtils.getLogger();
 		
@@ -184,33 +211,40 @@ public class PreventionExtDaoTest extends DaoTestFixtures {
 
 	@Test 
 	public void testGetPreventionExt() throws Exception {
-		
-		int preventionId1 = 1;
-		int preventionId2 = 2;
-		
+				
 		String val1 = "100";
 		String val2 = "200";
 		
 		String keyVal1 = "alpha";
 		String keyVal2 = "bravo";
 		
+
+		Prevention prevention1 = new Prevention();
+		EntityDataGenerator.generateTestDataForModelClass(prevention1);
+		dao.persist(prevention1);
+		
+		Prevention prevention2 = new Prevention();
+		EntityDataGenerator.generateTestDataForModelClass(prevention2);
+		dao.persist(prevention2);
+		
+		
 		PreventionExt prevenExt1 = new PreventionExt();
 		EntityDataGenerator.generateTestDataForModelClass(prevenExt1);
-		prevenExt1.setPreventionId(preventionId1);
+		prevenExt1.setPreventionId(prevention1.getId());
 		prevenExt1.setVal(val1);
 		prevenExt1.setKeyval(keyVal1);
 		dao.persist(prevenExt1);
 		
 		PreventionExt prevenExt2 = new PreventionExt();
 		EntityDataGenerator.generateTestDataForModelClass(prevenExt2);
-		prevenExt2.setPreventionId(preventionId2);
+		prevenExt2.setPreventionId(prevention2.getId());
 		prevenExt2.setVal(val2);
 		prevenExt2.setKeyval(keyVal2);
 		dao.persist(prevenExt2);
 		
 		HashMap<String, String> expectedResult = new HashMap<String, String>();
 		expectedResult.put(keyVal1, val1);
-		HashMap<String, String> result = dao.getPreventionExt(preventionId1);
+		HashMap<String, String> result = dao.getPreventionExt(prevention1.getId());
 		
 		assertEquals(expectedResult, result);
 	}

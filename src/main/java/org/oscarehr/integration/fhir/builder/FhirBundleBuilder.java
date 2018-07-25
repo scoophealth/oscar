@@ -23,6 +23,7 @@ package org.oscarehr.integration.fhir.builder;
  * Ontario, Canada
  */
 
+import java.util.HashSet;
 import java.util.UUID;
 import org.hl7.fhir.dstu3.model.Attachment;
 import org.hl7.fhir.dstu3.model.BaseResource;
@@ -32,7 +33,7 @@ import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.Bundle.BundleType;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.model.Destination;
-import org.oscarehr.integration.fhir.model.Organization;
+import org.oscarehr.integration.fhir.model.AbstractOscarFhirResource;
 import org.oscarehr.integration.fhir.model.Sender;
 
 /*
@@ -75,7 +76,7 @@ import org.oscarehr.integration.fhir.model.Sender;
  * 
  */
 
-public class FhirBundleBuilder extends FhirMessageBuilder {
+public class FhirBundleBuilder extends AbstractFhirMessageBuilder<Bundle> {
 
 	/**
 	 * Build a bundle without the header.  
@@ -100,35 +101,35 @@ public class FhirBundleBuilder extends FhirMessageBuilder {
 	}
 
 	public Bundle getBundle() {
-		return (Bundle) getWrapper();
+		return getWrapper();
 	}
 
 	private void setBundle( Bundle bundle ) {
 		bundle.setId( UUID.randomUUID().toString() );
 		bundle.setType( BundleType.MESSAGE );		
 		setWrapper( bundle );
-		
-		//TODO this may need to be optional by vendor.
 		initResources();
 	}	
 	
 	private void initResources() {
 		MessageHeader messageHeader = getMessageHeader();
-		Organization responsible = new Organization( getSender().getClinic(), getOscarFhirConfigurationManager() );
-		responsible.setOrganizationPHUID( getSender().getClinicPHU() );
-		messageHeader.setResponsible( responsible.getReference() );
 		addResource( messageHeader );
-		addResource( responsible );
+	}
+	
+	public void addResources( HashSet< AbstractOscarFhirResource< ?,? > > oscarFhirResources ) {
+		for( AbstractOscarFhirResource< ?,? > oscarFhirResource :  oscarFhirResources ) {
+			addResource( oscarFhirResource );
+		}
 	}
 
 	@Override
-	protected void addResource( BaseResource resource ) {
+	public void addResource( BaseResource resource ) {
 		getBundle().addEntry().setResource( (Resource) resource );
 	}
 
 	@Override
 	protected void addAttachment( Attachment attachment ) {
-		// TODO Auto-generated method stub		
+		// unused	
 	}
 
 }

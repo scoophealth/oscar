@@ -24,7 +24,9 @@
 
 package org.oscarehr.managers;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -53,6 +55,7 @@ import org.oscarehr.common.model.PHRVerification;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import org.oscarehr.ws.rest.to.model.DemographicSearchRequest;
 import org.oscarehr.ws.rest.to.model.DemographicSearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -199,6 +202,10 @@ public class DemographicManager {
 
 		return result;
 	}
+	
+	public DemographicExt getDemographicExt(LoggedInInfo loggedInInfo, Integer demographicNo, DemographicExt.DemographicProperty key) {
+		return getDemographicExt(loggedInInfo, demographicNo, key.name());
+	}
 
 	public DemographicExt getDemographicExt(LoggedInInfo loggedInInfo, Integer demographicNo, String key) {
 		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
@@ -254,6 +261,32 @@ public class DemographicManager {
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * Returns a list of all the internal providers assigned to this demographic.
+	 */
+	public List<Provider> getDemographicMostResponsibleProviders(LoggedInInfo loggedInInfo, int demographicNo) {
+		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
+		List<DemographicContact> demographicContacts = demographicContactDao.findAllByDemographicNoAndCategoryAndType(demographicNo, "professional", 0);
+		ProviderManager2 providerManager = SpringUtils.getBean(ProviderManager2.class);
+		List<Provider> providerList = null;
+		
+		for(DemographicContact demographicContact : demographicContacts) {			
+			Provider provider = providerManager.getProvider(loggedInInfo, demographicContact.getContactId());
+			if(providerList == null) {
+				providerList = new ArrayList<Provider>();
+			}
+			if(provider != null) {
+				providerList.add(provider);
+			}
+		}
+		
+		if(providerList == null) {
+			providerList = Collections.emptyList();
+		}
+		
+		return providerList;
 	}
 
 	public List<Demographic> getDemographicsByProvider(LoggedInInfo loggedInInfo, Provider provider) {
