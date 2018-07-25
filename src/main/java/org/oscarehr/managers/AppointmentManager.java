@@ -283,7 +283,7 @@ public class AppointmentManager {
 		Date startDate = cal.getTime();
 		
 		cal.set(Calendar.DAY_OF_MONTH,cal.getActualMaximum(Calendar.DAY_OF_MONTH)+1);
-		cal.add(Calendar.MINUTE,-1);
+		//cal.add(Calendar.MINUTE,-1);  //this won't get the last day of the month
 		
 		Date endDate = cal.getTime();
 		

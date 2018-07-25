@@ -1,4 +1,3 @@
-package org.oscarehr.integration.fhir.resources.constants;
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -22,8 +21,9 @@ package org.oscarehr.integration.fhir.resources.constants;
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.integration.dhir;
 
-public enum PersonalRelationship {
-	spouse, son, daughter, sibling, parent, mother, father,
-	friend, guardian, other
+public class DHIRUtils {
+
+	
 }

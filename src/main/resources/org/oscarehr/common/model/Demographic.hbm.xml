@@ -80,6 +80,5 @@
 		<property column="newsletter" name="newsletter" type="string" />
 		<property column="country_of_origin" name="countryOfOrigin" type="string" />
 
-
 	</class>
 </hibernate-mapping>

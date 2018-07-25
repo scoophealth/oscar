@@ -42,9 +42,11 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
+import org.oscarehr.common.model.DHIRSubmissionLog;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
+import org.oscarehr.managers.DHIRSubmissionManager;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -162,9 +164,9 @@ public class PreventionData {
 		return name;
 	}
 
-	public static void updatetPreventionData(String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list, String snomedId) {
+	public static Integer updatetPreventionData(String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list, String snomedId) {
 		deletePreventionData(id);
-		insertPreventionData(creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list, snomedId);
+		return insertPreventionData(creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list, snomedId);
 	}
 
 	public static ArrayList<Map<String, Object>> getPreventionDataFromExt(String extKey, String extVal) {
@@ -461,8 +463,16 @@ public class PreventionData {
 		try {
 			Prevention prevention = preventionDao.find(Integer.valueOf(id));
 			if (prevention != null) {
+				Map<String, String> ext = getPreventionKeyValues(prevention.getId().toString());
+
 				h = new HashMap<String, Object>();
-				String providerName = ProviderData.getProviderName(prevention.getProviderNo());
+				String providerName = null;
+				if(!"-1".equals(prevention.getProviderNo())) {
+					providerName = ProviderData.getProviderName(prevention.getProviderNo());
+				} else {
+					providerName = ext.get("providerName") != null ? ext.get("providerName") : "";
+				}
+				
 				String preventionDate = UtilDateUtilities.DateToString(prevention.getPreventionDate(), "yyyy-MM-dd HH:mm");
 				String lastUpdateDate = UtilDateUtilities.DateToString(prevention.getLastUpdateDate(), "yyyy-MM-dd");
 				@SuppressWarnings("deprecation")
@@ -484,8 +494,7 @@ public class PreventionData {
 				addToHashIfNotNull(h, "snomedId", prevention.getSnomedId());
 				String summary = "Prevention " + prevention.getPreventionType() + " provided by " + providerName + " on " + preventionDate;
 				summary = summary + " entered by " + creatorName + " on " + lastUpdateDate;
-				Map<String, String> ext = getPreventionKeyValues(prevention.getId().toString());
-
+				
 				addToHashIfNotNull(h, "brandSnomedId", ext.get("brandSnomedId"));
 				
 				if (ext.containsKey("result")) { //This is a preventive Test
@@ -528,6 +537,13 @@ public class PreventionData {
 				if (ext.containsKey("comments") && !ext.get("comments").equals("")) {
 					addToHashIfNotNull(h, "comments", ext.get("comments"));
 					summary += "\nComments: " + ext.get("comments");
+				}
+				
+				DHIRSubmissionManager dhirSubmissionManager = SpringUtils.getBean(DHIRSubmissionManager.class);
+				List<DHIRSubmissionLog> dhirLogs =  dhirSubmissionManager.findByPreventionId(prevention.getId());
+				if(!dhirLogs.isEmpty()) {
+					summary += "\n\nDHIR Submission Transaction ID: " + dhirLogs.get(0).getTransactionId();
+					summary += "\nDHIR Submission Location ID: " + dhirLogs.get(0).getBundleId();
 				}
 				addToHashIfNotNull(h, "summary", summary);
 				log.debug("1" + h.get("preventionType") + " " + h.size());

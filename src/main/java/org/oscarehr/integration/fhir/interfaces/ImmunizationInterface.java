@@ -34,9 +34,9 @@ import java.util.Date;
  * 
  * This interface is currently being used in FHIR mapping.
  */
-public interface ImmunizationInterface<T> {
+public interface ImmunizationInterface {
 	
-	public enum ImmunizationProperty{lot,location,route,dose,comments,neverReason,manufacture,name,expiryDate}
+	public enum ImmunizationProperty{lot, location, route, dose, comments, neverReason, manufacture, name, expiryDate,providerName, brandSnomedId}
 
 	/**
 	 * Get an immunization data value by ImmunizationProperty key
@@ -44,6 +44,10 @@ public interface ImmunizationInterface<T> {
 	public String getImmunizationProperty( ImmunizationProperty immunizationProperty );
 	
 	public boolean isImmunization();
+	
+	public Integer getDemographicId();
+	
+	public boolean isComplete();
 		
 	public String getLotNo();
 	public void setLotNo(String lotNo);
@@ -79,7 +83,7 @@ public interface ImmunizationInterface<T> {
 	public void setImmunizationDate(Date immunizationDate);
 	
 	/**
-	 * The expiry date of this immunization.  
+	 * The expire date of this immunization.  
 	 * Returns NULL if no date is available. 
 	 * Returns a Date object parsed from a string source.
 	 */
@@ -105,8 +109,34 @@ public interface ImmunizationInterface<T> {
 	 * True if the Immunization was administered by this clinician at this clinic.
 	 * For now this is hard coded to True as there is no way in Oscar to determine this. 
 	 */
-	public boolean isPrimarySource();
-	
+	public boolean isPrimarySource();	
 	public void setPrimarySource(boolean truefalse );
+	
+	/**
+	 * This is the name of an external provider that administered the immunization.
+	 */
+	public String getProviderName();
+	public void setProviderName(String providerName);
+	
+	/**
+	 * Fixed to SNOMED codes only
+	 */
+	public String getVaccineCode2();
+	
+	/**
+	 * Use SNOMED codes only
+	 */
+	public void setVaccineCode2(String vaccineCode);
+
+	/**
+	 * This method subtracts the date of immunization from the current date and compares 
+	 * the number of days given in the parameter. 
+	 * 
+	 * In some cases it is assumed that an immunization being submitted to an authority after 14 
+	 * days from the date of immunization is (was) completed externally. 
+	 * 
+	 *  ie: [submission date] – [immunization date] > 14 days (2 weeks) 
+	 */
+	public boolean isHistorical(int days);
 	
 }

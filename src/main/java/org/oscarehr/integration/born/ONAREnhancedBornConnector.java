@@ -293,4 +293,58 @@ public class ONAREnhancedBornConnector {
 		}
 		return results;
 	}
+	
+	public List<Map<String,Object>> getMetadataForDemographic(Integer demographicNoInput) throws Exception {
+		List<Map<String,Object>> results = new ArrayList<Map<String,Object>>();
+		
+		Connection conn=null;
+		Statement st=null;
+		
+		try {
+			
+			conn = org.oscarehr.util.DbConnectionFilter.getThreadLocalDbConnection();
+			st = conn.createStatement();
+			ResultSet rs = st.executeQuery("select provider_no,demographic_no,id,formEdited,c_finalEDB,sent_to_born,pg1_signature,pg2_signature,episodeId,c_postal from (select r.provider_no,r.demographic_no,r.id,r.formEdited,r.c_finalEDB,r.sent_to_born,r.pg1_signature,r2.pg2_signature,r.episodeId,r.c_postal from formONAREnhancedRecord r,formONAREnhancedRecordExt2 r2 where r.ID = r2.ID and c_finalEDB!='' AND c_finalEDB IS NOT NULL ORDER BY formEdited DESC) AS x  WHERE demographic_no = "+demographicNoInput+" GROUP BY demographic_no");
+			while(rs.next()) {
+				try {
+					int demographicNo = rs.getInt("demographic_no");
+					int id = rs.getInt("id");
+					boolean sent = rs.getBoolean("sent_to_born");
+					int episodeId = rs.getInt("episodeId");
+					String postalCode = rs.getString("c_postal");
+					String providerNo = rs.getString("provider_no");
+					Date formEdited = rs.getDate("formEdited");
+					
+					if(postalCode == null || postalCode.length() == 0) {
+						continue;
+					}
+					if(!sent) {
+						Map<String,Object> r = new HashMap<String,Object>();
+						
+						r.put("demographicNo", demographicNo);
+						r.put("id",id);
+						r.put("sent",sent);
+						r.put("episodeId",episodeId);
+						r.put("providerNo",providerNo);
+						r.put("formEdited", formEdited);
+						
+						results.add(r);
+					}
+				}catch(Exception e) {
+					MiscUtils.getLogger().warn("Unable to add record",e);
+				}			
+			}
+			
+		} finally {
+			if(st != null)
+				try {
+					st.close();
+				}catch(SQLException e){}
+			if(conn != null)
+				try {
+					conn.close();
+				}catch(SQLException e){}
+		}
+		return results;
+	}
 }

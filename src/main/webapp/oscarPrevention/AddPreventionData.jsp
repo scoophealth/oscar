@@ -24,6 +24,9 @@
 
 --%>
 
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="org.oscarehr.common.model.Consent"%>
+<%@page import="org.oscarehr.common.dao.ConsentDao"%>
 <%@page import="org.oscarehr.common.model.CVCMapping"%>
 <%@page import="org.oscarehr.common.dao.CVCImmunizationDao"%>
 <%@page import="org.oscarehr.common.dao.CVCMappingDao"%>
@@ -479,6 +482,16 @@ function displayCloseWarning(){
 
 //{"lotNumber":"M042476","expiryDate":{"date":22,"day":5,"hours":0,"minutes":0,"month":2,"nanos":0,"seconds":0,"time":1553227200000,"timezoneOffset":240,"year":119}}
 
+function escapeHtml(unsafe1) {
+	var unsafe = String(unsafe1);
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+ }
+ 
 var lots;
 var startup = false, startup2 = false;
 
@@ -518,14 +531,14 @@ function changeCVCName() {
             			var output = d.getFullYear() + "-" + month + "-" + day;
             			 
             			
-            			if(startup2 && item.lotNumber == '<%=addByLotNbr %>') {
+            			if(startup2 && escapeHtml(item.lotNumber) == '<%=addByLotNbr %>') {
             				$("#cvcLot").append('<option selected="selected" value="'+item.lotNumber+'" expiryDate="'+output+'">'+item.lotNumber+'</option>');
             				startup2=false;
-            			} else if(startup && item.lotNumber == '<%=(existingPrevention != null)?existingPrevention.get("lot"):"" %>') {
-            				$("#cvcLot").append('<option selected="selected" value="'+item.lotNumber+'" expiryDate="'+output+'">'+item.lotNumber+'</option>');
+            			} else if(startup && escapeHtml(item.lotNumber) == '<%=(existingPrevention != null)?existingPrevention.get("lot"):"" %>') {
+            				$("#cvcLot").append('<option selected="selected" value="'+escapeHtml(item.lotNumber)+'" expiryDate="'+output+'">'+escapeHtml(item.lotNumber)+'</option>');
             				startup=false;
             			} else {
-            				$("#cvcLot").append('<option value="'+item.lotNumber+'" expiryDate="'+output+'">'+item.lotNumber+'</option>');
+            				$("#cvcLot").append('<option value="'+escapeHtml(item.lotNumber)+'" expiryDate="'+output+'">'+escapeHtml(item.lotNumber)+'</option>');
             			}
             			updateCvcLot();        			 
             		 }            		 
@@ -568,6 +581,16 @@ $(document).ready(function(){
 });
 <% } %>
 
+
+function changeSite(el) {
+	var val = el.options[el.selectedIndex].value;
+	if(val == 'Other') {
+		$("#locationDiv").show();
+	} else {
+		$("#locationDiv").hide();
+		$("#location2").val('');
+	}
+}
 </script>
 </head>
 
@@ -582,7 +605,7 @@ $(document).ready(function(){
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-                            <%=nameage%>
+                            <%=StringEscapeUtils.escapeHtml(nameage)%>
                         </td>
                         <td  >&nbsp;
 
@@ -596,6 +619,8 @@ $(document).ready(function(){
         </tr>
         <tr>
             <td class="MainTableLeftColumn" valign="top">
+
+
                &nbsp;
 <!--
                <%
@@ -614,6 +639,28 @@ $(document).ready(function(){
 -->
             </td>
             <td valign="top" class="MainTableRightColumn">
+<%
+			if(session.getAttribute("oneIdEmail") == null) {
+		%>
+		<div style="width:100%;background-color:pink;text-align:center;font-weight:bold;font-size:13pt">
+			Warning: You are not logged into OneId and will not be able to submit data to DHIR
+		</div>
+		<% } %>
+
+<%
+	if(request.getAttribute("errors") != null) {
+		List<String> errorList = (List<String>)request.getAttribute("errors");
+		%><ul style="color:red"><% 
+		for(String error:errorList) {
+			%>
+			<li><%=error %></li>
+			<% 
+		}
+		%></ul><%
+	}
+
+%>
+
             <% if(prevHash == null) { %>
             	<h3 style="color:red">Prevention not found!</h3>
             <%} else { %>
@@ -643,8 +690,8 @@ $(document).ready(function(){
                    <fieldset>
                       <legend>Prevention : <%=prevention%></legend>
                          <div>
-                            <input name="given" type="radio" value="given"      <%=checked(completed,"0")%>>Completed</input><br/>
-                            <input name="given" type="radio" value="given_ext"  <%=checked(completed,"3")%>>Completed externally</input><br/>
+                            <input name="given" type="radio" value="given"      <%=checked(completed,"0")%> onClick="$('#providerDrop').val('<%=LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo() %>');hideExtraName(document.getElementById('providerDrop'))">Completed</input><br/>
+                            <input name="given" type="radio" value="given_ext"  <%=checked(completed,"3")%> onClick="$('#providerDrop').val('-1');hideExtraName(document.getElementById('providerDrop'))">Completed externally</input><br/>
                             <input name="given" type="radio" value="refused"    <%=checked(completed,"1")%>>Refused</input><br/>
                             <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input>
                          </div>
@@ -710,9 +757,97 @@ $(document).ready(function(){
              			 
              			 
              			 
-             			 <label for="location">Location:</label> <input type="text" name="location" value="<%=str((extraData.get("location")),"")%>"/> <br/>
-                         <label for="route">Route:</label> <input type="text" name="route"   value="<%=str((extraData.get("route")),"")%>"/><br/>
-                         <label for="dose">Dose:</label> <input type="text" name="dose"  value="<%=str((extraData.get("dose")),"")%>"/><br/>
+             			 <label for="location">Location:</label> 
+             			 
+             			 <select name="location" id="location" onChange="changeSite(this)">
+             			 	 <option value=""></option>
+                         	    <%
+                         	    	String locationSelected = " selected=\"selected\" ";
+                         	    %>
+                         		<option value="Superior Deltoid Lt" <%="Superior Deltoid Lt".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Superior Deltoid Lt</option>
+                         		<option value="Inferior Deltoid Lt" <%="Inferior Deltoid Lt".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Inferior Deltoid Lt</option>
+                         		<option value="Anterolateral Thigh Lt" <%="Anterolateral Thigh Lt".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Anterolateral Thigh Lt</option>
+                         		<option value="Gluteal Lt" <%="Gluteal Lt".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Gluteal Lt</option>
+                         		<option value="Superior Deltoid Rt" <%="Superior Deltoid Rt".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Superior Deltoid Rt</option>
+                         		<option value="Inferior Deltoid Rt" <%="Inferior Deltoid Rt".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Inferior Deltoid Rt</option>
+                         		<option value="Anterolateral Thigh Rt" <%="Anterolateral Thigh Rt".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Anterolateral Thigh Rt</option>
+                         		<option value="Gluteal Rt" <%="Gluteal Rt".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Gluteal Rt</option>
+                         		<option value="Arm Lt" <%="Arm Lt".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Arm Lt</option>
+                         		<option value="Arm Rt" <%="Arm Rt".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Arm Rt</option>
+                         		<option value="Unknown" <%="Unknown".equals(str((extraData.get("location")),"")) || extraData.get("location") == null ? locationSelected : "" %>>Unknown</option>
+                         		<option value="Mouth" <%="Mouth".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Mouth</option>
+                         		<option value="Deltoid Lt" <%="Deltoid Lt".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Deltoid Lt</option>
+                         		<option value="Deltoid Rt" <%="Deltoid Rt".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Deltoid Rt</option>
+                         		<option value="Naris Lt" <%="Naris Lt".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Naris Lt</option>
+                         		<option value="Naris Rt" <%="Naris Rt".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Naris Rt</option>
+                         		<option value="Forearm Lt" <%="Forearm Lt".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Forearm Lt</option>
+                         		<option value="Forearm Rt" <%="Forearm Rt".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Forearm Rt</option>
+                         		<option value="Other" <%="Other".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Other</option>
+                         		<option value="Nares (Lt and Rt)" <%="Nares (Lt and Rt)".equals(str((extraData.get("location")),"")) ? locationSelected : "" %>>Nares (Lt and Rt)</option>
+                         		
+             			 </select>
+             			 
+             			 <%
+             			 	String locationDisplay = "none";
+             			 	if("Other".equals(str(extraData.get("location"),""))) {
+             			 		locationDisplay="block";
+             			 	}
+             			 %>
+             			 <br>
+             			 	<div id="locationDiv" style="display:<%=locationDisplay%>">
+             				<label for="location2">Specify Location:</label> 
+             			
+             			 <input type="text" name="location2" id="location2" value="<%=str((extraData.get("location2")),"")%>"/> 
+             			 </div>
+             			 
+             			 <br/>
+                         <label for="route">Route:</label> 
+                         	
+                         	<select name="route" id="route">
+                         	    <option value=""></option>
+                         	    <%
+                         	    	String routeSelected = " selected=\"selected\" ";
+                         	    %>
+                         		<option value="ID" <%="ID".equals(str((extraData.get("route")),"")) ? routeSelected : "" %>>Intradermal: ID</option>
+                         		<option value="IM" <%="IM".equals(str((extraData.get("route")),"")) ? routeSelected : "" %>>Intramuscular: IM</option>
+                         		<option value="IN" <%="IN".equals(str((extraData.get("route")),"")) ? routeSelected : "" %>>Intranasal: IN</option>
+                         		<option value="PO" <%="PO".equals(str((extraData.get("route")),"")) ? routeSelected : "" %>>Oral: PO</option>
+                         		<option value="SC" <%="SC".equals(str((extraData.get("route")),"")) ? routeSelected : "" %>>Subcutaneous: SC</option>
+                         	</select>
+                         	<br/>
+                         	<%
+                         		String dose = str((extraData.get("dose")),"");
+                         		String d1 = "";
+                         		String d2 = "";
+                         		if(dose.split(" ").length == 2) {
+                         			String d3 = dose.split(" ")[1];
+                         			if(!d3.equals("mL") && !d3.equals("mg") && !d3.equals("g") && !d3.equals("capsule") && !d3.equals("vial") ) {
+                         				d1 = dose;
+                         			} else {
+                         				d1 = dose.split(" ")[0];
+                             			d2 = dose.split(" ")[1];
+                         			}
+                         		} else {
+                         			d1 = dose;
+                         		}
+                         		
+                         		if("".equals(dose)) {
+                         			d2 = "mL";
+                         		}
+                         	%>
+                         <label for="dose">Dose:</label> <input type="text" name="dose"  value="<%=d1%>"/>
+                         <br>
+                          <label for="doseUnit">Dose Unit:</label>
+                          <select name="doseUnit">
+							<option value="mL" <%="mL".equals(d2)?"selected=\"selected\" ":"" %>>mL</option>
+							<option value="mg" <%="mg".equals(d2)?"selected=\"selected\" ":"" %>>mg</option>
+							<option value="g" <%="g".equals(d2)?"selected=\"selected\" ":"" %>>g</option>
+							<option value="capsule" <%="capsule".equals(d2)?"selected=\"selected\" ":"" %>>capsule</option>
+							<option value="vial" <%="vial".equals(d2)?"selected=\"selected\" ":"" %>>vial</option>
+                        
+                          </select>
+                         
+                          <br/>
                         <%if(!isCvc) { %>
                          <label for="lot">Lot:</label>  <input type="text" name="lot" id="lot" value="<%=str(lot,"")%>" />
                         <select onchange="javascript:updateLotNr(this);" id="lotDrop" name="lotItem" >
@@ -773,6 +908,7 @@ $(document).ready(function(){
                    <fieldset>
                       <legend >Result</legend>
                          <label for="location">Location:</label> <input type="text" name="location" value="<%=str((extraData.get("location")),"")%>"/> <br/>
+                          <label for="location">Other Location:</label> <input type="text" name="location2" value="<%=str((extraData.get("location2")),"")%>"/> <br/>
                          <label for="route">Route:</label> <input type="text" name="route"   value="<%=str((extraData.get("route")),"")%>"/><br/>
                          <label for="dose">Dose:</label> <input type="text" name="dose"  value="<%=str((extraData.get("dose")),"")%>"/><br/>
 			 <label for="dose1">Dose 1:</label> <input type="checkbox" name="dose1" value="true" <%=checked(str((extraData.get("dose1")),""),"true")%>/><br/>
@@ -927,7 +1063,23 @@ $(document).ready(function(){
                    </fieldset>
                </div>
                <br/>
-               <input type="submit" value="Save">
+               <input type="submit" value="Save" name="action">
+               <%
+   					ConsentDao consentDao = SpringUtils.getBean(ConsentDao.class);
+   					Consent ispaConsent =  consentDao.findByDemographicAndConsentType(Integer.parseInt(demographic_no), "dhir_ispa_consent");
+   					Consent nonIspaConsent =  consentDao.findByDemographicAndConsentType(Integer.parseInt(demographic_no), "dhir_non_ispa_consent");
+   					
+   					boolean ispa = Boolean.valueOf((String)prevHash.get("ispa"));
+   					
+   					boolean isSSOLoggedIn = session.getAttribute("oneIdEmail") != null;
+   					boolean hasIspaConsent = ispaConsent != null && !ispaConsent.isOptout();
+   					boolean hasNonIspaConsent = nonIspaConsent != null && !nonIspaConsent.isOptout();
+
+   					if(isSSOLoggedIn) {
+   						if((ispa && hasIspaConsent) || (!ispa && hasNonIspaConsent)) {
+               %>
+               <input type="submit" value="Save & Submit" name="action" >
+                <% } } %>
                <% if ( id != null ) { %>
                <input type="submit" name="delete" value="Delete"/>
                <% } %>
@@ -973,7 +1125,7 @@ String str(String first,String second){
     }else if ( second != null){
        ret = second;
     }
-    return ret;
+    return StringEscapeUtils.escapeHtml(ret);
   }
 
 String checked(String first,String second){

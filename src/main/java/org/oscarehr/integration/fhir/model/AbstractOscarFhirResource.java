@@ -28,20 +28,15 @@ import org.oscarehr.common.model.AbstractModel;
 import org.oscarehr.integration.fhir.interfaces.ResourceAttributeFilterInterface;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.resources.ResourceAttributeFilter;
+import org.oscarehr.integration.fhir.resources.constants.ActorType;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.hl7.fhir.dstu3.model.Resource;
 import ca.uhn.fhir.context.FhirContext;
 
 
-public abstract class OscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.BaseResource, OSCAR extends AbstractModel<?> > 
-implements ResourceAttributeFilterInterface {
-	
-	public enum ActorType {
-		none,
-		performing, // a practitioner whom executed the medical service on a patient
-		submitting // the practitioner whom is most responsible for the patient
-	}
-	
+public abstract class AbstractOscarFhirResource< FHIR extends org.hl7.fhir.dstu3.model.BaseResource, OSCAR extends AbstractModel<?> > 
+		implements ResourceAttributeFilterInterface {
+
 	private static FhirContext fhirContext = FhirContext.forDstu3();
 	private FHIR fhirResource;
 	private OSCAR oscarResource;
@@ -60,27 +55,27 @@ implements ResourceAttributeFilterInterface {
 	 */
 	protected abstract void mapAttributes( OSCAR oscarResource );
 
-	protected OscarFhirResource() {
+	protected AbstractOscarFhirResource() {
 		//default constructor
 	}
 	
-	protected OscarFhirResource( OSCAR to, FHIR from ){
+	protected AbstractOscarFhirResource( OSCAR to, FHIR from ){
 		setResource( to, from );
 	}
 	
-	protected OscarFhirResource( FHIR to, OSCAR from ) {
+	protected AbstractOscarFhirResource( FHIR to, OSCAR from ) {
 		setResource( to, from );
 	}
 	
-	protected OscarFhirResource( OscarFhirConfigurationManager configurationManager ) {
+	protected AbstractOscarFhirResource( OscarFhirConfigurationManager configurationManager ) {
 		this.configurationManager = configurationManager;
 	}
 
-	protected OscarFhirResource( FHIR to, OSCAR from, OscarFhirConfigurationManager configurationManager ) {
+	protected AbstractOscarFhirResource( FHIR to, OSCAR from, OscarFhirConfigurationManager configurationManager ) {
 		this.configurationManager = configurationManager;
 		setResource( to, from );
 	}
-	
+
 	/**
 	 * Set the reference id of the FHIR Resource.  
 	 * This can be set with the unique id of the Oscar Resource (ie: demographic_no) or can be 
@@ -131,7 +126,7 @@ implements ResourceAttributeFilterInterface {
 	}
 	
 	public static void setFhirContext(FhirContext fhirContext) {
-		OscarFhirResource.fhirContext = fhirContext;
+		AbstractOscarFhirResource.fhirContext = fhirContext;
 	}
 	
 	public String getFhirJSON() {

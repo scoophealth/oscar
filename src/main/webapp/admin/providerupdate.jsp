@@ -152,6 +152,7 @@ if(!authed) {
 	Provider provider = providerDao.getProvider(request.getParameter("provider_no"));
 	ProviderArchive pa = new ProviderArchive();
 	BeanUtils.copyProperties(pa, provider);
+	pa.setId(null);
 	providerArchiveDao.persist(pa);
 
 

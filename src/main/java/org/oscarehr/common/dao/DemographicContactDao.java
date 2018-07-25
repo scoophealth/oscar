@@ -25,6 +25,7 @@
 
 package org.oscarehr.common.dao;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -86,6 +87,21 @@ public class DemographicContactDao extends AbstractDao<DemographicContact>{
 		
 		@SuppressWarnings("unchecked")
 		List<DemographicContact> dContacts = query.getResultList();
+		return dContacts;
+	}
+	
+	public List<DemographicContact> findAllByDemographicNoAndCategoryAndType(int demographicNo, String category, int type) {
+		String sql = "select x from " + this.modelClass.getName() + " x where x.demographicNo = ? and x.category = ? and x.type = ? and x.active=1 and deleted=false";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, demographicNo);
+		query.setParameter(2, category);
+		query.setParameter(3, type);
+		
+		@SuppressWarnings("unchecked")
+		List<DemographicContact> dContacts = query.getResultList();
+		if(dContacts == null) {
+			dContacts = Collections.emptyList();
+		}
 		return dContacts;
 	}
 }

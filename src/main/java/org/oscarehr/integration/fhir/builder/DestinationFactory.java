@@ -1,6 +1,7 @@
 package org.oscarehr.integration.fhir.builder;
 
 import org.oscarehr.integration.fhir.model.Destination;
+import org.oscarehr.integration.fhir.resources.Settings;
 
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -27,7 +28,26 @@ import org.oscarehr.integration.fhir.model.Destination;
  */
 
 public final class DestinationFactory {
+	
 	public static final Destination getDestination( org.oscarehr.integration.fhir.resources.constants.FhirDestination destination ) {
 		return new Destination( destination.title(), destination.endpoint() );
+	}
+	
+	public static final Destination getDestination( Settings settings ) {
+		org.oscarehr.integration.fhir.resources.constants.FhirDestination destination = null;
+		String title = "";
+		String endpoint = "";
+		
+		if( settings != null ) {
+			destination = settings.getFhirDestination();
+		}
+		
+		//TODO will be changed from an Enum to a Class once the properties files are in effect.
+		if(destination != null) {
+			title = destination.name();
+			endpoint = destination.endpoint();
+		}
+		
+		return new Destination( title, endpoint );
 	}
 }
