@@ -55,6 +55,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.eform.EFormUtil;
+import oscar.log.LogAction;
 import oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil;
 
 /**
@@ -2689,6 +2690,101 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 		request.setAttribute("method","saveBornPrefs");
 
 		return actionmapping.findForward("genBornPrefs");
+	}
+    
+    private UserProperty loadProperty(String providerNo, String name) {
+        UserProperty prop = this.userPropertyDAO.getProp(providerNo, name);
+        String propValue="";
+        if (prop == null){
+                prop = new UserProperty();
+        }else{
+                propValue=prop.getValue();
+        }
+
+        boolean checked;
+        if(propValue.equals("true"))
+                checked=true;
+        else
+                checked=false;
+
+        prop.setChecked(checked);
+        
+        return prop;
+    }
+
+    
+    public ActionForward viewClinicalConnectPrefs(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request, HttpServletResponse response) {
+        DynaActionForm frm = (DynaActionForm)actionform;
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+        String providerNo=loggedInInfo.getLoggedInProviderNo();
+
+        UserProperty prop = loadProperty(providerNo, UserProperty.CLINICALCONNECT_DISABLE_CLOSE_WINDOW);
+        UserProperty prop2 = loadProperty(providerNo, UserProperty.CLINICALCONNECT_DISABLE_LOGOUT_WARNING);
+        
+        request.setAttribute("clinicalConnectDisableCloseWindow", prop);
+        request.setAttribute("clinicalConnectDisableLogoutWarning", prop2);
+       
+        request.setAttribute("providertitle","provider.clinicalConnectPrefs.title"); 
+        request.setAttribute("providermsgPrefs","provider.clinicalConnectPrefs.msgPrefs"); //=Preferences
+        request.setAttribute("providerbtnSubmit","provider.clinicalConnectPrefs.btnSubmit"); //=Save
+        request.setAttribute("providerbtnCancel","provider.clinicalConnectPrefs.btnCancel"); //=Cancel
+        request.setAttribute("method","saveClinicalConnectPrefs");
+
+        frm.set("clinicalConnectDisableCloseWindow", prop);
+        frm.set("clinicalConnectDisableLogoutWarning", prop2);
+        
+        return actionmapping.findForward("genClinicalConnectPrefs");
+    }
+    
+    private UserProperty saveProperty(DynaActionForm frm, String providerNo, String formName, String name) {
+        
+        UserProperty Uprop=(UserProperty)frm.get(formName);
+
+                boolean checked=false;
+                if(Uprop!=null)
+                        checked = Uprop.isChecked();
+                UserProperty prop=this.userPropertyDAO.getProp(providerNo, name);
+                if(prop==null){
+                        prop=new UserProperty();
+                        prop.setName(name);
+                        prop.setProviderNo(providerNo);
+                }
+                String propValue="false";
+                if(checked) propValue="true";
+
+                prop.setValue(propValue);
+                this.userPropertyDAO.saveProp(prop);
+
+                return prop;
+
+    }
+
+
+    public ActionForward saveClinicalConnectPrefs(ActionMapping actionmapping,ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+        String providerNo=loggedInInfo.getLoggedInProviderNo();
+        DynaActionForm frm=(DynaActionForm)actionform;
+
+
+        UserProperty prop = saveProperty(frm, providerNo, "clinicalConnectDisableCloseWindow" ,UserProperty.CLINICALCONNECT_DISABLE_CLOSE_WINDOW);
+        UserProperty prop2 = saveProperty(frm, providerNo,"clinicalConnectDisableLogoutWarning", UserProperty.CLINICALCONNECT_DISABLE_LOGOUT_WARNING);
+    
+        LogAction.addLog(LoggedInInfo.getLoggedInInfoFromSession(request),"ClinicalConnectPreferences","clinicalConnectDisableCloseWindow","",null,prop.getValue());
+        LogAction.addLog(LoggedInInfo.getLoggedInInfoFromSession(request),"ClinicalConnectPreferences","clinicalConnectDisableLogoutWarning","",null,prop.getValue());
+
+        request.setAttribute("status", "success");
+        request.setAttribute("clinicalConnectDisableCloseWindow",prop);
+        request.setAttribute("clinicalConnectDisableLogoutWarning",prop2);
+       
+        request.setAttribute("providertitle","provider.clinicalConnectPrefs.title"); 
+        request.setAttribute("providermsgPrefs","provider.clinicalConnectPrefs.msgPrefs"); //=Preferences
+        request.setAttribute("providerbtnClose","provider.clinicalConnectPrefs.btnClose"); //=Close
+        request.setAttribute("providermsgSuccess","provider.clinicalConnectPrefs.msgSuccess"); 
+        
+        request.setAttribute("method","saveClinicalConnectPrefs");
+
+        return actionmapping.findForward("genClinicalConnectPrefs");
+
 	}
     
     /**
