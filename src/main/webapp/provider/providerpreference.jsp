@@ -864,6 +864,11 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
  	<tr>
     	<td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewPreventionPrefs');return false;"><bean:message key="provider.btnViewPreventionPrefs"/></a></td>
     </tr>
+    
+    <tr>
+    	<td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewClinicalConnectPrefs');return false;"><bean:message key="provider.btnViewClinicalConnectPrefs"/></a></td>
+    </tr>
+
 </table>
 </FORM>
 

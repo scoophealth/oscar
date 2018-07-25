@@ -23,8 +23,10 @@
  */
 package org.oscarehr.ws.rest;
 
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,6 +36,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -58,10 +62,16 @@ import org.oscarehr.ws.rest.conversion.AppointmentTypeConverter;
 import org.oscarehr.ws.rest.conversion.LookupListItemConverter;
 import org.oscarehr.ws.rest.conversion.NewAppointmentConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
+import org.oscarehr.ws.rest.to.AppointmentExtResponse;
+import org.oscarehr.ws.rest.to.ProviderApptsCountResponse;
+import org.oscarehr.ws.rest.to.ProviderPeriodAppsResponse;
 import org.oscarehr.ws.rest.to.SchedulingResponse;
+import org.oscarehr.ws.rest.to.model.AppointmentExtTo;
 import org.oscarehr.ws.rest.to.model.AppointmentStatusTo1;
 import org.oscarehr.ws.rest.to.model.AppointmentTo1;
 import org.oscarehr.ws.rest.to.model.NewAppointmentTo1;
+import org.oscarehr.ws.rest.to.model.ProviderApptsCountTo;
+import org.oscarehr.ws.rest.to.model.ProviderPeriodAppsTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -361,5 +371,150 @@ public class ScheduleService extends AbstractServiceImpl {
 		
 		return response;
 	}
+	
+	@GET
+	@Path("/fetchDays/{sDate}/{eDate}/{providers}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public AppointmentExtResponse listAppointmentsByPeriodProvider(@PathParam(value="sDate") String sDateStr,
+			@PathParam(value="eDate") String eDateStr,
+			@PathParam(value="providers") String providers) {
+		if(sDateStr == null || sDateStr.length() == 0 
+				|| eDateStr == null || sDateStr.length() == 0
+				|| providers == null) 
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity("Required path parameter is missing").build());
+			
+		try {
+			Date sDate = null;
+			Date eDate = null;
+			try {
+				sDate = org.apache.tools.ant.util.DateUtils.parseIso8601Date(sDateStr);
+				eDate = org.apache.tools.ant.util.DateUtils.parseIso8601Date(eDateStr);
+			} catch(Exception e) {
+				throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity("Path parameter has the wrong format").build());			
+			}
+
+			List<Object[]> items = scheduleManager.listAppointmentsByPeriodProvider(getLoggedInInfo(), sDate, eDate, providers);
+
+			AppointmentExtResponse response = new AppointmentExtResponse();
+			if(items != null && items.size()>0) {
+				if(response.getContent() == null) response.setContent(new ArrayList<AppointmentExtTo>());
+				for(Object[] obj : items) {
+					Integer appointmentNo = (Integer) obj[0];
+					String providerNo = (String)obj[1];
+					Date appointmentDate = (Date)obj[2];
+					Date startTime = (Date)obj[3];
+					Integer demographicNo = (Integer)obj[4];
+					String notes = (String)obj[5];
+					String location = (String)obj[6];
+					String resources = (String)obj[7];
+					Character status = (Character)obj[8];
+					String lastName = (String)obj[9];
+					String firstName = (String)obj[10];
+					String phone = (String)obj[11];
+					String phone2 = (String)obj[12];
+					String email = (String)obj[13];
+					String demoCell = (String)obj[14];
+					String reminderPreference = (String)obj[15];
+					String hPhoneExt = (String)obj[16];
+					String wPhoneExt = (String)obj[17];
+					
+					AppointmentExtTo to = new AppointmentExtTo(appointmentNo, providerNo, appointmentDate, startTime, 
+							demographicNo, notes, location,resources, status,
+							lastName, firstName, phone, phone2,email,
+							demoCell, reminderPreference, hPhoneExt, wPhoneExt);
+					
+					response.getContent().add(to);
+				}
+			}
+			
+			return response;			
+		} catch (Exception e) {
+			logger.error("ScheduleService.listAppointmentsByPeriodProvider error", e);
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity("Internal server error").build());			
+		}
+		
+	}
+	
+
+	/**
+	 * @param sDate has format "yyyy-MM-dd"
+	 * @param eDate has format "yyyy-MM-dd"
+	 * @return ProviderApptsCountResponse
+	 */
+	@GET
+	@Path("/fetchProvidersApptsCount/{sDate}/{eDate}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ProviderApptsCountResponse listProviderAppointmentCounts(@PathParam(value="sDate") String sDateStr, @PathParam(value="eDate") String eDateStr) {
+		if(sDateStr == null || eDateStr == null) 
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity("Required path parameter is miossing").build());
+				
+		try {
+			List<Object[]> items = scheduleManager.listProviderAppointmentCounts(getLoggedInInfo(), sDateStr, eDateStr);
+
+			ProviderApptsCountResponse response = new ProviderApptsCountResponse();
+			if(items != null && items.size()>0) {
+				if(response.getContent() == null) response.setContent(new ArrayList<ProviderApptsCountTo>());
+				for(Object[] obj : items) {
+					String providerNo = (String)obj[0];
+					String firstName = (String)obj[1];
+					String lastName = (String)obj[2];
+					Long appointmentsCount = ((BigInteger)obj[3]).longValue();
+					
+					ProviderApptsCountTo to = new ProviderApptsCountTo(providerNo, lastName+", "+firstName, appointmentsCount);
+					
+					if(appointmentsCount > 0) {
+						if(response.getContent() == null) response.setContent(new ArrayList<ProviderApptsCountTo>());
+						response.getContent().add(to);
+					}
+				}
+			}
+			
+			return response;			
+		} catch (Exception e) {
+			logger.error("ScheduleService.listProviderAppointmentCounts error", e);
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity("Internal server error").build());			
+		}
+	}
+	
+	@GET
+	@Path("/fetchProviderAppts/{providerNo}/{sDate}/{eDate}")
+	@Produces("application/json")
+	/**
+	 * @param providerNo
+	 * @param sDate has format "yyyy-MM-dd"
+	 * @param eDate has format "yyyy-MM-dd"
+	 * @return
+	 */
+	public ProviderPeriodAppsResponse listProviderApptsForPeriod(@PathParam("providerNo") String providerNo, @PathParam("sDate") String sDateStr, @PathParam("eDate") String eDateStr) {
+		if(providerNo == null || providerNo.length() == 0 || sDateStr == null || eDateStr == null) 
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity("Required path parameter is miossing").build());
+
+		try {
+			Date sDate = null;
+			Date eDate = null;
+			try {
+				sDate = org.apache.tools.ant.util.DateUtils.parseIso8601Date(sDateStr);
+				eDate = org.apache.tools.ant.util.DateUtils.parseIso8601Date(eDateStr);
+			} catch(Exception e) {
+				throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity("Path parameter has the wrong format").build());			
+			}
+
+			List<Appointment> appts = scheduleManager.getAppointmentsForDateRangeAndProvider(getLoggedInInfo(), sDate, eDate, providerNo);
+			
+			ProviderPeriodAppsResponse response = new ProviderPeriodAppsResponse();
+			if(appts != null && appts.size()>0) {
+				response.setContent(new ArrayList<ProviderPeriodAppsTo>());
+				for (Appointment appt : appts) {
+					ProviderPeriodAppsTo to = new ProviderPeriodAppsTo(appt);
+					response.getContent().add(to);
+				}				
+			}
+			return response;
+		} catch (Exception e) {
+			logger.error("ScheduleService.listProviderApptsForPeriod error", e);;
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity("Internal server error").build());			
+		}
+	}
+
 
 }

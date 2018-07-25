@@ -128,15 +128,15 @@ Varicella Immunoglobulin	VarIg
 		desc="Pneumovax Pneumococcal-Polysaccharide - 23 valent eg Pneumovax" 
 		name="Pneumovax" link="" layout="injection"
 		healthCanadaType="Pneu-P-23"
-		atc="J07AL02" showIfMinRecordNum="1" />
+		atc="J07AL01" showIfMinRecordNum="1" />
 
 	<item 
 		resultDesc=""
-		desc="Pneu-C=Pneumococcal Multi Valent Conjugate eg Prevenar 13"
+		desc="Pneu-C=Pneumococcal Multi Valent Conjugate eg Prevnar 13"
 		name="Pneu-C" 
 		healthCanadaType="Pneu-C-7"
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#PneuC"
-		layout="injection" atc="J07AL" minAge="0" maxAge="2"
+		layout="injection" atc="J07AL02" minAge="0" maxAge="2"
 		showIfMinRecordNum="1" />
 
 	<item
@@ -240,6 +240,15 @@ Varicella Immunoglobulin	VarIg
         atc="J07BK02"
         minAge="50" 
 		showIfMinRecordNum="1" />
+	
+    <item
+        resultDesc=""
+        desc="RZV=herpes zoster recomb subunit vaccine eg Shingrix" name="RZV" healthCanadaType="HerpR"
+        layout="injection" 
+        atc="J07BK03" 
+        minAge="50" 
+        maxAge="100"
+        showIfMinRecordNum="1" />
 
 	<item 
 		resultDesc=""

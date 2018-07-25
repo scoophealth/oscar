@@ -2754,6 +2754,7 @@
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:Vector&lt;String&gt; req_id      = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:java.util.Hashtable,</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:java.util.Vector,</ViolationValue>
+        <ViolationValue>/src/main/webapp/logoutSSO.jsp:StringBuffer oscarUrl = request.getRequestURL();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/Index2.jsp:Vector splitChart = ectSplitChart.getSplitCharts(demoNo);</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/immunization/ScheduleConfig.jsp:Vector cfgId = new EctImmConfigData().getImmunizationConfigId();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarEncounter/immunization/ScheduleConfig.jsp:Vector cfgSet = new EctImmConfigData().getImmunizationConfigName();</ViolationValue>
