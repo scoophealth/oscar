@@ -2693,29 +2693,6 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 	}
 
    
-    private UserProperty loadProperty(String providerNo, String name) {
-    	
-    	UserProperty prop = this.userPropertyDAO.getProp(providerNo, name);
-
-		String propValue="";
-		if (prop == null){
-			prop = new UserProperty();
-		}else{
-			propValue=prop.getValue();
-		}
-
-		boolean checked;
-		if(propValue.equals("true"))
-			checked=true;
-		else
-			checked=false;
-
-		prop.setChecked(checked);
-		
-		return prop;
-    }
-    
-    
     public ActionForward viewPreventionPrefs(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request, HttpServletResponse response) {
     	DynaActionForm frm = (DynaActionForm)actionform;
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
