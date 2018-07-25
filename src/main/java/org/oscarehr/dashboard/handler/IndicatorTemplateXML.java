@@ -57,6 +57,7 @@ public class IndicatorTemplateXML {
 	
 	private static enum ManditoryParameter { provider }
 	private static enum ProviderValueAlias { all, loggedinprovider }
+	private static enum ExcludedPatientAlias { none, excludedpatient }
 	public static enum RangeType {upperLimit, lowerLimit}
 		
 	private Integer id;
@@ -539,8 +540,9 @@ public class IndicatorTemplateXML {
 		
 		for( int i = 0; i < parameterValues.length; i++ ) {
 			newParameterValues[i] = setParameterAliasWithValue( parameterId, parameterValues[i] );
+			logger.info("parameterAliases: " + newParameterValues[i]);
 		}
-		
+
 		return newParameterValues;
 	}
 	
@@ -554,7 +556,16 @@ public class IndicatorTemplateXML {
 		
 		//TODO for now only captures one required parameter value
 		// A switch will be required here to handle more values.
-		if( ! ( ManditoryParameter.provider.name() ).equalsIgnoreCase( parameterId ) ) {			
+		if( ! ( ManditoryParameter.provider.name() ).equalsIgnoreCase( parameterId ) ) {
+			logger.info("parameterId: " + parameterId + " parameterValue: " + parameterValue);
+			if ( ( ExcludedPatientAlias.excludedpatient.name().equalsIgnoreCase(parameterId))) {
+				switch( ExcludedPatientAlias.valueOf(parameterValue.toLowerCase())) {
+					case excludedpatient: parameterValue = "("+"5,6"+")";
+						break;
+					case none: parameterValue = "(-1)";
+						break;
+				}
+			}
 			return parameterValue;
 		}
 		
