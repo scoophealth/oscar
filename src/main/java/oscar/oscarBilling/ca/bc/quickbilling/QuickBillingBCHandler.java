@@ -373,6 +373,27 @@ public class QuickBillingBCHandler {
 		return tempVal;
 	}
 	
+	private String convertYYYYMMDD(String date) {
+		
+		String yyyymmdd = null;
+		// always to the global OSCAR format first.
+		String ddmmyyyy = convertDDMMYYYY(date);
+		Date ddmmyyyDate = null;
+		SimpleDateFormat yyyymmddFormat = new SimpleDateFormat("yyyyMMdd");
+		
+		try {
+			ddmmyyyDate = dateformat.parse(ddmmyyyy);
+		} catch (ParseException e) {
+			log.error("Error while reformatting date from ddmmyyyyy to yyyymmdd", e);
+		}
+		
+		if( ddmmyyyDate != null ) {
+			yyyymmdd = yyyymmddFormat.format(ddmmyyyDate);
+		}
+		
+		return yyyymmdd;
+	}
+	
 	/**
 	 * Triggers exsisting class: BillingSaveBillingAction to recursivley save the bills array list.
 	 * @throws IOException
@@ -463,8 +484,8 @@ public class QuickBillingBCHandler {
         bill.setBillingDate(dateformat.parse(bean.getServiceDate()));
         bill.setTotal(bean.getGrandtotal());
         bill.setStatus(""+billingAccountStatus);
-        bill.setDob(bean.getPatientDoB());
-        bill.setVisitDate(dateformat.parse(bean.getAdmissionDate()));
+        bill.setDob(bean.getPatientDoB());        
+        bill.setVisitDate(dateformat.parse(bean.getServiceDate()));        
         bill.setVisitType(bean.getVisitType());
         bill.setProviderOhipNo(bean.getBillingPracNo());
         bill.setApptProviderNo(bean.getApptProviderNo());
@@ -524,7 +545,7 @@ public class QuickBillingBCHandler {
         
         bill.setPaymentMode(paymentMode);
         
-        bill.setServiceDate(convertDDMMYYYY(bean.getServiceDate()));
+        bill.setServiceDate(convertYYYYMMDD(bean.getServiceDate())); // the service date format is yyyyMMdd as required by MSP      
         bill.setServiceToDay(bean.getService_to_date());
         
         bill.setSubmissionCode(bean.getSubmissionCode());
