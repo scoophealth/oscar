@@ -72,6 +72,8 @@ public class IndicatorTemplateXML {
 	
 	private String providerNo = null;
 	private String sharedMetricLabel = null;
+	
+	private ExcludeDemographicHandler excludeDemographicHandler = new ExcludeDemographicHandler();
 
 	public IndicatorTemplateXML( LoggedInInfo loggedInInfo, Document xmlDocument ) {
 		this( xmlDocument );
@@ -560,7 +562,20 @@ public class IndicatorTemplateXML {
 			logger.info("parameterId: " + parameterId + " parameterValue: " + parameterValue);
 			if ( ( ExcludedPatientAlias.excludedpatient.name().equalsIgnoreCase(parameterId))) {
 				switch( ExcludedPatientAlias.valueOf(parameterValue.toLowerCase())) {
-					case excludedpatient: parameterValue = "("+"5,6"+")";
+					case excludedpatient:
+					String indicatorName = this.getName() + "|" + this.getSubCategory() + "|" + this.getCategory();
+					excludeDemographicHandler.setLoggedinInfo(loggedInInfo);
+					List<Integer> demoNos = excludeDemographicHandler.getDemoIds(indicatorName);
+					if (demoNos != null && !demoNos.isEmpty()) {
+						String result = "(";
+						for (Integer i: demoNos) {
+							result += i + ",";
+						}
+						parameterValue = result.substring(0, result.length() - 1) + ")";
+					} else {
+						parameterValue = "(-1)";
+					}
+					logger.info("demoNos parameterValue: " + parameterValue);
 						break;
 					case none: parameterValue = "(-1)";
 						break;

@@ -58,7 +58,14 @@ public class ExcludeDemographicHandler {
 	private String excludeIndicator = "excludeIndicator";
 	
 	public List<Integer> getDemoIds(String indicatorName) {
-		demoIds = demographicExtDao.findDemographicIdsByKeyVal(excludeIndicator, indicatorName);
+		demoIds = new ArrayList<Integer>();
+		List<DemographicExt> allProviderExts = demographicExtDao.getDemographicExtByKeyAndValue(excludeIndicator, indicatorName);
+		String providerNo = getProviderNo();
+		for (DemographicExt e: allProviderExts) {
+			if (e.getProviderNo().equals(providerNo)) {
+				demoIds.add(e.getDemographicNo());
+			}
+		}
 		return demoIds;
 	}
 	
