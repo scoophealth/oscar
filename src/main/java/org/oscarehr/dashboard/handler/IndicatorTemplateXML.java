@@ -542,7 +542,6 @@ public class IndicatorTemplateXML {
 		
 		for( int i = 0; i < parameterValues.length; i++ ) {
 			newParameterValues[i] = setParameterAliasWithValue( parameterId, parameterValues[i] );
-			logger.info("parameterAliases: " + newParameterValues[i]);
 		}
 
 		return newParameterValues;
@@ -559,23 +558,21 @@ public class IndicatorTemplateXML {
 		//TODO for now only captures one required parameter value
 		// A switch will be required here to handle more values.
 		if( ! ( ManditoryParameter.provider.name() ).equalsIgnoreCase( parameterId ) ) {
-			logger.info("parameterId: " + parameterId + " parameterValue: " + parameterValue);
 			if ( ( ExcludedPatientAlias.excludedpatient.name().equalsIgnoreCase(parameterId))) {
 				switch( ExcludedPatientAlias.valueOf(parameterValue.toLowerCase())) {
 					case excludedpatient:
-					String indicatorName = this.getName() + "|" + this.getSubCategory() + "|" + this.getCategory();
-					excludeDemographicHandler.setLoggedinInfo(loggedInInfo);
-					List<Integer> demoNos = excludeDemographicHandler.getDemoIds(indicatorName);
-					if (demoNos != null && !demoNos.isEmpty()) {
-						String result = "(";
-						for (Integer i: demoNos) {
-							result += i + ",";
+						String indicatorName = this.getName() + "|" + this.getSubCategory() + "|" + this.getCategory();
+						excludeDemographicHandler.setLoggedinInfo(loggedInInfo);
+						List<Integer> demoNos = excludeDemographicHandler.getDemoIds(indicatorName);
+						if (demoNos != null && !demoNos.isEmpty()) {
+							String result = "(";
+							for (Integer i: demoNos) {
+								result += i + ",";
+							}
+							parameterValue = result.substring(0, result.length() - 1) + ")";
+						} else {
+							parameterValue = "(-1)";
 						}
-						parameterValue = result.substring(0, result.length() - 1) + ")";
-					} else {
-						parameterValue = "(-1)";
-					}
-					logger.info("demoNos parameterValue: " + parameterValue);
 						break;
 					case none: parameterValue = "(-1)";
 						break;
