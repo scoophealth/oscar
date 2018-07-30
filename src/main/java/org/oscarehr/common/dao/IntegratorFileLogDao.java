@@ -23,6 +23,7 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -77,6 +78,20 @@ public class IntegratorFileLogDao extends AbstractDao<IntegratorFileLog> {
 		List<IntegratorFileLog> results = query.getResultList();
 		
 		return (results);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<IntegratorFileLog> findAllWithNoCompletedOrErrorIntegratorStatus() {
+		String queryStr = "FROM IntegratorFileLog c WHERE c.integratorStatus IS NULL OR c.integratorStatus NOT LIKE 'COMPLETED' AND c.integratorStatus NOT LIKE 'ERROR' ORDER BY c.id DESC";
+
+		Query query = entityManager.createQuery(queryStr);
+		
+		List<IntegratorFileLog> results = query.getResultList();
+		if(results == null) {
+			results = Collections.emptyList();
+		}
+		
+		return results;
 	}
 
 }

@@ -114,14 +114,17 @@ public class PreventionData {
 
 	public static Map<String, String> getPreventionKeyValues(String preventionId) {
 		Map<String, String> h = new HashMap<String, String>();
-
-		try {
-			List<PreventionExt> preventionExts = preventionExtDao.findByPreventionId(Integer.valueOf(preventionId));
+		
+		if( preventionId == null || preventionId.isEmpty()) {
+			return h;
+		}
+		
+		List<PreventionExt> preventionExts = preventionExtDao.findByPreventionId(Integer.valueOf(preventionId));
+		
+		if(preventionExts != null) {
 			for (PreventionExt preventionExt : preventionExts) {
 				h.put(preventionExt.getkeyval(), preventionExt.getVal());
 			}
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
 		}
 		return h;
 	}
@@ -350,7 +353,7 @@ public class PreventionData {
 		return p;
 	}
 
-	private static List<CachedDemographicPrevention> getRemotePreventions(LoggedInInfo loggedInInfo, Integer demographicId) {
+	public static List<CachedDemographicPrevention> getRemotePreventions(LoggedInInfo loggedInInfo, Integer demographicId) {
 
 		List<CachedDemographicPrevention> remotePreventions = null;
 		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
@@ -368,20 +371,22 @@ public class PreventionData {
 				remotePreventions = IntegratorFallBackManager.getRemotePreventions(loggedInInfo, demographicId);
 			}
 		}
-		return (remotePreventions);
+		if(remotePreventions == null) {
+			remotePreventions = Collections.emptyList();
+		}
+		
+		return remotePreventions;
 	}
 
 	public static oscar.oscarPrevention.Prevention addRemotePreventions(LoggedInInfo loggedInInfo, oscar.oscarPrevention.Prevention prevention, Integer demographicId) {
 		List<CachedDemographicPrevention> remotePreventions = getRemotePreventions(loggedInInfo, demographicId);
 
-		if (remotePreventions != null) {
-			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
-				Date preventionDate = DateUtils.toDate(cachedDemographicPrevention.getPreventionDate());
+		for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
+			Date preventionDate = DateUtils.toDate(cachedDemographicPrevention.getPreventionDate());
 
-				PreventionItem pItem = new PreventionItem(cachedDemographicPrevention.getPreventionType(), preventionDate);
-				pItem.setRemoteEntry(true);
-				prevention.addPreventionItem(pItem);
-			}
+			PreventionItem pItem = new PreventionItem(cachedDemographicPrevention.getPreventionType(), preventionDate);
+			pItem.setRemoteEntry(true);
+			prevention.addPreventionItem(pItem);
 		}
 
 		return (prevention);
@@ -389,45 +394,46 @@ public class PreventionData {
 
 	public static ArrayList<Map<String, Object>> addRemotePreventions(LoggedInInfo loggedInInfo, ArrayList<Map<String, Object>> preventions, Integer demographicId, String preventionType, Date demographicDateOfBirth) {
 		List<CachedDemographicPrevention> remotePreventions = getRemotePreventions(loggedInInfo, demographicId);
+		return addRemotePreventions(loggedInInfo, remotePreventions, preventions, preventionType, demographicDateOfBirth);
+	}
+	
+	public static ArrayList<Map<String, Object>> addRemotePreventions(LoggedInInfo loggedInInfo, List<CachedDemographicPrevention> remotePreventions, ArrayList<Map<String, Object>> preventions, String preventionType, Date demographicDateOfBirth) {
+		for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
+			if (preventionType.equals(cachedDemographicPrevention.getPreventionType())) {
 
-		if (remotePreventions != null) {
-			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
-				if (preventionType.equals(cachedDemographicPrevention.getPreventionType())) {
-
-					Map<String, Object> h = new HashMap<String, Object>();
-					h.put("integratorFacilityId", cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
-					h.put("integratorPreventionId", cachedDemographicPrevention.getFacilityPreventionPk().getCaisiItemId());
-					String remoteFacilityName = "N/A";
-					CachedFacility remoteFacility = null;
-					try {
-						remoteFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(), cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
-					} catch (Exception e) {
-						log.error("Error", e);
-					}
-					if (remoteFacility != null) remoteFacilityName = remoteFacility.getName();
-					h.put("remoteFacilityName", remoteFacilityName);
-					h.put("integratorDemographicId", cachedDemographicPrevention.getCaisiDemographicId());
-					h.put("type", cachedDemographicPrevention.getPreventionType());
-					h.put("provider_no", "remote:" + cachedDemographicPrevention.getCaisiProviderId());
-					h.put("provider_name", "remote:" + cachedDemographicPrevention.getCaisiProviderId());
-					h.put("prevention_date", DateFormatUtils.ISO_DATE_FORMAT.format(cachedDemographicPrevention.getPreventionDate()) + " 00:00");
-					h.put("prevention_date_asDate", cachedDemographicPrevention.getPreventionDate());
-
-					if (demographicDateOfBirth != null) {
-						String age = UtilDateUtilities.calcAgeAtDate(demographicDateOfBirth, DateUtils.toDate(cachedDemographicPrevention.getPreventionDate()));
-						h.put("age", age);
-					} else {
-						h.put("age", "N/A");
-					}
-
-					preventions.add(h);
+				Map<String, Object> h = new HashMap<String, Object>();
+				h.put("integratorFacilityId", cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
+				h.put("integratorPreventionId", cachedDemographicPrevention.getFacilityPreventionPk().getCaisiItemId());
+				String remoteFacilityName = "N/A";
+				CachedFacility remoteFacility = null;
+				try {
+					remoteFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(), cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
+				} catch (Exception e) {
+					log.error("Error", e);
 				}
+				if (remoteFacility != null) remoteFacilityName = remoteFacility.getName();
+				h.put("remoteFacilityName", remoteFacilityName);
+				h.put("integratorDemographicId", cachedDemographicPrevention.getCaisiDemographicId());
+				h.put("type", cachedDemographicPrevention.getPreventionType());
+				h.put("provider_no", "remote:" + cachedDemographicPrevention.getCaisiProviderId());
+				h.put("provider_name", "remote:" + cachedDemographicPrevention.getCaisiProviderId());
+				h.put("prevention_date", DateFormatUtils.ISO_DATE_FORMAT.format(cachedDemographicPrevention.getPreventionDate()) + " 00:00");
+				h.put("prevention_date_asDate", cachedDemographicPrevention.getPreventionDate());
+
+				if (demographicDateOfBirth != null) {
+					String age = UtilDateUtilities.calcAgeAtDate(demographicDateOfBirth, DateUtils.toDate(cachedDemographicPrevention.getPreventionDate()));
+					h.put("age", age);
+				} else {
+					h.put("age", "N/A");
+				}
+
+				preventions.add(h);
 			}
 
 			Collections.sort(preventions, new PreventionsComparator());
 		}
-
-		return (preventions);
+		
+		return preventions;
 	}
 
 	public static class PreventionsComparator implements Comparator<Map<String, Object>> {

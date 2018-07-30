@@ -28,6 +28,7 @@ package org.oscarehr.common.dao;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -267,6 +268,8 @@ public class DocumentDao extends AbstractDao<Document> {
 	}
 	
 	/**
+	 * @Deprecated
+	 * 
 	 * Chop-chop. Please don't ask what this spagehtti does, better don't use it. 
 	 * 
 	 * @param module
@@ -342,6 +345,26 @@ public class DocumentDao extends AbstractDao<Document> {
 
         @SuppressWarnings("unchecked")
         List<Document> documents = query.getResultList();
+        return documents;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public List<Document> findByDemographicUpdateDate(Integer demographicId, Date updatedAfterThisDateInclusive) {
+	    	String sql = "select d from "
+	    			+ modelClass.getSimpleName()
+	    			+ " d, CtlDocument c "
+	    			+ "where c.id.documentNo=d.documentNo "
+	    			+ "and c.id.module LIKE 'demographic' "
+	    			+ "AND c.id.moduleId = ?1 "
+	    			+ "and d.updatedatetime >= ?2";
+	    	
+	    	Query query = entityManager.createQuery(sql);
+	    	query.setParameter(1, demographicId);
+	    	query.setParameter(2, updatedAfterThisDateInclusive);
+        List<Document> documents = query.getResultList();
+        if(documents == null) {
+        		documents = Collections.emptyList();
+        }
         return documents;
     }
     
