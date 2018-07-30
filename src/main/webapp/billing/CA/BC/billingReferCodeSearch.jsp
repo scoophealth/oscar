@@ -134,14 +134,14 @@ codeName2 = codeName2 + "%";
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
 <title>Diagnostic Code Search</title>
 <script LANGUAGE="JavaScript">
-<!--
+
 function CodeAttach(File0) {
       self.close();
-      self.opener.document.BillingCreateBillingForm.xml_refer1.value = File0;
-      self.opener.document.BillingCreateBillingForm.xml_refer2.value ='';
-      self.opener.document.BillingCreateBillingForm.xml_refer3.value ='';
+      self.opener.document.<%=formName%>.<%=formElement%>.value = File0;
+  //    self.opener.document.BillingCreateBillingForm.xml_refer2.value ='';
+  //    self.opener.document.BillingCreateBillingForm.xml_refer3.value ='';
 }
--->
+
 </script>
 
 </head>
