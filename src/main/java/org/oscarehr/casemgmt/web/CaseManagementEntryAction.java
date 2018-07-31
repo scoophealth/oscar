@@ -264,7 +264,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		logger.debug("NoteId " + nId);
 
-		String maxTmpSave = oscar.OscarProperties.getInstance().getProperty("maxTmpSave", "");
+		String maxTmpSave = oscar.OscarProperties.getInstance().getProperty("maxTmpSave", "off");
 		logger.debug("maxTmpSave " + maxTmpSave);
 		// set date 2 weeks in past so we retrieve more recent saved notes
 		Calendar cal = Calendar.getInstance();
