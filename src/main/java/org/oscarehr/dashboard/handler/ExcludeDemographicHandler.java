@@ -25,6 +25,7 @@
 package org.oscarehr.dashboard.handler;
 
 import java.util.ArrayList;
+import java.util.Date;
 //import java.util.ArrayList;
 import java.util.List;
 //import java.util.Objects;
@@ -56,13 +57,15 @@ public class ExcludeDemographicHandler {
 	List<DemographicExt> demoExts;
 	private LoggedInInfo loggedInInfo;
 	private String excludeIndicator = "excludeIndicator";
+	Date now = new java.util.Date();
 	
 	public List<Integer> getDemoIds(String indicatorName) {
 		demoIds = new ArrayList<Integer>();
 		List<DemographicExt> allProviderExts = demographicExtDao.getDemographicExtByKeyAndValue(excludeIndicator, indicatorName);
 		String providerNo = getProviderNo();
+		Date now = new java.util.Date();
 		for (DemographicExt e: allProviderExts) {
-			if (e.getProviderNo().equals(providerNo)) {
+			if (e.getProviderNo().equals(providerNo) && isCurrentExclusion(e)) {
 				demoIds.add(e.getDemographicNo());
 			}
 		}
@@ -73,8 +76,9 @@ public class ExcludeDemographicHandler {
 		demoExts = new ArrayList<DemographicExt>();
 		List<DemographicExt> allProviderExts = demographicExtDao.getDemographicExtByKeyAndValue(excludeIndicator, indicatorName);
 		String providerNo = getProviderNo();
+		Date now = new java.util.Date();
 		for (DemographicExt e: allProviderExts) {
-			if (e.getProviderNo().equals(providerNo)) {
+			if (e.getProviderNo().equals(providerNo) && isCurrentExclusion(e)) {
 				demoExts.add(e);
 			}
 		}
@@ -84,6 +88,11 @@ public class ExcludeDemographicHandler {
 	public void excludeDemoId(Integer demographicNo, String indicatorName) {
 		if (demographicNo == null || indicatorName == null || indicatorName.isEmpty()) return;
 		String providerNo = getProviderNo();
+		// It is possible that there is already a exclusion present in demographicExt but the
+		// exclusion is no longer current.  The old one could be removed, its creation date
+		// could be updated to the current date, or we can just ignore it.  For the moment we
+		// will ignore non-current entries.  There probably wouldn't be many and they serve as
+		// a record that the patient was excluded from the indicator in the past.
 		demographicExtDao.addKey(providerNo, demographicNo, excludeIndicator, indicatorName);
 		logger.info("demo: " + demographicNo + " excluded from indicatorTemplate " + indicatorName);
 	}
@@ -165,6 +174,26 @@ public class ExcludeDemographicHandler {
 		return providerNo;
 	}
 	
+	// An exclusion is only valid for a finite interval.  The interval may need to be modified
+	// based on user feedback.
+	private Boolean isCurrentExclusion(DemographicExt de) {
+		Boolean result = true;
+		
+		int MILLIS_IN_SECOND = 1000;
+	    int SECONDS_IN_MINUTE = 60;
+	    int MINUTES_IN_HOUR = 60;
+	    int HOURS_IN_DAY = 24;
+	    int DAYS_IN_YEAR = 365;
+	    long MILLISECONDS_IN_YEAR =
+	    		(long)MILLIS_IN_SECOND * SECONDS_IN_MINUTE * MINUTES_IN_HOUR *
+	    		HOURS_IN_DAY * DAYS_IN_YEAR;
+		
+	    if (now.getTime() - de.getDateCreated().getTime() > MILLISECONDS_IN_YEAR ) {
+			result = false;
+		}
+		
+	    return result;
+	}
 //	public void archiveExtension(DemographicExt ext) {
 //		//TODO: this needs a loggedInInfo
 //		if (ext != null && ext.getId() != null) {

@@ -107,6 +107,10 @@ public class ExcludeDemographicHandlerTest {
     	}
     	excludeDemographicHandler.excludeDemoIds(list, indicatorName);
     	assertEquals(array.length, excludeDemographicHandler.getDemoIds(indicatorName).size());
+    	// check whether we can add the same entries yet again
+    	excludeDemographicHandler.excludeDemoIds(list, indicatorName);
+    	assertEquals(2*array.length, excludeDemographicHandler.getDemoIds(indicatorName).size());
+    	// also checks whether duplicated entries are removed
     	excludeDemographicHandler.unExcludeDemoIds(list, indicatorName);
     	assertEquals(0, excludeDemographicHandler.getDemoIds(indicatorName).size());
     }
