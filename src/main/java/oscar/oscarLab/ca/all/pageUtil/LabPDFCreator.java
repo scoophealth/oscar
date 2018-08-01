@@ -49,7 +49,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tika.io.IOUtils;
-import org.jfree.ui.Align;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.printing.FontSettings;
@@ -579,6 +578,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 									
 									if(j == 0 && k == 0) {
 										cell.setColspan(colspan-1);
+										cell.setNoWrap(true);
 										cell.setPhrase( new Phrase(data.replaceAll("<br\\s*/*>", "\n"), lineFont ) );
 										table.addCell(cell);
 										
