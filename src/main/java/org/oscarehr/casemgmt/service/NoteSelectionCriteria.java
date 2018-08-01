@@ -24,6 +24,7 @@
 package org.oscarehr.casemgmt.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,6 +46,8 @@ public class NoteSelectionCriteria {
 	private List<String> issues = new ArrayList<String>();
 	private boolean sliceFromEndOfList = true;  //historically this is the default
 
+	private Date startDate;
+	private Date endDate;
 	/**
 	 * Gets demographic id to obtains notes for.
 	 * 
@@ -249,4 +252,21 @@ public class NoteSelectionCriteria {
 	    return "NoteSelectionCriteria [maxResults=" + maxResults + ", firstResult=" + firstResult + ", demographicId=" + demographicId + ", userRole=" + userRole + ", userName=" + userName + ", noteSort=" + noteSort + ", programId=" + programId + ", roles=" + roles + ", providers=" + providers + ", issues=" + issues + "]";
     }
 
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	
 }
