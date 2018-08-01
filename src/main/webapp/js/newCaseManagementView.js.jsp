@@ -3479,8 +3479,8 @@ function autoCompleteShowMenuCPP(element, update) {
         }else if( $("printopAll").checked ){
             printAll();
         }
-
-        if( $F("notes2print").length == 0 && $F("printCPP") == "false" && $F("printRx") == "false" && $F("printLabs") == "false" && $F("printPreventions") == "false" ) {
+		
+		if( $F("notes2print").length == 0 && $F("printCPP") == "false" && $F("printRx") == "false" && $F("printLabs") == "false" && $F("printPreventions") == "false" ) {
             alert(nothing2PrintMsg);
             return false;
         }
@@ -3492,6 +3492,8 @@ function autoCompleteShowMenuCPP(element, update) {
 
         frm.pStartDate.value = $F("printStartDate");
         frm.pEndDate.value = $F("printEndDate");
+        frm.pType.value = $F("printopDates");
+        
         frm.submit();
 
         return false;
