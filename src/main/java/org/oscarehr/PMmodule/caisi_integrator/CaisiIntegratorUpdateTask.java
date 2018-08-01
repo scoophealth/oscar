@@ -25,19 +25,26 @@ package org.oscarehr.PMmodule.caisi_integrator;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -105,9 +112,9 @@ import org.oscarehr.caisi_integrator.util.CodeType;
 import org.oscarehr.caisi_integrator.util.Role;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.FacilityWs;
+import org.oscarehr.caisi_integrator.ws.ImportLog;
 import org.oscarehr.caisi_integrator.ws.transfer.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.transfer.ProviderTransfer;
-import org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer;
 import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
@@ -157,7 +164,6 @@ import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.GroupNoteLink;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.IntegratorConsent;
-import org.oscarehr.common.model.IntegratorConsent.ConsentStatus;
 import org.oscarehr.common.model.IntegratorFileLog;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementMap;
@@ -181,32 +187,31 @@ import org.oscarehr.util.XmlUtils;
 import org.springframework.beans.BeanUtils;
 import org.w3c.dom.Document;
 
-import com.google.common.io.Files;
-
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
-import oscar.dms.EDocUtil.EDocSort;
 import oscar.form.FrmLabReq07Record;
 import oscar.log.LogAction;
 import oscar.oscarLab.ca.all.web.LabDisplayHelper;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
-import oscar.util.DateUtils;
 
 public class CaisiIntegratorUpdateTask extends TimerTask {
 
 	private static final Logger logger = MiscUtils.getLogger();
+	
+	private static final String COMPRESSION_SHELL_SCRIPT = "build_doc_zip.sh";
+	private static final String COMPRESSED_DOCUMENTS_APPENDAGE = "-Docs";
 
 	private static final String INTEGRATOR_UPDATE_PERIOD_PROPERTIES_KEY = "INTEGRATOR_UPDATE_PERIOD";
 
 	private static boolean ISACTIVE_PATIENT_CONSENT_MODULE = Boolean.FALSE; 
 	
-	ObjectOutputStream out = null;
+	private ObjectOutputStream out = null;
 
 	private static String outputDirectory = OscarProperties.getInstance().getProperty("DOCUMENT_DIR").trim();
 	
-	PrintWriter documentMetaWriter;
+	private PrintWriter documentMetaWriter;
 	
 	private static Timer timer = new Timer("CaisiIntegratorUpdateTask Timer", true);
 
@@ -304,10 +309,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			return;
 		}
 		
-		// If "push all patients that have consented" is set in the Integrator properties
-		// this will ensure that only consenting patients will be pushed.
-		// Note: the consent module must be activated in the Oscar properties file; and the Integrator Patient Consent program
-		// must be set in Provider Properties database table.
+		// If "push all patients that have consented" is set in the Integrator properties - this will ensure that only consenting patients will be pushed.
+		// Note: the consent module must be activated in the Oscar properties file; and the Integrator Patient Consent program must be set in Provider Properties database table.
 		if( OscarProperties.getInstance().getBooleanProperty("USE_NEW_PATIENT_CONSENT_MODULE", "true") &&  userPropertyDao.getProp( UserProperty.INTEGRATOR_PATIENT_CONSENT ) != null ) {
 			CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE = "1".equals( userPropertyDao.getProp( UserProperty.INTEGRATOR_PATIENT_CONSENT ).getValue() );
 			// consenttype is the consent type from the patient consent manager used for this module .
@@ -362,19 +365,28 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			logger.warn("Integrator is enabled but information is incomplete. facilityId=" + facility.getId() + ", user=" + user + ", password=" + password + ", url=" + integratorBaseUrl);
 			return;
 		}
-
+		
+		FacilityWs facilityWs = CaisiIntegratorManager.getFacilityWs(loggedInInfo, facility);
+		org.oscarehr.caisi_integrator.ws.CachedFacility cachedFacility = facilityWs.getMyFacility();
+		
+		// sync the integrator logs and the most recent entry
+		IntegratorFileLog lastFile = updateLogs(loggedInInfo, facility);
 
 		// start at the beginning of time (aka jan 1, 1970) so by default everything is pushed
 		Date lastDataUpdated = new Date(0);
-		
-		IntegratorFileLog lastFile = integratorFileLogManager.getLastFileData();
+
+		// set the date threshold.
 		if (lastFile != null && lastFile.getCurrentDate() != null){
 			lastDataUpdated = lastFile.getCurrentDate();
 		}
 		
-		FacilityWs service = CaisiIntegratorManager.getFacilityWs(loggedInInfo, facility);
-		org.oscarehr.caisi_integrator.ws.CachedFacility cachedFacility = service.getMyFacility();
+		logger.info("Last data snapshot date " + lastDataUpdated);
 
+		// Sync Oscar and Integrator Consent tables via web services. This is required before pushing any patient data. 
+		// This is important because a patient file is NOT pushed if the consent is revoked - and therefore will not be updated with Integrator. 
+		if( CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE ) {
+			this.pushPatientConsentTable(loggedInInfo, lastDataUpdated, facility);
+		}
 
 		// this needs to be set now, before we do any sends, this will cause anything updated after now to be resent twice but it's better than items being missed that were updated after this started.
 		Date currentUpdateDate = new Date();
@@ -387,11 +399,17 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		String dateOnFile = formatter.format(currentUpdateDate);
 		String filename = "IntegratorPush_" + facility.getId() + "_" + dateOnFile;
 		
+		// set to collect a manifest of documents (and maybe labs) during the push process.
+		// This manifest will be used to create a zipped package after the the initial serialization process is completed. 
+		Set<Path> documentPaths = new HashSet<Path>();
+		
+		logger.info("This data snapshot will be timestamped with " + currentUpdateDate);
+		
 		try {
 			//create the first file
 			out = new ObjectOutputStream(new FileOutputStream(new File(documentDir + File.separator + filename + ".1.ser")));
 		
-			File documentMetaFile = new File(documentDir + File.separator + "documentMeta.txt");
+			File documentMetaFile = new File(documentDir + File.separator + filename + "_documentMeta.txt");
 			documentMetaWriter = new PrintWriter(new FileWriter(documentMetaFile));
 			
 			IntegratorFileHeader header = new IntegratorFileHeader();
@@ -407,27 +425,16 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			pushProviders(out,lastDataUpdated, facility);
 			pushPrograms(out,lastDataUpdated, facility);
 			
-			// sync the Patient Consent tables. See method signature for details.
-			if( CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE ) {
-				this.pushPatientConsentTable(out, loggedInInfo, lastDataUpdated, facility);
-			}
-			
 			IOUtils.closeQuietly(out);
 			out = new ObjectOutputStream(new FileOutputStream(new File(documentDir + File.separator + filename + ".2.ser")));
 			
-			
-			
-			int currentFileNumber = pushAllDemographics(documentDir + File.separator + filename,loggedInInfo, facility, lastDataUpdated,cachedFacility,programs);
-			///////////////////////////////
-			//pushAllDemographicsMultiThreaded(documentDir + File.separator + filename,loggedInInfo, facility, lastDataUpdated,cachedFacility,programs);
-			
-			//int currentFileNumber = 2;
-			/////////////////////////////////////
-			
+			int currentFileNumber = pushAllDemographics(documentDir + File.separator + filename, loggedInInfo, facility, lastDataUpdated, cachedFacility, programs, documentPaths);
+
 			IOUtils.closeQuietly(out);
 			out = new ObjectOutputStream(new FileOutputStream(new File(documentDir + File.separator + filename + "."+(++currentFileNumber)+".ser")));
 			
 			IntegratorFileFooter footer =new IntegratorFileFooter();
+
 			out.writeUnshared(footer);
 			
 		}catch(IOException e) {
@@ -438,15 +445,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			IOUtils.closeQuietly(documentMetaWriter);
 		}
 		
-		//create the DocumentZip
-		String docChecksum = null;
-		try {
-			docChecksum = completeDocumentFile(documentDir, filename);
-		} catch(Exception e) {
-			throw new IOException(e);
-		}
-		
-		//creates a zip (.zipTemp) and returns the checksum for th elog
+		//creates a zip (.zipTemp) and returns the checksum for the log
 		String checksum = null;
 		try {
 			checksum = completeFile(documentDir,filename);
@@ -454,12 +453,24 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			throw new IOException(e);
 		}
 		
+		//TODO is there any need to log or transmit a checksum for the documents? Technically the manifest should confirm them all?
+		try {
+			completeDocumentFile(documentDir, filename, documentPaths);
+		} catch(Exception e) {
+			throw new IOException(e);
+		}
+				
 		//save this log
 		integratorFileLogManager.saveNewFileData(filename + ".zip",checksum,lastDataUpdated,currentUpdateDate);
 		
-		//publish the file
+		//publish the file(s)
 		try {
-			Files.move(new File(documentDir + File.separator + filename + ".zipTemp"), new File(documentDir + File.separator + filename + ".zip"));
+			Files.move(Paths.get(documentDir + File.separator + filename + ".zipTemp"), Paths.get(documentDir + File.separator + filename + ".zip"), StandardCopyOption.REPLACE_EXISTING);	
+			
+			Path documentzip = Paths.get(documentDir + File.separator + filename + COMPRESSED_DOCUMENTS_APPENDAGE + ".zipTemp");
+			if(Files.exists(documentzip)) {
+				Files.move(documentzip, Paths.get(documentDir + File.separator + filename + COMPRESSED_DOCUMENTS_APPENDAGE + ".zip"), StandardCopyOption.REPLACE_EXISTING);	
+			}
 		}catch(Exception e) {
 			logger.error("Error renaming file",e);	
 		}
@@ -705,7 +716,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 
 
 	protected int pushAllDemographics(String parentFilename, LoggedInInfo loggedInInfo, Facility facility,Date lastDataUpdated, 
-			org.oscarehr.caisi_integrator.ws.CachedFacility cachedFacility, List<Program> programs) 
+			org.oscarehr.caisi_integrator.ws.CachedFacility cachedFacility, List<Program> programs, Set<Path> documentPaths) 
 			throws IOException {
 		
 		List<Integer> demographicIds = getDemographicIdsToPush(facility,lastDataUpdated, programs);
@@ -732,13 +743,12 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			
 			
 			demographicPushCount++;
-			//logger.debug("pushing demographic facilityId:" + facility.getId() + ", demographicId:" + demographicId + "  " + demographicPushCount + " of " + demographicIds.size());
+
 			BenchmarkTimer benchTimer = new BenchmarkTimer("pushing demo facilityId:" + facility.getId() + ", demographicId:" + demographicId + "  " + demographicPushCount + " of " + demographicIds.size());
 
 			String filename = "IntegratorPush_" + facility.getId() + "_" + demographicId + ".ser";				
 			ObjectOutputStream demoOut = null;
-			
-			
+						
 			try {
 				
 				if((demographicPushCount % 500) == 0) {
@@ -752,7 +762,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				pushDemographic(demoOut,lastDataUpdated, facility, demographicId,rid);
 				benchTimer.tag("pushDemographic");
 				
-				// see new method pushPatientConsentTable() for reason.
+				// Use alternate method for patient consents if the Patient Consent Module is off. 
 				if( ! CaisiIntegratorUpdateTask.ISACTIVE_PATIENT_CONSENT_MODULE ) {
 					pushDemographicConsent(demoOut,lastDataUpdated, facility, demographicId);
 					benchTimer.tag("pushDemographicConsent");
@@ -794,7 +804,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 				pushAllergies(demoOut,lastDataUpdated, facility, demographicId);
 				benchTimer.tag("pushAllergies");
 				
-				pushDocuments(demoOut,loggedInInfo, lastDataUpdated, facility, demographicId);
+				pushDocuments(demoOut,loggedInInfo, lastDataUpdated, facility, demographicId, documentPaths);
 				benchTimer.tag("pushDocuments");
 				
 				pushForms(demoOut,lastDataUpdated, facility, demographicId);
@@ -878,7 +888,6 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			if(!deleted) {
 				logger.warn("unable to delete temp demographic file");
 			}
-			
 		}
 		
 		logger.debug("Total pushAllDemographics :" + (System.currentTimeMillis() - startTime));
@@ -948,48 +957,32 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	 * 
 	 * This method ensures that the all current consents from the Patient Consent Module ()  
 	 */
-	private void pushPatientConsentTable(ObjectOutputStream out, LoggedInInfo loggedinInfo, Date lastDataUpdated, Facility facility ) throws IOException{
-		
-		List<Consent> consents = null;
-		List<IntegratorConsent> tempConsents = null;
-			
-		consents = patientConsentManager.getConsentsByTypeAndEditDate( loggedinInfo, this.consentType, lastDataUpdated );
-		tempConsents = new ArrayList<IntegratorConsent>();
-		
+	private void pushPatientConsentTable(LoggedInInfo loggedinInfo, Date lastDataUpdated, Facility facility ) {
+		List<Consent> consents = patientConsentManager.getConsentsByTypeAndEditDate( loggedinInfo, this.consentType, lastDataUpdated );
 		logger.debug("Updating last edited consent list after " +  lastDataUpdated);
-		
-		// Convert a Consent object into an IntegratorConsent object so that it 
-		// the IntegratorConsent object can be converted to a transfer object to 
-		// be consumed by the webservice.
-		for( Consent consent : consents ) {
-			
-			logger.debug("Updating consent id: " +  consent.getId() );
-			IntegratorConsent integratorConsent = CaisiIntegratorManager.makeIntegratorConsent(consent);
-			integratorConsent.setFacilityId( facility.getId() );
-			tempConsents.add( integratorConsent );
-		}
-		
-		if( tempConsents != null && tempConsents.size() > 0 ) {
-			pushDemographicConsent( out, tempConsents );
+
+		if(consents != null) {
+			for( Consent consent : consents ) {				
+				try {
+					CaisiIntegratorManager.pushConsent(loggedinInfo, facility, consent);
+					logger.debug("pushDemographicConsent:" + consent.getId() + "," + facility.getId() + "," + consent.getDemographicNo());
+				} catch (MalformedURLException e) {
+					logger.error("Error while pushing consent via webservices. Consent ID: " + consent.getId(), e);
+					continue;
+				}
+			}
 		}
 	}
 
 	private void pushDemographicConsent(ObjectOutputStream out, Date lastUpdatedData, Facility facility,  Integer demographicId) throws IOException {
 		// find the latest relevant consent that needs to be pushed.
-		pushDemographicConsent(out, integratorConsentDao.findByFacilityAndDemographicSince(facility.getId(), demographicId,lastUpdatedData) );		
-	}
-	
-	private void pushDemographicConsent(ObjectOutputStream out,List<IntegratorConsent> tempConsents ) throws IOException {
-		for (IntegratorConsent tempConsent : tempConsents) {
-			if (tempConsent.getClientConsentStatus() == ConsentStatus.GIVEN || tempConsent.getClientConsentStatus() == ConsentStatus.REVOKED) {
-				SetConsentTransfer consentTransfer = CaisiIntegratorManager.makeSetConsentTransfer2(tempConsent);
-				out.writeUnshared(consentTransfer);
-				logger.debug("pushDemographicConsent:" + tempConsent.getId() + "," + tempConsent.getFacilityId() + "," + tempConsent.getDemographicId());
-				// return;
-			}
+		List<IntegratorConsent> integratorConsentList = integratorConsentDao.findByFacilityAndDemographicSince(facility.getId(), demographicId, lastUpdatedData);
+		for(IntegratorConsent integratorConsent : integratorConsentList) {
+			org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer consentTransfer = CaisiIntegratorManager.makeSetConsentTransfer2(integratorConsent);
+			out.writeUnshared(consentTransfer);
 		}
+		
 	}
-	
 
 	private void pushDemographicIssues(ObjectOutputStream out, Date lastDataUpdated, Facility facility, List<Program> programsInFacility, Integer demographicId, org.oscarehr.caisi_integrator.ws.CachedFacility cachedFacility) throws IOException {
 		logger.debug("pushing demographicIssues facilityId:" + facility.getId() + ", demographicId:" + demographicId);
@@ -1188,24 +1181,55 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		wrapper = null;
 	}
 
-	private void pushDocuments(ObjectOutputStream out,LoggedInInfo loggedInInfo, Date lastDataUpdated, Facility facility, Integer demographicId) throws IOException  {
-		logger.debug("pushing demographicDocuments facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+	private void pushDocuments(ObjectOutputStream out,LoggedInInfo loggedInInfo, Date lastDataUpdated, Facility facility, Integer demographicId, Set<Path> documentPaths) throws IOException, ParseException  {
 
 		if("true".equals(OscarProperties.getInstance().getProperty("integrator.send.documents.disabled", "false"))) {
+			logger.debug("Pushing documents is disabled: integrator.send.documents.disabled = false");
 			return;
 		}
 		
+		logger.debug("pushing demographicDocuments edited after " + lastDataUpdated + " for facilityId:" + facility.getId() + ", demographicId:" + demographicId);
+
+		// Get ALL PRIVATE documents with a LAST DATE EDITED on or after the lastDataUpdated date for a specific DEMOGRAPHIC (no need to sort them).
+		List<EDoc> privateDocs = EDocUtil.listAllDemographicDocsSince(loggedInInfo, demographicId, lastDataUpdated);
+		
 		StringBuilder sentIds = new StringBuilder();
 
-		List<EDoc> privateDocs = EDocUtil.listDocsSince(loggedInInfo, "demographic", demographicId.toString(), "all", EDocUtil.PRIVATE, EDocSort.OBSERVATIONDATE, "",lastDataUpdated);
 		for (EDoc eDoc : privateDocs) {
-			sendSingleDocument(out, eDoc, demographicId);
+			
+			Path documentPath = sendSingleDocument(out, eDoc, demographicId);
+			
+			if(documentPath == null) {
+				continue;
+			}
+
+			// Add this confirmed file path to the manifest.
+			if(documentPaths != null) {
+				documentPaths.add(documentPath);
+			}
+			
+			documentMetaWriter.println( eDoc.getDocId()
+					+ "," 
+					+ demographicId 
+					+ "," 
+					+ documentPath.getFileName());
+
 			sentIds.append("," + eDoc.getDocId());
 		}
+
 		conformanceTestLog(facility, "EDoc", sentIds.toString());
+
 	}
 
-	private void sendSingleDocument(ObjectOutputStream out, EDoc eDoc, Integer demographicId) throws IOException  {
+	private Path sendSingleDocument(ObjectOutputStream out, EDoc eDoc, Integer demographicId) throws IOException, ParseException  {
+		
+		// ensure the document is actually in the file system
+		Path documentPath = Paths.get( OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + File.separator + eDoc.getFileName() );
+		if(! Files.exists(documentPath) ) {
+			logger.warn("Unable to send document - the file does not exist or can't be read!! " 
+					+  OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + '/' + eDoc.getFileName());
+			return null;
+		}
 		
 		// send this document
 		CachedDemographicDocument cachedDemographicDocument = new CachedDemographicDocument();
@@ -1223,7 +1247,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		cachedDemographicDocument.setDocType(eDoc.getType());
 		cachedDemographicDocument.setDocXml(eDoc.getHtml());
 		cachedDemographicDocument.setNumberOfPages(eDoc.getNumberOfPages());
-		cachedDemographicDocument.setObservationDate(DateUtils.toGregorianCalendarDate(eDoc.getObservationDate()).getTime());
+		cachedDemographicDocument.setObservationDate( org.oscarehr.util.DateUtils.parseIsoDateAsCalendar(eDoc.getObservationDate()).getTime() );
 		cachedDemographicDocument.setProgramId(eDoc.getProgramId());
 		cachedDemographicDocument.setPublic1(Integer.parseInt(eDoc.getDocPublic()));
 		cachedDemographicDocument.setResponsible(eDoc.getResponsibleId());
@@ -1234,18 +1258,15 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		cachedDemographicDocument.setUpdateDateTime(eDoc.getDateTimeStampAsDate());
 		cachedDemographicDocument.setDescription(eDoc.getDescription());
 
-		byte[] contents = EDocUtil.getFile(OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + '/' + eDoc.getFileName());
-		if(contents == null) {
-			logger.warn("Unable to send document - the file does not exist or can't be read!! " +  OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + '/' + eDoc.getFileName());
-			return;
-		}
+//		byte[] contents = EDocUtil.getFile(OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + '/' + eDoc.getFileName());
+//		if(contents == null) {
+//			logger.warn("Unable to send document - the file does not exist or can't be read!! " +  OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + '/' + eDoc.getFileName());
+//			return;
+//		}
 		out.writeUnshared(cachedDemographicDocument);
 
-		//TODO: fix here
-		//out.writeUnshared(new ByteWrapper(contents));
+		return documentPath;
 		
-		documentMetaWriter.println( cachedDemographicDocument.getId().getCaisiItemId() + "," + cachedDemographicDocument.getCaisiDemographicId() + "," + cachedDemographicDocument.getDocFilename()  );
-		contents = null;
 	}
 
 	private void pushHL7LabResults(ObjectOutputStream out, Date lastDataUpdated, Facility facility, Integer demographicId) throws IOException {
@@ -1260,7 +1281,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		//TODO:we need to check the patient lab routing table on it's own too..the case where a lab is updated, but the link is done later
 		OscarProperties op = OscarProperties.getInstance();
 		String hl7text = op.getProperty("HL7TEXT_LABS","false");
-		
+		  
 		List<LabIdAndType> results = new ArrayList<LabIdAndType>();
 		
 		if("yes".equals(hl7text))
@@ -2085,37 +2106,83 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		}
 	}
 	
-
-	private String completeDocumentFile(String parentDir, final String parentFile)  {
-		logger.info("creating document zip file");
+	/**
+	 * This is a redirect method to determine compression by the server shell or by Java process. 
+	 */
+	private final String completeDocumentFile(final String parentDir, final String parentFile, final Set<Path> documentPaths)  {
 		
+		Path processFile = Paths.get(parentDir, COMPRESSION_SHELL_SCRIPT);
+		String checksum = null;
+		
+		if(Files.exists(processFile)) 
+		{
+			checksum = completeDocumentFile(parentDir, parentFile);
+		} 
+		else if(! documentPaths.isEmpty()) 
+		{
+			//TODO consider splitting this thread so that the entire process is not held up with large document archives. 
+			checksum = zipDocumentFiles(parentDir, parentFile, documentPaths);
+		}
+		
+		return checksum;
+	}
+
+	/**
+	 * This is an option to "off-load" some of the compression workload by invoking 
+	 * a script from the server shell.  
+	 * The script must be named build_doc_zip.sh and located 
+	 * in the parent directory of this process.
+	 * The script should also produce a checksum file for use in the logs. 
+	 * This may involve more intervention and security hardening from the Oscar support provider.
+	 * 
+	 * WARNING: this method has not been tested in production as of June 15, 2018
+	 */
+	private final String completeDocumentFile(final String parentDir, final String parentFile)  {
+		logger.info("creating document zip file");
+		String checksum = null;
+		BufferedReader bufferedReader = null;
 		try {
-			ProcessBuilder processBuilder = new ProcessBuilder(parentDir + File.separator + "build_doc_zip.sh",parentFile);
+			File processFile = new File(parentDir + File.separator + COMPRESSION_SHELL_SCRIPT);
+			
+			// is this method secure? It loads and executes a shell script from the user accessible 
+			// OscarDocuments directory. 
+			ProcessBuilder processBuilder = new ProcessBuilder(processFile.getAbsolutePath(),parentFile).inheritIO();
 			
 			Process process = processBuilder.start();
 			
 			process.waitFor();
 			
-			//BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-		   //     String data = br.readLine();
-		   //     logger.debug(data);
+			if(logger.isDebugEnabled()) {
+				bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			    String data = bufferedReader.readLine();
+			    logger.debug(data);
+			}
+			
+			// The shell script will need to create a checksum file in the file system named [filename].md5
+			// The MD5 hash shall be written to the first line. 
+			File checksumfile = new File(parentDir + File.separator + parentFile + ".md5");
+			if(checksumfile.exists()) {
+				bufferedReader = new BufferedReader(new FileReader(checksumfile));
+				checksum = bufferedReader.readLine();
+				logger.debug("Found MD5 for document zip file " + processFile.getAbsolutePath());
+			}
+			
 		}catch(Exception e) {
 			logger.error("Error",e);
 		} finally {
-			
+		    IOUtils.closeQuietly(bufferedReader);
 		}
 		
 		logger.info("done creating document zip file");
-		
-	
-		return null;
+			
+		return checksum;
 	}
 
 	private String completeFile(String parentDir,final String parentFile) throws NoSuchAlgorithmException, IOException {
 		
 		String[] files = new File(parentDir).list(new FilenameFilter(){
 		    public boolean accept(File dir, String name) {
-		    	if(name.startsWith(parentFile) && !name.equals(parentFile + "-Docs.zip")) {
+		    	if(name.startsWith(parentFile) && !name.equals(parentFile + COMPRESSED_DOCUMENTS_APPENDAGE + ".zip")) {
 		    		return true;
 		    	}
 		    	if(name.indexOf("documentMeta.txt") != -1) {
@@ -2124,16 +2191,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		    	return false;
 		    }
 		});
-		
-		
-		
 		logger.info("CREATING ZIP FILE NOW");
 		createZipFile(parentDir,parentFile,files);
-		
-		
-		//createTarFile(parentDir,parentFile,files);
-		
-		
 		//delete those files since they are zipped
 		for(int x=0;x<files.length;x++) {
 			new File(parentDir + File.separator + files[x]).delete();
@@ -2145,11 +2204,8 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		
 		 
 		//Get the checksum
-		String checksum = getFileChecksum(md5Digest, file);
-			
-		
-		return checksum;
-		
+		return getFileChecksum(md5Digest, file);
+
 	}
 	
 	protected void createTarFile(String parentDir, String parentFile, String[] files) {
@@ -2179,35 +2235,73 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 			 IOUtils.closeQuietly(tOut);
 		 }
 	}
-	
-	protected void createZipFile(String parentDir, String parentFile, String[] files) {
-		ZipOutputStream out =null;
+		
+	protected void createZipFile(final String parentDir, final String parentFile, String[] files) {
+		String destination = parentDir + File.separator + parentFile + ".zipTemp";		
+		logger.info("creating zip file " + destination);
+		ZipOutputStream out = null;
+		
 		try {
-			logger.info("creating " + parentDir + File.separator + parentFile + ".zipTemp");
+			out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(destination)));
+			out.setMethod(ZipOutputStream.DEFLATED);
 			
-			out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(parentDir + File.separator + parentFile + ".zipTemp")));
-			 out.setMethod(ZipOutputStream.DEFLATED);
-			 byte data[] = new byte[1024];
-			 
-			for(int x=0;x<files.length;x++) {
-				//out.putNextEntry(new ZipEntry(files[x].getName()));
-			  FileInputStream fi = new FileInputStream(parentDir + File.separator + files[x]);
-				BufferedInputStream origin = new BufferedInputStream(fi, 1024);
-                ZipEntry entry = new ZipEntry(files[x].toString());
-                out.putNextEntry(entry);
-                int count;
-                while((count = origin.read(data, 0, 1024)) != -1) {
-                   out.write(data, 0, count);
-                }
-                origin.close(); 
+			for(String file : files) {
+				addZipFile(parentDir + File.separator + file, out, file);
 			}
-			
 		} catch(Exception e) {
 			logger.error("Error creating zip file",e);
 		} finally {
 			IOUtils.closeQuietly(out);
 		}
 	}
+	
+	/**
+	 * Compresses all the document files listed in the documentPaths manifest and then returns a checksum. 
+	 */
+	private final String zipDocumentFiles(final String parentDir, final String parentFile, final Set<Path> documentPaths) {
+		
+		Path destination = Paths.get(parentDir, parentFile + COMPRESSED_DOCUMENTS_APPENDAGE + ".zipTemp");
+		logger.info("creating document zip file " + destination.toAbsolutePath().toString());
+		ZipOutputStream out = null;
+		String checksum = null;
+		
+		try {
+			out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(destination.toFile())));
+			out.setMethod(ZipOutputStream.DEFLATED);
+					
+			for(Path documentPath : documentPaths) {			
+				addZipFile(documentPath.toAbsolutePath().toString(), out, documentPath.getFileName().toString());
+			}
+			
+			checksum = getFileChecksum(MessageDigest.getInstance("MD5"), destination.toFile());
+			
+		} catch (IOException e) {
+			logger.error("Error creating zip file for document manifest " + documentPaths, e);
+		} catch (NoSuchAlgorithmException e) {
+			logger.error("Error creating checksum for document zip file " + documentPaths, e);
+		} finally {
+			IOUtils.closeQuietly(out);
+		}
+		
+		return checksum;
+	}
+	
+	private void addZipFile(final String source, final ZipOutputStream destination, final String filename) throws IOException {
+
+		byte data[] = new byte[1024];
+		//out.putNextEntry(new ZipEntry(files[x].getName()));
+		FileInputStream fi = new FileInputStream(source);
+		BufferedInputStream origin = new BufferedInputStream(fi, 1024);
+        
+		ZipEntry entry = new ZipEntry(filename);
+		destination.putNextEntry(entry);
+        int count;
+        while((count = origin.read(data, 0, 1024)) != -1) {
+        	destination.write(data, 0, count);
+        }
+        origin.close(); 
+	}
+		
 	private static String getFileChecksum(MessageDigest digest, File file) throws IOException
 	{
 	    //Get file input stream for reading the file content
@@ -2240,12 +2334,20 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	   return sb.toString();
 	}
 
+	/**
+	 * Defaults to DOCUMENT_DIR when INTEGRATOR_OUTPUT_DIR is not set.
+	 * @return
+	 */
 	public static String getOutputDirectory() {
 		String integratorOutputDirectory = OscarProperties.getInstance().getProperty("INTEGRATOR_OUTPUT_DIR");
 		if(StringUtils.isNotEmpty(integratorOutputDirectory)) {
-			return integratorOutputDirectory;
+			outputDirectory = integratorOutputDirectory;
 		}
-		//default to DOCUMENT_DIR
+		
+		if(outputDirectory.endsWith(File.separator)) {
+			outputDirectory = outputDirectory.substring(0, outputDirectory.length() -1);
+		}
+		
 		return outputDirectory;
 	}
 
@@ -2253,6 +2355,42 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 		CaisiIntegratorUpdateTask.outputDirectory = outputDirectory;
 	}
 	
-	
+	private final IntegratorFileLog updateLogs(final LoggedInInfo loggedInInfo, final Facility facility) {
+				
+		// get the date from the last log entry 
+		IntegratorFileLog lastFile = null;
+		List<IntegratorFileLog> integratorFileLogList = integratorFileLogManager.getStatusNotCompleteOrError(loggedInInfo);
+		FacilityWs facilityWs = null;
+		
+		if(! integratorFileLogList.isEmpty()) {
+			lastFile = integratorFileLogList.get(0);
+		}
+		
+		try {
+			facilityWs = CaisiIntegratorManager.getFacilityWs(loggedInInfo, facility);
+		} catch (MalformedURLException e) {
+			logger.error("Connection error while syncing file logs", e);
+		} 
+
+		// sort out the current status' in the integrator file log with the integrator log.
+		for(IntegratorFileLog integratorFileLog : integratorFileLogList) {
+			List<ImportLog> importLogList = null;
+			
+			if(facilityWs != null) {
+				importLogList = facilityWs.getImportLogByFilenameAndChecksum(integratorFileLog.getFilename(), integratorFileLog.getChecksum());
+			}
+			
+			if(importLogList == null) {
+				continue;
+			}
+			
+			for(ImportLog importLog : importLogList) {
+				integratorFileLog.setIntegratorStatus(importLog.getStatus());
+				integratorFileLogManager.updateIntegratorFileLog(loggedInInfo, integratorFileLog);
+			}
+		}
+
+		return lastFile;
+	}
 }
 

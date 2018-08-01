@@ -24,10 +24,9 @@ package org.oscarehr.integration.fhir.model;
  */
 
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.hl7.fhir.dstu3.model.MessageHeader.MessageSourceComponent;
-import org.hl7.fhir.dstu3.model.Organization;
 import org.oscarehr.common.model.Clinic;
-import org.oscarehr.common.model.Contact;
 
 /*
 "source": {
@@ -69,15 +68,20 @@ public class Sender {
 	private String softwareName;
 	private String versionSignature;
 	private String endpoint;
-	private OscarFhirResource<Organization, Contact> oscarFhirResource;
-	private Organization organization;
-	private RelatedPerson relatedPerson;
-	private Contact contact;
-	private String clinicPHU;
+	private String senderName;
+	private AbstractOscarFhirResource<org.hl7.fhir.dstu3.model.Organization, Clinic> oscarFhirResource;
+	private org.hl7.fhir.dstu3.model.Organization organization;
 	private Clinic clinic;
 	
 	public Sender() {
 		setMessageSourceComponent( new MessageSourceComponent() );
+	}
+	
+	public Sender( String vendorName, String softwareName, String versionSignature ) {
+		setMessageSourceComponent( new MessageSourceComponent() );
+		setVendorName(vendorName);
+		setSoftwareName(softwareName);
+		setVersionSignature(versionSignature);
 	}
 	
 	public Sender( String vendorName, String softwareName, String versionSignature, String endpoint ) {
@@ -155,48 +159,41 @@ public class Sender {
 		return this.organization;
 	}
 
-	public void setFhirOrganization( org.hl7.fhir.dstu3.model.Organization organization ) {
+	public void setOrganization( org.hl7.fhir.dstu3.model.Organization organization ) {
 		this.organization = organization;
-	}
-	
-	public org.oscarehr.common.model.Contact getContact() {
-		return this.contact;
-	}
-	
-	public void setContact( org.oscarehr.common.model.Contact contact ) {	
-		this.contact = contact;
 	}
 
 	public org.oscarehr.common.model.Clinic getClinic() {
 		return this.clinic;
 	}
 
-	public void setClinic( org.oscarehr.common.model.Clinic clinic ) {	
+	public void setClinic( org.oscarehr.common.model.Clinic clinic ) {
+		if(clinic != null) {
+			setSenderName( clinic.getClinicName() );
+			setOscarFhirResource(new Organization<Clinic>(clinic));
+		}
 		this.clinic = clinic;
 	}
 	
-	public OscarFhirResource<Organization, Contact> getOscarFhirResource() {
+	public AbstractOscarFhirResource<org.hl7.fhir.dstu3.model.Organization, Clinic> getOscarFhirResource() {
 		return oscarFhirResource;
 	}
 
-	public void setOscarFhirResource( OscarFhirResource<Organization, Contact> oscarFhirResource ) {
+	public void setOscarFhirResource( AbstractOscarFhirResource<org.hl7.fhir.dstu3.model.Organization, Clinic> oscarFhirResource ) {
+		this.organization = oscarFhirResource.getFhirResource();
+		this.clinic = oscarFhirResource.getOscarResource();
 		this.oscarFhirResource = oscarFhirResource;
 	}
-	
-	public RelatedPerson getRelatedPerson() {
-		return relatedPerson;
+
+	public String getSenderName() {
+		return senderName;
 	}
 
-	public void setRelatedPerson( RelatedPerson relatedPerson ) {
-		this.relatedPerson = relatedPerson;
+	public void setSenderName(String senderName) {
+		this.senderName = senderName;
 	}
 
-	public String getClinicPHU() {
-		return clinicPHU;
-	}
-
-	public void setClinicPHU(String clinicPHU) {
-		this.clinicPHU = clinicPHU;
-	}
-
+	 public String toString() {
+	     return ReflectionToStringBuilder.toString(this);
+	 }
 }

@@ -30,8 +30,7 @@ import org.oscarehr.integration.fhir.builder.SenderFactory;
 import org.oscarehr.integration.fhir.model.Destination;
 import org.oscarehr.integration.fhir.model.Sender;
 import org.oscarehr.integration.fhir.resources.ResourceAttributeFilter;
-import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
-import org.oscarehr.integration.fhir.resources.constants.Region;
+import org.oscarehr.integration.fhir.resources.Settings;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
@@ -43,18 +42,29 @@ public final class OscarFhirConfigurationManager {
 	private Sender sender;
 	private LoggedInInfo loggedInInfo;
 	private ResourceAttributeFilter resourceAttributeFilter;
+	private Settings settings;
 
 	/**
-	 * Every configuration Object is set based on the FHIR destination.
+	 * Inject a Settings Object and all the configuration Objects will be instantiated automatically. 
+	 * Including the Sender and Destination Objects. 
 	 */
-	public OscarFhirConfigurationManager( LoggedInInfo loggedInInfo, FhirDestination fhirDestination, Region region ) {
+	public OscarFhirConfigurationManager( LoggedInInfo loggedInInfo, Settings settings ) {
+		
+		logger.debug( "Setting Oscar FHIR Configuration Manager with settings file: " + settings );
+		
 		this.loggedInInfo = loggedInInfo;
-		this.destination = DestinationFactory.getDestination( fhirDestination );
-		this.sender = SenderFactory.getSender();
 		
-		logger.info( "Setting resource attribute filter for " + fhirDestination );
+		this.destination = DestinationFactory.getDestination( settings );
 		
-		this.resourceAttributeFilter = ResourceAttributeFilterFactory.getFilter( fhirDestination );
+		logger.debug( "Destination settings: " + this.destination );
+		
+		this.sender = SenderFactory.getSender( settings );
+		
+		logger.debug( "Sender settings: " + this.sender );
+		
+		this.resourceAttributeFilter = ResourceAttributeFilterFactory.getFilter( settings.getFhirDestination() );
+		
+		logger.debug( "FHIR Resource Attribute Filter: " + this.resourceAttributeFilter );
 	}
 
 	public Destination getDestination() {
@@ -75,5 +85,13 @@ public final class OscarFhirConfigurationManager {
 		}
 		return resourceAttributeFilter.getFilter( targetResource );
 	}
-	
+
+	public Settings getSettings() {
+		return settings;
+	}
+
+	public void setSettings(Settings settings) {
+		this.settings = settings;
+	}
+
 }

@@ -185,7 +185,7 @@ public class BORNWbXmlGenerator {
 
 					}
 					eformValuesMap.put(name, valueMap);
-					MiscUtils.getLogger().info("found eform values for " + eform.getFormName());
+					MiscUtils.getLogger().debug("found eform values for " + eform.getFormName());
 				}
 			}
 		}

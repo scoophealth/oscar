@@ -24,6 +24,7 @@ package org.oscarehr.integration.fhir.model;
  */
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
+import org.oscarehr.integration.fhir.resources.constants.ActorType;
 
 
 /**
@@ -37,6 +38,11 @@ public class PerformingPractitioner extends Practitioner {
 	public PerformingPractitioner(Provider provider, OscarFhirConfigurationManager configurationManager) {
 		super(provider, configurationManager);
 		setActor( ActorType.performing );
+	}
+	
+	@Override
+	protected final void setId(org.hl7.fhir.dstu3.model.Practitioner fhirResource) {
+		fhirResource.setId( "P" + getOscarResource().getProviderNo() );		
 	}
 
 	@Override

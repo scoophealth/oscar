@@ -92,7 +92,7 @@ import ca.uhn.fhir.model.primitive.StringDt;
 	}
  * @param <T>
  */
-public class PatientContact extends OscarFhirResource< org.hl7.fhir.dstu3.model.Patient, Contact >  {
+public class PatientContact extends AbstractOscarFhirResource< org.hl7.fhir.dstu3.model.Patient, Contact >  {
 	
 	private org.oscarehr.common.model.Contact contact;
 	private ProfessionalSpecialist professionalSpecialist;

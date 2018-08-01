@@ -43,6 +43,9 @@ import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
 
+import org.apache.commons.lang.StringUtils;
+import oscar.util.UtilDateUtilities;
+
 @Repository
 @SuppressWarnings("unchecked")
 public class OscarAppointmentDao extends AbstractDao<Appointment> {
@@ -70,6 +73,19 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 	}
 	
 	public List<Appointment> getAppointmentHistory(Integer demographicNo, Integer offset, Integer limit) {
+		String sql = "select a from Appointment a where a.demographicNo=? and a.status not in ('D') order by a.appointmentDate DESC, a.startTime DESC";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, demographicNo);
+		query.setFirstResult(offset);
+		query.setMaxResults(limit);
+		
+		List<Appointment> result = query.getResultList();
+		
+		return result;
+	}
+	
+	
+	public List<Appointment> getAllAppointmentHistory(Integer demographicNo, Integer offset, Integer limit) {
 		String sql = "select a from Appointment a where a.demographicNo=? order by a.appointmentDate DESC, a.startTime DESC";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, demographicNo);
@@ -98,7 +114,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 	}
 
 	public List<Appointment> getAppointmentHistory(Integer demographicNo) {
-		String sql = "select a from Appointment a where a.demographicNo=? order by a.appointmentDate DESC, a.startTime DESC";
+		String sql = "select a from Appointment a where a.demographicNo=? and a.status not in ('C','D') order by a.appointmentDate DESC, a.startTime DESC";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, demographicNo);
 
@@ -209,6 +225,13 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		return rs;
 	}
 
+	public List<Appointment> getByDemoNoAndDay(int demoNo, Date date) {
+		Query q = entityManager.createQuery("select a from Appointment a where a.demographicNo=?1 and a.appointmentDate = ?2 and a.status !='D'");
+		q.setParameter(1, demoNo);
+		q.setParameter(2, new Date());
+		return q.getResultList();
+	}
+	
 	public List<Appointment> findByProviderAndDayandNotStatuses(String providerNo, Date date, String[] notThisStatus) {
 		String sql = "SELECT a FROM Appointment a WHERE a.providerNo=?1 and a.appointmentDate = ?2 and a.status NOT IN ( ?3 )";
 		Query query = entityManager.createQuery(sql);
@@ -308,7 +331,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 	
 	
     public List<Appointment> findNonCancelledFutureAppointments(Integer demographicId) {
-		Query query = entityManager.createQuery("FROM Appointment appt WHERE appt.demographicNo = :demographicNo AND appt.status NOT LIKE '%C%' " +
+    	Query query = entityManager.createQuery("FROM Appointment appt WHERE appt.demographicNo = :demographicNo AND appt.status NOT LIKE '%C%' AND appt.status NOT LIKE '%D%'" +
 				" AND appt.appointmentDate >= CURRENT_DATE ORDER BY appt.appointmentDate");
 		query.setParameter("demographicNo", demographicId);
 		return query.getResultList();
@@ -455,7 +478,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 	
 	//search_appt_name
 	public List<Appointment> search_appt(Date date, String providerNo, Date startTime1, Date startTime2, Date endTime1, Date endTime2, Date startTime3, Date endTime3, Integer programId) {
-		String sql = "select a from Appointment a where a.appointmentDate = ? and a.providerNo = ? and a.status <>'C' and ((a.startTime >= ? and a.startTime<= ?) or (a.endTime>= ? and a.endTime<= ?) or (a.startTime <= ? and a.endTime>= ?) ) and program_id=?";
+		String sql = "select a from Appointment a where a.appointmentDate = ? and a.providerNo = ? and a.status <>'C' and a.status<>'D' and ((a.startTime >= ? and a.startTime<= ?) or (a.endTime>= ? and a.endTime<= ?) or (a.startTime <= ? and a.endTime>= ?) ) and program_id=?";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter(1, date);
 		query.setParameter(2, providerNo);
@@ -548,7 +571,7 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
     }
     
     public List<Object[]> export_appt(Integer demographicNo) {
-    	String sql="from Appointment app, Provider prov where app.id = prov.id and app.demographicNo = ?";
+    	String sql="from Appointment app, Provider prov where app.providerNo = prov.id and app.demographicNo = ?";
     	Query query = entityManager.createQuery(sql);
     	query.setParameter(1, demographicNo);
          
@@ -602,10 +625,26 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 	}
     
     public List<Appointment> searchappointmentday(String providerNo, Date appointmentDate, Integer programId) {
-    	Query query = createQuery("appt", "appt.providerNo = :providerNo AND appt.appointmentDate = :appointmentDate AND appt.programId = :programId ORDER BY appt.startTime, appt.status DESC");
+    	Query query = createQuery("appt", "appt.providerNo = :providerNo AND appt.appointmentDate = :appointmentDate AND appt.programId = :programId AND appt.status <> :status ORDER BY appt.startTime, appt.status DESC");
     	query.setParameter("providerNo", providerNo);
         query.setParameter("appointmentDate", appointmentDate);
         query.setParameter("programId", programId);
+        query.setParameter("status", "D");
+        return query.getResultList();
+    }
+
+    public List<Appointment> searchAppointmentDaySite(String providerNo, Date appointmentDate, Integer programId, String selectedSiteId) {
+    	Query query;
+    	if(selectedSiteId == null || selectedSiteId.equalsIgnoreCase("none")) {
+    		query = createQuery("appt", "appt.providerNo = :providerNo AND appt.appointmentDate = :appointmentDate AND appt.programId = :programId AND appt.status <> :status ORDER BY appt.startTime, appt.status DESC");
+    	} else {
+    		query = createQuery("appt", "appt.providerNo = :providerNo AND appt.appointmentDate = :appointmentDate AND appt.programId = :programId AND appt.status <> :status AND appt.location = :siteId ORDER BY appt.startTime, appt.status DESC");
+    		query.setParameter("siteId", selectedSiteId);
+    	}
+    	query.setParameter("providerNo", providerNo);
+        query.setParameter("appointmentDate", appointmentDate);
+        query.setParameter("programId", programId);
+        query.setParameter("status", "D");
         return query.getResultList();
     }
 
@@ -746,6 +785,63 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		List<Appointment> results =  query.getResultList();
 
 		return results;
+	}
+	
+	public int findProvideAppointmentTodayNum(String provide,String appdate){
+		Date appointDate = UtilDateUtilities.StringToDate(appdate);
+		String sql = "SELECT COUNT(a) FROM Appointment a WHERE a.providerNo = ?1 AND a.status != 'C' AND a.status != 'D' AND a.status != 'CS' AND a.appointmentDate= ?2";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, provide);
+		query.setParameter(2, appointDate);
+		return Integer.parseInt(String.valueOf(query.getSingleResult()));
+	}
+	
+	public int updateApptStatus(String ids, String status) {
+		// remove non-number value
+		StringBuilder idClean = new StringBuilder();
+		for (String id : ids.split(",")) {
+			if (!StringUtils.isNumeric(id)) {
+				continue;
+			}
+			idClean.append(id + ",");
+		}
+		if (idClean.length() == 0) {
+			return 0;
+		}
+		idClean.deleteCharAt(idClean.length() - 1);
+		Query q = entityManager.createQuery("update Appointment set status=?1 where id in ("+ idClean.toString() + ")");
+		q.setParameter(1, status);
+		return q.executeUpdate();
+	}
+	
+	public List<Object[]> listAppointmentsByPeriodProvider(Date sDate, Date eDate, List<Integer> providerNos) {
+		String sql = "SELECT a.appointment_no, a.provider_no, a.appointment_date, a.start_time, a.demographic_no, a.notes, a.location, a.resources, a.status, " + 
+				"d.last_name, d.first_name, d.phone, d.phone2, d.email, " + 
+				"e1.value as demo_cell, e2.value as reminderPreference, e3.value as hPhoneExt, e4.value as wPhoneExt " + 
+				"FROM appointment a LEFT JOIN demographic d ON a.demographic_no = d.demographic_no  LEFT JOIN demographicExt e1 ON a.demographic_no = e1.demographic_no AND e1.key_val = 'demo_cell' " + 
+				"LEFT JOIN demographicExt e2 ON a.demographic_no = e2.demographic_no AND e2.key_val = 'reminderPreference' " + 
+				"LEFT JOIN demographicExt e3 ON a.demographic_no = e3.demographic_no AND e3.key_val = 'hPhoneExt' " + 
+				"LEFT JOIN demographicExt e4 ON a.demographic_no = e4.demographic_no AND e4.key_val = 'wPhoneExt' " + 
+				"WHERE a.provider_no IN (:providers) AND a.appointment_date >= :startDate AND a.appointment_date <= :endDate";
+		Query query = entityManager.createNativeQuery(sql);
+		query.setParameter("providers", providerNos != null && providerNos.size()>0 ? providerNos : Arrays.asList());
+		query.setParameter("startDate", sDate == null ? new Date(Long.MIN_VALUE) : sDate);
+		query.setParameter("endDate", eDate == null ? new Date(Long.MAX_VALUE) : eDate);
+		return query.getResultList();
+	}
+	
+	/*
+	 * List active providers and their appontments count
+	 */
+	public List<Object[]> listProviderAppointmentCounts(Date sDate, Date eDate) {
+		String sql = "SELECT a.provider_no, p.first_name, p.last_name, COUNT(a.provider_no) as count " + 
+				"FROM appointment a JOIN provider p ON a.provider_no=p.provider_no " + 
+				"WHERE a.appointment_date BETWEEN :startDate AND :endDate AND p.status=1 " + 
+				"GROUP BY a.provider_no";
+		Query query = entityManager.createNativeQuery(sql);
+		query.setParameter("startDate", sDate == null ? new Date(Long.MIN_VALUE) : sDate);
+		query.setParameter("endDate", eDate == null ? new Date(Long.MIN_VALUE) : eDate);
+		return query.getResultList();
 	}
 	
 }

@@ -94,13 +94,17 @@ public class CaseManagementPrint {
 	 *This method was in CaseManagementEntryAction but has been moved out so that both the classic Echart and the flat echart can use the same printing method.
 	 * 
 	 */
-	public void doPrint(LoggedInInfo loggedInInfo,Integer demographicNo, boolean printAllNotes,String[] noteIds,boolean printCPP,boolean printRx,boolean printLabs, boolean printPreventions, Calendar startDate, Calendar endDate,   HttpServletRequest request, OutputStream os) throws IOException, DocumentException {
+	public void doPrint(LoggedInInfo loggedInInfo,Integer demographicNo, boolean printAllNotes,String[] noteIds,boolean printCPP,boolean printRx,boolean printLabs, boolean printPreventions, boolean useDateRange, Calendar startDate, Calendar endDate,   HttpServletRequest request, OutputStream os) throws IOException, DocumentException {
 		
 		String providerNo=loggedInInfo.getLoggedInProviderNo();
 
 		
 		if (printAllNotes) {
 			noteIds = getAllNoteIds(loggedInInfo,request,""+demographicNo);
+		}
+		
+		if(useDateRange) {
+			noteIds = getAllNoteIdsWithinDateRange(loggedInInfo,request,""+demographicNo,startDate.getTime(),endDate.getTime());
 		}
 		logger.debug("NOTES2PRINT: " + noteIds);
 
@@ -333,6 +337,67 @@ public class CaseManagementPrint {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
+    private String[] getAllNoteIdsWithinDateRange(LoggedInInfo loggedInInfo,HttpServletRequest request,String demoNo, Date startDate, Date endDate) {
+		
+		HttpSession se = loggedInInfo.getSession();
+		
+		ProgramProvider pp = programManager2.getCurrentProgramInDomain(loggedInInfo,loggedInInfo.getLoggedInProviderNo());
+		String programId = null;
+		
+		if(pp !=null && pp.getProgramId() != null){
+			programId = ""+pp.getProgramId();
+		}else{
+			programId = String.valueOf(programMgr.getProgramIdByProgramName("OSCAR")); //Default to the oscar program if provider hasn't been assigned to a program
+		}
+			
+		NoteSelectionCriteria criteria = new NoteSelectionCriteria();
+		criteria.setStartDate(startDate);
+		criteria.setEndDate(endDate);
+		criteria.setMaxResults(Integer.MAX_VALUE);
+		criteria.setDemographicId(ConversionUtils.fromIntString(demoNo));
+		criteria.setUserRole((String) request.getSession().getAttribute("userrole"));
+		criteria.setUserName((String) request.getSession().getAttribute("user"));
+		if (request.getParameter("note_sort") != null && request.getParameter("note_sort").length() > 0) {
+			criteria.setNoteSort(request.getParameter("note_sort"));
+		}
+		if (programId != null && !programId.trim().isEmpty()) {
+			criteria.setProgramId(programId);
+		}
+		
+		
+		if (se.getAttribute("CaseManagementViewAction_filter_roles") != null) {
+			criteria.getRoles().addAll((List<String>) se.getAttribute("CaseManagementViewAction_filter_roles"));
+		}
+		
+		if (se.getAttribute("CaseManagementViewAction_filter_providers") != null) {
+			criteria.getProviders().addAll((List<String>) se.getAttribute("CaseManagementViewAction_filter_providers"));
+		}
+
+		if (se.getAttribute("CaseManagementViewAction_filter_providers") != null) {
+			criteria.getIssues().addAll((List<String>) se.getAttribute("CaseManagementViewAction_filter_issues"));
+		}
+		
+		
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("SEARCHING FOR NOTES WITH CRITERIA: " + criteria);
+		}
+		
+		NoteSelectionResult result = noteService.findNotes(loggedInInfo, criteria);
+		
+		
+		List<String>  buf = new ArrayList<String>();
+		for(NoteDisplay nd : result.getNotes()) {
+			if (!(nd instanceof NoteDisplayLocal)) {
+				continue;
+			}
+			buf.add(nd.getNoteId().toString());
+		}
+		
+		
+		return buf.toArray(new String[0]);
+    }
 	@SuppressWarnings("unchecked")
     private String[] getAllNoteIds(LoggedInInfo loggedInInfo,HttpServletRequest request,String demoNo) {
 		

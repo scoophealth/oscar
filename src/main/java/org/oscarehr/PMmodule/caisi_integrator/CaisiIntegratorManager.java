@@ -51,7 +51,6 @@ import org.oscarehr.caisi_integrator.ws.DemographicTransfer;
 import org.oscarehr.caisi_integrator.ws.DemographicWs;
 import org.oscarehr.caisi_integrator.ws.DemographicWsService;
 import org.oscarehr.caisi_integrator.ws.DuplicateHinExceptionException;
-import org.oscarehr.caisi_integrator.ws.FacilityConsentPair;
 import org.oscarehr.caisi_integrator.ws.FacilityIdIntegerCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityIdStringCompositePk;
 import org.oscarehr.caisi_integrator.ws.FacilityWs;
@@ -67,7 +66,6 @@ import org.oscarehr.caisi_integrator.ws.ProviderWs;
 import org.oscarehr.caisi_integrator.ws.ProviderWsService;
 import org.oscarehr.caisi_integrator.ws.ReferralWs;
 import org.oscarehr.caisi_integrator.ws.ReferralWsService;
-import org.oscarehr.caisi_integrator.ws.SetConsentTransfer;
 import org.oscarehr.common.model.Consent;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Facility;
@@ -83,6 +81,7 @@ import org.oscarehr.util.QueueCache;
 import org.oscarehr.util.SessionConstants;
 import org.oscarehr.ws.rest.to.model.DemographicSearchRequest;
 import org.oscarehr.ws.rest.to.model.DemographicSearchRequest.SEARCHMODE;
+
 
 /**
  * This class is a manager for integration related functionality. <br />
@@ -392,11 +391,17 @@ public class CaisiIntegratorManager {
 		GetConsentTransfer getConsentTransfer = demographicWs.getConsentState(pk);
 		return (getConsentTransfer);
 	}
+	
+	public static void pushConsent(LoggedInInfo loggedInInfo, Facility facility, Consent consent) throws MalformedURLException {
+		IntegratorConsent integratorConsent = makeIntegratorConsent( consent );
+		pushConsent(loggedInInfo,facility, integratorConsent);
+	}
 
-	public static void pushConsent(LoggedInInfo loggedInInfo,Facility facility, IntegratorConsent consent) throws MalformedURLException	{
-		if (consent.getClientConsentStatus()==ConsentStatus.GIVEN || consent.getClientConsentStatus()==ConsentStatus.REVOKED)
+	public static void pushConsent(LoggedInInfo loggedInInfo, Facility facility, IntegratorConsent integratorConsent) throws MalformedURLException {
+		if (integratorConsent.getClientConsentStatus()==ConsentStatus.GIVEN || integratorConsent.getClientConsentStatus()==ConsentStatus.REVOKED)
 		{
-			SetConsentTransfer consentTransfer=makeSetConsentTransfer(consent);				
+			integratorConsent.setFacilityId( facility.getId() );
+			org.oscarehr.caisi_integrator.ws.SetConsentTransfer consentTransfer = makeSetConsentTransfer(integratorConsent);
 			getDemographicWs(loggedInInfo, facility).setCachedDemographicConsent(consentTransfer);
 		}
 	}
@@ -412,6 +417,7 @@ public class CaisiIntegratorManager {
 			consentStatus = IntegratorConsent.ConsentStatus.GIVEN;
 		} else if( consent.isOptout() ) {
 			consentStatus = IntegratorConsent.ConsentStatus.REVOKED;
+			integratorConsent.setExpiry( consent.getOptoutDate() );	
 		}
 		
 		SignatureStatus signatureStatus = null;			
@@ -420,57 +426,71 @@ public class CaisiIntegratorManager {
 		} else {
 			signatureStatus = IntegratorConsent.SignatureStatus.ELECTRONIC;
 		}
-					
+		
 		integratorConsent.setClientConsentStatus( consentStatus );
-		integratorConsent.setCreatedDate( new Date(System.currentTimeMillis() ) );//consent.getConsentDate() );
-		integratorConsent.setExpiry( consent.getOptoutDate() );			
+		integratorConsent.setCreatedDate( consent.getEditDate() );
 		integratorConsent.setDemographicId( consent.getDemographicNo() );
 		integratorConsent.setProviderNo( consent.getLastEnteredBy() );
-		integratorConsent.setSignatureStatus( signatureStatus );
-		
+		integratorConsent.setSignatureStatus( signatureStatus );		
 		integratorConsent.setConsentToShareData( shareData );
 		
 		return integratorConsent;
 	}
 
-	protected static SetConsentTransfer makeSetConsentTransfer(IntegratorConsent consent) {
-		SetConsentTransfer consentTransfer = new SetConsentTransfer();
-		consentTransfer.setConsentStatus(consent.getClientConsentStatus().name());
-		consentTransfer.setCreatedDate(oscar.util.DateUtils.toCalendar(consent.getCreatedDate()));
-		consentTransfer.setDemographicId(consent.getDemographicId());
-		consentTransfer.setExcludeMentalHealthData(consent.isExcludeMentalHealthData());
-		consentTransfer.setExpiry(oscar.util.DateUtils.toCalendar(consent.getExpiry()));
-
-		for (Entry<Integer, Boolean> entry : consent.getConsentToShareData().entrySet()) {
-			FacilityConsentPair pair = new FacilityConsentPair();
-			pair.setRemoteFacilityId(entry.getKey());
-			pair.setShareData(entry.getValue());
-			consentTransfer.getConsentToShareData().add(pair);
+	/**
+	 * Method to be used for transmitting Consents via web services.
+	 */
+	private static org.oscarehr.caisi_integrator.ws.SetConsentTransfer makeSetConsentTransfer(IntegratorConsent integratorConsent) {
+		Calendar calendar = Calendar.getInstance();
+		org.oscarehr.caisi_integrator.ws.SetConsentTransfer consentTransfer = new org.oscarehr.caisi_integrator.ws.SetConsentTransfer();
+		consentTransfer.setConsentStatus(integratorConsent.getClientConsentStatus().name());
+		
+		// this should never be null
+		calendar.setTime(integratorConsent.getCreatedDate());
+		consentTransfer.setCreatedDate(calendar);		
+		consentTransfer.setDemographicId(integratorConsent.getDemographicId());
+		consentTransfer.setExcludeMentalHealthData(integratorConsent.isExcludeMentalHealthData());
+		
+		// this will be null if the status is not revoked.
+		if(integratorConsent.getClientConsentStatus().equals(IntegratorConsent.ConsentStatus.REVOKED)) {
+			calendar.setTime(integratorConsent.getExpiry());
+			consentTransfer.setExpiry(calendar);
 		}
 
-		return (consentTransfer);
+		for (Entry<Integer, Boolean> entry : integratorConsent.getConsentToShareData().entrySet()) {
+			org.oscarehr.caisi_integrator.ws.FacilityConsentPair pair = new org.oscarehr.caisi_integrator.ws.FacilityConsentPair();
+			pair.setRemoteFacilityId(entry.getKey());
+			pair.setShareData(entry.getValue());
+			consentTransfer.getConsentToShareData().add(pair);			
+		}
+
+		return consentTransfer;
 	}
 	
-	protected static org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer makeSetConsentTransfer2(IntegratorConsent consent) {
-		org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer consentTransfer = new org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer();
-		consentTransfer.consentStatus = consent.getClientConsentStatus().name();
-		consentTransfer.createdDate = consent.getCreatedDate();
-		consentTransfer.demographicId =consent.getDemographicId();
-		consentTransfer.excludeMentalHealthData = consent.isExcludeMentalHealthData();
-		consentTransfer.expiry = consent.getExpiry();
+	/**
+	 * Method to be used for serializing Consent objects for transmission by file transfer.
+	 */
+	public static org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer makeSetConsentTransfer2(IntegratorConsent consent) {
 
-		List<org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer.FacilityConsentPair> pairList = new ArrayList<org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer.FacilityConsentPair>();
+		org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer consentTransfer = new org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer();
+		consentTransfer.setConsentStatus(consent.getClientConsentStatus().name());
+		consentTransfer.setCreatedDate(consent.getCreatedDate());
+		consentTransfer.setDemographicId(consent.getDemographicId());
+		consentTransfer.setExcludeMentalHealthData(consent.isExcludeMentalHealthData());
+		consentTransfer.setExpiry(consent.getExpiry());
+
+		List<org.oscarehr.caisi_integrator.ws.transfer.FacilityConsentPair> pairList = new ArrayList<org.oscarehr.caisi_integrator.ws.transfer.FacilityConsentPair>();
 		for (Entry<Integer, Boolean> entry : consent.getConsentToShareData().entrySet()) {
-			org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer.FacilityConsentPair pair = new org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer.FacilityConsentPair();
-			pair.remoteFacilityId = entry.getKey();
-			pair.shareData = entry.getValue();
+			org.oscarehr.caisi_integrator.ws.transfer.FacilityConsentPair pair = new org.oscarehr.caisi_integrator.ws.transfer.FacilityConsentPair();
+			pair.setRemoteFacilityId(entry.getKey());
+			pair.setShareData(entry.getValue());
 			pairList.add(pair);
 			
 		}
 		
-		consentTransfer.consentToShareData = pairList.toArray(new org.oscarehr.caisi_integrator.ws.transfer.SetConsentTransfer.FacilityConsentPair[pairList.size()] );
+		consentTransfer.setConsentToShareData(pairList.toArray(new org.oscarehr.caisi_integrator.ws.transfer.FacilityConsentPair[pairList.size()] ) );
 
-		return (consentTransfer);
+		return consentTransfer;
 	}
 
     public static List<CachedDemographicNote> getLinkedNotes(LoggedInInfo loggedInInfo, Integer demographicNo) throws MalformedURLException 

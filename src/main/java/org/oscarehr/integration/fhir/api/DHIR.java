@@ -23,72 +23,122 @@ package org.oscarehr.integration.fhir.api;
  * Ontario, Canada
  */
 
-import java.util.List;
-
+import java.util.HashSet;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.MessageHeader;
+import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.Resource;
+import org.oscarehr.caisi_integrator.util.MiscUtils;
 import org.oscarehr.integration.fhir.builder.FhirBundleBuilder;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.manager.OscarFhirResourceManager;
-import org.oscarehr.integration.fhir.model.OscarFhirResource;
+import org.oscarehr.integration.fhir.model.AbstractOscarFhirResource;
+import org.oscarehr.integration.fhir.resources.Settings;
 import org.oscarehr.integration.fhir.resources.constants.FhirDestination;
 import org.oscarehr.integration.fhir.resources.constants.Region;
 import org.oscarehr.util.LoggedInInfo;
 
 
 public class DHIR {
-	
-	private static final FhirDestination destination = FhirDestination.DHIR;
-	private static final Region region = Region.ON;
 
+	private static Settings SETTINGS = new Settings( FhirDestination.DHIR, Region.ON );
+	
 	/**
-	 * Get the FhirBundleBuilder Object.
+	 * Get the FhirBundleBuilder Object for all immunizations
 	 * Useful for adding additional resources or adjusting the message structure.
 	 */
 	public static synchronized FhirBundleBuilder getFhirBundleBuilder( LoggedInInfo loggedInInfo, int demographicNo ) {
-		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, destination, region );
+		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, SETTINGS );
+		HashSet<AbstractOscarFhirResource<?,?>> resourceList = new HashSet<AbstractOscarFhirResource<?,?>>();
 		org.oscarehr.integration.fhir.model.Patient patient = OscarFhirResourceManager.getPatientByDemographicNumber( configurationManager, demographicNo );
 		
-		// the patient is the focus resource for this type of bundle
-		// A referrence link will be inserted into the MessageHeader.focus
+		// The patient is the focus resource for this type of bundle. A reference link will be inserted into the MessageHeader.focus
 		patient.setFocusResource( Boolean.TRUE );
 		
-		// intercept the default clinic PHU with the PHU from the Patient resource.
-		String phu = patient.getOscarResource().getPHU();
-		if( phu != null && ! phu.isEmpty()) {
-			configurationManager.getSender().setClinicPHU( phu );
+		org.hl7.fhir.dstu3.model.Organization publicHealthUnit = OscarFhirResourceManager.getPublicHealthUnit( configurationManager, demographicNo );
+
+		OscarFhirResourceManager.getImmunizationResourceBundle( configurationManager, patient, resourceList );	
+		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( configurationManager );
+		
+		if(publicHealthUnit != null) {
+			Reference reference = new Reference();
+			reference.setReference( String.format( "%s/%s", ((Resource) publicHealthUnit).getResourceType(), publicHealthUnit.getId() ) );
+			reference.setResource( publicHealthUnit );
+			fhirBundleBuilder.setMessageHeaderResponsible( reference );
+			fhirBundleBuilder.addResource(publicHealthUnit);
+		} else {
+			MiscUtils.getLogger().warn("Patient and Clinic default PHU ID is missing. Check Oscar properties file for Default PHU setting.");
 		}
 		
-		List<OscarFhirResource<?,?>> resourceList = OscarFhirResourceManager.getImmunizationResourceBundle( configurationManager, patient );	
-		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( configurationManager );
 		fhirBundleBuilder.addResources(resourceList);
+		
 		return fhirBundleBuilder;
 	}
+	
+	/**
+	 * Get the FhirBundleBuilder Object for a specific immunization
+	 * Useful for adding additional resources or adjusting the message structure.
+	 */
+	public static synchronized FhirBundleBuilder getFhirBundleBuilder( LoggedInInfo loggedInInfo, int demographicNo, int preventionId ) {
+		
+		//TODO this will be set in a properties file later. The default is false anyway. 
+		SETTINGS.setIncludeSenderEndpoint( Boolean.TRUE ); 
+		
+		OscarFhirConfigurationManager configurationManager = new OscarFhirConfigurationManager( loggedInInfo, SETTINGS );
+		HashSet<AbstractOscarFhirResource<?,?>> resourceList = new HashSet<AbstractOscarFhirResource<?,?>>();
+		org.oscarehr.integration.fhir.model.Patient patient = OscarFhirResourceManager.getPatientByDemographicNumber( configurationManager, demographicNo );
+		org.oscarehr.integration.fhir.model.SubmittingPractitioner submittingPractitioner = new org.oscarehr.integration.fhir.model.SubmittingPractitioner( configurationManager.getLoggedInInfo().getLoggedInProvider(), configurationManager );
+		FhirBundleBuilder fhirBundleBuilder = new FhirBundleBuilder( configurationManager );
+		
+		// Public Health Unit requirement for Ontario submissions. 
+		org.hl7.fhir.dstu3.model.Organization publicHealthUnit = OscarFhirResourceManager.getPublicHealthUnit( configurationManager, demographicNo );
+			
+		// the patient is the focus resource for this type of bundle. A reference link will be inserted into the MessageHeader.focus
+		patient.setFocusResource( Boolean.TRUE );
+		
+		// set the immunizations into the resource list
+		OscarFhirResourceManager.getImmunizationResourceBundle( configurationManager, patient, preventionId, resourceList );			
+		
+		if(publicHealthUnit != null) {
+			Reference reference = new Reference();
+			reference.setReference( String.format( "%s/%s", ((Resource) publicHealthUnit).getResourceType(), publicHealthUnit.getId() ) );
+			reference.setResource( publicHealthUnit );
+			fhirBundleBuilder.setMessageHeaderResponsible( reference );
+			fhirBundleBuilder.addResource(publicHealthUnit);
+		} else {
+			MiscUtils.getLogger().warn("Patient and Clinic default PHU ID is missing. Check Oscar properties file for Default PHU setting.");
+		}
+
+		resourceList.add(submittingPractitioner);
+		fhirBundleBuilder.addResources(resourceList);
+
+		return fhirBundleBuilder;
+	}
+	
 	
 	/**
 	 * Get the FHIR Resource Bundle.
 	 * Useful if needing to extract and send specific resources separately from the bundle. 
 	 * ie: send the MessageHeader as a reference back to this bundle resource.
 	 */
-	public static Bundle getBundleResource( LoggedInInfo loggedInInfo, int demographicNo ) {
-		return DHIR.getFhirBundleBuilder( loggedInInfo, demographicNo ).getBundle();
+	public static Bundle getBundleResource( LoggedInInfo loggedInInfo, int demographicNo, int preventionId ) {
+		return DHIR.getFhirBundleBuilder( loggedInInfo, demographicNo, preventionId ).getBundle();
 	}
 	
 	/**
 	 * Get the raw JSON string of the entire Bundle message.
 	 * For a single transmission payload.
 	 */
-	public static String getMessageJSON( LoggedInInfo loggedInInfo, int demographicNo ) {
-		return DHIR.getFhirBundleBuilder( loggedInInfo, demographicNo ).getMessageJson();
+	public static String getMessageJSON( LoggedInInfo loggedInInfo, int demographicNo, int preventionId ) {
+		return DHIR.getFhirBundleBuilder( loggedInInfo, demographicNo, preventionId ).getMessageJson();
 	}
 	
 	/**
 	 * The Message Header from this bundle message. 
 	 * This is useful for retrieving the destination endpoint, etc...
 	 */
-	public static MessageHeader getMessageHeader( LoggedInInfo loggedInInfo, int demographicNo ) {
-		return DHIR.getFhirBundleBuilder( loggedInInfo, demographicNo ).getMessageHeader();
+	public static MessageHeader getMessageHeader( LoggedInInfo loggedInInfo, int demographicNo, int preventionId) {
+		return DHIR.getFhirBundleBuilder( loggedInInfo, demographicNo, preventionId).getMessageHeader();
 	}
-	
 
 }

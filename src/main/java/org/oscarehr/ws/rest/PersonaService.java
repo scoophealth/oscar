@@ -440,6 +440,29 @@ public class PersonaService extends AbstractServiceImpl {
 	}
 	
 	@POST
+	@Path("/updatePreference")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public GenericRESTResponse updatePreference(JSONObject json){
+		Provider provider = getCurrentProvider();
+		GenericRESTResponse response = new GenericRESTResponse();
+		
+		if(!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_pref", "u", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+
+		UserPropertyDAO userPropertyDao = SpringUtils.getBean(UserPropertyDAO.class);
+		UserProperty up = userPropertyDao.getProp(provider.getProviderNo(), json.getString("key"));
+		if(up != null) {
+			up.setValue(json.getString("value"));
+			userPropertyDao.merge(up);
+			response.setSuccess(true);
+		}
+
+		return response;
+	}
+	
+	@POST
 	@Path("/updatePreferences")
 	@Produces("application/json")
 	@Consumes("application/json")

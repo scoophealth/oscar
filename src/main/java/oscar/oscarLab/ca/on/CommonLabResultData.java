@@ -360,6 +360,10 @@ public class CommonLabResultData {
 	}
 
 	public static boolean updateReportStatus(int labNo, String providerNo, char status, String comment, String labType) {
+		return updateReportStatus(labNo,providerNo,status,comment,labType,false);
+	}
+	
+	public static boolean updateReportStatus(int labNo, String providerNo, char status, String comment, String labType,boolean skipCommentOnUpdate) {
 
 		try {
 			DBPreparedHandler db = new DBPreparedHandler();
@@ -376,8 +380,10 @@ public class CommonLabResultData {
 					if(plr != null) {
 						plr.setStatus(""+status);
 						//we don't want to clobber existing comments when filing labs
-						if( status != 'F' ) {
-							plr.setComment(comment);
+						if( status != 'F') {
+							if(!skipCommentOnUpdate) {
+								plr.setComment(comment);
+							}
 						}
 						plr.setTimestamp(new Date());
 						providerLabRoutingDao.merge(plr);

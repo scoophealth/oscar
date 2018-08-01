@@ -52,7 +52,7 @@ public class PreventionExt extends AbstractModel<Integer> implements Serializabl
 	@Lob
 	private String val = null;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="prevention_id", insertable = false, updatable = false )
 	private Prevention prevention;
 

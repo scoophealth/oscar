@@ -22,6 +22,11 @@
     Toronto, Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.common.model.UserProperty"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.oscarehr.common.dao.UserPropertyDAO"%>
+<%@page import="oscar.OscarProperties"%>
 <%@page contentType="text/javascript"%>
 <%@page import="org.oscarehr.casemgmt.common.Colour"%>
 
@@ -59,6 +64,12 @@
 		var updateDivTimer = null;
 		var reloadDivUrl;
 		var reloadDiv;
+		var activeCCWindows = [];
+	
+	function openCCEHRWindow(url,demographicNo) {
+		var w = window.open(url,'CC_EHR_' + demographicNo,'width=800,height=650');
+		activeCCWindows.push(w);
+	}
 		
 		function checkLengthofObject(o) {
 			var c = 0;
@@ -477,9 +488,10 @@ function navBarLoader() {
                   ctx + "/oscarEncounter/displayMyOscar.do?hC=",
                   ctx + "/eaaps/displayEctEaaps.do?hC=",
                   ctx + "/oscarEncounter/displayEconsultation.do?hC=",
+                  ctx + "/oscarEncounter/displayEHR.do?hC=",
               ];
 
-            var leftNavBarTitles = [ "preventions", "tickler", "Dx", "forms", "eforms", "docs","labs", "msgs", "measurements", "consultation", "HRM","PHR", "eaaps", "eConsult"];
+            var leftNavBarTitles = [ "preventions", "tickler", "Dx", "forms", "eforms", "docs","labs", "msgs", "measurements", "consultation", "HRM","PHR", "eaaps", "eConsult","ehr"];
             var rightNavBar = [
                   ctx + "/oscarEncounter/displayAllergy.do?hC=" + Colour.allergy,
                   ctx + "/oscarEncounter/displayRx.do?hC=" + Colour.rx + "&numToDisplay=12",
@@ -3467,8 +3479,8 @@ function autoCompleteShowMenuCPP(element, update) {
         }else if( $("printopAll").checked ){
             printAll();
         }
-
-        if( $F("notes2print").length == 0 && $F("printCPP") == "false" && $F("printRx") == "false" && $F("printLabs") == "false" && $F("printPreventions") == "false" ) {
+		
+		if( $F("notes2print").length == 0 && $F("printCPP") == "false" && $F("printRx") == "false" && $F("printLabs") == "false" && $F("printPreventions") == "false" ) {
             alert(nothing2PrintMsg);
             return false;
         }
@@ -3480,6 +3492,8 @@ function autoCompleteShowMenuCPP(element, update) {
 
         frm.pStartDate.value = $F("printStartDate");
         frm.pEndDate.value = $F("printEndDate");
+        frm.pType.value = $F("printopDates");
+        
         frm.submit();
 
         return false;
@@ -3933,3 +3947,21 @@ function receiveMessage(event) {
 	}
 	
 }
+
+<%
+	UserPropertyDAO userPropertyDAO = SpringUtils.getBean(UserPropertyDAO.class);
+	UserProperty prop = userPropertyDAO.getProp(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo(), "clinicalConnectDisableCloseWindow");
+	if(prop != null && "true".equals(prop.getValue()) ) {
+		
+	} else {
+%>
+	window.addEventListener("beforeunload", function(){
+		for(var x=0;x<activeCCWindows.length;x++) {
+			activeCCWindows[x].close();
+		}
+	});
+<%		
+	}
+	
+%>
+

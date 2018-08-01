@@ -514,6 +514,23 @@ public final class EDocUtil {
 
 		return resultDocs;
 	}
+	
+	public static List<EDoc> listAllDemographicDocsSince(LoggedInInfo loggedInInfo, int demographicNo, Date since) {
+		
+		List<Document> documents = documentDao.findByDemographicUpdateDate(demographicNo, since);
+		
+		List<EDoc> edocList = new ArrayList<EDoc>();
+		for(Document document : documents) {
+			EDoc edoc = toEDoc(document);
+			edocList.add(edoc);
+		}
+		
+		if (OscarProperties.getInstance().getBooleanProperty("FILTER_ON_FACILITY", "true")) {
+			edocList = documentFacilityFiltering(loggedInInfo, edocList);
+		}
+		
+		return edocList;
+	}
 
 	public static ArrayList<EDoc> listDocsSince(LoggedInInfo loggedInInfo, String module, String moduleid, String docType, String publicDoc, EDocSort sort, String viewstatus, Date since) {
 		

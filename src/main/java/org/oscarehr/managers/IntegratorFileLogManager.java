@@ -63,4 +63,17 @@ public class IntegratorFileLogManager {
 	public List<IntegratorFileLog> getFileLogHistory(LoggedInInfo loggedInInfo) {
 		return integratorFileLogDao.getFileLogHistory();
 	}
+	
+	/**
+	 * Used to compare with the Integrator logs.
+	 * Gets all log entries that are coded with a final status.  
+	 */
+	@SuppressWarnings("unused")
+	public List<IntegratorFileLog> getStatusNotCompleteOrError(LoggedInInfo loggedInInfo) {
+		return integratorFileLogDao.findAllWithNoCompletedOrErrorIntegratorStatus();
+	}
+	
+	public void updateIntegratorFileLog(LoggedInInfo loggedInInfo, IntegratorFileLog integratorFileLog) {
+		integratorFileLogDao.merge(integratorFileLog);
+	}
 }

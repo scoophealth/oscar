@@ -263,6 +263,11 @@ public class DefaultNoteService implements NoteService {
 		logger.debug("FILTER NOTES ISSUES " + (System.currentTimeMillis() - intTime) + "ms entries size "+entries.size());
 		intTime = System.currentTimeMillis();
 
+		//apply date range filter
+		entries = applyDateRangeFilter1(entries,criteria.getStartDate(),criteria.getEndDate());
+		logger.debug("FILTER NOTES BY DATE " + (System.currentTimeMillis() - intTime) + "ms entries size "+entries.size());
+		intTime = System.currentTimeMillis();
+
 		NoteSelectionResult result = new NoteSelectionResult();
 		
 		List<EChartNoteEntry> slice = null;
@@ -532,6 +537,29 @@ public class DefaultNoteService implements NoteService {
 		return filteredNotes;
 	}
 
+	private List<EChartNoteEntry> applyDateRangeFilter1(List<EChartNoteEntry> notes, Date startDate, Date endDate) {
+		List<EChartNoteEntry> filteredNotes = new ArrayList<EChartNoteEntry>();
+
+		for(EChartNoteEntry note:notes) {
+			if(startDate == null && endDate == null) {
+				filteredNotes.add(note);
+			} else if(startDate != null && endDate == null) {
+				if(note.getDate().after(startDate)) {
+					filteredNotes.add(note);
+				}
+			} else if(startDate == null && endDate != null) {
+				if(note.getDate().before(endDate)) {
+					filteredNotes.add(note);
+				}
+			} else {
+				if(note.getDate().after(startDate) && note.getDate().before(endDate)) {
+					filteredNotes.add(note);
+				}
+			}
+		}
+		return filteredNotes;
+	}
+	
 	private List<EChartNoteEntry> applyIssueFilter1(List<EChartNoteEntry> notes, List<String> issueId) {
 		if (issueId.isEmpty() || issueId.contains("a")) {
 			return notes;

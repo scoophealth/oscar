@@ -2157,7 +2157,7 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 	public List<Integer> getBORNKidsMissingExtKey(String keyName) {
 		Calendar cal = Calendar.getInstance();
 		//TODO: change this to use a similar AGE calculation like in RptDemographicQueryBuilder
-		int year = cal.get(Calendar.YEAR) - 8;
+		int year = cal.get(Calendar.YEAR) - 18;
 		Session session = getSession();
 		try {
 			SQLQuery sqlQuery = session.createSQLQuery("select distinct d.demographic_no from demographic d where d.year_of_birth >= :year1 and  d.demographic_no not in (select distinct d.demographic_no from demographic d, demographicExt e where d.demographic_no = e.demographic_no and d.year_of_birth >= :year2 and key_val=:key)");
