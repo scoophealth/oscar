@@ -321,5 +321,10 @@ $(document).ready( function() {
 			sendData("/web/dashboard/display/AssignTickler.do", $("#ticklerAddForm").serialize(), "close")
 		}
 	});
+
+	$("#excludePatientsChecked").on('click', function(event) {
+		event.preventDefault();
+		alert("TODO: send demographic numbers to server side.");
+	});
     
 })

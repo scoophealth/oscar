@@ -177,6 +177,12 @@
 												Assign Tickler
 											</a>
 										</li>
+										<li>
+											<a href="#" class="dropdown-item"
+												title="Exclude Checked Patients from Indicator Results." id="excludePatientsChecked" >
+												Exclude Patients From Indicator Results
+											</a>
+										</li>
 									</ul>						 
 							    </div>
 							</th>
