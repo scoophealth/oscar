@@ -151,16 +151,15 @@
 					<thead>
 						<tr>
 							<th class="donotprint" id="0" >
-								<div class="dropdown" id="ticklerMenu">
+								<div class="dropdown" id="actionMenu">
 									<a href="#" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" role="button" 
-							        	aria-haspopup="true" aria-expanded="false" id="ticklerMenuLink">
-							        	<span class="glyphicon glyphicon-check"></span>
-							        	Tickler 
-							        	<span class="caret"></span>
-							        </a>
-							        
-									
-									<ul class="dropdown-menu" aria-labelledby="ticklerMenuLink">
+										aria-haspopup="true" aria-expanded="false" id="actionMenuLink">
+										<span class="glyphicon glyphicon-check"></span>
+										Actions
+										<span class="caret"></span>
+									</a>
+
+									<ul class="dropdown-menu" aria-labelledby="actionMenuLink">
 										<li>									
 											<a href="#" class="dropdown-item" id="selectAllDrilldown" title="Select all rows in the current view." >
 												Select All in View
@@ -214,7 +213,7 @@
 										<c:out value="${ column }" />									
 									</c:when>
 									<c:otherwise>
-										<input type="checkbox" id="${ column }" class="ticklerChecked" />
+										<input type="checkbox" id="${ column }" class="patientChecked" />
 									</c:otherwise>
 									</c:choose>
 								</td>

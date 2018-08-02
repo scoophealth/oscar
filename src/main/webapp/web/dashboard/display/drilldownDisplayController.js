@@ -155,7 +155,7 @@ $.fn.dataTable.moment( 'M-D-YYYY' );
 $.fn.dataTable.ext.order['dom-checkbox'] = function  ( settings, col )
 {
     return this.api().column( col, {order:'index'} ).nodes().map( function ( td, i ) {
-        return $('.ticklerChecked', td).prop('checked') ? '1' : '0';
+        return $('.patientChecked', td).prop('checked') ? '1' : '0';
     } );
 };
 
@@ -283,16 +283,16 @@ $(document).ready( function() {
     	sendData(url, data, "reload");
     });
 	
-	//--> Check all for ticklers
+	//--> Check all for actions
 	$("#selectAllDrilldown").on('click', function(event) {
 		event.preventDefault();
-	    $('.ticklerChecked').prop('checked', 'checked');
+	    $('.patientChecked').prop('checked', 'checked');
 	});
 	
-	//--> Uncheck all for ticklers
+	//--> Uncheck all for actions
 	$("#selectNoneDrilldown").on('click', function(event) {
 		event.preventDefault();
-	    $('.ticklerChecked').prop('checked', '');
+	    $('.patientChecked').prop('checked', '');
 	});
 
 	//--> Assign Tickler to all checked items - returns the tickler dialog.
@@ -300,7 +300,7 @@ $(document).ready( function() {
 		
 		event.preventDefault();
 		var demographics = [];		
-		$("input:checkbox.ticklerChecked").each(function(){
+		$("input:checkbox.patientChecked").each(function(){
 			if( this.checked ) {
 				demographics.push(this.id);
 			}
