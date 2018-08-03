@@ -24,7 +24,10 @@
 
 package oscar.oscarLab.ca.all.pageUtil;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayOutputStream;
+
 import java.io.FileOutputStream;
 
 // import static org.junit.Assert.*;
@@ -33,20 +36,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.io.IOUtils;
-// import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
+import org.oscarehr.caisi_integrator.util.MiscUtils;
 import com.lowagie.text.DocumentException;
 
 import ca.uhn.hl7v2.HL7Exception;
 import oscar.oscarLab.ca.all.parsers.IHAPOIHandler;
-// import oscar.oscarLab.ca.all.parsers.IHAPOIHandler;
 import oscar.oscarLab.ca.all.parsers.MEDITECHHandler;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.oscarLab.ca.all.parsers.PATHL7Handler;
@@ -54,9 +58,6 @@ import oscar.oscarLab.ca.all.parsers.PATHL7Handler;
 /**
  * 
  * This unit test is used for verifying the PDF output of various lab systems
- * during development and before deployment. 
- * 
- * This is not intended to run as part of the automated unit tests during build.
  * 
  * To set up:
  * 
@@ -68,26 +69,27 @@ import oscar.oscarLab.ca.all.parsers.PATHL7Handler;
  */
 public class LabPDFCreatorTest {
 
-	private static final String outputFilePath = "/Users/denniswarren/Desktop/lab_pdf_tests/";
+	private static String outputFilePath;
 	private static ZipFile zipFile;
+
 	
 	@BeforeClass
 	public static void setUpBeforeClass(){		
-
+		outputFilePath = Thread.currentThread().getContextClassLoader().getResource("").getFile();
 	}
 
 	/**
 	 * HL7 format used by most of the rural Ontario health authorities 
 	 */
 	 @Test
-	public void testPrintMeditech() {		
-
+	public void testPrintMeditech() {				
 		Enumeration<?> zipFile = openZipFile( "MEDITECH_test_data.zip" );
 
 		while( zipFile.hasMoreElements() ) {
 			ZipEntry zipEntry =  (ZipEntry) zipFile.nextElement();
 			MEDITECHHandler handler = new MEDITECHHandler();
-			createPDF( zipEntry, handler );
+			Path path = Paths.get( createPDF( zipEntry, handler ) );
+			assertTrue(Files.exists(path));
 		}
 	}
 	
@@ -102,7 +104,8 @@ public class LabPDFCreatorTest {
 		while( zipFile.hasMoreElements() ) {
 			ZipEntry zipEntry =  (ZipEntry) zipFile.nextElement();
 			IHAPOIHandler handler = new IHAPOIHandler();
-			createPDF( zipEntry, handler );
+			Path path = Paths.get( createPDF( zipEntry, handler ) );
+			assertTrue(Files.exists(path));
 		}
 	}
 	
@@ -117,33 +120,38 @@ public class LabPDFCreatorTest {
 		while( zipFile.hasMoreElements() ) {
 			ZipEntry zipEntry =  (ZipEntry) zipFile.nextElement();
 			PATHL7Handler handler = new PATHL7Handler();
-			createPDF( zipEntry, handler );
+			Path path = Paths.get( createPDF( zipEntry, handler ) );
+			assertTrue(Files.exists(path));
 		}
 	}
 	
-	private static void createPDF( ZipEntry zipEntry, MessageHandler handler ) {
+	private static String createPDF( ZipEntry zipEntry, MessageHandler handler ) {
 
 		String hl7Body = getHL7Body( zipEntry );
 		LabPDFCreator lpdfc = null;
 		FileOutputStream output = null; 
+		String filePath = "";
 		
 		if( ! hl7Body.isEmpty() ) {
 			
 			lpdfc = new LabPDFCreator();
 			lpdfc.setOs( new ByteArrayOutputStream() );
-					
+			String filename = zipEntry.getName();
+			
 			try {
-				
+				MiscUtils.getLogger().info("Trying lab file " + filename);
 		        handler.init( hl7Body );
 				lpdfc.setHandler( handler );
 				lpdfc.printPdf();
-				String filename = zipEntry.getName();
+			
 				if( filename.contains("/") ) {
 					filename = filename.replaceAll( "/", "_" );
 				}
-				output = new FileOutputStream( outputFilePath + filename + ".pdf" );
+				filePath = outputFilePath + filename + ".pdf";
+				output = new FileOutputStream( filePath );
 				output.write( ( (ByteArrayOutputStream) lpdfc.getOs() ).toByteArray());
 	
+				MiscUtils.getLogger().info("PDF file created at " + filePath);
 	        } catch (HL7Exception e) {
 		       e.printStackTrace();
 	        } catch (IOException e) {
@@ -166,6 +174,8 @@ public class LabPDFCreatorTest {
 				}
 			}
 		}
+		
+		return filePath;
 	}
 	
 	private static String getHL7Body( ZipEntry zipEntry ) {
