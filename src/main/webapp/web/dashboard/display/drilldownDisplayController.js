@@ -295,16 +295,23 @@ $(document).ready( function() {
 	    $('.patientChecked').prop('checked', '');
 	});
 
+	function getSelectedPatientIds() {
+		var patientIds = [];
+
+		$("input:checkbox.patientChecked").each(function() {
+			if(this.checked) {
+				patientIds.push(this.id);
+			}
+		});
+
+		return patientIds;
+	}
+
 	//--> Assign Tickler to all checked items - returns the tickler dialog.
 	$("#assignTicklerChecked").on('click', function(event) {
 		
 		event.preventDefault();
-		var demographics = [];		
-		$("input:checkbox.patientChecked").each(function(){
-			if( this.checked ) {
-				demographics.push(this.id);
-			}
-		});		
+		var demographics = getSelectedPatientIds();
 		var param = "demographics=" + demographics;
 
 		if( demographics.length > 0 ) {
