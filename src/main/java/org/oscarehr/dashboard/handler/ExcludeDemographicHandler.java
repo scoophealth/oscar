@@ -58,15 +58,16 @@ public class ExcludeDemographicHandler {
 	private LoggedInInfo loggedInInfo;
 	private String excludeIndicator = "excludeIndicator";
 	Date now = new java.util.Date();
-	
+
 	public List<Integer> getDemoIds(String indicatorName) {
 		demoIds = new ArrayList<Integer>();
-		List<DemographicExt> allProviderExts = demographicExtDao.getDemographicExtByKeyAndValue(excludeIndicator, indicatorName);
+		List<DemographicExt> allProviderDemoExts = demographicExtDao.getDemographicExtByKeyAndValue(excludeIndicator, indicatorName);
+		logger.debug("getDemosIds: " + allProviderDemoExts + " matching extensions for template " + indicatorName);
 		String providerNo = getProviderNo();
-		Date now = new java.util.Date();
-		for (DemographicExt e: allProviderExts) {
+		for (DemographicExt e: allProviderDemoExts) {
 			if (e.getProviderNo().equals(providerNo) && isCurrentExclusion(e)) {
 				demoIds.add(e.getDemographicNo());
+				logger.debug("template: " + indicatorName +" getDemoIds returning: " + e.getDemographicNo());
 			}
 		}
 		return demoIds;
@@ -74,12 +75,13 @@ public class ExcludeDemographicHandler {
 	
 	public List<DemographicExt> getDemoExts(String indicatorName) {
 		demoExts = new ArrayList<DemographicExt>();
-		List<DemographicExt> allProviderExts = demographicExtDao.getDemographicExtByKeyAndValue(excludeIndicator, indicatorName);
+		List<DemographicExt> allProviderDemoExts = demographicExtDao.getDemographicExtByKeyAndValue(excludeIndicator, indicatorName);
+		logger.debug("getDemosExts: " + allProviderDemoExts + " matching extensions for template " + indicatorName);
 		String providerNo = getProviderNo();
-		Date now = new java.util.Date();
-		for (DemographicExt e: allProviderExts) {
+		for (DemographicExt e: allProviderDemoExts) {
 			if (e.getProviderNo().equals(providerNo) && isCurrentExclusion(e)) {
 				demoExts.add(e);
+				logger.debug("template: " + indicatorName +" getDemoExts returning: " + e.getDemographicNo());
 			}
 		}
 		return demoExts;
@@ -109,8 +111,9 @@ public class ExcludeDemographicHandler {
 	public void unExcludeDemoIds(List<Integer> demographicNos, String indicatorName) {
 		if (demographicNos == null || demographicNos.isEmpty() || indicatorName == null || indicatorName.isEmpty()) return;
 		String providerNo = getProviderNo();
-		List<DemographicExt> allProvidersExts = demographicExtDao.getDemographicExtByKeyAndValue(excludeIndicator, indicatorName);
-		for (DemographicExt e: allProvidersExts) {
+		List<DemographicExt> allProviderDemoExts = demographicExtDao.getDemographicExtByKeyAndValue(excludeIndicator, indicatorName);
+		logger.debug("unExcludeDemoIds: " + allProviderDemoExts + " matching extensions for template " + indicatorName);
+		for (DemographicExt e: allProviderDemoExts) {
 			// remove exclusion if provider_no matches or is null and the demongraphic_no matches
 			if (e.getProviderNo().equals(providerNo) && demographicNos.contains(e.getDemographicNo())) {
 //				checkPrivilege(loggedInInfo, SecurityInfoManager.WRITE);
@@ -148,8 +151,9 @@ public class ExcludeDemographicHandler {
 		}
 		JSONArray jsonArray = JSONArray.fromObject( jsonString );
 		String providerNo = getProviderNo();
-		List<DemographicExt> allProvidersExts = demographicExtDao.getDemographicExtByKeyAndValue(excludeIndicator, indicatorName);
-		for (DemographicExt e: allProvidersExts) {
+		List<DemographicExt> allProviderDemoExts = demographicExtDao.getDemographicExtByKeyAndValue(excludeIndicator, indicatorName);
+		logger.debug("unExcludeDemoIds (json): " + allProviderDemoExts + " matching extensions for template " + indicatorName);
+		for (DemographicExt e: allProviderDemoExts) {
 			// remove exclusion if provider_no matches or is null and the demongraphic_no matches
 			if (e.getProviderNo().equals(providerNo) && jsonArray.contains(e.getDemographicNo())) {
 				demographicExtDao.removeDemographicExt(e.getId());
