@@ -333,17 +333,16 @@ $(document).ready( function() {
 		event.preventDefault();
 
 		var patientIds = getSelectedPatientIds();
-		var indicatorName = "TestIndicatorName";
+		// Note that indicatorName is already placed in the href
+		// querystring by the JSP code.
 
 		var url = $(this).attr("href");
-		var data = "patientIds=" + patientIds + "&indicatorName=" + indicatorName;
+		var data = "patientIds=" + patientIds;
 
 		$.ajax({
 			url: url,
 			data: data
 		});
-
-		alert("Sent request to server.");
 	});
     
 })

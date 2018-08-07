@@ -178,7 +178,7 @@
 											</a>
 										</li>
 										<li>
-											<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=excludePatients"
+											<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=excludePatients&indicatorName=${ drilldown.name }"
 												class="dropdown-item"
 												title="Exclude Checked Patients from Indicator Results." id="excludePatientsChecked" >
 												Exclude Patients From Indicator Results
