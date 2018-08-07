@@ -332,8 +332,16 @@ $(document).ready( function() {
 	$("#excludePatientsChecked").on('click', function(event) {
 		event.preventDefault();
 
+		var patientIds = getSelectedPatientIds();
+		var indicatorName = "TestIndicatorName";
+
 		var url = $(this).attr("href");
-		$.ajax(url);
+		var data = "patientIds=" + patientIds + "&indicatorName=" + indicatorName;
+
+		$.ajax({
+			url: url,
+			data: data
+		});
 
 		alert("Sent request to server.");
 	});

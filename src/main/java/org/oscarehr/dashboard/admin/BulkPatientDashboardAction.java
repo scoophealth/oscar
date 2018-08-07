@@ -45,6 +45,12 @@ public class BulkPatientDashboardAction extends DispatchAction {
 
 		// TODO
 		// 1. Pull patient ids (demographic ids) and indicator name out of the request.
+		String patientIdsJson = request.getParameter("patientIds");
+		String indicatorName = request.getParameter("indicatorName");
+
+		MiscUtils.getLogger().info("Patient IDs: " + patientIdsJson);
+		MiscUtils.getLogger().info("Indicator name: " + indicatorName);
+
 		// 2. Pass to excludeDemographicHandler
 
 		return null;
