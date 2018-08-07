@@ -336,6 +336,11 @@ $(document).ready( function() {
 		// Note that indicatorName is already placed in the href
 		// querystring by the JSP code.
 
+		if (patientIds.length < 1) {
+			alert("At least one patient must be selected to perform this action.");
+			return;
+		}
+
 		var url = $(this).attr("href");
 		var data = "patientIds=" + patientIds;
 
