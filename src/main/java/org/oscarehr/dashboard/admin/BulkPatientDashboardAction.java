@@ -33,25 +33,22 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.util.MiscUtils;
 
-//import org.oscarehr.dashboard.handler.ExcludeDemographicHandler;
+import org.oscarehr.dashboard.handler.ExcludeDemographicHandler;
 
 public class BulkPatientDashboardAction extends DispatchAction {
-	// private ExcludeDemographicHandler excludeDemographicHandler = new ExcludeDemographicHandler();
+	private ExcludeDemographicHandler excludeDemographicHandler = new ExcludeDemographicHandler();
 
 	public ActionForward excludePatients(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
 
-		MiscUtils.getLogger().info("BulkPatientDashboardAction.excludePatients was called");
-
-		// TODO
-		// 1. Pull patient ids (demographic ids) and indicator name out of the request.
 		String patientIdsJson = request.getParameter("patientIds");
 		String indicatorName = request.getParameter("indicatorName");
 
-		MiscUtils.getLogger().info("Patient IDs: " + patientIdsJson);
-		MiscUtils.getLogger().info("Indicator name: " + indicatorName);
+		excludeDemographicHandler.excludeDemoIds(patientIdsJson, indicatorName);
 
-		// 2. Pass to excludeDemographicHandler
+		MiscUtils.getLogger().info(
+			"Excluded patients (" + patientIdsJson + ") from " + indicatorName
+		);
 
 		return null;
 	}
