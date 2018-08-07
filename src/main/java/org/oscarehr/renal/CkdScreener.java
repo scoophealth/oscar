@@ -53,6 +53,8 @@ import org.oscarmcmaster.ckd.CKDConfig;
 import org.oscarmcmaster.ckd.CkdConfigDocument;
 import org.oscarmcmaster.ckd.DxCodes.Code;
 
+import oscar.OscarProperties;
+
 public class CkdScreener {
 	
 	private Logger logger = MiscUtils.getLogger();
@@ -181,6 +183,7 @@ public class CkdScreener {
 	}
 	
 	public boolean screenDemographic(int demographicNo, List<String> reasons, MyBoolean first) {
+		
 		logger.debug("checking demographic " + demographicNo);
 		
 		Demographic demographic = demographicDao.getDemographicById(demographicNo);
@@ -288,7 +291,11 @@ public class CkdScreener {
 	}
 	
 	private boolean hasBilledDxCode(Integer demographicNo, String codingSystem, String code) {
-		return billingDao.getBillingItemByDxCode(demographicNo, code).size()>0;
+		if("ON".equals(OscarProperties.getInstance().getProperty("bill_region"))) {
+			return billingDao.getBillingItemByDxCode(demographicNo, code).size()>0;
+		}
+		//BC not implemented - this done to avoid exception
+		return false;
 	}
 	
 	protected boolean checkBP(int demographicNo) {
