@@ -264,7 +264,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 
 		logger.debug("NoteId " + nId);
 
-		String maxTmpSave = oscar.OscarProperties.getInstance().getProperty("maxTmpSave", "");
+		String maxTmpSave = oscar.OscarProperties.getInstance().getProperty("maxTmpSave", "off");
 		logger.debug("maxTmpSave " + maxTmpSave);
 		// set date 2 weeks in past so we retrieve more recent saved notes
 		Calendar cal = Calendar.getInstance();
@@ -2890,12 +2890,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		
 		String pStartDate = null;
 		String pEndDate = null;
+		String pType = null;
 		
 		Calendar cStartDate = null;
 		Calendar cEndDate = null;
 		
 		pStartDate = request.getParameter("pStartDate");
 		pEndDate = request.getParameter("pEndDate");
+		pType = request.getParameter("pType");
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
 		
@@ -2925,7 +2927,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction {
 		
 		
 		CaseManagementPrint cmp = new CaseManagementPrint();
-		cmp.doPrint(loggedInInfo,demographicNo, printAllNotes,noteIds,printCPP,printRx,printLabs,printPreventions,cStartDate,cEndDate,request, response.getOutputStream());
+		cmp.doPrint(loggedInInfo,demographicNo, printAllNotes,noteIds,printCPP,printRx,printLabs,printPreventions,(pType != null && "dates".equals(pType))?true:false,cStartDate,cEndDate,request, response.getOutputStream());
 		
 		return null;
 	}

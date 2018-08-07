@@ -27,12 +27,13 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.integration.fhir.exception.MandatoryAttributeException;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.util.MiscUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
 
-public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Practitioner, org.oscarehr.common.model.Provider> {
+public class Practitioner extends AbstractOscarFhirResource<org.hl7.fhir.dstu3.model.Practitioner, org.oscarehr.common.model.Provider> {
 
-	public enum LicenseType { CPSO, CNO, DEFAULT }
+	public enum LicenseType { CPSO, CNORNP, CNORN, CNORPN, OCP, DEFAULT, CMO }
 
 	public Practitioner( Provider provider ) {
 		super( new org.hl7.fhir.dstu3.model.Practitioner(), provider );
@@ -47,7 +48,7 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 	}
 
 	@Override
-	protected final void setId(org.hl7.fhir.dstu3.model.Practitioner fhirResource) {
+	protected void setId(org.hl7.fhir.dstu3.model.Practitioner fhirResource) {
 		fhirResource.setId( getOscarResource().getProviderNo() );		
 	}
 
@@ -117,9 +118,16 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 		}
 
 		switch( LicenseType.valueOf( licensetype ) ) {
-		case CNO: setNurseIdentifier( fhirResource, practitionerNumber );
+		case CNORN:
+		case CNORPN:
+		case CNORNP:
+			setNurseIdentifier( fhirResource, practitionerNumber );
 			break;
 		case CPSO: setDoctorIdentifier( fhirResource, practitionerNumber );
+			break;
+		case OCP: setPharmacistIdentifier( fhirResource, practitionerNumber );
+			break;
+		case CMO: setMidwifeIdentifier( fhirResource, practitionerNumber );
 			break;
 		case DEFAULT: fhirResource.addIdentifier().setSystem( "" ).setValue( practitionerNumber );
 			break;		
@@ -129,13 +137,25 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 	
 	protected void setNurseIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource, String practitionerNumber ) {
 		fhirResource.addIdentifier()
-		.setSystem( "http://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-nurse" )
+		.setSystem( "https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-nurse" )
 		.setValue( practitionerNumber );		
 	}
 	
 	protected void setDoctorIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource, String practitionerNumber ) {
 		fhirResource.addIdentifier()
-		.setSystem( "http://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-physician" )
+		.setSystem( "https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-physician" )
+		.setValue( practitionerNumber );
+	}
+	
+	protected void setPharmacistIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource, String practitionerNumber ) {
+		fhirResource.addIdentifier()
+		.setSystem( "https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-pharmacist" )
+		.setValue( practitionerNumber );
+	}
+	
+	protected void setMidwifeIdentifier( org.hl7.fhir.dstu3.model.Practitioner fhirResource, String practitionerNumber ) {
+		fhirResource.addIdentifier()
+		.setSystem( "https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-license-midwife" )
 		.setValue( practitionerNumber );
 	}
 	
@@ -143,24 +163,46 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 		
 		//TODO these codes cannot be hard coded like this. Temporary hack
 		String licensetype = getOscarResource().getPractitionerNoType();
-		String designation = "OD";
+		String designation = null;
 		
-		if( LicenseType.CNO.name().equals( licensetype ) ) {
+		if( LicenseType.CNORN.name().equals( licensetype ) ) {
 			designation =  "RN";
+		}
+		
+		if( LicenseType.CNORPN.name().equals( licensetype ) ) {
+			designation =  "RPN";
+		}
+		
+		if( LicenseType.CNORNP.name().equals( licensetype ) ) {
+			designation =  "RNP";
 		}
 		
 		if( LicenseType.CPSO.name().equals( licensetype ) ) {
 			designation = "MD";
 		}
-				
-		fhirResource.addQualification().getCode().addCoding()
-			.setSystem("https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-immunizations-practitioner-designation")
-			.setCode( designation )
-			.setDisplay( designation );
+		
+		if( LicenseType.OCP.name().equals( licensetype ) ) {
+			designation = "PHARM";
+		}
+		
+		if( LicenseType.CMO.name().equals( licensetype ) ) {
+			designation = "RM";
+		}
+		
+		
+		if(designation != null) {
+			fhirResource.addQualification().getCode().addCoding()
+				.setSystem("https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-immunizations-practitioner-designation")
+				.setCode( designation )
+				.setDisplay( designation );
+		}
 	}
 	
 	
 	protected void setWorkPhone( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+		if(StringUtils.isEmpty(getOscarResource().getWorkPhone())) {
+			return;
+		}
 		fhirResource.addTelecom()
 			.setUse( ContactPointUse.WORK )
 			.setSystem( ContactPointSystem.PHONE )
@@ -168,6 +210,9 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 	}
 	
 	protected void setOtherPhone( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+		if(StringUtils.isEmpty(getOscarResource().getPhone())) {
+			return;
+		}
 		fhirResource.addTelecom()
 			.setUse( ContactPointUse.NULL )
 			.setSystem( ContactPointSystem.PHONE )
@@ -175,10 +220,13 @@ public class Practitioner extends OscarFhirResource<org.hl7.fhir.dstu3.model.Pra
 	}
 	
 	protected void setEmail( org.hl7.fhir.dstu3.model.Practitioner fhirResource ) {
+		if(StringUtils.isEmpty(getOscarResource().getEmail())) {
+			return;
+		}
 		fhirResource.addTelecom()
 			.setUse( ContactPointUse.WORK )
-			.setSystem( ContactPointSystem.PHONE )
-			.setValue( getOscarResource().getWorkPhone() );
+			.setSystem( ContactPointSystem.EMAIL )
+			.setValue( getOscarResource().getEmail() );
 	}
 
 }

@@ -64,7 +64,8 @@ Varicella Immunoglobulin	VarIg
 	<item
 		resultDesc=""
 		desc="Tdap-IPV=Diphtheria, Tetanus and Acellular Pertussis for children 4 - 6 years of age; IPV=Inactivated Poliovirus; eg Adacel-IPV"
-		name="Tdap-IPV"		
+		name="Tdap-IPV"	
+		healthCanadaType="Tdap-IPV"	
 		layout="injection" atc="J07AJ52" minAge="4" maxAge="6"
 		showIfMinRecordNum="1" />
 
@@ -74,6 +75,7 @@ Varicella Immunoglobulin	VarIg
 		name="TdP-IPV-Hib"
 		link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html"
 		layout="injection" atc="J07CA06" minAge="0" maxAge="6"
+		healthCanadaType="TdP-IPV-Hib"
 		showIfMinRecordNum="1" />
 
 	<item
@@ -89,6 +91,7 @@ Varicella Immunoglobulin	VarIg
 		resultDesc=""
 		desc="Diphtheria, Tetanus, Pertussis, HepB, Polio, Haemophilus Influenzae type b (6wks-2yrs)"
 		name="DTaP-HBV-IPV-Hib"
+		healthCanadaType="DTaP-HBV-IPV-Hib"	
 		link="http://www.phac-aspc.gc.ca/"
 		layout="injection" atc="J07CA02" minAge="0" maxAge="6"
 		showIfMinRecordNum="1" />
@@ -106,6 +109,7 @@ Varicella Immunoglobulin	VarIg
 		resultDesc=""
  		desc="Rot-1=Rotavirus Vaccine eg Rotarix" 
  		name="Rot"
+		healthCanadaType="Rot"	
         link="www.novaccine.com/pdffiles/Rotarix_new_package_insert.pdf"
 		layout="injection" atc="J07BH01" minAge="0" maxAge="2"
 		showIfMinRecordNum="1" />
@@ -367,12 +371,14 @@ Varicella Immunoglobulin	VarIg
 	<item 
 		resultDesc=""
 		desc="TdP" name="TdP" link="" layout="injection" atc="J07AJ52" 
-		showIfMinRecordNum="1" />
+		showIfMinRecordNum="1"
+		healthCanadaType="TdP"/>
 
 	<item 
 		resultDesc=""
 		desc="IPV" name="IPV" link="" layout="injection" atc="J07BF03"
-		showIfMinRecordNum="1" />
+		showIfMinRecordNum="1"
+		healthCanadaType="IPV" />
 
 	<item 
 		resultDesc=""
@@ -503,7 +509,10 @@ Varicella Immunoglobulin	VarIg
 		desc="H1N1 Vaccination" 
 		name="H1N1" layout="h1n1"
         minAge="0" 
-        atc="J07BB02" />
+        atc="J07BB02" 
+		healthCanadaType="H1N1"	
+
+/>
 
 	<item
 		resultDesc=""
@@ -511,6 +520,7 @@ Varicella Immunoglobulin	VarIg
 		name="Zostavax"		
 		link="http://webprod5.hc-sc.gc.ca/dpd-bdpp/item-iteme.do?pm-mp=00015056"
 		layout="injection" atc="J07BK"
+		healthCanadaType="Zostavax"	
 		showIfMinRecordNum="1" />
 
 	<item 

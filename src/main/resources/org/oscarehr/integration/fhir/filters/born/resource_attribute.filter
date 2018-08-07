@@ -1,3 +1,7 @@
 ## OptionalFHIRAttribute 
 patient.workPhone=false
 patient.namePrefix=false
+patient.email=false
+patient.mrn=true
+patient.address=false
+patient.language=true

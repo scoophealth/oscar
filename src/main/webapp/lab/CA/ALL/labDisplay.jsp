@@ -421,8 +421,7 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
             var popup=window.open(varpage, windowname, windowprops);
         }
         function getComment(action, segmentId) {
-       
-            var ret = true;
+       		var ret = true;
             var comment = "";
             var text = providerNo + "_" + segmentId + "commentText";
             if( $(text) != null ) {

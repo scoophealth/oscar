@@ -3,6 +3,8 @@ submittingpractitioner.practitionerNo=false
 submittingpractitioner.qualification=false
 submittingpractitioner.oneid=true
 submittingpractitioner.otherphone=false
+submittingpractitioner.email=false
+
 
 practitioner.otherphone=false
 practitioner.email=true
@@ -18,6 +20,8 @@ patient.nameUse=false
 patient.workPhone=false
 patient.namePrefix=false
 patient.email=false
+patient.mrn=false
+patient.language=false
 
 organization.address=false 
 organization.telecom=false 
@@ -26,6 +30,7 @@ organization.name=false
 organization.oranizationName=true
 
 immunization.annotation=false
+immunization.dateIsEstimated=true
 
 ## MandatoryFHIRAttribute 
 submittingpractitioner.practitionerNo=true

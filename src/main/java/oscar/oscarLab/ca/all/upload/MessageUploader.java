@@ -43,6 +43,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.OtherIdManager;
@@ -257,7 +258,26 @@ public final class MessageUploader {
 				hl7TextInfo.setFillerOrderNum(fillerOrderNum);
 				hl7TextInfoDao.persist(hl7TextInfo);
 			}
-
+			
+			if("true".equals(OscarProperties.getInstance().getProperty("inbox.labels.sticky","false"))) {
+				String latestLabel = "";
+				String multiID = Hl7textResultsData.getMatchingLabs(String.valueOf(hl7TextMessage.getId()));
+				for(String id: multiID.split(",")) {
+					if(!id.equals(String.valueOf(hl7TextMessage.getId()))) {
+						List<Hl7TextInfo> infos = hl7TextInfoDao.findByLabId(Integer.parseInt(id));
+						for(Hl7TextInfo info:infos) {
+							if(!StringUtils.isEmpty(info.getLabel())) {
+								latestLabel = info.getLabel();
+							}
+						}
+					}
+				}
+				if(!StringUtils.isEmpty(latestLabel)) {
+					hl7TextInfo.setLabel(latestLabel);
+					hl7TextInfoDao.merge(hl7TextInfo);
+				}
+			}
+			
 			String demProviderNo = null;
 			Connection c = null;
 			try {

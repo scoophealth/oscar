@@ -47,6 +47,14 @@ public class BornTransmissionLog extends AbstractModel<Integer> {
 	
 	private String filename;
 
+	private Integer demographicNo;
+	private String type;
+	private String httpCode;
+	private String httpResult;
+	private String httpHeaders;
+	private String hialTransactionId;
+	private String contentLocation;
+	
 	public Integer getId() {
     	return id;
     }
@@ -78,6 +86,62 @@ public class BornTransmissionLog extends AbstractModel<Integer> {
 	public void setFilename(String filename) {
     	this.filename = filename;
     }
+
+	public Integer getDemographicNo() {
+		return demographicNo;
+	}
+
+	public void setDemographicNo(Integer demographicNo) {
+		this.demographicNo = demographicNo;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getHttpCode() {
+		return httpCode;
+	}
+
+	public void setHttpCode(String httpCode) {
+		this.httpCode = httpCode;
+	}
+
+	public String getHttpResult() {
+		return httpResult;
+	}
+
+	public void setHttpResult(String httpResult) {
+		this.httpResult = httpResult;
+	}
+
+	public String getHttpHeaders() {
+		return httpHeaders;
+	}
+
+	public void setHttpHeaders(String httpHeaders) {
+		this.httpHeaders = httpHeaders;
+	}
+
+	public String getHialTransactionId() {
+		return hialTransactionId;
+	}
+
+	public void setHialTransactionId(String hialTransactionId) {
+		this.hialTransactionId = hialTransactionId;
+	}
+
+	public String getContentLocation() {
+		return contentLocation;
+	}
+
+	public void setContentLocation(String contentLocation) {
+		this.contentLocation = contentLocation;
+	}
 	
 	
 }

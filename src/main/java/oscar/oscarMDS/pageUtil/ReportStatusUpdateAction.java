@@ -32,20 +32,21 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONObject;
-
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
+import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.PatientLabRouting;
+import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import net.sf.json.JSONObject;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarLab.ca.on.CommonLabResultData;
@@ -88,8 +89,13 @@ public class ReportStatusUpdateAction extends DispatchAction {
         }
 
         try {
-            CommonLabResultData.updateReportStatus(labNo, providerNo, status, comment,lab_type);
-            if (multiID != null){
+        	if(status=='A') {
+        		CommonLabResultData.updateReportStatus(labNo, providerNo, status, comment,lab_type,skipComment(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo()));
+        	} else {
+        		CommonLabResultData.updateReportStatus(labNo, providerNo, status, comment,lab_type);
+        	}
+            
+        	if (multiID != null){
                 String[] id = multiID.split(",");
                 int i=0;
                 int idNum = Integer.parseInt(id[i]);
@@ -110,6 +116,15 @@ public class ReportStatusUpdateAction extends DispatchAction {
         }
     }
 
+    private boolean skipComment(String providerNo) {
+		UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+		UserProperty uProp = userPropertyDAO.getProp(providerNo, UserProperty.LAB_ACK_COMMENT);
+		boolean skipComment = false;
+		if( uProp != null && uProp.getValue().equalsIgnoreCase("yes")) {
+			skipComment = true;
+		}
+		return skipComment;
+    }
     public ActionForward addComment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	int labNo = Integer.parseInt(request.getParameter("segmentID"));
     	String providerNo = request.getParameter("providerNo");

@@ -54,6 +54,17 @@ public class ConsentDao extends AbstractDao<Consent> {
         return consent;
 	}
 	
+	public Consent findByDemographicAndConsentType(int demographic_no, String consentType ) {
+		String sql = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 and x.consentType.type=?2";
+    	Query query = entityManager.createQuery(sql);
+    	query.setParameter( 1, demographic_no );
+    	query.setParameter( 2, consentType);
+
+        Consent consent = getSingleResultOrNull(query);
+        return consent;
+	}
+	
+	
 	public List<Consent> findByDemographic( int demographic_no ) {
 		String sql = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 AND x.deleted=0";
     	Query query = entityManager.createQuery(sql);

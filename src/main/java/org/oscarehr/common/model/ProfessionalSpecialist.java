@@ -35,12 +35,16 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.apache.commons.lang.StringUtils;
+import org.oscarehr.integration.fhir.interfaces.ContactInterface;
+import org.oscarehr.integration.fhir.resources.constants.ContactRelationship;
+import org.oscarehr.integration.fhir.resources.constants.ContactType;
 
 @Entity
 @Table(name = "professionalSpecialists")
-public class ProfessionalSpecialist extends AbstractModel<Integer> implements Serializable {
+public class ProfessionalSpecialist extends AbstractModel<Integer> implements Serializable, ContactInterface {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -101,6 +105,15 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 	protected void jpaUpdateLastUpdateTime() {
 		lastUpdated = new Date();
 	}
+	
+    @Transient
+    private ContactRelationship contactRelationship;
+    
+    @Transient
+    private ContactType contactType = ContactType.professional;
+    
+    @Transient
+    private String[] addressArray;
 
 	@Override
     public Integer getId() {
@@ -138,6 +151,22 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 
 	public void setStreetAddress(String streetAddress) {
     	this.streetAddress = StringUtils.trimToNull(streetAddress);
+    	
+    	if( this.streetAddress != null && this.streetAddress.contains(",") ) {
+    		this.addressArray = this.streetAddress.split(",");
+ 
+			while( this.addressArray.length < 5) {
+				this.addressArray[this.addressArray.length + 1] = ",";
+			}
+    		
+    	} else if( this.streetAddress == null ) {
+    		this.addressArray = new String[5];
+    		this.addressArray[0] = ","; // address line
+    		this.addressArray[1] = ","; // city
+    		this.addressArray[2] = ","; // postal
+    		this.addressArray[3] = ","; // province
+    		this.addressArray[4] = ","; // country
+    	}
     }
 
 	public String getPhoneNumber() {
@@ -366,6 +395,196 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 		this.eformId = eformId;
 	}
 
-	
+	@Override
+	public void setContactRelationship(ContactRelationship contactRelationship) {
+		this.contactRelationship = contactRelationship;
+		
+	}
 
+	@Override
+	public ContactRelationship getContactRelationship() {
+		return this.contactRelationship;
+	}
+
+	@Override
+	public void setContactType(ContactType contactType) {
+		this.contactType = contactType;		
+	}
+
+	@Override
+	public ContactType getContactType() {
+		return this.getContactType();
+	}
+
+
+	@Override
+	public void setLocationCode(String locationCode) {
+		// unused
+	}
+
+	@Override
+	public String getLocationCode() {
+		return null;
+	}
+
+	/**
+	 * For now the Organization name will be the first name.
+	 * An organization name should be added to the database table. 
+	 */
+	@Override
+	public void setOrganizationName(String organizationName) {	
+		this.setFirstName(organizationName);
+	}
+
+	@Override
+	public String getOrganizationName() {
+		return (this.getFirstName() + " " + this.getLastName() );
+	}
+	public void setStreetAddress(String[] address) {
+		String streetAddress = "";
+		for( String street : address ) {
+			streetAddress += street;
+		}
+		this.setStreetAddress(streetAddress);	
+	}
+
+	@Override
+	public void setAddress(String address) {
+		if( address != null ) {
+			address = address.replaceAll(",", "").trim();
+			String[] addressArray = getAddressArray();
+			addressArray[0] = address + ",";
+			this.setStreetAddress(addressArray);
+		}	
+	}
+
+	@Override
+	public String getAddress() {
+		return getAddressArray()[0];			
+	}
+
+	@Override
+	public void setAddress2(String address2) {
+		// unused	
+	}
+
+	@Override
+	public String getAddress2() {
+		return null;
+	}
+
+	@Override
+	public void setCity(String city) {
+		if( city != null ) {
+			city = city.trim();
+			String[] addressArray = getAddressArray();
+			addressArray[1] = city + ",";
+			this.setStreetAddress(addressArray);
+		}	
+	}
+
+	@Override
+	public String getCity() {
+		String city = null;
+		if( addressArray.length > 3 ) {	
+			city = addressArray[1];
+		}
+		return city;	
+	}
+
+	@Override
+	public void setProvince(String province) {
+		if( province != null ) {
+			province = province.trim();
+			String[] addressArray = getAddressArray();
+			addressArray[3] = province + ",";
+			this.setStreetAddress(addressArray);
+		}	
+	}
+
+	@Override
+	public String getProvince() {
+		String province = null;
+
+		if(getAddressArray().length > 3) {
+			province = getAddressArray()[3].trim();
+		} else {
+			province = getAddressArray()[1].trim();
+		}
+		
+		return province;
+	}
+
+	@Override
+	public void setPostal(String postal) {
+		if( postal != null ) {
+			 postal =  postal.trim();
+			String[] addressArray = getAddressArray();
+			addressArray[2] = postal + ",";
+			this.setStreetAddress(addressArray);
+		}
+	}
+
+	@Override
+	public String getPostal() {
+		String postal = null;
+
+		if(getAddressArray().length > 3) {
+			postal = getAddressArray()[2];
+		} 	
+		return postal;
+	}
+
+	@Override
+	public void setFax(String fax) {
+		this.setFaxNumber(fax);
+		
+	}
+
+	@Override
+	public String getFax() {
+		return this.getFaxNumber();
+	}
+
+	@Override
+	public void setWorkPhone(String workphone) {
+		// unused
+	}
+
+	@Override
+	public String getWorkPhone() {
+		return null;
+	}
+
+	@Override
+	public void setProviderCpso(String providerCPSO) {
+		// unused
+	}
+
+	@Override
+	public String getProviderCpso() {
+		return null;
+	}
+	
+	@Override
+	public void setPhone(String phone) {
+		this.setPhoneNumber(phone);
+	}
+	
+	@Override
+	public String getPhone() {
+		return this.getPhoneNumber();
+	}
+	
+	public String[] getAddressArray() {
+		if( this.addressArray == null ) {
+			return new String[] {","};
+		}
+		return addressArray;
+	}
+	
+	public void setAddressArray( String[] addressArray ) {
+		this.addressArray = addressArray;
+	}
+	
 }

@@ -1936,7 +1936,7 @@ public class MSPReconcile {
 			String strOwing = String.valueOf(dblAmtOwing);
 			double amountOwing = Double.parseDouble(strOwing);
 			if (amountOwing <= 0) {
-				if (MSPReconcile.BILLTYPE_PRI.equals(b.getBillAmount())) { // Warning: This was probably a bug, as row[0] referred to bill amount...
+				if (MSPReconcile.BILLTYPE_PRI.equals(b1.getBillingtype())) { // Warning: This was probably a bug, as row[0] referred to bill amount...
 					this.updateBillingMasterStatus(billingmasterNo, MSPReconcile.PAIDPRIVATE);
 				} else {
 					this.updateBillingMasterStatus(billingmasterNo, MSPReconcile.SETTLED);

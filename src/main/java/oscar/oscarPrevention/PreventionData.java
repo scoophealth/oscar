@@ -42,9 +42,11 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
+import org.oscarehr.common.model.DHIRSubmissionLog;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
+import org.oscarehr.managers.DHIRSubmissionManager;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -112,14 +114,17 @@ public class PreventionData {
 
 	public static Map<String, String> getPreventionKeyValues(String preventionId) {
 		Map<String, String> h = new HashMap<String, String>();
-
-		try {
-			List<PreventionExt> preventionExts = preventionExtDao.findByPreventionId(Integer.valueOf(preventionId));
+		
+		if( preventionId == null || preventionId.isEmpty()) {
+			return h;
+		}
+		
+		List<PreventionExt> preventionExts = preventionExtDao.findByPreventionId(Integer.valueOf(preventionId));
+		
+		if(preventionExts != null) {
 			for (PreventionExt preventionExt : preventionExts) {
 				h.put(preventionExt.getkeyval(), preventionExt.getVal());
 			}
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
 		}
 		return h;
 	}
@@ -159,9 +164,9 @@ public class PreventionData {
 		return name;
 	}
 
-	public static void updatetPreventionData(String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list, String snomedId) {
+	public static Integer updatetPreventionData(String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list, String snomedId) {
 		deletePreventionData(id);
-		insertPreventionData(creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list, snomedId);
+		return insertPreventionData(creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list, snomedId);
 	}
 
 	public static ArrayList<Map<String, Object>> getPreventionDataFromExt(String extKey, String extVal) {
@@ -348,7 +353,7 @@ public class PreventionData {
 		return p;
 	}
 
-	private static List<CachedDemographicPrevention> getRemotePreventions(LoggedInInfo loggedInInfo, Integer demographicId) {
+	public static List<CachedDemographicPrevention> getRemotePreventions(LoggedInInfo loggedInInfo, Integer demographicId) {
 
 		List<CachedDemographicPrevention> remotePreventions = null;
 		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
@@ -366,20 +371,22 @@ public class PreventionData {
 				remotePreventions = IntegratorFallBackManager.getRemotePreventions(loggedInInfo, demographicId);
 			}
 		}
-		return (remotePreventions);
+		if(remotePreventions == null) {
+			remotePreventions = Collections.emptyList();
+		}
+		
+		return remotePreventions;
 	}
 
 	public static oscar.oscarPrevention.Prevention addRemotePreventions(LoggedInInfo loggedInInfo, oscar.oscarPrevention.Prevention prevention, Integer demographicId) {
 		List<CachedDemographicPrevention> remotePreventions = getRemotePreventions(loggedInInfo, demographicId);
 
-		if (remotePreventions != null) {
-			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
-				Date preventionDate = DateUtils.toDate(cachedDemographicPrevention.getPreventionDate());
+		for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
+			Date preventionDate = DateUtils.toDate(cachedDemographicPrevention.getPreventionDate());
 
-				PreventionItem pItem = new PreventionItem(cachedDemographicPrevention.getPreventionType(), preventionDate);
-				pItem.setRemoteEntry(true);
-				prevention.addPreventionItem(pItem);
-			}
+			PreventionItem pItem = new PreventionItem(cachedDemographicPrevention.getPreventionType(), preventionDate);
+			pItem.setRemoteEntry(true);
+			prevention.addPreventionItem(pItem);
 		}
 
 		return (prevention);
@@ -387,45 +394,46 @@ public class PreventionData {
 
 	public static ArrayList<Map<String, Object>> addRemotePreventions(LoggedInInfo loggedInInfo, ArrayList<Map<String, Object>> preventions, Integer demographicId, String preventionType, Date demographicDateOfBirth) {
 		List<CachedDemographicPrevention> remotePreventions = getRemotePreventions(loggedInInfo, demographicId);
+		return addRemotePreventions(loggedInInfo, remotePreventions, preventions, preventionType, demographicDateOfBirth);
+	}
+	
+	public static ArrayList<Map<String, Object>> addRemotePreventions(LoggedInInfo loggedInInfo, List<CachedDemographicPrevention> remotePreventions, ArrayList<Map<String, Object>> preventions, String preventionType, Date demographicDateOfBirth) {
+		for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
+			if (preventionType.equals(cachedDemographicPrevention.getPreventionType())) {
 
-		if (remotePreventions != null) {
-			for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
-				if (preventionType.equals(cachedDemographicPrevention.getPreventionType())) {
-
-					Map<String, Object> h = new HashMap<String, Object>();
-					h.put("integratorFacilityId", cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
-					h.put("integratorPreventionId", cachedDemographicPrevention.getFacilityPreventionPk().getCaisiItemId());
-					String remoteFacilityName = "N/A";
-					CachedFacility remoteFacility = null;
-					try {
-						remoteFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(), cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
-					} catch (Exception e) {
-						log.error("Error", e);
-					}
-					if (remoteFacility != null) remoteFacilityName = remoteFacility.getName();
-					h.put("remoteFacilityName", remoteFacilityName);
-					h.put("integratorDemographicId", cachedDemographicPrevention.getCaisiDemographicId());
-					h.put("type", cachedDemographicPrevention.getPreventionType());
-					h.put("provider_no", "remote:" + cachedDemographicPrevention.getCaisiProviderId());
-					h.put("provider_name", "remote:" + cachedDemographicPrevention.getCaisiProviderId());
-					h.put("prevention_date", DateFormatUtils.ISO_DATE_FORMAT.format(cachedDemographicPrevention.getPreventionDate()) + " 00:00");
-					h.put("prevention_date_asDate", cachedDemographicPrevention.getPreventionDate());
-
-					if (demographicDateOfBirth != null) {
-						String age = UtilDateUtilities.calcAgeAtDate(demographicDateOfBirth, DateUtils.toDate(cachedDemographicPrevention.getPreventionDate()));
-						h.put("age", age);
-					} else {
-						h.put("age", "N/A");
-					}
-
-					preventions.add(h);
+				Map<String, Object> h = new HashMap<String, Object>();
+				h.put("integratorFacilityId", cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
+				h.put("integratorPreventionId", cachedDemographicPrevention.getFacilityPreventionPk().getCaisiItemId());
+				String remoteFacilityName = "N/A";
+				CachedFacility remoteFacility = null;
+				try {
+					remoteFacility = CaisiIntegratorManager.getRemoteFacility(loggedInInfo, loggedInInfo.getCurrentFacility(), cachedDemographicPrevention.getFacilityPreventionPk().getIntegratorFacilityId());
+				} catch (Exception e) {
+					log.error("Error", e);
 				}
+				if (remoteFacility != null) remoteFacilityName = remoteFacility.getName();
+				h.put("remoteFacilityName", remoteFacilityName);
+				h.put("integratorDemographicId", cachedDemographicPrevention.getCaisiDemographicId());
+				h.put("type", cachedDemographicPrevention.getPreventionType());
+				h.put("provider_no", "remote:" + cachedDemographicPrevention.getCaisiProviderId());
+				h.put("provider_name", "remote:" + cachedDemographicPrevention.getCaisiProviderId());
+				h.put("prevention_date", DateFormatUtils.ISO_DATE_FORMAT.format(cachedDemographicPrevention.getPreventionDate()) + " 00:00");
+				h.put("prevention_date_asDate", cachedDemographicPrevention.getPreventionDate());
+
+				if (demographicDateOfBirth != null) {
+					String age = UtilDateUtilities.calcAgeAtDate(demographicDateOfBirth, DateUtils.toDate(cachedDemographicPrevention.getPreventionDate()));
+					h.put("age", age);
+				} else {
+					h.put("age", "N/A");
+				}
+
+				preventions.add(h);
 			}
 
 			Collections.sort(preventions, new PreventionsComparator());
 		}
-
-		return (preventions);
+		
+		return preventions;
 	}
 
 	public static class PreventionsComparator implements Comparator<Map<String, Object>> {
@@ -455,8 +463,16 @@ public class PreventionData {
 		try {
 			Prevention prevention = preventionDao.find(Integer.valueOf(id));
 			if (prevention != null) {
+				Map<String, String> ext = getPreventionKeyValues(prevention.getId().toString());
+
 				h = new HashMap<String, Object>();
-				String providerName = ProviderData.getProviderName(prevention.getProviderNo());
+				String providerName = null;
+				if(!"-1".equals(prevention.getProviderNo())) {
+					providerName = ProviderData.getProviderName(prevention.getProviderNo());
+				} else {
+					providerName = ext.get("providerName") != null ? ext.get("providerName") : "";
+				}
+				
 				String preventionDate = UtilDateUtilities.DateToString(prevention.getPreventionDate(), "yyyy-MM-dd HH:mm");
 				String lastUpdateDate = UtilDateUtilities.DateToString(prevention.getLastUpdateDate(), "yyyy-MM-dd");
 				@SuppressWarnings("deprecation")
@@ -478,8 +494,7 @@ public class PreventionData {
 				addToHashIfNotNull(h, "snomedId", prevention.getSnomedId());
 				String summary = "Prevention " + prevention.getPreventionType() + " provided by " + providerName + " on " + preventionDate;
 				summary = summary + " entered by " + creatorName + " on " + lastUpdateDate;
-				Map<String, String> ext = getPreventionKeyValues(prevention.getId().toString());
-
+				
 				addToHashIfNotNull(h, "brandSnomedId", ext.get("brandSnomedId"));
 				
 				if (ext.containsKey("result")) { //This is a preventive Test
@@ -522,6 +537,13 @@ public class PreventionData {
 				if (ext.containsKey("comments") && !ext.get("comments").equals("")) {
 					addToHashIfNotNull(h, "comments", ext.get("comments"));
 					summary += "\nComments: " + ext.get("comments");
+				}
+				
+				DHIRSubmissionManager dhirSubmissionManager = SpringUtils.getBean(DHIRSubmissionManager.class);
+				List<DHIRSubmissionLog> dhirLogs =  dhirSubmissionManager.findByPreventionId(prevention.getId());
+				if(!dhirLogs.isEmpty()) {
+					summary += "\n\nDHIR Submission Transaction ID: " + dhirLogs.get(0).getTransactionId();
+					summary += "\nDHIR Submission Location ID: " + dhirLogs.get(0).getBundleId();
 				}
 				addToHashIfNotNull(h, "summary", summary);
 				log.debug("1" + h.get("preventionType") + " " + h.size());

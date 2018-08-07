@@ -30,25 +30,21 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.PoolingClientConnectionManager;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.util.MessageResources;
@@ -58,7 +54,6 @@ import org.codehaus.jettison.json.JSONObject;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.util.CxfClientUtils;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -137,19 +132,13 @@ public class EctDisplayEconsultAction extends EctDisplayAction {
                     //Creates an HttpGet with the url to get eConsults and sets a header for the oneIdEmail
                     HttpGet httpGet = new HttpGet(url);
 
-                    String oneIdToken = "";
-                    for (Cookie cookie : request.getCookies()) {
-                        if (cookie.getName().equals("oneid_token")) {
-                            oneIdToken = cookie.getValue();
-                            break;
-                        }
-                    }
+                    String oneIdToken = (String)session.getAttribute("oneid_token");
                     
                     httpGet.addHeader("x-oneid-email", encodedOneIdEmail);
                     httpGet.addHeader("x-access-token", oneIdToken);
                     
                     //Gets an HttpClient that will ignore SSL validation
-                    HttpClient httpClient = getHttpClient();
+                    HttpClient httpClient = getHttpClient2();
                     //Executes the GET request and stores the response
                     HttpResponse httpResponse = httpClient.execute(httpGet);
                     //Gets the entity from the response and stores it as a JSONObject
@@ -209,7 +198,7 @@ public class EctDisplayEconsultAction extends EctDisplayAction {
                 }
                 catch (JSONException e) {
                     logger.error("Failed to convert the response entity to a JSON Object", e);
-                }
+                } 
             }
             catch (UnsupportedEncodingException uee) {
             	logger.error("The eConsult URL could not be encoded", uee);
@@ -223,25 +212,21 @@ public class EctDisplayEconsultAction extends EctDisplayAction {
          return cmd;
     }
 
-    /**
-     * Gets an HttpClient to use that will bypass the SSL certifications for HTTPS
-     *
-     * @return An HttpClient that will bypass SSL
-     * @throws NoSuchAlgorithmException Thrown if the 'SSL' instance does not exist in SSLContext
-     * @throws KeyManagementException General key management exception
-     */
-    private HttpClient getHttpClient() throws NoSuchAlgorithmException, KeyManagementException {
-        //Gets the SSLContext instance for SSL and initializes it
-        SSLContext sslContext = SSLContext.getInstance("SSL");
-        sslContext.init(null, new TrustManager[] {new CxfClientUtils.TrustAllManager()}, new SecureRandom());
-        //Creates a new SocketFactory to bypass the SSL verifiers
-        SSLSocketFactory sf = new SSLSocketFactory(sslContext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-        //Makes a new SchemeRegistry using the SocketFactory so that HTTPS ssl is bypassed
-        SchemeRegistry registry = new SchemeRegistry();
-        registry.register(new Scheme("https", 443, sf));
-        //Creates a new ClientConnectionManager with the registry and creates the httpClient to use
-        ClientConnectionManager ccm = new PoolingClientConnectionManager(registry);
+    protected HttpClient getHttpClient2() throws KeyManagementException, NoSuchAlgorithmException {
 
-        return new DefaultHttpClient(ccm);
+        //setup SSL
+        SSLContext sslcontext = SSLContexts.custom().useTLS().build();
+        sslcontext.getDefaultSSLParameters().setNeedClientAuth(true);
+        sslcontext.getDefaultSSLParameters().setWantClientAuth(true);
+        SSLConnectionSocketFactory sf = new SSLConnectionSocketFactory(sslcontext);
+
+        //setup timeouts
+        int timeout = Integer.parseInt(OscarProperties.getInstance().getProperty("dhir.timeout", "60"));
+        RequestConfig config = RequestConfig.custom().setSocketTimeout(timeout * 1000).setConnectTimeout(timeout * 1000).build();
+
+        CloseableHttpClient httpclient3 = HttpClients.custom().setDefaultRequestConfig(config).setSSLSocketFactory(sf).build();
+
+        return httpclient3;
+
     }
 }

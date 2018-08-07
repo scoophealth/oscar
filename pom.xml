@@ -443,7 +443,7 @@
 		<dependency>
 			<groupId>org.oscarehr.caisi_integrator</groupId>
 			<artifactId>caisi_integrator_client_stubs</artifactId>
-			<version>0.9</version>
+			<version>1.1</version>
 		</dependency>
 
 		<!-- macplus -->
@@ -464,7 +464,7 @@
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.4</version>
+			<version>1.7</version>
 		</dependency>
 
 		<!-- indivo -->
@@ -1126,9 +1126,9 @@
 	</dependency>
 
 	<dependency>
-		<groupId>com.medseek</groupId>
+		<groupId>com.medseek.clinical.service</groupId>
 		<artifactId>SSOClinicalConnect</artifactId>
-		<version>20161017</version>
+		<version>20171101</version>
 	</dependency>
 
 	<dependency>
@@ -1143,18 +1143,26 @@
 	</dependency>
 
 
+	<!-- Caisi Integrator -->
 	<dependency>
-  <groupId>org.oscarehr.caisi_integrator</groupId>
-  <artifactId>integrator-objects</artifactId>
-  <version>0.0.3</version>
-
+	  <groupId>org.oscarehr.caisi_integrator</groupId>
+	  <artifactId>integrator-objects</artifactId>
+	  <version>0.0.4</version>
 	</dependency>
+	
+	<!-- This is a dependency for the Caisi Integrator Objects. Only required until
+	OpenJPA is no longer needed in Integrator. -->
+    <dependency>
+          <groupId>org.apache.openjpa</groupId>
+          <artifactId>openjpa</artifactId>
+          <version>2.4.2</version>
+    </dependency>
 
-<dependency>
-    <groupId>org.apache.commons</groupId>
-    <artifactId>commons-compress</artifactId>
-    <version>1.14</version>
-</dependency>
+	<dependency>
+	    <groupId>org.apache.commons</groupId>
+	    <artifactId>commons-compress</artifactId>
+	    <version>1.14</version>
+	</dependency>
 
 
 	<dependency>

@@ -27,26 +27,18 @@ package org.oscarehr.common.model;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Hashtable;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-
 import java.util.regex.Matcher;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.PMmodule.utility.Utility;
-import org.oscarehr.common.model.DemographicExt.DemographicProperty;
 import org.oscarehr.util.MiscUtils;
 
 /**
@@ -129,12 +121,6 @@ public class Demographic extends AbstractModel<Integer> implements Serializable 
 
     private String countryOfOrigin;
     private String newsletter;
-    
-	@OneToMany(mappedBy="demographic")
-    private List<DemographicExt> demographicExts;
-	
-	@Transient
-	private Hashtable<String, String> demographicExtendedProperties;
 
         public String getTitle() {
         	return title;
@@ -922,7 +908,6 @@ public class Demographic extends AbstractModel<Integer> implements Serializable 
 
 	protected void initialize() {
 		links = StringUtils.EMPTY;
-		this.demographicExts = new ArrayList<DemographicExt>();
 	}
 
 	public String addZero(String text, int num) {
@@ -1137,173 +1122,6 @@ public class Demographic extends AbstractModel<Integer> implements Serializable 
 	public void setNewsletter(String newsletter) {
     	this.newsletter = newsletter;
     }
-
-    public List<DemographicExt> getDemographicExts() {
-		return demographicExts;
-	}
-
-	public void setDemographicExts(List<DemographicExt> demographicExts) {
-		this.demographicExts = demographicExts;
-	}
-	
-	public DemographicExt addDemographicExt( DemographicExt demographicExt ) {
-		getDemographicExts().add( demographicExt );
-		demographicExt.setDemographic(this);
-		return demographicExt;
-	}
-
-	public Hashtable<String, String> getDemographicExtendedProperties() {
-		if( demographicExtendedProperties == null ) {
-			demographicExtendedProperties = new Hashtable<String, String>();
-		}
-		return demographicExtendedProperties;
-	}
-	
-	public void addDemographicExtendedProperty( DemographicExt demographicExtendedProperty ) {
-		getDemographicExtendedProperties().put(demographicExtendedProperty.getKey(), demographicExtendedProperty.getValue() );
-	}
-	
-	public String getDemographicExtendedProperty( DemographicProperty property ) {
-		return getDemographicExtendedProperties().get( property.name() );
-	}
-
-	public void setDemographicExtendedProperties( Hashtable<String, String> demographicExtendedProperties ) {
-		if( this.getDemographicExts() != null && demographicExtendedProperties.isEmpty() ) {
-			for( DemographicExt demographicExt : getDemographicExts() ) {
-				addDemographicExtendedProperty( demographicExt );
-			}
-		}
-		
-		this.demographicExtendedProperties = demographicExtendedProperties;
-	}
-	
-	public void addDemographicExtendedProperty( DemographicProperty key, String value ) {		
-		DemographicExt demographicExt = new DemographicExt();
-		demographicExt.setKey( key.name() );
-		demographicExt.setValue(value);
-		
-		addDemographicExt( demographicExt );
-	}
-
-	public String getPHU() {
-		return getDemographicExtendedProperty( DemographicProperty.PHU );
-	}
-
-	public void setPHU(String PHU) {
-		addDemographicExtendedProperty( DemographicProperty.PHU, PHU );
-	}
-
-	public String getEmploymentStatus() {
-		return getDemographicExtendedProperty( DemographicProperty.EmploymentStatus );
-	}
-
-	public void setEmploymentStatus(String employmentStatus) {
-		addDemographicExtendedProperty( DemographicProperty.EmploymentStatus , employmentStatus );
-	}
-
-	public String getHasPrimaryCarePhyscian() {
-		return getDemographicExtendedProperty( DemographicProperty.HasPrimaryCarePhyscian );
-	}
-
-	public void setHasPrimaryCarePhyscian(String hasPrimaryCarePhyscian) {
-		addDemographicExtendedProperty( DemographicProperty.HasPrimaryCarePhyscian , hasPrimaryCarePhyscian );
-	}
-
-	public String getInformedConsent() {
-		return getDemographicExtendedProperty( DemographicProperty.informedConsent );
-	}
-
-	public void setInformedConsent(String informedConsent) {
-		addDemographicExtendedProperty( DemographicProperty.informedConsent , informedConsent );
-	}
-
-	public String getPrivacyConsent() {
-		return getDemographicExtendedProperty( DemographicProperty.privacyConsent );
-	}
-
-	public void setPrivacyConsent(String privacyConsent) {
-		addDemographicExtendedProperty( DemographicProperty.privacyConsent , privacyConsent );
-	}
-
-	public String getUsSigned() {
-		return getDemographicExtendedProperty( DemographicProperty.usSigned );
-	}
-
-	public void setUsSigned(String usSigned) {
-		addDemographicExtendedProperty( DemographicProperty.usSigned , usSigned );
-	}
-
-	public String getfNationCom() {
-		return getDemographicExtendedProperty( DemographicProperty.fNationCom );
-	}
-
-	public void setfNationCom(String fNationCom) {
-		addDemographicExtendedProperty( DemographicProperty.fNationCom , fNationCom );
-	}
-
-	public String getStatusNum() {
-		return getDemographicExtendedProperty( DemographicProperty.statusNum );
-	}
-
-	public void setStatusNum(String statusNum) {
-		addDemographicExtendedProperty( DemographicProperty.statusNum , statusNum );
-	}
-
-	public String getArea() {
-		return getDemographicExtendedProperty( DemographicProperty.area );
-	}
-
-	public void setArea(String area) {
-		addDemographicExtendedProperty( DemographicProperty.area , area );
-	}
-
-	public String getEthnicity() {
-		return getDemographicExtendedProperty( DemographicProperty.ethnicity);
-	}
-
-	public void setEthnicity(String ethnicity) {
-		addDemographicExtendedProperty( DemographicProperty.ethnicity , ethnicity );
-	}
-
-	public String getCytolNum() {
-		return getDemographicExtendedProperty( DemographicProperty.cytolNum );
-	}
-
-	public void setCytolNum(String cytolNum) {
-		addDemographicExtendedProperty( DemographicProperty.cytolNum , cytolNum );
-	}
-
-	public String getwPhoneExt() {
-		return getDemographicExtendedProperty( DemographicProperty.wPhoneExt );
-	}
-
-	public void setwPhoneExt(String wPhoneExt) {
-		addDemographicExtendedProperty( DemographicProperty.wPhoneExt , wPhoneExt );
-	}
-
-	public String gethPhoneExt() {
-		return getDemographicExtendedProperty( DemographicProperty.hPhoneExt );
-	}
-
-	public void sethPhoneExt(String hPhoneExt) {
-		addDemographicExtendedProperty( DemographicProperty.hPhoneExt , hPhoneExt );
-	}
-
-	public String getDemo_cell() {
-		return getDemographicExtendedProperty( DemographicProperty.demo_cell );
-	}
-
-	public void setDemo_cell(String demo_cell) {
-		addDemographicExtendedProperty( DemographicProperty.demo_cell , demo_cell );
-	}
-
-	public String getPhoneComment() {
-		return getDemographicExtendedProperty( DemographicProperty.phoneComment );
-	}
-
-	public void setPhoneComment(String phoneComment) {
-		addDemographicExtendedProperty( DemographicProperty.phoneComment , phoneComment );
-	}
 
 	public static final Comparator<Demographic> FormattedNameComparator = new Comparator<Demographic>() {	
         @Override	

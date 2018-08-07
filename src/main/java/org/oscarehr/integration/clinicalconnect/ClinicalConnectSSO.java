@@ -103,7 +103,7 @@ public class ClinicalConnectSSO {
 		while (url.endsWith("/")) {
 			url = url.substring(0, url.length()-1);
 		}
-		if (url.endsWith(VMO_SERVICE)) url.substring(0, url.length()-VMO_SERVICE.length());
+		if (url.endsWith(VMO_SERVICE)) url = url.substring(0, url.length()-VMO_SERVICE.length());
 		return url+whichService;
 	}
 	
