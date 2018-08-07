@@ -128,9 +128,17 @@ public class IntegratorPushItem {
 		
 		int recordsProccessd = getTotalDemographics() - getTotalOutstanding();
 		
-		long totalTime = (totalDemographics * timeElapsed) / recordsProccessd;
+		long totalTime = 0L;
+		
+		if(recordsProccessd > 0) {
+			totalTime = (totalDemographics * timeElapsed) / recordsProccessd;
+		}
 		
 		long remainingTime = totalTime - timeElapsed;
+		
+		if(remainingTime < 0) {
+			remainingTime = 0;
+		}
 		
 		long endTime = now.getTime() + remainingTime;
 		

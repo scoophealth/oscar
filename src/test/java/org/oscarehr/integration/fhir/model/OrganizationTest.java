@@ -35,7 +35,7 @@ import org.oscarehr.util.MiscUtils;
 
 public class OrganizationTest {
 	
-	private static Organization organization;
+	private static Organization<Clinic> organization;
 	private static Clinic clinic;
 	// private static final String testJSON = "{\"resourceType\":\"Patient\",\"identifier\":[{\"system\":\"urn:fake:mrns\",\"value\":\"122343\"}],\"name\":[{\"family\":[\"Warren\"],\"given\":[\"Dennis\"],\"suffix\":[\"Mr\"]}],\"gender\":{\"coding\":[{\"system\":\"http://hl7.org/fhir/v3/AdministrativeGender\",\"code\":\"M\"}]}}";
 	// private static final String testXML = "<Patient xmlns=\"http://hl7.org/fhir\"><identifier><system value=\"urn:fake:mrns\"/><value value=\"122343\"/></identifier><name><family value=\"Warren\"/><given value=\"Dennis\"/><suffix value=\"Mr\"/></name><gender><coding><system value=\"http://hl7.org/fhir/v3/AdministrativeGender\"/><code value=\"M\"/></coding></gender></Patient>";
@@ -53,7 +53,7 @@ public class OrganizationTest {
 		clinic.setClinicFax("778-343-3453");
 		clinic.setClinicName("Test Medical Clinic");
 
-		organization = new org.oscarehr.integration.fhir.model.Organization( clinic );
+		organization = new org.oscarehr.integration.fhir.model.Organization<Clinic>( clinic );
 	}
 
 	@AfterClass
@@ -67,13 +67,7 @@ public class OrganizationTest {
 		System.out.println( organization.getFhirJSON() );
 	}
 	
-	@Test
-	public void testGetOscarClinicModel() {
-		logger.info("testGetOscarClinicModel");
-		// this is only visible in the Organization subclass. 
-		System.out.println( organization.castToClinic() );
-	}
-	
+
 	@Test
 	public void testGetOscarContactModel() {
 		logger.info("testGetOscarContactModel");

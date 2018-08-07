@@ -69,6 +69,8 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
     public static final String OFFICIAL_OLIS_IDTYPE="official_olis_idtype";
     public static final String OSCAR_MSG_RECVD="oscarMsgRecvd";
     
+    public static final String CLINICALCONNECT_DISABLE_CLOSE_WINDOW = "clinicalConnectDisableCloseWindow";
+    public static final String CLINICALCONNECT_DISABLE_LOGOUT_WARNING = "clinicalConnectDisableLogoutWarning";
     
     //added to user properties with new interface
     public static final String FAX = "fax";
@@ -171,6 +173,11 @@ public class UserProperty extends AbstractModel<Integer> implements Serializable
 	
 	public static final String CODE_TO_ADD_PATIENTDX = "code_to_add_patientDx";
 	public static final String CODE_TO_MATCH_PATIENTDX = "code_to_match_patientDx";
+	
+	public static final String PREVENTION_SSO_WARNING = "prevention_sso_warning";
+	public static final String PREVENTION_ISPA_WARNING = "prevention_ispa_warning";
+	public static final String PREVENTION_NON_ISPA_WARNING = "prevention_non_ispa_warning";
+	
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

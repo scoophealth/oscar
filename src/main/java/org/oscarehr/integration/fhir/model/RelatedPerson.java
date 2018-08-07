@@ -40,11 +40,7 @@ import org.oscarehr.common.model.ProfessionalContact;
 import org.oscarehr.integration.fhir.utils.FhirUtils;
 
 
-/*
-
-*/
-
-public class RelatedPerson extends OscarFhirResource< org.hl7.fhir.dstu3.model.RelatedPerson, org.oscarehr.common.model.Contact > {
+public class RelatedPerson extends AbstractOscarFhirResource< org.hl7.fhir.dstu3.model.RelatedPerson, org.oscarehr.common.model.Contact > {
 	
 	public RelatedPerson( org.oscarehr.common.model.Contact contact ) {
 		super( new org.hl7.fhir.dstu3.model.RelatedPerson(), contact );

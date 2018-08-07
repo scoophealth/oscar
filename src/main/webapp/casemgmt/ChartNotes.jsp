@@ -520,6 +520,7 @@ try
 	<input type="hidden" name="printLabs" id="printLabs" value="false">
 	<input type="hidden" name="printPreventions" id="printPreventions" value="false">
 	<input type="hidden" name="encType" id="encType" value="">
+	<input type="hidden" name="pType" id="pType" value="">
 	<input type="hidden" name="pStartDate" id="pStartDate" value="">
 	<input type="hidden" name="pEndDate" id="pEndDate" value="">
 	<input type="hidden" id="annotation_attribname" name="annotation_attribname" value="">

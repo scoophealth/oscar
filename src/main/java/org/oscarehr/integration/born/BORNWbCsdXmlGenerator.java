@@ -123,8 +123,8 @@ public class BORNWbCsdXmlGenerator {
 		
 		////business validation
 		//business validation
-		if (!isAgeLessThan7y(patientInfo)) {
-			MiscUtils.getLogger().warn("Child is over 6.5 years old..skipping");
+		if (!isAgeLessThan18y(patientInfo)) {
+			MiscUtils.getLogger().warn("Child is 18 years old or over..skipping");
 			return false;
 		}
 				
@@ -601,7 +601,7 @@ public class BORNWbCsdXmlGenerator {
 		}
 	}
 
-	private boolean isAgeLessThan7y(PatientInfo patientInfo) {	
+	protected boolean isAgeLessThan7y(PatientInfo patientInfo) {	
 		LocalDate date1 = new LocalDate(LocalDate.fromCalendarFields(patientInfo.getDOB()));
         LocalDate date2 = new LocalDate(new java.util.Date());
         PeriodType monthDay = PeriodType.months();
@@ -609,6 +609,18 @@ public class BORNWbCsdXmlGenerator {
         int months = difference.getMonths();
         
         if(months >= ((12*6)+6)) {
+        	return false;
+        }
+        return true;
+	}
+	private boolean isAgeLessThan18y(PatientInfo patientInfo) {	
+		LocalDate date1 = new LocalDate(LocalDate.fromCalendarFields(patientInfo.getDOB()));
+        LocalDate date2 = new LocalDate(new java.util.Date());
+        PeriodType monthDay = PeriodType.months();
+        Period difference = new Period(date1, date2, monthDay);
+        int months = difference.getMonths();
+        
+        if(months >= (12*18)) {
         	return false;
         }
         return true;

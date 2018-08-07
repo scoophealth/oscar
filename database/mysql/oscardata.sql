@@ -1841,6 +1841,7 @@ insert into `secObjectName` (`objectName`) values ('_allergy');
 insert into `secObjectName` (`objectName`) values ('_eyeform');
 insert into `secObjectName` (`objectName`) values ('_appDefinition');
 insert into `secObjectName` (`objectName`) values ('_phr');
+insert into `secObjectName` (`objectName`) values ('_ehr');
 
 insert into `secObjectName`  (`objectName`,`description`,`orgapplicable`) values('_demographicExport', 'Export Demographic', 0);
 insert into `secObjectName` (`objectName`) values ('_admin.document');
@@ -2772,6 +2773,7 @@ INSERT INTO LookupList(name, description, categoryId, active, createdBy, dateCre
 
 SET @lookupListId:=LAST_INSERT_ID();
 
+INSERT INTO LookupListItem(lookupListId, `value`, label, displayOrder, active, createdBy, dateCreated) VALUES(@lookupListId, 'Others'						 , 'Others'						   , 99, 1, 'oscar', CURRENT_TIMESTAMP);
 INSERT INTO LookupListItem(lookupListId, `value`, label, displayOrder, active, createdBy, dateCreated) VALUES(@lookupListId, 'Contraception'                 , 'Contraception'                 , 1 , 1, 'oscar', CURRENT_TIMESTAMP);
 INSERT INTO LookupListItem(lookupListId, `value`, label, displayOrder, active, createdBy, dateCreated) VALUES(@lookupListId, 'Counselling'                   , 'Counselling'                   , 2 , 1, 'oscar', CURRENT_TIMESTAMP);
 INSERT INTO LookupListItem(lookupListId, `value`, label, displayOrder, active, createdBy, dateCreated) VALUES(@lookupListId, 'ECP'                           , 'ECP'                           , 3 , 1, 'oscar', CURRENT_TIMESTAMP);
@@ -2788,7 +2790,6 @@ INSERT INTO LookupListItem(lookupListId, `value`, label, displayOrder, active, c
 INSERT INTO LookupListItem(lookupListId, `value`, label, displayOrder, active, createdBy, dateCreated) VALUES(@lookupListId, 'STI Exam'                      , 'STI Exam'                      , 14, 1, 'oscar', CURRENT_TIMESTAMP);
 INSERT INTO LookupListItem(lookupListId, `value`, label, displayOrder, active, createdBy, dateCreated) VALUES(@lookupListId, 'STI Prescription/Treatment'    , 'STI Prescription/Treatment'    , 15, 1, 'oscar', CURRENT_TIMESTAMP);
 INSERT INTO LookupListItem(lookupListId, `value`, label, displayOrder, active, createdBy, dateCreated) VALUES(@lookupListId, 'Therapeutic Abortion Follow-Up', 'Therapeutic Abortion Follow-Up', 16, 1, 'oscar', CURRENT_TIMESTAMP);
-INSERT INTO LookupListItem(lookupListId, `value`, label, displayOrder, active, createdBy, dateCreated) VALUES(@lookupListId, 'Others'						 , 'Others'						   , 99, 1, 'oscar', CURRENT_TIMESTAMP);
 
 insert into issue (code,description,role,update_date,type,sortOrderId) values ('TicklerNote','Tickler Note', 'nurse',now(),'system', 0);
 

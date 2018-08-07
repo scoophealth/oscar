@@ -25,12 +25,10 @@ package org.oscarehr.managers;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.util.MiscUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,8 +36,6 @@ import oscar.log.LogAction;
 
 @Service
 public class LabManager {
-
-	private Logger logger = MiscUtils.getLogger();
 
 	@Autowired
 	Hl7TextInfoDao hl7textInfoDao;

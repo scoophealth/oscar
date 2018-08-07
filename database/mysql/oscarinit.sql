@@ -9952,7 +9952,14 @@ create table BornTransmissionLog(
         id integer not null auto_increment,
         submitDateTime timestamp not null,
         success tinyint(1) default 0,
-        filename varchar(100) not null,
+        filename varchar(100),
+	demographicNo int,
+	type varchar(20),
+	httpCode varchar(20),
+	httpResult mediumtext,
+	httpHeaders text,
+	hialTransactionId varchar(255),
+	contentLocation varchar(255),
         primary key(id)
 );
 
@@ -12261,4 +12268,18 @@ CREATE TABLE `CVCMapping` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE DHIRSubmissionLog (
+    id int(11) auto_increment,
+    demographicNo int,
+    preventionId int,
+    submitterProviderNo varchar(255),
+    status varchar(255),
+    dateCreated datetime,
+    transactionId varchar(100),
+    bundleId varchar(255),
+    response mediumtext,
+    clientRequestId varchar(100),
+    clientResponseId varchar(100),
+    PRIMARY KEY(id)
+);
 

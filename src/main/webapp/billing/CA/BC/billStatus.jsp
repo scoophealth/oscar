@@ -119,13 +119,14 @@ addEvent(window, "load", sortables_init);
 var SORT_COLUMN_INDEX;
 
 function sortables_init() {
-    // Find all tables with class sortable and make them sortable
+	// Find all tables with class sortable and make them sortable
     if (!document.getElementsByTagName) return;
     tbls = document.getElementsByTagName("table");
-    for (ti=0;ti<tbls.length;ti++) {
+    
+    for (ti=0;ti<tbls.length;ti++) {   
         thisTbl = tbls[ti];
+        
         if (((' '+thisTbl.className+' ').indexOf("sortable") != -1) && (thisTbl.id)) {
-            //initTable(thisTbl.id);
             ts_makeSortable(thisTbl);
         }
     }
@@ -536,7 +537,7 @@ billTypes = "%";
 
 <div class="row">
 <input class="btn pull-right hidden-print" type='button' name='print' value='Print' onClick='window.print()'>
-<table class="table table-striped  table-condensed">
+<table class="table table-striped  table-condensed sortable" id="resultsTable">
 <thead>
 	<tr>
 	<th align="center" title="INVOICE #" >INVOICE # </th>
@@ -664,7 +665,7 @@ billTypes = "%";
   <% }%>
     </tbody>
   <tfoot>
-  <tr>
+  <tr class="sortbottom">
     <logic:notEqual parameter="filterPatient" value="true">
       <td align="center">&nbsp;</td>
     </logic:notEqual>

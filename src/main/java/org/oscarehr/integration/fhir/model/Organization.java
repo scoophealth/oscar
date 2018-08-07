@@ -31,9 +31,8 @@ import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.oscarehr.common.model.AbstractModel;
-import org.oscarehr.common.model.Clinic;
-import org.oscarehr.common.model.Contact;
 import org.oscarehr.common.model.ProfessionalContact;
+import org.oscarehr.integration.fhir.interfaces.ContactInterface;
 import org.oscarehr.integration.fhir.manager.OscarFhirConfigurationManager;
 import org.oscarehr.integration.fhir.utils.FhirUtils;
 
@@ -63,79 +62,22 @@ import org.oscarehr.integration.fhir.utils.FhirUtils;
 /**
  * Any Organizational unit that has compiled and is in stewardship of patient data.
  * 
- * Maps data from DSTU3 Organization to Oscar Contact/ProfessionalContact and visa versa 
- *
- * An Oscar Model Clinic class can be consumed by a unique constructor. This class 
- * can also cast any model to an Oscar Model Clinic class through the castToClinic method.
- *
  */
-public class Organization 
-	extends OscarFhirResource< org.hl7.fhir.dstu3.model.Organization, org.oscarehr.common.model.Contact > {
+public class Organization<T extends AbstractModel<Integer> & ContactInterface> extends AbstractOscarFhirResource< org.hl7.fhir.dstu3.model.Organization, T> {
 
-	private org.oscarehr.common.model.Clinic clinic;
-
-	public Organization( org.oscarehr.common.model.Contact contact ) {
+	public Organization( T contact ) {
 		super( new org.hl7.fhir.dstu3.model.Organization(), contact );
 	}
 	
-	public Organization( org.oscarehr.common.model.Contact contact, OscarFhirConfigurationManager configurationManager  ) {
-		super( new org.hl7.fhir.dstu3.model.Organization(), contact, configurationManager );
+	public Organization( T clinic, OscarFhirConfigurationManager configurationManager  ) {
+		super( new org.hl7.fhir.dstu3.model.Organization(), clinic, configurationManager );
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	public Organization( org.hl7.fhir.dstu3.model.Organization organization ) {
-		super( new ProfessionalContact(), organization );
+		super( (T) new ProfessionalContact(), organization );
 	}
 	
-	public Organization( org.oscarehr.common.model.Clinic clinic ) {
-		super();
-		setClinic( clinic );
-	}
-	
-	public Organization( org.oscarehr.common.model.Clinic clinic, OscarFhirConfigurationManager configurationManager ) {
-		super( configurationManager );
-		setClinic( clinic );
-	}
-
-	public <T extends AbstractModel<?> > org.oscarehr.common.model.Clinic castToClinic() {
-		Contact contact = getOscarResource();
-		if( contact != null ) {
-			Clinic clinic = new Clinic();
-			clinic.setClinicName( contact.getAddress() );
-			clinic.setClinicAddress( contact.getAddress2() );
-			clinic.setClinicCity( contact.getCity() );
-			clinic.setClinicProvince( contact.getProvince() );
-			clinic.setClinicPostal( contact.getPostal() );
-			
-			if( contact instanceof ProfessionalContact ) {
-				clinic.setClinicLocationCode( ((ProfessionalContact) contact).getCpso() );
-			}
-			
-			clinic.setClinicFax( contact.getFax() );
-			clinic.setClinicPhone( contact.getWorkPhone() );
-
-			this.clinic = clinic;
-		}
-		return clinic;
-	}
-
-	private void setClinic( org.oscarehr.common.model.Clinic clinic ) {
-
-		ProfessionalContact professionalContact = new ProfessionalContact();
-		professionalContact.setId( clinic.getId() );
-		professionalContact.setAddress( clinic.getClinicName() );
-		professionalContact.setAddress2( clinic.getClinicAddress() );
-		professionalContact.setCity( clinic.getClinicCity() );
-		professionalContact.setProvince( clinic.getClinicProvince() );
-		professionalContact.setPostal( clinic.getClinicPostal() );
-		professionalContact.setFax( clinic.getClinicFax() );
-		professionalContact.setWorkPhone( clinic.getClinicPhone() );
-		professionalContact.setCpso( clinic.getClinicLocationCode() );
-		
-		setResource( new org.hl7.fhir.dstu3.model.Organization(), professionalContact );
-
-		this.clinic = clinic;
-	}
-
 	@Override
 	protected void setId( org.hl7.fhir.dstu3.model.Organization fhirResource ) {
 		Integer intId = getOscarResource().getId();
@@ -167,7 +109,7 @@ public class Organization
 	}
 
 	@Override
-	protected void mapAttributes( Contact oscarResource ) {
+	protected void mapAttributes( T oscarResource ) {
 		setOranizationName( oscarResource );		
 		setAddress( oscarResource );
 		setTelecom( oscarResource );
@@ -178,7 +120,7 @@ public class Organization
 		fhirResource.setName( getOscarResource().getAddress() );
 	}
 	
-	private void setOranizationName( Contact oscarResource ) {
+	private void setOranizationName( ContactInterface oscarResource ) {
 		oscarResource.setAddress( getFhirResource().getName() );
 	}
 	
@@ -191,7 +133,7 @@ public class Organization
 			.setPostalCode( getOscarResource().getPostal() );
 	}
 	
-	private void setAddress( Contact oscarResource ) {
+	private void setAddress( ContactInterface oscarResource ) {
 		Address address = getFhirResource().getAddressFirstRep();
 		oscarResource.setAddress( FhirUtils.fhirAddressLineToString( address ) );
 		oscarResource.setCity( address.getCity() );
@@ -211,7 +153,7 @@ public class Organization
 		}
 	}
 	
-	private void setTelecom( Contact oscarResource ) {		
+	private void setTelecom( ContactInterface oscarResource ) {		
 		List<ContactPoint> contactPointList = getFhirResource().getTelecom();
 		oscarResource.setWorkPhone( FhirUtils.getFhirPhone( contactPointList ) );
 		oscarResource.setFax( FhirUtils.getFhirFax( contactPointList ) );
@@ -223,35 +165,19 @@ public class Organization
 	 */
 	private void setFHIRIdentifier() {
 		Identifier identifier = new Identifier();
-		if( getOscarResource() instanceof ProfessionalContact ) {
-			identifier.setSystem("").setValue( "" );
-		}
+		identifier.setSystem("").setValue( "" );
 		setIdentifier( identifier );
 	}
 	
-	private void setIdentifier( Identifier identifier ) {
+	protected void setIdentifier( Identifier identifier ) {
 		if( getFhirResource().getIdentifier() != null ) {
 			getFhirResource().getIdentifier().clear();
 		}	
 		getFhirResource().addIdentifier( identifier );
 	}
 
-	private void setIdentifier( Contact oscarResource ) {
-		( (ProfessionalContact) oscarResource).setCpso( FhirUtils.getFhirOfficialIdentifier( getFhirResource().getIdentifier() ));
-	}
-	
-	/**
-	 * Set a Public Health Unit Id as this organization's identifier.
-	 * 
-	 * This is mainly used for setting the identifier for ONTARIO's PHU ids. 
-	 * Each patient in Oscar is assinged a specific PHU ID according to the patient's location in the province.
-	 * Each Clinic is assigned a specific PHU ID according to the clinic's location in the province.
-	 * 
-	 * Please create an overhead for identifiers that have a different nomenclature, yet behave the same way.
-	 */
-	public void setOrganizationPHUID( String phuId ) {
-		Identifier identifier = new Identifier();
-		identifier.setSystem( "https://ehealthontario.ca/API/FHIR/NamingSystem/ca-on-panorama-phu-id" ).setValue( phuId );
+	private void setIdentifier( ContactInterface oscarResource ) {
+		oscarResource.setProviderCpso( FhirUtils.getFhirOfficialIdentifier( getFhirResource().getIdentifier() ));
 	}
 
 }

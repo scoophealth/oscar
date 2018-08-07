@@ -482,6 +482,7 @@ public class RecordUxService extends AbstractServiceImpl {
 		final boolean printRx   = getBoolean(jsonobject,"rx");
 		final boolean printLabs = getBoolean(jsonobject,"labs");
 		final boolean printPreventions = getBoolean(jsonobject,"preventions");
+		final boolean useDates = jsonobject.containsKey("dates");
 		
 		final JSONArray keyArray = jsonobject.getJSONArray("selectedList");
 		final String[] noteIds = new String[keyArray.size()];
@@ -496,7 +497,7 @@ public class RecordUxService extends AbstractServiceImpl {
 					throws IOException, WebApplicationException {
 				try{
 					CaseManagementPrint cmp = new CaseManagementPrint();
-					cmp.doPrint(loggedInInfo,demographicNof, printAllNotes,noteIds,printCPP,printRx,printLabs,printPreventions,startCalf,endCalf, requestf, os);
+					cmp.doPrint(loggedInInfo,demographicNof, printAllNotes,noteIds,printCPP,printRx,printLabs,printPreventions,useDates,startCalf,endCalf, requestf, os);
 		        }catch(Exception e){
 		        		logger.error("error streaming",e);
 		        }finally{
