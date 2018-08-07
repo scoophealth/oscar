@@ -113,6 +113,9 @@ public final class ApptStatusData {
     public String getTitleString(Locale locale) {
     	ResourceBundle bundle = ResourceBundle.getBundle("oscarResources",locale);
     	
+    	 if (strEditable!=null&&strEditable.equalsIgnoreCase("yes")) {
+    		 return getStr("desc");
+    	 }
     	String value = "";
     	if(bundle != null) {
     		String keyName = getStr(aStatus, aTitle);
