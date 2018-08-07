@@ -31,6 +31,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.util.MiscUtils;
 
 //import org.oscarehr.dashboard.handler.ExcludeDemographicHandler;
 
@@ -39,6 +40,8 @@ public class BulkPatientDashboardAction extends DispatchAction {
 
 	public ActionForward excludePatients(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
+
+		MiscUtils.getLogger().info("BulkPatientDashboardAction.excludePatients was called");
 
 		// TODO
 		// 1. Pull patient ids (demographic ids) and indicator name out of the request.

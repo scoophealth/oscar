@@ -324,7 +324,11 @@ $(document).ready( function() {
 
 	$("#excludePatientsChecked").on('click', function(event) {
 		event.preventDefault();
-		alert("TODO: send demographic numbers to server side.");
+
+		var url = $(this).attr("href");
+		$.ajax(url);
+
+		alert("Sent request to server.");
 	});
     
 })
