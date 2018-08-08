@@ -31,6 +31,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import org.oscarehr.dashboard.handler.ExcludeDemographicHandler;
@@ -40,6 +41,9 @@ public class BulkPatientDashboardAction extends DispatchAction {
 
 	public ActionForward excludePatients(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
+
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		excludeDemographicHandler.setLoggedinInfo(loggedInInfo);
 
 		String patientIdsJson = request.getParameter("patientIds");
 		String indicatorName = request.getParameter("indicatorName");
