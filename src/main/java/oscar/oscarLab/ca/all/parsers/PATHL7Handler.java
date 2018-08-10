@@ -46,6 +46,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.Type;
+import ca.uhn.hl7v2.model.Varies;
 import ca.uhn.hl7v2.model.v23.datatype.ED;
 import ca.uhn.hl7v2.model.v23.datatype.XCN;
 import ca.uhn.hl7v2.model.v23.message.ORU_R01;
@@ -458,6 +460,29 @@ public class PATHL7Handler implements MessageHandler {
         }catch(Exception e){
             return("");
         }
+    }
+    
+    public boolean isLegacy(int i,int j)  {
+    	if("PDF".equals(getOBXIdentifier(i,j))) {
+    		try {
+    		
+    			Varies[] v = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationValue();
+    			if(v != null && v.length>0) {
+    				Varies va = v[0];
+    				Type t = va.getData();
+    				if(t instanceof ED) {
+    					ED ed = (ED)t;
+    					if(ed.getEd2_TypeOfData().getValue() == null && ed.getEd3_DataSubtype().getValue() == null && ed.getEd4_Encoding().getValue() == null && ed.getEd5_Data().getValue() == null) {
+    						return true;
+    					}
+    				}
+    			}
+    		}catch(HL7Exception e) {
+    			logger.error("Error",e);
+    			return false;
+    		}
+    	}
+    	return false;
     }
     
     public String getLegacyOBXResult(int i, int j){
