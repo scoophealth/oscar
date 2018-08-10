@@ -682,7 +682,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 								if( handler.getMsgType().equals("PATHL7") ){
 									
 									if(handler.getOBXValueType(j,k).equals("ED")) {
-										if("PDF".equals(handler.getOBXIdentifier(j,k))) {
+										if(((PATHL7Handler)handler).isLegacy(j,k)) {
 											embeddedDocumentsToAppend.add(((PATHL7Handler)handler).getLegacyOBXResult(j, k));
 										} else {
 											embeddedDocumentsToAppend.add(handler.getOBXResult(j, k));

@@ -1703,7 +1703,7 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 											<%
 												if((handler.getMsgType().equals("ExcellerisON") || handler.getMsgType().equals("PATHL7")) && handler.getOBXValueType(j,k).equals("ED")) {
 													String legacy = "";
-													if(handler.getMsgType().equals("PATHL7") && "PDF".equals(handler.getOBXIdentifier(j,k))) {
+													if(handler.getMsgType().equals("PATHL7") && ((PATHL7Handler)handler).isLegacy(j,k) ) {
 														legacy ="&legacy=true";
 													}
 												
