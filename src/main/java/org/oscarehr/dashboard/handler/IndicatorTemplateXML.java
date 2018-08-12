@@ -561,8 +561,9 @@ public class IndicatorTemplateXML {
 			if ( ( ExcludedPatientAlias.excludedpatient.name().equalsIgnoreCase(parameterId))) {
 				switch( ExcludedPatientAlias.valueOf(parameterValue.toLowerCase())) {
 					case excludedpatient:
-						String indicatorName = this.getName() + "|" + this.getSubCategory() + "|" + this.getCategory();
 						excludeDemographicHandler.setLoggedinInfo(loggedInInfo);
+						String indicatorName = excludeDemographicHandler.getDrilldownIdentifier(this.getName(),this.getSubCategory(),this.getCategory());
+						logger.info("excluding patients for " + indicatorName);
 						List<Integer> demoNos = excludeDemographicHandler.getDemoIds(indicatorName);
 						if (demoNos != null && !demoNos.isEmpty()) {
 							String result = "(";
