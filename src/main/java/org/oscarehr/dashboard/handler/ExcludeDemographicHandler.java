@@ -34,6 +34,8 @@ import org.apache.log4j.Logger;
 //import org.oscarehr.common.dao.DemographicExtArchiveDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.model.DemographicExt;
+import org.oscarehr.dashboard.display.beans.DrilldownBean;
+import org.oscarehr.managers.DashboardManager;
 //import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -60,6 +62,7 @@ public class ExcludeDemographicHandler {
 	Date now = new java.util.Date();
 
 	public List<Integer> getDemoIds(String indicatorName) {
+		if (indicatorName == null || indicatorName.isEmpty()) return null;
 		demoIds = new ArrayList<Integer>();
 		List<DemographicExt> allProviderDemoExts = demographicExtDao.getDemographicExtByKeyAndValue(excludeIndicator, indicatorName);
 		logger.debug("getDemosIds: " + allProviderDemoExts + " matching extensions for template " + indicatorName);
@@ -74,6 +77,7 @@ public class ExcludeDemographicHandler {
 	}
 	
 	public List<DemographicExt> getDemoExts(String indicatorName) {
+		if (indicatorName == null || indicatorName.isEmpty()) return null;
 		demoExts = new ArrayList<DemographicExt>();
 		List<DemographicExt> allProviderDemoExts = demographicExtDao.getDemographicExtByKeyAndValue(excludeIndicator, indicatorName);
 		logger.debug("getDemosExts: " + allProviderDemoExts + " matching extensions for template " + indicatorName);
@@ -198,6 +202,29 @@ public class ExcludeDemographicHandler {
 		
 	    return result;
 	}
+	
+    public String getDrilldownIdentifier(int indicatorTemplateId) {
+    	logger.info("entering getDrilldownIdentifer with indicatorTemplateId="+indicatorTemplateId);
+    	String identifier = null;
+    	DashboardManager dashboardManager = SpringUtils.getBean(DashboardManager.class);
+    	if (dashboardManager != null && loggedInInfo != null) {
+    		DrilldownBean drilldown = dashboardManager.getDrilldownData(loggedInInfo, indicatorTemplateId, "null");
+    		if (drilldown != null) {
+    			identifier = getDrilldownIdentifier(drilldown.getName(),drilldown.getSubCategory(),drilldown.getCategory());
+    		} else {
+    			logger.info("drilldown is null");
+    		}
+    	} else {
+    		logger.info("dashboardManager is null");
+    	}
+    	logger.info("getDrilldownIdentifer returning " + identifier + " for indicatorTemplateId " + indicatorTemplateId);
+    	return identifier;
+    }
+    
+    public String getDrilldownIdentifier(String name, String category, String subCategory) {
+    	return name + "|" + subCategory + "|" + category;
+    }
+    
 //	public void archiveExtension(DemographicExt ext) {
 //		//TODO: this needs a loggedInInfo
 //		if (ext != null && ext.getId() != null) {
