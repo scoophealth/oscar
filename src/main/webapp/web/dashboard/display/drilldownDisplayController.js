@@ -333,7 +333,7 @@ $(document).ready( function() {
 		event.preventDefault();
 
 		var patientIds = getSelectedPatientIds();
-		// Note that indicatorName is already placed in the href
+		// Note that indicatorId is already placed in the href
 		// querystring by the JSP code.
 
 		if (patientIds.length < 1) {

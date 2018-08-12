@@ -46,7 +46,19 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		excludeDemographicHandler.setLoggedinInfo(loggedInInfo);
 
 		String patientIdsJson = request.getParameter("patientIds");
-		String indicatorName = request.getParameter("indicatorName");
+		String indicatorIdString = request.getParameter("indicatorId");
+
+		int indicatorId;
+		try {
+			indicatorId = Integer.parseInt(indicatorIdString);
+		} catch (NumberFormatException exception) {
+			MiscUtils.getLogger().
+				error("Could not parse indicator id from: " + indicatorIdString);
+			return null;
+		}
+
+		String indicatorName = excludeDemographicHandler.getDrilldownIdentifier(
+				indicatorId);
 
 		excludeDemographicHandler.excludeDemoIds(patientIdsJson, indicatorName);
 
