@@ -178,6 +178,13 @@
 											</a>
 										</li>
 										<li>
+											<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=addToDiseaseRegistry"
+												class="dropdown-item"
+												title="Add Checked Patients to Disease Registry." id="addToDiseaseRegistryChecked" >
+												Add To Disease Registry
+											</a>
+										</li>
+										<li>
 											<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=excludePatients&indicatorId=${ drilldown.id }"
 												class="dropdown-item"
 												title="Exclude Checked Patients from Indicator Results." id="excludePatientsChecked" >

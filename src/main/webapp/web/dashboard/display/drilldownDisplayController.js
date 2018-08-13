@@ -329,6 +329,27 @@ $(document).ready( function() {
 		}
 	});
 
+	// TODO remove duplication with exclude patients
+	$("#addToDiseaseRegistryChecked").on('click', function(event) {
+		event.preventDefault();
+
+		var patientIds = getSelectedPatientIds();
+		// TODO Get the ICD9 code. Here from indicator, or on server?
+
+		if (patientIds.length < 1) {
+			alert("At least one patient must be selected to perform this action.");
+			return;
+		}
+
+		var url = $(this).attr("href");
+		var data = "patientIds=" + patientIds;
+
+		$.ajax({
+			url: url,
+			data: data
+		});
+	});
+
 	$("#excludePatientsChecked").on('click', function(event) {
 		event.preventDefault();
 

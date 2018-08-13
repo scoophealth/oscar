@@ -68,4 +68,18 @@ public class BulkPatientDashboardAction extends DispatchAction {
 
 		return null;
 	}
+
+	public ActionForward addToDiseaseRegistry(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		String patientIdsJson = request.getParameter("patientIds");
+		String icd9code = "TODO";
+
+		MiscUtils.getLogger().info(
+				"Added code (" + icd9code +
+				") to disease registry for patients (" + patientIdsJson + ")"
+		);
+
+		return null;
+	}
 }
