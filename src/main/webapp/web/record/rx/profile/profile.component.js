@@ -306,7 +306,7 @@ const RxProfileComponent = {
 
         var top = winY+70;
         var left = winX+110;
-        var url = "../annotation/annotation.jsp?display=Prescriptions&amp;table_id="+drug.drugId+"&amp;demo="+drug.demographicNo+"+&amp;drugSpecial="+drug.instructions;
+        var url = "../annotation/annotation.jsp?display=Prescriptions&table_id="+drug.drugId+"&demo="+drug.demographicNo+"+&drugSpecial="+drug.instructions;
         
         windowName = 'windowNameRxAnnotation'+drug.demographicNo;
         
