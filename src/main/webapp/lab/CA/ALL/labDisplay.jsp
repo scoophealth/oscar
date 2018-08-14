@@ -1658,7 +1658,7 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                            <%
                                        			lastObxSetId = ((AlphaHandler)handler).getObxSetId(j,k);
                                     	  
-                                           } else if(handler instanceof PATHL7Handler && "FT".equals(handler.getOBXValueType(j, k))){ 
+                                           } else if(handler instanceof PATHL7Handler && "FT".equals(handler.getOBXValueType(j, k)) && (handler.getOBXReferenceRange(j,k).isEmpty() && handler.getOBXUnits(j,k).isEmpty())){ 
                                         	  %> <td colspan="4"><%= handler.getOBXResult( j, k) %></td> <%
                                            } else { %> 
                                            <%
@@ -1666,7 +1666,11 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                           	//for pathl7, if it is an SG/CDC result greater than 100 characters, left justify it
                                            	if((handler.getOBXResult(j, k) != null && handler.getOBXResult(j, k).length() > 100) && (isSGorCDC)){
                                            		align="left";
-                                           	}%>
+                                           	}
+                                           	if(handler instanceof PATHL7Handler && "FT".equals(handler.getOBXValueType(j, k))) {
+                                           		align="left";
+                                           	}
+                                           	%>
                  	
                                            	<%
                                            		//CLS textual results - use 4 columns.
@@ -1699,7 +1703,7 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 											<%
 												if((handler.getMsgType().equals("ExcellerisON") || handler.getMsgType().equals("PATHL7")) && handler.getOBXValueType(j,k).equals("ED")) {
 													String legacy = "";
-													if(handler.getMsgType().equals("PATHL7") && "PDF".equals(handler.getOBXIdentifier(j,k))) {
+													if(handler.getMsgType().equals("PATHL7") && ((PATHL7Handler)handler).isLegacy(j,k) ) {
 														legacy ="&legacy=true";
 													}
 												
@@ -1784,7 +1788,8 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                        <%obrFlag = true;
                                    }%>
                                <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
-                                   <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBRComment(j, k)%></pre></td>
+                              	 <td valign="top" align="left" colspan="1"></td>
+                                   <td valign="top" align="left" colspan="7"><pre  style="margin:0px 0px 0px 0px;"><%=handler.getOBRComment(j, k)%></pre></td>
                                </tr>
                                <% if  (!handler.getMsgType().equals("HHSEMR") || !handler.getMsgType().equals("TRUENORTH")) {
                                		if(handler.getOBXName(j,k).equals("")){

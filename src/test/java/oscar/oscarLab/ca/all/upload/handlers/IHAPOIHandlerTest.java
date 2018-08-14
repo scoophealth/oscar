@@ -23,6 +23,9 @@
  */
 package oscar.oscarLab.ca.all.upload.handlers;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,15 +38,11 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.xml.sax.SAXException;
 
 @RunWith(Parameterized.class)
 public class IHAPOIHandlerTest extends IHAPOIHandler {
@@ -128,14 +127,10 @@ public class IHAPOIHandlerTest extends IHAPOIHandler {
 		logger.info("#------------>>  Testing MEDITECHHandler Uploader for file: (" + TEST_COUNT + ")");
 
 	    try {
-	        logger.info( parse( new ByteArrayInputStream( hl7Body.getBytes(StandardCharsets.UTF_8) ) ) );
-        } catch (ParserConfigurationException e) {
-        	 logger.error("Test Failed ", e);
-        } catch (SAXException e) {
-        	 logger.error("Test Failed ", e);
-        } catch (IOException e) {
-        	 logger.error("Test Failed ", e);
-        }
+	       assertNotNull( parse( new ByteArrayInputStream( hl7Body.getBytes(StandardCharsets.UTF_8) ) ) );
+        } catch (Exception e) {
+        	 fail("MEDITECHHandler Uploader test failed" + e.getCause());
+        } 
 	}
 
 

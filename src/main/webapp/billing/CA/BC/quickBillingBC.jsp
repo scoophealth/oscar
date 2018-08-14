@@ -1,6 +1,6 @@
 <%--
 
-    Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved.
+    Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
     This software is published under the GPL GNU General Public License.
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -15,6 +15,12 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+    This software was written for the
+    Department of Family Medicine
+    McMaster University
+    Hamilton
+    Ontario, Canada
 
 --%>
 <%--
@@ -62,10 +68,6 @@ if(!authed) {
 <style type="text/css">.ui-autocomplete-loading { background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat; }
 	</style>
 <script type="text/javascript" src="<c:out value="${ oscar_context_path }/js/jquery-1.7.1.min.js" />" ></script>
-
-<!-- script type="text/javascript" src="<c:out value="${ oscar_context_path }/js/jquery-ui/development-bundle/ui/jquery.ui.position.js" />" ></script>
-<script type="text/javascript" src="<c:out value="${ oscar_context_path }/js/jquery-ui/development-bundle/ui/jquery.ui.widget.js" />" ></script -->
-
 <script type="text/javascript" src="<c:out value="${ oscar_context_path }/js/jquery-ui-1.8.18.custom.min.js" />" ></script>
 
 <script type="text/javascript">
@@ -230,13 +232,6 @@ $(document).ready(function() {
 		 }
 
 	});	
-	
-		
-	// open advanced input fields.
-	//$("#advancedLink").click(function() {
-	//	$("#advancedInput").show();
-	//});
-	
 
 }); // end document ready
 
@@ -351,11 +346,7 @@ function removeBill(bill) {
 					<li><input type="button" id="addDemo" name="addDemo" value="add" /></li>
 								
 				</ul>
-				
-				<%-- a href="#" id="advancedLink">advanced</a>
-				<div id="advancedInput" >
-			
-				</div --%>						
+					
 			</div>
 			
 			<div id="inputList">
