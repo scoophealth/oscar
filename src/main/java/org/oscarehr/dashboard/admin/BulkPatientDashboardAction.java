@@ -27,6 +27,7 @@ package org.oscarehr.dashboard.admin;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -37,6 +38,9 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.dashboard.handler.ExcludeDemographicHandler;
 
 public class BulkPatientDashboardAction extends DispatchAction {
+
+	private static Logger logger = MiscUtils.getLogger();
+
 	private ExcludeDemographicHandler excludeDemographicHandler = new ExcludeDemographicHandler();
 
 	public ActionForward excludePatients(ActionMapping mapping, ActionForm form, 
@@ -52,8 +56,7 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		try {
 			indicatorId = Integer.parseInt(indicatorIdString);
 		} catch (NumberFormatException exception) {
-			MiscUtils.getLogger().
-				error("Could not parse indicator id from: " + indicatorIdString);
+			logger.error("Could not parse indicator id from: " + indicatorIdString);
 			return null;
 		}
 
@@ -62,7 +65,7 @@ public class BulkPatientDashboardAction extends DispatchAction {
 
 		excludeDemographicHandler.excludeDemoIds(patientIdsJson, indicatorName);
 
-		MiscUtils.getLogger().info(
+		logger.info(
 			"Excluded patients (" + patientIdsJson + ") from " + indicatorName
 		);
 
@@ -75,9 +78,9 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		String patientIdsJson = request.getParameter("patientIds");
 		String icd9code = "TODO";
 
-		MiscUtils.getLogger().info(
-				"Added code (" + icd9code +
-				") to disease registry for patients (" + patientIdsJson + ")"
+		logger.info(
+			"Added code (" + icd9code +
+			") to disease registry for patients (" + patientIdsJson + ")"
 		);
 
 		return null;
