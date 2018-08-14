@@ -167,6 +167,7 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
         t.setTakeMax(d.getTakeMax());
         t.setRxDate(d.getRxDate());
         t.setEndDate(d.getEndDate());
+        t.setWrittenDate(d.getWrittenDate());
         t.setFrequency(d.getFreqCode());
         t.setDuration(convertToIntegerOrNull(d.getDuration()));   // Parse the duration string to an int.
         t.setDurationUnit(d.getDurUnit());

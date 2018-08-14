@@ -131,6 +131,7 @@ Drug.prototype.copy = function(d){
 
     this.endDate = d.endDate === null ? null : new Date(d.endDate);
     this.rxDate = d.rxDate === null ? null : new Date(d.rxDate);
+    this.writtenDate = d.writtenDate === null ? null : new Date(d.writtenDate);
 
     this.archived = d.archived;
     this.archivedDate = d.archivedDate === null ? null : new Date(d.archivedDate);
@@ -294,6 +295,12 @@ Drug.prototype.fromDrugTransferObject = function (obj) {
         this.rxDate = new Date(obj.rxDate);
     } else {
         this.rxDate = null;
+    }
+    
+    if (obj.writtenDate) {
+        this.writtenDate = new Date(obj.writtenDate);
+    } else {
+        this.writtenDate = null;
     }
 
     if (obj.endDate) {

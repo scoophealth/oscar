@@ -228,6 +228,9 @@ const RxComponent = {
 				var d = new Drug();
 				console.log("resp", resp);
 				d.fromDrugTransferObject(resp.data.drug);
+				d.rxDate = new Date();
+		        d.writtenDate = new Date();
+				
 				d.endDate = calculateEndDate({
 		            start : d.rxDate,
 		            duration : d.duration,
