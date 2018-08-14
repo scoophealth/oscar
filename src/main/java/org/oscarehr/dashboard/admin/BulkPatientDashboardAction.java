@@ -35,6 +35,9 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
+import net.sf.json.JSONArray;
+
+import org.oscarehr.dashboard.handler.DiseaseRegistryHandler;
 import org.oscarehr.dashboard.handler.ExcludeDemographicHandler;
 
 public class BulkPatientDashboardAction extends DispatchAction {
@@ -42,6 +45,8 @@ public class BulkPatientDashboardAction extends DispatchAction {
 	private static Logger logger = MiscUtils.getLogger();
 
 	private ExcludeDemographicHandler excludeDemographicHandler = new ExcludeDemographicHandler();
+
+	private DiseaseRegistryHandler diseaseRegistryHandler = new DiseaseRegistryHandler();
 
 	public ActionForward excludePatients(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
@@ -75,8 +80,17 @@ public class BulkPatientDashboardAction extends DispatchAction {
 	public ActionForward addToDiseaseRegistry(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
 
+		String icd9code = "250"; // TODO get from indicator. This placehold is for diabetes.
+
 		String patientIdsJson = request.getParameter("patientIds");
-		String icd9code = "TODO";
+		JSONArray patientIds = asJsonArray(patientIdsJson);
+
+		for (int i = 0; i < patientIds.size(); ++i) {
+			diseaseRegistryHandler.addToDiseaseRegistry(
+				patientIds.getInt(i),
+				icd9code
+			);
+		}
 
 		logger.info(
 			"Added code (" + icd9code +
@@ -84,5 +98,21 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		);
 
 		return null;
+	}
+
+	private static JSONArray asJsonArray(String jsonString) {
+		if(jsonString == null || jsonString.isEmpty()) {
+			return new JSONArray();
+		}
+
+		if(!jsonString.startsWith("[")) {
+			jsonString = "[" + jsonString;
+		}
+		if(!jsonString.endsWith("]")) {
+			jsonString = jsonString + "]";
+		}
+
+		JSONArray jsonArray = JSONArray.fromObject( jsonString );
+		return jsonArray;
 	}
 }
