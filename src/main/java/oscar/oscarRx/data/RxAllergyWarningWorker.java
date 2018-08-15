@@ -25,6 +25,9 @@
 
 package oscar.oscarRx.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.MiscUtils;
@@ -60,10 +63,12 @@ public class RxAllergyWarningWorker extends Thread {
         try {
             if (atcCode != null && sessionBean != null && allergies != null) {
                 RxDrugData drugData = new RxDrugData();
-                allergyWarnings = drugData.getAllergyWarnings(atcCode, allergies);
+                List<Allergy> missing = new ArrayList<Allergy>();
+                allergyWarnings = drugData.getAllergyWarnings(atcCode, allergies,missing);
                 if (allergyWarnings != null) {
 
                     sessionBean.addAllergyWarnings(atcCode, allergyWarnings);
+                    sessionBean.addMissingAllergyWarnings(atcCode, missing.toArray(new Allergy[missing.size()]));
                     sessionBean.removeFromWorkingAllergyWarnings(atcCode);
                 }
                 else {

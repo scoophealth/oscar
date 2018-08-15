@@ -27,6 +27,7 @@ package oscar.oscarRx.data;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -805,6 +806,10 @@ public class RxDrugData {
 	 * @throws Exception
 	 */
 	public Allergy[] getAllergyWarnings(String atcCode,Allergy[] allerg) throws Exception{
+		return getAllergyWarnings(atcCode, allerg,null);
+	}
+	
+	public Allergy[] getAllergyWarnings(String atcCode,Allergy[] allerg,List<Allergy> missing) throws Exception {
 		Vector vec = new Vector();
 		for (int i =0; i < allerg.length; i++){
 			Hashtable h = new Hashtable();
@@ -828,7 +833,16 @@ public class RxDrugData {
 					li.add(allerg[id]);
 					MiscUtils.getLogger().debug(str);
 				}
-
+				
+				Vector allmissing = (Vector) hashObject.get("missing");
+				for (int k = 0; k < allmissing.size(); k++){
+					String str = (String) allmissing.get(k);
+					int id = Integer.parseInt(str);
+					if(missing != null) {
+						missing.add(allerg[id]);
+					}
+					
+				}
 			}
 		}
 		actualAllergies  =  (Allergy[]) li.toArray(actualAllergies);
