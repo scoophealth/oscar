@@ -80,6 +80,9 @@ public class BulkPatientDashboardAction extends DispatchAction {
 	public ActionForward addToDiseaseRegistry(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
 
+		String providerNo = LoggedInInfo.getLoggedInInfoFromSession(request)
+			.getLoggedInProviderNo();
+
 		String icd9code = "250"; // TODO get from indicator. This placehold is for diabetes.
 
 		String patientIdsJson = request.getParameter("patientIds");
@@ -88,13 +91,15 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		for (int i = 0; i < patientIds.size(); ++i) {
 			diseaseRegistryHandler.addToDiseaseRegistry(
 				patientIds.getInt(i),
-				icd9code
+				icd9code,
+				providerNo
 			);
 		}
 
 		logger.info(
 			"Added code (" + icd9code +
-			") to disease registry for patients (" + patientIdsJson + ")"
+			") to disease registry for patients (" + patientIdsJson + ")" +
+			" with provider no (" + providerNo + ")"
 		);
 
 		return null;

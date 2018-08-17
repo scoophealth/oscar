@@ -14,7 +14,7 @@ public class DiseaseRegistryHandler {
 
 	private DxresearchDAO dao = (DxresearchDAO) SpringUtils.getBean("DxresearchDAO");
 
-	public void addToDiseaseRegistry(int demographicNo, String icd9code) {
+	public void addToDiseaseRegistry(int demographicNo, String icd9code, String providerNo) {
 		String codeType = "ICD9"; // TODO get the actual string const
 
 		boolean activeEntryExists = dao.activeEntryExists(demographicNo, codeType, icd9code);
@@ -33,13 +33,14 @@ public class DiseaseRegistryHandler {
 		dx.setDemographicNo(demographicNo);
 		dx.setDxresearchCode(icd9code);
 		dx.setStatus('A');
-		// TODO get providerNo dx.setProviderNo(providerNo);
+		dx.setProviderNo(providerNo);
 
 		dao.persist(dx);
 
 		logger.info(
 			"Added code (" + icd9code +
-			") to disease registry for patient (" + demographicNo + ")"
+			") to disease registry for patient (" + demographicNo + ")" +
+			" with provider no (" + providerNo + ")"
 		);
 	}
 }
