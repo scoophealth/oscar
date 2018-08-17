@@ -15,9 +15,10 @@ public class DiseaseRegistryHandler {
 	private DxresearchDAO dao = (DxresearchDAO) SpringUtils.getBean("DxresearchDAO");
 
 	public void addToDiseaseRegistry(int demographicNo, String icd9code, String providerNo) {
-		String codeType = "ICD9"; // TODO get the actual string const
+		// XXX is there an API for getting this reliably? (other than `new Icd9().getCodingSystem()`)
+		String codingSystem = "icd9";
 
-		boolean activeEntryExists = dao.activeEntryExists(demographicNo, codeType, icd9code);
+		boolean activeEntryExists = dao.activeEntryExists(demographicNo, codingSystem, icd9code);
 		if (activeEntryExists) {
 			logger.info(
 				"Patient (" + demographicNo +
@@ -29,7 +30,7 @@ public class DiseaseRegistryHandler {
 
 		Dxresearch dx = new Dxresearch();
 		dx.setStartDate(new Date());
-		dx.setCodingSystem(codeType);
+		dx.setCodingSystem(codingSystem);
 		dx.setDemographicNo(demographicNo);
 		dx.setDxresearchCode(icd9code);
 		dx.setStatus('A');
