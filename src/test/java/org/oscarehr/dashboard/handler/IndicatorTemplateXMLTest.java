@@ -224,7 +224,7 @@ public class IndicatorTemplateXMLTest {
 	@Test
 	public void testGetDrilldownActions() {
 		Boolean verify = Boolean.FALSE;
-		for( DrillDownAction action : indicatorTemplateXML.getDrilldownActions("null") ) {
+		for( DrillDownAction action : indicatorTemplateXML.getDrilldownActions() ) {
 			if( "dxUpdate".equals( action.getId() ) && "250".equals( action.getValue()) ) {
 				verify = Boolean.TRUE;
 			}
@@ -234,7 +234,7 @@ public class IndicatorTemplateXMLTest {
 	
 	@Test
 	public void testGetDrilldownActionsSize() {
-		assertEquals(  3, indicatorTemplateXML.getDrilldownActions("null").size() );
+		assertEquals(  3, indicatorTemplateXML.getDrilldownActions().size() );
 	}
 
 }

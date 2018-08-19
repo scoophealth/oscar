@@ -335,7 +335,10 @@ public class IndicatorTemplateXML {
 		return createParameterList( parameters,  metricLabel);
 	}
 
-	public List<DrillDownAction> getDrilldownActions(String metricLabel ) {
+	/**
+	 * Optional Element - returns null if the node or element is missing.
+	 */
+	public List<DrillDownAction> getDrilldownActions( ) {
 		NodeList actionsNodeList = getDrillDownQueryNode().getElementsByTagName( Drilldown.drillDownActions.name() );
 		Element drillDownActionsElement = null;
 		NodeList actions = null;
@@ -345,7 +348,7 @@ public class IndicatorTemplateXML {
 		if( drillDownActionsElement != null ) {
 			actions = drillDownActionsElement.getElementsByTagName( Drilldown.action.name() ); 
 		}
-		return createActionList( actions,  metricLabel);
+		return createActionList( actions );
 	}
 	
 	/**
@@ -551,7 +554,7 @@ public class IndicatorTemplateXML {
 		return parameterList;
 	}
 	
-	private List<DrillDownAction> createActionList( NodeList actions,  String metricLabel) {
+	private List<DrillDownAction> createActionList( NodeList actions ) {
 		List<DrillDownAction> actionList = null;
 		if( actions == null ) {
 			return actionList;

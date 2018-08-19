@@ -25,6 +25,7 @@ package org.oscarehr.dashboard.display.beans;
 
 import java.util.List;
 
+import org.oscarehr.dashboard.query.DrillDownAction;
 import org.oscarehr.dashboard.query.Parameter;
 import org.oscarehr.dashboard.query.RangeInterface;
 
@@ -45,8 +46,10 @@ public abstract class AbstractDataDisplayBean {
 	private boolean active;
 	private boolean locked;
 	private String xmlTemplate;
+	private String dxUpdateICD9Code = null;
 
 	private List<Parameter> parameters;
+	private List<DrillDownAction> actions;
 	private List<RangeInterface> ranges;
 	private String rangeString;
 	private String queryString;
@@ -178,6 +181,30 @@ public abstract class AbstractDataDisplayBean {
 
 	public void setParameters(List<Parameter> parameters) {
 		this.parameters = parameters;
+	}
+	
+	public List<DrillDownAction> getActions() {
+		return actions;
+	}
+	
+	public void setActions(List<DrillDownAction> actions) {
+		this.actions = actions;
+		if (actions != null && !actions.isEmpty()) {
+			for (DrillDownAction action: actions) {
+				if ("dxUpdate".equals(action.getId())) {
+					setDxUpdateICD9Code(action.getValue());
+					break;
+				}
+			}
+		}
+	}
+	
+	public void setDxUpdateICD9Code(String dxUpdateICD9Code) {
+		this.dxUpdateICD9Code = dxUpdateICD9Code;
+	}
+	
+	public String getDxUpdateICD9Code() {
+		return dxUpdateICD9Code;
 	}
 
 	public String getRangeString() {
