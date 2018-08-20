@@ -482,11 +482,51 @@ $(function() {
 					key="SearchDrug.nameText" /></b> <jsp:getProperty name="patient"
 					property="surname" />, <jsp:getProperty name="patient"
 					property="firstName" /></div>
-				<br />
-				&nbsp; <bean:message key="SelectPharmacy.instructions" /></td>
+				</td>
 			</tr>			
 			<tr>
-				<td>				
+				<td>
+				
+				<table>
+				
+				<%
+					RxPharmacyData pharmacyData1 = new RxPharmacyData();
+			        List<PharmacyInfo> pharmacyList1;
+			        pharmacyList1 = pharmacyData1.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));
+			        if( pharmacyList1 != null ) {
+			            ObjectMapper mapper = new ObjectMapper();
+			            StringWriter jsonObject;
+			        	for( PharmacyInfo pharmacyInfo : pharmacyList1 ) {
+			        		jsonObject = new StringWriter();
+			        		mapper.writeValue(jsonObject, pharmacyInfo);
+				%>
+							<tr>
+								<td>
+								<%=pharmacyInfo.getName() + " " + pharmacyInfo.getCity()%>
+								</td>
+								<td>
+									<input type="button" value="<bean:message key="SelectPharmacy.editLink" />" onclick="editPharmacy($('#preferedPharmacy>option:selected').val())"/>&nbsp;
+								</td>
+								
+									
+								<td>
+								<input type="button" value="Unlink" onclick="unlinkPharmacy($('#preferedPharmacy>option:selected').val())"/>
+								</td>
+								
+								
+								
+							<option value='<%=jsonObject.toString().replaceAll("'", "")%>'></option>
+							</tr>
+				<%
+			        	}
+			        }
+				%>
+				
+			
+				</table>
+				
+				<br/>
+								
 				Search Pharmacy&nbsp;&nbsp;<input type="text" id="autocompletepharmacy"/>&nbsp;&nbsp;
 				Narrow Search By City&nbsp;&nbsp;<input type="text" id="autocompletepharmacyCity"/> 
 				
@@ -513,6 +553,8 @@ $(function() {
 				<input type="button" value="Unlink" onclick="unlinkPharmacy($('#preferedPharmacy>option:selected').val())"/>
 				<input type="hidden" id="pharmacyId" name="pharmacyId"/>
 				<input type="hidden" id="demographicNo" name="demographicNo" value="<%=bean.getDemographicNo()%>"/>
+				<br/><br/>
+				<hr/>
                 <div style=" width:860px; height:460px; overflow:auto;">
 				<table>
 					<tr>
