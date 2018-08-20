@@ -178,7 +178,7 @@
 											</a>
 										</li>
 										<li>
-											<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=addToDiseaseRegistry"
+											<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=addToDiseaseRegistry&dxUpdateICD9Code=${ drilldown.dxUpdateICD9Code }"
 												class="dropdown-item"
 												title="Add Checked Patients to Disease Registry." id="addToDiseaseRegistryChecked" >
 												Add To Disease Registry

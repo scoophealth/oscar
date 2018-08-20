@@ -83,7 +83,7 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		String providerNo = LoggedInInfo.getLoggedInInfoFromSession(request)
 			.getLoggedInProviderNo();
 
-		String icd9code = "250"; // TODO get from indicator. This placehold is for diabetes.
+		String icd9code = request.getParameter("dxUpdateICD9Code");
 
 		String patientIdsJson = request.getParameter("patientIds");
 		JSONArray patientIds = asJsonArray(patientIdsJson);
