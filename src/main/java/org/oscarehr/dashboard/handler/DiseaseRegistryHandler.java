@@ -21,6 +21,7 @@
  * University of Victoria
  * Victoria, Canada
  */
+
 package org.oscarehr.dashboard.handler;
 
 import java.util.Date;
@@ -28,12 +29,14 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.DxresearchDAO;
 import org.oscarehr.common.model.Dxresearch;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public class DiseaseRegistryHandler {
 
 	private static Logger logger = MiscUtils.getLogger();
+	private LoggedInInfo loggedInInfo;
 
 	// XXX is there an API for getting this reliably? (other than `new Icd9().getCodingSystem()`)
 	private static final String ICD9_CODING_SYSTEM = "icd9";
@@ -42,6 +45,10 @@ public class DiseaseRegistryHandler {
 
 	public String getDescription(String icd9code) {
 		return dao.getDescription(ICD9_CODING_SYSTEM, icd9code);
+	}
+	
+	public void addToDiseaseRegistry(int demographicNo, String icd9code) {
+		addToDiseaseRegistry(demographicNo, icd9code, getProviderNo());
 	}
 
 	public void addToDiseaseRegistry(int demographicNo, String icd9code, String providerNo) {
@@ -71,4 +78,21 @@ public class DiseaseRegistryHandler {
 			" with provider no (" + providerNo + ")"
 		);
 	}
+	
+    protected LoggedInInfo getLoggedInInfo() {
+        return loggedInInfo;
+}
+
+    public void setLoggedInInfo( LoggedInInfo loggedInInfo ) {
+        this.loggedInInfo = loggedInInfo;
+    }
+    
+	private String getProviderNo() {
+		String providerNo = null;
+		if (loggedInInfo != null) {
+			providerNo = getLoggedInInfo().getLoggedInProviderNo();
+		}
+		return providerNo;
+	}
+
 }
