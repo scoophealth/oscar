@@ -198,7 +198,7 @@
             {
                  
                  if(document.getElementById('useclinicdefault').checked && document.docDescriptionForm.providerNo.value!="null") {
-                    document.getElementById('docTypeTable').style.visibility='hidden';
+                	document.getElementById('docTypeTable').style.visibility='hidden';
                     document.getElementById('tblDesc').style.visibility='hidden';
                     document.docDescriptionForm.updateDescription.style.visibility='hidden';
                     document.docDescriptionForm.deleteDescription.style.visibility='hidden';
@@ -210,9 +210,9 @@
                 }
                  else
                 {
-                    useDocumentDescriptionTemplateType=document.docDescriptionForm.providerNo.value!="null"?"<%=UserProperty.USER%>":"<%=UserProperty.CLINIC%>";
+                	useDocumentDescriptionTemplateType=document.docDescriptionForm.providerNo.value!="null"?"<%=UserProperty.USER%>":"<%=UserProperty.CLINIC%>";
                     var url="<%=request.getContextPath()%>/DocumentDescriptionTemplate.do";
-                    var data='method=saveDocumentDescriptionTemplatePreference&defaultShortcut=<%=UserProperty.USER%>';
+                    var data='method=saveDocumentDescriptionTemplatePreference&defaultShortcut=' + useDocumentDescriptionTemplateType;
                     new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
                         }});
                     document.getElementById('docTypeTable').style.visibility='visible';

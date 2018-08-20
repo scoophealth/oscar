@@ -63,7 +63,8 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     }
     else {
         pathview = request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "&parentAjaxId=" + cmd;
-        pathedit = request.getContextPath() + "/appointment/appointmentcontrol.jsp?keyword=" + encode(bean) + "&displaymode=" + encode("Search ") + "&search_mode=search_name&originalpage=" + encode(request.getContextPath() + "/tickler/ticklerAdd.jsp") + "&orderby=last_name&appointment_date=2000-01-01&limit1=0&limit2=5&status=t&start_time=10:45&end_time=10:59&duration=15&dboperation=search_demorecord&type=&demographic_no=" + bean.demographicNo + "&parentAjaxId=" + cmd + "&updateParent=false";
+        pathedit = request.getContextPath() + "/tickler/ticklerAdd.jsp?bFirstDisp=false&demographic_no=" + bean.demographicNo;
+        
     }
 
     String url = "popupPage(500,900,'" + winName + "','" + pathview + "')";

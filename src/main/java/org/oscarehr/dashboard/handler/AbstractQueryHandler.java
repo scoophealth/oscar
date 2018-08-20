@@ -31,6 +31,7 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.oscarehr.dashboard.handler.IndicatorTemplateXML.RangeType;
 import org.oscarehr.dashboard.query.Column;
+import org.oscarehr.dashboard.query.DrillDownAction;
 import org.oscarehr.dashboard.query.Parameter;
 import org.oscarehr.dashboard.query.RangeInterface;
 import org.oscarehr.dashboard.query.RangeInterface.Limit;
@@ -49,6 +50,7 @@ public abstract class AbstractQueryHandler extends HibernateDaoSupport {
 	
 	private List<Parameter> parameters;
 	private List<RangeInterface> ranges;
+	private List<DrillDownAction> actions;
 	private String query;
 	private List<?> resultList;
 	private List<Column> columns;
@@ -93,6 +95,14 @@ public abstract class AbstractQueryHandler extends HibernateDaoSupport {
 	
 	public void setParameters(List<Parameter> parameters) {
 		this.parameters = parameters;
+	}
+	
+	public List<DrillDownAction> getActions() {
+		return actions;
+	}
+	
+	public void setActions(List<DrillDownAction> actions) {
+		this.actions = actions;
 	}
 	
 	public List<RangeInterface> getRanges() {

@@ -24,6 +24,8 @@
 
 --%>
 
+<%@page import="org.oscarehr.common.dao.DemographicDao"%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -52,6 +54,12 @@ if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter(
 String ChartNo;
 String demoNo = "";
 String demoName = request.getParameter("name");
+
+DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+Demographic demographic = demographicDao.getDemographic(request.getParameter("demographic_no"));
+if(demographic != null) {
+	demoName = demographic.getFormattedName();
+}
 if ( request.getAttribute("demographic_no") != null){
     demoNo = (String) request.getAttribute("demographic_no");
     demoName = (String) request.getAttribute("demoName");

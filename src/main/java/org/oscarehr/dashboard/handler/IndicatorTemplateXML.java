@@ -34,6 +34,7 @@ import org.oscarehr.dashboard.query.Parameter;
 import org.oscarehr.dashboard.query.RangeInterface;
 import org.oscarehr.dashboard.query.RangeLowerLimit;
 import org.oscarehr.dashboard.query.RangeUpperLimit;
+import org.oscarehr.dashboard.query.DrillDownAction;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.w3c.dom.Document;
@@ -50,10 +51,11 @@ public class IndicatorTemplateXML {
 	private enum Root {heading, author, indicatorQuery, drillDownQuery, shared}
 	private enum Heading {category, subCategory, framework, frameworkVersion, name, definition, notes, metricSetName, metricLabel}
 	private enum Indicator {version, params, parameter, range, query}
-	private enum Drilldown {version, params, parameter, range, displayColumns, column, exportColumns, query}
+	private enum Drilldown {version, params, parameter, range, displayColumns, column, exportColumns, drillDownActions, action, query}
 	private enum ParameterAttribute {id, name, value}
 	private enum ColumnAttribute {id, name, title, primary}
 	private enum RangeAttribute {id, label, name, value}
+	private enum ActionAttribute {id, name, value}
 	
 	private static enum ManditoryParameter { provider }
 	private static enum ProviderValueAlias { all, loggedinprovider }
@@ -336,6 +338,22 @@ public class IndicatorTemplateXML {
 	/**
 	 * Optional Element - returns null if the node or element is missing.
 	 */
+	public List<DrillDownAction> getDrilldownActions( ) {
+		NodeList actionsNodeList = getDrillDownQueryNode().getElementsByTagName( Drilldown.drillDownActions.name() );
+		Element drillDownActionsElement = null;
+		NodeList actions = null;
+		if( actionsNodeList != null ) {		
+			drillDownActionsElement = (Element) actionsNodeList.item(0);
+		}
+		if( drillDownActionsElement != null ) {
+			actions = drillDownActionsElement.getElementsByTagName( Drilldown.action.name() ); 
+		}
+		return createActionList( actions );
+	}
+	
+	/**
+	 * Optional Element - returns null if the node or element is missing.
+	 */
 	public List<Column> getDrilldownDisplayColumns() {
 		NodeList columnNodeList = getDrillDownQueryNode().getElementsByTagName( Drilldown.displayColumns.name() );
 		return createColumnList( columnNodeList );
@@ -536,6 +554,34 @@ public class IndicatorTemplateXML {
 		return parameterList;
 	}
 	
+	private List<DrillDownAction> createActionList( NodeList actions ) {
+		List<DrillDownAction> actionList = null;
+		if( actions == null ) {
+			return actionList;
+		}
+		for(int i = 0; i < actions.getLength(); i++) {
+			
+			if( actionList == null ) {
+				actionList = new ArrayList<DrillDownAction>();
+			}
+			Node actionNode = actions.item(i);
+			NamedNodeMap actionAttributes = actionNode.getAttributes();
+			DrillDownAction action = new DrillDownAction();
+			String id = actionAttributes.getNamedItem( ActionAttribute.id.name() ).getTextContent();
+			String name = actionAttributes.getNamedItem( ActionAttribute.name.name() ).getTextContent();
+			String value = null;
+			if ("dxUpdate".equals(id)) {
+				value = actionAttributes.getNamedItem( ActionAttribute.value.name() ).getTextContent();
+			}
+			action.setId(id);
+			action.setName(name);
+			action.setValue(value);
+			
+			actionList.add(action);
+		}
+		return actionList;
+	}
+	
 	private String[] setParameterAliasWithValue( String parameterId, String[] parameterValues ) {
 		
 		String[] newParameterValues = new String[ parameterValues.length ];
@@ -563,9 +609,9 @@ public class IndicatorTemplateXML {
 					case excludedpatient:
 						excludeDemographicHandler.setLoggedinInfo(loggedInInfo);
 						String indicatorName = excludeDemographicHandler.getDrilldownIdentifier(this.getName(),this.getSubCategory(),this.getCategory());
-						logger.info("excluding patients for " + indicatorName);
 						List<Integer> demoNos = excludeDemographicHandler.getDemoIds(indicatorName);
 						if (demoNos != null && !demoNos.isEmpty()) {
+							logger.info("excluding patients for " + indicatorName);
 							String result = "(";
 							for (Integer i: demoNos) {
 								result += i + ",";
