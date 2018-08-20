@@ -24,6 +24,8 @@
 
 package org.oscarehr.dashboard.admin;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,6 +38,7 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.oscarehr.dashboard.handler.DiseaseRegistryHandler;
 import org.oscarehr.dashboard.handler.ExcludeDemographicHandler;
@@ -77,13 +80,17 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		return null;
 	}
 
+	private String getICD9Code(HttpServletRequest request) {
+		return request.getParameter("dxUpdateICD9Code");
+	}
+
 	public ActionForward addToDiseaseRegistry(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
 
 		String providerNo = LoggedInInfo.getLoggedInInfoFromSession(request)
 			.getLoggedInProviderNo();
 
-		String icd9code = request.getParameter("dxUpdateICD9Code");
+		String icd9code = getICD9Code(request);
 
 		String patientIdsJson = request.getParameter("patientIds");
 		JSONArray patientIds = asJsonArray(patientIdsJson);
@@ -101,6 +108,27 @@ public class BulkPatientDashboardAction extends DispatchAction {
 			") to disease registry for patients (" + patientIdsJson + ")" +
 			" with provider no (" + providerNo + ")"
 		);
+
+		return null;
+	}
+
+	public ActionForward getICD9Description(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		String icd9code = getICD9Code(request);
+		String description = diseaseRegistryHandler.getDescription(icd9code);
+
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("icd9code", icd9code);
+		jsonObject.put("description", description);
+
+		try {
+			jsonObject.write(response.getWriter());
+			response.setStatus(HttpServletResponse.SC_OK);
+		} catch (IOException e) {
+			logger.error("Error generating JSON response", e);
+			return mapping.findForward("error");
+		}
 
 		return null;
 	}

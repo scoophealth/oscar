@@ -12,13 +12,17 @@ public class DiseaseRegistryHandler {
 
 	private static Logger logger = MiscUtils.getLogger();
 
+	// XXX is there an API for getting this reliably? (other than `new Icd9().getCodingSystem()`)
+	private static final String ICD9_CODING_SYSTEM = "icd9";
+
 	private DxresearchDAO dao = (DxresearchDAO) SpringUtils.getBean("DxresearchDAO");
 
-	public void addToDiseaseRegistry(int demographicNo, String icd9code, String providerNo) {
-		// XXX is there an API for getting this reliably? (other than `new Icd9().getCodingSystem()`)
-		String codingSystem = "icd9";
+	public String getDescription(String icd9code) {
+		return dao.getDescription(ICD9_CODING_SYSTEM, icd9code);
+	}
 
-		boolean activeEntryExists = dao.activeEntryExists(demographicNo, codingSystem, icd9code);
+	public void addToDiseaseRegistry(int demographicNo, String icd9code, String providerNo) {
+		boolean activeEntryExists = dao.activeEntryExists(demographicNo, ICD9_CODING_SYSTEM, icd9code);
 		if (activeEntryExists) {
 			logger.info(
 				"Patient (" + demographicNo +
@@ -30,7 +34,7 @@ public class DiseaseRegistryHandler {
 
 		Dxresearch dx = new Dxresearch();
 		dx.setStartDate(new Date());
-		dx.setCodingSystem(codingSystem);
+		dx.setCodingSystem(ICD9_CODING_SYSTEM);
 		dx.setDemographicNo(demographicNo);
 		dx.setDxresearchCode(icd9code);
 		dx.setStatus('A');
