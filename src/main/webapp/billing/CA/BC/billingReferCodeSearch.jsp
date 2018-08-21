@@ -33,7 +33,7 @@
 <%@page import="org.oscarehr.common.model.Billingreferral" %>
 <%@page import="org.oscarehr.common.dao.BillingreferralDao" %>
 <%
-	 billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
+	BillingreferralDao billingReferralDao = (BillingreferralDao)SpringUtils.getBean("BillingreferralDAO");
 %>
 
 <% String search = "",search2 = "";
