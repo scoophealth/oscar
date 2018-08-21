@@ -329,12 +329,34 @@ $(document).ready( function() {
 		}
 	});
 
-	// TODO remove duplication with exclude patients
+
 	$("#addToDiseaseRegistryChecked").on('click', function(event) {
 		event.preventDefault();
 
 		var patientIds = getSelectedPatientIds();
-		// TODO Get the ICD9 code. Here from indicator, or on server?
+
+		if (patientIds.length < 1) {
+			alert("At least one patient must be selected to perform this action.");
+			return;
+		}
+
+		var url = $(this).attr("href");
+
+		$.ajax({
+			url: url,
+			dataType: "json",
+			success: function(data) {
+				$("#modalConfirmAddToDiseaseRegistry").modal("show");
+				$("#icd9code").text(data.icd9code);
+				$("#icd9description").text(data.description);
+			}
+		});
+	});
+
+	$("#confirmAddToDiseaseRegistry").on('click', function(event) {
+		event.preventDefault();
+
+		var patientIds = getSelectedPatientIds();
 
 		if (patientIds.length < 1) {
 			alert("At least one patient must be selected to perform this action.");
@@ -346,7 +368,10 @@ $(document).ready( function() {
 
 		$.ajax({
 			url: url,
-			data: data
+			data: data,
+			success: function(data) {
+				$("#modalConfirmAddToDiseaseRegistry").modal("toggle");
+			}
 		});
 	});
 

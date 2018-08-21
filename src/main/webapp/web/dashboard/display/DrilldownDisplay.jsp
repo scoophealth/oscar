@@ -178,7 +178,7 @@
 											</a>
 										</li>
 										<li>
-											<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=addToDiseaseRegistry&dxUpdateICD9Code=${ drilldown.dxUpdateICD9Code }"
+											<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=getICD9Description&dxUpdateICD9Code=${ drilldown.dxUpdateICD9Code }"
 												class="dropdown-item"
 												title="Add Checked Patients to Disease Registry." id="addToDiseaseRegistryChecked" >
 												Add To Disease Registry
@@ -354,6 +354,30 @@
 	</div>
 </div>
 <!-- End Tickler assignment modal panel -->	
+
+<!-- modal panel for bulk addition to disease registry -->
+<div id="modalConfirmAddToDiseaseRegistry" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4>Verify ICD9 Code For Addition To Disease Registry</h4>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you want to bulk add the following to the disease registry of the selected patients?</p>
+				<p>ICD9 Code: <span id="icd9code"></span></p>
+				<p>Description: <span id="icd9description"></span></p>
+			</div>
+			<div class="modal-footer">
+				<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=addToDiseaseRegistry&dxUpdateICD9Code=${ drilldown.dxUpdateICD9Code }"
+					id="confirmAddToDiseaseRegistry" type="submit" class="btn btn-primary">Confirm</a>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End bulk addition to disease registry modal panel -->
 
 </div>	<!-- end container -->
 </body>
