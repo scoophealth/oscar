@@ -67,7 +67,17 @@ $(document).ready( function() {
 
     	sendData(url, data, null);
     });
-	
+
+	$(".indicatorWrapper").on("click", ".indicatorGraph", function(event) {
+		event.preventDefault();
+		var url = "/web/dashboard/display/DrilldownDisplay.do";
+		var data = new Object();
+		data.indicatorTemplateId = (this.id).split("_")[1];
+		data.method = "getDrilldown";
+
+		sendData(url, data, null);
+	});
+
 	// get the dashboard manager page
 	$(".dashboardManagerBtn").on('click', function(event) {
     	event.preventDefault();
