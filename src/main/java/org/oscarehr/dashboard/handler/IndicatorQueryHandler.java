@@ -46,7 +46,7 @@ public class IndicatorQueryHandler extends AbstractQueryHandler {
 
 	private static Logger logger = MiscUtils.getLogger();
 	private List< GraphPlot[] > graphPlots;
-	private static final Double DEFAULT_DENOMINATOR = 100.0;
+	private static final Double DEFAULT_DENOMINATOR = 1.0;
 
 	public IndicatorQueryHandler() {	
 		// default
@@ -106,46 +106,6 @@ public class IndicatorQueryHandler extends AbstractQueryHandler {
 		
 		List< GraphPlot[] > graphPlotList = null;
 
-		//[{% Not Recorded=33.3, % Status Recorded=66.7}] ArrayList with a HashMap
-		
-		//figure out the denominator
-		int denominator = 0;
-		
-		for(Object row : results) {
-			Map<String, ?> theRow = (Map<String, ?>)row;
-			for(String key:theRow.keySet()) {
-				Integer numerator = 0;
-				
-				if(theRow.get(key) instanceof String) {
-					numerator = Integer.parseInt((String)theRow.get(key));
-				}
-				if(theRow.get(key) instanceof BigDecimal) {
-					numerator = ((BigDecimal)theRow.get(key)).intValue();
-				}
-				if(theRow.get(key) instanceof Double) {
-					numerator = ((Double)theRow.get(key)).intValue();
-					
-				}
-			//	BigDecimal numerator = (BigDecimal)theRow.get(key);
-				denominator += numerator.intValue();
-			}
-		}
-		
-		if(denominator > 0) {
-		
-			//now update the numerators to be percentages
-			for(Object row : results) {
-				Map<String, BigDecimal> theRow = (Map<String, BigDecimal>)row;
-				for(String key:theRow.keySet()) {
-					BigDecimal numerator = theRow.get(key);
-					BigDecimal bd = BigDecimal.valueOf((numerator.doubleValue() * 100 )/ denominator);
-					bd.setScale(2, BigDecimal.ROUND_CEILING);
-					theRow.put(key,bd);
-				}
-			}
-		}
- 
-		 
 		for(Object row : results) {
 			if( graphPlotList == null ) {
 				graphPlotList = new ArrayList< GraphPlot[] >();
@@ -189,7 +149,7 @@ public class IndicatorQueryHandler extends AbstractQueryHandler {
 				logger.warn( "Null or Empty Key found for the label parameter of this graph plot." );
 			}
 			
-			// Only pie charts for now - so the denom is out of 100 percent.
+			// This was for showing percentages. Now just showing values so denominator is 1.
 			graphPlot.setDenominator( DEFAULT_DENOMINATOR );
 
 			if( value instanceof Number ) {

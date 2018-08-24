@@ -36,7 +36,9 @@ $(document).ready( function() {
 				rendererOptions: { 
 					startAngle: 180, 
 					sliceMargin: 4, 
-					showDataLabels: true } 
+					showDataLabels: true,
+					dataLabels: 'value'
+				}
 			},
 			grid: {
 			    drawGridLines: false,        	// wether to draw lines across the grid or not.
