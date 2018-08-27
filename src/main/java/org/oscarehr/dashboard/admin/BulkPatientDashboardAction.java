@@ -42,6 +42,7 @@ import net.sf.json.JSONObject;
 
 import org.oscarehr.dashboard.handler.DiseaseRegistryHandler;
 import org.oscarehr.dashboard.handler.ExcludeDemographicHandler;
+import org.oscarehr.dashboard.handler.MessageHandler;
 
 public class BulkPatientDashboardAction extends DispatchAction {
 
@@ -50,6 +51,8 @@ public class BulkPatientDashboardAction extends DispatchAction {
 	private ExcludeDemographicHandler excludeDemographicHandler = new ExcludeDemographicHandler();
 
 	private DiseaseRegistryHandler diseaseRegistryHandler = new DiseaseRegistryHandler();
+
+	private MessageHandler messageHandler = new MessageHandler();
 
 	public ActionForward excludePatients(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
@@ -103,11 +106,14 @@ public class BulkPatientDashboardAction extends DispatchAction {
 			);
 		}
 
-		logger.info(
-			"Added code (" + icd9code +
+		String subject = "Bulk addition to disease registry report.";
+		String message = "Added code (" + icd9code +
 			") to disease registry for patients (" + patientIdsJson + ")" +
-			" with provider no (" + providerNo + ")"
-		);
+			" with provider no (" + providerNo + ")";
+
+		messageHandler.notifyProvider(subject, message, providerNo);
+
+		logger.info(message);
 
 		return null;
 	}
