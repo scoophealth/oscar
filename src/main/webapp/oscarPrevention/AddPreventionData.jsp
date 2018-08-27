@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="oscar.OscarProperties"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.common.model.Consent"%>
 <%@page import="org.oscarehr.common.dao.ConsentDao"%>
