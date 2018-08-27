@@ -94,6 +94,11 @@ if(!authed) {
 	String annotation_display = CaseManagementNoteLink.DISP_PREV;
 
 	
+	boolean dhirEnabled=false;
+	  
+  	if("true".equals(OscarProperties.getInstance().getProperty("dhir.enabled", "false"))) {
+  		dhirEnabled=true;
+  	}
 	
   if (id != null){
 
@@ -1075,7 +1080,7 @@ function changeSite(el) {
    					boolean hasIspaConsent = ispaConsent != null && !ispaConsent.isOptout();
    					boolean hasNonIspaConsent = nonIspaConsent != null && !nonIspaConsent.isOptout();
 
-   					if(isSSOLoggedIn) {
+   					if(dhirEnabled &&  isSSOLoggedIn) {
    						if((ispa && hasIspaConsent) || (!ispa && hasNonIspaConsent)) {
                %>
                <input type="submit" value="Save & Submit" name="action" >

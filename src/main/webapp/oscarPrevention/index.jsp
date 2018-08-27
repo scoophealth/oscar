@@ -109,7 +109,12 @@ if(!authed) {
   ArrayList recomendations = p.getReminder();
 
   boolean printError = request.getAttribute("printError") != null;
+
+  boolean dhirEnabled=false;
   
+  	if("true".equals(OscarProperties.getInstance().getProperty("dhir.enabled", "false"))) {
+  		dhirEnabled=true;
+  	}
 
 	ConsentDao consentDao = SpringUtils.getBean(ConsentDao.class);
 	Consent ispaConsent =  consentDao.findByDemographicAndConsentType(demographicId, "dhir_ispa_consent");
@@ -679,19 +684,19 @@ List<String> OTHERS = Arrays.asList(new String[]{"DTaP-Hib","TdP-IPV-Hib","HBTmf
 			action="<rewrite:reWrite jspPage="printPrevention.do"/>">
 		<td valign="top" class="MainTableRightColumn">
 		
-		<%if(!isSSOLoggedIn && !hideSSOWarning) {%>
+		<%if(dhirEnabled && !isSSOLoggedIn && !hideSSOWarning) {%>
 		<div style="width:100%;background-color:pink;text-align:left;font-weight:bold;font-size:13pt;border-style:solid" id="ssoWarning">
 			<span><a href="javascript:void()" onClick="disableSSOWarning()">[x]</a></span> Warning: You are not logged into OneId and will not be able to submit data to DHIR	
 		</div>
 		<% } %>
 		
-		<%if(!hasIspaConsent && !hideISPAWarning) {%>
+		<%if(dhirEnabled && !hasIspaConsent && !hideISPAWarning) {%>
 		<div style="width:100%;background-color:pink;text-align:left;font-weight:bold;font-size:13pt;border-style:solid" id="ispaWarning">
 			<span><a href="javascript:void()" onClick="disableISPAWarning()">[x]</a></span> Warning: This patient has not consented to send ISPA vaccines to DHIR	
 		</div>
 		<% } %>
 		
-		<%if(!hasNonIspaConsent && !hideNonISPAWarning) {%>
+		<%if(dhirEnabled && !hasNonIspaConsent && !hideNonISPAWarning) {%>
 		<div style="width:100%;background-color:pink;text-align:left;font-weight:bold;font-size:13pt;border-style:solid" id="nonIspaWarning">
 			<span><a href="javascript:void()" onClick="disableNonISPAWarning()">[x]</a></span> Warning: This patient has not consented to send non-ISPA vaccines to DHIR	
 		</div>
@@ -890,7 +895,7 @@ List<String> OTHERS = Arrays.asList(new String[]{"DTaP-Hib","TdP-IPV-Hib","HBTmf
          	if(!dhirLogs.isEmpty()) {
          	%> <span class="footnote" style="background-color:black;color:white"><%=dhirLogs.get(0).getStatus()%></span> <%
          	} else {
-         		if(!StringUtils.isEmpty(snomedId)) {
+         		if(dhirEnabled && !StringUtils.isEmpty(snomedId)) {
 	         		if((ispa && hasIspaConsent) || (!ispa && hasNonIspaConsent)) {
 	         			%><span class="footnote" style="background-color:orange;color:black;white-space:nowrap">Not Submitted</span> <%
 	         		}
@@ -963,7 +968,7 @@ List<String> OTHERS = Arrays.asList(new String[]{"DTaP-Hib","TdP-IPV-Hib","HBTmf
          	if(!dhirLogs.isEmpty()) {
          	%> <span class="footnote" style="background-color:black;color:white"><%=dhirLogs.get(0).getStatus()%></span> <%
          	} else {
-         		if(!StringUtils.isEmpty(snomedId)) {
+         		if(dhirEnabled && !StringUtils.isEmpty(snomedId)) {
          			if((ispa && hasIspaConsent) || (!ispa && hasNonIspaConsent)) {
 	         			%><span class="footnote" style="background-color:orange;color:black">Not Submitted</span> <%
 	         		}
