@@ -25,11 +25,13 @@
 package org.oscarehr.dashboard.handler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.oscarehr.common.model.OscarMsgType;
 
 import oscar.oscarMessenger.data.MsgMessageData;
 import oscar.oscarMessenger.data.MsgProviderData;
+import oscar.oscarMessenger.util.MsgDemoMap;
 
 public class MessageHandler {
 
@@ -37,7 +39,12 @@ public class MessageHandler {
 	private static final String SYSTEM_USER_NAME = "System";
 
 	// This is based on EaapsHandler.notifyProvider
-	public void notifyProvider(String subject, String messageBody, String providerNo) {
+	public void notifyProvider(
+		String subject,
+		String messageBody,
+		String providerNo,
+		List<Integer> linkedDemographicNumbers
+	) {
 		String userName = SYSTEM_USER_NAME;
 		String userNo = SYSTEM_USER_ID;
 		String attachment = null;
@@ -49,7 +56,7 @@ public class MessageHandler {
 		String sentToWho = messageData.createSentToString(providerIds);
 		ArrayList<MsgProviderData> providerListing = messageData.getProviderStructure(providerIds);
 
-		messageData.sendMessage2(
+		String messageId = messageData.sendMessage2(
 			messageBody,
 			subject,
 			userName,
@@ -60,5 +67,14 @@ public class MessageHandler {
 			pdfAttachment,
 			OscarMsgType.GENERAL_TYPE
 		);
+
+		if (linkedDemographicNumbers == null) {
+			return;
+		}
+
+		MsgDemoMap msgDemoMap = new MsgDemoMap();
+		for (Integer demographicNumber : linkedDemographicNumbers) {
+			msgDemoMap.linkMsg2Demo(messageId, demographicNumber.toString());
+		}
 	}
 }

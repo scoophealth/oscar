@@ -25,6 +25,8 @@
 package org.oscarehr.dashboard.admin;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -97,21 +99,25 @@ public class BulkPatientDashboardAction extends DispatchAction {
 
 		String patientIdsJson = request.getParameter("patientIds");
 		JSONArray patientIds = asJsonArray(patientIdsJson);
+		List<Integer> patientIdList = new ArrayList<Integer>();
 
 		for (int i = 0; i < patientIds.size(); ++i) {
+			int patientId = patientIds.getInt(i);
+			patientIdList.add(patientId);
+
 			diseaseRegistryHandler.addToDiseaseRegistry(
-				patientIds.getInt(i),
+				patientId,
 				icd9code,
 				providerNo
 			);
 		}
 
 		String subject = "Bulk addition to disease registry report.";
-		String message = "Added code (" + icd9code +
-			") to disease registry for patients (" + patientIdsJson + ")" +
-			" with provider no (" + providerNo + ")";
+		String message = "Added code {" + icd9code +
+			"} to disease registry for patients {" + patientIdsJson + "}" +
+			" with provider no {" + providerNo + "}";
 
-		messageHandler.notifyProvider(subject, message, providerNo);
+		messageHandler.notifyProvider(subject, message, providerNo, patientIdList);
 
 		logger.info(message);
 
