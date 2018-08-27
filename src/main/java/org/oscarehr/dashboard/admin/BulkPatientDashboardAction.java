@@ -38,6 +38,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -45,10 +46,13 @@ import net.sf.json.JSONObject;
 import org.oscarehr.dashboard.handler.DiseaseRegistryHandler;
 import org.oscarehr.dashboard.handler.ExcludeDemographicHandler;
 import org.oscarehr.dashboard.handler.MessageHandler;
+import org.oscarehr.managers.SecurityInfoManager;
 
 public class BulkPatientDashboardAction extends DispatchAction {
 
 	private static Logger logger = MiscUtils.getLogger();
+
+	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
 	private ExcludeDemographicHandler excludeDemographicHandler = new ExcludeDemographicHandler();
 
@@ -92,9 +96,14 @@ public class BulkPatientDashboardAction extends DispatchAction {
 	public ActionForward addToDiseaseRegistry(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
 
-		String providerNo = LoggedInInfo.getLoggedInInfoFromSession(request)
-			.getLoggedInProviderNo();
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 
+		if (!securityInfoManager.hasPrivilege(loggedInInfo,
+				"_dxresearch", SecurityInfoManager.WRITE, null)) {
+			return mapping.findForward("unauthorized");
+		}
+
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
 		String icd9code = getICD9Code(request);
 
 		String patientIdsJson = request.getParameter("patientIds");
