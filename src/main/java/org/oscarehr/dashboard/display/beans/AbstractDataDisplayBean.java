@@ -23,6 +23,7 @@
  */
 package org.oscarehr.dashboard.display.beans;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.oscarehr.dashboard.query.DrillDownAction;
@@ -50,6 +51,7 @@ public abstract class AbstractDataDisplayBean {
 
 	private List<Parameter> parameters;
 	private List<DrillDownAction> actions;
+	private List<String> actionIds;
 	private List<RangeInterface> ranges;
 	private String rangeString;
 	private String queryString;
@@ -189,16 +191,22 @@ public abstract class AbstractDataDisplayBean {
 	
 	public void setActions(List<DrillDownAction> actions) {
 		this.actions = actions;
+		this.actionIds = new ArrayList<String>();
+
 		if (actions != null && !actions.isEmpty()) {
 			for (DrillDownAction action: actions) {
+				actionIds.add(action.getId());
 				if ("dxUpdate".equals(action.getId())) {
 					setDxUpdateICD9Code(action.getValue());
-					break;
 				}
 			}
 		}
 	}
-	
+
+	public List<String> getActionIds() {
+		return actionIds;
+	}
+
 	public void setDxUpdateICD9Code(String dxUpdateICD9Code) {
 		this.dxUpdateICD9Code = dxUpdateICD9Code;
 	}

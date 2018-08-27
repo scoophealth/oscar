@@ -177,20 +177,26 @@
 												Assign Tickler
 											</a>
 										</li>
-										<li>
-											<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=getICD9Description&dxUpdateICD9Code=${ drilldown.dxUpdateICD9Code }"
-												class="dropdown-item"
-												title="Add Checked Patients to Disease Registry." id="addToDiseaseRegistryChecked" >
-												Add To Disease Registry
-											</a>
-										</li>
-										<li>
-											<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=excludePatients&indicatorId=${ drilldown.id }"
-												class="dropdown-item"
-												title="Exclude Checked Patients from Indicator Results." id="excludePatientsChecked" >
-												Exclude Patients From Indicator Results
-											</a>
-										</li>
+										
+										<c:if test="${fn:contains(drilldown.actionIds, 'dxUpdate')}">
+											<li>
+												<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=getICD9Description&dxUpdateICD9Code=${ drilldown.dxUpdateICD9Code }"
+													class="dropdown-item"
+													title="Add Checked Patients to Disease Registry." id="addToDiseaseRegistryChecked" >
+													Add To Disease Registry
+												</a>
+											</li>
+										</c:if>
+										
+										<c:if test="${fn:contains(drilldown.actionIds, 'demoExcl')}">
+											<li>
+												<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=excludePatients&indicatorId=${ drilldown.id }"
+													class="dropdown-item"
+													title="Exclude Checked Patients from Indicator Results." id="excludePatientsChecked" >
+													Exclude Patients From Indicator Results
+												</a>
+											</li>
+										</c:if>
 									</ul>						 
 							    </div>
 							</th>
