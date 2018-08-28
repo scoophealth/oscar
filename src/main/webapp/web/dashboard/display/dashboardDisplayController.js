@@ -37,7 +37,8 @@ $(document).ready( function() {
 					startAngle: 180, 
 					sliceMargin: 4, 
 					showDataLabels: true,
-					dataLabels: 'value'
+					dataLabels: 'value',
+					dataLabelThreshold: 0
 				}
 			},
 			grid: {
