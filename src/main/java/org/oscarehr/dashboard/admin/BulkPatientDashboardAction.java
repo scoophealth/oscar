@@ -122,8 +122,8 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		}
 
 		String subject = "Bulk addition to disease registry report.";
-		String message = "Added code {" + icd9code +
-			"} to disease registry for patients {" + patientIdsJson + "}" +
+		String message = "Added ICD9 code {" + icd9code +
+			"} to disease registry for patient demographic_no {" + patientIdsJson + "}" +
 			" with provider no {" + providerNo + "}";
 
 		messageHandler.notifyProvider(subject, message, providerNo, patientIdList);
