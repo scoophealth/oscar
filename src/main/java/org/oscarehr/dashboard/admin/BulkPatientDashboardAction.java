@@ -82,9 +82,18 @@ public class BulkPatientDashboardAction extends DispatchAction {
 
 		excludeDemographicHandler.excludeDemoIds(patientIdsJson, indicatorName);
 
-		logger.info(
-			"Excluded patients (" + patientIdsJson + ") from " + indicatorName
+		String subject = "Patient exclusion report.";
+		String message = "Excluded patient demographic_no {" + patientIdsJson +
+			"} from indicator {" + indicatorName + "}";
+
+		messageHandler.notifyProvider(
+			subject,
+			message,
+			loggedInInfo.getLoggedInProviderNo(),
+			parseIntegers(patientIdsJson)
 		);
+
+		logger.info(message);
 
 		return null;
 	}
@@ -168,5 +177,16 @@ public class BulkPatientDashboardAction extends DispatchAction {
 
 		JSONArray jsonArray = JSONArray.fromObject( jsonString );
 		return jsonArray;
+	}
+
+	private List<Integer> parseIntegers(String jsonString) {
+		List<Integer> ints = new ArrayList<Integer>();
+
+		JSONArray jsonArray = asJsonArray(jsonString);
+		for (int i = 0; i < jsonArray.size(); i++) {
+			ints.add(jsonArray.getInt(i));
+		}
+
+		return ints;
 	}
 }
