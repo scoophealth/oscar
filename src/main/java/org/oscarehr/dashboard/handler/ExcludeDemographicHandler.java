@@ -48,12 +48,6 @@ public class ExcludeDemographicHandler {
 	
 	private static Logger logger = MiscUtils.getLogger();
 	
-//	@Autowired
-//	private SecurityInfoManager securityInfoManager;
-//	
-//	@Autowired
-//	private DemographicExtArchiveDao demographicExtArchiveDao;
-	
 	static DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 	List<Integer> demoIds;
 	List<DemographicExt> demoExts;
@@ -120,8 +114,6 @@ public class ExcludeDemographicHandler {
 		for (DemographicExt e: allProviderDemoExts) {
 			// remove exclusion if provider_no matches or is null and the demongraphic_no matches
 			if (e.getProviderNo().equals(providerNo) && demographicNos.contains(e.getDemographicNo())) {
-//				checkPrivilege(loggedInInfo, SecurityInfoManager.WRITE);
-//				archiveExtension(e);
 				demographicExtDao.removeDemographicExt(e.getId());
 				logger.info("demo: " + e.getDemographicNo() + " unexcluded from indicatorTemplate " + indicatorName);
 			}
@@ -224,20 +216,4 @@ public class ExcludeDemographicHandler {
     public String getDrilldownIdentifier(String name, String category, String subCategory) {
     	return name + "|" + subCategory + "|" + category;
     }
-    
-//	public void archiveExtension(DemographicExt ext) {
-//		//TODO: this needs a loggedInInfo
-//		if (ext != null && ext.getId() != null) {
-//			DemographicExt prevExt = demographicExtDao.find(ext.getId());
-//			if (!(ext.getKey().equals(prevExt.getKey()) && Objects.equals(ext.getValue(),prevExt.getValue()))) {
-//				demographicExtArchiveDao.archiveDemographicExt(prevExt);
-//			}
-//		}
-//	}
-//
-//	private void checkPrivilege(LoggedInInfo loggedInInfo, String privilege) {
-//  		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_demographic", privilege, null)) {
-//			throw new RuntimeException("missing required security object (_demographic)");
-//		}
-//	}
 }
