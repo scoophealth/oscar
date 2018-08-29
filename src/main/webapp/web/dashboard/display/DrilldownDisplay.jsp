@@ -190,7 +190,7 @@
 										
 										<c:if test="${fn:contains(drilldown.actionIds, 'demoExcl')}">
 											<li>
-												<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=excludePatients&indicatorId=${ drilldown.id }"
+												<a href="#"
 													class="dropdown-item"
 													title="Exclude Checked Patients from Indicator Results." id="excludePatientsChecked" >
 													Exclude Patients From Indicator Results
@@ -384,6 +384,31 @@
 	</div>
 </div>
 <!-- End bulk addition to disease registry modal panel -->
+
+<!-- modal panel for patient exclusion -->
+<div id="modalConfirmPatientExclusion" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4>Verify Patient Exclusion</h4>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you want to exclude the selected patients from this indicator?</p>
+				<div class="alert alert-warning">
+					Note that you will have to reload the dashboard before patients are excluded from the results you see (such as the drilldown table).
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=excludePatients&indicatorId=${ drilldown.id }"
+					id="confirmPatientExclusion" type="submit" class="btn btn-primary">Confirm</a>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End patient exclusion modal panel -->
 
 </div>	<!-- end container -->
 </body>
