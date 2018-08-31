@@ -70,7 +70,8 @@ if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 
 Allergy[] allergyWarnings = null;
    RxDrugData drugData = new RxDrugData();
-   allergyWarnings = drugData.getAllergyWarnings(atcCode, allergies);
+   List<Allergy> missing = new ArrayList<Allergy>();
+   allergyWarnings = drugData.getAllergyWarnings(atcCode, allergies,missing);
 
 
    // Hashtable d = new Hashtable();
