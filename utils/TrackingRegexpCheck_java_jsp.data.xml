@@ -388,10 +388,12 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSearchDrugAction.java:Vector catVec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:// private ArrayList stash=new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:allergyWarnings = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:missingAllergyWarnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private ArrayList attributeNames = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private ArrayList&lt;RxPrescriptionData.Prescription&gt; stash = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private HashMap randomIdDrugIdPair=new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private Hashtable allergyWarnings = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private Hashtable missingAllergyWarnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private Hashtable workingAllergyWarnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private List&lt;HashMap&lt;String,String&gt;&gt; listMedHistory=new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private List&lt;String&gt; reRxDrugIdList=new ArrayList();</ViolationValue>
@@ -1122,11 +1124,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDao.java:Hashtable&lt;String, Long&gt; retHash = new Hashtable&lt;String, Long&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDao.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDao.java:public Hashtable&lt;String, Long&gt; getHashofMessages(String providerNo, String name) {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/model/Demographic.java:demographicExtendedProperties = new Hashtable&lt;String, String&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/model/Demographic.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/model/Demographic.java:private Hashtable&lt;String, String&gt; demographicExtendedProperties;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/model/Demographic.java:public Hashtable&lt;String, String&gt; getDemographicExtendedProperties() {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/model/Demographic.java:public void setDemographicExtendedProperties( Hashtable&lt;String, String&gt; demographicExtendedProperties ) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/FlowSheetCustomAction.java:Hashtable&lt;String,String&gt; h = new Hashtable&lt;String,String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/FlowSheetCustomAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/SearchProviderAutoCompleteAction.java:Hashtable d=new Hashtable();</ViolationValue>
@@ -1178,8 +1175,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setPatientIdNames(Hashtable patientIdNames) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setPatientNumDoc(Hashtable patientNumDoc) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setTypeDocLab(Hashtable&lt;String, List&lt;String&gt;&gt; typeDocLab) {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/integration/fhir/manager/OscarFhirResourceManager.java:demographic.setDemographicExtendedProperties(new Hashtable&lt;String,String&gt;());</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/integration/fhir/manager/OscarFhirResourceManager.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Hashtable drug = dr.getDrug2(id, true);</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Hashtable generic = dr.getGenericName(id);</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Vector&lt;Hashtable&lt;String, Object&gt;&gt; components = (Vector&lt;Hashtable&lt;String, Object&gt;&gt;) h.get("components");</ViolationValue>
@@ -2228,6 +2223,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Hashtable&lt;String, Object&gt; returnVal = drugRef.getDrugByDIN(DIN, Boolean.TRUE);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:MinDrug(Hashtable h){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Vector alli = (Vector) hashObject.get("warnings");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Vector allmissing = (Vector) hashObject.get("missing");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Vector comps = (Vector) hash.get("components");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Vector drugRoute=(Vector)hash.get("drugRoute");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Vector res = d.getAlergyWarnings(atcCode, vec);</ViolationValue>
@@ -2335,7 +2331,9 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:allergyWarnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:import java.util.Vector;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:missingAllergyWarnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private Hashtable allergyWarnings = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private Hashtable missingAllergyWarnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private Hashtable workingAllergyWarnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:public Vector getAtcCodes(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxWriteScriptAction.java:Vector comps = dmono.components;</ViolationValue>
