@@ -151,16 +151,15 @@
 					<thead>
 						<tr>
 							<th class="donotprint" id="0" >
-								<div class="dropdown" id="ticklerMenu">
+								<div class="dropdown" id="actionMenu">
 									<a href="#" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" role="button" 
-							        	aria-haspopup="true" aria-expanded="false" id="ticklerMenuLink">
-							        	<span class="glyphicon glyphicon-check"></span>
-							        	Tickler 
-							        	<span class="caret"></span>
-							        </a>
-							        
-									
-									<ul class="dropdown-menu" aria-labelledby="ticklerMenuLink">
+										aria-haspopup="true" aria-expanded="false" id="actionMenuLink">
+										<span class="glyphicon glyphicon-check"></span>
+										Actions
+										<span class="caret"></span>
+									</a>
+
+									<ul class="dropdown-menu" aria-labelledby="actionMenuLink">
 										<li>									
 											<a href="#" class="dropdown-item" id="selectAllDrilldown" title="Select all rows in the current view." >
 												Select All in View
@@ -178,6 +177,26 @@
 												Assign Tickler
 											</a>
 										</li>
+										
+										<c:if test="${fn:contains(drilldown.actionIds, 'dxUpdate')}">
+											<li>
+												<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=getICD9Description&dxUpdateICD9Code=${ drilldown.dxUpdateICD9Code }"
+													class="dropdown-item"
+													title="Add Checked Patients to Disease Registry." id="addToDiseaseRegistryChecked" >
+													Add To Disease Registry
+												</a>
+											</li>
+										</c:if>
+										
+										<c:if test="${fn:contains(drilldown.actionIds, 'demoExcl')}">
+											<li>
+												<a href="#"
+													class="dropdown-item"
+													title="Exclude Checked Patients from Indicator Results." id="excludePatientsChecked" >
+													Exclude Patients From Indicator Results
+												</a>
+											</li>
+										</c:if>
 									</ul>						 
 							    </div>
 							</th>
@@ -214,7 +233,7 @@
 										<c:out value="${ column }" />									
 									</c:when>
 									<c:otherwise>
-										<input type="checkbox" id="${ column }" class="ticklerChecked" />
+										<input type="checkbox" id="${ column }" class="patientChecked" />
 									</c:otherwise>
 									</c:choose>
 								</td>
@@ -341,6 +360,55 @@
 	</div>
 </div>
 <!-- End Tickler assignment modal panel -->	
+
+<!-- modal panel for bulk addition to disease registry -->
+<div id="modalConfirmAddToDiseaseRegistry" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4>Verify ICD9 Code For Addition To Disease Registry</h4>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you want to bulk add the following to the disease registry of the selected patients?</p>
+				<p>ICD9 Code: <span id="icd9code"></span></p>
+				<p>Description: <span id="icd9description"></span></p>
+			</div>
+			<div class="modal-footer">
+				<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=addToDiseaseRegistry&dxUpdateICD9Code=${ drilldown.dxUpdateICD9Code }"
+					id="confirmAddToDiseaseRegistry" type="submit" class="btn btn-primary">Confirm</a>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End bulk addition to disease registry modal panel -->
+
+<!-- modal panel for patient exclusion -->
+<div id="modalConfirmPatientExclusion" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4>Verify Patient Exclusion</h4>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you want to exclude the selected patients from this indicator?</p>
+				<div class="alert alert-warning">
+					Note that you will have to reload the dashboard before patients are excluded from the results you see (such as the drilldown table).
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=excludePatients&indicatorId=${ drilldown.id }"
+					id="confirmPatientExclusion" type="submit" class="btn btn-primary">Confirm</a>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End patient exclusion modal panel -->
 
 </div>	<!-- end container -->
 </body>

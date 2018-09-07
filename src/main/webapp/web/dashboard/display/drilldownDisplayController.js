@@ -155,7 +155,7 @@ $.fn.dataTable.moment( 'M-D-YYYY' );
 $.fn.dataTable.ext.order['dom-checkbox'] = function  ( settings, col )
 {
     return this.api().column( col, {order:'index'} ).nodes().map( function ( td, i ) {
-        return $('.ticklerChecked', td).prop('checked') ? '1' : '0';
+        return $('.patientChecked', td).prop('checked') ? '1' : '0';
     } );
 };
 
@@ -283,28 +283,35 @@ $(document).ready( function() {
     	sendData(url, data, "reload");
     });
 	
-	//--> Check all for ticklers
+	//--> Check all for actions
 	$("#selectAllDrilldown").on('click', function(event) {
 		event.preventDefault();
-	    $('.ticklerChecked').prop('checked', 'checked');
+	    $('.patientChecked').prop('checked', 'checked');
 	});
 	
-	//--> Uncheck all for ticklers
+	//--> Uncheck all for actions
 	$("#selectNoneDrilldown").on('click', function(event) {
 		event.preventDefault();
-	    $('.ticklerChecked').prop('checked', '');
+	    $('.patientChecked').prop('checked', '');
 	});
+
+	function getSelectedPatientIds() {
+		var patientIds = [];
+
+		$("input:checkbox.patientChecked").each(function() {
+			if(this.checked) {
+				patientIds.push(this.id);
+			}
+		});
+
+		return patientIds;
+	}
 
 	//--> Assign Tickler to all checked items - returns the tickler dialog.
 	$("#assignTicklerChecked").on('click', function(event) {
 		
 		event.preventDefault();
-		var demographics = [];		
-		$("input:checkbox.ticklerChecked").each(function(){
-			if( this.checked ) {
-				demographics.push(this.id);
-			}
-		});		
+		var demographics = getSelectedPatientIds();
 		var param = "demographics=" + demographics;
 
 		if( demographics.length > 0 ) {
@@ -320,6 +327,84 @@ $(document).ready( function() {
 		if( checkFields() ) {
 			sendData("/web/dashboard/display/AssignTickler.do", $("#ticklerAddForm").serialize(), "close")
 		}
+	});
+
+
+	$("#addToDiseaseRegistryChecked").on('click', function(event) {
+		event.preventDefault();
+
+		var patientIds = getSelectedPatientIds();
+
+		if (patientIds.length < 1) {
+			alert("At least one patient must be selected to perform this action.");
+			return;
+		}
+
+		var url = $(this).attr("href");
+
+		$.ajax({
+			url: url,
+			dataType: "json",
+			success: function(data) {
+				$("#modalConfirmAddToDiseaseRegistry").modal("show");
+				$("#icd9code").text(data.icd9code);
+				$("#icd9description").text(data.description);
+			}
+		});
+	});
+
+	$("#confirmAddToDiseaseRegistry").on('click', function(event) {
+		event.preventDefault();
+
+		var patientIds = getSelectedPatientIds();
+
+		if (patientIds.length < 1) {
+			alert("At least one patient must be selected to perform this action.");
+			return;
+		}
+
+		var url = $(this).attr("href");
+		var data = "patientIds=" + patientIds;
+
+		$.ajax({
+			url: url,
+			data: data,
+			success: function(data) {
+				$("#modalConfirmAddToDiseaseRegistry").modal("toggle");
+			}
+		});
+	});
+
+	$("#excludePatientsChecked").on('click', function(event) {
+		event.preventDefault();
+
+		var patientIds = getSelectedPatientIds();
+
+		if (patientIds.length < 1) {
+			alert("At least one patient must be selected to perform this action.");
+			return;
+		}
+
+		$("#modalConfirmPatientExclusion").modal("show");
+	});
+
+	$("#confirmPatientExclusion").on('click', function(event) {
+		event.preventDefault();
+
+		var patientIds = getSelectedPatientIds();
+		// Note that indicatorId is already placed in the href
+		// querystring by the JSP code.
+
+		var url = $(this).attr("href");
+		var data = "patientIds=" + patientIds;
+
+		$.ajax({
+			url: url,
+			data: data,
+			success: function(data) {
+				$("#modalConfirmPatientExclusion").modal("toggle");
+			}
+		});
 	});
     
 })

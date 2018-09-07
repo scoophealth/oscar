@@ -30,6 +30,7 @@
 			 -->
 			<parameter id="active" name="Active Patients" value="%AC%" />
 			<parameter id="dxcodelist" name="Dx Codes" value="250,430" />
+			<parameter id="excludedPatient" name="Excluded Patient" value="excludedPatient" />
 		</params>
 		<range>
 			<upperLimit id="to" label="From today" name="Date Range" value="now()" />
@@ -77,6 +78,7 @@
 					AND d.demographic_no > 0
 					AND d.provider_no LIKE '${ provider }'
 					AND ( ${lowerLimit.age} &lt;= ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), DATE_SUB( ${ upperLimit.to }, INTERVAL ${ lowerLimit.from } MONTH ) ) ) / 365.25 ) ) 
+AND d.demographic_no NOT IN ${excludedPatient}
 				) fin;
 		</query>
 	</indicatorQuery>
@@ -99,6 +101,7 @@
 			 -->
 			<parameter id="active" name="Active Patients" value="%AC%" />
 			<parameter id="dxcodelist" name="Dx Codes" value="250,430" />
+			<parameter id="excludedPatient" name="Excluded Patient" value="excludedPatient" />
 		</params>
 		
 		<range>
@@ -126,6 +129,11 @@
 			<column id="dob" name="CONCAT( month_of_birth, '-', date_of_birth, '-', year_of_birth )" title="Date of Birth" primary="false" />
 			<column id="a1c" name="IFNULL(A1C.a1cnumber,0)" title="A1C 12 Months" primary="false" />
 		</exportColumns>
+                <drillDownActions>
+                        <action id="tickler" name="Tickler"/>
+                        <action id="dxUpdate" name="Disease Registry Update" value="250"/>
+                        <action id="demoExcl" name="Patient Exclusion"/>
+                </drillDownActions>
 		<query>
 				SELECT *
 				FROM demographic d
@@ -149,6 +157,7 @@
 				AND d.demographic_no > 0
 				AND d.provider_no LIKE '${ provider }'
 				AND ( ${lowerLimit.age} &lt;= ROUND( ABS( DATEDIFF( DATE( CONCAT(d.year_of_birth,"-",d.month_of_birth,"-",d.date_of_birth) ), DATE_SUB( ${ upperLimit.to }, INTERVAL ${ lowerLimit.from } MONTH ) ) ) / 365.25 ) ) 
+AND d.demographic_no NOT IN ${excludedPatient}
 			</query>
 	</drillDownQuery>
 </indicatorTemplateXML>

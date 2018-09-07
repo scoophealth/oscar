@@ -36,7 +36,10 @@ $(document).ready( function() {
 				rendererOptions: { 
 					startAngle: 180, 
 					sliceMargin: 4, 
-					showDataLabels: true } 
+					showDataLabels: true,
+					dataLabels: 'value',
+					dataLabelThreshold: 0
+				}
 			},
 			grid: {
 			    drawGridLines: false,        	// wether to draw lines across the grid or not.
@@ -65,7 +68,17 @@ $(document).ready( function() {
 
     	sendData(url, data, null);
     });
-	
+
+	$(".indicatorWrapper").on("click", ".indicatorGraph", function(event) {
+		event.preventDefault();
+		var url = "/web/dashboard/display/DrilldownDisplay.do";
+		var data = new Object();
+		data.indicatorTemplateId = (this.id).split("_")[1];
+		data.method = "getDrilldown";
+
+		sendData(url, data, null);
+	});
+
 	// get the dashboard manager page
 	$(".dashboardManagerBtn").on('click', function(event) {
     	event.preventDefault();

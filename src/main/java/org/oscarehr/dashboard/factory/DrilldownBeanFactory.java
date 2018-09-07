@@ -64,6 +64,7 @@ public class DrilldownBeanFactory {
 		drilldownQueryHandler.setParameters( getIndicatorTemplateXML().getDrilldownParameters(metricLabel) );
 		drilldownQueryHandler.setColumns( getIndicatorTemplateXML().getDrilldownDisplayColumns() );
 		drilldownQueryHandler.setRanges( getIndicatorTemplateXML().getDrilldownRanges() );
+		drilldownQueryHandler.setActions( getIndicatorTemplateXML().getDrilldownActions());
 
 		setDrilldownBean( new DrilldownBean() );
 	}
@@ -122,6 +123,7 @@ public class DrilldownBeanFactory {
 			drilldownBean.setDisplayColumns( getDrilldownQueryHandler().getColumns() );
 			drilldownBean.setParameters( getDrilldownQueryHandler().getParameters() );
 			drilldownBean.setRanges( getDrilldownQueryHandler().getRanges() );
+			drilldownBean.setActions( getDrilldownQueryHandler().getActions());
 			drilldownBean.setTable( getDrilldownQueryHandler().getTable() );
 			
 		} else {

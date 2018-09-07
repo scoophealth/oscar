@@ -35,6 +35,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.oscarehr.dashboard.query.DrillDownAction;
 import org.oscarehr.dashboard.query.RangeInterface;
 import org.oscarehr.dashboard.query.RangeInterface.Limit;
 import org.w3c.dom.Document;
@@ -128,8 +129,13 @@ public class IndicatorTemplateXMLTest {
 	}
 	
 	@Test
+	public void testGetIndicatorParametersExcludedDemos() {
+		assertEquals("excludedPatient", indicatorTemplateXML.getIndicatorParameters().get(3).getId());
+	}
+	
+	@Test
 	public void testGetIndicatorParametersSize() {
-		assertEquals(3, indicatorTemplateXML.getIndicatorParameters().size() );
+		assertEquals(4, indicatorTemplateXML.getIndicatorParameters().size() );
 	}
 
 	@Test
@@ -148,8 +154,13 @@ public class IndicatorTemplateXMLTest {
 	}
 	
 	@Test
+	public void testGetDrilldownParametersExcludedDemos() {
+		assertEquals("excludedPatient", indicatorTemplateXML.getDrilldownParameters("null").get(3).getId());
+	}
+	
+	@Test
 	public void testGetDrilldownParametersSize() {
-		assertEquals(3, indicatorTemplateXML.getDrilldownParameters("null").size() );
+		assertEquals(4, indicatorTemplateXML.getDrilldownParameters("null").size() );
 	}
 	
 	@Test
@@ -210,5 +221,20 @@ public class IndicatorTemplateXMLTest {
 		assertTrue( verify );
 	}
 
+	@Test
+	public void testGetDrilldownActions() {
+		Boolean verify = Boolean.FALSE;
+		for( DrillDownAction action : indicatorTemplateXML.getDrilldownActions() ) {
+			if( "dxUpdate".equals( action.getId() ) && "250".equals( action.getValue()) ) {
+				verify = Boolean.TRUE;
+			}
+		}
+		assertTrue( verify );
+	}
+	
+	@Test
+	public void testGetDrilldownActionsSize() {
+		assertEquals(  3, indicatorTemplateXML.getDrilldownActions().size() );
+	}
 
 }
