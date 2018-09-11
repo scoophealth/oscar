@@ -43,12 +43,14 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Type;
 import ca.uhn.hl7v2.model.Varies;
 import ca.uhn.hl7v2.model.v23.datatype.ED;
+import ca.uhn.hl7v2.model.v23.datatype.HD;
 import ca.uhn.hl7v2.model.v23.datatype.XCN;
 import ca.uhn.hl7v2.model.v23.message.ORU_R01;
 import ca.uhn.hl7v2.parser.Parser;
@@ -452,8 +454,19 @@ public class PATHL7Handler implements MessageHandler {
     	try{
     		if("ED".equals(getOBXValueType(i,j))) {
     			ED ed = (ED)msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObx5_ObservationValue()[0].getData();
+    			
+    			if(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getObr24_DiagnosticServiceSectionID() != null &&
+    					"CELLPATHR".equals(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getObr24_DiagnosticServiceSectionID().getValue())) {
+    			
+    				HD sourceApp = ed.getEd1_SourceApplication();
+        			if(!StringUtils.isEmpty(sourceApp.getHd1_NamespaceID().getValue())) {
+        				return sourceApp.getHd1_NamespaceID().getValue().replaceAll("\\E\\", "\\");
+        			}
+    			}
+    			 
     			if(ed.getData() != null) {
     				return ed.getData().getValue();
+	    			
     			}
     		}
             return(getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1)));
