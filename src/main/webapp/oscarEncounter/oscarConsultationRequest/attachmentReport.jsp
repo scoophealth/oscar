@@ -249,7 +249,7 @@ function popup1(height, width, url, windowName){
 				<tr>
 					<td>&nbsp;</td>
 					<td><a href="<%=labURL%>" target="_blank"><%=labDisplayName%></a></td>
-					<td>html</td>
+					<td></td>
 					<td>Lab Result</td>
 					<td style="text-align: center">---</td>
 					<td><%=result.getDateTime()%></td>
