@@ -446,7 +446,7 @@ public class CaseManagementPrint {
 			criteria.getProviders().addAll((List<String>) se.getAttribute("CaseManagementViewAction_filter_providers"));
 		}
 
-		if (se.getAttribute("CaseManagementViewAction_filter_providers") != null) {
+		if (se.getAttribute("CaseManagementViewAction_filter_issues") != null) {
 			criteria.getIssues().addAll((List<String>) se.getAttribute("CaseManagementViewAction_filter_issues"));
 		}
 
