@@ -460,7 +460,7 @@ public class PATHL7Handler implements MessageHandler {
     			
     				HD sourceApp = ed.getEd1_SourceApplication();
         			if(!StringUtils.isEmpty(sourceApp.getHd1_NamespaceID().getValue())) {
-        				return sourceApp.getHd1_NamespaceID().getValue().replaceAll("\\E\\", "\\");
+        				return sourceApp.getHd1_NamespaceID().getValue()/*.replaceAll("\\E\\", "\\")*/;
         			}
     			}
     			 

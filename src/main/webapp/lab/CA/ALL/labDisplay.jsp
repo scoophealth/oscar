@@ -1602,6 +1602,7 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                    					<td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= URLEncoder.encode(handler.getOBXIdentifier(j, k).replaceAll("&","%26"),"UTF-8") %>')"><%=obxName %></a>
                                    			<%}%>
 											<%if(isVIHARtf){
+												
 											    //create bytes from the rtf string
 										    	byte[] rtfBytes = handler.getOBXResult(j, k).getBytes();
 										    	ByteArrayInputStream rtfStream = new ByteArrayInputStream(rtfBytes);
