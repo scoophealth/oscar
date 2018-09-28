@@ -141,50 +141,58 @@ public class EctDisplayEconsultAction extends EctDisplayAction {
                     HttpClient httpClient = getHttpClient2();
                     //Executes the GET request and stores the response
                     HttpResponse httpResponse = httpClient.execute(httpGet);
-                    //Gets the entity from the response and stores it as a JSONObject
-                    String entity = EntityUtils.toString(httpResponse.getEntity());
-                    JSONObject object = new JSONObject(entity);
-
-                    //Creates the onClick string for each eConsult that will be listed
-                    url = "popupPage(700,960, 'eConsult', '" + frontendEconsultUrl + "?oneid_email=%s%s#!/econsult/%s?actor=requester'); return false;";
-                    //Gets the data and then entry sections of the response entity
-                    JSONObject data = object.getJSONObject("data");
-                    JSONArray entryArray = data.getJSONArray("entry");
-                    //Creates a SimpleDateFormat for parsing the dat
-                    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
-                    //Gets the length of the entryArray
-                    Integer entryLength = entryArray.length();
-
-                    //Loops for the length of the array to output each eConsult
-                    for (Integer i = 0; i < entryLength; i++) {
-                        //Gets the JSONObject from the entryArray and then the resource object from the entry
-                        JSONObject entry = (JSONObject)entryArray.get(i);
-                        JSONObject resource = entry.getJSONObject("resource");
-                        //Gets the eConsultId
-                        String eConsultId = resource.getString("id");
-                        //Gets the last update date
-                        String date = resource.getString("date");
-                        //Gets the eConsult title
-                        String title = resource.getString("description");
-                        String status = resource.getString("status");
-
-                        //Creates a new item to populate and display the eConsult
-                        NavBarDisplayDAO.Item item = new NavBarDisplayDAO.Item();
-                        //Sets the item's title
-                        item.setTitle(title + "(" + status + ")");
-                        //Formats the url string with the oneIdEmail and eConsultId and sets the eConsult's URL
-                        String eConsultLink = String.format(url, providerEmail, delegateEmailQueryString, eConsultId);
-                        item.setURL(eConsultLink);
-                        try {
-                            //Parses and sets the eConsult's date
-                            item.setDate(dateFormatter.parse(date));
-                        }
-                        catch (ParseException e) {
-                            logger.error("Could not parse the date for eConsult " + eConsultId, e);
-                        }
-
-                        //Adds the eConsult to the Dao
-                        Dao.addItem(item);
+                    
+                    if(httpResponse.getStatusLine().getStatusCode() >= 200 && httpResponse.getStatusLine().getStatusCode() < 300 ) {
+	                    //Gets the entity from the response and stores it as a JSONObject
+	                    String entity = EntityUtils.toString(httpResponse.getEntity());
+	                    JSONObject object = new JSONObject(entity);
+	
+	                    //Creates the onClick string for each eConsult that will be listed
+	                    url = "popupPage(700,960, 'eConsult', '" + frontendEconsultUrl + "?oneid_email=%s%s#!/econsult/%s?actor=requester'); return false;";
+	                    //Gets the data and then entry sections of the response entity
+	                    JSONObject data = object.getJSONObject("data");
+	                    JSONArray entryArray = data.getJSONArray("entry");
+	                    //Creates a SimpleDateFormat for parsing the dat
+	                    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+	                    //Gets the length of the entryArray
+	                    Integer entryLength = entryArray.length();
+	
+	                    //Loops for the length of the array to output each eConsult
+	                    for (Integer i = 0; i < entryLength; i++) {
+	                        //Gets the JSONObject from the entryArray and then the resource object from the entry
+	                        JSONObject entry = (JSONObject)entryArray.get(i);
+	                        JSONObject resource = entry.getJSONObject("resource");
+	                        //Gets the eConsultId
+	                        String eConsultId = resource.getString("id");
+	                        //Gets the last update date
+	                        String date = resource.getString("date");
+	                        //Gets the eConsult title
+	                        String title = resource.getString("description");
+	                        String status = resource.getString("status");
+	
+	                        //Creates a new item to populate and display the eConsult
+	                        NavBarDisplayDAO.Item item = new NavBarDisplayDAO.Item();
+	                        //Sets the item's title
+	                        item.setTitle(title + "(" + status + ")");
+	                        //Formats the url string with the oneIdEmail and eConsultId and sets the eConsult's URL
+	                        String eConsultLink = String.format(url, providerEmail, delegateEmailQueryString, eConsultId);
+	                        item.setURL(eConsultLink);
+	                        try {
+	                            //Parses and sets the eConsult's date
+	                            item.setDate(dateFormatter.parse(date));
+	                        }
+	                        catch (ParseException e) {
+	                            logger.error("Could not parse the date for eConsult " + eConsultId, e);
+	                        }
+	
+	                        //Adds the eConsult to the Dao
+	                        Dao.addItem(item);
+	                    }
+                    } else {
+                    	 NavBarDisplayDAO.Item item = new NavBarDisplayDAO.Item();
+                    	 item.setURL("javascript:void(0);return false;");
+                    	 item.setTitle("Error retrieving data");
+                    	 Dao.addItem(item);
                     }
                 }
                 catch (IOException e) {

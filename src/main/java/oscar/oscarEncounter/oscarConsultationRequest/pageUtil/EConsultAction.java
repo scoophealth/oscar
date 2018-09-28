@@ -72,7 +72,7 @@ public class EConsultAction extends Action {
 			response.sendRedirect(frontendEconsultUrl + "/?oneid_email=" + providerEmail + delegateEmailQueryString + "#!/dashboard");
 		}
 		else {
-			response.sendRedirect(backendEconsultUrl + "/SAML2/login?oscarReturnURL=" + URLEncoder.encode(oscarUrl + "/econsultSSOLogin.do", "UTF-8") + "?loginStart=" + new Date().getTime() / 1000);
+			response.sendRedirect(backendEconsultUrl + "/SAML2/login?oscarReturnURL=" + URLEncoder.encode(oscarUrl + "/econsultSSOLogin.do", "UTF-8") + "&loginStart=" + new Date().getTime() / 1000);
 		}
 		
 		return  null;
