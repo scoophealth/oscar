@@ -65,4 +65,8 @@ public class CanadianVaccineCatalogueJob implements OscarRunnable {
 		this.security = security;
 	}
 
+	
+	@Override
+	public void setConfig(String string) {
+	}
 }

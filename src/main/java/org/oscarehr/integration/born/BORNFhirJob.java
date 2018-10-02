@@ -663,4 +663,8 @@ public class BORNFhirJob implements OscarRunnable {
 		}
 		return null;
 	}
+	
+	@Override
+	public void setConfig(String string) {
+	}
 }

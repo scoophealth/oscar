@@ -60,6 +60,8 @@ public class OscarJob extends AbstractModel<Integer> {
 
 	private String providerNo;
 	
+	private String config;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updated;
 	
@@ -141,6 +143,14 @@ public class OscarJob extends AbstractModel<Integer> {
 	@PreUpdate
 	protected void jpa_updateCreated() {
 		updated = new Date();
+	}
+
+	public String getConfig() {
+		return config;
+	}
+
+	public void setConfig(String config) {
+		this.config = config;
 	}
 	
 	
