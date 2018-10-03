@@ -130,6 +130,15 @@ angular.module("surveillanceServices", [])
 		  deferred.reject("An error occured while trying to /resources/setExportAsSent/"+id);
 		});
 	    return deferred.promise;	
+    },
+    createJob: function(id,obj){
+        var deferred = $q.defer();
+        $http.post(this.apiPath+'/surveillance/createJob/'+id,obj,this.configHeaders).then(function(data){
+                deferred.resolve(data.data);
+        },function(){
+          deferred.reject("An error occured while trying to /resources/setExportAsSent/"+id);
+        });
+        return deferred.promise;    
     }
     
     
