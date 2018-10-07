@@ -98,6 +98,11 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
             d.setPosition(1);
             d.setOutsideProviderName(t.getExternalProvider());
             d.setSpecialInstruction(t.getAdditionalInstructions());
+            	
+            d.setDispenseInternal(falseIfNull(t.getDispenseInternal())); 
+            d.setDispenseInterval(zeroIfNull(t.getDispenseIntervalNumber()));
+            d.setRefillDuration(zeroIfNull(t.getRefillDuration()));
+            d.setRefillQuantity(zeroIfNull(t.getRefillQuantity()));
 
             if(t.getQuantity() != null){
                 d.setQuantity(t.getQuantity().toString());
@@ -114,6 +119,19 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
 
         return d;
 
+    }
+    private boolean falseIfNull(Boolean b) {
+    		if(b == null) {
+    			return false;
+    		}
+    		return b.booleanValue();
+    }
+    
+    private int zeroIfNull(Integer i) {
+    		if (i == null) {
+    			return 0;
+    		}
+    		return i.intValue();
     }
 
     /**
