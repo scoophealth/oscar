@@ -96,6 +96,12 @@ public class DrugTo1 implements Serializable {
     private Boolean longTerm;
 
     private Boolean noSubstitutions;
+    
+    private Boolean dispenseInternal = null;
+    private Integer dispenseIntervalNumber = null;
+    private Integer refillDuration = null;
+    private Integer refillQuantity = null;
+    
 
     public String getAdditionalInstructions() {
         return additionalInstructions;
@@ -336,4 +342,36 @@ public class DrugTo1 implements Serializable {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+
+	public Boolean getDispenseInternal() {
+		return dispenseInternal;
+	}
+
+	public void setDispenseInternal(Boolean dispenseInternal) {
+		this.dispenseInternal = dispenseInternal;
+	}
+
+	public Integer getDispenseIntervalNumber() {
+		return dispenseIntervalNumber;
+	}
+
+	public void setDispenseIntervalNumber(Integer dispenseIntervalNumber) {
+		this.dispenseIntervalNumber = dispenseIntervalNumber;
+	}
+
+	public Integer getRefillDuration() {
+		return refillDuration;
+	}
+
+	public void setRefillDuration(Integer refillDuration) {
+		this.refillDuration = refillDuration;
+	}
+
+	public Integer getRefillQuantity() {
+		return refillQuantity;
+	}
+
+	public void setRefillQuantity(Integer refillQuantity) {
+		this.refillQuantity = refillQuantity;
+	}
 }
