@@ -59,20 +59,33 @@
 		 }
 	} else {
 		message = "Please be aware that any browser windows that you were working on will remain open. To ensure patient privacy, close all browser windows containing confidential or private health information (PHI) after logging out of your EMR.";
+		message = "Warning: Any browser windows that you opened during your session will remain open. To ensure patient privacy, close all browser windows containing confidential or private health information (PHI) after signing out.";
 	}
 
 %>
 <html>
 <head>
+<meta http-equiv="refresh" content="10; url=<%=econsultUrl + "/SAML2/logout?oscarReturnURL=" + URLEncoder.encode(oscarUrl + "/logout.jsp", "UTF-8") %>">
+
 </head>
 
 <body>
-<img src="images/OSCAR-LOGO.gif"/>
+<br/></br/><br/>
+<center><img src="images/oscar_emr_logo.png"/></center>
 <br/>
 
-<h3><%=message %></h3>
+<div style="margin-left:auto;margin-right:auto;width:40em;font-size:15pt"><%=message %></div>
+<br/>
+<div style="margin-left:auto;margin-right:auto;width:40em;font-size:15pt;text-align:center">
+CONFIRM SIGN OUT*
+<br/>
+<input type="button" value="SIGN OUT" onClick="window.location.href='<%=econsultUrl + "/SAML2/logout?oscarReturnURL=" + URLEncoder.encode(oscarUrl + "/logout.jsp", "UTF-8") %>'"/>
+<input type="button" value="CANCEL" onClick="window.history.back();"/>
+<br/>
 
-<br>
-<a href="<%=econsultUrl + "/SAML2/logout?oscarReturnURL=" + URLEncoder.encode(oscarUrl + "/logout.jsp", "UTF-8") %>">Logout</a>
+<br/><br/>
+<h6>* If not action is taken in 10 seconds, you will automatically be signed out. To disable this warning, to go Preferences -> ClinicalConnect settings.</h6>
+</div>
+
 </body>
 </html>

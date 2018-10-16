@@ -204,10 +204,21 @@ public final class SSOLoginAction extends MappingDispatchAction {
         	if (loggedInProviderNumber.equals(providerNumber)){
         		//Sets the oneIdEmail session attribute
     			session.setAttribute("oneIdEmail", oneIdEmail);
+    			session.setAttribute("oneid_token", oneIdToken );
+    			 
     			if (providerInformation[6] != null && !providerInformation[6].equals("")) {
                     session.setAttribute("delegateOneIdEmail", providerInformation[6]);
                 }
-        		actionForward = new ParameterActionForward(mapping.findForward("success"));
+    			
+    			String operation = request.getParameter("operation");
+    			if(operation != null && "launch".equals(operation)) {
+    				ActionForward af = new ActionForward();
+    				af.setPath("/clinicalConnectEHRViewer.do");
+    				actionForward = new ParameterActionForward(af);
+    				actionForward.addParameter("method", "launchNonPatientContext");
+    			} else {
+    				actionForward = new ParameterActionForward(mapping.findForward("success"));
+    			}
         	}
         	else {
         		actionForward = new ParameterActionForward(mapping.findForward("error"));
