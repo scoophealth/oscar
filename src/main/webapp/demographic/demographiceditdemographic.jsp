@@ -146,6 +146,7 @@ if(!authed) {
 	DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 	ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
     
+	LookupList ll = null;
 %>
 
 <jsp:useBean id="providerBean" class="java.util.Properties"	scope="session" />
@@ -1644,6 +1645,7 @@ if ( Dead.equals(PatStat) ) {%>
                                                         <span class="info"><%=MyDateFormat.getMyStandardDate(demographic.getEndDate())%></span>
 							</li>
 							
+							<%if(!"true".equals(OscarProperties.getInstance().getProperty("phu.hide","false"))) { %>
 							<li><span class="label">
 								<bean:message key="demographic.demographiceditdemographic.formPHU" />:</span>
 								<%
@@ -1651,7 +1653,7 @@ if ( Dead.equals(PatStat) ) {%>
 									String phu = demoExt.get("PHU");
 									
 									LookupListManager lookupListManager = SpringUtils.getBean(LookupListManager.class);
-									LookupList ll = lookupListManager.findLookupListByName(LoggedInInfo.getLoggedInInfoFromSession(request), "phu");
+									ll = lookupListManager.findLookupListByName(LoggedInInfo.getLoggedInInfoFromSession(request), "phu");
 									if(ll != null) {
 										LookupListItem phuItem =  lookupListManager.findLookupListItemByLookupListIdAndValue(loggedInInfo, ll.getId(), phu);
 										
@@ -1663,6 +1665,7 @@ if ( Dead.equals(PatStat) ) {%>
 								%>
                                 <span class="info"><%=StringUtils.trimToEmpty(phuName)%></span>
                             </li>
+                            <%} %>
                                                         
 						</ul>
 						</div>
@@ -3105,26 +3108,31 @@ document.updatedelete.r_doctor_ohip.value = refNo;
 								</td>
                                                         </tr>
                                                         <tr>
-                                <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formPHU" />:</b></td>
-                                <td align="left">
-		                                <select id="PHU" name="PHU" >
-										<option value="">Select Below</option>
-										<%
-											if(ll != null) {
-												for(LookupListItem llItem : ll.getItems()) {
-													String selected = "";
-													if(llItem.getValue().equals(StringUtils.trimToEmpty(demoExt.get("PHU")))) {
-														selected = " selected=\"selected\" ";	
+                                <%if(!"true".equals(OscarProperties.getInstance().getProperty("phu.hide","false"))) { %>
+	                                <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formPHU" />:</b></td>
+	                                <td align="left">
+			                                <select id="PHU" name="PHU" >
+											<option value="">Select Below</option>
+											<%
+												if(ll != null) {
+													for(LookupListItem llItem : ll.getItems()) {
+														String selected = "";
+														if(llItem.getValue().equals(StringUtils.trimToEmpty(demoExt.get("PHU")))) {
+															selected = " selected=\"selected\" ";	
+														}
+														%>
+															<option value="<%=llItem.getValue()%>" <%=selected%>><%=llItem.getLabel()%></option>
+														<%
 													}
-													%>
-														<option value="<%=llItem.getValue()%>" <%=selected%>><%=llItem.getLabel()%></option>
-													<%
 												}
-											}
-										
-										%>
-									</select>
-                                </td>                                
+											
+											%>
+										</select>
+	                                </td>            
+	                              <% } else { %>
+	                              	<td align="right"></td>
+	                              	<td align="left"><input type="hidden" name="PHU" value=""/></td>
+	                              <% } %>                    
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formChartNo" />:</b></td>
 								<td align="left"><input type="text" name="chart_no"
