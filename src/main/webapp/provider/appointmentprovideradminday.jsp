@@ -883,10 +883,13 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 </li>
 </security:oscarSec>
 </caisi:isModuleLoad>
- <li id="econ">
-	<a href="#" onclick ="popupOscarRx(625, 1024, '../oscarEncounter/econsult.do')" title="eConsult">
- 	<span>eConsult</span></a>
-</li>
+<%-- EConsult cannot be logged into without a link, no sense in showing it --%>
+<% if(econsultUrl != null && ! econsultUrl.isEmpty()) { %>
+	 <li id="econ">
+		<a href="#" onclick ="popupOscarRx(625, 1024, '../econsult.do?method=frontend&task=physicianSummary')" title="eConsult">
+	 	<span>eConsult</span></a>
+	</li>
+<%} %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_pref" rights="r">
 <li>    <!-- remove this and let providerpreference check -->
     <caisi:isModuleLoad moduleName="ticklerplus">

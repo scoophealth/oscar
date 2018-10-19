@@ -1224,7 +1224,8 @@
 			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormRequest.jsp" />
 		</action>
 		
-		<action input=" " path="/oscarEncounter/econsult" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EConsultAction">
+		<action path="/econsult" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EConsultAction" 
+		validate="false" parameter="method">		
 		</action>
 		
 		<action input=" " name="EctIncomingConsultationForm" path="/oscarEncounter/IncomingConsultation" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctIncomingConsultationAction">
