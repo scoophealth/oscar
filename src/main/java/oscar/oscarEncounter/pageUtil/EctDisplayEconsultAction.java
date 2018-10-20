@@ -186,11 +186,10 @@ public class EctDisplayEconsultAction extends EctDisplayAction {
                     viewConsultUrl.append(String.format("&%1$s=%2$s", "itemId", eConsultId));
                     stringBuilder.append(viewConsultUrl.toString());
                     stringBuilder.append("'); return false;");
-                    
                     item.setURL(stringBuilder.toString());
                     try {
                         //Parses and sets the eConsult's date
-                        item.setDate(dateFormatter.parse(date));
+                    	item.setDate(dateFormatter.parse(date));   
                     }
                     catch (ParseException e) {
                         logger.error("Could not parse the date for eConsult " + eConsultId, e);
