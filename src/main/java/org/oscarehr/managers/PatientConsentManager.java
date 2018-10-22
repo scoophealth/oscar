@@ -257,6 +257,15 @@ public class PatientConsentManager {
 		
 	}
 	
+	public ConsentType addConsentType(LoggedInInfo loggedinInfo, ConsentType consentType ) {
+		
+		LogAction.addLog(loggedinInfo.getLoggedInProviderNo(), "PatientConsentManager.addConsentType", consentType.getType(), consentType.toString());
+		
+		consentTypeDao.persist(consentType);
+		return consentType;
+	}
+	
+	
 	/**
 	 * Returns a list of all the patient consent types currently active. 
 	 */
