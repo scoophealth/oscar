@@ -2853,7 +2853,7 @@ INSERT INTO specialty VALUES ('BC','48',' THORACIC SURGERY');
 insert into ProductLocation (name) values ('Default');
 
 INSERT INTO `OscarJobType` VALUES (null,'OSCAR MSG REVIEW','Sends OSCAR Messages to Residents Supervisors when charts need to be reviewed','org.oscarehr.jobs.OscarMsgReviewSender',0,now());
-INSERT INTO `OscarJob` VALUES (null,'OSCAR Message Review','',(select id from OscarJobType where name = 'OSCAR MSG REVIEW') ,'0 0/30 * * * *','999998',0,now());
+INSERT INTO `OscarJob` VALUES (null,'OSCAR Message Review','',(select id from OscarJobType where name = 'OSCAR MSG REVIEW') ,'0 0/30 * * * *','999998',0,now(),null);
 INSERT INTO `consentType` VALUES ('1', 'default_consent_entry', 'Demonstraton Consent', 'This is a demonstration consent. Modify the consentType and Consent tables to replace this message with a desired consent description, or to add new consents.', '1');
 
 
@@ -2867,7 +2867,7 @@ insert into scheduletemplatecode Values(null,'C','On Call Clinic','15','green','
 
 insert into OscarJobType Values(null,'OSCAR ON CALL CLINIC', 'Notifies MRP if patient seen during on-call clinic','org.oscarehr.jobs.OscarOnCallClinic',false,now());
 
-insert into OscarJob Values(null,'OSCAR On-Call Clinic',null,(select id from OscarJobType where name = 'OSCAR ON CALL CLINIC'),'0 0 4 * * *','999998',false,now());
+insert into OscarJob Values(null,'OSCAR On-Call Clinic',null,(select id from OscarJobType where name = 'OSCAR ON CALL CLINIC'),'0 0 4 * * *','999998',false,now(),null);
 
 insert into `secObjectName` (`objectName`) values ('_dashboardCommonLink');
 insert into `secObjPrivilege` values('doctor','_dashboardCommonLink','o',0,'999998');
