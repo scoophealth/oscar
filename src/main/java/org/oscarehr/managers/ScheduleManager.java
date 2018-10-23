@@ -94,6 +94,9 @@ public class ScheduleManager {
 	
 	@Autowired
 	private SecurityInfoManager securityInfoManager;
+	
+	@Autowired
+	private PatientConsentManager patientConsentManager;
 
 
 	/*Right now the date object passed is converted to a local time.  
@@ -260,6 +263,7 @@ public class ScheduleManager {
 
 		LogAction.addLogSynchronous(loggedInInfo, "ScheduleManager.getAppointmentUpdatedAfterDate", "updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
 
+		patientConsentManager.filterProviderSpecificConsent(loggedInInfo, results);
 		return (results);
 	}
 

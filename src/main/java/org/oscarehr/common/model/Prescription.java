@@ -43,7 +43,7 @@ import org.apache.commons.lang.StringUtils;
 
 @Entity
 @Table(name = "prescription")
-public class Prescription extends AbstractModel<Integer> implements Serializable {
+public class Prescription extends AbstractModel<Integer> implements Serializable, DemographicData {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -100,6 +100,10 @@ public class Prescription extends AbstractModel<Integer> implements Serializable
 	}
 
 	public Integer getDemographicId() {
+		return (demographicId);
+	}
+	
+	public int getDemographicNo() {
 		return (demographicId);
 	}
 
