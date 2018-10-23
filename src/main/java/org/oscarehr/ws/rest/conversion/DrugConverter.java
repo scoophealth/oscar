@@ -35,6 +35,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Converts between domain Drug object and transfer Drug objects.
@@ -166,10 +168,36 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
             t.setQuantity(Integer.parseInt(d.getQuantity()));
         }
 
-        this.populateTo1Strength(t, d);
-
+        this.populateStrengthFromDosage(d, t);
 
         return t;
+    }
+
+    protected Boolean populateStrengthFromDosage(Drug d, DrugTo1 t) {
+        if(t.getStrength() != null || (t.getStrengthUnit() != null && !t.getStrengthUnit().isEmpty())) {
+            return false;
+        }
+        Boolean result = false;
+        String dosage = d.getDosage();
+        try {
+            if (!dosage.isEmpty()) {
+                Pattern pattern = Pattern.compile("(\\d+\\.?\\d+)\\s?([^0-9]+)\\s?");
+                Matcher matcher = pattern.matcher(dosage);
+                if (matcher.find()) {  // getting first dosage component, to match populateTo1Strength behaviour
+                    String strength = matcher.group(1);
+                    String unit = matcher.group(2);
+                    if (!strength.isEmpty() && !unit.isEmpty()) {
+                        t.setStrength(Float.parseFloat(strength));
+                        t.setStrengthUnit(unit);
+                        result = true;
+                    }
+                }
+            }
+            return result;
+        } catch (Exception e) {
+            logger.error(e.getStackTrace());
+            return false;
+        }
     }
 
     /**
