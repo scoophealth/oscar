@@ -2462,6 +2462,10 @@
 			<forward name="form" path="/provider/olis_preferences.jsp" />
 		</action>
 
+		<action path="/provider/DashboardUserPreference" type="org.oscarehr.provider.web.DashboardUserPreferenceAction" parameter="method" scope="request" validate="false" input="/provider/dashboard_user_preference.jsp">
+			<forward name="form" path="/provider/dashboard_user_preference.jsp" />
+		</action>
+
 		<action path="/eyeform/ExaminationHistory" type="org.oscarehr.eyeform.web.ExaminationHistoryAction" parameter="method">
 			<forward name="success" path="/eyeform/examination_history.jsp" />
 			<forward name="results" path="/eyeform/examination_history_results.jsp" />

@@ -742,6 +742,11 @@ Event.observe('rxInteractionWarningLevel', 'change', function(event) {
       	<tr>
           <td align="center"><a href=# onClick ="popupPage(400,860,'../provider/OlisPreferences.do');return false;"><bean:message key="provider.olisPrefs" /></a></td>
       	</tr>
+      	<security:oscarSec roleName="<%=roleName$%>" rights="r" objectName="_dashboardDisplay">
+      	<tr>
+          <td align="center"><a href=# onClick ="popupPage(400,860,'../provider/DashboardUserPreference.do');return false;"><bean:message key="provider.dashboardUserPrefs" /></a></td>
+      	</tr>
+      	</security:oscarSec>
       	<tr>
           <td align="center"><a href=# onClick ="popupPage(230,860,'../setProviderStaleDate.do?method=viewCommentLab');return false;"><bean:message key="provider.btnDisableAckCommentLab"/></a></td>
         </tr>
