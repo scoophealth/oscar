@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -40,6 +41,7 @@ import org.oscarehr.dashboard.handler.IndicatorTemplateHandler;
 import org.oscarehr.managers.DashboardManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.w3c.dom.NodeList;
 
@@ -47,6 +49,7 @@ public class DisplayDrilldownAction extends DispatchAction  {
 	
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	private static DashboardManager dashboardManager = SpringUtils.getBean(DashboardManager.class);
+	private static Logger logger = MiscUtils.getLogger();
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
@@ -58,9 +61,19 @@ public class DisplayDrilldownAction extends DispatchAction  {
 		
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 		
-		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardDrilldown", SecurityInfoManager.READ, null ) ) {	
+		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardDrilldown", SecurityInfoManager.READ, null ) ) {
+			if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null) {
+				logger.info("Provider "+loggedInInfo.getLoggedInProvider().getProviderNo()+" does not have read permission on _dashboardDrilldown security object");
+			}
 			return mapping.findForward("unauthorized");
         }
+		if (!securityInfoManager.hasPrivilege(loggedInInfo,
+				"_dxresearch", SecurityInfoManager.WRITE, null)) {
+			if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null) {
+				logger.info("Provider "+loggedInInfo.getLoggedInProvider().getProviderNo()+" does not have write permission on _dxresearch security object");
+			}
+			return mapping.findForward("unauthorized");
+		}
 		
 		String indicatorTemplateId = request.getParameter("indicatorTemplateId");
 

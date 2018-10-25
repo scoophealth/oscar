@@ -43,6 +43,8 @@ import org.oscarehr.util.SpringUtils;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.oscarehr.common.dao.PropertyDao;
+import org.oscarehr.common.model.Property;
 import org.oscarehr.dashboard.handler.DiseaseRegistryHandler;
 import org.oscarehr.dashboard.handler.ExcludeDemographicHandler;
 import org.oscarehr.dashboard.handler.MessageHandler;
@@ -92,6 +94,11 @@ public class BulkPatientDashboardAction extends DispatchAction {
 			loggedInInfo.getLoggedInProviderNo(),
 			parseIntegers(patientIdsJson)
 		);
+		String mrp = getMRP(loggedInInfo);
+		if (mrp != loggedInInfo.getLoggedInProviderNo()) {
+			messageHandler.notifyProvider(subject, message, mrp, parseIntegers(patientIdsJson));
+		}
+
 
 		logger.info(message);
 
@@ -109,6 +116,9 @@ public class BulkPatientDashboardAction extends DispatchAction {
 
 		if (!securityInfoManager.hasPrivilege(loggedInInfo,
 				"_dxresearch", SecurityInfoManager.WRITE, null)) {
+			if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null) {
+				logger.info("Provider "+loggedInInfo.getLoggedInProvider().getProviderNo()+" does not have write permission on _dxresearch security object");
+			}
 			return mapping.findForward("unauthorized");
 		}
 
@@ -136,6 +146,10 @@ public class BulkPatientDashboardAction extends DispatchAction {
 			" with provider no {" + providerNo + "}";
 
 		messageHandler.notifyProvider(subject, message, providerNo, patientIdList);
+		String mrp = getMRP(loggedInInfo);
+		if (providerNo != mrp) {
+			messageHandler.notifyProvider(subject, message, mrp, patientIdList);
+		}
 
 		logger.info(message);
 
@@ -188,5 +202,29 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		}
 
 		return ints;
+	}
+	
+	private String getMRP(LoggedInInfo loggedInInfo) {
+		String providerNo = null;
+		if (loggedInInfo != null) {
+			providerNo = loggedInInfo.getLoggedInProviderNo();
+			String surrogate = surrogateForProvider(providerNo);
+			if (!surrogate.isEmpty()) {
+				providerNo = surrogate;
+			}
+		}
+		return providerNo;
+	}
+	
+	/**
+	 *Retrieve provider for which current provider is acting as a surrogate.
+	 */
+	private static String surrogateForProvider(String surrogate_providerNo) {
+		PropertyDao dao = SpringUtils.getBean(PropertyDao.class);
+		List<Property> props = dao.findByNameAndProvider("surrogate_for_provider", surrogate_providerNo);
+		if(props.size()>0) {
+			return props.get(0).getValue();
+		}
+		return new String();
 	}
 }
