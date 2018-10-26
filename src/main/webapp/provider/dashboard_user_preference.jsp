@@ -23,14 +23,14 @@ Provider provider = providerDao.getProvider(curProviderNo);
 logger.info("user: " + curProviderNo);
 List<Provider> providerList = null;
 providerList = providerDao.getBillableProviders();
-for (Provider p: providerList) {
-     logger.info("provider: " + p.getFullName());
-}
+// for (Provider p: providerList) {
+//      logger.info("provider: " + p.getFullName());
+// }
 %>
 
 <%
-  String curUser_no;
-  curUser_no = (String) session.getAttribute("user");
+//   String curUser_no;
+//   curUser_no = (String) session.getAttribute("user");
 
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -71,10 +71,10 @@ for (Provider p: providerList) {
 				<th width="20%">Default Dashboard User</th>
 				<td colspan="3">
 					<%
-						String val1 = (String)request.getAttribute("surrogateProvider");
+						String val1 = (String)request.getAttribute("dashboardUser");
 						if(val1 == null) val1 = curProviderNo;
 					%>
-					<select id="surrogateProvider" name="surrogateProvider">
+					<select id="dashboardUser" name="dashboardUser">
 					<option value="" <%=(val1.equals("")?"selected=\"selected\"":"") %>></option>
 					<%for(Provider p: providerList) {%>
 						<option value="<%=p.getProviderNo()%>"<%=(val1.equals(p.getProviderNo())?"selected=\"selected\"":"") %>><%=p.getFullName()%></option>
@@ -86,10 +86,10 @@ for (Provider p: providerList) {
 				<th width="20%">Share With Ontario Common Dashboard</th>
 				<td width="30%">
 					<%
-						val1 = (String)request.getAttribute("sharedMetric");
+						val1 = (String)request.getAttribute("shareDashboard");
 						if(val1 == null) val1 = "false";
 					%>
-					<select id="sharedMetric" name="sharedMetric">
+					<select id="shareDashboard" name="shareDashboard">
 						<option value="" <%=(val1.equals("")?"selected=\"selected\"":"") %>></option>
 						<option value="true" <%=(val1.equals("YES")?"selected=\"selected\"":"") %>>YES</option>
 						<option value="false" <%=(val1.equals("NO")?"selected=\"selected\"":"") %>>NO</option>

@@ -35,13 +35,16 @@ import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
+import org.apache.log4j.Logger;
 
 public class DashboardUserPreferenceAction extends DispatchAction {
 
 	private UserPropertyDAO dao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+	private Logger logger = org.oscarehr.util.MiscUtils.getLogger();
 	
 	@Override	   
-	public ActionForward unspecified(ActionMapping mapping, ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {		   
+	public ActionForward unspecified(ActionMapping mapping, ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {	
+		logger.info("here in unspecified");
 		return view(mapping, actionform, request, response);	   
 	}
 	   
@@ -49,6 +52,7 @@ public class DashboardUserPreferenceAction extends DispatchAction {
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		String providerNo=loggedInInfo.getLoggedInProviderNo();
 		UserProperty prop = dao.getProp(providerNo, "surrogate_for_provider");
+		logger.info("here in view with prop=" + prop);
 		if(prop != null)
 			request.setAttribute("dashboardUser", prop.getValue());
 
@@ -64,7 +68,8 @@ public class DashboardUserPreferenceAction extends DispatchAction {
 		String shareDash = request.getParameter("shareDashboard");
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		String providerNo=loggedInInfo.getLoggedInProviderNo();
-		
+		logger.info("here in save with dashUser="+dashUser);
+		logger.info("and shareDash="+shareDash);
 		if(dashUser != null ) {
 			UserProperty prop = dao.getProp(providerNo, "surrogate_for_provider");
 			if(prop == null) {
