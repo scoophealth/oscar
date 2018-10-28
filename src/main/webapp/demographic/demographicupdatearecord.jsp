@@ -247,7 +247,10 @@
 		{
 			String type = consentType.getType();
 			String consentRecord = request.getParameter(type);
-			int deleteme = Integer.parseInt(request.getParameter("deleteConsent_" + type));
+			int deleteme = 0;
+			if(!StringUtils.isEmpty(request.getParameter("deleteConsent_" + type))) {
+				deleteme = Integer.parseInt(request.getParameter("deleteConsent_" + type));
+			}
 			
 			if( consentRecord != null )
 			{
