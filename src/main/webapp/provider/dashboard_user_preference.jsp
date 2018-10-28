@@ -82,6 +82,7 @@ providerList = providerDao.getBillableProviders();
 					</select>
 				</td>
 			</tr>
+			<oscar:oscarPropertiesCheck property="billregion" value="ON">
 			<tr>
 				<th width="20%">Share With Ontario Common Dashboard</th>
 				<td width="30%">
@@ -91,15 +92,17 @@ providerList = providerDao.getBillableProviders();
 					%>
 					<select id="shareDashboard" name="shareDashboard">
 						<option value="" <%=(val1.equals("")?"selected=\"selected\"":"") %>></option>
-						<option value="true" <%=(val1.equals("YES")?"selected=\"selected\"":"") %>>YES</option>
-						<option value="false" <%=(val1.equals("NO")?"selected=\"selected\"":"") %>>NO</option>
+						<option value="true" <%=(val1.equals("true")?"selected=\"selected\"":"") %>>YES</option>
+						<option value="false" <%=(val1.equals("false")?"selected=\"selected\"":"") %>>NO</option>
 					</select>
 			</td>
 			</tr>
+			</oscar:oscarPropertiesCheck>
 								
 			
 		</table>
 			<input type="submit" value="Save Changes"/>
+			<input type="button" value="Close" onclick="window.close();"/>
 			</form>
 			<!-- end of form -->
 		</td>
