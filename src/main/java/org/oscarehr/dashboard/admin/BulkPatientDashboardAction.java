@@ -45,6 +45,7 @@ import net.sf.json.JSONObject;
 
 import org.oscarehr.common.dao.PropertyDao;
 import org.oscarehr.common.model.Property;
+import org.oscarehr.dashboard.handler.DemographicPatientStatusRosterStatusHandler;
 import org.oscarehr.dashboard.handler.DiseaseRegistryHandler;
 import org.oscarehr.dashboard.handler.ExcludeDemographicHandler;
 import org.oscarehr.dashboard.handler.MessageHandler;
@@ -59,6 +60,8 @@ public class BulkPatientDashboardAction extends DispatchAction {
 	private ExcludeDemographicHandler excludeDemographicHandler = new ExcludeDemographicHandler();
 
 	private DiseaseRegistryHandler diseaseRegistryHandler = new DiseaseRegistryHandler();
+	
+	private DemographicPatientStatusRosterStatusHandler demographicPatientStatusRosterStatusHandler = new DemographicPatientStatusRosterStatusHandler();
 
 	private MessageHandler messageHandler = new MessageHandler();
 
@@ -94,8 +97,8 @@ public class BulkPatientDashboardAction extends DispatchAction {
 			loggedInInfo.getLoggedInProviderNo(),
 			parseIntegers(patientIdsJson)
 		);
-		String mrp = getMRP(loggedInInfo);
-		if (mrp != loggedInInfo.getLoggedInProviderNo()) {
+		String mrp = getMRP(loggedInInfo.getLoggedInProviderNo());
+		if (mrp != null && mrp != loggedInInfo.getLoggedInProviderNo()) {
 			messageHandler.notifyProvider(subject, message, mrp, parseIntegers(patientIdsJson));
 		}
 
@@ -146,8 +149,8 @@ public class BulkPatientDashboardAction extends DispatchAction {
 			" with provider no {" + providerNo + "}";
 
 		messageHandler.notifyProvider(subject, message, providerNo, patientIdList);
-		String mrp = getMRP(loggedInInfo);
-		if (providerNo != mrp) {
+		String mrp = getMRP(providerNo);
+		if (mrp != null && providerNo != mrp) {
 			messageHandler.notifyProvider(subject, message, mrp, patientIdList);
 		}
 
@@ -177,6 +180,41 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		return null;
 	}
 
+	public ActionForward setPatientsInactive(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo = getProviderNo(loggedInInfo);
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_demographic", SecurityInfoManager.WRITE, null) ) {
+			logger.info("Provider "+providerNo+" does not have write permission on _demographic security object");
+			return mapping.findForward("unauthorized");
+		}
+
+		demographicPatientStatusRosterStatusHandler.setLoggedinInfo(loggedInInfo);
+
+		String patientIdsJson = request.getParameter("patientIds");
+		demographicPatientStatusRosterStatusHandler.setPatientStatusInactiveJson(patientIdsJson);
+
+		String subject = "Report on bulk setting of patients to inactive.";
+		String message = "Patient demographic_no(s) {" + patientIdsJson +
+			"} set inactive by " + providerNo;
+
+		messageHandler.notifyProvider(
+			subject,
+			message,
+			providerNo,
+			parseIntegers(patientIdsJson)
+		);
+		String mrp = getMRP(providerNo);
+		if (mrp != null && mrp != providerNo) {  // operation done by MOA for doctor
+			messageHandler.notifyProvider(subject, message, mrp, parseIntegers(patientIdsJson));
+		}
+
+		logger.info(message);
+
+		return null;
+	}
+	
 	private static JSONArray asJsonArray(String jsonString) {
 		if(jsonString == null || jsonString.isEmpty()) {
 			return new JSONArray();
@@ -204,18 +242,34 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		return ints;
 	}
 	
-	private String getMRP(LoggedInInfo loggedInInfo) {
+	private String getProviderNo(LoggedInInfo loggedInInfo) {
 		String providerNo = null;
 		if (loggedInInfo != null) {
 			providerNo = loggedInInfo.getLoggedInProviderNo();
-			String surrogate = surrogateForProvider(providerNo);
-			if (!surrogate.isEmpty()) {
-				providerNo = surrogate;
-			}
 		}
 		return providerNo;
 	}
 	
+//	private String getMRP(LoggedInInfo loggedInInfo) {
+//		String providerNo = null;
+//		if (loggedInInfo != null) {
+//			providerNo = loggedInInfo.getLoggedInProviderNo();
+//			String surrogate = surrogateForProvider(providerNo);
+//			if (!surrogate.isEmpty()) {
+//				providerNo = surrogate;
+//			}
+//		}
+//		return providerNo;
+//	}
+	
+	private String getMRP(String providerNo) {
+		String mrp = surrogateForProvider(providerNo);
+		if (!mrp.isEmpty()) {
+			return mrp;
+		}
+		return null;
+	}
+
 	/**
 	 *Retrieve provider for which current provider is acting as a surrogate.
 	 */
