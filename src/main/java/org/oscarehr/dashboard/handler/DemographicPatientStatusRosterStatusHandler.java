@@ -24,9 +24,13 @@
 
 package org.oscarehr.dashboard.handler;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils; 
+import org.oscarehr.util.SpringUtils;
+
+import net.sf.json.JSONArray;
 
 import org.oscarehr.common.model.Demographic; 
 import org.oscarehr.common.dao.DemographicDao; 
@@ -46,7 +50,28 @@ public class DemographicPatientStatusRosterStatusHandler {
 	DemographicArchiveDao demographicArchiveDao = SpringUtils.getBean(DemographicArchiveDao.class);
 	DemographicExtDao demographicExtDao = SpringUtils.getBean(DemographicExtDao.class);
 	DemographicExtArchiveDao demographicExtArchiveDao = SpringUtils.getBean(DemographicExtArchiveDao.class);
+	
+	public Boolean setPatientStatusInactiveJson( String jsonString) {
+		Boolean result = false;
+		if( jsonString == null || jsonString.isEmpty()) return false;
+		String providerNo = getProviderNo();
+		if (providerNo == null || providerNo.isEmpty()) return false;
 
+		if( ! jsonString.startsWith("[")) {
+			jsonString = "[" + jsonString;
+		}
+		if( ! jsonString.endsWith("]")) {
+			jsonString = jsonString + "]";
+		}
+		JSONArray jsonArray = JSONArray.fromObject( jsonString );
+		Integer arraySize = jsonArray.size();
+		for (int i = 0; i < arraySize; i++) {
+			result = setPatientStatusInactive(jsonArray.getString(i));
+			if (!result) return false;
+		}
+		return true;
+	}
+	
 	public Boolean setPatientStatusInactive(String demographicNo) {
 		Demographic demographic = demographicDao.getDemographic(demographicNo);
 		if(demographic != null) {
