@@ -126,7 +126,7 @@ public class DemographicAction extends DispatchAction  {
 					wPhoneExt = extMap.get("wPhoneExt")!=null?extMap.get("wPhoneExt").getValue():"";
 				}
 				
-				if((extMap.get("demo_cell") != null && !extMap.get("demo_cell").getValue().equals(cell))) {
+				if((extMap.get("demo_cell") != null && extMap.get("demo_cell").getValue() != null && !extMap.get("demo_cell").getValue().equals(cell))) {
 					//new cell phone
 					items.add(new DemographicHistoryItem(extMap.get("demo_cell").getValue(),"cell",archive.getLastUpdateDate()));
 					cell = extMap.get("demo_cell").getValue();
