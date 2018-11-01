@@ -197,6 +197,16 @@
 												</a>
 											</li>
 										</c:if>
+										
+										<c:if test="${fn:contains(drilldown.actionIds, 'patientStatusUpdate')}">
+											<li>
+												<a href="#"
+													class="dropdown-item"
+													title="Update Patients' Status." id="patientStatusUpdateChecked" >
+													Update Patients' Status
+												</a>
+											</li>
+										</c:if>
 									</ul>						 
 							    </div>
 							</th>
@@ -409,6 +419,28 @@
 	</div>
 </div>
 <!-- End patient exclusion modal panel -->
+
+<!-- modal panel for patient status update -->
+<div id="modalConfirmPatientStatusUpdate" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4>Verify Patient Status Update</h4>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you want to update the status of the selected patients to inactive?</p>
+			</div>
+			<div class="modal-footer">
+				<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=setPatientsInactive"
+					id="confirmPatientStatusUpdate" type="submit" class="btn btn-primary">Confirm</a>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End patient status update modal panel -->
 
 </div>	<!-- end container -->
 </body>
