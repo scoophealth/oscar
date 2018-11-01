@@ -68,8 +68,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 
 import oscar.log.LogAction;
-import oscar.oscarPrevention.PreventionDS;
-
 import oscar.oscarSurveillance.ProcessSurveyFile;
 import oscar.oscarSurveillance.SurveillanceMaster;
 import oscar.oscarSurveillance.Survey;
@@ -93,10 +91,7 @@ public class SurveillanceService extends AbstractServiceImpl {
 	
 	@Autowired
 	private ResourceStorageDao resourceStorageDao;
-	
-	@Autowired
-	private PreventionDS preventionDS;
-	
+
 	@Autowired
 	SurveillanceDataDao surveillanceDataDao;
 	
