@@ -55,6 +55,19 @@ angular.module("scheduleServices", [])
           return deferred.promise;
             
         },
+        getTemplateCodes: function () {
+            var deferred = $q.defer();
+            $http.get(this.apiPath+'schedule/codes',this.configHeadersWithCache).then(function (response){
+            	console.log(response.data);
+            	deferred.resolve(response.data);
+            },function(){
+            	console.log("error fetching types");
+            	deferred.reject("An error occured while fetching types");
+            });
+     
+          return deferred.promise;
+            
+        },
         getAppointments: function (day){
 	        deferred = $q.defer();	
 	        $http.get(this.apiPath+'schedule/day/'+day).then(function (response){	

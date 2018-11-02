@@ -48,6 +48,7 @@ import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.AppointmentStatus;
 import org.oscarehr.common.model.AppointmentType;
 import org.oscarehr.common.model.LookupListItem;
+import org.oscarehr.common.model.ScheduleTemplateCode;
 import org.oscarehr.managers.AppointmentManager;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.ScheduleManager;
@@ -61,6 +62,7 @@ import org.oscarehr.ws.rest.conversion.AppointmentStatusConverter;
 import org.oscarehr.ws.rest.conversion.AppointmentTypeConverter;
 import org.oscarehr.ws.rest.conversion.LookupListItemConverter;
 import org.oscarehr.ws.rest.conversion.NewAppointmentConverter;
+import org.oscarehr.ws.rest.conversion.ScheduleCodesConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
 import org.oscarehr.ws.rest.to.AppointmentExtResponse;
 import org.oscarehr.ws.rest.to.ProviderApptsCountResponse;
@@ -72,6 +74,7 @@ import org.oscarehr.ws.rest.to.model.AppointmentTo1;
 import org.oscarehr.ws.rest.to.model.NewAppointmentTo1;
 import org.oscarehr.ws.rest.to.model.ProviderApptsCountTo;
 import org.oscarehr.ws.rest.to.model.ProviderPeriodAppsTo;
+import org.oscarehr.ws.rest.to.model.ScheduleTemplateCodeTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -355,6 +358,21 @@ public class ScheduleService extends AbstractServiceImpl {
 
 		return response;
 	}
+	
+	@GET
+	@Path("/codes")
+	@Produces("application/json")
+	public List<ScheduleTemplateCodeTo> getScheduleTemplateCodes() {
+		SchedulingResponse response = new SchedulingResponse();
+		List<ScheduleTemplateCode> codes = scheduleManager.getScheduleTemplateCodes();
+
+		ScheduleCodesConverter converter = new ScheduleCodesConverter();
+
+		return converter.getAllAsTransferObjects(getLoggedInInfo(), codes);
+
+		
+	}
+	
 
 	@GET
 	@Path("/reasons")
