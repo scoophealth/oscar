@@ -42,6 +42,8 @@ import org.oscarehr.util.SpringUtils;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 
 import org.oscarehr.common.dao.PropertyDao;
 import org.oscarehr.common.model.Property;
@@ -70,6 +72,8 @@ public class BulkPatientDashboardAction extends DispatchAction {
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 		excludeDemographicHandler.setLoggedinInfo(loggedInInfo);
+		
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
 
 		String patientIdsJson = request.getParameter("patientIds");
 		String indicatorIdString = request.getParameter("indicatorId");
@@ -94,14 +98,13 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		messageHandler.notifyProvider(
 			subject,
 			message,
-			loggedInInfo.getLoggedInProviderNo(),
+			providerNo,
 			parseIntegers(patientIdsJson)
 		);
 		String mrp = getMRP(loggedInInfo.getLoggedInProviderNo());
-		if (mrp != null && mrp != loggedInInfo.getLoggedInProviderNo()) {
+		if (!providerNo.equals(mrp)) {
 			messageHandler.notifyProvider(subject, message, mrp, parseIntegers(patientIdsJson));
 		}
-
 
 		logger.info(message);
 
@@ -132,15 +135,17 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		JSONArray patientIds = asJsonArray(patientIdsJson);
 		List<Integer> patientIdList = new ArrayList<Integer>();
 
+		String ip = request.getRemoteAddr();
 		for (int i = 0; i < patientIds.size(); ++i) {
 			int patientId = patientIds.getInt(i);
 			patientIdList.add(patientId);
 
-			diseaseRegistryHandler.addToDiseaseRegistry(
-				patientId,
-				icd9code,
-				providerNo
-			);
+			Integer drId = diseaseRegistryHandler.addToDiseaseRegistry(
+					patientId,
+					icd9code,
+					providerNo
+					);
+			LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, "DX", ""+drId , ip,"");
 		}
 
 		String subject = "Bulk addition to disease registry report.";
@@ -150,7 +155,7 @@ public class BulkPatientDashboardAction extends DispatchAction {
 
 		messageHandler.notifyProvider(subject, message, providerNo, patientIdList);
 		String mrp = getMRP(providerNo);
-		if (mrp != null && providerNo != mrp) {
+		if (!providerNo.equals(mrp)) { // operation done by MOA for doctor
 			messageHandler.notifyProvider(subject, message, mrp, patientIdList);
 		}
 
@@ -193,21 +198,25 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		demographicPatientStatusRosterStatusHandler.setLoggedinInfo(loggedInInfo);
 
 		String patientIdsJson = request.getParameter("patientIds");
-		demographicPatientStatusRosterStatusHandler.setPatientStatusInactiveJson(patientIdsJson);
+		JSONArray patientIds = asJsonArray(patientIdsJson);
+		List<Integer> patientIdList = new ArrayList<Integer>();
+
+		String ip = request.getRemoteAddr();
+		for (int i = 0; i < patientIds.size(); ++i) {
+			int patientId = patientIds.getInt(i);
+			patientIdList.add(patientId);
+			demographicPatientStatusRosterStatusHandler.setPatientStatusInactive(""+patientId);
+		    LogAction.addLog(providerNo, LogConst.UPDATE, LogConst.CON_DEMOGRAPHIC, ""+patientId, ip, ""+patientId, "patient_status: IN");
+		}
 
 		String subject = "Report on bulk setting of patients to inactive.";
 		String message = "Patient demographic_no(s) {" + patientIdsJson +
 			"} set inactive by " + providerNo;
 
-		messageHandler.notifyProvider(
-			subject,
-			message,
-			providerNo,
-			parseIntegers(patientIdsJson)
-		);
+		messageHandler.notifyProvider(subject, message, providerNo, patientIdList);
 		String mrp = getMRP(providerNo);
-		if (mrp != null && mrp != providerNo) {  // operation done by MOA for doctor
-			messageHandler.notifyProvider(subject, message, mrp, parseIntegers(patientIdsJson));
+		if (!providerNo.equals(mrp)) {  // operation done by MOA for doctor
+			messageHandler.notifyProvider(subject, message, mrp, patientIdList);
 		}
 
 		logger.info(message);
@@ -249,21 +258,10 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		}
 		return providerNo;
 	}
-	
-//	private String getMRP(LoggedInInfo loggedInInfo) {
-//		String providerNo = null;
-//		if (loggedInInfo != null) {
-//			providerNo = loggedInInfo.getLoggedInProviderNo();
-//			String surrogate = surrogateForProvider(providerNo);
-//			if (!surrogate.isEmpty()) {
-//				providerNo = surrogate;
-//			}
-//		}
-//		return providerNo;
-//	}
+
 	
 	private String getMRP(String providerNo) {
-		String mrp = surrogateForProvider(providerNo);
+		String mrp = moaForProvider(providerNo);
 		if (!mrp.isEmpty()) {
 			return mrp;
 		}
@@ -273,7 +271,7 @@ public class BulkPatientDashboardAction extends DispatchAction {
 	/**
 	 *Retrieve provider for which current provider is acting as a surrogate.
 	 */
-	private static String surrogateForProvider(String surrogate_providerNo) {
+	private static String moaForProvider(String surrogate_providerNo) {
 		PropertyDao dao = SpringUtils.getBean(PropertyDao.class);
 		List<Property> props = dao.findByNameAndProvider("surrogate_for_provider", surrogate_providerNo);
 		if(props.size()>0) {

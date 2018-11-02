@@ -24,7 +24,7 @@
 
 package org.oscarehr.dashboard.handler;
 
-import java.util.List;
+//import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
