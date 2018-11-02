@@ -202,8 +202,8 @@
 											<li>
 												<a href="#"
 													class="dropdown-item"
-													title="Update Patients' Status." id="patientStatusUpdateChecked" >
-													Update Patients' Status
+													title="Set Checked Patients Status Inactive." id="patientStatusUpdateChecked" >
+													Set Status Inactive
 												</a>
 											</li>
 										</c:if>

@@ -70,6 +70,8 @@ public class BulkPatientDashboardAction extends DispatchAction {
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 		excludeDemographicHandler.setLoggedinInfo(loggedInInfo);
+		
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
 
 		String patientIdsJson = request.getParameter("patientIds");
 		String indicatorIdString = request.getParameter("indicatorId");
@@ -94,14 +96,13 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		messageHandler.notifyProvider(
 			subject,
 			message,
-			loggedInInfo.getLoggedInProviderNo(),
+			providerNo,
 			parseIntegers(patientIdsJson)
 		);
 		String mrp = getMRP(loggedInInfo.getLoggedInProviderNo());
-		if (mrp != null && mrp != loggedInInfo.getLoggedInProviderNo()) {
+		if (!providerNo.equals(mrp)) {
 			messageHandler.notifyProvider(subject, message, mrp, parseIntegers(patientIdsJson));
 		}
-
 
 		logger.info(message);
 
@@ -150,7 +151,7 @@ public class BulkPatientDashboardAction extends DispatchAction {
 
 		messageHandler.notifyProvider(subject, message, providerNo, patientIdList);
 		String mrp = getMRP(providerNo);
-		if (mrp != null && providerNo != mrp) {
+		if (!providerNo.equals(mrp)) { // operation done by MOA for doctor
 			messageHandler.notifyProvider(subject, message, mrp, patientIdList);
 		}
 
@@ -206,7 +207,7 @@ public class BulkPatientDashboardAction extends DispatchAction {
 			parseIntegers(patientIdsJson)
 		);
 		String mrp = getMRP(providerNo);
-		if (mrp != null && mrp != providerNo) {  // operation done by MOA for doctor
+		if (!providerNo.equals(mrp)) {  // operation done by MOA for doctor
 			messageHandler.notifyProvider(subject, message, mrp, parseIntegers(patientIdsJson));
 		}
 
@@ -249,21 +250,10 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		}
 		return providerNo;
 	}
-	
-//	private String getMRP(LoggedInInfo loggedInInfo) {
-//		String providerNo = null;
-//		if (loggedInInfo != null) {
-//			providerNo = loggedInInfo.getLoggedInProviderNo();
-//			String surrogate = surrogateForProvider(providerNo);
-//			if (!surrogate.isEmpty()) {
-//				providerNo = surrogate;
-//			}
-//		}
-//		return providerNo;
-//	}
+
 	
 	private String getMRP(String providerNo) {
-		String mrp = surrogateForProvider(providerNo);
+		String mrp = moaForProvider(providerNo);
 		if (!mrp.isEmpty()) {
 			return mrp;
 		}
@@ -273,7 +263,7 @@ public class BulkPatientDashboardAction extends DispatchAction {
 	/**
 	 *Retrieve provider for which current provider is acting as a surrogate.
 	 */
-	private static String surrogateForProvider(String surrogate_providerNo) {
+	private static String moaForProvider(String surrogate_providerNo) {
 		PropertyDao dao = SpringUtils.getBean(PropertyDao.class);
 		List<Property> props = dao.findByNameAndProvider("surrogate_for_provider", surrogate_providerNo);
 		if(props.size()>0) {
