@@ -42,6 +42,8 @@ import org.oscarehr.util.SpringUtils;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 
 import org.oscarehr.common.dao.PropertyDao;
 import org.oscarehr.common.model.Property;
@@ -137,11 +139,13 @@ public class BulkPatientDashboardAction extends DispatchAction {
 			int patientId = patientIds.getInt(i);
 			patientIdList.add(patientId);
 
-			diseaseRegistryHandler.addToDiseaseRegistry(
-				patientId,
-				icd9code,
-				providerNo
-			);
+			Integer drId = diseaseRegistryHandler.addToDiseaseRegistry(
+					patientId,
+					icd9code,
+					providerNo
+					);
+			String ip = request.getRemoteAddr();
+			LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, "DX", ""+drId , ip,"");
 		}
 
 		String subject = "Bulk addition to disease registry report.";
