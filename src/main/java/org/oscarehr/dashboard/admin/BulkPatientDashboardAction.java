@@ -135,6 +135,7 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		JSONArray patientIds = asJsonArray(patientIdsJson);
 		List<Integer> patientIdList = new ArrayList<Integer>();
 
+		String ip = request.getRemoteAddr();
 		for (int i = 0; i < patientIds.size(); ++i) {
 			int patientId = patientIds.getInt(i);
 			patientIdList.add(patientId);
@@ -144,7 +145,6 @@ public class BulkPatientDashboardAction extends DispatchAction {
 					icd9code,
 					providerNo
 					);
-			String ip = request.getRemoteAddr();
 			LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, "DX", ""+drId , ip,"");
 		}
 
@@ -198,21 +198,25 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		demographicPatientStatusRosterStatusHandler.setLoggedinInfo(loggedInInfo);
 
 		String patientIdsJson = request.getParameter("patientIds");
-		demographicPatientStatusRosterStatusHandler.setPatientStatusInactiveJson(patientIdsJson);
+		JSONArray patientIds = asJsonArray(patientIdsJson);
+		List<Integer> patientIdList = new ArrayList<Integer>();
+
+		String ip = request.getRemoteAddr();
+		for (int i = 0; i < patientIds.size(); ++i) {
+			int patientId = patientIds.getInt(i);
+			patientIdList.add(patientId);
+			demographicPatientStatusRosterStatusHandler.setPatientStatusInactive(""+patientId);
+		    LogAction.addLog(providerNo, LogConst.UPDATE, LogConst.CON_DEMOGRAPHIC, ""+patientId, ip, ""+patientId, "patient_status: IN");
+		}
 
 		String subject = "Report on bulk setting of patients to inactive.";
 		String message = "Patient demographic_no(s) {" + patientIdsJson +
 			"} set inactive by " + providerNo;
 
-		messageHandler.notifyProvider(
-			subject,
-			message,
-			providerNo,
-			parseIntegers(patientIdsJson)
-		);
+		messageHandler.notifyProvider(subject, message, providerNo, patientIdList);
 		String mrp = getMRP(providerNo);
 		if (!providerNo.equals(mrp)) {  // operation done by MOA for doctor
-			messageHandler.notifyProvider(subject, message, mrp, parseIntegers(patientIdsJson));
+			messageHandler.notifyProvider(subject, message, mrp, patientIdList);
 		}
 
 		logger.info(message);
