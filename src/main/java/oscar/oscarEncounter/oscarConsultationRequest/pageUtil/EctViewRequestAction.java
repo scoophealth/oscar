@@ -51,6 +51,8 @@ import org.oscarehr.common.hl7.v2.oscar_to_oscar.OscarToOscarUtils;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.RefI12;
 import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.DemographicExt;
+import org.oscarehr.common.model.DemographicExt.DemographicProperty;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
@@ -156,7 +158,11 @@ public class EctViewRequestAction extends Action {
 
             DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
             Demographic demo = demographicManager.getDemographic(loggedInInfo, consult.getDemographicId());
-
+            DemographicExt demographicExt = demographicManager.getDemographicExt(loggedInInfo, consult.getDemographicId(), DemographicProperty.demo_cell);
+            String demographicCellPhone = "";
+            if(demographicExt != null) {		
+            	demographicCellPhone = demographicExt.getValue();
+        	}
             thisForm.setPatientAddress(demo.getAddress());
             thisForm.setPatientDOB(demo.getFormattedDob());
             thisForm.setPatientHealthNum(demo.getHin());
@@ -167,6 +173,7 @@ public class EctViewRequestAction extends Action {
             thisForm.setPatientPhone(demo.getPhone());
             thisForm.setPatientSex(demo.getSex());
             thisForm.setPatientWPhone(demo.getPhone2());
+            thisForm.setPatientCellPhone(demographicCellPhone);
             thisForm.setPatientEmail(demo.getEmail());
             thisForm.setPatientAge(demo.getAge());
 
@@ -215,6 +222,7 @@ public class EctViewRequestAction extends Action {
         thisForm.setPatientPhone(consultUtil.patientPhone);
         thisForm.setPatientSex(consultUtil.patientSex);
         thisForm.setPatientWPhone(consultUtil.patientWPhone);
+        thisForm.setPatientCellPhone(consultUtil.patientCellPhone);
         thisForm.setPatientEmail(consultUtil.patientEmail);
         thisForm.setPatientAge(consultUtil.patientAge);
         
