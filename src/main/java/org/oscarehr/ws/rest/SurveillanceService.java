@@ -29,7 +29,7 @@ import java.text.SimpleDateFormat;
 
 import java.util.Date;
 import java.util.List;
-
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,11 +55,15 @@ import org.oscarehr.common.dao.AppDefinitionDao;
 import org.oscarehr.common.dao.AppUserDao;
 import org.oscarehr.common.dao.ResourceStorageDao;
 import org.oscarehr.common.dao.SurveillanceDataDao;
+import org.oscarehr.common.jobs.OscarJobUtils;
 import org.oscarehr.common.model.AppDefinition;
 import org.oscarehr.common.model.AppUser;
+import org.oscarehr.common.model.OscarJob;
+import org.oscarehr.common.model.OscarJobType;
 import org.oscarehr.common.model.ResourceStorage;
 import org.oscarehr.common.model.SurveillanceData;
 import org.oscarehr.managers.AppManager;
+import org.oscarehr.managers.OscarJobManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -99,6 +103,9 @@ public class SurveillanceService extends AbstractServiceImpl {
 	
 	@Autowired
 	SurveillanceDataDao surveillanceDataDao;
+	
+	@Autowired
+	OscarJobManager oscarJobManager;
 	
 
 	
@@ -308,13 +315,59 @@ public class SurveillanceService extends AbstractServiceImpl {
 		LoggedInInfo loggedInInfo = getLoggedInInfo();
 		Survey survey = Survey.createSurvey(resourceStorage.getFileContents());
 		
+	    uandp.accumulate("domain", survey.getExportDomain());
+	    uandp.accumulate("port", survey.getExportPort());
+	    uandp.accumulate("surveyId",survey.getSurveyId());
+		
+		String config = uandp.toString();
+		
 		if(resourceStorage.isActive()){
 			
 			LogAction.addLog(loggedInInfo.getLoggedInProviderNo(), "SurveillanceService.generateExport", "ResourceStorage",""+resourceStorage.getId(),loggedInInfo.getIp(), null,null);
+			
+			if("FTPS".equals(survey.getExportMethod())) {
+				
+				List<OscarJob> jobList =  oscarJobManager.getJobByName(loggedInInfo,"Surveillance "+survey.getSurveyId());
+				OscarJob job = null;
+				if(jobList.isEmpty()) {					
+					OscarJobType oscarJobType = oscarJobManager.addIfNotLoaded(loggedInInfo,OscarJobManager.getFTPSJob());
+					job = new OscarJob();
+					job.setOscarJobTypeId(oscarJobType.getId());
+					job.setEnabled(true);
+					job.setProviderNo(loggedInInfo.getLoggedInProviderNo());;
+					job.setName("Surveillance "+survey.getSurveyId());
+					job.setDescription("Data submission :"+survey.getSurveyTitle());
+					job.setUpdated(new Date());
+					job.setOscarJobType(null);
+					job.setConfig(config);
+					job.setCronExpression("0 "+getRandomMinute()+" 6 ? * MON");
+					oscarJobManager.saveJob(getLoggedInInfo(),job);
+				}else {
+					job = jobList.get(0);
+					logger.debug("OscarJob found :"+job.getId());
+					job.setConfig(config);
+					job.setUpdated(new Date());
+					job.setEnabled(true);
+					job.setCronExpression("0 "+getRandomMinute()+" 6 ? * MON");
+					oscarJobManager.updateJob(loggedInInfo, job);
+
+				}
+				OscarJobUtils.scheduleJob(job);
+				
+			}
 
 			return Response.ok(true).build();
 		}
 		return Response.ok(false).build();
+	}
+	
+	
+	private int getRandomMinute() {
+		Random r = new Random();
+		int low = 1;
+		int high = 59;
+		int result = r.nextInt(high-low) + low;
+		return result;
 	}
 	
 	private Date getReferenceDate(String s) {

@@ -24,6 +24,7 @@
 package org.oscarehr.managers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.oscarehr.common.dao.AbstractDao;
@@ -94,6 +95,13 @@ public class OscarJobManager {
 		return jobs;
 	}
 	
+	public List<OscarJob> getJobByName(LoggedInInfo loggedInInfo,String name){
+		List<OscarJob> jobs = oscarJobDao.getJobByName(name);
+		//--- log action ---  
+		LogAction.addLog(loggedInInfo, "OscarJobManager.getJobByName", null, null, null, "name="+name);
+		return jobs;
+	}
+	
 	public OscarJob getJob(LoggedInInfo loggedInInfo, Integer id) {
 		
 		OscarJob job = oscarJobDao.find(id);
@@ -104,6 +112,21 @@ public class OscarJobManager {
 		}
 	
 		return job;
+	}
+	
+	public OscarJobType addIfNotLoaded(LoggedInInfo loggedInInfo,OscarJobType jobType) {
+		List<OscarJobType> allJobs =  getAllJobTypes();
+		boolean loaded = false;
+		for(OscarJobType ojt : allJobs) {
+			if(ojt.getName().equals(jobType.getName()) && ojt.getClassName().equals(jobType.getClassName())) {
+				return ojt;
+			}
+		}
+		if(!loaded) {
+			saveJobType(loggedInInfo,jobType);
+			return jobType;
+		}
+		return null;
 	}
 	
 	public OscarJobType getJobType(LoggedInInfo loggedInInfo, Integer id) {
@@ -131,4 +154,15 @@ public class OscarJobManager {
         //--- log action ---
 		LogAction.addLogSynchronous(loggedInInfo, "OscarJobManager.updateJobType", "oscarJobType.id="+oscarJob.getId());
     }
+	
+	public static OscarJobType getFTPSJob() {
+		OscarJobType oscarJobType = new OscarJobType();
+		oscarJobType.setDescription("Common FTPS Job type");
+		oscarJobType.setClassName("org.oscarehr.integration.surveillance.FTPSJob");
+		oscarJobType.setEnabled(true);
+		oscarJobType.setName("FTPS");
+		oscarJobType.setUpdated(new Date());
+		return oscarJobType;
+	}
+	
 }

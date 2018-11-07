@@ -38,4 +38,5 @@ public interface OscarRunnable extends Runnable {
 
 	public void setLoggedInProvider(Provider provider);
 	public void setLoggedInSecurity(Security security);
+	public void setConfig(String config);
 }

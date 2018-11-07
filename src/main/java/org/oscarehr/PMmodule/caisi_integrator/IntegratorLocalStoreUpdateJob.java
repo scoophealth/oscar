@@ -185,4 +185,8 @@ public class IntegratorLocalStoreUpdateJob implements OscarRunnable {
 		logger.info("End fetch data for facility : " + facility.getId() + " : " + facility.getName());
 	}
 	
+	@Override
+	public void setConfig(String string) {
+	}
+	
 }
