@@ -39,6 +39,7 @@ public class DashboardBean {
 	private boolean locked;
 	
 	private Date lastChecked;
+	private String providerNo = null;
 	
 	// by Indicator Category
 	private List<PanelBean> panelBeans;
@@ -113,6 +114,10 @@ public class DashboardBean {
 
 	public void setLastChecked(Date lastChecked) {
 		this.lastChecked = lastChecked;
+	}
+
+	public void setProviderNo(String providerNo) {
+		this.providerNo = providerNo;
 	}
 
 	@Override

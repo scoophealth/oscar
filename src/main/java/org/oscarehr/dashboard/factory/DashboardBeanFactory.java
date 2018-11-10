@@ -58,6 +58,14 @@ public class DashboardBeanFactory {
 	public DashboardBeanFactory( LoggedInInfo loggedInInfo, Dashboard dashboardEntity ) {
 		this( loggedInInfo, dashboardEntity, null);
 	}
+
+	/**
+	 * Parameters cannot be null or empty. This will work if the Indicator Templates are pre-set into the
+	 * DashboardEntity Object.
+	 */
+	public DashboardBeanFactory( LoggedInInfo loggedInInfo, String providerNo, Dashboard dashboardEntity ) {
+		this( loggedInInfo, dashboardEntity,  providerNo,  null);
+	}
 	
 	/**
 	 * Additional IndicatorTemplates parameter incase they are not preset in the Dashboard Entity.
@@ -77,7 +85,27 @@ public class DashboardBeanFactory {
 		setPanelBeans( getDashboardBean(), getIndicatorTemplates() );
 		getDashboardBean().setLastChecked( new Date( System.currentTimeMillis() ) );
 	}
-	
+
+	/**
+	 * Additional IndicatorTemplates parameter incase they are not preset in the Dashboard Entity.
+	 */
+	public DashboardBeanFactory( LoggedInInfo loggedInInfo, Dashboard dashboardEntity, String providerNo, List<IndicatorTemplate> indicatorTemplates ) {
+
+		logger.info("Building Dashboard: " + dashboardEntity.getName() );
+
+		setDashboardEntity(dashboardEntity);
+
+		if(indicatorTemplates == null ) {
+			indicatorTemplates = dashboardEntity.getIndicators();
+		}
+
+		setIndicatorTemplates( indicatorTemplates );
+		setDashboardBean( new DashboardBean() );
+		setPanelBeans( getDashboardBean(), getIndicatorTemplates() );
+		getDashboardBean().setLastChecked( new Date( System.currentTimeMillis() ) );
+		getDashboardBean().setProviderNo(providerNo);
+	}
+
 	public DashboardBean getDashboardBean() {
 		return dashboardBean;
 	}

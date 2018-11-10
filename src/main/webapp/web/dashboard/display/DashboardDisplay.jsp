@@ -66,6 +66,48 @@
 		</h2>
 		<hr />
 	</div>
+	<center>
+	<div class="dropdown">
+		<form action="<%=request.getContextPath()%>/web/dashboard/display/DashboardDisplay.do?method=getDashboard&dashboardId=${ dashboard.id }" method="post">
+			<select id="providerNo" name="providerNo">
+			<option value="${ preferredProvider.providerNo }"><c:out value="${ preferredProvider.fullName }"/></option>
+			<c:forEach items="${ providers }" var="provider">
+				<option value="${ provider.providerNo }">
+					<c:out value="${ provider.formattedName }"/>
+				</option>
+			</c:forEach>
+			</select>
+			<input type="submit" value="Change Dashboard Provider"><%-- onclick="newWindow('<%=request.getContextPath()%>/web/dashboard/display/DashboardDisplay.do?method=getDashboard&dashboardId=${ dashboard.id }','dashboard'>)">--%>
+		</form>
+	</div>
+	</center>
+	<div class="form-group">
+			<%--             <div class="dropdown btn-group" id="selectProviderDashboardButtonContainer">
+                                 <button class="btn btn-default dropdown-toggle btn-md" type="button"
+                                         id="providerDashboardMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                         <c:out value="Select provider" />
+                                         <span class="caret"></span>
+                                 </button>
+                                 <ul class="dropdown-menu" aria-labelledby="providerDashboardMenu">
+                                                 <li><c:out value="${ providers.get(1).getFullName() }" />
+                                 abc
+                                 def
+                                                 </li>
+                                 </ul>
+                         </div>--%>
+<%--		<center>
+			<div class="col-md-6">
+				<label></label>
+				<select class="form-control required" name="providerNo" id="getDashboard_${ dashboard.id }" >
+					<option value="${ preferredProvider.providerNo }"><c:out value="${ preferredProvider.fullName }"/></option>
+					<c:forEach items="${ providers }" var="provider">
+						<option value="${ provider.providerNo }">
+							<c:out value="${ provider.formattedName }"/>
+						</option>
+					</c:forEach>
+				</select>
+			</div>
+		</center>--%>
 	<div class="row dashboardSubHeading" >
 		<div class="col-md-6">
 			Last loaded: 
@@ -79,6 +121,7 @@
 				<span class="glyphicon glyphicon glyphicon-cog"></span>
 			</a>
 		</div>
+	</div>
 	</div>
 	<!-- end Dashboard Heading -->
 	
