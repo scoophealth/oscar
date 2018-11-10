@@ -67,29 +67,25 @@ public class DisplayDashboardAction extends DispatchAction {
 		if( dashboardId != null && ! dashboardId.isEmpty() ) {
 			id = Integer.parseInt( dashboardId );
 		}
-
-		Provider preferredProvider = null;
-		String requestedProviderNo = dashboardManager.getRequestedProviderNo();
-		if (requestedProviderNo != null) {
-			preferredProvider = providerManager.getProvider(loggedInInfo, requestedProviderNo);
-		} else {
-			preferredProvider = loggedInInfo.getLoggedInProvider();
-		}
 		
-		List<Provider> providers = providerManager.getProviders(loggedInInfo, Boolean.TRUE);
-
-		request.setAttribute("providers", providers);
-		DashboardBean dashboard = null;
-
-		requestedProviderNo = request.getParameter("providerNo");
+		Provider preferredProvider = null;
+		String requestedProviderNo = request.getParameter("providerNo");
 		if (requestedProviderNo != null && !requestedProviderNo.isEmpty()) {
 			logger.info("zzz requestedProviderNo: " + requestedProviderNo);
 			preferredProvider = providerManager.getProvider(loggedInInfo, requestedProviderNo);
-			dashboardManager.setRequestProviderNo(requestedProviderNo);
+			dashboardManager.setRequestedProviderNo(loggedInInfo, requestedProviderNo);
+		} else if (dashboardManager.getRequestedProviderNo(loggedInInfo) != null) {
+			logger.info("using dashboardManager preferred provider");
+			preferredProvider = providerManager.getProvider(loggedInInfo, dashboardManager.getRequestedProviderNo(loggedInInfo));
+		} else {
+			preferredProvider = loggedInInfo.getLoggedInProvider();
 		}
 		request.setAttribute("preferredProvider", preferredProvider);
+		
+		List<Provider> providers = providerManager.getProviders(loggedInInfo, Boolean.TRUE);
+		request.setAttribute("providers", providers);
 
-		dashboard = dashboardManager.getDashboard(loggedInInfo, id);
+		DashboardBean dashboard = dashboardManager.getDashboard(loggedInInfo, id);
 
 		request.setAttribute("dashboard", dashboard);
 

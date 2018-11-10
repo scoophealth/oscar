@@ -23,7 +23,9 @@
  */
 package org.oscarehr.managers;
 import java.security.Security;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -73,7 +75,7 @@ public class DashboardManager {
 	@Autowired
 	ClinicDAO clinicDAO;
 
-	private static String requestedProviderNo = null;
+	private Map<String,String> requestedProviderNumMap = new HashMap<String, String>();
 	
 	private Logger logger = MiscUtils.getLogger();
 	/**
@@ -441,45 +443,6 @@ public class DashboardManager {
 	}
 	
 	/**
-	 *  Get an entire Dashboard, with all of its Indicators in a List parameter.
-	 */
-	public DashboardBean getDashboard( LoggedInInfo loggedInInfo, String providerNo, int dashboardId ) {
-
-		DashboardBean dashboardBean = null;
-
-		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardDisplay", SecurityInfoManager.READ, null ) ) {
-			LogAction.addLog(loggedInInfo, "DashboardManager.getDashboard", null, null, null,"User missing _dashboardManager role with write access");
-			return dashboardBean;
-        }
-
-		Dashboard dashboardEntity = null;
-		DashboardBeanFactory dashboardBeanFactory = null;
-
-		if( dashboardId > 0 ) {
-			dashboardEntity = dashboardDao.find( dashboardId );
-			List<IndicatorTemplate> indicatorTemplates = getIndicatorTemplatesByDashboardId( loggedInInfo, dashboardId );
-			dashboardEntity.setIndicators( indicatorTemplates );
-		}
-
-		if( dashboardEntity != null ) {
-			// Add the indicators and panels.
-			dashboardBeanFactory = new DashboardBeanFactory( loggedInInfo, providerNo, dashboardEntity );
-		}
-
-		if( dashboardBeanFactory != null ) {
-			dashboardBean = dashboardBeanFactory.getDashboardBean();
-		}
-
-		if( dashboardBean != null ) {
-			LogAction.addLog(loggedInInfo, "DashboardManager.getDashboard", null, null, null,"Returning Dashboard results for Dashboard ID " + dashboardId );
-		} else {
-			LogAction.addLog(loggedInInfo, "DashboardManager.getDashboard", null, null, null,"Failed to return results for Dashboard ID " + dashboardId );
-		}
-
-		return dashboardBean;
-	}
-	
-	/**
 	 * Get an Indicator Template by Id.
 	 */
 	public IndicatorTemplate getIndicatorTemplate( LoggedInInfo loggedInInfo, int indicatorTemplateId ) {
@@ -526,31 +489,6 @@ public class DashboardManager {
 		
 		return indicatorTemplateXML;
 	}
-	
-//	/**
-//	 * Get the XML template that contains all the data and meta data for an Indicator display. 
-//	 */
-//	public IndicatorTemplateXML getIndicatorTemplateXML( LoggedInInfo loggedInInfo, String requestedProviderNo, int indicatorTemplateId ) {
-//		
-//		IndicatorTemplateXML indicatorTemplateXML = null;
-//		
-//		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardDrilldown", SecurityInfoManager.READ, null ) ) {	
-//			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorTemplateXML", null, null, null,"User missing _dashboardDrilldown role with read access");
-//			return indicatorTemplateXML;
-//        }
-//		
-//		IndicatorTemplate indicatorTemplate = getIndicatorTemplate( loggedInInfo, indicatorTemplateId );
-//		IndicatorTemplateHandler templateHandler = new IndicatorTemplateHandler( loggedInInfo, indicatorTemplate.getTemplate().getBytes() );
-//		indicatorTemplateXML = templateHandler.getIndicatorTemplateXML();
-//		
-//		if( indicatorTemplateXML != null ) {
-//			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorTemplateXML", null, null, null,"Returning IndicatorTemplateXML Id " + indicatorTemplateId );			
-//		} else {
-//			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorTemplateXML", null, null, null,"IndicatorTemplateXML Id " + indicatorTemplateId + " not found." );			
-//		}
-//		
-//		return indicatorTemplateXML;
-//	}
 
 	public DrilldownBean getDrilldownData( LoggedInInfo loggedInInfo, int indicatorTemplateId, String metricLabel) {
 		return getDrilldownData(loggedInInfo,indicatorTemplateId,null, metricLabel);
@@ -630,8 +568,8 @@ public class DashboardManager {
 		
 		IndicatorTemplateXML indicatorTemplateXML = getIndicatorTemplateXML( loggedInInfo, indicatorId );
 
-		if (getRequestedProviderNo() != null) {
-			indicatorTemplateXML.setProviderNo(requestedProviderNo);
+		if (getRequestedProviderNo(loggedInInfo) != null) {
+			indicatorTemplateXML.setProviderNo(getRequestedProviderNo(loggedInInfo));
 		}
 		
 		// The id needs to be force set.
@@ -764,12 +702,18 @@ public class DashboardManager {
 		return url + "?" + "encodedParams=" + b64 + "&version=1.1";
 	}
 
-	public void setRequestProviderNo(String providerNo) {
-		this.requestedProviderNo = providerNo;
+	public void setRequestedProviderNo(LoggedInInfo loggedInInfo, String providerNo) {
+		String loggedInInfoStr = loggedInInfo.getLoggedInProviderNo();
+		if (loggedInInfoStr != null && !loggedInInfoStr.isEmpty())
+			this.requestedProviderNumMap.put(loggedInInfoStr,providerNo);
 	}
 
-	public String getRequestedProviderNo() {
-		return requestedProviderNo;
+	public String getRequestedProviderNo(LoggedInInfo loggedInInfo) {
+		if (loggedInInfo != null) {
+			return this.requestedProviderNumMap.get(loggedInInfo.getLoggedInProviderNo());
+		} else {
+			return null;
+		}
 	}
 
 }

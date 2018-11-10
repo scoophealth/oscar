@@ -86,9 +86,9 @@ public class DisplayDrilldownAction extends DispatchAction  {
 		String providerNo = (String) request.getAttribute("providerNo");
 		//providerNo = "111114";
 		logger.info("yyy providerNo: " + providerNo);
-		logger.info("dashboardManager.getRequestedProviderNo():"+dashboardManager.getRequestedProviderNo());
-		if (dashboardManager.getRequestedProviderNo() != null) {
-		    providerNo = dashboardManager.getRequestedProviderNo();
+		logger.info("dashboardManager.getRequestedProviderNo():"+dashboardManager.getRequestedProviderNo(loggedInInfo));
+		if (dashboardManager.getRequestedProviderNo(loggedInInfo) != null) {
+		    providerNo = dashboardManager.getRequestedProviderNo(loggedInInfo);
         }
 		DrilldownBean drilldown;
 		if (providerNo == null) {
