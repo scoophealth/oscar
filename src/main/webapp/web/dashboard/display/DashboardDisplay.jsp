@@ -66,6 +66,21 @@
 		</h2>
 		<hr />
 	</div>
+	<center>
+	<div class="dropdown">
+		<form action="<%=request.getContextPath()%>/web/dashboard/display/DashboardDisplay.do?method=getDashboard&dashboardId=${ dashboard.id }" method="post">
+			<select id="providerNo" name="providerNo">
+			<option value="${ preferredProvider.providerNo }"><c:out value="${ preferredProvider.fullName }"/></option>
+			<c:forEach items="${ providers }" var="provider">
+				<option value="${ provider.providerNo }">
+					<c:out value="${ provider.formattedName }"/>
+				</option>
+			</c:forEach>
+			</select>
+			<input type="submit" value="Change Dashboard Provider">
+		</form>
+	</div>
+	</center>
 	<div class="row dashboardSubHeading" >
 		<div class="col-md-6">
 			Last loaded: 

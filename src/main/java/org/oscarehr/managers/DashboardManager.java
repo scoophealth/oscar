@@ -23,7 +23,9 @@
  */
 package org.oscarehr.managers;
 import java.security.Security;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -72,7 +74,8 @@ public class DashboardManager {
 	
 	@Autowired
 	ClinicDAO clinicDAO;
-	
+
+	private Map<String,String> requestedProviderNumMap = new HashMap<String, String>();
 	
 	private Logger logger = MiscUtils.getLogger();
 	/**
@@ -507,6 +510,9 @@ public class DashboardManager {
 		IndicatorTemplate indicatorTemplate = getIndicatorTemplate( loggedInInfo, indicatorTemplateId );
 		IndicatorTemplateHandler templateHandler = new IndicatorTemplateHandler( loggedInInfo, indicatorTemplate.getTemplate().getBytes() );
 		IndicatorTemplateXML indicatorTemplateXML = templateHandler.getIndicatorTemplateXML();
+		if (providerNo != null) {
+			indicatorTemplateXML.setProviderNo(providerNo);
+		}
 		
 		if( indicatorTemplate != null ) {
 			drilldownBeanFactory = new DrilldownBeanFactory( loggedInInfo, indicatorTemplate, providerNo, metricLabel ); 
@@ -691,4 +697,19 @@ public class DashboardManager {
 
 		return url + "?" + "encodedParams=" + b64 + "&version=1.1";
 	}
+
+	public void setRequestedProviderNo(LoggedInInfo loggedInInfo, String providerNo) {
+		String loggedInInfoStr = loggedInInfo.getLoggedInProviderNo();
+		if (loggedInInfoStr != null && !loggedInInfoStr.isEmpty())
+			this.requestedProviderNumMap.put(loggedInInfoStr,providerNo);
+	}
+
+	public String getRequestedProviderNo(LoggedInInfo loggedInInfo) {
+		if (loggedInInfo != null) {
+			return this.requestedProviderNumMap.get(loggedInInfo.getLoggedInProviderNo());
+		} else {
+			return null;
+		}
+	}
+
 }

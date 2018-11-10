@@ -29,8 +29,6 @@ import java.util.List;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
-import org.oscarehr.common.dao.PropertyDao;
-import org.oscarehr.common.model.Property;
 import org.oscarehr.dashboard.query.Column;
 import org.oscarehr.dashboard.query.Parameter;
 import org.oscarehr.dashboard.query.RangeInterface;
@@ -39,7 +37,6 @@ import org.oscarehr.dashboard.query.RangeUpperLimit;
 import org.oscarehr.dashboard.query.DrillDownAction;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -648,10 +645,6 @@ public class IndicatorTemplateXML {
 		
 		switch( ProviderValueAlias.valueOf( parameterValue ) ) {
 		case loggedinprovider : parameterValue = getLoggedInProvider().trim();
-				String surrogate = surrogateForProvider(parameterValue);
-				if (!surrogate.isEmpty()) {
-					parameterValue = surrogate;
-				}
 				break;
 		
 		case all : parameterValue = "%";
@@ -676,17 +669,6 @@ public class IndicatorTemplateXML {
 		this.providerNo = providerNo;
 	}
 	
-	/**
-	 *Retrieve provider for which current provider is acting as a surrogate.
-	 */
-	public static String surrogateForProvider(String surrogate_providerNo) {
-		PropertyDao dao = SpringUtils.getBean(PropertyDao.class);
-		List<Property> props = dao.findByNameAndProvider("surrogate_for_provider", surrogate_providerNo);
-		if(props.size()>0) {
-			return props.get(0).getValue();
-		}
-		return new String();
-	}
 	
 	public void setSharedMetricLabel(String sharedMetricLabel) {
 		this.sharedMetricLabel = sharedMetricLabel;

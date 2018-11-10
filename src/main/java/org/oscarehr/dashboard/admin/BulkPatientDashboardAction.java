@@ -45,12 +45,11 @@ import net.sf.json.JSONObject;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 
-import org.oscarehr.common.dao.PropertyDao;
-import org.oscarehr.common.model.Property;
 import org.oscarehr.dashboard.handler.DemographicPatientStatusRosterStatusHandler;
 import org.oscarehr.dashboard.handler.DiseaseRegistryHandler;
 import org.oscarehr.dashboard.handler.ExcludeDemographicHandler;
 import org.oscarehr.dashboard.handler.MessageHandler;
+import org.oscarehr.managers.DashboardManager;
 import org.oscarehr.managers.SecurityInfoManager;
 
 public class BulkPatientDashboardAction extends DispatchAction {
@@ -58,6 +57,8 @@ public class BulkPatientDashboardAction extends DispatchAction {
 	private static Logger logger = MiscUtils.getLogger();
 
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
+	private DashboardManager dashboardManager = SpringUtils.getBean(DashboardManager.class);
 
 	private ExcludeDemographicHandler excludeDemographicHandler = new ExcludeDemographicHandler();
 
@@ -101,8 +102,8 @@ public class BulkPatientDashboardAction extends DispatchAction {
 			providerNo,
 			parseIntegers(patientIdsJson)
 		);
-		String mrp = getMRP(loggedInInfo.getLoggedInProviderNo());
-		if (!providerNo.equals(mrp)) {
+		String mrp = getMRP(loggedInInfo);
+		if (mrp != null && !providerNo.equals(mrp)) {
 			messageHandler.notifyProvider(subject, message, mrp, parseIntegers(patientIdsJson));
 		}
 
@@ -154,8 +155,8 @@ public class BulkPatientDashboardAction extends DispatchAction {
 			" with provider no {" + providerNo + "}";
 
 		messageHandler.notifyProvider(subject, message, providerNo, patientIdList);
-		String mrp = getMRP(providerNo);
-		if (!providerNo.equals(mrp)) { // operation done by MOA for doctor
+		String mrp = getMRP(loggedInInfo);
+		if (mrp != null && !providerNo.equals(mrp)) { // operation done by MOA for doctor
 			messageHandler.notifyProvider(subject, message, mrp, patientIdList);
 		}
 
@@ -214,8 +215,8 @@ public class BulkPatientDashboardAction extends DispatchAction {
 			"} set inactive by " + providerNo;
 
 		messageHandler.notifyProvider(subject, message, providerNo, patientIdList);
-		String mrp = getMRP(providerNo);
-		if (!providerNo.equals(mrp)) {  // operation done by MOA for doctor
+		String mrp = getMRP(loggedInInfo);
+		if (mrp != null && !providerNo.equals(mrp)) {  // operation done by MOA for doctor
 			messageHandler.notifyProvider(subject, message, mrp, patientIdList);
 		}
 
@@ -259,24 +260,8 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		return providerNo;
 	}
 
-	
-	private String getMRP(String providerNo) {
-		String mrp = moaForProvider(providerNo);
-		if (!mrp.isEmpty()) {
-			return mrp;
-		}
-		return null;
+	private String getMRP(LoggedInInfo loggedInInfo) {
+		return dashboardManager.getRequestedProviderNo(loggedInInfo);
 	}
 
-	/**
-	 *Retrieve provider for which current provider is acting as a surrogate.
-	 */
-	private static String moaForProvider(String surrogate_providerNo) {
-		PropertyDao dao = SpringUtils.getBean(PropertyDao.class);
-		List<Property> props = dao.findByNameAndProvider("surrogate_for_provider", surrogate_providerNo);
-		if(props.size()>0) {
-			return props.get(0).getValue();
-		}
-		return new String();
-	}
 }

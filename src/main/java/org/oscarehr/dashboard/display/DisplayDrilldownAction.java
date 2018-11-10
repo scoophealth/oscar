@@ -82,7 +82,16 @@ public class DisplayDrilldownAction extends DispatchAction  {
 			id = Integer.parseInt( indicatorTemplateId );
 		}
 		
-		DrilldownBean drilldown = dashboardManager.getDrilldownData(loggedInInfo, id, "null");
+		String providerNo = null;
+		if (dashboardManager.getRequestedProviderNo(loggedInInfo) != null) {
+		    providerNo = dashboardManager.getRequestedProviderNo(loggedInInfo);
+        }
+		DrilldownBean drilldown;
+		if (providerNo == null) {
+			drilldown = dashboardManager.getDrilldownData(loggedInInfo, id, "null");
+		} else {
+			drilldown = dashboardManager.getDrilldownData(loggedInInfo, id, providerNo, "null");
+		}
 		
 		// something must be returned. If not then something is very wrong.
 		if ( drilldown == null ) {

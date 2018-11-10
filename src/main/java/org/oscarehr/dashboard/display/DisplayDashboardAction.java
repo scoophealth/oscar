@@ -30,15 +30,22 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.dashboard.display.beans.DashboardBean;
 import org.oscarehr.managers.DashboardManager;
+import org.oscarehr.managers.ProviderManager2;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+import java.util.List;
 
 public class DisplayDashboardAction extends DispatchAction {
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	private static DashboardManager dashboardManager = SpringUtils.getBean(DashboardManager.class);
+	private ProviderManager2 providerManager = SpringUtils.getBean( ProviderManager2.class );
+	private static Logger logger = MiscUtils.getLogger();
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
@@ -61,6 +68,22 @@ public class DisplayDashboardAction extends DispatchAction {
 			id = Integer.parseInt( dashboardId );
 		}
 		
+		Provider preferredProvider = null;
+		String requestedProviderNo = request.getParameter("providerNo");
+		if (requestedProviderNo != null && !requestedProviderNo.isEmpty()) {
+			logger.info("DashboardDisplay of provider_no " + requestedProviderNo + " requested by provider_no " + loggedInInfo.getLoggedInProviderNo() );
+			preferredProvider = providerManager.getProvider(loggedInInfo, requestedProviderNo);
+			dashboardManager.setRequestedProviderNo(loggedInInfo, requestedProviderNo);
+		} else if (dashboardManager.getRequestedProviderNo(loggedInInfo) != null) {
+			preferredProvider = providerManager.getProvider(loggedInInfo, dashboardManager.getRequestedProviderNo(loggedInInfo));
+		} else {
+			preferredProvider = loggedInInfo.getLoggedInProvider();
+		}
+		request.setAttribute("preferredProvider", preferredProvider);
+		
+		List<Provider> providers = providerManager.getProviders(loggedInInfo, Boolean.TRUE);
+		request.setAttribute("providers", providers);
+
 		DashboardBean dashboard = dashboardManager.getDashboard(loggedInInfo, id);
 
 		request.setAttribute("dashboard", dashboard);
