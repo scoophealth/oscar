@@ -72,7 +72,8 @@ public class DashboardManager {
 	
 	@Autowired
 	ClinicDAO clinicDAO;
-	
+
+	private static String requestedProviderNo = null;
 	
 	private Logger logger = MiscUtils.getLogger();
 	/**
@@ -440,6 +441,45 @@ public class DashboardManager {
 	}
 	
 	/**
+	 *  Get an entire Dashboard, with all of its Indicators in a List parameter.
+	 */
+	public DashboardBean getDashboard( LoggedInInfo loggedInInfo, String providerNo, int dashboardId ) {
+
+		DashboardBean dashboardBean = null;
+
+		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardDisplay", SecurityInfoManager.READ, null ) ) {
+			LogAction.addLog(loggedInInfo, "DashboardManager.getDashboard", null, null, null,"User missing _dashboardManager role with write access");
+			return dashboardBean;
+        }
+
+		Dashboard dashboardEntity = null;
+		DashboardBeanFactory dashboardBeanFactory = null;
+
+		if( dashboardId > 0 ) {
+			dashboardEntity = dashboardDao.find( dashboardId );
+			List<IndicatorTemplate> indicatorTemplates = getIndicatorTemplatesByDashboardId( loggedInInfo, dashboardId );
+			dashboardEntity.setIndicators( indicatorTemplates );
+		}
+
+		if( dashboardEntity != null ) {
+			// Add the indicators and panels.
+			dashboardBeanFactory = new DashboardBeanFactory( loggedInInfo, providerNo, dashboardEntity );
+		}
+
+		if( dashboardBeanFactory != null ) {
+			dashboardBean = dashboardBeanFactory.getDashboardBean();
+		}
+
+		if( dashboardBean != null ) {
+			LogAction.addLog(loggedInInfo, "DashboardManager.getDashboard", null, null, null,"Returning Dashboard results for Dashboard ID " + dashboardId );
+		} else {
+			LogAction.addLog(loggedInInfo, "DashboardManager.getDashboard", null, null, null,"Failed to return results for Dashboard ID " + dashboardId );
+		}
+
+		return dashboardBean;
+	}
+	
+	/**
 	 * Get an Indicator Template by Id.
 	 */
 	public IndicatorTemplate getIndicatorTemplate( LoggedInInfo loggedInInfo, int indicatorTemplateId ) {
@@ -486,6 +526,31 @@ public class DashboardManager {
 		
 		return indicatorTemplateXML;
 	}
+	
+//	/**
+//	 * Get the XML template that contains all the data and meta data for an Indicator display. 
+//	 */
+//	public IndicatorTemplateXML getIndicatorTemplateXML( LoggedInInfo loggedInInfo, String requestedProviderNo, int indicatorTemplateId ) {
+//		
+//		IndicatorTemplateXML indicatorTemplateXML = null;
+//		
+//		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardDrilldown", SecurityInfoManager.READ, null ) ) {	
+//			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorTemplateXML", null, null, null,"User missing _dashboardDrilldown role with read access");
+//			return indicatorTemplateXML;
+//        }
+//		
+//		IndicatorTemplate indicatorTemplate = getIndicatorTemplate( loggedInInfo, indicatorTemplateId );
+//		IndicatorTemplateHandler templateHandler = new IndicatorTemplateHandler( loggedInInfo, indicatorTemplate.getTemplate().getBytes() );
+//		indicatorTemplateXML = templateHandler.getIndicatorTemplateXML();
+//		
+//		if( indicatorTemplateXML != null ) {
+//			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorTemplateXML", null, null, null,"Returning IndicatorTemplateXML Id " + indicatorTemplateId );			
+//		} else {
+//			LogAction.addLog(loggedInInfo, "DashboardManager.getIndicatorTemplateXML", null, null, null,"IndicatorTemplateXML Id " + indicatorTemplateId + " not found." );			
+//		}
+//		
+//		return indicatorTemplateXML;
+//	}
 
 	public DrilldownBean getDrilldownData( LoggedInInfo loggedInInfo, int indicatorTemplateId, String metricLabel) {
 		return getDrilldownData(loggedInInfo,indicatorTemplateId,null, metricLabel);
@@ -507,6 +572,9 @@ public class DashboardManager {
 		IndicatorTemplate indicatorTemplate = getIndicatorTemplate( loggedInInfo, indicatorTemplateId );
 		IndicatorTemplateHandler templateHandler = new IndicatorTemplateHandler( loggedInInfo, indicatorTemplate.getTemplate().getBytes() );
 		IndicatorTemplateXML indicatorTemplateXML = templateHandler.getIndicatorTemplateXML();
+		if (providerNo != null) {
+			indicatorTemplateXML.setProviderNo(providerNo);
+		}
 		
 		if( indicatorTemplate != null ) {
 			drilldownBeanFactory = new DrilldownBeanFactory( loggedInInfo, indicatorTemplate, providerNo, metricLabel ); 
@@ -561,6 +629,10 @@ public class DashboardManager {
         }
 		
 		IndicatorTemplateXML indicatorTemplateXML = getIndicatorTemplateXML( loggedInInfo, indicatorId );
+
+		if (getRequestedProviderNo() != null) {
+			indicatorTemplateXML.setProviderNo(requestedProviderNo);
+		}
 		
 		// The id needs to be force set.
 		if( indicatorTemplateXML != null ) {
@@ -628,67 +700,76 @@ public class DashboardManager {
 	
 	
 	public String getSharedOutcomesDashboardLaunchURL(LoggedInInfo loggedInInfo) {
-		
+
 		String url = OscarProperties.getInstance().getProperty("shared_outcomes_dashboard_url");
-		if(url == null) {
+		if (url == null) {
 			return null;
 		}
-		
+
 		org.oscarehr.common.model.Clinic oClinic = clinicDAO.getClinic();
-    	Clinic clinic = new Clinic();
-    	clinic.setApplication("oscar");
-    	
-    	String clinicIdentifier = OscarProperties.getInstance().getProperty("shared_outcomes_dashboard_clinic_id");
-		
-		if(clinicIdentifier == null || clinicIdentifier.length() == 0 || clinicIdentifier.length() > 42 ) {
+		Clinic clinic = new Clinic();
+		clinic.setApplication("oscar");
+
+		String clinicIdentifier = OscarProperties.getInstance().getProperty("shared_outcomes_dashboard_clinic_id");
+
+		if (clinicIdentifier == null || clinicIdentifier.length() == 0 || clinicIdentifier.length() > 42) {
 			clinicIdentifier = oClinic.getClinicName();
 		}
-		
+
 		clinic.setIdentifier(clinicIdentifier);
-		
-    	clinic.setName(oClinic.getClinicName());
-    	
-    	
-    	Provider provider = loggedInInfo.getLoggedInProvider();
-    	
-    	User user = new User();
-    	user.setCity("");
-    	user.setFirstName(provider.getFirstName());
-    	//TODO: not sure yet how we want to implement this
-    	//user.setAuthorizedUsernameList(null);
-    	user.setLastName(provider.getLastName());
-    	user.setPostalCode("");
-    	user.setProvince(Province.ON);
-    	//user.setUniqueIdentifier(uniqueIdentifier);
-    	user.setUsername(provider.getProviderNo());
-    	user.setRole("provider");
-    	
-    	
+
+		clinic.setName(oClinic.getClinicName());
+
+
+		Provider provider = loggedInInfo.getLoggedInProvider();
+
+		User user = new User();
+		user.setCity("");
+		user.setFirstName(provider.getFirstName());
+		//TODO: not sure yet how we want to implement this
+		//user.setAuthorizedUsernameList(null);
+		user.setLastName(provider.getLastName());
+		user.setPostalCode("");
+		user.setProvince(Province.ON);
+		//user.setUniqueIdentifier(uniqueIdentifier);
+		user.setUsername(provider.getProviderNo());
+		user.setRole("provider");
+
+
 		JSONObject response = new JSONObject();
 		response.put("clinic", clinic);
 		response.put("user", user);
-		
+
 		String json = response.toString();
-		
+
 		logger.debug(json);
-		
+
 		String encrypted = null;
 		String b64 = null;
-		
+
 		//system must have the UnlimitedJCEPolicyJDK7.zip installed for this to work
 		try {
 			Security.addProvider(new BouncyCastleProvider());
-			
+
 			StandardPBEStringEncryptor encrypter = new StandardPBEStringEncryptor();
 			encrypter.setAlgorithm("PBEWITHSHA256AND256BITAES-CBC-BC");
 			encrypter.setProviderName("BC");
-			encrypter.setPassword(OscarProperties.getInstance().getProperty("shared_outcomes_dashboard_key"));			
+			encrypter.setPassword(OscarProperties.getInstance().getProperty("shared_outcomes_dashboard_key"));
 			encrypted = encrypter.encrypt(json);
 			b64 = Base64.toBase64String(encrypted.getBytes());
-	       } catch(Exception e) {
-	    	  logger.error("error",e);
-	       }
+		} catch (Exception e) {
+			logger.error("error", e);
+		}
 
 		return url + "?" + "encodedParams=" + b64 + "&version=1.1";
 	}
+
+	public void setRequestProviderNo(String providerNo) {
+		this.requestedProviderNo = providerNo;
+	}
+
+	public String getRequestedProviderNo() {
+		return requestedProviderNo;
+	}
+
 }
