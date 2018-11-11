@@ -510,9 +510,6 @@ public class DashboardManager {
 		IndicatorTemplate indicatorTemplate = getIndicatorTemplate( loggedInInfo, indicatorTemplateId );
 		IndicatorTemplateHandler templateHandler = new IndicatorTemplateHandler( loggedInInfo, indicatorTemplate.getTemplate().getBytes() );
 		IndicatorTemplateXML indicatorTemplateXML = templateHandler.getIndicatorTemplateXML();
-		if (providerNo != null) {
-			indicatorTemplateXML.setProviderNo(providerNo);
-		}
 		
 		if( indicatorTemplate != null ) {
 			drilldownBeanFactory = new DrilldownBeanFactory( loggedInInfo, indicatorTemplate, providerNo, metricLabel ); 
