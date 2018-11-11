@@ -567,7 +567,7 @@ public class DashboardManager {
         }
 		
 		IndicatorTemplateXML indicatorTemplateXML = getIndicatorTemplateXML( loggedInInfo, indicatorId );
-
+		
 		// The id needs to be force set.
 		if( indicatorTemplateXML != null ) {
 			indicatorTemplateXML.setId( indicatorId );
@@ -634,66 +634,66 @@ public class DashboardManager {
 	
 	
 	public String getSharedOutcomesDashboardLaunchURL(LoggedInInfo loggedInInfo) {
-
+		
 		String url = OscarProperties.getInstance().getProperty("shared_outcomes_dashboard_url");
-		if (url == null) {
+		if(url == null) {
 			return null;
 		}
-
+		
 		org.oscarehr.common.model.Clinic oClinic = clinicDAO.getClinic();
-		Clinic clinic = new Clinic();
-		clinic.setApplication("oscar");
-
-		String clinicIdentifier = OscarProperties.getInstance().getProperty("shared_outcomes_dashboard_clinic_id");
-
-		if (clinicIdentifier == null || clinicIdentifier.length() == 0 || clinicIdentifier.length() > 42) {
+    	Clinic clinic = new Clinic();
+    	clinic.setApplication("oscar");
+    	
+    	String clinicIdentifier = OscarProperties.getInstance().getProperty("shared_outcomes_dashboard_clinic_id");
+		
+		if(clinicIdentifier == null || clinicIdentifier.length() == 0 || clinicIdentifier.length() > 42 ) {
 			clinicIdentifier = oClinic.getClinicName();
 		}
-
+		
 		clinic.setIdentifier(clinicIdentifier);
-
-		clinic.setName(oClinic.getClinicName());
-
-
-		Provider provider = loggedInInfo.getLoggedInProvider();
-
-		User user = new User();
-		user.setCity("");
-		user.setFirstName(provider.getFirstName());
-		//TODO: not sure yet how we want to implement this
-		//user.setAuthorizedUsernameList(null);
-		user.setLastName(provider.getLastName());
-		user.setPostalCode("");
-		user.setProvince(Province.ON);
-		//user.setUniqueIdentifier(uniqueIdentifier);
-		user.setUsername(provider.getProviderNo());
-		user.setRole("provider");
-
-
+		
+    	clinic.setName(oClinic.getClinicName());
+    	
+    	
+    	Provider provider = loggedInInfo.getLoggedInProvider();
+    	
+    	User user = new User();
+    	user.setCity("");
+    	user.setFirstName(provider.getFirstName());
+    	//TODO: not sure yet how we want to implement this
+    	//user.setAuthorizedUsernameList(null);
+    	user.setLastName(provider.getLastName());
+    	user.setPostalCode("");
+    	user.setProvince(Province.ON);
+    	//user.setUniqueIdentifier(uniqueIdentifier);
+    	user.setUsername(provider.getProviderNo());
+    	user.setRole("provider");
+    	
+    	
 		JSONObject response = new JSONObject();
 		response.put("clinic", clinic);
 		response.put("user", user);
-
+		
 		String json = response.toString();
-
+		
 		logger.debug(json);
-
+		
 		String encrypted = null;
 		String b64 = null;
-
+		
 		//system must have the UnlimitedJCEPolicyJDK7.zip installed for this to work
 		try {
 			Security.addProvider(new BouncyCastleProvider());
-
+			
 			StandardPBEStringEncryptor encrypter = new StandardPBEStringEncryptor();
 			encrypter.setAlgorithm("PBEWITHSHA256AND256BITAES-CBC-BC");
 			encrypter.setProviderName("BC");
-			encrypter.setPassword(OscarProperties.getInstance().getProperty("shared_outcomes_dashboard_key"));
+			encrypter.setPassword(OscarProperties.getInstance().getProperty("shared_outcomes_dashboard_key"));			
 			encrypted = encrypter.encrypt(json);
 			b64 = Base64.toBase64String(encrypted.getBytes());
-		} catch (Exception e) {
-			logger.error("error", e);
-		}
+	       } catch(Exception e) {
+	    	  logger.error("error",e);
+	       }
 
 		return url + "?" + "encodedParams=" + b64 + "&version=1.1";
 	}

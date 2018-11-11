@@ -45,8 +45,6 @@ import net.sf.json.JSONObject;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 
-//import org.oscarehr.common.dao.PropertyDao;
-//import org.oscarehr.common.model.Property;
 import org.oscarehr.dashboard.handler.DemographicPatientStatusRosterStatusHandler;
 import org.oscarehr.dashboard.handler.DiseaseRegistryHandler;
 import org.oscarehr.dashboard.handler.ExcludeDemographicHandler;
