@@ -379,5 +379,9 @@ public class BORNWBCSDJob implements OscarRunnable {
 			demographicExtDao.persist(de);
 		}
 	}
+	
+	@Override
+	public void setConfig(String string) {
+	}
 
 }

@@ -301,5 +301,9 @@ public class OscarOnCallClinic implements OscarRunnable {
 		// TODO Auto-generated method stub
 
 	}
+	
+	@Override
+	public void setConfig(String string) {
+	}
 
 }

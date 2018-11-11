@@ -28,8 +28,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.net.ftp.FTPReply;
+import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPSClient;
+import org.apache.commons.net.util.TrustManagerUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.SurveillanceDataDao;
 import org.oscarehr.common.jobs.OscarRunnable;
@@ -37,7 +38,6 @@ import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Security;
 import org.oscarehr.common.model.SurveillanceData;
 import org.oscarehr.util.MiscUtils;
-//import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.SpringUtils;
 
 import net.sf.json.JSONObject;
@@ -61,8 +61,6 @@ public class FTPSJob implements OscarRunnable {
 	  
 	 */
 
-	private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
 	@Override
 	public void run() {
 	
@@ -74,31 +72,44 @@ public class FTPSJob implements OscarRunnable {
 		int port = json.getInt("port");
 		String username = json.getString("username");
 		String password = json.getString("password");
-		
+		String filePrefix = json.optString("prefix","");
+		logger.debug("calling proccess for id : "+surveyId);
 		ProcessSurveyFile.processSurveyFile(surveyId); //Run file generator
 		
 		//Check if there is anything to send
 		List<SurveillanceData> listToSend = surveillanceDataDao.findUnSentBySurveyId(surveyId);
+		logger.debug("data files to send?  : "+listToSend.size());
 		if(listToSend.size() > 0) {
 			try{
 				//Login to FTPS server
 				String protocol = "SSL";    // SSL/TLS
 		        FTPSClient ftps = new FTPSClient(protocol);
+		        ftps.setTrustManager(TrustManagerUtils.getValidateServerCertificateTrustManager());
 		        ftps.setDefaultPort(port);
 		        ftps.connect(domain);
-		        
-		        int reply = ftps.getReplyCode();
-		        logger.error("reply code "+FTPReply.isPositiveCompletion(reply));
-		        
+		        ftps.configure(new FTPClientConfig(FTPClientConfig.SYST_UNIX));
+		       
 		        boolean loggedIn  = ftps.login(username, password);
 				if(loggedIn) {
+					
+					ftps.execPBSZ(0);  // Set protection buffer size
+					ftps.execPROT("P"); // Set data channel protection to private
+					
 					for(SurveillanceData data: listToSend) {
 						ByteArrayInputStream is = new ByteArrayInputStream(data.getData());
-						boolean sent = ftps.storeFile(data.getId()+"-"+data.getCreateDate().getTime(),is);
+						
+						SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddkkmmss");
+						String remoteFilename = filePrefix+simpleDateFormat.format(data.getCreateDate().getTime())+".csv";
+						logger.debug("remoteFilename:" +remoteFilename);
+						ftps.enterLocalPassiveMode();
+						boolean sent = ftps.storeFile(remoteFilename,is);
+						
 						if(sent) {//Mark what was sent
 							data.setTransmissionDate(new Date());
 							data.setSent(true);
 							surveillanceDataDao.merge(data);
+						}else{
+							logger.error("File for "+data.getSurveyId()+" id "+data.getId()+" was not sent "+ftps.getReplyString());
 						}
 						is.close();
 						is = null;
