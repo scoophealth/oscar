@@ -568,10 +568,6 @@ public class DashboardManager {
 		
 		IndicatorTemplateXML indicatorTemplateXML = getIndicatorTemplateXML( loggedInInfo, indicatorId );
 
-		if (getRequestedProviderNo(loggedInInfo) != null) {
-			indicatorTemplateXML.setProviderNo(getRequestedProviderNo(loggedInInfo));
-		}
-		
 		// The id needs to be force set.
 		if( indicatorTemplateXML != null ) {
 			indicatorTemplateXML.setId( indicatorId );

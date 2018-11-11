@@ -23,8 +23,6 @@
  */
 package org.oscarehr.dashboard.display;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,10 +31,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.dashboard.display.beans.IndicatorBean;
 import org.oscarehr.managers.DashboardManager;
-import org.oscarehr.managers.ProviderManager2;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -69,18 +65,17 @@ public class DisplayIndicatorAction extends DispatchAction {
 		if( indicatorId != null && ! indicatorId.isEmpty() ) {
 			id = Integer.parseInt( indicatorId );
 		}
-		logger.info("xxx indicatorId: "+indicatorId);
-		String providerNo = request.getParameter("providerNo");
-		//providerNo = "111114";
-		logger.info("xxx providerNo: " +providerNo);
+
+		String providerNo = null;
+		if (dashboardManager.getRequestedProviderNo(loggedInInfo) != null) {
+		    providerNo = dashboardManager.getRequestedProviderNo(loggedInInfo);
+        }
+
 		IndicatorBean indicatorPanelBean;
 		if (providerNo == null) {
 			indicatorPanelBean = dashboardManager.getIndicatorPanel(loggedInInfo, id);
 		} else {
 			indicatorPanelBean = dashboardManager.getIndicatorPanelForProvider(loggedInInfo, providerNo, id);
-		}
-		if (providerNo != null) {
-			request.setAttribute("providerNo",  providerNo);
 		}
 
 		request.setAttribute("indicatorPanel", indicatorPanelBean);

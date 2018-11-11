@@ -29,8 +29,6 @@ import java.util.List;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.log4j.Logger;
-import org.oscarehr.common.dao.PropertyDao;
-import org.oscarehr.common.model.Property;
 import org.oscarehr.dashboard.query.Column;
 import org.oscarehr.dashboard.query.Parameter;
 import org.oscarehr.dashboard.query.RangeInterface;
@@ -39,7 +37,6 @@ import org.oscarehr.dashboard.query.RangeUpperLimit;
 import org.oscarehr.dashboard.query.DrillDownAction;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;

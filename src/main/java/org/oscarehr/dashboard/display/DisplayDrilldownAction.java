@@ -82,11 +82,7 @@ public class DisplayDrilldownAction extends DispatchAction  {
 			id = Integer.parseInt( indicatorTemplateId );
 		}
 		
-		logger.info("yyy indicatorTemplateId: "+indicatorTemplateId);
-		String providerNo = (String) request.getAttribute("providerNo");
-		//providerNo = "111114";
-		logger.info("yyy providerNo: " + providerNo);
-		logger.info("dashboardManager.getRequestedProviderNo():"+dashboardManager.getRequestedProviderNo(loggedInInfo));
+		String providerNo = null;
 		if (dashboardManager.getRequestedProviderNo(loggedInInfo) != null) {
 		    providerNo = dashboardManager.getRequestedProviderNo(loggedInInfo);
         }
@@ -96,11 +92,6 @@ public class DisplayDrilldownAction extends DispatchAction  {
 		} else {
 			drilldown = dashboardManager.getDrilldownData(loggedInInfo, id, providerNo, "null");
 		}
-		if (providerNo != null) {
-			logger.info("yyy setting providerNo attribute");
-			request.setAttribute("providerNo",  providerNo);
-		}
-		logger.info("yyy request.getParameter() "+request.getParameter("providerNo"));
 		
 		// something must be returned. If not then something is very wrong.
 		if ( drilldown == null ) {

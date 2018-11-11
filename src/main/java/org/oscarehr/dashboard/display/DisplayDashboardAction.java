@@ -71,11 +71,10 @@ public class DisplayDashboardAction extends DispatchAction {
 		Provider preferredProvider = null;
 		String requestedProviderNo = request.getParameter("providerNo");
 		if (requestedProviderNo != null && !requestedProviderNo.isEmpty()) {
-			logger.info("zzz requestedProviderNo: " + requestedProviderNo);
+			logger.info("DashboardDisplay of provider_no " + requestedProviderNo + " requested by provider_no " + loggedInInfo.getLoggedInProviderNo() );
 			preferredProvider = providerManager.getProvider(loggedInInfo, requestedProviderNo);
 			dashboardManager.setRequestedProviderNo(loggedInInfo, requestedProviderNo);
 		} else if (dashboardManager.getRequestedProviderNo(loggedInInfo) != null) {
-			logger.info("using dashboardManager preferred provider");
 			preferredProvider = providerManager.getProvider(loggedInInfo, dashboardManager.getRequestedProviderNo(loggedInInfo));
 		} else {
 			preferredProvider = loggedInInfo.getLoggedInProvider();
