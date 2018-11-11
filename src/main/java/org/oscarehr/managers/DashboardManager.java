@@ -510,9 +510,6 @@ public class DashboardManager {
 		IndicatorTemplate indicatorTemplate = getIndicatorTemplate( loggedInInfo, indicatorTemplateId );
 		IndicatorTemplateHandler templateHandler = new IndicatorTemplateHandler( loggedInInfo, indicatorTemplate.getTemplate().getBytes() );
 		IndicatorTemplateXML indicatorTemplateXML = templateHandler.getIndicatorTemplateXML();
-		if (providerNo != null) {
-			indicatorTemplateXML.setProviderNo(providerNo);
-		}
 		
 		if( indicatorTemplate != null ) {
 			drilldownBeanFactory = new DrilldownBeanFactory( loggedInInfo, indicatorTemplate, providerNo, metricLabel ); 
@@ -531,8 +528,12 @@ public class DashboardManager {
 		return drilldownBean;
 
 	}
-	
+
 	public String exportDrilldownQueryResultsToCSV( LoggedInInfo loggedInInfo, int indicatorId ) {
+		return exportDrilldownQueryResultsToCSV(loggedInInfo, null, indicatorId);
+	}
+	
+	public String exportDrilldownQueryResultsToCSV( LoggedInInfo loggedInInfo, String providerNo, int indicatorId ) {
 		
 		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardDrilldown", SecurityInfoManager.READ, null ) ) {	
 			LogAction.addLog(loggedInInfo, "DashboardManager.exportDrilldownQueryResultsToCSV", null, null, null,"User missing _dashboardDrilldown role with read access");
@@ -540,6 +541,9 @@ public class DashboardManager {
         }
 		
 		IndicatorTemplateXML templateXML = getIndicatorTemplateXML( loggedInInfo, indicatorId );
+		if (providerNo != null) {
+			templateXML.setProviderNo(providerNo);
+		}
 
 		ExportQueryHandler exportQueryHandler = SpringUtils.getBean( ExportQueryHandler.class );
 		exportQueryHandler.setLoggedInInfo( loggedInInfo );

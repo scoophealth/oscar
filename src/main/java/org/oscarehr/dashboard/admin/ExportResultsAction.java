@@ -58,7 +58,14 @@ public class ExportResultsAction extends Action  {
 		String indicatorId = request.getParameter("indicatorId");
 		String indicatorName = request.getParameter("indicatorName");		
 		OutputStream outputStream = null;
-		String csvFile = dashboardManager.exportDrilldownQueryResultsToCSV( loggedInInfo, Integer.parseInt( indicatorId ) );
+
+		String providerNo = dashboardManager.getRequestedProviderNo(loggedInInfo);
+		String csvFile;
+		if (providerNo != null) {
+			csvFile = dashboardManager.exportDrilldownQueryResultsToCSV(loggedInInfo, providerNo, Integer.parseInt(indicatorId));
+		} else {
+			csvFile = dashboardManager.exportDrilldownQueryResultsToCSV(loggedInInfo, Integer.parseInt(indicatorId));
+		}
 		
 		if( indicatorName == null || indicatorName.isEmpty() ) {
 			indicatorName = "indicator_data-" + System.currentTimeMillis() + ".csv";

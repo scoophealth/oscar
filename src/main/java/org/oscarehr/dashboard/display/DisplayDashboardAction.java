@@ -39,6 +39,8 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class DisplayDashboardAction extends DispatchAction {
@@ -61,27 +63,33 @@ public class DisplayDashboardAction extends DispatchAction {
 		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardDisplay", SecurityInfoManager.READ, null ) ) {	
 			return mapping.findForward("unauthorized");
         }
-		
+        Boolean canChgDashboardUser = false;
+		if( securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardChgUser", SecurityInfoManager.READ, null ) ) {
+			canChgDashboardUser = true;
+		}
+
 		String dashboardId = request.getParameter("dashboardId");
 		int id = 0;
 		if( dashboardId != null && ! dashboardId.isEmpty() ) {
 			id = Integer.parseInt( dashboardId );
 		}
 		
-		Provider preferredProvider = null;
-		String requestedProviderNo = request.getParameter("providerNo");
-		if (requestedProviderNo != null && !requestedProviderNo.isEmpty()) {
-			logger.info("DashboardDisplay of provider_no " + requestedProviderNo + " requested by provider_no " + loggedInInfo.getLoggedInProviderNo() );
-			preferredProvider = providerManager.getProvider(loggedInInfo, requestedProviderNo);
-			dashboardManager.setRequestedProviderNo(loggedInInfo, requestedProviderNo);
-		} else if (dashboardManager.getRequestedProviderNo(loggedInInfo) != null) {
-			preferredProvider = providerManager.getProvider(loggedInInfo, dashboardManager.getRequestedProviderNo(loggedInInfo));
-		} else {
-			preferredProvider = loggedInInfo.getLoggedInProvider();
+		Provider preferredProvider = loggedInInfo.getLoggedInProvider();
+		List<Provider> providers = new ArrayList<Provider>();
+
+		if (canChgDashboardUser) {
+			String requestedProviderNo = request.getParameter("providerNo");
+			if (requestedProviderNo != null && !requestedProviderNo.isEmpty()) {
+				logger.info("DashboardDisplay of provider_no " + requestedProviderNo + " requested by provider_no " + loggedInInfo.getLoggedInProviderNo());
+				preferredProvider = providerManager.getProvider(loggedInInfo, requestedProviderNo);
+				dashboardManager.setRequestedProviderNo(loggedInInfo, requestedProviderNo);
+			} else if (dashboardManager.getRequestedProviderNo(loggedInInfo) != null) {
+				preferredProvider = providerManager.getProvider(loggedInInfo, dashboardManager.getRequestedProviderNo(loggedInInfo));
+			}
+			providers = providerManager.getProviders(loggedInInfo, Boolean.TRUE);
 		}
+
 		request.setAttribute("preferredProvider", preferredProvider);
-		
-		List<Provider> providers = providerManager.getProviders(loggedInInfo, Boolean.TRUE);
 		request.setAttribute("providers", providers);
 
 		DashboardBean dashboard = dashboardManager.getDashboard(loggedInInfo, id);

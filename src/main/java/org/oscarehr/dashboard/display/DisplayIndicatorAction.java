@@ -44,7 +44,7 @@ public class DisplayIndicatorAction extends DispatchAction {
 	
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	private static DashboardManager dashboardManager = SpringUtils.getBean(DashboardManager.class);
-
+	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
 		return null;
@@ -79,7 +79,7 @@ public class DisplayIndicatorAction extends DispatchAction {
 		}
 
 		request.setAttribute("indicatorPanel", indicatorPanelBean);
-
+		
 		return mapping.findForward("success");
 	}
 
