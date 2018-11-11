@@ -91,6 +91,7 @@
 	<h3> 
 		<c:out value="${ drilldown.name }" />
 		<c:out value="${ drilldown.metricLabel }" />
+		<b><c:out value=": ${ preferredProvider.fullName }"/></b>
 	</h3>
 	<hr />
 	

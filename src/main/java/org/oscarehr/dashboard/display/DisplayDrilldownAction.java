@@ -36,9 +36,11 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.IndicatorTemplate;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.dashboard.display.beans.DrilldownBean;
 import org.oscarehr.dashboard.handler.IndicatorTemplateHandler;
 import org.oscarehr.managers.DashboardManager;
+import org.oscarehr.managers.ProviderManager2;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -49,6 +51,7 @@ public class DisplayDrilldownAction extends DispatchAction  {
 	
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	private static DashboardManager dashboardManager = SpringUtils.getBean(DashboardManager.class);
+	private ProviderManager2 providerManager = SpringUtils.getBean( ProviderManager2.class );
 	private static Logger logger = MiscUtils.getLogger();
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, 
@@ -98,6 +101,12 @@ public class DisplayDrilldownAction extends DispatchAction  {
 			return mapping.findForward("error");
 		}
 
+		Provider preferredProvider = loggedInInfo.getLoggedInProvider();
+		if (dashboardManager.getRequestedProviderNo(loggedInInfo) != null) {
+			preferredProvider = providerManager.getProvider(loggedInInfo, dashboardManager.getRequestedProviderNo(loggedInInfo));
+		}
+		
+		request.setAttribute("preferredProvider",  preferredProvider);
 		request.setAttribute( "drilldown", drilldown );		
 		return mapping.findForward("success");
 	}
