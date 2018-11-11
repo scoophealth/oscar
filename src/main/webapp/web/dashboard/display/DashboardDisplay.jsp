@@ -27,6 +27,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 <security:oscarSec roleName='${ sessionScope[userrole] }, ${ sessionScope[user] }' rights="w" objectName="_dashboardDisplay">
 	<c:redirect url="securityError.jsp?type=_dashboardDisplay" />
@@ -67,6 +68,10 @@
 		<hr />
 	</div>
 	<center>
+	<c:if test="${fn:length(providers) eq 0}">
+	<b><c:out value="${ preferredProvider.fullName }"/></b>
+	</c:if>
+	<c:if test="${fn:length(providers) gt 0}">
 	<div class="dropdown">
 		<form action="<%=request.getContextPath()%>/web/dashboard/display/DashboardDisplay.do?method=getDashboard&dashboardId=${ dashboard.id }" method="post">
 			<select id="providerNo" name="providerNo">
@@ -80,6 +85,8 @@
 			<input type="submit" value="Change Dashboard Provider">
 		</form>
 	</div>
+	</c:if>
+	<br>
 	</center>
 	<div class="row dashboardSubHeading" >
 		<div class="col-md-6">
