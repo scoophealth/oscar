@@ -91,6 +91,9 @@
 	<h3> 
 		<c:out value="${ drilldown.name }" />
 		<c:out value="${ drilldown.metricLabel }" />
+		<c:if test="${not empty preferredProvider}">
+		<b><c:out value=": ${ preferredProvider.fullName }"/></b>
+		</c:if>
 	</h3>
 	<hr />
 	
@@ -194,6 +197,16 @@
 													class="dropdown-item"
 													title="Exclude Checked Patients from Indicator Results." id="excludePatientsChecked" >
 													Exclude Patients From Indicator Results
+												</a>
+											</li>
+										</c:if>
+										
+										<c:if test="${fn:contains(drilldown.actionIds, 'patientStatusUpdate')}">
+											<li>
+												<a href="#"
+													class="dropdown-item"
+													title="Set Checked Patients Status Inactive." id="patientStatusUpdateChecked" >
+													Set Status Inactive
 												</a>
 											</li>
 										</c:if>
@@ -371,6 +384,9 @@
 				<h4>Verify ICD9 Code For Addition To Disease Registry</h4>
 			</div>
 			<div class="modal-body">
+				<c:if test="${not empty preferredProvider}">
+				<p>Doctor: <c:out value="${ preferredProvider.fullName }" /></p>
+				</c:if>
 				<p>Are you sure you want to bulk add the following to the disease registry of the selected patients?</p>
 				<p>ICD9 Code: <span id="icd9code"></span></p>
 				<p>Description: <span id="icd9description"></span></p>
@@ -395,6 +411,9 @@
 				<h4>Verify Patient Exclusion</h4>
 			</div>
 			<div class="modal-body">
+				<c:if test="${not empty preferredProvider}">
+				<p>Doctor: <c:out value="${ preferredProvider.fullName }" /></p>
+				</c:if>
 				<p>Are you sure you want to exclude the selected patients from this indicator?</p>
 				<div class="alert alert-warning">
 					Note that you will have to reload the dashboard before patients are excluded from the results you see (such as the drilldown table).
@@ -409,6 +428,31 @@
 	</div>
 </div>
 <!-- End patient exclusion modal panel -->
+
+<!-- modal panel for patient status update -->
+<div id="modalConfirmPatientStatusUpdate" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4>Verify Patient Status Update</h4>
+			</div>
+			<div class="modal-body">
+				<c:if test="${not empty preferredProvider}">
+				<p>Doctor: <c:out value="${ preferredProvider.fullName }" /></p>
+				</c:if>
+				<p>Are you sure you want to update the status of the selected patients to inactive?</p>
+			</div>
+			<div class="modal-footer">
+				<a href="${ pageContext.request.contextPath }/web/dashboard/display/BulkPatientAction.do?method=setPatientsInactive"
+					id="confirmPatientStatusUpdate" type="submit" class="btn btn-primary">Confirm</a>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End patient status update modal panel -->
 
 </div>	<!-- end container -->
 </body>

@@ -1851,6 +1851,7 @@ insert into `secObjectName` (`objectName`) values ('_admin.consult');
 insert into `secObjectName` (`objectName`) values ('_dashboardManager');
 insert into `secObjectName` (`objectName`) values ('_dashboardDisplay');
 insert into `secObjectName` (`objectName`) values ('_dashboardDrilldown');
+insert into `secObjectName` (`objectName`) values ('_dashboardChgUser');
 
 insert into `secObjectName` (`objectName`) values ('_admin.demographic');
 
