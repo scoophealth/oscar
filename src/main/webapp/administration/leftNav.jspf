@@ -518,6 +518,7 @@ String curProvider_no = (String)session.getAttribute("user");
 					
 					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/oscarPrevention/PreventionManager.jsp" title="Customize prevention notifications."><bean:message key="admin.admin.preventionNotification.title" /></a></li>
 				</security:oscarSec>
+				<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/appointmentSearchConfig.jsp" ><bean:message key="admin.admin.appointmentSearchConfig"/></a></li>
 				</ul>
 				</div>
 				</div>

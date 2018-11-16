@@ -29,13 +29,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Transient;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-//import org.oscarehr.oscar_clinic_component.ws.rest.transfer_objects.AllowedAppointmentTypeTransfer;
-//import org.oscarehr.oscar_clinic_component.ws.rest.transfer_objects.FilterDefinitionTransfer;
-//import org.oscarehr.oscar_clinic_component.ws.rest.transfer_objects.ProviderTransfer;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.XmlUtils;
+import org.oscarehr.ws.rest.to.model.AllowedAppointmentTypeTransfer;
+import org.oscarehr.ws.rest.to.model.BookingProviderTransfer;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
@@ -44,6 +45,10 @@ public class Provider {
 	private static Logger logger = MiscUtils.getLogger();
 	String messageUserId;
 	String providerNo = null;
+	@Transient
+	String lastName;
+	@Transient
+	String firstName;
 	Map<String, Character[]> appointmentTypes = null;
 	Map<Long, Integer> appointmentDurations = null;
 	List<Provider> teamMembers = null;
@@ -180,9 +185,24 @@ public class Provider {
 		}
 		return map;
 	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 	
-	/*
-	public static Provider fromProvider(ProviderTransfer provider) {
+	public static Provider fromProvider(BookingProviderTransfer provider) {
 		Provider returnProvider = new Provider();
 		returnProvider.appointmentDurations =  new HashMap<Long,Integer>();
 		returnProvider.appointmentTypes = new HashMap<String,Character[]>();
@@ -198,14 +218,14 @@ public class Provider {
 		returnProvider.providerNo = provider.getProviderNo();
 		returnProvider.teamMembers = new ArrayList<Provider>();
 		if(provider.getTeamMembers() != null){
-			for(ProviderTransfer p: provider.getTeamMembers()){
+			for(BookingProviderTransfer p: provider.getTeamMembers()){
 				returnProvider.teamMembers.add(Provider.fromProvider(p));
 			}
 		}
 		returnProvider.filters = new ArrayList<FilterDefinition>();
 		if(provider.isFilterFAF()){
 			FilterDefinition fd = new FilterDefinition();
-			fd.setFilterClassName("org.oscarehr.oscar_clinic_component.booking.filters.FutureApptFilter");
+			fd.setFilterClassName("org.oscarehr.appointment.search.filters.FutureApptFilter");
 			Map<String,String> params = new HashMap<String,String>();
 			params.put("buffer",""+provider.getFilterFAFbuffer());
 			fd.setParams(params);
@@ -213,17 +233,17 @@ public class Provider {
 		}
 		if(provider.isFilterEAF()){
 			FilterDefinition fd = new FilterDefinition();
-			fd.setFilterClassName("org.oscarehr.oscar_clinic_component.booking.filters.ExistingAppointmentFilter");
+			fd.setFilterClassName("org.oscarehr.appointment.search.filters.ExistingAppointmentFilter");
 			returnProvider.filters.add(fd);
 		}
 		if(provider.isFilterMUF()){
 			FilterDefinition fd = new FilterDefinition();
-			fd.setFilterClassName("org.oscarehr.oscar_clinic_component.booking.filters.MultiUnitFilter");
+			fd.setFilterClassName("org.oscarehr.appointment.search.filters.MultiUnitFilter");
 			returnProvider.filters.add(fd);
 		}
 		if(provider.isFilterOAF()){
 			FilterDefinition fd = new FilterDefinition();
-			fd.setFilterClassName("org.oscarehr.oscar_clinic_component.booking.filters.OpenAccessFilter");
+			fd.setFilterClassName("org.oscarehr.appointment.search.filters.OpenAccessFilter");
 			Map<String,String> params = new HashMap<String,String>();
 			params.put("codes",""+provider.getFilterOAFCodes());
 			fd.setParams(params);
@@ -231,12 +251,10 @@ public class Provider {
 		}
 		if(provider.isFilterSCTF()){
 			FilterDefinition fd = new FilterDefinition();
-			fd.setFilterClassName("org.oscarehr.oscar_clinic_component.booking.filters.SufficientContiguousTimeFilter");
+			fd.setFilterClassName("org.oscarehr.appointment.search.filters.SufficientContiguousTimeFilter");
 			returnProvider.filters.add(fd);
 		}
 				
 		return returnProvider;
 	}
-	*/
-	
 }

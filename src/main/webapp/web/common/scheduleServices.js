@@ -162,8 +162,92 @@ angular.module("scheduleServices", [])
                 	deferred.reject("An error occured while getting appointment history");
                 });
            return deferred.promise;
+        },
+        saveSearchConfig: function (id,searchConfig) {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'schedule/searchConfig/' + id ,
+                method: "POST",
+                data: searchConfig,
+                headers: {'Content-Type': 'application/json'}
+              }).then(function (response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers, config) {
+                	deferred.reject("An error occured while getting appointment history");
+                });
+           return deferred.promise;
+        },
+        addSearchConfig: function (searchConfig) {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'schedule/searchConfig/add' ,
+                method: "POST",
+                data: searchConfig,
+                headers: {'Content-Type': 'application/json'}
+              }).then(function (response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers, config) {
+                	deferred.reject("An error occured while getting appointment history");
+                });
+           return deferred.promise;
+        },
+        getSearchConfig: function (id) {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'schedule/searchConfig/' + id ,
+                method: "GET",
+                headers: {'Content-Type': 'application/json'}
+              }).then(function (response){
+              		console.log("response from getSearchConfig",response);
+              		if(response.status == 204){   
+              			deferred.resolve(null);
+              		}else{
+            	  			deferred.resolve(response.data);
+            	  		}
+                },function (data, status, headers, config) {
+                	deferred.reject("An error occured while getting appointment history");
+                });
+           return deferred.promise;
+        },
+        getSearchConfigList: function (id) {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'schedule/searchConfig/list',
+                method: "GET",
+                headers: {'Content-Type': 'application/json'}
+              }).then(function (response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers, config) {
+                	deferred.reject("An error occured while getting appointment history");
+                });
+           return deferred.promise;
+        },
+        enableSearchConfig: function (id) {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'schedule/searchConfig/enable/' + id ,
+                method: "POST",
+                headers: {'Content-Type': 'application/json'}
+              }).then(function (response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers, config) {
+                	deferred.reject("An error occured while getting appointment history");
+                });
+           return deferred.promise;
+        },
+        disableSearchConfig: function (id) {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'schedule/searchConfig/disable/' + id ,
+                method: "POST",
+                headers: {'Content-Type': 'application/json'}
+              }).then(function (response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers, config) {
+                	deferred.reject("An error occured while getting appointment history");
+                });
+           return deferred.promise;
         }
-		
     };
 });
 //appointment/{id}/updateStatus

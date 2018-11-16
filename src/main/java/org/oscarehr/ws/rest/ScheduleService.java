@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -43,8 +44,11 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
 import org.apache.tools.ant.util.DateUtils;
+import org.oscarehr.appointment.search.SearchConfig;
+import org.oscarehr.common.dao.AppointmentSearchDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.AppointmentSearch;
 import org.oscarehr.common.model.AppointmentStatus;
 import org.oscarehr.common.model.AppointmentType;
 import org.oscarehr.common.model.LookupListItem;
@@ -55,6 +59,7 @@ import org.oscarehr.managers.ScheduleManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.XmlUtils;
 import org.oscarehr.web.PatientListApptBean;
 import org.oscarehr.web.PatientListApptItemBean;
 import org.oscarehr.ws.rest.conversion.AppointmentConverter;
@@ -69,14 +74,17 @@ import org.oscarehr.ws.rest.to.ProviderApptsCountResponse;
 import org.oscarehr.ws.rest.to.ProviderPeriodAppsResponse;
 import org.oscarehr.ws.rest.to.SchedulingResponse;
 import org.oscarehr.ws.rest.to.model.AppointmentExtTo;
+import org.oscarehr.ws.rest.to.model.AppointmentSearchTo1;
 import org.oscarehr.ws.rest.to.model.AppointmentStatusTo1;
 import org.oscarehr.ws.rest.to.model.AppointmentTo1;
 import org.oscarehr.ws.rest.to.model.NewAppointmentTo1;
 import org.oscarehr.ws.rest.to.model.ProviderApptsCountTo;
 import org.oscarehr.ws.rest.to.model.ProviderPeriodAppsTo;
 import org.oscarehr.ws.rest.to.model.ScheduleTemplateCodeTo;
+import org.oscarehr.ws.rest.to.model.SearchConfigTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
 
 @Path("/schedule")
 @Component("scheduleService")
@@ -92,6 +100,8 @@ public class ScheduleService extends AbstractServiceImpl {
 	private DemographicManager demographicManager;
 	@Autowired
 	private SecurityInfoManager securityInfoManager;
+	@Autowired
+	private AppointmentSearchDao appointmentSearchDao;
 
 	@GET
 	@Path("/day/{date}")
@@ -534,5 +544,200 @@ public class ScheduleService extends AbstractServiceImpl {
 		}
 	}
 
+
+	@POST
+	@Path("/searchConfig/{id}")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public Response saveSearchConfig(@PathParam("id") Integer id, SearchConfigTo1 searchConfigTo) {
+		if(id == null || id.intValue() == 0) {
+			return null;
+		}
+		
+		
+		AppointmentSearchTo1 forNewId = new AppointmentSearchTo1();
+		try {
+			SearchConfig oldConfig = null;
+			AppointmentSearch currentAppointmentSearch = null;
+			AppointmentSearch appointmentSearch = new AppointmentSearch(); // new object to be returned
+			
+			currentAppointmentSearch = appointmentSearchDao.find(id);
+			if(currentAppointmentSearch == null || currentAppointmentSearch.getFileContents() == null) {
+				oldConfig = new SearchConfig();
+			}else {
+				Document doc = XmlUtils.toDocument(currentAppointmentSearch.getFileContents());
+				oldConfig = SearchConfig.fromDocument(doc);
+			}
+					
+			SearchConfig searchConfig = SearchConfig.fromTransfer(searchConfigTo, oldConfig);
+			Document d = SearchConfig.toDocument(searchConfig);
+			
+			
+			appointmentSearch.setFileContents(XmlUtils.toBytes(d, false));
+			appointmentSearch.setProviderNo(currentAppointmentSearch.getProviderNo());
+			appointmentSearch.setSearchName(currentAppointmentSearch.getSearchName());
+			appointmentSearch.setSearchType(currentAppointmentSearch.getSearchType());
+			appointmentSearch.setUuid(currentAppointmentSearch.getUuid());
+			appointmentSearch.setActive(true);
+			
+			
+			appointmentSearchDao.persist(appointmentSearch);
+			Integer newSearchConfigId  = appointmentSearch.getId();
+			forNewId.setId(newSearchConfigId);
+			forNewId.setActive(appointmentSearch.isActive());
+			forNewId.setCreateDate(appointmentSearch.getCreateDate());
+			forNewId.setProviderNo(appointmentSearch.getProviderNo());
+			forNewId.setSearchName(appointmentSearch.getSearchName());
+			forNewId.setSearchType(appointmentSearch.getSearchType());
+				
+			if(currentAppointmentSearch != null) {
+				currentAppointmentSearch.setActive(false);
+				appointmentSearchDao.merge(currentAppointmentSearch);
+			}
+			
+			logger.info("searchConfig\n"+XmlUtils.toString(d, true));
+		}catch(Exception e) {
+			logger.error("save Search Config Error ",e);
+		}
+		
+	
+		return Response.ok(forNewId).build();
+	}
+	
+	@GET
+	@Path("/searchConfig/{id}")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public SearchConfigTo1 getSearchConfig(@PathParam("id") Integer id) {
+		SearchConfigTo1  response = null;
+		
+		try {
+			AppointmentSearch appointmentSearch = appointmentSearchDao.find(id);
+			
+			Document doc = XmlUtils.toDocument(appointmentSearch.getFileContents());
+
+			SearchConfig searchConfig = SearchConfig.fromDocument(doc);
+			
+			response = SearchConfigTo1.fromClinic(searchConfig);  
+			
+		}catch(Exception e) {
+			logger.error("get Search Config Error ",e);
+		}
+		
+		return response;
+	}
+	
+	@GET
+	@Path("/searchConfig/list")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public List<AppointmentSearchTo1> getSearchConfig() {
+		List<AppointmentSearchTo1> response = new ArrayList<AppointmentSearchTo1>();
+		
+		try {
+			List<AppointmentSearch> appointmentSearchList = appointmentSearchDao.findAll();
+			logger.error("list size"+ appointmentSearchList.size());
+					
+			for(AppointmentSearch search:appointmentSearchList) {
+				AppointmentSearchTo1 appSearch = new AppointmentSearchTo1();
+				appSearch.setActive(search.isActive());
+				appSearch.setCreateDate(search.getCreateDate());
+				appSearch.setId(search.getId());
+				appSearch.setProviderNo(search.getProviderNo());
+				appSearch.setSearchName(search.getSearchName());
+				appSearch.setSearchType(search.getSearchType());
+				appSearch.setUpdateDate(search.getUpdateDate());
+				
+				response.add(appSearch);
+			}
+			
+			
+			
+		}catch(Exception e) {
+			logger.error("save Search Config Error ",e);
+		}
+		
+		return response;
+	}
+	
+	
+	@POST
+	@Path("/searchConfig/add")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public AppointmentSearchTo1 addSearchConfig(AppointmentSearchTo1 appointmentSearchTo) {
+		
+		
+		AppointmentSearch appointmentSearch = new AppointmentSearch();
+		appointmentSearch.setProviderNo(appointmentSearchTo.getProviderNo());
+		appointmentSearch.setSearchName(appointmentSearchTo.getSearchName());
+		appointmentSearch.setUuid(UUID.randomUUID().toString());
+		if(AppointmentSearch.ONLINE.equals(appointmentSearchTo.getSearchType())) {
+			appointmentSearch.setSearchType(AppointmentSearch.ONLINE);
+		}else {
+			appointmentSearch.setSearchType(AppointmentSearch.ONLINE);
+		}
+			
+		appointmentSearchDao.persist(appointmentSearch);
+		
+		appointmentSearchTo.setId(appointmentSearch.getId());
+		
+		
+		return appointmentSearchTo;
+	}
+	
+	
+	@POST
+	@Path("/searchConfig/enable/{id}")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public AppointmentSearchTo1 enableSearchConfig(@PathParam("id") Integer id) {
+		
+		//Will need to disable any searchconfigs that are enabled.
+		AppointmentSearch appointmentSearch = appointmentSearchDao.find(id);
+		appointmentSearch.setActive(true);
+		
+		
+		List<AppointmentSearch> uuidList = appointmentSearchDao.findByUUID(appointmentSearch.getUuid(),true);
+		for(AppointmentSearch asearch: uuidList) {
+			asearch.setActive(false);
+			appointmentSearchDao.merge(asearch);
+		}
+		
+		appointmentSearchDao.merge(appointmentSearch);
+		
+		AppointmentSearchTo1 appointmentSearchTo = new AppointmentSearchTo1(); 
+		appointmentSearchTo.setActive(appointmentSearch.isActive());
+		appointmentSearchTo.setProviderNo(appointmentSearch.getProviderNo());
+		appointmentSearchTo.setSearchName(appointmentSearch.getSearchName());
+		appointmentSearchTo.setSearchType(appointmentSearch.getSearchType());
+		appointmentSearchTo.setCreateDate(appointmentSearch.getCreateDate());
+		appointmentSearchTo.setUpdateDate(appointmentSearch.getUpdateDate());
+		appointmentSearchTo.setId(appointmentSearch.getId());
+
+		return appointmentSearchTo;
+	}
+	
+	@POST
+	@Path("/searchConfig/disable/{id}")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public AppointmentSearchTo1 disableSearchConfig(@PathParam("id") Integer id) {
+		
+		
+		AppointmentSearch appointmentSearch = appointmentSearchDao.find(id);
+		appointmentSearch.setActive(false);
+		appointmentSearchDao.merge(appointmentSearch);
+		
+		
+		AppointmentSearchTo1 appointmentSearchTo1 = new AppointmentSearchTo1();
+		appointmentSearchTo1.setId(appointmentSearch.getId());
+		appointmentSearchTo1.setSearchName(appointmentSearch.getSearchName());
+		
+		return appointmentSearchTo1;
+	}
+	
+	
+	
 
 }

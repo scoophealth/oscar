@@ -1,0 +1,90 @@
+package org.oscarehr.ws.rest.to.model;
+
+import java.util.Arrays;
+
+import org.oscarehr.appointment.search.SearchConfig;
+
+public class BookingScheduleTemplateCodeTransfer {
+	
+	private Integer id;
+	private Character code;
+	private String description;
+	private String duration;
+	private String color;
+	private String confirm;
+	private int bookinglimit;
+	private boolean onlineBooking;
+	private boolean openAccess;
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public Character getCode() {
+		return code;
+	}
+	public void setCode(Character code) {
+		this.code = code;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getDuration() {
+		return duration;
+	}
+	public void setDuration(String duration) {
+		this.duration = duration;
+	}
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color) {
+		this.color = color;
+	}
+	public String getConfirm() {
+		return confirm;
+	}
+	public void setConfirm(String confirm) {
+		this.confirm = confirm;
+	}
+	public int getBookinglimit() {
+		return bookinglimit;
+	}
+	public void setBookinglimit(int bookinglimit) {
+		this.bookinglimit = bookinglimit;
+	}
+	public boolean isOnlineBooking() {
+		return onlineBooking;
+	}
+	public void setOnlineBooking(boolean onlineBooking) {
+		this.onlineBooking = onlineBooking;
+	}
+	public boolean isOpenAccess() {
+		return openAccess;
+	}
+	public void setOpenAccess(boolean openAccess) {
+		this.openAccess = openAccess;
+	}
+	public static BookingScheduleTemplateCodeTransfer getFromTransfer(BookingScheduleTemplateCodeTransfer appointmentCodeTransfer, SearchConfig clinic) {
+		BookingScheduleTemplateCodeTransfer retval = new BookingScheduleTemplateCodeTransfer();
+		
+		retval.code = (char) appointmentCodeTransfer.getCode();//.intValue();
+		retval.description = appointmentCodeTransfer.getDescription();
+		retval.duration = appointmentCodeTransfer.getDuration();
+		retval.color = appointmentCodeTransfer.getColor();
+		
+		if(clinic != null && clinic.getAppointmentCodeDurations().containsKey(retval.code)){
+			retval.onlineBooking = clinic.getAppointmentCodeDurations().containsKey(retval.code);
+			if(clinic.getOpenAccessCodes() != null && Arrays.binarySearch(clinic.getOpenAccessCodes(),retval.code) >=0){
+				retval.openAccess = true;
+			}
+		}				
+		
+		return retval;
+	}
+}

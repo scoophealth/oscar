@@ -1,0 +1,55 @@
+<clinic name="DemoFamHealthCentre">
+	
+	<daysToSearchAheadLimit>10</daysToSearchAheadLimit>
+	<numberOfAppointmentOptionsToReturn>10</numberOfAppointmentOptionsToReturn>
+	<timezone>America/Toronto</timezone>
+
+	<appointment_type id="1" name="I'm not feeling well" sex="A"/>
+	<appointment_type id="2" name="Prenatal"  sex="F" />
+	<appointment_type id="3" name="Follow up" sex="A"/>
+	<appointment_type id="4" name="Allergy Injection" sex="A"/>
+	<appointment_type id="5" name="Prescription Renewal" sex="A"/>
+	<appointment_type id="6" name="Well Baby Visit" sex="A"/>
+	<appointment_type id="7" name="Yearly Physical" sex="A"/>
+	<appointment_type id="8" name="Other" sex="A"/>
+
+
+	<appointment_code code="o" duration="15"/>
+	<appointment_code code="1" duration="15"/>	
+	<appointment_code code="2" duration="30"/>
+	<filters>
+		<filter buffer="30">org.oscarehr.oscar_clinic_component.booking.filters.FutureApptFilter</filter>
+	    <filter>org.oscarehr.oscar_clinic_component.booking.filters.ExistingAppointmentFilter</filter>
+	    <filter>org.oscarehr.oscar_clinic_component.booking.filters.MultiUnitFilter</filter>
+	</filters>
+	<allowedProvider providerNo="-1">
+		<allowed_appointment id="1" appointment_codes="o,1"/>
+		<allowed_appointment id="2" appointment_codes="o,2" duration="30"/>
+		<allowed_appointment id="3" appointment_codes="o,1"/>
+		<team>
+			<member providerNo="91111">
+				<allowed_appointment id="4" appointment_codes="o,2" duration="30"/>
+				<allowed_appointment id="1" appointment_codes="1" />
+				<allowed_appointment id="2" appointment_codes="2" />
+			</member>	
+		</team>
+	</allowedProvider>
+	<allowedProvider providerNo="75">
+                <allowed_appointment id="1" appointment_codes="o,1"/>
+                <allowed_appointment id="2" appointment_codes="o,2" duration="30"/>
+                <allowed_appointment id="3" appointment_codes="o,1"/>
+                <team>
+                        <member providerNo="91111">
+                                <allowed_appointment id="4" appointment_codes="o,2" duration="30"/>
+                                <allowed_appointment id="1" appointment_codes="1" />
+                                <allowed_appointment id="2" appointment_codes="2" />
+                        </member>
+                </team>
+        </allowedProvider>
+
+	
+
+	
+
+</clinic>
+

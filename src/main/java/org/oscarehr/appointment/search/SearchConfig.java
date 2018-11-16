@@ -1,7 +1,23 @@
 package org.oscarehr.appointment.search;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.XmlUtils;
+import org.oscarehr.ws.rest.to.model.AppointmentTypeTransfer;
+import org.oscarehr.ws.rest.to.model.BookingProviderTransfer;
+import org.oscarehr.ws.rest.to.model.BookingScheduleTemplateCodeTransfer;
+import org.oscarehr.ws.rest.to.model.SearchConfigTo1;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 
 
@@ -12,24 +28,50 @@ import java.util.Map;
 
 
 public class SearchConfig {
-
+	protected static Logger logger = MiscUtils.getLogger();
+	
 	private int daysToSearchAheadLimit = 10; //Number of days it searches before giving up. ie search for the next 60 days before giving up
 	private int numberOfAppointmentOptionsToReturn  = 10; //Number of appts that seems like it gives a reasonable choice.	
 	
 	
 	
-	List<AppointmentType> appointmentTypes = null;
-	List<String> debugUsers = null;
-	Map<Character, Integer> appointmentCodeDurations = null;
-	Map<String, Provider> providers = null;
-	String timezone = "America/Toronto";
-	int defaultAppointmentCount=1;
-	List<FilterDefinition> filters = null;
+	private List<AppointmentType> appointmentTypes = null;
+	
+	private Map<Character, Integer> appointmentCodeDurations = null;
+	private Map<String, Provider> providers = null;
+	private List<Provider> bookingProviders = null; //needed for web service delete me
+	private String timezone = "America/Toronto";
+	private int defaultAppointmentCount=1;
+	private List<FilterDefinition> filters = null;
     private String appointmentLocation = null;
 	
-	public Map<Provider, Character[]>  getProvidersForAppointmentType(Integer demographicNo, Long appointmentTypeId){
-		Map<Provider, Character[]> providerForAppointmentType = null;
-		return providerForAppointmentType;
+	public Map<Provider, Character[]>  getProvidersForAppointmentType(Integer demographicNo, Long appointmentTypeId,String providerNo){
+		
+		Map<Provider, Character[]> map = new HashMap<Provider, Character[]>();
+		Provider provider = providers.get(providerNo);
+		Character[] codes = provider.appointmentTypes.get("" + appointmentTypeId);
+		
+		if (codes != null && codes.length > 0){
+			map.put(provider, codes);
+		}
+		
+		for (Provider teamMember : provider.getTeamMembers()){
+			Character[] codes2 = teamMember.appointmentTypes.get("" + appointmentTypeId);
+			if (codes2 != null && codes2.length > 0){
+				map.put(teamMember, codes2);
+			}
+		}
+		return map;
+	}
+	
+	//Delete me
+	public void moveBooking2Provider() {
+		if(bookingProviders != null) {
+			for(Provider provider: bookingProviders) {
+				providers.put(provider.getProviderNo(),provider);
+			}
+		}
+		
 	}
 	
 	
@@ -73,8 +115,456 @@ public class SearchConfig {
 		return appointmentDuration;
 	}
 	
+	public Provider getProvider(String mrp, String providerNo){
+		if (mrp != null && providers.get(mrp) != null){
+			Provider p = providers.get(mrp);
+			if(p.getProviderNo().equals(providerNo)){
+				return p;
+			}
+			//If the mrp isn't what is being requested, check their team
+			for(Provider teamMember:p.getTeamMembers()){
+				if(teamMember.getProviderNo().equals(providerNo)){
+					return teamMember;
+				}
+			}
+		}
+		return null;
+	}
 	
 	public List<FilterDefinition> getFilter(){
 		return filters;
+	}
+	
+	
+	public Integer getNumberOfMinutesAdvance(){
+		if (filters != null){
+			for(FilterDefinition fd : filters){
+				if("org.oscarehr.appointment.search.filters.FutureApptFilter".equals(fd.getFilterClassName())){
+					String str = fd.getParams().get("buffer");
+					try {
+						return Integer.parseInt(str);
+					} catch(Exception e) {
+						logger.error("buffer attribute should be an integer:"+str,e);
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	public void setNumberOfMinutesAdvance(Integer minutes){
+		if (filters != null){
+			for(FilterDefinition fd : filters){
+				if("org.oscarehr.appointment.search.filters.FutureApptFilter".equals(fd.getFilterClassName())){
+					Map<String,String> params = new HashMap<String,String>();
+					params.put("buffer",""+minutes);
+					fd.setParams(params);
+				}
+			}
+		}
+	}
+	
+	public Set<String> getProviderNo(){
+		return providers.keySet();
+	}
+	
+	public Character[] getOpenAccessCodes(){
+		if (filters != null){
+			for(FilterDefinition fd : filters){
+				if("org.oscarehr.appointment.search.filters.OpenAccessFilter".equals(fd.getFilterClassName())){
+					String str = fd.getParams().get("codes");
+					try{
+						Character[] retval = getCharArray(str); 
+						Arrays.sort(retval);
+						return retval;
+					} catch(Exception e) {
+						logger.error("buffer attribute should be an integer:"+str,e);
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	public void setOpenAccessCodes(Character[] openAccessCodes){
+		if (filters != null){
+			for(FilterDefinition fd : filters){
+				if("org.oscarehr.appointment.search.filters.OpenAccessFilter".equals(fd.getFilterClassName())){
+					Map<String,String> params = new HashMap<String,String>();
+					params.put("codes",org.apache.commons.lang.StringUtils.join(openAccessCodes,","));
+					fd.setParams(params);
+				}
+			}
+		}
+	}
+	
+	/////
+	
+	public static Document toDocument(SearchConfig clinic) throws Exception{
+		
+		Document doc = XmlUtils.newDocument("clinic");
+		//doc.getDocumentElement().setAttribute("name",clinic.getName());
+		
+		XmlUtils.appendChildToRoot(doc, "defaultAppointmentCount", Integer.toString(clinic.getDefaultAppointmentCount()));
+		
+		XmlUtils.appendChildToRoot(doc, "timezone",clinic.getTimezone());
+		
+		XmlUtils.appendChildToRoot(doc,"daysToSearchAheadLimit", ""+clinic.daysToSearchAheadLimit);
+		XmlUtils.appendChildToRoot(doc,"numberOfAppointmentOptionsToReturn", ""+clinic.numberOfAppointmentOptionsToReturn);
+		addChildIfNotNull(doc,"appointment_location",clinic.appointmentLocation);
+		
+		
+		if(clinic.getAppointmentTypes() != null){
+			for(AppointmentType aType :clinic.getAppointmentTypes()){
+				Element appointmentType = doc.createElement("appointment_type");
+				appointmentType.setAttribute("id",""+aType.getId());
+				appointmentType.setAttribute("name",aType.getName());
+				doc.getFirstChild().appendChild(appointmentType);
+			}
+		}
+		
+		logger.error("toDocument "+clinic.appointmentCodeDurations);
+		if(clinic.appointmentCodeDurations != null){
+			for(Map.Entry<Character, Integer> ent : clinic.appointmentCodeDurations.entrySet()){
+				Element appointmentCode = doc.createElement("appointment_code");
+				appointmentCode.setAttribute("code",""+ent.getKey());
+				appointmentCode.setAttribute("duration",""+ent.getValue());
+				doc.getFirstChild().appendChild(appointmentCode);
+			}
+		}
+		
+		if(clinic.getFilter() != null && clinic.getFilter().size() > 0){
+			Element filters = doc.createElement("filters");
+			for(FilterDefinition fd: clinic.filters){
+				Element filter = doc.createElement("filter");
+				filter.setTextContent(fd.getFilterClassName());
+				for(Map.Entry<String,String> fdParams : fd.getParams().entrySet()){
+					filter.setAttribute(fdParams.getKey(),fdParams.getValue());
+				}
+				filters.appendChild(filter);
+			}
+			doc.getFirstChild().appendChild(filters);
+		}
+		
+		if(clinic.providers != null){
+			for(Map.Entry<String, Provider> ent : clinic.providers.entrySet()){
+				Element allowedProvider = doc.createElement("allowedProvider");
+				allowedProvider.setAttribute("providerNo", ent.getKey());
+				Provider p = ent.getValue();
+				for(Map.Entry<String, Character[]> apptTypeEnt : p.appointmentTypes.entrySet()){
+					Element allowedAppt = doc.createElement("allowed_appointment");
+					allowedAppt.setAttribute("id", apptTypeEnt.getKey());
+					allowedAppt.setAttribute("appointment_codes", org.apache.commons.lang.StringUtils.join(apptTypeEnt.getValue(),","));
+					Integer duration = p.getAppointmentDurations().get(Long.parseLong(apptTypeEnt.getKey()));
+					if(duration != null){
+						allowedAppt.setAttribute("duration", ""+duration);
+					}
+					allowedProvider.appendChild(allowedAppt);
+					
+				}
+				
+				for(FilterDefinition fd: p.filters){
+					Element filter = doc.createElement("filter");
+					filter.setTextContent(fd.getFilterClassName());
+					for(Map.Entry<String,String> fdParams : fd.getParams().entrySet()){
+						filter.setAttribute(fdParams.getKey(),fdParams.getValue());
+					}
+					allowedProvider.appendChild(filter);
+				}
+				
+				if(p.getTeamMembers() != null && p.getTeamMembers().size() > 0){
+					Element team = doc.createElement("team");
+					for(Provider m: p.getTeamMembers()){
+						Element teamProvider = doc.createElement("member");
+						teamProvider.setAttribute("providerNo", m.getProviderNo());
+						allowedAppt(doc,teamProvider,m.appointmentTypes.entrySet(),m.appointmentDurations);
+						team.appendChild(teamProvider);
+					}
+					allowedProvider.appendChild(team);
+				}
+				
+				doc.getFirstChild().appendChild(allowedProvider);
+			}
+		}
+		
+		return doc;
+	}
+	
+	
+	public static SearchConfig fromDocument(Document doc) throws Exception{
+		SearchConfig returnClinic = new SearchConfig();
+
+		Node rootNode = doc.getFirstChild();
+		//returnClinic.name = XmlUtils.getAttributeValue(rootNode, "name");
+		returnClinic.timezone = XmlUtils.getChildNodeTextContents(rootNode,"timezone");
+		returnClinic.appointmentLocation = XmlUtils.getChildNodeTextContents(rootNode,"appointment_location");
+		
+		String daysToSearchAheadLimitStr = XmlUtils.getChildNodeTextContents(rootNode,"daysToSearchAheadLimit");
+		if(daysToSearchAheadLimitStr != null){
+			try{
+				returnClinic.daysToSearchAheadLimit = Integer.parseInt(daysToSearchAheadLimitStr);
+			}catch(Exception daysToSearchAheadLimitException){
+				logger.error("Error parsing daysToSearchAheadLimit"+daysToSearchAheadLimitStr,daysToSearchAheadLimitException);
+			}
+		}
+		
+		String numberOfAppointmentOptionsToReturnStr = XmlUtils.getChildNodeTextContents(rootNode,"numberOfAppointmentOptionsToReturn");
+		if(numberOfAppointmentOptionsToReturnStr != null){
+			try{
+				returnClinic.numberOfAppointmentOptionsToReturn = Integer.parseInt(numberOfAppointmentOptionsToReturnStr);
+			}catch(Exception numberOfAppointmentOptionsToReturnException){
+				logger.error("Error parsing numberOfAppointmentOptionsToReturn"+numberOfAppointmentOptionsToReturnStr,numberOfAppointmentOptionsToReturnException);
+			}
+		}
+		
+		
+		String defaultAppointmentCount = XmlUtils.getChildNodeTextContents(rootNode, "defaultAppointmentCount");
+		if(defaultAppointmentCount != null){
+			try{
+				returnClinic.defaultAppointmentCount = Integer.parseInt(defaultAppointmentCount);
+			}catch(Exception defaultAppointmentCountException){
+				logger.error("Error parsing defaultAppointmentCount "+defaultAppointmentCount, defaultAppointmentCountException);
+			}
+		}
+		
+		
+		
+		returnClinic.appointmentTypes = new ArrayList<AppointmentType>();
+		List<Node> apptNodes = XmlUtils.getChildNodes(rootNode, "appointment_type");
+		for (Node apptNode : apptNodes){
+			returnClinic.appointmentTypes.add(AppointmentType.fromXml2(apptNode));
+		}
+
+		
+		Node filterNode = XmlUtils.getChildNode(rootNode, "filters");
+		if(filterNode != null){
+			returnClinic.filters = Provider.getFilterArray(filterNode);
+		}
+		
+		returnClinic.appointmentCodeDurations = new HashMap<Character, Integer>();
+		List<Node> apptCodeNodes = XmlUtils.getChildNodes(rootNode, "appointment_code");
+		for (Node apptCodeNode : apptCodeNodes){
+			Integer duration = Integer.parseInt(XmlUtils.getAttributeValue(apptCodeNode, "duration"));
+			String s = XmlUtils.getAttributeValue(apptCodeNode, "code");
+			s = StringUtils.trimToNull(s);
+			if (s != null && s.length() > 0){
+				returnClinic.appointmentCodeDurations.put(s.charAt(0), duration);
+				String openAccessStr = XmlUtils.getAttributeValue(apptCodeNode, "openaccess");
+				if(openAccessStr != null && "true".equals(openAccessStr)){
+					getCharArray(openAccessStr);
+				}
+			}
+		}
+
+		returnClinic.providers = new HashMap<String, Provider>();
+		List<Node> providerNodes = XmlUtils.getChildNodes(rootNode, "allowedProvider");
+		for (Node providerNode : providerNodes){
+			Provider provider = Provider.fromXml(providerNode);
+			returnClinic.providers.put(provider.getProviderNo(), provider);
+		}
+		//returnClinic.secretKey = EncryptionUtils.generateEncryptionKey();
+
+		return returnClinic;
+	}
+
+	private static Character[] getCharArray(String toSplit){
+		String[] splitStr = toSplit.split(",");
+		Character[] retval = new Character[splitStr.length];
+		int i = 0;
+		for(String c:splitStr){
+			retval[i] = c.charAt(0);
+			i++;
+		}	
+		return retval;
+	}
+	
+	private static void allowedAppt(Document doc,Element elementToAppend,Set<Map.Entry<String, Character[]>> allowedApptSet,Map<Long, Integer> extDurations){
+		for(Map.Entry<String, Character[]> apptTypeEnt : allowedApptSet){
+			Element allowedAppt = doc.createElement("allowed_appointment");
+			allowedAppt.setAttribute("id", apptTypeEnt.getKey());
+			allowedAppt.setAttribute("appointment_codes", org.apache.commons.lang.StringUtils.join(apptTypeEnt.getValue(),","));
+			Integer duration = extDurations.get(Long.parseLong(apptTypeEnt.getKey()));
+			if(duration != null){
+				allowedAppt.setAttribute("duration", ""+duration);
+			}
+			elementToAppend.appendChild(allowedAppt);
+		}
+	}
+	
+	private static void addChildIfNotNull(Document doc,String nodeName,String textValue){
+		if(textValue != null){
+			XmlUtils.appendChildToRoot(doc, nodeName, textValue);
+		}
+	}
+	/////
+	
+	
+	public static SearchConfig fromTransfer(SearchConfigTo1 clinicTransfer,SearchConfig oldClinic){
+		logger.debug("clinicTransfer:"+clinicTransfer);
+		SearchConfig returnClinic = new SearchConfig();	
+		returnClinic.timezone = clinicTransfer.getTimezone();
+		returnClinic.daysToSearchAheadLimit = clinicTransfer.getDaysToSearchAheadLimit();
+		returnClinic.numberOfAppointmentOptionsToReturn = clinicTransfer.getNumberOfAppointmentOptionsToReturn();
+		returnClinic.appointmentLocation = clinicTransfer.getAppointmentLocation();
+		returnClinic.filters = new ArrayList<FilterDefinition>();
+		returnClinic.defaultAppointmentCount = clinicTransfer.getDefaultAppointmentCount();
+		
+		if(clinicTransfer.getNumberOfMinutesAdvance() != null && clinicTransfer.getNumberOfMinutesAdvance() > 0){
+			FilterDefinition fd = new FilterDefinition();
+			fd.setFilterClassName("org.oscarehr.appointment.search.filters.FutureApptFilter");
+			Map<String,String> params = new HashMap<String,String>();
+			params.put("buffer",""+clinicTransfer.getNumberOfMinutesAdvance());
+			fd.setParams(params);
+			returnClinic.filters.add(fd);
+		}	
+
+		try { 
+			List<AppointmentTypeTransfer> bookingAppointmentTypes = clinicTransfer.getBookingAppointmentTypes();
+			returnClinic.appointmentTypes = new ArrayList<AppointmentType>();
+			for (AppointmentTypeTransfer apptNode : bookingAppointmentTypes){
+				logger.debug("adding appt type");
+				returnClinic.appointmentTypes.add(AppointmentType.fromAppointmentTypeTransfer(apptNode));
+			} 		
+		} catch(Exception e) {
+			logger.error("error processing appointmentTypes");
+			returnClinic.appointmentTypes = oldClinic.appointmentTypes;
+		}
+		
+		returnClinic.providers = new HashMap<String,Provider>(); 
+		List<BookingProviderTransfer> bookingProviders = clinicTransfer.getBookingProviders();
+		for(BookingProviderTransfer bp : bookingProviders){
+			Provider provider = Provider.fromProvider(bp);	
+			returnClinic.providers.put(provider.getProviderNo(), provider);
+		}
+		
+		returnClinic.appointmentCodeDurations = clinicTransfer.getAppointmentCodeDurations();
+		List<BookingScheduleTemplateCodeTransfer> bookingCodeList = clinicTransfer.getApptCodes();
+		/* Check if this is not needed... it seems the above codes receives the hashmap instead of creating it.
+		  if(bookingCodeList != null) {
+			returnClinic.appointmentCodeDurations = new HashMap<Character,Integer>();
+			List<Character> openAccessList = new ArrayList<Character>();
+			for(BookingScheduleTemplateCodeTransfer code:bookingCodeList){
+				if(code.isOnlineBooking()){
+					logger.info("Adding Code"+code.getCode()+ " with dur "+code.getDuration());
+					returnClinic.appointmentCodeDurations.put(code.getCode(), Integer.parseInt(code.getDuration()));
+				}else{
+					logger.info("Not Adding Code"+code.getCode() );
+					
+				}
+				if(code.isOpenAccess()){
+					openAccessList.add(code.getCode());
+				}
+			}
+			
+			if(openAccessList.size() > 0){
+				FilterDefinition fd = new FilterDefinition();
+				fd.setFilterClassName("org.oscarehr.appointment.search.filters.OpenAccessFilter");
+				returnClinic.filters.add(fd);
+			}
+			returnClinic.setOpenAccessCodes(openAccessList.toArray(new Character[openAccessList.size()]));
+		} else {
+			logger.debug("booking code List size is null just going with what was there ");
+			returnClinic.appointmentCodeDurations = oldClinic.appointmentCodeDurations;
+		}
+		*/
+		
+		if(clinicTransfer.getOpenAccessList() != null && clinicTransfer.getOpenAccessList().size() > 0) {
+			FilterDefinition fd = new FilterDefinition();
+			fd.setFilterClassName("org.oscarehr.appointment.search.filters.OpenAccessFilter");
+			returnClinic.filters.add(fd);
+			returnClinic.setOpenAccessCodes(clinicTransfer.getOpenAccessList().toArray(new Character[clinicTransfer.getOpenAccessList().size()]));
+		}
+		
+				
+		FilterDefinition fdExistingApp = new FilterDefinition();
+		fdExistingApp.setFilterClassName("org.oscarehr.appointment.search.filters.ExistingAppointmentFilter");
+		returnClinic.filters.add(fdExistingApp);
+	
+		FilterDefinition fdMultiUnit = new FilterDefinition();
+		fdMultiUnit.setFilterClassName("org.oscarehr.appointment.search.filters.MultiUnitFilter");
+		returnClinic.filters.add(fdMultiUnit);
+		
+		
+		return returnClinic;
+	}
+
+
+	public List<AppointmentType> getAppointmentTypes() {
+		return appointmentTypes;
+	}
+
+
+	public void setAppointmentTypes(List<AppointmentType> appointmentTypes) {
+		this.appointmentTypes = appointmentTypes;
+	}
+
+
+	public Map<Character, Integer> getAppointmentCodeDurations() {
+		return appointmentCodeDurations;
+	}
+
+
+	public void setAppointmentCodeDurations(Map<Character, Integer> appointmentCodeDurations) {
+		this.appointmentCodeDurations = appointmentCodeDurations;
+	}
+
+
+	public Map<String, Provider> getProviders() {
+		return providers;
+	}
+
+
+	public void setProviders(Map<String, Provider> providers) {
+		this.providers = providers;
+	}
+
+
+	public String getTimezone() {
+		return timezone;
+	}
+
+
+	public void setTimezone(String timezone) {
+		this.timezone = timezone;
+	}
+
+
+	public int getDefaultAppointmentCount() {
+		return defaultAppointmentCount;
+	}
+
+
+	public void setDefaultAppointmentCount(int defaultAppointmentCount) {
+		this.defaultAppointmentCount = defaultAppointmentCount;
+	}
+
+
+	public List<FilterDefinition> getFilters() {
+		return filters;
+	}
+
+
+	public void setFilters(List<FilterDefinition> filters) {
+		this.filters = filters;
+	}
+
+
+	public String getAppointmentLocation() {
+		return appointmentLocation;
+	}
+
+
+	public void setAppointmentLocation(String appointmentLocation) {
+		this.appointmentLocation = appointmentLocation;
+	}
+
+
+	public List<Provider> getBookingProviders() {
+		return bookingProviders;
+	}
+
+
+	public void setBookingProviders(List<Provider> bookingProviders) {
+		this.bookingProviders = bookingProviders;
 	}
 }

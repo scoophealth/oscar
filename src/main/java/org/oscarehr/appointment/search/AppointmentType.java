@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.oscarehr.util.XmlUtils;
+import org.oscarehr.ws.rest.to.model.AppointmentTypeTransfer;
 import org.w3c.dom.Node;
 
 public final class AppointmentType{
@@ -97,7 +98,7 @@ public final class AppointmentType{
 		return(result);
 	}
 
-	/*
+	
 	public static AppointmentType fromAppointmentTypeTransfer(AppointmentTypeTransfer apptNode) {
 		AppointmentType result = new AppointmentType();
 
@@ -106,5 +107,5 @@ public final class AppointmentType{
 
 		return(result);
 	}
-	*/
+	
 }

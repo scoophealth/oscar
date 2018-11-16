@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -36,36 +35,21 @@ import org.oscarehr.common.dao.AppointmentArchiveDao;
 import org.oscarehr.common.dao.AppointmentStatusDao;
 import org.oscarehr.common.dao.LookupListDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
-import org.oscarehr.common.model.Appointment;
-import org.oscarehr.common.model.AppointmentArchive;
-import org.oscarehr.common.model.AppointmentStatus;
 import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.LookupList;
-import org.oscarehr.common.model.LookupListItem;
 
 import org.oscarehr.appointment.search.SearchConfig;
 import org.oscarehr.appointment.search.TimeSlot;
-
+import org.oscarehr.appointment.search.AppointmentType;
 import org.oscarehr.appointment.search.FilterDefinition;
 import org.oscarehr.appointment.search.Provider;
 import org.oscarehr.appointment.search.filters.AvailableTimeSlotFilter;
-
-
-
-
-
-
-//import org.oscarehr.oscar_clinic_component.manager.BookingLearningManager;
 import org.oscarehr.util.LoggedInInfo;
+//import org.oscarehr.oscar_clinic_component.manager.BookingLearningManager;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.ws.transfer_objects.CalendarScheduleCodePairTransfer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import oscar.log.LogAction;
 
 @Service
 public class AppointmentSearchManager {
@@ -89,14 +73,20 @@ public class AppointmentSearchManager {
 
 	
 	
-
+	public List<AppointmentType> getAppointmentTypes(SearchConfig config,Integer demographicNo){
+		
+		return config.getAppointmentTypes();
+		
+	}
+ 	
 	
-	
-	public List<TimeSlot> findAppointment(SearchConfig config, Integer demographicNo,Long appointmentTypeId,Calendar startDate) throws java.lang.ClassNotFoundException,java.lang.InstantiationException,java.lang.IllegalAccessException{
+	public List<TimeSlot> findAppointment(LoggedInInfo loggedInInfo,SearchConfig config, Integer demographicNo,Long appointmentTypeId,Calendar startDate) throws java.lang.ClassNotFoundException,java.lang.InstantiationException,java.lang.IllegalAccessException{
 		List<TimeSlot> appointments = new ArrayList<TimeSlot>();
-		Map<Provider, Character[]> providerMap = config.getProvidersForAppointmentType(demographicNo, appointmentTypeId);
-		Demographic demographic = demographicManager.getDemographic(null, demographicNo);
+		Demographic demographic = demographicManager.getDemographic(loggedInInfo, demographicNo);
 		String mrp = demographic.getProviderNo();
+		
+		Map<Provider, Character[]> providerMap = config.getProvidersForAppointmentType(demographicNo, appointmentTypeId,mrp);
+		
 		//need to get Providers for demographic and appt Type.
 		
 		//////
