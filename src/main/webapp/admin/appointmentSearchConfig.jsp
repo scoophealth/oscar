@@ -148,7 +148,7 @@
 				                <td ng-repeat="appt in currentSearchConfig.bookingAppointmentTypes"><small>{{appt.name}}</small></td>
 				            </tr>
 				            <tr ng-repeat-start="provider in currentSearchConfig.bookingProviders"> 
-				                <td><a ng-click="cnf.viewProvider(provider,$event)" class="clickable">{{getProviderName(provider.providerNo)}}</a>
+				                <td><a ng-click="viewProvider(provider,$event)" class="clickable">{{getProviderName(provider.providerNo)}}</a>
 				                    <md-icon class="glyphicon glyphicon-trash" aria-label="Trash" ng-click="removeProvider(provider, currentSearchConfig.bookingProviders, $index, $event)"></md-icon>
 				                </td>
 				                <td>
@@ -162,11 +162,11 @@
 									  </ul>
 									</div>
 				                </td>
-				                <td ng-repeat="appt in currentSearchConfig.bookingAppointmentTypes" ng-click="editApptTypeForProvider(appt,provider,$event)" style="cursor: pointer;"><span><i ng-class="{'glyphicon glyphicon-ok' : checkAppt(provider,appt) }" ></i><small>{{listAppt(provider,appt) | blankFilter:checkAppt(provider,appt)}}</small></span></td>
+				                <td ng-repeat="appt in currentSearchConfig.bookingAppointmentTypes" ng-click="editApptTypeForProvider(appt,provider,$event)" style="cursor: pointer;"><span><i ng-class="{'glyphicon glyphicon-ok' : checkAppt(provider,appt) }" ></i><small> {{listAppt(provider,appt) | blankFilter:checkAppt(provider,appt)}}</small></span></td>
 				            </tr>
 				            <tr ng-repeat="teamProvider in provider.teamMembers" ng-repeat-end>
 				                <td>&nbsp;</td>
-				                <td><small><a ng-click="cnf.viewProvider(teamProvider, $event)" class="clickable">{{getProviderName(teamProvider.providerNo)}}</a> <md-icon class="glyphicon glyphicon-trash" aria-label="Trash" ng-click="removeProvider(teamProvider,provider.teamMembers,$index,$event)" ></md-icon></small></td>
+				                <td><small><a ng-click="viewProvider(teamProvider, $event)" class="clickable">{{getProviderName(teamProvider.providerNo)}}</a> <md-icon class="glyphicon glyphicon-trash" aria-label="Trash" ng-click="removeProvider(teamProvider,provider.teamMembers,$index,$event)" ></md-icon></small></td>
 				                <td ng-repeat="appt in currentSearchConfig.bookingAppointmentTypes" ng-click="editApptTypeForProvider(appt,teamProvider,$event)" style="cursor: pointer;"><span><i ng-class="{'glyphicon glyphicon-ok' : checkAppt(teamProvider,appt) }" ></i><small> {{listAppt(teamProvider,appt) | blankFilter:checkAppt(teamProvider,appt)}}</small></span></td>
 				            </tr>
 				            <tr>
@@ -242,7 +242,7 @@
     						<h2>Appointment Codes</h2>
 			            <div class="row">
 			                <div class="col-xs-12">
-			                    <table class="table table-bordered">
+			                    <table class="table table-bordered table-hover">
 			                        <tr>
 			                            <td>&nbsp;</td>
 			                            <td>Appt Code Desc</td>
@@ -312,7 +312,39 @@
 	 	
 		
 	</div>
-	
+	<script type="text/ng-template" id="providerCopy.html">
+		<div class="modal-header">
+            <h3 class="modal-title" id="modal-title">Copy Provider Configuration :{{vp.getProviderName(vp.provider.providerNo)}}</h3>
+        </div>
+		<div class="modal-body" id="modal-body">
+            <div class="md-dialog-content" id="dialogContentProviderCopy">
+				<table class="table table-bordered table-striped table-hover">
+	            		<tr>
+	                		<td>Provider</td>
+	                		<td>Team</td>
+	                		<td>&nbsp;</td>
+	                		<td ng-repeat="appt in vp.clinic.bookingAppointmentTypes"><small>{{appt.name}}</small></td>
+	            		</tr>
+	            		<tr ng-repeat-start="prov in vp.clinic.bookingProviders">
+	                		<td><a class="clickable">{{vp.getProviderName(prov.providerNo)}}</a></td>
+	                		<td>&nbsp;</td>
+	                		<td>
+							<button class="btn btn-primary" type="button" ng-click="vp.copyProvidersTemplate(prov)">Copy</button>
+	                		</td>
+	                		<td ng-repeat="appt in vp.clinic.bookingAppointmentTypes"><span><small>{{vp.listAppt(prov, appt)}}</small></span></td>
+	            		</tr>
+	            		<tr ng-repeat="teamProvider in prov.teamMembers" ng-repeat-end>
+	                		<td>&nbsp;</td>
+	                		<td><small><a class="clickable">{{vp.getProviderName(teamProvider.providerNo)}}</a></small></td>
+	                		<td>
+							<button class="btn btn-primary" type="button" ng-click="vp.copyProvidersTemplate(teamProvider)">Copy</button>
+	                		</td>
+	                		<td ng-repeat="appt in vp.clinic.bookingAppointmentTypes"><span><small>{{vp.listAppt(teamProvider,appt)}}</small></span></td>
+	            		</tr>
+	        		</table>
+        		</div>
+		</div>
+	</script>
 	
 	<script type="text/ng-template" id="myModalContent.html">
         <div class="modal-header">
@@ -820,14 +852,68 @@
 	    		    modalInstance.result.then(function (selectedItem) {
 	    		      selected = selectedItem;
 	    		    }, function () {
-	    		      $log.info('Modal dismissed at: ' + new Date());
+	    		      console.log('Modal dismissed at: ' + new Date());
 	    		    });
 	    		  };
 		    
+	    		  
+	    		  $scope.viewProvider = function(provider,$event){
+	    			  var modalInstance = $modal.open({
+		    		      
+		    		      templateUrl: 'providerCopy.html',
+		    		      controller: 'ViewProviderDialogCtrl',
+		    		      controllerAs: 'ppa',
+		    		      parent: angular.element(document.body),
+		    		      size: 'lg',
+		    		      appendTo: $event,
+		    		      resolve: {
+		    		    	  	
+		    		    	  		provider: function () {
+		    		          		return provider;
+		    		        		},
+		    		        		searchConfig: function () {
+		    		          		return $scope.currentSearchConfig;
+		    		        		},
+		    		        		providerName : function(){
+		    		        			return $scope.getProviderName;
+		    		        		}
+		    		      }
+		    		    });
+
+		    		    modalInstance.result.then(function (selectedItem) {
+		    		      selected = selectedItem;
+		    		    }, function () {
+		    		      console.log('Modal dismissed at: ' + new Date());
+		    		    });
+	    		
+	    		  }
 		
 			
 		});
 		
+		app.controller('ViewProviderDialogCtrl',function ViewProviderDialogCtrl($scope,$modal,$modalInstance,provider,searchConfig,providerName){
+			console.log("ViewProviderDialogCtrl",provider,searchConfig);
+			$scope.vp = {};
+			$scope.vp.getProviderName = providerName;
+			$scope.vp.clinic = searchConfig;
+			$scope.vp.copyProvidersTemplate = function(providerToCopy) {
+				console.log("vpd ",provider,providerToCopy);
+				provider.appointmentDurations = angular.copy(providerToCopy.appointmentDurations);
+				provider.appointmentTypes = angular.copy(providerToCopy.appointmentTypes);
+				$modalInstance.close(providerToCopy);	
+			};
+			$scope.vp.listAppt = function(prov, appt){
+				if(angular.isDefined(prov) && angular.isDefined(prov.appointmentTypes)) {
+			
+					for(var x = 0; x < prov.appointmentTypes.length; x++) {
+						if(prov.appointmentTypes[x].id === appt.id) {
+							return prov.appointmentTypes[x].codes.join();
+						}
+					}
+				}
+				return "";
+			}
+		});
 		
 		app.controller('ModalInstanceCtrl', function ModalInstanceCtrl($scope, $modal, $modalInstance,provider,appt,apptCodes,appointmentCodeDurations){
 			console.log("ModalInstanceCtrl",provider,appt,apptCodes);
