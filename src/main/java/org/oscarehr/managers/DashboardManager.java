@@ -23,7 +23,9 @@
  */
 package org.oscarehr.managers;
 import java.security.Security;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -72,7 +74,8 @@ public class DashboardManager {
 	
 	@Autowired
 	ClinicDAO clinicDAO;
-	
+
+	private Map<String,String> requestedProviderNumMap = new HashMap<String, String>();
 	
 	private Logger logger = MiscUtils.getLogger();
 	/**
@@ -525,8 +528,12 @@ public class DashboardManager {
 		return drilldownBean;
 
 	}
-	
+
 	public String exportDrilldownQueryResultsToCSV( LoggedInInfo loggedInInfo, int indicatorId ) {
+		return exportDrilldownQueryResultsToCSV(loggedInInfo, null, indicatorId);
+	}
+	
+	public String exportDrilldownQueryResultsToCSV( LoggedInInfo loggedInInfo, String providerNo, int indicatorId ) {
 		
 		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardDrilldown", SecurityInfoManager.READ, null ) ) {	
 			LogAction.addLog(loggedInInfo, "DashboardManager.exportDrilldownQueryResultsToCSV", null, null, null,"User missing _dashboardDrilldown role with read access");
@@ -534,6 +541,9 @@ public class DashboardManager {
         }
 		
 		IndicatorTemplateXML templateXML = getIndicatorTemplateXML( loggedInInfo, indicatorId );
+		if (providerNo != null) {
+			templateXML.setProviderNo(providerNo);
+		}
 
 		ExportQueryHandler exportQueryHandler = SpringUtils.getBean( ExportQueryHandler.class );
 		exportQueryHandler.setLoggedInInfo( loggedInInfo );
@@ -691,4 +701,19 @@ public class DashboardManager {
 
 		return url + "?" + "encodedParams=" + b64 + "&version=1.1";
 	}
+
+	public void setRequestedProviderNo(LoggedInInfo loggedInInfo, String providerNo) {
+		String loggedInInfoStr = loggedInInfo.getLoggedInProviderNo();
+		if (loggedInInfoStr != null && !loggedInInfoStr.isEmpty())
+			this.requestedProviderNumMap.put(loggedInInfoStr,providerNo);
+	}
+
+	public String getRequestedProviderNo(LoggedInInfo loggedInInfo) {
+		if (loggedInInfo != null) {
+			return this.requestedProviderNumMap.get(loggedInInfo.getLoggedInProviderNo());
+		} else {
+			return null;
+		}
+	}
+
 }

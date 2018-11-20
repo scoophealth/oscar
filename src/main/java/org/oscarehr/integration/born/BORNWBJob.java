@@ -392,4 +392,8 @@ public class BORNWBJob implements OscarRunnable {
 		}
 		
 	}
+	
+	@Override
+	public void setConfig(String string) {
+	}
 }

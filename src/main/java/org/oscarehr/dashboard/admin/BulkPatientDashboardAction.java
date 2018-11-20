@@ -42,10 +42,14 @@ import org.oscarehr.util.SpringUtils;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import oscar.log.LogAction;
+import oscar.log.LogConst;
 
+import org.oscarehr.dashboard.handler.DemographicPatientStatusRosterStatusHandler;
 import org.oscarehr.dashboard.handler.DiseaseRegistryHandler;
 import org.oscarehr.dashboard.handler.ExcludeDemographicHandler;
 import org.oscarehr.dashboard.handler.MessageHandler;
+import org.oscarehr.managers.DashboardManager;
 import org.oscarehr.managers.SecurityInfoManager;
 
 public class BulkPatientDashboardAction extends DispatchAction {
@@ -53,10 +57,14 @@ public class BulkPatientDashboardAction extends DispatchAction {
 	private static Logger logger = MiscUtils.getLogger();
 
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
+	private DashboardManager dashboardManager = SpringUtils.getBean(DashboardManager.class);
 
 	private ExcludeDemographicHandler excludeDemographicHandler = new ExcludeDemographicHandler();
 
 	private DiseaseRegistryHandler diseaseRegistryHandler = new DiseaseRegistryHandler();
+	
+	private DemographicPatientStatusRosterStatusHandler demographicPatientStatusRosterStatusHandler = new DemographicPatientStatusRosterStatusHandler();
 
 	private MessageHandler messageHandler = new MessageHandler();
 
@@ -65,6 +73,8 @@ public class BulkPatientDashboardAction extends DispatchAction {
 
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 		excludeDemographicHandler.setLoggedinInfo(loggedInInfo);
+		
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
 
 		String patientIdsJson = request.getParameter("patientIds");
 		String indicatorIdString = request.getParameter("indicatorId");
@@ -89,9 +99,13 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		messageHandler.notifyProvider(
 			subject,
 			message,
-			loggedInInfo.getLoggedInProviderNo(),
+			providerNo,
 			parseIntegers(patientIdsJson)
 		);
+		String mrp = getMRP(loggedInInfo);
+		if (mrp != null && !providerNo.equals(mrp)) {
+			messageHandler.notifyProvider(subject, message, mrp, parseIntegers(patientIdsJson));
+		}
 
 		logger.info(message);
 
@@ -109,6 +123,9 @@ public class BulkPatientDashboardAction extends DispatchAction {
 
 		if (!securityInfoManager.hasPrivilege(loggedInInfo,
 				"_dxresearch", SecurityInfoManager.WRITE, null)) {
+			if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null) {
+				logger.info("Provider "+loggedInInfo.getLoggedInProvider().getProviderNo()+" does not have write permission on _dxresearch security object");
+			}
 			return mapping.findForward("unauthorized");
 		}
 
@@ -119,15 +136,17 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		JSONArray patientIds = asJsonArray(patientIdsJson);
 		List<Integer> patientIdList = new ArrayList<Integer>();
 
+		String ip = request.getRemoteAddr();
 		for (int i = 0; i < patientIds.size(); ++i) {
 			int patientId = patientIds.getInt(i);
 			patientIdList.add(patientId);
 
-			diseaseRegistryHandler.addToDiseaseRegistry(
-				patientId,
-				icd9code,
-				providerNo
-			);
+			Integer drId = diseaseRegistryHandler.addToDiseaseRegistry(
+					patientId,
+					icd9code,
+					providerNo
+					);
+			LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, "DX", ""+drId , ip,"");
 		}
 
 		String subject = "Bulk addition to disease registry report.";
@@ -136,6 +155,10 @@ public class BulkPatientDashboardAction extends DispatchAction {
 			" with provider no {" + providerNo + "}";
 
 		messageHandler.notifyProvider(subject, message, providerNo, patientIdList);
+		String mrp = getMRP(loggedInInfo);
+		if (mrp != null && !providerNo.equals(mrp)) { // operation done by MOA for doctor
+			messageHandler.notifyProvider(subject, message, mrp, patientIdList);
+		}
 
 		logger.info(message);
 
@@ -163,6 +186,45 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		return null;
 	}
 
+	public ActionForward setPatientsInactive(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+		String providerNo = getProviderNo(loggedInInfo);
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_demographic", SecurityInfoManager.WRITE, null) ) {
+			logger.info("Provider "+providerNo+" does not have write permission on _demographic security object");
+			return mapping.findForward("unauthorized");
+		}
+
+		demographicPatientStatusRosterStatusHandler.setLoggedinInfo(loggedInInfo);
+
+		String patientIdsJson = request.getParameter("patientIds");
+		JSONArray patientIds = asJsonArray(patientIdsJson);
+		List<Integer> patientIdList = new ArrayList<Integer>();
+
+		String ip = request.getRemoteAddr();
+		for (int i = 0; i < patientIds.size(); ++i) {
+			int patientId = patientIds.getInt(i);
+			patientIdList.add(patientId);
+			demographicPatientStatusRosterStatusHandler.setPatientStatusInactive(""+patientId);
+		    LogAction.addLog(providerNo, LogConst.UPDATE, LogConst.CON_DEMOGRAPHIC, ""+patientId, ip, ""+patientId, "patient_status: IN");
+		}
+
+		String subject = "Report on bulk setting of patients to inactive.";
+		String message = "Patient demographic_no(s) {" + patientIdsJson +
+			"} set inactive by " + providerNo;
+
+		messageHandler.notifyProvider(subject, message, providerNo, patientIdList);
+		String mrp = getMRP(loggedInInfo);
+		if (mrp != null && !providerNo.equals(mrp)) {  // operation done by MOA for doctor
+			messageHandler.notifyProvider(subject, message, mrp, patientIdList);
+		}
+
+		logger.info(message);
+
+		return null;
+	}
+	
 	private static JSONArray asJsonArray(String jsonString) {
 		if(jsonString == null || jsonString.isEmpty()) {
 			return new JSONArray();
@@ -189,4 +251,17 @@ public class BulkPatientDashboardAction extends DispatchAction {
 
 		return ints;
 	}
+	
+	private String getProviderNo(LoggedInInfo loggedInInfo) {
+		String providerNo = null;
+		if (loggedInInfo != null) {
+			providerNo = loggedInInfo.getLoggedInProviderNo();
+		}
+		return providerNo;
+	}
+
+	private String getMRP(LoggedInInfo loggedInInfo) {
+		return dashboardManager.getRequestedProviderNo(loggedInInfo);
+	}
+
 }

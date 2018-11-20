@@ -29,17 +29,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.IndicatorTemplate;
+import org.oscarehr.common.model.Provider;
 import org.oscarehr.dashboard.display.beans.DrilldownBean;
 import org.oscarehr.dashboard.handler.IndicatorTemplateHandler;
 import org.oscarehr.managers.DashboardManager;
+import org.oscarehr.managers.ProviderManager2;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.w3c.dom.NodeList;
 
@@ -47,6 +51,8 @@ public class DisplayDrilldownAction extends DispatchAction  {
 	
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 	private static DashboardManager dashboardManager = SpringUtils.getBean(DashboardManager.class);
+	private ProviderManager2 providerManager = SpringUtils.getBean( ProviderManager2.class );
+	private static Logger logger = MiscUtils.getLogger();
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
@@ -58,9 +64,19 @@ public class DisplayDrilldownAction extends DispatchAction  {
 		
 		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
 		
-		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardDrilldown", SecurityInfoManager.READ, null ) ) {	
+		if( ! securityInfoManager.hasPrivilege(loggedInInfo, "_dashboardDrilldown", SecurityInfoManager.READ, null ) ) {
+			if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null) {
+				logger.info("Provider "+loggedInInfo.getLoggedInProvider().getProviderNo()+" does not have read permission on _dashboardDrilldown security object");
+			}
 			return mapping.findForward("unauthorized");
         }
+		if (!securityInfoManager.hasPrivilege(loggedInInfo,
+				"_dxresearch", SecurityInfoManager.WRITE, null)) {
+			if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null) {
+				logger.info("Provider "+loggedInInfo.getLoggedInProvider().getProviderNo()+" does not have write permission on _dxresearch security object");
+			}
+			return mapping.findForward("unauthorized");
+		}
 		
 		String indicatorTemplateId = request.getParameter("indicatorTemplateId");
 
@@ -69,13 +85,28 @@ public class DisplayDrilldownAction extends DispatchAction  {
 			id = Integer.parseInt( indicatorTemplateId );
 		}
 		
-		DrilldownBean drilldown = dashboardManager.getDrilldownData(loggedInInfo, id, "null");
+		String providerNo = null;
+		if (dashboardManager.getRequestedProviderNo(loggedInInfo) != null) {
+		    providerNo = dashboardManager.getRequestedProviderNo(loggedInInfo);
+        }
+		DrilldownBean drilldown;
+		if (providerNo == null) {
+			drilldown = dashboardManager.getDrilldownData(loggedInInfo, id, "null");
+		} else {
+			drilldown = dashboardManager.getDrilldownData(loggedInInfo, id, providerNo, "null");
+		}
 		
 		// something must be returned. If not then something is very wrong.
 		if ( drilldown == null ) {
 			return mapping.findForward("error");
 		}
 
+		Provider preferredProvider = loggedInInfo.getLoggedInProvider();
+		if (dashboardManager.getRequestedProviderNo(loggedInInfo) != null) {
+			preferredProvider = providerManager.getProvider(loggedInInfo, dashboardManager.getRequestedProviderNo(loggedInInfo));
+		}
+		
+		request.setAttribute("preferredProvider",  preferredProvider);
 		request.setAttribute( "drilldown", drilldown );		
 		return mapping.findForward("success");
 	}

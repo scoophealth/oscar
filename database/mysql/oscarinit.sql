@@ -10671,7 +10671,8 @@ CREATE TABLE IF NOT EXISTS `OscarJob` (
     `cronExpression` VARCHAR(255),
     `providerNo` VARCHAR(10),
     `enabled` TINYINT(1) NOT NULL,
-    `updated` DATETIME NOT NULL
+    `updated` DATETIME NOT NULL,
+    `config` text
 );
 
 

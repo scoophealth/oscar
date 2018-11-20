@@ -96,4 +96,8 @@ public class IntegratorFileLogUpdateJob implements OscarRunnable{
 		this.security = security;
 	}
 	
+	@Override
+	public void setConfig(String string) {
+	}
+	
 }
