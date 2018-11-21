@@ -24,6 +24,7 @@ public class SearchConfigTo1 {
 	Integer numberOfMinutesAdvance;
 	private String appointmentLocation = null;
 	int defaultAppointmentCount =1;
+	private String title ;
     /**
 	 * @return the defaultAppointmentCount
 	 */
@@ -55,6 +56,7 @@ public class SearchConfigTo1 {
 		clinicTransfer.daysToSearchAheadLimit = clinic.getDaysToSearchAheadLimit();
 		clinicTransfer.numberOfAppointmentOptionsToReturn = clinic.getNumberOfAppointmentOptionsToReturn();
 		clinicTransfer.timezone = clinic.getTimezone();
+		clinicTransfer.title = clinic.getTitle();
 		
 		clinicTransfer.numberOfMinutesAdvance = clinic.getNumberOfMinutesAdvance();
 		clinicTransfer.appointmentLocation = clinic.getAppointmentLocation();
@@ -175,6 +177,14 @@ public class SearchConfigTo1 {
 
 	public void setOpenAccessList(List<Character> openAccessList) {
 		this.openAccessList = openAccessList;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 }

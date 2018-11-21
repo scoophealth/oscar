@@ -132,7 +132,10 @@
 		 	</div>
 		 	<div class="col-xs-9" ng-show="currentSearchConfig != null">
 		 		<h4>{{currentApptSearch.searchName}} - {{getProviderName(currentApptSearch.providerNo)}} - {{currentApptSearch.searchType}}</h4>
-		 		
+		 		<div class="form-group">
+				    <label for="ClinicTitleId">Booking Title</label>
+				    <input type="text" class="form-control" id="ClinicTitleId" placeholder="Name of Clinic" ng-model="currentSearchConfig.title">
+				  </div>
 		 		<ul class="nav nav-tabs nav-justified">
   					<li role="presentation" ng-class="tabActive('main')"><a ng-click="setActiveTab('main')"><bean:message key="admin.appointmentSearchConfig.main"/></a></li>
   					<li role="presentation" ng-class="tabActive('codes')"><a ng-click="setActiveTab('codes')"><bean:message key="admin.appointmentSearchConfig.apptCodes"/></a></li>

@@ -56,6 +56,7 @@ public class SearchConfig {
 	private int defaultAppointmentCount=1;
 	private List<FilterDefinition> filters = null;
     private String appointmentLocation = null;
+    private String title;
 	
 	public Map<Provider, Character[]>  getProvidersForAppointmentType(Integer demographicNo, Long appointmentTypeId,String providerNo){
 		
@@ -87,9 +88,8 @@ public class SearchConfig {
 	}
 	
 	public String getTitle() {
-		return "Clinic";
+		return title;
 	}
-	
 	
 	public int getDaysToSearchAheadLimit() {
 		return daysToSearchAheadLimit;
@@ -224,6 +224,8 @@ public class SearchConfig {
 		XmlUtils.appendChildToRoot(doc, "defaultAppointmentCount", Integer.toString(clinic.getDefaultAppointmentCount()));
 		
 		XmlUtils.appendChildToRoot(doc, "timezone",clinic.getTimezone());
+		XmlUtils.appendChildToRoot(doc, "title",clinic.getTitle());
+		
 		
 		XmlUtils.appendChildToRoot(doc,"daysToSearchAheadLimit", ""+clinic.daysToSearchAheadLimit);
 		XmlUtils.appendChildToRoot(doc,"numberOfAppointmentOptionsToReturn", ""+clinic.numberOfAppointmentOptionsToReturn);
@@ -314,6 +316,7 @@ public class SearchConfig {
 		//returnClinic.name = XmlUtils.getAttributeValue(rootNode, "name");
 		returnClinic.timezone = XmlUtils.getChildNodeTextContents(rootNode,"timezone");
 		returnClinic.appointmentLocation = XmlUtils.getChildNodeTextContents(rootNode,"appointment_location");
+		returnClinic.title = XmlUtils.getChildNodeTextContents(rootNode,"title");
 		
 		String daysToSearchAheadLimitStr = XmlUtils.getChildNodeTextContents(rootNode,"daysToSearchAheadLimit");
 		if(daysToSearchAheadLimitStr != null){
@@ -424,6 +427,7 @@ public class SearchConfig {
 		returnClinic.appointmentLocation = clinicTransfer.getAppointmentLocation();
 		returnClinic.filters = new ArrayList<FilterDefinition>();
 		returnClinic.defaultAppointmentCount = clinicTransfer.getDefaultAppointmentCount();
+		returnClinic.title = clinicTransfer.getTitle();
 		
 		if(clinicTransfer.getNumberOfMinutesAdvance() != null && clinicTransfer.getNumberOfMinutesAdvance() > 0){
 			FilterDefinition fd = new FilterDefinition();
