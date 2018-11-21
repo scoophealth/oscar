@@ -28,6 +28,7 @@ import java.util.Comparator;
 
 public class TimeSlot{
 	String providerNo = null;
+	private Integer demographicNo = null;
 	String providerName = null;
 	Calendar availableApptTime = null;
 	Character code = null;
@@ -102,6 +103,14 @@ public class TimeSlot{
 
 	public static Comparator<TimeSlot> getTimeSlotComparator(){
 		return TIMESLOT_DATE_COMPARATOR;
+	}
+
+	public Integer getDemographicNo() {
+		return demographicNo;
+	}
+
+	public void setDemographicNo(Integer demographicNo) {
+		this.demographicNo = demographicNo;
 	}
 
 }

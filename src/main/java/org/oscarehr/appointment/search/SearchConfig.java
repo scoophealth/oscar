@@ -1,12 +1,23 @@
 package org.oscarehr.appointment.search;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
@@ -32,6 +43,7 @@ public class SearchConfig {
 	
 	private int daysToSearchAheadLimit = 10; //Number of days it searches before giving up. ie search for the next 60 days before giving up
 	private int numberOfAppointmentOptionsToReturn  = 10; //Number of appts that seems like it gives a reasonable choice.	
+	private SecretKey secretKey = null;
 	
 	
 	
@@ -72,6 +84,10 @@ public class SearchConfig {
 			}
 		}
 		
+	}
+	
+	public String getTitle() {
+		return "Clinic";
 	}
 	
 	
@@ -567,4 +583,82 @@ public class SearchConfig {
 	public void setBookingProviders(List<Provider> bookingProviders) {
 		this.bookingProviders = bookingProviders;
 	}
+	
+	public void genSecKey() throws Exception{
+		KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+		keyGenerator.init(256);
+
+		secretKey = keyGenerator.generateKey();
+	}
+
+	public String encrypt(String toEncyrpt) throws Exception{
+		if (secretKey == null) return toEncyrpt;
+		Cipher cipher = Cipher.getInstance("AES");
+		cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+		
+		byte[] unencryptedByteArray = toEncyrpt.getBytes("UTF8");
+		byte[] encryptedBytes = cipher.doFinal(unencryptedByteArray);
+		byte[] encodedBytes = Base64.encodeBase64(encryptedBytes);
+
+		return new String(encodedBytes);
+	}
+
+	public String decrypt(String toDecrypt) throws Exception{
+		if (secretKey == null) return(toDecrypt);
+		
+		byte[] encryptedData = Base64.decodeBase64(toDecrypt.getBytes());
+		Cipher cipher = Cipher.getInstance("AES");
+		cipher.init(Cipher.DECRYPT_MODE, secretKey);
+		byte[] unencryptedByteArray = cipher.doFinal(encryptedData);
+		return new String(unencryptedByteArray, "UTF8");
+	}
+
+	public String encrypt(TimeSlot toEncyrpt) throws Exception{
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssZ");
+		formatter.setTimeZone(toEncyrpt.getAvailableApptTime().getTimeZone());
+		String combinedString = formatter.format(toEncyrpt.getAvailableApptTime().getTime()) + ":" + toEncyrpt.getProviderNo() + ":" + toEncyrpt.getAppointmentType() + ":" + toEncyrpt.getCode()+":"+toEncyrpt.getAvailableApptTime().getTimeZone().getID()+":"+toEncyrpt.getDemographicNo();
+		return encrypt(combinedString);
+	}
+	
+	public TimeSlot decryptTimeSlot(String toDecrypt) throws Exception{
+		TimeSlot timeslot = new TimeSlot();
+
+		String combinedString = decrypt(toDecrypt);
+		String[] combined = combinedString.split(":");
+		
+		DateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssZ");
+	    Date date = formatter.parse(combined[0]);
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(date);
+		cal.setTimeZone(TimeZone.getTimeZone(combined[4]));
+		
+		String providerId = combined[1];
+		Long appointmentTypeId = Long.parseLong(combined[2]);
+
+		timeslot.setAvailableApptTime(cal);
+		timeslot.setProviderNo(providerId);
+		timeslot.setAppointmentType(appointmentTypeId);
+		if (combined[3].length() > 0){
+			Character code = combined[3].charAt(0);
+			timeslot.setCode(code);
+		}
+		try {
+			timeslot.setDemographicNo(Integer.parseInt(combined[4]));
+		}catch(Exception e) {
+			logger.error("Error parsing demo",e);
+		}
+		return timeslot;
+		
+	}
+
+	public AppointmentType getAppointmentType(Long appointmentTypeId) {
+		for(AppointmentType appointmentType: appointmentTypes) {
+			if(appointmentType.getId() == appointmentTypeId.longValue()) {
+				return appointmentType;
+			}
+		}
+		return null;
+	}
+	
 }

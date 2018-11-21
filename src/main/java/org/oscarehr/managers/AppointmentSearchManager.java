@@ -27,16 +27,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.AppointmentArchiveDao;
+import org.oscarehr.common.dao.AppointmentSearchDao;
 import org.oscarehr.common.dao.AppointmentStatusDao;
 import org.oscarehr.common.dao.LookupListDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
+import org.oscarehr.common.model.AppointmentSearch;
 import org.oscarehr.common.model.Demographic;
-
 import org.oscarehr.appointment.search.SearchConfig;
 import org.oscarehr.appointment.search.TimeSlot;
 import org.oscarehr.appointment.search.AppointmentType;
@@ -46,15 +48,17 @@ import org.oscarehr.appointment.search.filters.AvailableTimeSlotFilter;
 import org.oscarehr.util.LoggedInInfo;
 //import org.oscarehr.oscar_clinic_component.manager.BookingLearningManager;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.XmlUtils;
 import org.oscarehr.ws.transfer_objects.CalendarScheduleCodePairTransfer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
 
 @Service
 public class AppointmentSearchManager {
 
-	protected Logger logger = MiscUtils.getLogger();
+	private static Logger logger = MiscUtils.getLogger();
 
 	@Autowired
 	private OscarAppointmentDao appointmentDao;
@@ -70,15 +74,38 @@ public class AppointmentSearchManager {
 	private ScheduleManager scheduleManager;
 	@Autowired
 	private DemographicManager demographicManager;
+	@Autowired
+	private AppointmentSearchDao appointmentSearchDao;
 
+	private Map<String,SearchConfig> searchConfigCache = new HashMap<String,SearchConfig>();
 	
 	
+	//Right now these two methods return the same but in the future this could be customized based on the demographic 
 	public List<AppointmentType> getAppointmentTypes(SearchConfig config,Integer demographicNo){
-		
 		return config.getAppointmentTypes();
-		
+	}
+	
+	public List<AppointmentType> getAppointmentTypes(SearchConfig config,String providerNo){
+		return config.getAppointmentTypes();	
 	}
  	
+	
+	public SearchConfig getProviderSearchConfig(String providerNo) {
+		SearchConfig searchConfig = searchConfigCache.get(providerNo);
+		Integer searchId = null;
+		if(searchConfig == null) {
+			try {
+				AppointmentSearch appointmentSearch = appointmentSearchDao.findForProvider(providerNo);
+				searchId = appointmentSearch.getId();
+				Document doc = XmlUtils.toDocument(appointmentSearch.getFileContents());
+				searchConfig = SearchConfig.fromDocument(doc);
+				searchConfigCache.put(providerNo, searchConfig);
+			}catch(Exception e) {
+				logger.error("Error Parsing AppointmentSearch Object id:"+searchId,e);
+			}
+		}
+		return searchConfig;
+	}
 	
 	public List<TimeSlot> findAppointment(LoggedInInfo loggedInInfo,SearchConfig config, Integer demographicNo,Long appointmentTypeId,Calendar startDate) throws java.lang.ClassNotFoundException,java.lang.InstantiationException,java.lang.IllegalAccessException{
 		List<TimeSlot> appointments = new ArrayList<TimeSlot>();
@@ -152,65 +179,7 @@ public class AppointmentSearchManager {
 
 	
 	
-	/*
-	DaysToSearchAheadLimit = Number of days it searches before giving up. ie search for the next 60 days before giving up
-	NumberOfAppointmentOptionsToReturn = Number of appts that seems like it gives a reasonable choice.
-	 ========================
-		get Circle of Care Providers capable of dealing with appt Type
-		for each provider retrieve their DayWorkSchedule
-		
-		//check if it's a holiday
-		//get providers timecodes for appt Type
-		//how to eliminate 30 min codes represented as 2 15min segments eg 1112211___ codes really should just be eg 1112_11___
-		//Then filter for future	
-	*/
-/*
- 
-	public static List<TimeSlot> findAppointments(Clinic clinic,String providerNo,Long appointmentTypeId,Calendar startDate,Document doc) throws java.lang.ClassNotFoundException,java.lang.InstantiationException,java.lang.IllegalAccessException{
-		Map<Provider, Character[]> providerMap = clinic.getProvidersForAppointmentType(providerNo, appointmentTypeId);
-		List<TimeSlot> appointments = new ArrayList<TimeSlot>();
-		for(int i=0;i<clinic.getDaysToSearchAheadLimit();i++){
-			Calendar calDayToSearch = (Calendar) startDate.clone();
-			calDayToSearch.add(Calendar.DAY_OF_YEAR, i);
-			
-			Element searchRecord = recordDateSearched(doc, calDayToSearch,clinic.getTimezone());
-
-			for(Provider provider : providerMap.keySet()){
-				DayWorkScheduleTransfer dayWorkScheduleTransfer = getDayWorkSchedule(clinic,provider.getProviderNo(), calDayToSearch);
-				Element searchedProviderRecord = recordProviderSearched(doc,searchRecord,provider.getProviderNo(),dayWorkScheduleTransfer, providerMap.get(provider));
-				if (dayWorkScheduleTransfer == null || dayWorkScheduleTransfer.isHoliday())	continue;
-				if (BookingLearningManager.isDaySetToSkip(clinic, provider.getProviderNo(), calDayToSearch, appointmentTypeId)) continue;
-				
-				List<TimeSlot> providerAppointments = Clinic.getAllowedTimesByType(dayWorkScheduleTransfer, providerMap.get(provider),provider.getProviderNo());
-				recordFilterForSearchedProvider(doc,searchedProviderRecord,dayWorkScheduleTransfer,"N/A" , providerAppointments);						
-
-				List<FilterDefinition> filterClassNames = provider.getFilter();
-				if(filterClassNames == null || filterClassNames.isEmpty()){
-					filterClassNames = clinic.getFilter();
-				}
-				if (filterClassNames != null){
-					for (FilterDefinition className : filterClassNames){
-						@SuppressWarnings("unchecked")
-						Class<AvailableTimeSlotFilter> filterClass = (Class<AvailableTimeSlotFilter>) Class.forName(className.getFilterClassName());
-						logger.debug("filter class null? "+filterClass.getName());
-						AvailableTimeSlotFilter filterClassInstance = filterClass.newInstance();
-						providerAppointments = filterClassInstance.filterAvailableTimeSlots(clinic,providerNo,provider.getProviderNo(), appointmentTypeId, dayWorkScheduleTransfer, providerAppointments,calDayToSearch,className.getParams());
-						recordFilterForSearchedProvider(doc,searchedProviderRecord,dayWorkScheduleTransfer,filterClassInstance.getClass().getSimpleName() , providerAppointments);						
-						if(providerAppointments.size() == 0) {
-							break;
-						}
-					}
-				}		
-				appointments.addAll(providerAppointments);
-			}
-			if (appointments.size() > clinic.getNumberOfAppointmentOptionsToReturn()){
-				break;
-			}
-		}
-		Collections.sort(appointments,TimeSlot.getTimeSlotComparator());
-		return appointments;
-	}  
- */
+	
 
 
 
