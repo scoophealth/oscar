@@ -612,6 +612,30 @@ public class SearchConfig {
 		byte[] unencryptedByteArray = cipher.doFinal(encryptedData);
 		return new String(unencryptedByteArray, "UTF8");
 	}
+	
+	public BookingType getBookingType(AppointmentType appointmentType, String providerNo) {
+		BookingType bookingType = new BookingType();
+		
+		bookingType.setName(appointmentType.getName());
+		String combinedString = appointmentType.getId()+":"+providerNo;
+		try {
+			bookingType.setId(encrypt(combinedString));
+		}catch(Exception e) {
+			bookingType.setId(""+appointmentType.getId());
+		}
+		return bookingType;
+	}
+	
+	public Long getAppointmentTypeId(String encryptedStr) {
+		try {
+			String combinedString = decrypt(encryptedStr);
+			String[] combined = combinedString.split(":");
+			return Long.parseLong(combined[0]);
+		}catch(Exception e) {
+			logger.error("error getting appointment ID",e);
+		}
+		return null;
+	}
 
 	public String encrypt(TimeSlot toEncyrpt) throws Exception{
 		

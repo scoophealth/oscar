@@ -38,6 +38,7 @@ import org.oscarehr.appointment.search.AppointmentType;
 import org.oscarehr.appointment.search.SearchConfig;
 import org.oscarehr.appointment.search.TimeSlot;
 import org.oscarehr.appointment.search.BookingError;
+import org.oscarehr.appointment.search.BookingType;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Appointment.BookingSource;
 import org.oscarehr.common.model.Demographic;
@@ -49,7 +50,6 @@ import org.oscarehr.appointment.search.AppointmentOptionTransfer;
 import org.oscarehr.appointment.search.AppointmentResults;
 import org.oscarehr.appointment.search.AppointmentConfirmationTransfer;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.ws.transfer_objects.AppointmentTypeTransfer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -79,40 +79,43 @@ public class BookingWs extends AbstractWs {
 
 	//getAppointmentTypes
 	
-	public AppointmentTypeTransfer[] getAppointmentTypesByProvider(String providerNo) {
-		SearchConfig config = appointmentSearchManager.getProviderSearchConfig(providerNo);
+	public BookingType[] getAppointmentTypesByProvider(String providerNo) {
+		SearchConfig config = appointmentSearchManager.getProviderSearchConfig(this.getLoggedInInfo().getLoggedInProviderNo());
 		List<AppointmentType> list = appointmentSearchManager.getAppointmentTypes(config, providerNo);
 		
-		AppointmentTypeTransfer[] result = new AppointmentTypeTransfer[list.size()];
+		BookingType[] result = new BookingType[list.size()];
 		for (int i = 0; i < list.size(); i++) {
 			AppointmentType appointmentType = list.get(i);
-			result[i] = new AppointmentTypeTransfer ();
-			result[i].setId( (int) (long) appointmentType.getId());
-			result[i].setName(appointmentType.getName());
+			result[i] = config.getBookingType(appointmentType, this.getLoggedInInfo().getLoggedInProviderNo());
 		}
 		return result;
 	}
 	
-	public AppointmentTypeTransfer[] getAppointmentTypes(Integer demographicNo) {
-		String providerNo = this.getLoggedInInfo().getLoggedInProviderNo();
-		SearchConfig config = appointmentSearchManager.getProviderSearchConfig(providerNo);
+	public BookingType[] getAppointmentTypes(Integer demographicNo) {
+
+		SearchConfig config = appointmentSearchManager.getProviderSearchConfig(this.getLoggedInInfo().getLoggedInProviderNo());
 		List<AppointmentType> list = appointmentSearchManager.getAppointmentTypes(config, demographicNo);
 		
-		AppointmentTypeTransfer[] result = new AppointmentTypeTransfer[list.size()];
+		BookingType[] result = new BookingType[list.size()];
 		for (int i = 0; i < list.size(); i++) {
 			AppointmentType appointmentType = list.get(i);
-			result[i] = new AppointmentTypeTransfer ();
-			result[i].setId( (int) (long) appointmentType.getId());
-			result[i].setName(appointmentType.getName());
+			result[i] = config.getBookingType(appointmentType, this.getLoggedInInfo().getLoggedInProviderNo());
 		}
 		return result;
 	}
 	
 	//findAppointment
-	public AppointmentResults findAppointment(Integer demographicNo,Long appointmentTypeId,Calendar startDate) {
+	public AppointmentResults findAppointment(Integer demographicNo,String appointmentTypeStr,Calendar startDate) {
 		String providerNo = this.getLoggedInInfo().getLoggedInProviderNo();
 		SearchConfig config = appointmentSearchManager.getProviderSearchConfig(providerNo);
 		AppointmentResults appointmentResults = null;
+		Long appointmentTypeId = config.getAppointmentTypeId(appointmentTypeStr);
+		if(appointmentTypeId == null) { // if this is null the appt type was corrupt and shouldn't be trusted
+			logger.error("ERROR: Appointment Type was not parsed returning System Error");
+			appointmentResults = new AppointmentResults();
+			appointmentResults.setBookingError(new BookingError("ERROR", "System Error"));
+			return appointmentResults;
+		}
 		try {
 			List<TimeSlot> timeslots = appointmentSearchManager.findAppointment(this.getLoggedInInfo(),config,  demographicNo, appointmentTypeId, startDate);
 			List<AppointmentOptionTransfer> apptList = new ArrayList<AppointmentOptionTransfer>();
