@@ -32,9 +32,11 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.net.ssl.TrustManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -44,9 +46,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.net.util.TrustManagerUtils;
+import org.apache.cxf.configuration.jsse.TLSClientParameters;
+import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.jaxrs.provider.json.JSONProvider;
+import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.log4j.Logger;
 import org.oscarehr.app.OAuth1Utils;
 import org.oscarehr.common.dao.AppDefinitionDao;
@@ -57,6 +65,7 @@ import org.oscarehr.managers.AppManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.ws.rest.to.Creds;
 import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.RSSResponse;
 import org.oscarehr.ws.rest.to.model.AppDefinitionTo1;
@@ -64,6 +73,7 @@ import org.oscarehr.ws.rest.to.model.RssItem;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import oscar.OscarProperties;
+import oscar.util.TokenUtil;
 
 @Path("/app")
 public class AppService extends AbstractServiceImpl {
@@ -74,6 +84,9 @@ public class AppService extends AbstractServiceImpl {
 	
 	@Autowired
 	private SecurityInfoManager securityInfoManager;
+	
+	@Autowired
+	AppDefinitionDao appDefinitionDao;
 	
 	
 	@GET
@@ -95,6 +108,157 @@ public class AppService extends AbstractServiceImpl {
 		}
 		return response;
 	}
+
+	
+	@GET
+	@Path("/PHRActive/")
+	@Produces("application/json")
+	public GenericRESTResponse isPHRActive(@Context HttpServletRequest request){
+		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+    	if(!com.quatro.service.security.SecurityManager.hasPrivilege("_admin", roleName$)  && !com.quatro.service.security.SecurityManager.hasPrivilege("_report", roleName$)) {
+    		throw new SecurityException("Insufficient Privileges");
+    	}
+		
+		GenericRESTResponse response = null;
+		if( appManager.getAppDefinition(getLoggedInInfo(), "PHR") == null){
+			response = new GenericRESTResponse(false,"PHR not active");
+		}else{
+			response = new GenericRESTResponse(true,"PHR active");
+		}
+		return response;
+	}
+	
+	@POST
+	@Path("/PHRInit/")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public GenericRESTResponse initPHR(@Context HttpServletRequest request,Creds clinicCreds){
+		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_appDefinition", "w", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		List<Object> providers = new ArrayList<Object>();
+		JSONProvider jsonProvider = new JSONProvider();
+		jsonProvider.setDropRootElement(true);
+	    providers.add(jsonProvider);
+//	    String requestURI = "https://localhost:8282/oscar_clinic_component/c/rs/c/init";
+	    String requestURI = "https://localhost:8282/oscar_clinic_component/ws/es/c/init";
+	    		//"https://clinics.kindredphr.com/c/init";
+		try {
+		WebClient webclient = WebClient.create(requestURI, providers);
+		////////
+		HTTPConduit conduit = WebClient.getConfig(webclient).getHttpConduit();
+
+		    TLSClientParameters params = conduit.getTlsClientParameters();
+
+		    if (params == null) {
+		        params = new TLSClientParameters();
+		        conduit.setTlsClientParameters(params);
+		    }
+
+		    params.setTrustManagers(new TrustManager[] { TrustManagerUtils.getAcceptAllTrustManager() });
+		    
+		    params.setDisableCNCheck(true);
+		////////
+   		javax.ws.rs.core.Response reps = webclient.accept("application/json, text/plain, */*").acceptEncoding("gzip, deflate").type("application/json;charset=utf-8").post(clinicCreds);
+		logger.info("response code "+reps.getStatus());
+   		if(reps.getStatus() == 200) {
+   		
+	   		InputStream in = (InputStream) reps.getEntity();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+			StringBuilder sb = new StringBuilder();	
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				sb.append(line);
+			}
+		
+			bufferedReader.close();
+			
+		    String response  = sb.toString();
+			 
+		      
+		    AppDefinition phrNew = new AppDefinition();
+			      
+		    phrNew.setActive(true);
+		    phrNew.setAdded(new Date());
+		    phrNew.setAppType(AppDefinition.JWT);
+		    phrNew.setName("PHR");
+		    phrNew.setConfig(response);
+		    phrNew.setAddedBy(getLoggedInInfo().getLoggedInProviderNo());
+		    appManager.saveAppDefinition(getLoggedInInfo(),  phrNew);
+		    
+		    return new GenericRESTResponse(true,"completed");
+   		}
+		}catch(Exception e) {
+			logger.error("error initializing phr",e);
+		}
+		return new GenericRESTResponse(false,"failed"); 
+	}
+	
+	/////
+	@POST
+	@Path("/PHRAbilities/")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public Response phrAbilities(@Context HttpServletRequest request){
+		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_appDefinition", "w", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		List<Object> providers = new ArrayList<Object>();
+		JSONProvider jsonProvider = new JSONProvider();
+		jsonProvider.setDropRootElement(true);
+	    providers.add(jsonProvider);
+//	    String requestURI = "https://localhost:8282/oscar_clinic_component/c/rs/c/init";
+	    String requestURI = "https://localhost:8282/oscar_clinic_component/ws/es/c/abilities";
+	    
+	    AppDefinition phrApp = appDefinitionDao.findByName("PHR");
+	    
+	    		//"https://clinics.kindredphr.com/c/init";
+		try {
+		WebClient webclient = WebClient.create(requestURI, providers);
+		////////
+		HTTPConduit conduit = WebClient.getConfig(webclient).getHttpConduit();
+
+		    TLSClientParameters params = conduit.getTlsClientParameters();
+
+		    if (params == null) {
+		        params = new TLSClientParameters();
+		        conduit.setTlsClientParameters(params);
+		    }
+
+		    params.setTrustManagers(new TrustManager[] { TrustManagerUtils.getAcceptAllTrustManager() });
+		    
+		    params.setDisableCNCheck(true);
+		////////
+		
+   		javax.ws.rs.core.Response reps = webclient.accept("application/json, text/plain, */*")
+   												 .acceptEncoding("gzip, deflate")
+   												 .header("Authorization", "Bearer "+TokenUtil.createJWTString(phrApp.getConfig(),getLoggedInInfo().getLoggedInProviderNo(),"PHR"))
+   												 .type("application/json;charset=utf-8")
+   												 .post("True");
+   		
+   		InputStream in = (InputStream) reps.getEntity();
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+		StringBuilder sb = new StringBuilder();	
+		String line;
+		while ((line = bufferedReader.readLine()) != null) {
+			sb.append(line);
+		}
+	
+		bufferedReader.close();
+		
+	    String response  = sb.toString();
+   		
+		logger.info("response code "+reps.getStatus());
+   		if(reps.getStatus() == 200) {
+   			return Response.ok(response).build();
+   		}
+		}catch(Exception e) {
+			logger.error("ERROR getting abilities",e);
+		}
+   		return Response.status(401).entity("ERROR").build();
+	}
+	/////
+	
 	
 	@POST
 	@Path("/K2AInit/")
