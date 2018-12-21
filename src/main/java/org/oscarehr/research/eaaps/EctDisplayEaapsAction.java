@@ -103,9 +103,15 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 		
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		EaapsHash hash = new EaapsHash(demographic);
+		//If user doesn't have 493 in there dx registry or they are under 16
 		if(!dxresearchDAO.activeEntryExists(demographic.getDemographicNo(), "icd9", "493")){
 			if (logger.isDebugEnabled()) {
-				logger.debug("Demographic " + demographic + " is not entered for a study");
+				logger.debug("Demographic " + demographic + " does not have 493 in there dx registry");
+			}
+			return true;
+		}else if(demographic.getAgeInYears() <16){
+			if (logger.isDebugEnabled()) {
+				logger.debug("Demographic " + demographic + " is younger than 16");
 			}
 			return true;
 		}
@@ -181,6 +187,12 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 	    }
 	    buf.append("isMrp=").append(isMrpPhysicianLookingAtTheRecord);
 	    buf.append("&pNo=").append(loggedInInfo.getLoggedInProviderNo());
+	    
+		String clinic = OscarProperties.getInstance().getProperty("eaaps.clinic", "");
+		if(!clinic.equals("")) {
+			buf.append("&clinic=").append(clinic);
+		}
+		
 	    patientData.replaceUrl(buf.toString());
     }
 
