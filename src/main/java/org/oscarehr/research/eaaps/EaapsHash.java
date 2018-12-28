@@ -29,7 +29,6 @@ import java.util.GregorianCalendar;
 
 import org.oscarehr.common.model.Demographic;
 
-import oscar.OscarProperties;
 import oscar.util.Appender;
 import oscar.util.ConversionUtils;
 

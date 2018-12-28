@@ -58,7 +58,7 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 
 	private static final String EAAPS = "eaaps";
 	
-	private static final String EAAPS_ERROR_MESSAGE = "Patient not found in eAAPS database";
+	private static final String EAAPS_ERROR_MESSAGE = "Patient not found in eAMS database";
 
 	private static Logger logger = Logger.getLogger(EctDisplayEaapsAction.class);
 	
@@ -115,11 +115,11 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 			}
 			return true;
 		}
-		
-		Dao.setLeftHeading("eAAPS");
+		logger.debug("eaams module should show!");
+		Dao.setLeftHeading("eAMS");
 		Dao.setHeadingColour("FF6600"); // orange
 		Dao.setMenuHeader("Menu Header");  
-        Dao.setRightHeadingID("eaaps");
+        Dao.setRightHeadingID("eams");
 		
 		EaapsPatientData patientData;
 		try {
@@ -185,7 +185,7 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 	    } else {
 	    	buf.append("?");
 	    }
-	    buf.append("isMrp=").append(isMrpPhysicianLookingAtTheRecord);
+	    buf.append("mrp=").append(mrpProviderNo);
 	    buf.append("&pNo=").append(loggedInInfo.getLoggedInProviderNo());
 	    
 		String clinic = OscarProperties.getInstance().getProperty("eaaps.clinic", "");
@@ -235,7 +235,7 @@ public class EctDisplayEaapsAction extends EctDisplayAction {
 
 	@Override
 	public String getCmd() {
-		return "eaaps";
+		return "eams";
 	}
 
 }
