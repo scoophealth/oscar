@@ -46,7 +46,7 @@
 
 <html ng-app="phrConfig">
 <head>
-	<title><bean:message key="admin.admin.PHRConfig"/></title>
+	<title><bean:message key="admin.admin.phrconfig"/></title>
 	<link href="<%=request.getContextPath() %>/library/bootstrap/3.0.0/css/bootstrap.css" rel="stylesheet">
 	<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
 	<script type="text/javascript" src="<%=request.getContextPath() %>/library/angular.min.js"></script>	
@@ -56,7 +56,7 @@
 <body vlink="#0000FF" class="BodyStyle">
 	<div ng-controller="phrConfig">
 		<div class="page-header">
-			<h4><bean:message key="admin.admin.PHRConfig"/> <small data-ng-show="phrActive"> <bean:message key="admin.phr.active"/></small></h4>
+			<h4><bean:message key="admin.admin.phrconfig"/> <small data-ng-show="phrActive"> <bean:message key="admin.phr.active"/></small><small data-ng-show="serverOffline"> Connector Offline</small></h4>
 		</div>
 	 	<div data-ng-show="k2aActive">
 	  		<h4><bean:message key="admin.k2a.preventionsListTitle"/> <small>{{currentPreventionRulesSet}}</small></h4>
@@ -128,6 +128,9 @@
 		var app = angular.module("phrConfig", ['phrServices']);
 		
 		app.controller("phrConfig", function($scope,phrService) {
+			
+			$scope.serverOffline = false;
+			
 			checkStatus = function(){
 			    phrService.isPHRInit().then(function(data){
 				    	console.log("data coming back",data);
@@ -143,9 +146,14 @@
 		    checkStatus();
 		    
 		    getAbilities = function(){  
-			    	phrService.phrAbilities().then(function(data){
-				    	console.log("data coming back",data);
-				    	$scope.abilities = data;
+			    	phrService.phrAbilities().then(function(resp){
+				    	console.log("data coming back",resp);
+				    	if(resp.status == 288){
+				    		$scope.serverOffline = false;
+				    		console.log("setting serverOffline to false ",$scope.serverOffline);
+				    	}else{
+				    		$scope.abilities = resp.data;
+				    	}
 				    	console.log($scope.phrActive );
 				    	
 				    	if($scope.phrActive){

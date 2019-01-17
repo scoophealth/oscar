@@ -50,6 +50,8 @@ import javax.ws.rs.core.Response;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.net.util.TrustManagerUtils;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -238,21 +240,24 @@ public class AppService extends AbstractServiceImpl {
    		
    		InputStream in = (InputStream) reps.getEntity();
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-		StringBuilder sb = new StringBuilder();	
-		String line;
-		while ((line = bufferedReader.readLine()) != null) {
-			sb.append(line);
-		}
-	
+		String response = IOUtils.toString(bufferedReader);
 		bufferedReader.close();
-		
-	    String response  = sb.toString();
    		
 		logger.info("response code "+reps.getStatus());
    		if(reps.getStatus() == 200) {
    			return Response.ok(response).build();
    		}
+   		
 		}catch(Exception e) {
+			
+			Throwable rootException = ExceptionUtils.getRootCause(e);
+			logger.debug("Exception: "+e.getClass().getName()+" --- "+rootException.getClass().getName());
+					
+			if (rootException instanceof java.net.ConnectException || rootException instanceof java.net.SocketTimeoutException){
+				logger.error("ERROR CONNECTING ",rootException);
+				return Response.status(288).entity("ERROR: Connection Refused").build();
+			}
+				
 			logger.error("ERROR getting abilities",e);
 		}
    		return Response.status(401).entity("ERROR").build();

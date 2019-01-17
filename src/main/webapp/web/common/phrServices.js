@@ -72,7 +72,7 @@ angular.module("phrServices", [])
            	var deferred = $q.defer();
            	 $http.post(this.apiPath+'/app/PHRAbilities',this.configHeaders).then(function(response){
                	console.log("returned from /PHRAbilities",response.data);
-               	deferred.resolve(response.data);
+               	deferred.resolve(response);
                },function(){
                	console.log("error initializing phr");
                	deferred.reject("An error occured while trying to initialize k2a");
