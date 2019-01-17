@@ -39,7 +39,7 @@ angular.module("phrServices", [])
               }).then(function(response){
             	  deferred.resolve(response.data);
                 },function (data, status, headers) {
-                	deferred.reject("An error occured while getting k2a content");
+                	deferred.reject("An error occured while getting phr content");
                 });
            return deferred.promise;
         },
@@ -52,7 +52,7 @@ angular.module("phrServices", [])
               }).then(function(response){
             	  deferred.resolve(response.data);
                 },function (data, status, headers) {
-                	deferred.reject("An error occured while getting k2a content");
+                	deferred.reject("An error occured while getting phr content");
                 });
            return deferred.promise;
         },
@@ -61,9 +61,9 @@ angular.module("phrServices", [])
            	 $http.post(this.apiPath+'/app/PHRInit',clinicName,this.configHeaders).then(function(response){
                	console.log("returned from /PHRInit",response.data);
                	deferred.resolve(response.data);
-               },function(){
-               	console.log("error initializing phr");
-               	deferred.reject("An error occured while trying to initialize k2a");
+               },function(data, status, headers){
+               	console.log("error initializing phr",data, status, headers);
+               	deferred.reject("An error occured while trying to fetching data from  PHR");
                });
         
              return deferred.promise;
@@ -73,8 +73,8 @@ angular.module("phrServices", [])
            	 $http.post(this.apiPath+'/app/PHRAbilities',this.configHeaders).then(function(response){
                	console.log("returned from /PHRAbilities",response.data);
                	deferred.resolve(response);
-               },function(){
-               	console.log("error initializing phr");
+               },function(data, status, headers){
+               	console.log("error initializing phr",data, status, headers);
                	deferred.reject("An error occured while trying to initialize k2a");
                });
         

@@ -147,12 +147,13 @@
 		    
 		    getAbilities = function(){  
 			    	phrService.phrAbilities().then(function(resp){
-				    	console.log("data coming back",resp);
-				    	if(resp.status == 288){
-				    		$scope.serverOffline = false;
+				    	console.log("abilities coming back",resp);
+				    	if(resp.status === 268){
+				    		$scope.serverOffline = true;
 				    		console.log("setting serverOffline to false ",$scope.serverOffline);
 				    	}else{
 				    		$scope.abilities = resp.data;
+				    		$scope.serverOffline = false;
 				    	}
 				    	console.log($scope.phrActive );
 				    	

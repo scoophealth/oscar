@@ -255,7 +255,7 @@ public class AppService extends AbstractServiceImpl {
 					
 			if (rootException instanceof java.net.ConnectException || rootException instanceof java.net.SocketTimeoutException){
 				logger.error("ERROR CONNECTING ",rootException);
-				return Response.status(288).entity("ERROR: Connection Refused").build();
+				return Response.status(268).entity("{\"ERROR\":\"Connection Refused\"}").build();
 			}
 				
 			logger.error("ERROR getting abilities",e);
