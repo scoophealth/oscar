@@ -110,7 +110,7 @@ public class Hl7textResultsData {
 				String result = h.getOBXResult(i, j);
 
 				// only add if there is a result and it is supposed to be viewed
-				if (result.equals("") || result.equals("DNR") || h.getOBXName(i, j).equals("") || h.getOBXResultStatus(i, j).equals("DNS")) continue;
+				if (result == null || result.equals("") || result.equals("DNR") || h.getOBXName(i, j).equals("") || h.getOBXResultStatus(i, j).equals("DNS")) continue;
 				logger.debug("obx(" + j + ") should be added");
 				String identifier = h.getOBXIdentifier(i, j);
 				String name = h.getOBXName(i, j);
