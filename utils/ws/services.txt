@@ -10,3 +10,5 @@ PreventionService
 MeasurementService
 DocumentService
 PrescriptionService
+BookingService
+

@@ -82,10 +82,16 @@ public class AppointmentSearchManager {
 	
 	//Right now these two methods return the same but in the future this could be customized based on the demographic 
 	public List<AppointmentType> getAppointmentTypes(SearchConfig config,Integer demographicNo){
+		if(config == null) {
+			return null;
+		}
 		return config.getAppointmentTypes();
 	}
 	
 	public List<AppointmentType> getAppointmentTypes(SearchConfig config,String providerNo){
+		if(config == null) {
+			return null;
+		}
 		return config.getAppointmentTypes();	
 	}
  	

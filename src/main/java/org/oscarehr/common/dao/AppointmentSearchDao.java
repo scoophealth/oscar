@@ -76,6 +76,9 @@ public class AppointmentSearchDao extends AbstractDao<AppointmentSearch> {
 	    	@SuppressWarnings("unchecked")
 	    	List<AppointmentSearch> results = q.getResultList();
     	
+	    	if(results.isEmpty()) {
+	    		return null;
+	    	}
 		
 	    	return results.get(0);	
     }

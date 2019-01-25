@@ -91,9 +91,11 @@ public class BookingWs extends AbstractWs {
 		return result;
 	}
 	
-	public BookingType[] getAppointmentTypes(Integer demographicNo) {
+	public BookingType[] getExternalAppointmentTypes(Integer demographicNo) {
 
 		SearchConfig config = appointmentSearchManager.getProviderSearchConfig(this.getLoggedInInfo().getLoggedInProviderNo());
+		if(config == null) return null;
+		
 		List<AppointmentType> list = appointmentSearchManager.getAppointmentTypes(config, demographicNo);
 		
 		BookingType[] result = new BookingType[list.size()];
