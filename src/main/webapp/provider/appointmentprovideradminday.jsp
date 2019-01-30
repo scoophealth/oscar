@@ -884,7 +884,8 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 </security:oscarSec>
 </caisi:isModuleLoad>
  <%
- if(!"bc".equalsIgnoreCase(prov)){
+ boolean hide_eConsult = OscarProperties.getInstance().isPropertyActive("hide_eConsult_link");
+ if("on".equalsIgnoreCase(prov) && !hide_eConsult){
  %>
  <li id="econ">
 	<a href="#" onclick ="popupOscarRx(625, 1024, '../oscarEncounter/econsult.do')" title="eConsult">
