@@ -883,10 +883,15 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 </li>
 </security:oscarSec>
 </caisi:isModuleLoad>
+ <%
+ boolean hide_eConsult = OscarProperties.getInstance().isPropertyActive("hide_eConsult_link");
+ if("on".equalsIgnoreCase(prov) && !hide_eConsult){
+ %>
  <li id="econ">
 	<a href="#" onclick ="popupOscarRx(625, 1024, '../oscarEncounter/econsult.do')" title="eConsult">
  	<span>eConsult</span></a>
 </li>
+<% } %>
 <%if(!StringUtils.isEmpty(OscarProperties.getInstance().getProperty("clinicalConnect.CMS.url",""))) { %>
 <li id="clinical_connect">
 	<a href="#" onclick ="popupOscarRx(625, 1024, '../clinicalConnectEHRViewer.do?method=launchNonPatientContext')" title="clinical connect EHR viewer">

@@ -82,8 +82,13 @@ public class CustomInterfaceTag extends TagSupport {
 				out.println("<link rel=\"stylesheet\" href=\""+contextPath+"/js/custom/global.css\" type=\"text/css\">");
 				out.println("<script src=\""+contextPath+"/js/custom/"+customJs+"/global.js\"></script>");
 				if(getSection()!=null && getSection().length()>0) {
-                    int randomNo = new Random().nextInt();
-					out.println("<script src=\""+contextPath+"/js/custom/"+customJs+"/"+getSection()+".js?no-cache="+randomNo+"\"></script>");
+					boolean hide_ConReport = OscarProperties.getInstance().isPropertyActive("hide_ConReport_link");
+					if("main".equals(getSection()) && hide_ConReport){
+						// do nothing
+					} else {
+						int randomNo = new Random().nextInt();
+						out.println("<script src=\""+contextPath+"/js/custom/"+customJs+"/"+getSection()+".js?no-cache="+randomNo+"\"></script>");
+					}
 				}
 			}catch(IOException e) {
 				logger.error("Error",e);
