@@ -44,7 +44,7 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 
-<html ng-app="phrConfig">
+<html ng-app="phrConfig" ng-cloak>
 <head>
 	<title><bean:message key="admin.admin.phrconfig"/></title>
 	<link href="<%=request.getContextPath() %>/library/bootstrap/3.0.0/css/bootstrap.css" rel="stylesheet">
@@ -58,47 +58,28 @@
 		<div class="page-header">
 			<h4><bean:message key="admin.admin.phrconfig"/> <small data-ng-show="phrActive"> <bean:message key="admin.phr.active"/></small><small data-ng-show="serverOffline"> Connector Offline</small></h4>
 		</div>
-	 	<div data-ng-show="k2aActive">
-	  		<h4><bean:message key="admin.k2a.preventionsListTitle"/> <small>{{currentPreventionRulesSet}}</small></h4>
-	  		<table class="table table-bordered table-condensed">
-	  			<tr>
-	  				<th><bean:message key="admin.k2a.table.filename"/></th>
-	  				<th><bean:message key="admin.k2a.table.dateCreated"/></th>
-	  				<th><bean:message key="admin.k2a.table.createdBy"/></th>
-	  				<th>&nbsp;</th>
-	  			</tr>
-	  			<tr data-ng-repeat="preventionRuleSet in availablePreventionRuleSets | limitTo:PrevListQuantity"> 
-	  				<td>{{preventionRuleSet.name}}</td>
-	  				<td>{{preventionRuleSet.created_at}}</td>
-	  				<td>{{preventionRuleSet.author}}</td>
-	  				<td><button class="btn btn-default btn-sm" ng-click="loadPreventionRuleById(preventionRuleSet)"><bean:message key="admin.k2a.load"/></button></td>
-	  			</tr>
-	  		</table>
-	  		<button  class="btn btn-default btn-sm pull-right" ng-click="increasePrevListQuantity()"><bean:message key="admin.k2a.loadMore"/></button>
-	  		
-	  		
-	 	</div>
-	 	<div data-ng-show="k2aActive">
-	  		<h4><bean:message key="admin.k2a.LUCodes"/> <small>{{currentLuCodesVersion}}</small></h4>
-	  		<table class="table table-bordered table-condensed">
-	  			<tr>
-	  				<th><bean:message key="admin.k2a.table.luCodeFilename"/></th>
-	  				<th><bean:message key="admin.k2a.table.dateCreated"/></th>
-	  				<th><bean:message key="admin.k2a.table.createdBy"/></th>
-	  				<th>&nbsp;</th>
-	  			</tr>
-	  			<tr data-ng-repeat="fileSet in availableLuCodes | limitTo:LUListQuantity"> 
-	  				<td>{{fileSet.name}}</td>
-	  				<td>{{fileSet.created_at}}</td>
-	  				<td>{{fileSet.author}}</td>					
-	  				<td><button class="btn btn-default btn-sm" ng-click="loadLuCodesById(fileSet)"><bean:message key="admin.k2a.load"/></button></td>
-	  			</tr>
-	  		</table>
-	  		<button  class="btn btn-default btn-sm pull-right" ng-click="increaseLUListQuantity()"><bean:message key="admin.k2a.loadMore"/></button>
-	  		
-	  		
-	 	</div>
-
+		
+		<div class="container">
+		<div class="jumbotron" ng-if="!audit.clinicInformationSetup">
+		  <h3>PHR Clinic Configuration Wizard</h3>
+		  <div class="alert alert-warning" role="alert" ><strong>Clinic Information</strong> Clinic name, address and phone number haven't been configured yet<button  class="btn btn-info pull-right" type="button">Configure</button></div>
+		  <div ng-repeat="recc in audit.recommendations" class="alert alert-warning" role="alert" ><strong>{{recc.heading}}</strong> <br>{{recc.description}}<button  class="btn btn-info pull-right" type="button">Configure</button></div>
+		</div>
+		
+		<div class="jumbotron" ng-if="!audit.onlineBookingConfigured">
+		  <h3>Online Booking Configuration</h3>
+		  <pre>
+  -select a user that will be used to book appointments
+  -make sure permissions are correct.
+  -create schedule
+		  </pre>
+		  
+		  <div class="alert alert-info" role="alert">Clinic Information</div>
+		  <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+		</div>
+		</div>
+		
+	 	
 	 	
 	 	<div >
 	 		<button ng-repeat="ability in abilities" class="btn btn-default" ng-click="launch(ability)">{{ability.label}}</button>
@@ -138,12 +119,34 @@
 				    	console.log($scope.phrActive );
 				    	
 				    	if($scope.phrActive){
-				    		getAbilities();
+				    		//getAbilities();
+				    		getPhrSetupAudit();
+				    		
 				    		console.log("$scope.phrActive");	
 				    	}
 				});
 			}
 		    checkStatus();
+		    
+		     
+		    
+		    getPhrSetupAudit = function(){  
+		    	phrService.phrSetupAudit().then(function(resp){
+			    	console.log("abilities coming back",resp);
+			    	if(resp.status === 268){
+			    		$scope.serverOffline = true;
+			    		console.log("setting serverOffline to false ",$scope.serverOffline);
+			    	}else{
+			    		$scope.audit = resp.data;
+			    		$scope.serverOffline = false;
+			    	}
+			    	console.log($scope.phrActive );
+			    	
+			    	if($scope.phrActive){
+			    		console.log("$scope.phrActive");	
+			    	}
+			});
+	    }
 		    
 		    getAbilities = function(){  
 			    	phrService.phrAbilities().then(function(resp){

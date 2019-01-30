@@ -79,6 +79,18 @@ angular.module("phrServices", [])
                });
         
              return deferred.promise;
+        },
+        phrSetupAudit: function(){
+           	var deferred = $q.defer();
+           	 $http.post(this.apiPath+'/app/PHRAuditSetup',this.configHeaders).then(function(response){
+               	console.log("returned from /PHRAuditSetup",response.data);
+               	deferred.resolve(response);
+               },function(data, status, headers){
+               	console.log("error initializing phr",data, status, headers);
+               	deferred.reject("An error occured while trying to initialize k2a");
+               });
+        
+             return deferred.promise;
         }
 	
     };
