@@ -53,7 +53,7 @@
         <div class="row">
         		<ul class="nav nav-pills nav-justified">
 			  <li class="active" <%-- %>ng-class="isCurrentStatus('none')" --%> ><a data-target="#all" ng-click="removeFilter(0)" data-toggle="tab" class="hand-hover">Prescribe</a></li>
-			  <li ng-class="isCurrentStatus('Just My Notes')"><a ng-click="changeNoteFilter('Just My Notes')" class="hand-hover">Manage Meds</a></li>
+			  <li ng-class="isCurrentStatus('Just My Notes')"><a ng-click="changeNoteFilter('Just My Notes')" class="hand-hover">Additional Meds</a></li>
 			</ul>
 			<div class="tab-content">
 			  
