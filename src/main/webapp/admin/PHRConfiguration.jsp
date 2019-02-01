@@ -51,6 +51,7 @@
 	<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
 	<script type="text/javascript" src="<%=request.getContextPath() %>/library/angular.min.js"></script>	
 	<script src="<%=request.getContextPath() %>/web/common/phrServices.js"></script>	
+	<script src="<%=request.getContextPath() %>/web/common/providerServices.js"></script>	
 </head>
 
 <body vlink="#0000FF" class="BodyStyle">
@@ -62,18 +63,15 @@
 		<div class="container">
 		<div class="jumbotron" ng-if="!audit.clinicInformationSetup">
 		  <h3>PHR Clinic Configuration Wizard</h3>
-		  <div class="alert alert-warning" role="alert" ><strong>Clinic Information</strong> Clinic name, address and phone number haven't been configured yet<button  class="btn btn-info pull-right" type="button">Configure</button></div>
 		  <div ng-repeat="recc in audit.recommendations" class="alert alert-warning" role="alert" ><strong>{{recc.heading}}</strong> <br>{{recc.description}}<button  class="btn btn-info pull-right" type="button">Configure</button></div>
 		</div>
 		
 		<div class="jumbotron" ng-if="!audit.onlineBookingConfigured">
 		  <h3>Online Booking Configuration</h3>
-		  <pre>
-  -select a user that will be used to book appointments
-  -make sure permissions are correct.
-  -create schedule
-		  </pre>
-		  
+		 
+		  <select>
+		  	<option ng-repeat="pro in activeProviders" value="pro.providerNo">{{pro.lastName}}, {{pro.firstName}} ({{pro.providerNo}})</option>
+		  </select>
 		  <div class="alert alert-info" role="alert">Clinic Information</div>
 		  <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
 		</div>
@@ -106,11 +104,12 @@
 	</div>
 	
 	<script>
-		var app = angular.module("phrConfig", ['phrServices']);
+		var app = angular.module("phrConfig", ['phrServices','providerServices']);
 		
-		app.controller("phrConfig", function($scope,phrService) {
+		app.controller("phrConfig", function($scope,phrService,providerService) {
 			
 			$scope.serverOffline = false;
+			$scope.activeProviders = [];
 			
 			checkStatus = function(){
 			    phrService.isPHRInit().then(function(data){
@@ -128,25 +127,38 @@
 			}
 		    checkStatus();
 		    
+		    getAllActiveProviders = function(){
+    			providerService.getAllActiveProviders().then(function(data){
+		    			$scope.activeProviders = data;
+		    			console.log("$scope.activeProviders",data);
+		    			angular.forEach($scope.activeProviders, function(provider) {
+		    				activeProvidersHash[provider.providerNo] = provider;
+		    			});
+		    			console.log("getAllActiveProviders", activeProvidersHash); //data);
+				});
+	    		};
+    		
+    			getAllActiveProviders();
+    		
 		     
 		    
 		    getPhrSetupAudit = function(){  
 		    	phrService.phrSetupAudit().then(function(resp){
-			    	console.log("abilities coming back",resp);
-			    	if(resp.status === 268){
-			    		$scope.serverOffline = true;
-			    		console.log("setting serverOffline to false ",$scope.serverOffline);
-			    	}else{
-			    		$scope.audit = resp.data;
-			    		$scope.serverOffline = false;
-			    	}
-			    	console.log($scope.phrActive );
-			    	
-			    	if($scope.phrActive){
-			    		console.log("$scope.phrActive");	
-			    	}
-			});
-	    }
+				    	console.log("abilities coming back",resp);
+				    	if(resp.status === 268){
+				    		$scope.serverOffline = true;
+				    		console.log("setting serverOffline to false ",$scope.serverOffline);
+				    	}else{
+				    		$scope.audit = resp.data;
+				    		$scope.serverOffline = false;
+				    	}
+				    	console.log($scope.phrActive );
+				    	
+				    	if($scope.phrActive){
+				    		console.log("$scope.phrActive");	
+				    	}
+				});
+		    }
 		    
 		    getAbilities = function(){  
 			    	phrService.phrAbilities().then(function(resp){
