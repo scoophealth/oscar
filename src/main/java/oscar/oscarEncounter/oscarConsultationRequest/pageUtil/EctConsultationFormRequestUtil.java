@@ -200,7 +200,7 @@ public class EctConsultationFormRequestUtil {
 
 		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
 		for (String teamName : dao.getUniqueTeams()) {
-			if (!teamName.equals("")) {
+			if (teamName != null && !"".equals(teamName)) {
 				teamVec.add(teamName);
 			}
 		}
