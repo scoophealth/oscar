@@ -7149,7 +7149,9 @@ CREATE TABLE professionalSpecialists (
   pagerNumber varchar(30),
   salutation varchar(10),
   hideFromView tinyint(1),
-  eformId int(10)
+  eformId int(10),
+  cdxId varchar(10),
+  cdxCapable bit(1) not null default 0
 );
 
 --

@@ -93,6 +93,8 @@ public class EctConEditSpecialistsAction extends Action {
 		request.setAttribute("eDataOscarKey", professionalSpecialist.geteDataOscarKey());
 		request.setAttribute("eDataServiceKey", professionalSpecialist.geteDataServiceKey());
 		request.setAttribute("eDataServiceName", professionalSpecialist.geteDataServiceName());
+		request.setAttribute("cdxCapable", professionalSpecialist.getCdxCapable());
+		request.setAttribute("cdxId", professionalSpecialist.getCdxId());
 		request.setAttribute("annotation", professionalSpecialist.getAnnotation());
         request.setAttribute("referralNo", professionalSpecialist.getReferralNo());
         request.setAttribute("institution", professionalSpecialist.getInstitutionId().toString());

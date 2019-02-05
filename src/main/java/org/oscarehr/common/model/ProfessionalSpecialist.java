@@ -82,6 +82,10 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 	private String eDataOscarKey;
 	private String eDataServiceKey;
 	private String eDataServiceName;
+	
+	private boolean cdxCapable=false;
+	private String cdxId;
+
     private String annotation;
 
     private String referralNo;
@@ -249,6 +253,12 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 	public void seteDataServiceName(String eDataServiceName) {
     	this.eDataServiceName = StringUtils.trimToNull(eDataServiceName);
     }
+
+    // BC CDX columns
+    public void setCdxCapable(boolean cdxCapable) { this.cdxCapable = cdxCapable;}
+    public boolean getCdxCapable() { return this.cdxCapable;}
+    public void setCdxId(String cdxId) { this.cdxId = cdxId; }
+    public String getCdxId() { return this.cdxId; }
 
     /**
      * @return the annotation

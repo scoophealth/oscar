@@ -65,4 +65,22 @@ public class ServiceSpecialistsDao extends AbstractDao<ServiceSpecialists> {
 		query.setParameter("serviceId", servId);
 	    return query.getResultList();
     }
+
+	/**
+	 * Find all specialists for the specified service ID listing BC CDX capable first
+	 *
+	 * @param servId
+	 * 		Specialists to find for the specified service ID
+	 * @return
+	 * 		Returns the list of {@link ServiceSpecialists}, {@link ProfessionalSpecialist} pairs
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Object[]> findSpecialistsBcCdxFirst(Integer servId) {
+		String sql = "FROM ServiceSpecialists ser, " + ProfessionalSpecialist.class.getSimpleName() + " pro " +
+				"WHERE pro.id = ser.id.specId and ser.id.serviceId = :serviceId " +
+				"ORDER BY pro.cdxCapable desc, pro.lastName asc";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("serviceId", servId);
+		return query.getResultList();
+	}
 }
