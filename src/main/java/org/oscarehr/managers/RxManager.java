@@ -441,8 +441,8 @@ public class RxManager {
 
         List<Drug> historyDrugs;
 
-        if(potentialDrugs.size() == 1){
-            historyDrugs = drugDao.findByAtc(potentialDrugs.get(0).getAtc());
+        if(potentialDrugs.size() == 1 && potentialDrugs.get(0).getAtc() != null && !potentialDrugs.get(0).getAtc().trim().isEmpty()){
+            historyDrugs = drugDao.findByDemographicIdAndAtc(demographicNo,potentialDrugs.get(0).getAtc());
             if(historyDrugs.isEmpty()) { // not all drugs have ATC codes ie custom drugs.
             		return potentialDrugs;
             }
