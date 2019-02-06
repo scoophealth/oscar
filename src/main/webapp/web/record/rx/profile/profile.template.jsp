@@ -55,6 +55,7 @@
 		<%--  --%>
 			<td ng-class="{ 'deletedItem': drug.archived }">
 				<a ng-click="$ctrl.medhistory(drug)">{{drug.instructions}}</a>
+				<div ng-if="drug.externalProvider"><em>External Prescribed by {{drug.externalProvider}}</em></div>
 			</td>
 			<td>{{drug.rxDate}}</td>
 			<td>{{$ctrl.daysToExp(drug)}}</td>
@@ -93,6 +94,7 @@
 			
 			<td ng-class="{ 'deletedItem': drug.archived }">
 				<a ng-click="$ctrl.medhistory(drug)">{{drug.instructions}}</a>
+			    <div ng-if="drug.externalProvider"><em>External Prescribed by {{drug.externalProvider}}</em></div>
 			</td>
 			<td>{{drug.rxDate}}</td>
 			<td>{{$ctrl.daysToExp(drug)}}</td>
