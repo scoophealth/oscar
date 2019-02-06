@@ -91,6 +91,11 @@
 					  	<div class="row" ng-if="med.duration != null" >
 					  		<div class="col-xs-12 has-error">
 					  			Duration was calculated to  {{med.rxDurationInDays()}} days.  <a ng-click="$ctrl.changeEndDate(med)">Change?</a>
+					  			<div class="checkbox">
+								    <label>
+								      <input ng-model="med.longTerm" type="checkbox"> Long term
+								    </label>
+								  </div>
 					  		</div>
 					  	</div>
 					  </div>
