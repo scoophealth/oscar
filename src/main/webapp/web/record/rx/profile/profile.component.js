@@ -16,8 +16,19 @@ const RxProfileComponent = {
   		rxProfileComp.rxComp.profileHash = {};
   		fullDrugList = [];
   		rxProfileComp.mode = 0;
+  		rxProfileComp.tab = 0;
 
  	}
+  	rxProfileComp.setTab = function(tabNum){
+  		rxProfileComp.tab = tabNum;
+  	}
+  	
+  	rxProfileComp.booleanTab = function(tabNum){
+  		if(rxProfileComp.tab === tabNum){
+  			return true;
+  		}
+  		return false;
+  	}
   	
   	rxProfileComp.daysToExp = function(drug){
   		//console.log("drug--",drug);
@@ -94,15 +105,19 @@ const RxProfileComponent = {
   		profileObject = {};
 		profileObject.profileHash = {};
 	  	profileObject.profileList = [];
-	  		
+	  	rxProfileComp.rxComp = {};
+	  	 
+	  	allProfileObject = profileAll(drugList);
+	  	
 		if(rxProfileComp.mode == 0){
 			profileObject = profileCurrent(drugList);
 		}else{
-			profileObject = profileAll(drugList);
+			profileObject = allProfileObject;
 		}
-		rxProfileComp.rxComp = {};
+		
 		rxProfileComp.rxComp.profileHash = profileObject.profileHash;
 		rxProfileComp.rxComp.drugs = profileObject.profileList;
+		rxProfileComp.rxComp.allDrugsList = allProfileObject.profileList;
   	}
   	
   	/*Profile Mode*/

@@ -80,43 +80,90 @@
 			</td>
 		</tr>	
 	</table>
-	<h3>Expired Medications</h3>
-	<table class="table table-condensed table-striped">
-		<tr>
-			<th>Medication</th>
-			<th>Start Date</th>
-			<th>Days To Exp</th>
-			<th>reRx</th>
-			<th>Action</th>
-		</tr>
-		<tr ng-repeat="drug in $ctrl.rxComp.drugs | filter:$ctrl.drugProfileFilter | orderBy: '-rxDate'"
-			ng-if="$ctrl.daysToExp(drug) == 0 && !drug.longTerm">
-			
-			<td ng-class="{ 'deletedItem': drug.archived }">
-				<a ng-click="$ctrl.medhistory(drug)">{{drug.instructions}}</a>
-			    <div ng-if="drug.externalProvider"><em>External Prescribed by {{drug.externalProvider}}</em></div>
-			</td>
-			<td>{{drug.rxDate}}</td>
-			<td>{{$ctrl.daysToExp(drug)}}</td>
-			<td><a ng-click="$ctrl.reRx({'drug':drug})">rx</a></td>
-			<td>
-				<div class="btn-group">
-					<button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Actions<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu">
-					    <li><a ng-click="$ctrl.discontinue(drug)" >Discontinue</a></li>
-					    <li><a ng-click="$ctrl.delete(drug)" >Delete</a></li>
-					    <li><a ng-click="$ctrl.addReason(drug)" >Add Reason</a></li>
-					    <li><a ng-click="$ctrl.setAsLongTermMed(drug)" >Set as Long Term Med</a></li>
-					    <li><a ng-click="$ctrl.annotate(drug)" >Annotate</a></li>
-					    <%-- Kunal says these are no longer required for ontario md li><a ng-click="$ctrl.hideFromCPP(drug)" >Hide From CPP</a></li>
-					    <li><a ng-click="$ctrl.moveUpInList(drug)" >Move up in list</a></li>
-					    <li><a ng-click="$ctrl.moveDownInList(drug)" >Move down in list</a></li  --%>
-					</ul>
-				</div>
-			</td>
-		</tr>	
-	</table>
-			
+	
+	<ul class="nav nav-tabs nav-justified" role="tablist">
+    		<li role="presentation" ng-class="{'active' : $ctrl.booleanTab(0)}" <%-- class="{{$ctrl.activeTab(0)}}" --%>><a ng-click="$ctrl.setTab(0)" aria-controls="expired" role="tab" data-toggle="tab">Expired Medications</a></li>
+    		<li role="presentation" ng-class="{'active' : $ctrl.booleanTab(1)}" ><a ng-click="$ctrl.setTab(1)" aria-controls="discontinued" role="tab" data-toggle="tab">Discontinued Medications</a></li>
+    </ul>
+
+    
+	<div class="tab-content">
+    		<div role="tabpanel" class="tab-pane" ng-class="{'active' : $ctrl.booleanTab(0)}">
+    
+			<table class="table table-condensed table-striped">
+				<tr>
+					<th>Medication</th>
+					<th>Start Date</th>
+					<th>Days To Exp</th>
+					<th>reRx</th>
+					<th>Action</th>
+				</tr>
+				<tr ng-repeat="drug in $ctrl.rxComp.drugs | filter:$ctrl.drugProfileFilter | orderBy: '-rxDate'"
+					ng-if="$ctrl.daysToExp(drug) == 0 && !drug.longTerm">
+					
+					<td ng-class="{ 'deletedItem': drug.archived }">
+						<a ng-click="$ctrl.medhistory(drug)">{{drug.instructions}}</a>
+					    <div ng-if="drug.externalProvider"><em>External Prescribed by {{drug.externalProvider}}</em></div>
+					</td>
+					<td>{{drug.rxDate}}</td>
+					<td>{{$ctrl.daysToExp(drug)}}</td>
+					<td><a ng-click="$ctrl.reRx({'drug':drug})">rx</a></td>
+					<td>
+						<div class="btn-group">
+							<button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Actions<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+							    <li><a ng-click="$ctrl.discontinue(drug)" >Discontinue</a></li>
+							    <li><a ng-click="$ctrl.delete(drug)" >Delete</a></li>
+							    <li><a ng-click="$ctrl.addReason(drug)" >Add Reason</a></li>
+							    <li><a ng-click="$ctrl.setAsLongTermMed(drug)" >Set as Long Term Med</a></li>
+							    <li><a ng-click="$ctrl.annotate(drug)" >Annotate</a></li>
+							    <%-- Kunal says these are no longer required for ontario md li><a ng-click="$ctrl.hideFromCPP(drug)" >Hide From CPP</a></li>
+							    <li><a ng-click="$ctrl.moveUpInList(drug)" >Move up in list</a></li>
+							    <li><a ng-click="$ctrl.moveDownInList(drug)" >Move down in list</a></li  --%>
+							</ul>
+						</div>
+					</td>
+				</tr>	
+			</table>
+		</div>
+		<div role="tabpanel" class="tab-pane" id="discontinued" ng-class="{'active' : $ctrl.booleanTab(1)}">
+		
+			<table class="table table-condensed table-striped">
+				<tr>
+					<th>Medication</th>
+					<th>Start Date</th>
+					<th>Days To Exp</th>
+					<th>reRx</th>
+					<th>Action</th>
+				</tr>
+				<tr ng-repeat="drug in $ctrl.rxComp.allDrugsList | filter:$ctrl.drugProfileFilter | orderBy: '-rxDate'"
+					ng-if="drug.archived">
+					
+					<td ng-class="{ 'deletedItem': drug.archived }" >
+						<a ng-click="$ctrl.medhistory(drug)">{{drug.instructions}}</a>
+					    <div ng-if="drug.externalProvider"><em>External Prescribed by {{drug.externalProvider}}</em></div>
+					    <div>{{drug.archivedReason}}</div>
+					</td>
+					<td>{{drug.rxDate}}</td>
+					<td>{{$ctrl.daysToExp(drug)}}</td>
+					<td><a ng-click="$ctrl.reRx({'drug':drug})">rx</a></td>
+					<td>
+						<div class="btn-group">
+							<button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Actions<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+							    <li><a ng-click="$ctrl.addReason(drug)" >Add Reason</a></li>
+							    <li><a ng-click="$ctrl.annotate(drug)" >Annotate</a></li>
+							    <%-- Kunal says these are no longer required for ontario md li><a ng-click="$ctrl.hideFromCPP(drug)" >Hide From CPP</a></li>
+							    <li><a ng-click="$ctrl.moveUpInList(drug)" >Move up in list</a></li>
+							    <li><a ng-click="$ctrl.moveDownInList(drug)" >Move down in list</a></li  --%>
+							</ul>
+						</div>
+					</td>
+				</tr>	
+			</table>
+		</div>		
 </fieldset>
