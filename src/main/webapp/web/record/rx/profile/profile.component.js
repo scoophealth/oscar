@@ -1,8 +1,10 @@
 const RxProfileComponent = {
   bindings: {
   	fulldrugs: '<',
-  	reRx: '&'
-
+  	reRx: '&',
+  	dsMessages: '<',
+  	showAlert: '&'
+  		
   },
   templateUrl: '../web/record/rx/profile/profile.template.jsp',
   controller: ['$stateParams','$state','$log','$timeout','summaryService','rxService','$filter','$window','$uibModal',function($stateParams,$state,$log,$timeout,summaryService,rxService,$filter,$window,$uibModal) {
@@ -17,8 +19,27 @@ const RxProfileComponent = {
   		fullDrugList = [];
   		rxProfileComp.mode = 0;
   		rxProfileComp.tab = 0;
+  		rxProfileComp.dsMessagesHash = {};
 
  	}
+  	
+  	
+  	
+  	rxProfileComp.$onChanges = function(changesObj){
+  		console.log("hereZZ",changesObj);
+  		if(angular.isDefined(changesObj.fulldrugs)){
+  			console.log("was defined");
+  			drugList = changesObj.fulldrugs.currentValue;
+  			fullDrugList = drugList;//$filter('orderBy')(drugList, 'rxDate', true);
+  			rxProfileComp.processList(fullDrugList);
+  		}
+  		
+  		if(angular.isDefined(changesObj.dsMessages)){
+  			console.log("dsMessages was defined");
+  			rxProfileComp.dsMessagesHash = changesObj.dsMessages.currentValue;
+  		}
+  	}
+  	
   	rxProfileComp.setTab = function(tabNum){
   		rxProfileComp.tab = tabNum;
   	}
@@ -91,15 +112,24 @@ const RxProfileComponent = {
   		return profileObject;
   	}
   	
-  	rxProfileComp.$onChanges = function(changesObj){
-  		console.log("hereZZ",changesObj);
-  		if(angular.isDefined(changesObj.fulldrugs)){
-  			console.log("was defined");
-  			drugList = changesObj.fulldrugs.currentValue;
-  			fullDrugList = drugList;//$filter('orderBy')(drugList, 'rxDate', true);
-  			rxProfileComp.processList(fullDrugList);
+  	rxProfileComp.getHeading = function(warn){
+  		if(warn.heading != null){
+  			return warn.heading;
   		}
+  		return warn.summary;
   	}
+  	
+  	rxComp.getAlertStyl = function(alert) {
+		if (alert.significance === 3) {
+			return "danger";
+		} else if (alert.significance === 2) {
+			return "warning";
+		} else if (alert.significance === 1) {
+			return "info";
+		} else {
+			return "warning";
+		}
+	}
   	
   	rxProfileComp.processList = function(drugList){
   		profileObject = {};

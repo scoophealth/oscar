@@ -145,7 +145,7 @@
 		</div>
 		<hr>
 		<div class="row">
-			<rx-profile fulldrugs="$ctrl.page.fulldrugs" re-rx="$ctrl.reRx(drug)"></rx-profile>
+			<rx-profile fulldrugs="$ctrl.page.fulldrugs" re-rx="$ctrl.reRx(drug)" ds-messages="$ctrl.page.dsMessageHash" show-alert="$ctrl.showAlert(alert)"></rx-profile>
 		</div>
 			  
 
@@ -155,26 +155,7 @@
 
 
 	 <div class="col-sm-3">
-	    <fieldset>
-       		<legend style="margin-bottom:0px;">Alerts <small> <a ng-click="$ctrl.shortDSMessage()"><span class="glyphicon glyphicon-refresh"></span></a></small></legend>
-       		
-	 		<div uib-alert ng-repeat="alert in $ctrl.page.dsMessageList" class="alert"
-	 		    ng-click="$ctrl.showAlert(alert)"  
-	 			ng-class="'alert-' + ($ctrl.getAlertStyl(alert) || 'warning')"  
-	 			ng-hide="$ctrl.checkIfHidden(alert)"
-	 			style="padding: 9px;margin-bottom: 3px;" > <%-- uib-popover-html="{{alert.body}}" popover-trigger="'mouseenter'" --%>
-	 		    {{alert.heading}}<br>
-	 			{{alert.summary | limitTo: 150 }}{{alert.summary.length > 150 ? '...' : ''}}
-	 			<br>
-	 			<small>From:{{alert.author}}</small>
-	 			
-	 		</div>
-	 	</fieldset>
-	 	
-	 	
-	 	
-	 
-	 
+
 	 	<fieldset ng-repeat="mod in $ctrl.page.columnThree.modules">
        		<legend style="margin-bottom:0px;">{{mod.displayName}}
        			<div class="form-group">
@@ -189,5 +170,5 @@
         	<span ng-class="showMoreItemsSymbol(mod)" ng-click="toggleList(mod)" ng-show="showMoreItems(mod)"></span>
        </fieldset>
 	 	
-	
+		<a style="color:white;" ng-click="$ctrl.shortDSMessage()">Refresh Decision Support</a>
 	 </div>
