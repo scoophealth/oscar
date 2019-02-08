@@ -119,7 +119,7 @@ const RxProfileComponent = {
   		return warn.summary;
   	}
   	
-  	rxComp.getAlertStyl = function(alert) {
+  	rxProfileComp.getAlertStyl = function(alert) {
 		if (alert.significance === 3) {
 			return "danger";
 		} else if (alert.significance === 2) {
@@ -130,6 +130,13 @@ const RxProfileComponent = {
 			return "warning";
 		}
 	}
+  	rxProfileComp.checkIfHidden = function(alert) {
+		if (alert.hidden) {
+			return true;
+		}
+		return false;
+	}
+
   	
   	rxProfileComp.processList = function(drugList){
   		profileObject = {};

@@ -319,9 +319,14 @@ public class RxLookupService extends AbstractServiceImpl {
         pref.setProviderNo(provider);
         pref.setRecordCreated(new Date());
         pref.setResourceId(postId);
-        pref.setResourceType(UserDSMessagePrefs.MYDRUGREF);
+        if(dsMessageToHide.getMessageSource() != null && dsMessageToHide.getMessageSource().equals("MediSpan")) {
+        		pref.setResourceType(UserDSMessagePrefs.MEDISPAN);
+        }else {
+        		pref.setResourceType(UserDSMessagePrefs.MYDRUGREF);
+        }
         pref.setResourceUpdatedDate(date);
-        pref.setArchived(Boolean.FALSE);
+        pref.setArchived(Boolean.TRUE); //I'm not sure why this would be true 
+        								   //but it looks like it was changed a long time ago for new items to be true. 
        
         dsmessageDao.saveProp(pref);
         

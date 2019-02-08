@@ -57,7 +57,7 @@
 				<a ng-click="$ctrl.medhistory(drug)">{{drug.instructions}}</a>
 				<div ng-if="drug.externalProvider"><em>External Prescribed by {{drug.externalProvider}}</em></div>
 				<div  ng-repeat="warning in $ctrl.dsMessagesHash[drug.atc]">   	
-					<a ng-class="'alert-' + ($ctrl.getAlertStyl(warning) || 'warning')" ng-click="$ctrl.showAlert({'alert':warning})"><span <%-- style="color:red" --%> class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{$ctrl.getHeading(warning)}}</a>
+					<a ng-hide="$ctrl.checkIfHidden(warning)" ng-class="'alert-' + ($ctrl.getAlertStyl(warning) || 'warning')" ng-click="$ctrl.showAlert({'alert':warning})"><span <%-- style="color:red" --%> class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{$ctrl.getHeading(warning)}}</a>
 				</div>
 			</td>
 			<td>{{drug.rxDate}}</td>
@@ -108,7 +108,7 @@
 						<a ng-click="$ctrl.medhistory(drug)">{{drug.instructions}}</a>
 					    <div ng-if="drug.externalProvider"><em>External Prescribed by {{drug.externalProvider}}</em></div>
 					    <div  ng-repeat="warning in $ctrl.dsMessagesHash[drug.atc]">
-					    		<a  ng-class="'alert-' + ($ctrl.getAlertStyl(warning) || 'warning')" ng-click="$ctrl.showAlert({'alert':warning})"><span <%-- style="color:red" --%> class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{$ctrl.getHeading(warning)}}</a>
+					    		<a ng-hide="$ctrl.checkIfHidden(warning)"  ng-class="'alert-' + ($ctrl.getAlertStyl(warning) || 'warning')" ng-click="$ctrl.showAlert({'alert':warning})"><span <%-- style="color:red" --%> class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> {{$ctrl.getHeading(warning)}}</a>
 					    	</div>
 					</td>
 					<td>{{drug.rxDate}}</td>

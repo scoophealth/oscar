@@ -86,7 +86,7 @@ public class DrugrefUtil {
         }
     }
     
-    public List<RxDsMessageTo1> convertLocalDS(List list,ResourceBundle mr,Locale locale, List<RxDsMessageTo1> returnList){
+    public List<RxDsMessageTo1> convertLocalDS(List list,ResourceBundle mr,Locale locale, List<RxDsMessageTo1> returnList,Map hiddenList){
     		List<String> currentIdWarnings=new ArrayList<String>();
     		try{
             for(int i=0;i<list.size();i++){
@@ -119,6 +119,14 @@ public class DrugrefUtil {
 		        		}
 	        		
 	        		
+		        		if(hiddenList != null && hiddenList.containsKey("medispan"+dsMessage.getId())) {
+	                		logger.error("idWARNING medispan"+dsMessage.getId()+"  time value in warning "+hiddenList.get("medispan"+dsMessage.getId())+" medispan update time "+dsMessage.getUpdated_at().getTime());
+	                		//if(hiddenList.get("mydrugref"+dsMessage.getId()).equals(dsMessage.getUpdated_at().getTime())) {
+	                			dsMessage.setHidden(true);
+	                		//}
+	                }else {
+	                		logger.error("hidden list was empty or didn't contain :medispan"+dsMessage.getId()+"<"+hiddenList);
+	                }
 		        	
 		        	
 		        		dsMessage.setEffect((String)ht.get("effectdesc"));
@@ -193,6 +201,11 @@ public class DrugrefUtil {
 		        			id = ((Integer) ht.get("id")).toString();
 		        		}
 		        		dsMessage.setId(id);
+		        		
+		        		logger.info("hiddenlist size "+hiddenList.size());
+		        		for(Object s: hiddenList.keySet()) {
+		        			logger.info("keys: "+s+" looking for :"+"mydrugref"+dsMessage.getId()+" found "+hiddenList.containsKey("mydrugref"+dsMessage.getId()));
+		        		}
 		        		
 		        		if(hiddenList != null && hiddenList.containsKey("mydrugref"+dsMessage.getId())) {
 	                		logger.error("idWARNING mydrugref"+dsMessage.getId()+"  time value in warning "+hiddenList.get("mydrugref"+dsMessage.getId())+" mydrugref update time "+dsMessage.getUpdated_at().getTime());
@@ -368,7 +381,8 @@ public class DrugrefUtil {
 			        	RxDrugRef rxDrugRef = new RxDrugRef();
 			        	List localInteractions =  rxDrugRef.interactionByRegionalIdentifier(regionalIdentifiers,0);
 			        	logger.error("local interactions size = "+localInteractions.size());
-			        	convertLocalDS( localInteractions, mr, locale,  returnList);
+			        	Map<String,Long> dsLocalPrefs= dsmessageDao.getHashofMessages(provider,UserDSMessagePrefs.MEDISPAN);
+			        	convertLocalDS( localInteractions, mr, locale,  returnList,dsLocalPrefs);
 			        	logger.error("size after local interactions "+returnList.size());
 	
 		        }catch(Exception e){
