@@ -463,7 +463,7 @@ public class CaseloadContentAction extends DispatchAction {
 				// add B button to string
 				if (hasPrivilege("_billing", roleName$)) {
 					if(OscarProperties.getInstance().isOntarioBillingRegion()) {
-						buttons += "| <a href='#' onClick=\"popupPage(700,1000,'../billing.do?skipReload=true&billRegion="+URLEncoder.encode(prov)+"&billForm="+URLEncoder.encode(oscarProperties.getProperty("default_view"))+"&hotclick=&appointment_no=0&demographic_name="+URLEncoder.encode(clLastName)+"%2C"+URLEncoder.encode(clFirstName)+"&demographic_no="+demographic_no+"&providerview=1&user_no="+curUser_no+"&apptProvider_no=none&appointment_date="+year+"-"+month+"-"+day+"&start_time=0:00&bNewForm=1&status=t');return false;\" title='Billing'>B</a> ";
+						buttons += "| <a href='#' onClick=\"popupPage(700,1000,'../billing.do?skipReload=true&billRegion="+URLEncoder.encode(prov)+"&billForm="+URLEncoder.encode(oscarProperties.getProperty("default_view"))+"&hotclick=&appointment_no=0&demographic_name="+URLEncoder.encode(clLastName)+"%2C"+URLEncoder.encode(clFirstName)+"&demographic_no="+demographic_no+"&providerview=1&user_no="+curUser_no+"&apptProvider_no=none&appointment_date="+year+"-"+month+"-"+day+"&start_time=00:00:00&bNewForm=1&status=t');return false;\" title='Billing'>B</a> ";
 						buttons += "| <a href='#' onClick=\"popupPage(700,1000,'../billing/CA/ON/billinghistory.jsp?demographic_no="+demographic_no+"&last_name="+URLEncoder.encode(clLastName)+"&first_name="+URLEncoder.encode(clFirstName)+"&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10');return false;\" title='Billing'>BHx</a> ";
 					}
 					if(OscarProperties.getInstance().isBritishColumbiaBillingRegion()) {
