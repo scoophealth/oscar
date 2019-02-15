@@ -296,6 +296,18 @@ const RxComponent = {
 			}
 			med.showmore = true;
 		}
+		
+		rxComp.addToFavourite = function(med){
+			console.log("ADDtoFavourite",med);
+			var fav = new Favorite();
+			fav.fromDrug(med, "change this to an input");
+			rxService.addFavorite(fav,callBackFav);
+			
+		}
+		
+		callBackFav = function(fav){
+			console.log(fav);
+		}
 
 		rxComp.medSelected = function(med) {
 			console.log("med", med);

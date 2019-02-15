@@ -322,9 +322,9 @@ angular.module("rxServices", [])
 
             },
 
-            addFavorite : function(fav, cb){
+           /* addFavorite : function(fav, cb){
 
-                var obj = {favorite : fav.toTransferObject()};
+                var obj =  fav.toTransferObject();
 
                 this._addFavorite(obj).then(
                     function(resp){
@@ -334,7 +334,7 @@ angular.module("rxServices", [])
                 );
 
             },
-            
+            */
             getPrescriptions : function(demo){
 
                 var deferred = $q.defer();
@@ -370,7 +370,7 @@ angular.module("rxServices", [])
             
             addFavorite : function(fav, cb){
 
-                var obj = {favorite : fav.toTransferObject()};
+                var obj = fav.toTransferObject();
 
                 this._addFavorite(obj).then(
                     function(resp){

@@ -67,6 +67,7 @@
 			  				<span ng-if="med.showmore == null">More</span><span ng-if="med.showmore">Less</span> 
 			  			</a>
 			  			<a ng-click="$ctrl.cancelMed(med,$index)"><span class="glyphicon glyphicon-remove-circle"></span></a>
+			  			<a ng-click="$ctrl.addToFavourite(med)"><span class="glyphicon glyphicon-heart"></span></a>
 			  		</span>
 				    	<h4 class="list-group-item-heading">{{med.getName()}}</h4>
 				    	<form>

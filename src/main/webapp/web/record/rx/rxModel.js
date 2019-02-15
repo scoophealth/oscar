@@ -819,7 +819,7 @@ Favorite.prototype.toTransferObject = function(){
 
     return {
         favoriteName : this.name,
-        favoriteId : null,
+        favoriteId : 0,
         brandName : this.drug.brandName || null,
         genericName : this.drug.genericName || null,
         atc : this.drug.atc || null,
