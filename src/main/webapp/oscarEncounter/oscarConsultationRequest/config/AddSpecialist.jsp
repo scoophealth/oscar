@@ -58,6 +58,7 @@ if(!authed) {
 <%@page import="org.oscarehr.common.dao.DepartmentDao" %>
 <%@page import="org.oscarehr.common.model.Department" %>
 <%@page import="org.oscarehr.common.model.EForm" %>
+<%@page import="oscar.OscarProperties" %>
 
 <%
 	InstitutionDao institutionDao = SpringUtils.getBean(InstitutionDao.class);
@@ -321,6 +322,7 @@ function BackToOscar() {
 						<tr>
 							<td colspan="7"><hr /></td>
 						</tr>
+						<% if (!((OscarProperties) oscarVariables).isPropertyActive("hide_add_specialist_edata")) { %>
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eDataUrl" /></td>
 							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eDataUrl" /></td>
@@ -337,6 +339,7 @@ function BackToOscar() {
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eDataServiceName" /></td>
 							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eDataServiceName" /></td>
 						</tr>
+						<% } %>
 						<% if ("bc".equalsIgnoreCase(oscarVariables.getProperty("billregion"))) { %>
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.cdxCapable" /></td>
