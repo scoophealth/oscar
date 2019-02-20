@@ -236,6 +236,11 @@ function setSelect(id,type,name,val) {
 	jQuery("select[name='"+type+"_"+id+"."+name+"']").each(function() {
 		jQuery(this).val(val);
 	});
+	if(jQuery("select[name='"+type+"_"+id+"."+name+"']").val() !=val) {
+		jQuery("select[name='"+type+"_"+id+"."+name+"']").each(function() {
+			jQuery(this).val('');
+		});
+	}
 }
 
 function setSelectExisting(id,type,name,val) {
