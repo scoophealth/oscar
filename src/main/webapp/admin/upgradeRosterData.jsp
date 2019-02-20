@@ -111,7 +111,7 @@ if(!authed) {
 		
 		for(DemographicArchive da:demographicArchiveDao.findByDemographicNoChronologically(demographicNo)) { //ASC
 			if("RO".equals(da.getRosterStatus()) || "TE".equals(da.getRosterStatus())) {
-				if(!StringUtils.isEmpty(da.getProviderNo()) && StringUtils.isEmpty(da.getRosterEnrolledTo()))) {
+				if(!StringUtils.isEmpty(da.getProviderNo()) && StringUtils.isEmpty(da.getRosterEnrolledTo())) {
 					da.setRosterEnrolledTo(da.getProviderNo());
 					demographicArchiveDao.merge(da);
 				} else {
