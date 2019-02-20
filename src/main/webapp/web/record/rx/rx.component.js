@@ -300,13 +300,19 @@ const RxComponent = {
 		rxComp.addToFavourite = function(med){
 			console.log("ADDtoFavourite",med);
 			var fav = new Favorite();
-			fav.fromDrug(med, "change this to an input");
-			rxService.addFavorite(fav,callBackFav);
 			
+			var favName = prompt("Please enter name for favourite", med.brandName);
+
+			if (favName != null) {
+				fav.fromDrug(med, favName);
+				rxService.addFavorite(fav,callBackFav);
+			}
+	
 		}
 		
 		callBackFav = function(fav){
 			console.log(fav);
+			rxService.favorites($stateParams.demographicNo, null,rxComp.processFavourites);
 		}
 
 		rxComp.medSelected = function(med) {
