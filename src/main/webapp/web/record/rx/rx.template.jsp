@@ -146,7 +146,7 @@
 		</div>
 		<hr>
 		<div class="row">
-			<rx-profile fulldrugs="$ctrl.page.fulldrugs" re-rx="$ctrl.reRx(drug)" ds-messages="$ctrl.page.dsMessageHash" show-alert="$ctrl.showAlert(alert)"></rx-profile>
+			<rx-profile fulldrugs="$ctrl.page.fulldrugs" re-rx="$ctrl.reRx(drug)" ds-messages="$ctrl.page.dsMessageHash" show-alert="$ctrl.showAlert(alert)" add-favorite="$ctrl.addToFavourite(drug)"></rx-profile>
 		</div>
 			  
 

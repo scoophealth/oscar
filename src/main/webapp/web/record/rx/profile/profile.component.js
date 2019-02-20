@@ -3,7 +3,8 @@ const RxProfileComponent = {
   	fulldrugs: '<',
   	reRx: '&',
   	dsMessages: '<',
-  	showAlert: '&'
+  	showAlert: '&',
+  	addFavorite: '&'
   		
   },
   templateUrl: '../web/record/rx/profile/profile.template.jsp',
