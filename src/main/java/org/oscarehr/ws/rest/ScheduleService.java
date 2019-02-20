@@ -233,7 +233,7 @@ public class ScheduleService extends AbstractServiceImpl {
 		BillingDetailConverter converter = new BillingDetailConverter();
 		List<BillingDetailTo1> billingDetails = converter.getAllAsTransferObjects(getLoggedInInfo(), billingHeaders);
 
-		Map<Integer, BillingDetailTo1> apptIdBillingMap = new HashMap<>();
+		Map<Integer, BillingDetailTo1> apptIdBillingMap = new HashMap<Integer, BillingDetailTo1>();
 		for (BillingDetailTo1 billingDetail: billingDetails) {
 			apptIdBillingMap.put(billingDetail.getAppointmentNo(), billingDetail);
 		}
