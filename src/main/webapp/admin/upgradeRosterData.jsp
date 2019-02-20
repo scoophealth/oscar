@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.common.model.Demographic"%>
 <%@page import="org.apache.commons.lang3.StringUtils"%>
 <%@page import="org.oscarehr.common.model.DemographicArchive"%>
 <%@page import="org.oscarehr.common.dao.DemographicArchiveDao"%>
@@ -121,9 +122,9 @@ if(!authed) {
 		}
 		
 		if("RO".equals(d.getRosterStatus()) || "TE".equals(d.getRosterStatus())) {
-			if(!StringUtils.isEmpty(d.getProviderNo())  && StringUtils.isEmpty(da.getRosterEnrolledTo())) {
+			if(!StringUtils.isEmpty(d.getProviderNo())  && StringUtils.isEmpty(d.getRosterEnrolledTo())) {
 				d.setRosterEnrolledTo(d.getProviderNo());
-				demographicDao.merge(d);
+				demographicDao.save(d);
 			} else {
 				//that;s weird
 			}
