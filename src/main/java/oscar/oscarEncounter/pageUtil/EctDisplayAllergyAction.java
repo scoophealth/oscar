@@ -28,6 +28,7 @@ package oscar.oscarEncounter.pageUtil;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -36,6 +37,7 @@ import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicAllergy;
 import org.oscarehr.common.model.Allergy;
+import org.oscarehr.provider.web.CppPreferencesUIBean;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
@@ -81,10 +83,16 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
 
 			allergies = RxPatientData.getPatient(loggedInInfo, demographicId).getActiveAllergies();
 
+			 CppPreferencesUIBean prefsBean = new CppPreferencesUIBean(loggedInInfo.getLoggedInProviderNo());
+             prefsBean.loadValues();
+             
 			// --- get local allergies ---
 			for (int idx = 0; idx < allergies.length; ++idx) {
 				Date date = allergies[idx].getEntryDate();
-				NavBarDisplayDAO.Item item = makeItem(date, allergies[idx].getDescription(), allergies[idx].getSeverityOfReaction(), locale);
+				Date startDate = allergies[idx].getStartDate();
+				String severity = allergies[idx].getSeverityOfReactionDesc();
+				
+				NavBarDisplayDAO.Item item = makeItem(date, allergies[idx].getDescription(), allergies[idx].getSeverityOfReaction(), locale, prefsBean, startDate, severity);
 				Dao.addItem(item);
 			}
 
@@ -112,8 +120,10 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
 					{
 						Date date=null;
 						if (remoteAllergy.getEntryDate()!=null) date=remoteAllergy.getEntryDate().getTime();
-
-						NavBarDisplayDAO.Item item = makeItem(date, remoteAllergy.getDescription(), remoteAllergy.getSeverityCode(), locale);
+						Date startDate = null;
+						if(remoteAllergy.getStartDate()!=null) startDate = remoteAllergy.getStartDate().getTime();
+						
+						NavBarDisplayDAO.Item item = makeItem(date, remoteAllergy.getDescription(), remoteAllergy.getSeverityCode(), locale, prefsBean,startDate, remoteAllergy.getSeverityCode());
 						Dao.addItem(item);
 					}
 				} catch (Exception e) {
@@ -128,7 +138,7 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
 		}
 	}
 
-	private static NavBarDisplayDAO.Item makeItem(Date entryDate, String description, String severity, Locale locale)
+	private static NavBarDisplayDAO.Item makeItem(Date entryDate, String description, String severity, Locale locale, CppPreferencesUIBean prefsBean, Date startDate, String severityDescription)
 	{
 		NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 
@@ -139,8 +149,15 @@ public class EctDisplayAllergyAction extends EctDisplayAction {
 			item.setColour("orange");
 		}
 
-		item.setTitle(StringUtils.maxLenString(description, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES));
-		item.setLinkTitle(description + " " + DateUtils.formatDate(entryDate, locale));
+		String customDescription = description;
+		if(prefsBean != null && "on".equals(prefsBean.getAllergyStartDate())) {
+			customDescription = customDescription + " Start Date:" + DateUtils.formatDate(startDate, locale);
+		}
+		if(prefsBean != null && "on".equals(prefsBean.getAllergySeverity())) {
+			customDescription = customDescription + " Severity:" + severityDescription;
+		}
+		item.setTitle(StringUtils.maxLenString(customDescription, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES));
+		item.setLinkTitle(customDescription + " Entry Date:" + DateUtils.formatDate(entryDate, locale));
 		item.setURL("return false;");
 
 		return(item);

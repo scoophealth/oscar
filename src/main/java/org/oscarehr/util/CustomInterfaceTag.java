@@ -156,6 +156,26 @@ public class CustomInterfaceTag extends TagSupport {
 		if(!row2) {	sb.append("removeCppRow(2);");}
 		
 		sb.append("init();");
+		
+		//show/hide Cpp items
+		if ("".equals(bean.getPreventionsDisplay())) { sb.append("hideCpp('preventions');"); }
+		if ("".equals(bean.getDxRegistryDisplay())) { sb.append("hideCpp('Dx');"); }
+		if ("".equals(bean.getFormsDisplay())) { sb.append("hideCpp('forms');"); }
+		if ("".equals(bean.getEformsDisplay())) { sb.append("hideCpp('eforms');"); }
+		if ("".equals(bean.getDocumentsDisplay())) { sb.append("hideCpp('docs');"); }
+		if ("".equals(bean.getLabsDisplay())) { sb.append("hideCpp('labs');"); }
+		if ("".equals(bean.getMeasurementsDisplay())) { sb.append("hideCpp('measurements');"); }
+		if ("".equals(bean.getConsultationsDisplay())) { sb.append("hideCpp('consultation');"); }
+		if ("".equals(bean.getHrmDisplay())) { sb.append("hideCpp('HRM');"); }
+		if ("".equals(bean.getAllergiesDisplay())) { sb.append("hideCpp('allergies');"); }
+		if ("".equals(bean.getMedicationsDisplay())) { sb.append("hideCpp('Rx');"); }
+		if ("".equals(bean.getOtherMedsDisplay())) { sb.append("hideCpp('OMeds');"); }
+		if ("".equals(bean.getRiskFactorsDisplay())) { sb.append("hideCpp('RiskFactors');"); }
+		if ("".equals(bean.getFamilyHxDisplay())) { sb.append("hideCpp('FamHistory');"); }
+		if ("".equals(bean.getUnresolvedIssuesDisplay())) { sb.append("hideCpp('unresolvedIssues');"); }
+		if ("".equals(bean.getResolvedIssuesDisplay())) { sb.append("hideCpp('resolvedIssues');"); }
+		if ("".equals(bean.getEpisodesDisplay())) { sb.append("hideCpp('episode');"); }
+		
 		sb.append("});");
 		sb.append("function notifyIssueUpdate() {}");
 		sb.append("function notifyDivLoaded(divId) {}");

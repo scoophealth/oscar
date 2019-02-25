@@ -942,15 +942,21 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		// if no filter return everything
 		if (Arrays.binarySearch(issueId, "a") >= 0) return notes;
 
+		boolean none =  (Arrays.binarySearch(issueId, "n") >= 0) ? true : false;
+		
 		List<CaseManagementNote> filteredNotes = new ArrayList<CaseManagementNote>();
 
 		for (Iterator<CaseManagementNote> iter = notes.listIterator(); iter.hasNext();) {
 			CaseManagementNote note = iter.next();
 			List<CaseManagementIssue> issues = cmeIssueNotesDao.getNoteIssues((Integer.valueOf(note.getId().toString())));
-			for (CaseManagementIssue issue : issues) {
-				if (Arrays.binarySearch(issueId, String.valueOf(issue.getId())) >= 0) {
-					filteredNotes.add(note);
-					break;
+			if(issues.size()==0 && none) {
+				filteredNotes.add(note);
+			} else {
+				for (CaseManagementIssue issue : issues) {
+					if (Arrays.binarySearch(issueId, String.valueOf(issue.getId())) >= 0) {
+						filteredNotes.add(note);
+						break;
+					}
 				}
 			}
 		}
@@ -1889,6 +1895,41 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 				sb.append("Treatment:" + getNoteExt(noteId, "Treatment", noteExts));
 			}
 		}
+		
+		if (issueCodeArr[1].equals("RiskFactors")) {
+			if (prefsBean.getRiskFactorsStartDate().equals("on")) {
+				sb.append("Start Date:" + getNoteExt(noteId, "Start Date", noteExts));
+			}
+			if (prefsBean.getRiskFactorsResDate().equals("on")) {
+				sb.append("Resolution Date:" + getNoteExt(noteId, "Resolution Date", noteExts));
+			}
+		}
+		
+		if (issueCodeArr[1].equals("OMeds")) {
+			if (prefsBean.getOtherMedsStartDate().equals("on")) {
+				sb.append("Start Date:" + getNoteExt(noteId, "Start Date", noteExts));
+			}
+			if (prefsBean.getOtherMedsResDate().equals("on")) {
+				sb.append("Resolution Date:" + getNoteExt(noteId, "Resolution Date", noteExts));
+			}
+		}
+		
+		if (issueCodeArr[1].equals("FamHistory")) {
+			if (prefsBean.getFamilyHistoryStartDate().equals("on")) {
+				sb.append("Start Date:" + getNoteExt(noteId, "Start Date", noteExts));
+			}
+			if (prefsBean.getFamilyHistoryResDate().equals("on")) {
+				sb.append("Resolution Date:" + getNoteExt(noteId, "Resolution Date", noteExts));
+			}
+			if (prefsBean.getFamilyHistoryTreatment().equals("on")) {
+				sb.append("Treatment:" + getNoteExt(noteId, "Treatment", noteExts));
+			}
+			if (prefsBean.getFamilyHistoryRelationship().equals("on")) {
+				sb.append("Relationship:" + getNoteExt(noteId, "Relationship", noteExts));
+			}
+		}
+		
+		
 		if (sb.length() > 0) {
 			sb.insert(0, " (");
 			sb.append(")");

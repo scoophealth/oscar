@@ -43,6 +43,7 @@ public class CaseManagementNoteExt {
 	public static String LIFESTAGE	    = "Life Stage"	;
 	public static String HIDECPP	    = "Hide Cpp"	;
 	public static String PROBLEMDESC    = "Problem Description";
+	public static String PROCEDURE    = "Procedure";
         
 	
 	
