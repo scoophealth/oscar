@@ -685,6 +685,8 @@ CREATE TABLE document (
   number_of_pages int(6),
   appointment_no int(11) default NULL,
   restrictToProgram tinyint(1) NOT NULL,
+  receivedDate date default NULL,
+  abnormal int(1) NOT NULL default '0',
   PRIMARY KEY  (document_no)
 ) ;
 
@@ -12283,4 +12285,14 @@ CREATE TABLE DHIRSubmissionLog (
     clientResponseId varchar(100),
     PRIMARY KEY(id)
 );
+
+
+CREATE TABLE DocumentExtraReviewer (
+  `id` int(11) NOT NULL auto_increment,
+  `documentNo` integer,
+  `reviewerProviderNo` varchar(40),
+  `reviewDateTime` timestamp,
+  PRIMARY KEY  (`id`)
+);
+
 
