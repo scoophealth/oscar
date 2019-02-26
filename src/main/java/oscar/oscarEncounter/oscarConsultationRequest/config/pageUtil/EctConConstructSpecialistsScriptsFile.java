@@ -95,6 +95,10 @@ public class EctConConstructSpecialistsScriptsFile {
 
 					String name = pro.getLastName() + ", " + pro.getFirstName() + " " + pro.getProfessionalLetters();
 
+					if (pro.getCdxCapable()) {
+						name = "(CDX) " + name;
+					}
+
 					String specId = "" + ser.getId().getSpecId();
 					String phone = pro.getPhoneNumber();
 					String address = pro.getStreetAddress();
@@ -149,6 +153,10 @@ public class EctConConstructSpecialistsScriptsFile {
 				ProfessionalSpecialist pro = (ProfessionalSpecialist) o[1];
 				
 				String name = pro.getLastName() + ", " + pro.getFirstName()  + (pro.getProfessionalLetters() == null ? "" : " " + pro.getProfessionalLetters());
+				if (pro.getCdxCapable()) {
+					name = "(CDX) " + name;
+				}
+
 				name = this.escapeString(name);
 				String specId = "" + ser.getId().getSpecId();
 				String phone = pro.getPhoneNumber();

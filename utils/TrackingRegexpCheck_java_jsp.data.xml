@@ -1569,6 +1569,7 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:estSpecialistVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:fNameVec = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:faxVec = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:cdxVec = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:lNameVec = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:phoneVec = new Vector&lt;String&gt;();</ViolationValue>
@@ -1577,6 +1578,7 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:public Vector&lt;String&gt; emailVec;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:public Vector&lt;String&gt; fNameVec;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:public Vector&lt;String&gt; faxVec;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:public Vector&lt;String&gt; cdxVec;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:public Vector&lt;String&gt; getSpecialistInField(String serviceId) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:public Vector&lt;String&gt; lNameVec;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarConsultationRequest/config/pageUtil/EctConDisplayServiceUtil.java:public Vector&lt;String&gt; phoneVec;</ViolationValue>

@@ -1,4 +1,4 @@
-<%--
+<%@ page import="oscar.OscarProperties" %><%--
 
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
     This software is published under the GPL GNU General Public License.
@@ -38,7 +38,10 @@ if(!authed) {
 	return;
 }
 %>
-
+<%
+	OscarProperties props = oscar.OscarProperties.getInstance();
+	Boolean showCdx = "bc".equalsIgnoreCase(props.getProperty("billregion"));
+%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -121,11 +124,16 @@ function BackToOscar()
 							<th><bean:message
 								key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.fax" />
 							</th>
-
+							<% if (showCdx) { %>
+							<th><bean:message
+									key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.cdx" />
+							</th>
+							<% } %>
 						</tr>
 						<tr>
 							<td><!--<div class="ChooseRecipientsBox1">--> <%
 
+								 String cdx = "";
                                  for(int i=0;i < displayServiceUtil.specIdVec.size(); i++){
                                  String  specId     = displayServiceUtil.specIdVec.elementAt(i);
                                  String  fName      = displayServiceUtil.fNameVec.elementAt(i);
@@ -134,6 +142,9 @@ function BackToOscar()
                                  String  address    = displayServiceUtil.addressVec.elementAt(i);
                                  String  phone      = displayServiceUtil.phoneVec.elementAt(i);
                                  String  fax        = displayServiceUtil.faxVec.elementAt(i);
+                                 if (showCdx) {
+                                 	cdx        = displayServiceUtil.cdxVec.elementAt(i);
+                                 }
                               %>
 							
 						<tr>
@@ -149,6 +160,9 @@ function BackToOscar()
 							<td><%=address %></td>
 							<td><%=phone%></td>
 							<td><%=fax%></td>
+							<% if (showCdx) { %>
+							<td><%=cdx%></td>
+							<% } %>
 						</tr>
 						<% }%>
 						</td>

@@ -38,8 +38,12 @@ if(!authed) {
 	return;
 }
 %>
-
+<%
+	OscarProperties props = oscar.OscarProperties.getInstance();
+	Boolean showCdx = "bc".equalsIgnoreCase(props.getProperty("billregion"));
+%>
 <%@ page import="java.util.ResourceBundle"%>
+<%@ page import="oscar.OscarProperties" %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -122,11 +126,16 @@ function BackToOscar()
 							<th><bean:message
 								key="oscarEncounter.oscarConsultationRequest.config.DisplayService.fax" />
 							</th>
-
+							<% if (showCdx) { %>
+							<th><bean:message
+									key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.cdx" />
+							</th>
+							<% } %>
 						</tr>
 						<tr>
 							<td><!--<div class="ChooseRecipientsBox1">--> <%
                                  java.util.Vector  specialistInField = displayServiceUtil.getSpecialistInField(serviceId);
+                                 String cdx = "";
                                  for(int i=0;i < displayServiceUtil.specIdVec.size(); i++){
                                  String  specId     = displayServiceUtil.specIdVec.elementAt(i);
                                  String  fName      = displayServiceUtil.fNameVec.elementAt(i);
@@ -135,7 +144,9 @@ function BackToOscar()
                                  String  address    = displayServiceUtil.addressVec.elementAt(i);
                                  String  phone      = displayServiceUtil.phoneVec.elementAt(i);
                                  String  fax        = displayServiceUtil.faxVec.elementAt(i);
-
+                                 if (showCdx) {
+                                 	cdx        = displayServiceUtil.cdxVec.elementAt(i);
+                                 }
                               %>
 							
 						<tr>
@@ -151,6 +162,9 @@ function BackToOscar()
 							<td><%=address %></td>
 							<td><%=phone%></td>
 							<td><%=fax%></td>
+							<% if (showCdx) { %>
+							<td><%=cdx%></td>
+							<% } %>
 						</tr>
 						<% }%>
 						<!--</div>-->
