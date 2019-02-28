@@ -435,10 +435,34 @@ public class ProviderDao extends HibernateDaoSupport {
 
 	public Provider getProviderByPractitionerNo(String practitionerNo) {
 		if (practitionerNo == null || practitionerNo.length() <= 0) {
-			throw new IllegalArgumentException();
+			return null;
 		}
 
 		List<Provider> providerList = getHibernateTemplate().find("From Provider p where p.practitionerNo=?",new Object[]{practitionerNo});
+
+		if(providerList.size()>1) {
+			logger.warn("Found more than 1 provider with practitionerNo="+practitionerNo);
+		}
+		if(providerList.size()>0)
+			return providerList.get(0);
+
+		return null;
+	}
+	
+	public Provider getProviderByPractitionerNo(String practitionerNoType, String practitionerNo) {
+		return getProviderByPractitionerNo(new String[] {practitionerNoType},practitionerNo);
+	}
+	
+	public Provider getProviderByPractitionerNo(String[] practitionerNoTypes, String practitionerNo) {
+		if (practitionerNoTypes == null || practitionerNoTypes.length <= 0) {
+			throw new IllegalArgumentException();
+		}
+		if (practitionerNo == null || practitionerNo.length() <= 0) {
+			throw new IllegalArgumentException();
+		}
+
+		List<Provider> providerList = getHibernateTemplate().findByNamedParam("From Provider p where p.practitionerNoType IN (:types) AND p.practitionerNo=:pId", new String[] {"types","pId"}, new Object[] {practitionerNoTypes,practitionerNo});
+//		List<Provider> providerList = getHibernateTemplate().find("From Provider p where p.practitionerNoType IN (:types) AND p.practitionerNo=?",new Object[]{practitionerNo});
 
 		if(providerList.size()>1) {
 			logger.warn("Found more than 1 provider with practitionerNo="+practitionerNo);
