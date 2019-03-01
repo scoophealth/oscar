@@ -67,6 +67,7 @@ import org.oscarehr.common.model.DigitalSignature;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.ConsultationManager;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.DigitalSignatureUtils;
@@ -92,6 +93,7 @@ public class EctConsultationFormRequestAction extends Action {
 
 	private static final Logger logger=MiscUtils.getLogger();
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	private ConsultationManager consultationManager = SpringUtils.getBean(ConsultationManager.class);
 	
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -243,8 +245,11 @@ public class EctConsultationFormRequestAction extends Action {
 
 		if (submission.startsWith("Update")) {
 
+		
 			requestId = frm.getRequestId();
 
+			consultationManager.archiveConsultationRequest(Integer.parseInt(requestId));
+			
 			try {				     
 				
 				if (newSignature) {
