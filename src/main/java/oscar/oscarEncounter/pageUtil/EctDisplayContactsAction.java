@@ -32,8 +32,8 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.ContactDao;
 import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.model.Contact;
 import org.oscarehr.common.model.DemographicContact;
-import org.oscarehr.common.model.ProfessionalContact;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.util.MiscUtils;
@@ -111,10 +111,17 @@ public class EctDisplayContactsAction extends EctDisplayAction {
 		    	//String consent = "";
 		    	
 		    	if(contact.getType() == DemographicContact.TYPE_CONTACT) {
-		    		ProfessionalContact c = (ProfessionalContact)contactDao.find(Integer.parseInt(contact.getContactId()));
-		    		name = c.getLastName() + "," + c.getFirstName();
-		    		specialty = c.getSpecialty();
-		    		workPhone = c.getWorkPhone();
+		    		Object o = contactDao.find(Integer.parseInt(contact.getContactId()));
+		    		if(o instanceof ProfessionalSpecialist) {
+		    			ProfessionalSpecialist c = (ProfessionalSpecialist)o;
+		    			name = c.getLastName() + "," + c.getFirstName();
+		    			//specialty = c.getSpecialty();
+		    			workPhone = c.getWorkPhone();
+		    		} else {
+		    			Contact c = (Contact)o;
+		    			name = c.getLastName() + "," + c.getFirstName();
+		    			workPhone = c.getWorkPhone();
+		    		}
 		    	} else if(contact.getType() == DemographicContact.TYPE_PROVIDER) {
 		    		Provider p = providerDao.getProvider(contact.getContactId());
 		    		name = p.getFormattedName();
@@ -130,8 +137,8 @@ public class EctDisplayContactsAction extends EctDisplayAction {
 		    	NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
 		    	//48.45
 		    	String itemHeader = StringUtils.maxLenString(name, 20, 17, ELLIPSES) +
-		    			((specialty.length()>0)?StringUtils.maxLenString("  "+ specialty, 14, 11, ELLIPSES):"") +
-		    			((workPhone.length()>0)?StringUtils.maxLenString("  "+workPhone, 17, 14, ELLIPSES):"");
+		    			((specialty != null && specialty.length()>0)?StringUtils.maxLenString("  "+ specialty, 14, 11, ELLIPSES):"") +
+		    			((workPhone != null && workPhone.length()>0)?StringUtils.maxLenString("  "+workPhone, 17, 14, ELLIPSES):"");
 		        item.setTitle((contact.isConsentToContact()?"":"*") + itemHeader);
 		        String consent = contact.isConsentToContact()?"Ok to contact":"Do not contact";
 		        item.setLinkTitle(name + " " + specialty + " " + workPhone + " " + consent);
