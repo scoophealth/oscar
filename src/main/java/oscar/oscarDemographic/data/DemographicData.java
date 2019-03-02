@@ -318,10 +318,10 @@ public class DemographicData {
 
 
 
-	public DemographicAddResult addDemographic(LoggedInInfo loggedInInfo, String title, String last_name, String first_name, String address,
-			String city, String province, String postal, String phone, String phone2, String year_of_birth,
+	public DemographicAddResult addDemographic(LoggedInInfo loggedInInfo, String title, String last_name, String first_name, String middleNames, String address,
+			String city, String province, String postal, String mailingAddress, String mailingCity, String mailingProvince, String mailingPostal, String phone, String phone2, String year_of_birth,
 			String month_of_birth, String date_of_birth, String hin, String ver, String roster_status,
-			String roster_date, String roster_termination_date, String roster_termination_reason,
+			String roster_date, String roster_termination_date, String roster_termination_reason, String rosterEnrolledTo,
 			String patient_status, String patient_status_date, String date_joined, String chart_no,
 			String official_lang,String spoken_lang, String provider_no, String sex, String end_date,
 			String eff_date, String pcn_indicator, String hc_type, String hc_renew_date, String family_doctor,
@@ -334,10 +334,15 @@ public class DemographicData {
 		demographic.setTitle(title);
 		demographic.setLastName(last_name);
 		demographic.setFirstName(first_name);
+		demographic.setMiddleNames(middleNames);
 		demographic.setAddress(address);
 		demographic.setCity(city);
 		demographic.setProvince(province);
 		demographic.setPostal(postal);
+		demographic.setMailingAddress(mailingAddress);
+		demographic.setMailingCity(mailingCity);
+		demographic.setMailingProvince(mailingProvince);
+		demographic.setMailingPostal(mailingPostal);
 		demographic.setPhone(phone);
 		demographic.setPhone2(phone2);
 		demographic.setYearOfBirth(year_of_birth);
@@ -346,6 +351,7 @@ public class DemographicData {
 		demographic.setHin(hin);
 		demographic.setVer(ver);
 		demographic.setRosterStatus(roster_status);
+		demographic.setRosterEnrolledTo(rosterEnrolledTo);
 		if(roster_date != null && roster_date.length()>0) {
 			demographic.setRosterDate(formatter.parse(roster_date));
 		}

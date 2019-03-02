@@ -513,6 +513,7 @@ CREATE TABLE demographic (
   roster_date date,
   roster_termination_date date,
   roster_termination_reason varchar(2),
+  roster_enrolled_to varchar(20),
   patient_status varchar(20),
   patient_status_date date,
   date_joined date,
@@ -538,6 +539,11 @@ CREATE TABLE demographic (
   anonymous varchar(32),
   lastUpdateUser varchar(6),
   lastUpdateDate datetime not null,
+  middleNames varchar(100),
+  mailingAddress varchar(60),
+  mailingCity varchar(50),
+  mailingProvince varchar(20),
+  mailingPostal varchar(9),
   PRIMARY KEY  (demographic_no),
   KEY hin (hin),
   KEY name (last_name,first_name),
@@ -8867,6 +8873,7 @@ CREATE TABLE demographicArchive (
   title varchar(10),
   last_name varchar(30),
   first_name varchar(30),
+  middleNames varchar(100),
   address varchar(60),
   city varchar(20),
   province varchar(20),
@@ -8884,6 +8891,7 @@ CREATE TABLE demographicArchive (
   roster_date date,
   roster_termination_date date,
   roster_termination_reason varchar(2),
+  roster_enrolled_to varchar(20),
   patient_status varchar(20),
   patient_status_date date,
   date_joined date,
@@ -8908,7 +8916,11 @@ CREATE TABLE demographicArchive (
   newsletter varchar(32),
   anonymous varchar(32),
   lastUpdateUser varchar(6),
-  lastUpdateDate date
+  lastUpdateDate date,
+  mailingAddress varchar(60),
+  mailingCity varchar(50),
+  mailingProvince varchar(20),
+  mailingPostal varchar(9)
 );
 
 CREATE TABLE providerArchive (
