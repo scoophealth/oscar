@@ -47,15 +47,17 @@ import javax.persistence.Transient;
 import org.apache.commons.lang.StringUtils;
 
 @Entity
-@Table(name = "consultationRequests")
-public class ConsultationRequest extends AbstractModel<Integer> implements Serializable {
+@Table(name = "consultationRequestsArchive")
+public class ConsultationRequestArchive extends AbstractModel<Integer> implements Serializable {
 
 	private static final String ACTIVE_MARKER = "1";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "requestId")
 	private Integer id;
+	
+	@Column(name = "requestId")
+	private Integer requestId;
 
 	@Column(name = "referalDate")
 	@Temporal(TemporalType.DATE)
@@ -395,12 +397,24 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 		this.lookupListItem = lookupListItem;
 	}
 
+	public Integer getRequestId() {
+		return requestId;
+	}
+
+	public void setRequestId(Integer requestId) {
+		this.requestId = requestId;
+	}
+
 	public Date getLastUpdateDate() {
 		return lastUpdateDate;
 	}
 
 	public void setLastUpdateDate(Date lastUpdateDate) {
 		this.lastUpdateDate = lastUpdateDate;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 

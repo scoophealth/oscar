@@ -250,6 +250,7 @@ try
 			<nested:iterate type="String" id="filter_issue" property="issues">
 				<c:choose>
 					<c:when test="${filter_issue == 'a'}">All</c:when>
+					<c:when test="${filter_issue == 'n'}">None</c:when>
 					<c:otherwise>
 						<nested:iterate id="issue" name="cme_issues">
 							<c:if test="${filter_issue==issue.issue.id}">
@@ -280,6 +281,7 @@ try
 					<td style="font-size:inherit;background-color:#bbbbff;font-weight:bold">
 						<bean:message key="oscarEncounter.issues.title" />
 					</td>
+					
 				</tr>
 				<tr>
 					<td style="font-size:inherit;background-color:#ccccff">
@@ -323,6 +325,7 @@ try
 							</ul>
 						</div>
 					</td>
+					
 					<td style="font-size:inherit;background-color:#ccccff">
 						<div style="height:150px;overflow:auto">
 							<ul style="padding:0px;margin:0px;list-style:none inside none">
@@ -348,6 +351,8 @@ try
 						<div style="height:150px;overflow:auto">
 							<ul style="padding:0px;margin:0px;list-style:none inside none">
 								<li><html:multibox property="issues" value="a" onclick="filterCheckBox(this)"></html:multibox><bean:message key="oscarEncounter.sortAll.title" /></li>
+								<li><html:multibox property="issues" value="n" onclick="filterCheckBox(this)"></html:multibox>None</li>
+								
 								<%
 									@SuppressWarnings("unchecked")
 										List issues = (List)request.getAttribute("cme_issues");
