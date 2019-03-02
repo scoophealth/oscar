@@ -146,7 +146,7 @@ boolean isMulitSites = oscarProp.getBooleanProperty("multisites", "on");
                 billTo = billToBillExt.getValue();                                    
             }
             //If someone actually wants to print the bill with the "Bill To:" section left blank, this allows them to do that.
-            else if (billToBillExt.getValue().isEmpty() && useBillToExt != null && useBillToExt.getValue().equals("on"))
+            else if ((billToBillExt == null || billToBillExt != null && billToBillExt.getValue().isEmpty()) && useBillToExt != null && useBillToExt.getValue().equals("on"))
             {
                 billTo = "";
             }
