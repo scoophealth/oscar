@@ -3621,6 +3621,8 @@
         <ViolationValue>/database/mysql/updates/update-2014-11-28.sql:us_num varchar(10) default '0',</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2016-07-11.sql:provider_no varchar(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2018-04-16.sql:alter table billing modify status varchar(1) DEFAULT NULL;</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-02-26.sql:alter table document add abnormal int(1) NOT NULL default '0';</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-02-26.sql:alter table document add receivedDate date default NULL;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2019-02-25.sql:appointmentDate date default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2019-02-25.sql:appointmentTime time default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2019-02-25.sql:demographicNo int(10) default NULL,</ViolationValue>
