@@ -85,6 +85,9 @@ Allergy[] allergyWarnings = null;
 
         temp=StringUtils.trimToEmpty(allg.getReaction());
         d2.put("reaction", temp);
+        
+        temp=StringUtils.trimToEmpty(allg.getSeverityOfReactionDesc());
+        d2.put("severity", temp);
     }
 
    try{

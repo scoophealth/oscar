@@ -61,6 +61,7 @@ CREATE TABLE allergies (
   position int(10) not null,
   lastUpdateDate datetime not null,
   providerNo varchar(6),
+  nonDrug tinyint(1),
   PRIMARY KEY  (allergyid)
 ) ;
 
