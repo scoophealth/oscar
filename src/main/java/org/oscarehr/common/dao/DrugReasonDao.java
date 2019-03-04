@@ -84,5 +84,20 @@ public class DrugReasonDao extends AbstractDao<DrugReason> {
         return (results);
     }
 
+    
+    public List<DrugReason> getReasonsByIcd9CodeAndDemographicNo(String icd9Code, String demographicNo) {
+    	String sqlCommand = "select x from DrugReason x where x.codingSystem=?1 and x.code= ?2 and x.demographicNo = ?3 and x.archivedFlag = ?4";
+		
+        Query query = entityManager.createQuery(sqlCommand);
+        query.setParameter(1, "icd9");
+        query.setParameter(2,icd9Code);
+        query.setParameter(3, Integer.parseInt(demographicNo));
+        query.setParameter(4,false);
+	
+        @SuppressWarnings("unchecked")
+        List<DrugReason> results = query.getResultList();
+
+        return (results);
+    }
 
 }

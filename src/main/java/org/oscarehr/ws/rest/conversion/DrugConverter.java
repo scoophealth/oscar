@@ -102,7 +102,7 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
             d.setSpecialInstruction(t.getAdditionalInstructions());
             	
             d.setDispenseInternal(falseIfNull(t.getDispenseInternal())); 
-            d.setDispenseInterval(zeroIfNull(t.getDispenseIntervalNumber()));
+            d.setDispenseInterval(t.getDispenseIntervalNumber());
             d.setRefillDuration(zeroIfNull(t.getRefillDuration()));
             d.setRefillQuantity(zeroIfNull(t.getRefillQuantity()));
 
