@@ -9377,6 +9377,12 @@ create table FlowSheetUserCreated(
   topHTML text,
   archived tinyint(1),
   createdDate date,
+  createdBy varchar(100),
+  scope varchar(100),
+  scopeProviderNo varchar(100),
+  scopeDemographicNo int(10),
+  template varchar(100),
+  xmlContent text,
   KEY FlowSheetUserCreated_archived (archived)
 );
 

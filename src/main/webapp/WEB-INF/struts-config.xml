@@ -2956,6 +2956,9 @@
 			<forward name="error" path="/cc/launcherError.jsp"/>
 		</action>
 		
+		<action path="/admin/Flowsheet" type="org.oscarehr.flowsheet.FlowsheetAction" parameter="method">
+		</action>
+		
 		
 	</action-mappings>
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" maxFileSize="100M" />
