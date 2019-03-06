@@ -1195,6 +1195,20 @@
    <version>2.5</version>
 </dependency>
 
+<dependency>
+   <groupId>org.oscarehr</groupId>
+   <artifactId>flowsheets</artifactId>
+   <version>1.0</version>
+</dependency>
+<!-- JAVA 11
+<dependency>
+    <groupId>com.sun.xml.ws</groupId>
+    <artifactId>jaxws-ri</artifactId>
+    <version>2.3.0</version>
+    <type>pom</type>
+</dependency>
+-->
+
 	</dependencies>
 
 	<build>
