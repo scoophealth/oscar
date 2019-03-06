@@ -37,6 +37,13 @@
         <archive>demographic</archive>
     </databaseap>
     <databaseap>
+        <ap-name>patient_nameM</ap-name>
+        <ap-sql>SELECT middleNames FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${middleNames}</ap-output>
+        <ap-insql>UPDATE demographic SET middleNames='${value}' WHERE demographic_no=${demographic}</ap-insql>
+        <archive>demographic</archive>
+    </databaseap>
+    <databaseap>
         <ap-name>patient_alias</ap-name>
         <ap-sql>SELECT alias FROM demographic WHERE demographic_no=${demographic}</ap-sql>
         <ap-output>${alias}</ap-output>
@@ -59,14 +66,20 @@
         <ap-output>${last_name}, ${first_name} \n${address}, ${city}, ${province} ${postal} \nTel:${phone}(H)  ${phone2}(W) \n${date_of_birth}/${month_of_birth}/${year_of_birth}(${sex})  HIN:${hin}${ver}</ap-output>
     </databaseap>
     <databaseap>
+		<ap-name>mailing_address</ap-name>
+		<ap-sql>SELECT IF(LENGTH(mailingAddress)>1, mailingAddress, address) as adr, IF(LENGTH(mailingCity)>1,mailingCity,city) as cit, RIGHT(IF(LENGTH(mailingProvince)>1,mailingProvince,province),2) as pro, IF(LENGTH(mailingPostal)>1,mailingPostal,postal) as pos, IF(LEFT(IF(LENGTH(mailingProvince)>1,mailingProvince,province),2)="CA","Canada",LEFT(IF(LENGTH(mailingProvince)>1,mailingProvince,province),2)) as country FROM demographic WHERE demographic_no=${demographic}
+		</ap-sql>
+		<ap-output>${adr} \n${cit}, ${pro}, ${pos}\n${country}</ap-output>
+	</databaseap>
+    <databaseap>
         <ap-name>address</ap-name>
-        <ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-        <ap-output>${address} \n${city}, ${province}, ${postal}</ap-output>
+        <ap-sql>SELECT address, city, RIGHT(province,2) AS pro, postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${address} \n${city}, ${pro}, ${postal}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>addressline</ap-name>
-        <ap-sql>SELECT address, city, province, postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-        <ap-output>${address}, ${city}, ${province}, ${postal}</ap-output>
+        <ap-sql>SELECT address, city, RIGHT(province,2) AS pro, postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${address}, ${city}, ${pro}, ${postal}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>address_street_number_and_name</ap-name>
@@ -75,8 +88,8 @@
     </databaseap>
     <databaseap>
         <ap-name>province</ap-name>
-        <ap-sql>SELECT province FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-        <ap-output>${province}</ap-output>
+        <ap-sql>SELECT RIGHT(province,2) AS pro FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${pro}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>city</ap-name>
@@ -2318,5 +2331,6 @@
                 AND other_key='${other_key}' AND deleted=false ORDER BY id DESC LIMIT 1</ap-sql>
         <ap-output>${other_id}</ap-output>
     </databaseap>
-<!-- Extended eform tags end -->   
+<!-- Extended eform tags end -->  
+ 
 </eformap-config>
