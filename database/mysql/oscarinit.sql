@@ -747,7 +747,7 @@ CREATE TABLE drugs (
   regional_identifier varchar(100) default NULL,
   unit varchar(5) default 'tab',
   method varchar(5) default 'Take',
-  route varchar(5) default 'PO',
+  route varchar(50) default 'PO',
   drug_form varchar(50),
   create_date datetime,
   dosage text,
@@ -758,7 +758,7 @@ CREATE TABLE drugs (
   short_term boolean,
   non_authoritative boolean,
   past_med boolean,
-  patient_compliance tinyint(1),
+  patient_compliance boolean,
   outside_provider_name varchar(100),
   outside_provider_ohip varchar(20),
   archived_reason varchar(100) default '',
@@ -766,7 +766,7 @@ CREATE TABLE drugs (
   hide_from_drug_profile tinyint(1) default '0',
   eTreatmentType varchar(20),
   rxStatus varchar(20),
-  dispense_interval int(10),
+  dispense_interval varchar(100),
   refill_duration int(10),
   refill_quantity int(10),
   hide_cpp tinyint(1),
@@ -775,6 +775,9 @@ CREATE TABLE drugs (
   start_date_unknown boolean,
   lastUpdateDate datetime not null,
   dispenseInternal tinyint(1) not null,
+  protocol varchar(255),
+  priorRxProtocol varchar(255),
+  pharmacyId int(11),
   PRIMARY KEY  (drugid)
 ) ;
 
