@@ -182,6 +182,7 @@ public class EctViewRequestAction extends Action {
             thisForm.setProviderName(prov.getFormattedName());
 
             thisForm.seteReferral(false);
+            thisForm.setCDXeReferral(false);
             thisForm.setFdid(consult.getFdid());
         }
 
@@ -229,6 +230,7 @@ public class EctViewRequestAction extends Action {
         thisForm.setProviderName(consultUtil.getProviderName(consultUtil.providerNo));
         
         thisForm.seteReferral(false);
+        thisForm.setCDXeReferral(false);
         
         thisForm.setFdid(consultUtil.fdid);
         
@@ -296,6 +298,7 @@ public class EctViewRequestAction extends Action {
         thisForm.setProviderName(provider.getLastName()+", "+provider.getFirstName());
 
         thisForm.seteReferral(true);
+        thisForm.setCDXeReferral(true);
 
         // referredTo specialist
         PRD referredToPrd=RefI12.getPrdByRoleId(refI12, "RT");
