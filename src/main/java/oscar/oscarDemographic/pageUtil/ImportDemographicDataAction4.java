@@ -1620,7 +1620,7 @@ import oscar.util.UtilDateUtilities;
                     }
                     
                     drug.setPosition(0);
-                    drug.setDispenseInterval(0);
+                    drug.setDispenseInterval("0");
                     drugDao.persist(drug);
                     addOneEntry(MEDICATION);
 
