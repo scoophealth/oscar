@@ -25,9 +25,11 @@
 
 package oscar.oscarEncounter.oscarMeasurements.util;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.oscarehr.util.LoggedInInfo;
@@ -90,6 +92,51 @@ public class MeasurementDSHelper {
         return setM;
     }
     
+    public boolean setMeasurement(String measurementType, Date startDate, Date endDate){
+        boolean setM = false;
+        log.debug("demo "+this.demographic_no+" type "+measurementType);
+        EctMeasurementsDataBeanHandler mdbh = new  EctMeasurementsDataBeanHandler(Integer.valueOf(this.demographic_no), measurementType);
+
+        List<EctMeasurementsDataBean> col2 = new ArrayList<EctMeasurementsDataBean>();
+        for(Object o: mdbh.getMeasurementsDataVector()) {
+        	EctMeasurementsDataBean edb = (EctMeasurementsDataBean)o;
+        	Date d = edb.getDateObservedAsDate();
+        	if(d != null) {
+        		
+        		if(startDate == null && endDate == null) {
+        			col2.add(edb);
+        		}
+        		
+        		if(startDate != null && endDate != null) {
+        			if(d.after(startDate) && d.before(endDate)) {
+        				col2.add(edb);
+        			}
+        		}
+        		
+        		else if(startDate != null && endDate == null) {
+        			if(d.after(startDate)) {
+        				col2.add(edb);
+        			}
+        		}
+        		
+        		else if(startDate == null && endDate != null) {
+        			if(d.before(endDate)) {
+        				col2.add(edb);
+        			}
+        		}
+        		
+        	}
+        }
+        if (col2.size() >0){
+            this.mdb =  col2.iterator().next();
+            setM = true;
+        }
+    
+        
+        return setM;
+    }
+    
+    
     public boolean hasProblem(){
         return problem;
     }
@@ -113,9 +160,9 @@ public class MeasurementDSHelper {
     public boolean isDataEqualTo(String str){
         boolean equal = false;
         try{
-            equal = mdb.getDataField().equalsIgnoreCase(str);
+            equal = mdb != null &&  mdb.getDataField() != null &&  mdb.getDataField().equalsIgnoreCase(str);
         }catch(Exception e){
-            MiscUtils.getLogger().error("Error", e);
+            MiscUtils.getLogger().error("Error processing " + str, e);
             problem = true;
         }
         return equal;
@@ -125,7 +172,9 @@ public class MeasurementDSHelper {
         log.debug("dataAsDouble");
         double ret = -1;
         try{
-           ret = Double.parseDouble(mdb.getDataField());
+        	if(mdb != null && mdb.getDataField() != null) {
+        		ret = Double.parseDouble(mdb.getDataField());
+        	}
         }catch(Exception e){
             MiscUtils.getLogger().error("Error", e);
             problem =true;

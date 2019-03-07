@@ -166,6 +166,9 @@ if(request.getParameter("demographic")==null){ %>
             <%if(request.getParameter("demographic")!=null){ %>
             <input type="hidden" name="demographic" value="<%=demographic%>"/>
             <%} %>
+            <%if(request.getParameter("scope")!=null){ %>
+            <input type="hidden" name="scope" value="<%=request.getParameter("scope")%>"/>
+            <%} %>
             <fieldset width="300px">
                <input type="hidden" name="updater" value="yes"/>
                <input type="hidden" name="prevention_type" value="<%=h2.get("prevention_type")%>"/>

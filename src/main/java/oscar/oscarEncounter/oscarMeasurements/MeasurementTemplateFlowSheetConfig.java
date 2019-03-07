@@ -41,6 +41,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.drools.RuleBase;
 import org.jdom.Attribute;
@@ -82,12 +83,18 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
     Hashtable<String, String> flowsheetDisplayNames = new Hashtable<String, String>();
     ArrayList<String> universalFlowSheets = new ArrayList<String>();
 
+    Hashtable<String, File> flowsheetFiles = new Hashtable<String, File>();
+    
     static MeasurementTemplateFlowSheetConfig measurementTemplateFlowSheetConfig;
 
     Hashtable<String, MeasurementFlowSheet> flowsheets = null;
 
     HashMap<String,Flowsheet> flowsheetSettings = null;
 
+    public Hashtable<String,File> getFileMap() {
+    	return flowsheetFiles;
+    }
+    
     public void afterPropertiesSet() throws Exception {
         measurementTemplateFlowSheetConfig = this;
     }
@@ -236,6 +243,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
         programTrigHash = new HashMap<String, ArrayList<String>>();
         flowsheetDisplayNames = new Hashtable<String, String>();
         universalFlowSheets = new ArrayList<String>();
+        flowsheetFiles = new Hashtable<String,File>();
         flowsheets = null;
         flowsheetSettings = null;
         loadFlowsheets();
@@ -257,6 +265,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
 	            is = new FileInputStream(flowSheet);
 	            MeasurementFlowSheet d = createflowsheet(mType, is);
 	            flowsheets.put(d.getName(), d);
+	            flowsheetFiles.put(d.getName(), flowSheet);
 	            if (d.isUniversal())
 	                universalFlowSheets.add(d.getName());
 	            else if(d.getDxTriggers()!=null && d.getDxTriggers().length>0){
@@ -288,6 +297,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
         for(FlowSheetUserCreated flowSheetUserCreated: flowSheetUserCreateds){
 
         	MeasurementFlowSheet m = new MeasurementFlowSheet();
+        	m.setCustom(true);
         	m.setName(flowSheetUserCreated.getName());
             m.parseDxTriggers(flowSheetUserCreated.getDxcodeTriggers());
             m.setDisplayName(flowSheetUserCreated.getDisplayName());
@@ -295,7 +305,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
             m.setRecommendationColour(flowSheetUserCreated.getRecommendationColour());
             flowsheets.put(m.getName(), m);
             String[] dxTrig = m.getDxTriggers();
-            addTriggers(dxTrig, m.getName());
+        //    addTriggers(dxTrig, m.getName());
             flowsheetDisplayNames.put(m.getName(), m.getDisplayName());
             Flowsheet tmp = flowsheetDao.findByName(m.getName());
             if(tmp!=null) {
@@ -587,6 +597,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
         d.loadRuleBase();
         return d;
     }
+    
 
     public MeasurementFlowSheet validateFlowsheet(String data) {
     	InputStream is = null;
@@ -833,6 +844,63 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
 //        return getFlowSheet(flowsheetName);
 //    }
 
+    public MeasurementFlowSheet getFlowSheet(String flowsheetName, String providerNo, Integer demographicNo) {
+    	//flowsheetName is the out-of-the-box name, 
+        FlowSheetUserCreatedDao flowSheetUserCreatedDao = (FlowSheetUserCreatedDao) SpringUtils.getBean("flowSheetUserCreatedDao");
+
+        MeasurementFlowSheet m = null;
+        FlowSheetUserCreated fsuc = null;
+        
+        if(demographicNo != null) {
+        	fsuc = flowSheetUserCreatedDao.findByPatientScope(flowsheetName,demographicNo);
+        	if(fsuc == null) {
+        		fsuc = flowSheetUserCreatedDao.findByProviderScope(flowsheetName, providerNo);
+        		if(fsuc == null) {
+        			fsuc = flowSheetUserCreatedDao.findByClinicScope(flowsheetName);
+        		}
+        	}
+        }
+        
+        if(fsuc != null) {
+        	//use custom flowsheet
+            InputStream targetStream = IOUtils.toInputStream(fsuc.getXmlContent().replaceAll("<flowsheet xmlns=\"flowsheets.oscarehr.org\"", "<flowsheet"));
+            EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
+            m = createflowsheet(mType, targetStream);
+          
+        } else {
+        	//use out of the box flowsheet
+        	m = getFlowSheet(flowsheetName);
+        }
+        
+        return m;
+    }
+
+    public MeasurementFlowSheet getFlowSheetByName(String flowsheetName, String providerNo, Integer demographicNo) {
+    	FlowSheetUserCreatedDao flowSheetUserCreatedDao = (FlowSheetUserCreatedDao) SpringUtils.getBean("flowSheetUserCreatedDao");
+
+        MeasurementFlowSheet m = null;
+        FlowSheetUserCreated fsuc = null;
+        
+        if(demographicNo != null) {
+        	fsuc = flowSheetUserCreatedDao.findByPatientScopeName(flowsheetName,demographicNo);
+        	if(fsuc == null) {
+        		fsuc = flowSheetUserCreatedDao.findByProviderScopeName(flowsheetName, providerNo);
+        		if(fsuc == null) {
+        			fsuc = flowSheetUserCreatedDao.findByClinicScopeName(flowsheetName);
+        		}
+        	}
+        }
+        
+        if(fsuc != null) {
+        	//use custom flowsheet
+            InputStream targetStream = IOUtils.toInputStream(fsuc.getXmlContent().replaceAll("<flowsheet xmlns=\"flowsheets.oscarehr.org\"", "<flowsheet"));
+            EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
+            m = createflowsheet(mType, targetStream);
+          
+        } 
+        
+        return m;
+    }
 
     public MeasurementFlowSheet getFlowSheet(String flowsheetName) {
         log.debug("GET FLOWSHEET "+flowsheetName+"  "+flowsheets.get(flowsheetName));

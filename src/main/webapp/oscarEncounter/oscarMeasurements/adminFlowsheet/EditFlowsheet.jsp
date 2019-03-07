@@ -78,24 +78,34 @@ if(!authed2) {
 
     String flowsheet = temp;
     String demographic = request.getParameter("demographic");
+    String scope = request.getParameter("scope");
     MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
     Hashtable<String, String> flowsheetNames = templateConfig.getFlowsheetDisplayNames();
 
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
     FlowSheetCustomizationDao flowSheetCustomizationDao = (FlowSheetCustomizationDao) ctx.getBean("flowSheetCustomizationDao");
     List<FlowSheetCustomization> custList = null;
-    if(demographic == null || demographic.isEmpty()) {
-    	custList = flowSheetCustomizationDao.getFlowSheetCustomizations( flowsheet,(String) session.getAttribute("user"));
+    if("clinic".equals(scope)) {
+    	custList = flowSheetCustomizationDao.getFlowSheetCustomizations(flowsheet);
     } else {
-    	custList = flowSheetCustomizationDao.getFlowSheetCustomizations( flowsheet,(String) session.getAttribute("user"),Integer.parseInt(demographic));
+	    if(demographic == null || demographic.isEmpty()) {
+	    	custList = flowSheetCustomizationDao.getFlowSheetCustomizations( flowsheet,(String) session.getAttribute("user"));
+	    } else {
+	    	custList = flowSheetCustomizationDao.getFlowSheetCustomizationsForPatient(flowsheet,demographic);
+	    }
     }
     Enumeration en = flowsheetNames.keys();
 
     EctMeasurementTypesBeanHandler hd = new EctMeasurementTypesBeanHandler();
     Vector<EctMeasurementTypesBean> vec = hd.getMeasurementTypeVector();
-    String demographicStr = "";
+    String demographicStr = new String();
+    String demoStash = new String();
     if (demographic != null){
         demographicStr = "&demographic="+demographic;
+        session.setAttribute("demoNo"+session.getAttribute("user"), demographic);
+    } else {
+    	String demoNo = (String) session.getAttribute("demoNo"+session.getAttribute("user"));
+    	if (demoNo!=null) demoStash = "&demographic="+demoNo; 
     }
 
     XMLOutputter outp = new XMLOutputter();
@@ -247,15 +257,30 @@ if ( request.getParameter("htracker")!=null ){
 Flowsheet: <span style="font-weight:normal"><%=flowsheet.toUpperCase()%></span>
 </h4>
 		  <span class="mode-toggle">
-		            <% if (demographic!=null) { %>
-		             Patient 
-					<security:oscarSec roleName="<%=roleName2$%>" objectName="_flowsheet" rights="w">
-						| <a href="EditFlowsheet.jsp?flowsheet=<%=flowsheet%>">All Patients</a> 
-					</security:oscarSec>
-
+		  	<% if (scope==null) {
+		  			if (demographic!=null) { %>
+							Patient
+						<security:oscarSec roleName="<%=roleName2$%>" objectName="_flowsheet" rights="w">
+							| <a href="EditFlowsheet.jsp?flowsheet=<%=flowsheet%>">Your Patients</a> 
+							| <a href="EditFlowsheet.jsp?flowsheet=<%=flowsheet%>&scope=clinic">All Patients</a>
+						</security:oscarSec>
+						
 		            <%}else{%>
-		               <i>for</i> All Patients
-		            <%}%>
+						<security:oscarSec roleName="<%=roleName2$%>" objectName="_flowsheet" rights="w">
+							<a href="EditFlowsheet.jsp?flowsheet=<%=flowsheet%><%=demoStash%>">Patient</a>
+						</security:oscarSec>
+							| Your Patients
+						<security:oscarSec roleName="<%=roleName2$%>" objectName="_flowsheet" rights="w">
+							| <a href="EditFlowsheet.jsp?flowsheet=<%=flowsheet%>&scope=clinic">All Patients</a>
+						</security:oscarSec>
+		            <%}
+			   }else{%>
+						<security:oscarSec roleName="<%=roleName2$%>" objectName="_flowsheet" rights="w">
+							<a href="EditFlowsheet.jsp?flowsheet=<%=flowsheet%><%=demoStash%>">Patient</a>
+							| <a href="EditFlowsheet.jsp?flowsheet=<%=flowsheet%>">Your Patients</a>
+						</security:oscarSec>
+							| All Patients
+			<% } %>
 		  </span>
 </div><!-- row -->
 
@@ -269,15 +294,21 @@ Flowsheet: <span style="font-weight:normal"><%=flowsheet.toUpperCase()%></span>
 		<li><a href="#add" data-toggle="tab"><i class="icon-plus-sign"></i> Add</a></li>
 		</ul>
 
-	<%if (demographic!=null) { %>
+<%if (scope==null) {
+	if (demographic!=null) { %>
 		<div class="alert alert-info">
 			Any changes made to this flowsheet will be applied to this patient <strong><%=demo.getLastName()%>, <%=demo.getFirstName()%></strong> for you only.
 		</div>
-	 <%}else{%>
+	<%}else{%>
 		<div class="alert">
-			Any changes made to this flowsheet will be applied to all of <u>your</u> patients.
+			Any changes made to this flowsheet will be applied to all <u>your</u> patients.
 		</div>
-	 <%}%>
+	<%}
+}else{%>
+		<div class="alert alert-success">
+			Any changes made to this flowsheet will be applied to <u>all</u> clinic patients.
+		</div>
+<%}%>
  
 <div class="tab-content">
 	<div class="tab-pane active" id="home">
@@ -305,15 +336,23 @@ Flowsheet: <span style="font-weight:normal"><%=flowsheet.toUpperCase()%></span>
 		            
 		            if (measurements != null) {
 		                for (String mstring : measurements) {
+		                	
 		               %>
 		                <tr>
 		         		<td>
 		         		<%if(mFlowsheet.getFlowSheetItem(mstring).getPreventionType()!=null){ %>
 		         		<i class="icon-pencil action-icon"  rel="popover" data-container="body"  data-toggle="popover" data-placement="right" data-content="unable to edit a prevention item" data-trigger="hover" title=""></i>
 		                <%}else{%>
-		                <a href="UpdateFlowsheet.jsp?flowsheet=<%=temp%>&measurement=<%=mstring%><%=demographicStr%><%=htQueryString%>" title="Edit" class="action-icon"><i class="icon-pencil"></i></a>
+		                <a href="UpdateFlowsheet.jsp?flowsheet=<%=temp%>&measurement=<%=mstring%><%=demographicStr%><%=htQueryString%><%=scope==null?"":"&scope="+scope%>" title="Edit" class="action-icon"><i class="icon-pencil"></i></a>
 		                <%}%>
-		                <a href="FlowSheetCustomAction.do?method=delete&flowsheet=<%=temp%>&measurement=<%=mstring%><%=demographicStr%><%=htQueryString%>" title="Delete" class="action-icon"><i class="icon-trash"></i></a>
+		                <a href="FlowSheetCustomAction.do?method=delete&flowsheet=<%=temp%>&measurement=<%=mstring%><%=demographicStr%><%=htQueryString%><%=scope==null?"":"&scope="+scope%>" title="Delete" class="action-icon"><i class="icon-trash"></i></a>
+		               <%
+		                if(mFlowsheet.getFlowSheetItem(mstring).isHide()){
+		               %>
+		               	<a href="FlowSheetCustomAction.do?method=restore&flowsheet=<%=temp%>&measurement=<%=mstring%><%=demographicStr%><%=htQueryString%><%=scope==null?"":"&scope="+scope%>">RESTORE</a>
+		               <% } %>
+		                	
+						
 		                </td>
 		                <td><%=counter%></td>
 		                <td><%=mstring%></td>
@@ -357,16 +396,19 @@ Flowsheet: <span style="font-weight:normal"><%=flowsheet.toUpperCase()%></span>
 		     
 		    for (FlowSheetCustomization cust :custList){
 		    	
+		    	if("delete".equals(cust.getAction())) {
+		    		continue;
+		    	}
 		    	
 		    	MeasurementTemplateFlowSheetConfig mfc = MeasurementTemplateFlowSheetConfig.getInstance() ;
 		    	
 		    	FlowSheetItem item = mfc.getItemFromString(cust.getPayload());
 
 		    	try{
-		    	if(item.getMeasurementType()!=null){
-		    	mtype=item.getMeasurementType();
-		    	//out.print(mtype);
-		    	}
+		    		if(item.getMeasurementType()!=null){
+		    			mtype=item.getMeasurementType();
+		    			//out.print(mtype);
+		    		}
 		    	}catch(Exception e){
 	             //do nothing   
 	            }
@@ -389,8 +431,10 @@ Flowsheet: <span style="font-weight:normal"><%=flowsheet.toUpperCase()%></span>
 		       <%} %>
 		       <td><%=cust.getProviderNo()%> </td> <td> 
 		       
-		       <%if(cust.getDemographicNo().equals("0")){ %>
-		       All Patients
+		       <%if(cust.getProviderNo().isEmpty()){ %>
+		       All patients
+		       <%}else if(cust.getDemographicNo().equals("0")){ %>
+		       Your patients
 		       <%}else{ %>
 		       <a href="<%=request.getContextPath() %>/demographic/demographiccontrol.jsp?demographic_no=<%=cust.getDemographicNo()%>&displaymode=edit&dboperation=search_detail" target="_blank"><%=cust.getDemographicNo()%></a>
 		       <%} %>
@@ -419,6 +463,9 @@ Flowsheet: <span style="font-weight:normal"><%=flowsheet.toUpperCase()%></span>
             <input type="hidden" name="method" value="save"/>
             <%if (demographic !=null){%>
                     <input type="hidden" name="demographic" value="<%=demographic%>"/>
+            <%}
+            if (scope !=null){%>
+                    <input type="hidden" name="scope" value="<%=scope%>"/>
             <%}%>
           
 	

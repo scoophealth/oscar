@@ -1,0 +1,121 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="flowsheets.oscarehr.org">
+  <xs:element name="flowsheet">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="indicator" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="key" use="optional"/>
+                <xs:attribute type="xs:string" name="colour" use="optional"/>
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="header" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="item" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType mixed="true">
+                  <xs:sequence>
+                    <xs:element name="rules" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="recommendation" maxOccurs="unbounded" minOccurs="0">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="condition">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute type="xs:string" name="type" use="optional"/>
+                                        <xs:attribute type="xs:string" name="param" use="optional"/>
+                                        <xs:attribute type="xs:string" name="value" use="optional"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute type="xs:string" name="strength" use="optional"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="ruleset" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="rule" maxOccurs="unbounded" minOccurs="0">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="condition" maxOccurs="unbounded" minOccurs="0">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute type="xs:string" name="type" use="optional"/>
+                                        <xs:attribute type="xs:string" name="param" use="optional"/>
+                                        <xs:attribute type="xs:string" name="value" use="optional"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute type="xs:string" name="indicationColor" use="optional"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute type="xs:string" name="measurement_type" use="optional"/>
+                  <xs:attribute type="xs:string" name="display_name" use="optional"/>
+                  <xs:attribute type="xs:string" name="guideline" use="optional"/>
+                  <xs:attribute type="xs:string" name="graphable" use="optional"/>
+                  <xs:attribute type="xs:string" name="value_name" use="optional"/>
+                  <xs:attribute type="xs:string" name="ds_rules" use="optional"/>
+                  <xs:attribute type="xs:string" name="prevention_type" use="optional"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="display_name" use="optional"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="measurement" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="validationRule">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute type="xs:string" name="name" use="optional"/>
+                      <xs:attribute type="xs:string" name="regularExp" use="optional"/>
+                      <xs:attribute type="xs:string" name="maxValue" use="optional"/>
+                      <xs:attribute type="xs:string" name="minValue" use="optional"/>
+                      <xs:attribute type="xs:string" name="isDate" use="optional"/>
+                      <xs:attribute type="xs:string" name="isNumeric" use="optional"/>
+                      <xs:attribute type="xs:string" name="maxLength" use="optional"/>
+                      <xs:attribute type="xs:string" name="minLength" use="optional"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="type" use="optional"/>
+            <xs:attribute type="xs:string" name="typeDesc" use="optional"/>
+            <xs:attribute type="xs:string" name="typeDisplayName" use="optional"/>
+            <xs:attribute type="xs:string" name="measuringInstrc" use="optional"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="name"/>
+      <xs:attribute type="xs:string" name="ds_rules"/>
+      <xs:attribute type="xs:string" name="dxcode_triggers"/>
+      <xs:attribute type="xs:string" name="display_name"/>
+      <xs:attribute type="xs:string" name="warning_colour"/>
+      <xs:attribute type="xs:string" name="recommendation_colour"/>
+      <xs:attribute type="xs:string" name="top_HTML"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+
