@@ -735,4 +735,9 @@ public class TRUENORTHHandler implements MessageHandler {
 	    // TODO Auto-generated method stub
 	    return "";
     }
+    
+    //for OMD validation
+    public boolean isTestResultBlocked(int i, int j) {
+    	return false;
+    }
 }

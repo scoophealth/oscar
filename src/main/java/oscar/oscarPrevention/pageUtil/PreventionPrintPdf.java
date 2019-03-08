@@ -34,7 +34,9 @@ package oscar.oscarPrevention.pageUtil;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -47,9 +49,6 @@ import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
-
-import oscar.OscarProperties;
-import oscar.oscarClinic.ClinicData;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
@@ -66,6 +65,10 @@ import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
+
+import oscar.OscarProperties;
+import oscar.oscarClinic.ClinicData;
+import oscar.oscarPrevention.PreventionDisplayConfig;
 /*
  * @author rjonasz
  */
@@ -96,11 +99,33 @@ public class PreventionPrintPdf {
         printPdf(headerIds, request, response.getOutputStream());
     }
     
-    public void printPdf(String[] headerIds, HttpServletRequest request, OutputStream outputStream) throws IOException, DocumentException{
+    public void printPdf(String[] headerIds1, HttpServletRequest request, OutputStream outputStream) throws IOException, DocumentException{
         
         //make sure we have data to print      
-        if( headerIds == null )
+        if( headerIds1 == null )
             throw new DocumentException();
+        
+        String[] headerIds = null;
+        if("true".equals(request.getParameter("immunizationOnly"))) {
+        	List<String> validIds = new ArrayList<String>();
+        	PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
+        	
+        	for(int x=0;x<headerIds1.length;x++) {
+        		String pHeader = request.getParameter("preventionHeader" + headerIds1[x]);
+        		//check if this is an immunization!
+        		HashMap<String,String> prev = pdc.getPrevention(pHeader);
+        		if(prev != null && prev.get("layout") != null && "injection".equals(prev.get("layout"))) {
+        			validIds.add(headerIds1[x]);
+        		}
+        	}
+        	headerIds = validIds.toArray(new String[validIds.size()]);
+        } else {
+        	headerIds = headerIds1;
+        }
+        
+        if( headerIds1 == null )
+            throw new DocumentException();
+        
         
         String demoNo = request.getParameter("demographicNo");
         DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
@@ -122,7 +147,7 @@ public class PreventionPrintPdf {
                 .append(" HIN: (").append(demo.getHcType()).append(") ").append(demo.getHin()).append(" ").append(demo.getVer());                                                                 
               
         //Header will be printed at top of every page beginning with p2
-        Phrase titlePhrase = new Phrase(16, "Preventions", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 20, Font.BOLD, Color.BLACK));
+        Phrase titlePhrase = new Phrase(16, "Immunizations", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 20, Font.BOLD, Color.BLACK));
         titlePhrase.add(Chunk.NEWLINE);
         titlePhrase.add(new Chunk(demo.getFormattedName(),FontFactory.getFont(FontFactory.HELVETICA, 14, Font.NORMAL, Color.BLACK)));
         titlePhrase.add(Chunk.NEWLINE);         
@@ -203,6 +228,7 @@ public class PreventionPrintPdf {
                 procedureStatus = request.getParameter("preventProcedureStatus" + headerIds[idx] + "-" + subIdx);
                 procedureStatus = readableStatuses.get(procedureStatus);              
                 
+                String providerName = request.getParameter("preventProcedureProvider" + headerIds[idx] + "-"+ subIdx);
                 if( procedureStatus == null ) {
                 	procedureStatus = "N/A";
                 }
@@ -220,6 +246,11 @@ public class PreventionPrintPdf {
                 //Status
                 procedure.add("Status:");
                 procedure.add(new Chunk(procedureStatus, FontFactory.getFont(FontFactory.HELVETICA, 9, Font.NORMAL, Color.BLACK)));
+                procedure.add(Chunk.NEWLINE);
+                
+                //Provider
+                procedure.add("Provider:");
+                procedure.add(new Chunk(providerName, FontFactory.getFont(FontFactory.HELVETICA, 9, Font.NORMAL, Color.BLACK)));
                 procedure.add(Chunk.NEWLINE);
                 
                 String procedureComments = null;

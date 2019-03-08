@@ -379,6 +379,7 @@ public class GDMLHandler implements MessageHandler {
     /**
      *  Methods to get information from observation notes
      */
+/*
     public int getOBXCommentCount(int i, int j){
         int count = 0;
         try{
@@ -414,6 +415,27 @@ public class GDMLHandler implements MessageHandler {
         }
         return getString(comment).replaceAll("\\\\\\.br\\\\", "<br />");
     }
+  */  
+    public int getOBXCommentCount(int i, int j){
+        try {
+            if ( !getOBXComment(i, j, 0).equals("") ){
+                return(1);
+            }else{
+                return(0);
+            }
+        } catch (Exception e) {
+            return(0);
+        }
+    }
+
+    public String getOBXComment(int i, int j, int k){
+        try {
+            return(getString(msg.getRESPONSE(0).getORDER_OBSERVATION(i).getOBSERVATION(j).getNTE(k).getComment(0).getValue()));
+        } catch (Exception e) {
+            return("");
+        }
+    }
+
 
 
     /**
@@ -505,6 +527,13 @@ public class GDMLHandler implements MessageHandler {
     }
 
     public String getPatientLocation(){
+    	try {
+	    	if(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObr39_CollectorSCommentReps() != 0) {
+	            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObr39_CollectorSComment(0).getCe1_Identifier().getValue())); 
+	    	}
+    	}catch(HL7Exception e) {
+    		logger.error("Error",e);
+    	}
         return(getString(msg.getMSH().getSendingFacility().getNamespaceID().getValue()));
     }
 
@@ -728,7 +757,7 @@ public class GDMLHandler implements MessageHandler {
 				}
 				
 				if(hl7Body.equals(new String(base64.decode(l.message.getBytes("ASCII")), "ASCII"))){
-					logger.error("same message ");
+					//logger.error("same message ");
 					break;
 				}
 			}
@@ -745,7 +774,7 @@ public class GDMLHandler implements MessageHandler {
 		return ret;
 	}    
     
-    private ArrayList<String> getMatchingGDMLLabs(String hl7Body) {
+    protected ArrayList<String> getMatchingGDMLLabs(String hl7Body) {
 		Base64 base64 = new Base64(0);
 		ArrayList<String> ret = new ArrayList<String>();
 		int monthsBetween = 0;
@@ -872,4 +901,20 @@ public class GDMLHandler implements MessageHandler {
     		return "";
     	}
     }
+    
+    /*
+     * for OMD validation (imported files)
+     */
+    public boolean isTestResultBlocked(int i, int j){
+        try{
+            Segment obxSeg = (( obrSegMap.get(obrSegKeySet.get(i))).get(j));
+            String status = getString(getComponent(obxSeg, 13, 0, 1));
+
+            return "BLOCKED".equals(status);
+        }catch(Exception e){
+            logger.error("error returning obx identifier", e);
+            return false;
+        }
+    }
+
 }

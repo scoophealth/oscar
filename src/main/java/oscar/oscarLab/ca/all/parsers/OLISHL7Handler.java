@@ -350,8 +350,81 @@ public class OLISHL7Handler implements MessageHandler {
 		}
 		return null;
 	}
+	
+	public String getTestResultStatuses() {
+		List<String> vals = new ArrayList<String>();
+		
+		for(int x=0;x<getOBRCount();x++) {
+			for(int y=0;y<getOBXCount(x);y++) {
+				String value = getOBXField(x, y, 11, 0, 1);
+				if(!vals.contains(value)) {
+					vals.add(value);
+				}
+			}
+		}
+		
+		return StringUtils.join(vals, ',');
+	}
+	
+	public List<String[]> getTestResultInfo() {
+		List<String[]> vals = new ArrayList<String[]>();
+		
+		for(int x=0;x<getOBRCount();x++) {
+			for(int y=0;y<getOBXCount(x);y++) {
+				String type = getOBXField(x,y,2,0,1);
+				String name = getOBXField(x,y,3,0,1);
+				String value = "";
+				if(type.equals("SN")) {
+					value = getOBXField(x,y,5,0,1) +  getOBXField(x,y,5,0,2);
+				} else {
+					value = getOBXField(x,y,5,0,1);
+				}
+				 
+				String units = getOBXField(x,y,6,0,1);
+				String abnormal = getOBXField(x,y,8,0,1);
+				String status = getOBXField(x,y,11,0,1);
+				vals.add(new String[] {name,value,units,abnormal,status});
+			}
+		}
+		
+		return vals;
+	}
+	
+	public String getTestRequestStatuses() {
+		List<String> vals = new ArrayList<String>();
+		
+		for(int x=0;x<getOBRCount();x++) {
+			
+			int i = 1;
+			Segment test;
+			try {
+
+				test = terser.getSegment("/.OBR");
+				while (test != null) {
+					i++;
+					test = (Segment) terser.getFinder().getRoot().get("OBR" + i);
+					if(test != null) {
+						String value =  getString(Terser.get(test, 25, 0, 1, 1));
+						if(!vals.contains(value)) {
+							vals.add(value);
+						}
+					}
+				}
+
+			} catch (Exception e) {
+				// ignore exceptions
+			}
+		
+		}
+		
+		return StringUtils.join(vals, ',');
+	}
 
 	public String getCategoryList() {
+		return getCategoryList(" / ");
+	}
+	
+	public String getCategoryList(String delimeter) {
 		String result = "";
 		ArrayList<String> categories = new ArrayList<String>();
 		for (int i = 0; i < getOBRCount(); i++) {
@@ -361,18 +434,23 @@ public class OLISHL7Handler implements MessageHandler {
 		Arrays.sort(uniqueCategories);
 		int count = 0;
 		for (String category : uniqueCategories) {
-			result += (count++ > 0 ? " / " : "") + category;
+			result += (count++ > 0 ? delimeter : "") + category;
 		}
 		return result;
 	}
 
+	/* Test Request Name */
 	public String getTestList() {
+		return getTestList(" / ");
+	}
+	
+	public String getTestList(String delimeter) {
 		String result = "";
 		String[] uniqueTests = new HashSet<String>(headers).toArray(new String[0]);
 		Arrays.sort(uniqueTests);
 		int count = 0;
 		for (String test : uniqueTests) {
-			result += (count++ > 0 ? " / " : "") + test;
+			result += (count++ > 0 ? delimeter : "") + test;
 		}
 		return result;
 	}
@@ -1257,7 +1335,7 @@ public class OLISHL7Handler implements MessageHandler {
 		}
 	}
 
-	public String getTestResultStatusMessage(char status) {
+	public static String getTestResultStatusMessage(char status) {
 		switch (status) {
 		case 'C':
 			return "Amended";
@@ -1278,7 +1356,7 @@ public class OLISHL7Handler implements MessageHandler {
 		}
 	}
 
-	public String getTestRequestStatusMessage(char status) {
+	public static String getTestRequestStatusMessage(char status) {
 		switch (status) {
 		case 'A':
 			return "Some, but not all, results available";
@@ -1296,6 +1374,29 @@ public class OLISHL7Handler implements MessageHandler {
 			return "Preliminary: A verified early result is available, final results not yet obtained.";
 		case 'X':
 			return "No results available; Order canceled";
+		default:
+			return "";
+		}
+	}
+	
+	public static String getTestRequestStatusMessageShort(char status) {
+		switch (status) {
+		case 'A':
+			return "Partial";
+		case 'C':
+			return "Correction";
+		case 'E':
+			return "Expired";
+		case 'F':
+			return "Final";
+		case 'I':
+			return "Not Available";
+		case 'O':
+			return "Order received";
+		case 'P':
+			return "Preliminary";
+		case 'X':
+			return "No results";
 		default:
 			return "";
 		}
@@ -1500,6 +1601,22 @@ public class OLISHL7Handler implements MessageHandler {
 			} else {
 				Segment obrSeg = (Segment) terser.getFinder().getRoot().get("OBR" + i);
 				timeStamp = formatDateTime(getString(Terser.get(obrSeg, 7, 0, 1, 1)));
+			}
+			return (timeStamp);
+		} catch (Exception e) {
+			return ("");
+		}
+	}
+	
+	public String getLastUpdateDate(int i, int j) {
+		String timeStamp;
+		i++;
+		try {
+			if (i == 1) {
+				timeStamp = formatDateTime(getString(terser.get("/.OBR-22-1")));
+			} else {
+				Segment obrSeg = (Segment) terser.getFinder().getRoot().get("OBR" + i);
+				timeStamp = formatDateTime(getString(Terser.get(obrSeg, 22, 0, 1, 1)));
 			}
 			return (timeStamp);
 		} catch (Exception e) {
@@ -2253,7 +2370,7 @@ public class OLISHL7Handler implements MessageHandler {
 	public String getOrderStatus() {
 		return isCorrected ? "C" : isFinal ? "F" : "P";
 	}
-
+	
 	@Override
 	public String getClientRef() {
 		try {
@@ -2296,6 +2413,47 @@ public class OLISHL7Handler implements MessageHandler {
 		return "";
 	}
 
+	
+	public List<String> getAllPractitioners() {
+		List<String> docs = new ArrayList<String>();
+		
+		try {
+			String ordering = getShortName("/.OBR-16-");
+			String admitting = getShortName("/.OBR-17-");
+			String attending = getShortName("/.OBR-7-");
+			
+			String cc = getShortName("/.OBR-28(0)-");
+			int i = 1;
+			String nextDoc = getShortName("/.OBR-28(" + i + ")-");
+
+			while (!nextDoc.equals("")) {
+				cc = cc + "," + nextDoc;
+				i++;
+				nextDoc = getShortName("/.OBR-28(" + i + ")-");
+			}
+	
+			if(!StringUtils.isEmpty(ordering)) {
+				docs.add(ordering);
+			}
+			if(!StringUtils.isEmpty(admitting)) {
+				docs.add(admitting);
+			}
+			if(!StringUtils.isEmpty(attending)) {
+				docs.add(attending);
+			}
+			if(!StringUtils.isEmpty(cc)) {
+				for(String c : cc.split(",")) {
+					docs.add(c);
+				}
+			}
+			
+		} catch (Exception e) {
+			return new ArrayList<String>();
+		}
+		
+		return docs;
+	}
+	
 	@Override
 	public String getDocName() {
 		try {
@@ -2334,6 +2492,28 @@ public class OLISHL7Handler implements MessageHandler {
 		}
 	}
 
+	public String getTestRequestCode() {
+		try {
+			String code = getString(terser.get("/.OBR-4-1"));
+			return code;
+		} catch (HL7Exception e) {
+			MiscUtils.getLogger().error("OLIS HL7 Error", e);
+		}
+		return "";
+	}
+	
+	public boolean hasAbnormalResult() {
+		for(int x=0;x<getOBRCount();x++) {
+			for(int y=0;y<getOBXCount(x);y++) {
+				if(isOBXAbnormal(x,y)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	
 	@Override
 	public ArrayList<String> getDocNums() {
 		ArrayList<String> nums = new ArrayList<String>();
@@ -2417,6 +2597,7 @@ public class OLISHL7Handler implements MessageHandler {
 		return segments.length - 1;
 	}
 
+	
 	private String getFullDocName(String docSeg) throws HL7Exception {
 		String docName = "";
 		String temp;
@@ -2803,4 +2984,14 @@ public class OLISHL7Handler implements MessageHandler {
 		}
 
 	}
+    
+    //for OMD validation
+    public boolean isTestResultBlocked(int i, int j) { 
+    	int obr = getMappedOBR(i);
+    	if(isOBRBlocked(obr)) {
+    		return true;
+    	}
+       
+    	return false;
+    }
 }
