@@ -129,6 +129,7 @@ public class Hl7textResultsData {
 					abnormal = "N";
 				}
 				String[] refRange = splitRefRange(h.getOBXReferenceRange(i, j));
+				String blocked = h.isTestResultBlocked(i, j) ? "BLOCKED" : null;
 				String comments = "";
 				for (int l = 0; l < h.getOBXCommentCount(i, j); l++) {
 					comments += comments.length() > 0 ? "\n" + h.getOBXComment(i, j, l) : h.getOBXComment(i, j, l);
@@ -260,6 +261,14 @@ public class Hl7textResultsData {
 						me.setVal(refRange[2]);
 						measurementsExtDao.persist(me);
 					}
+				}
+				
+				if (blocked!=null) {
+					me = new MeasurementsExt();
+					me.setMeasurementId(mId);
+					me.setKeyVal("blocked");
+					me.setVal(blocked);
+					measurementsExtDao.persist(me);
 				}
 				
 				me = new MeasurementsExt();

@@ -1023,4 +1023,9 @@ public class TDISHandler implements MessageHandler {
     	
     	return "";
     }
+    
+    //for OMD validation
+    public boolean isTestResultBlocked(int i, int j) {
+    	return false;
+    }
 }
