@@ -12,6 +12,7 @@
         <ViolationValue>/database/mysql/caisi/updates/patch-2007-12-01.sql:) ENGINE=MyISAM DEFAULT CHARSET=latin1;</ViolationValue>
         <ViolationValue>/database/mysql/caisi/updates/patch-2007-12-03(4).sql:) ENGINE=MyISAM DEFAULT CHARSET=latin1;</ViolationValue>
         <ViolationValue>/database/mysql/caisi/updates/patch-2008-02-04.sql:) ENGINE=MyISAM;</ViolationValue>
+        <ViolationValue>/database/mysql/preventionreporting_letters.sql:) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2007-07-17.sql:) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2007-07-25.sql:) ENGINE=MyISAM DEFAULT CHARSET=latin1;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2007-08-16.sql:) ENGINE=MyISAM;</ViolationValue>
@@ -1390,6 +1391,12 @@
         <ViolationValue>/database/mysql/icd9.sql:description varchar(200) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/icd9.sql:icd9 varchar(7) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/measurementMapData.sql:`loinc_code` varchar(20) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/preventionreporting_letters.sql:) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;</ViolationValue>
+        <ViolationValue>/database/mysql/preventionreporting_letters.sql:`archive` char(1) DEFAULT '0',</ViolationValue>
+        <ViolationValue>/database/mysql/preventionreporting_letters.sql:`date_time` datetime DEFAULT NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/preventionreporting_letters.sql:`file_name` varchar(255) DEFAULT NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/preventionreporting_letters.sql:`provider_no` varchar(6) DEFAULT NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/preventionreporting_letters.sql:`report_name` varchar(255) DEFAULT NULL,</ViolationValue>
         <ViolationValue>/database/mysql/updates/hsfo_update_2007_08_31.sql:) ENGINE=InnoDB DEFAULT CHARSET=utf8;</ViolationValue>
         <ViolationValue>/database/mysql/updates/hsfo_update_2007_08_31.sql:`check_flag` tinyint(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/updates/hsfo_update_2007_08_31.sql:`schedule_time` datetime default NULL,</ViolationValue>
@@ -3636,6 +3643,13 @@
         <ViolationValue>/database/mysql/updates/update-2019-02-26.sql:alter table document add abnormal int(1) NOT NULL default '0';</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2019-02-26.sql:alter table document add receivedDate date default NULL;</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2019-03-04.sql:ALTER TABLE drugs modify route varchar(50) default 'PO';</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-08.sql:`active` tinyint(1) DEFAULT NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-08.sql:`archived` tinyint(1) DEFAULT NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-08.sql:`createDate` datetime DEFAULT NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-08.sql:`providerNo` varchar(6) DEFAULT NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-08.sql:`reportName` varchar(255) DEFAULT NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-08.sql:`updateDate` datetime DEFAULT NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-08.sql:`uuid` varchar(50) DEFAULT NULL,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:A1C double(2, 2) default null,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:ABPM bool NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:Ace_RxDecToday enum('Same', 'Increase', 'Decrease', 'Stop', 'Start', 'InClassSwitch', 'null') default null,</ViolationValue>

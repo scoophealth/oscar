@@ -73,13 +73,13 @@
 	</databaseap>
     <databaseap>
         <ap-name>address</ap-name>
-        <ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-        <ap-output>${address} \n${city}, ${province}, ${postal}</ap-output>
+	<ap-sql>SELECT address, city, RIGHT(province,2) AS pro, postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${address} \n${city}, ${pro}, ${postal}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>addressline</ap-name>
-        <ap-sql>SELECT address, city, province, postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-        <ap-output>${address}, ${city}, ${province}, ${postal}</ap-output>
+	<ap-sql>SELECT address, city, RIGHT(province,2) AS pro, postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${address}, ${city}, ${pro}, ${postal}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>address_street_number_and_name</ap-name>
@@ -88,8 +88,8 @@
     </databaseap>
     <databaseap>
         <ap-name>province</ap-name>
-        <ap-sql>SELECT province FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-        <ap-output>${province}</ap-output>
+	<ap-sql>SELECT RIGHT(province,2) AS pro FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${pro}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>city</ap-name>
