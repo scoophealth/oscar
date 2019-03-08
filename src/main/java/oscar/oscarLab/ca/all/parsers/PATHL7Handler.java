@@ -761,4 +761,9 @@ public class PATHL7Handler implements MessageHandler {
 		return result;
 	}
     
+    //for OMD validation
+    public boolean isTestResultBlocked(int i, int j) {
+    	return false;
+    }
+    
 }

@@ -310,6 +310,7 @@ public class LabResultData implements Comparable<LabResultData> {
 			if(time == null) {
 				return null;
 			}
+			time = time.trim();
 			String dateFormat = "yyyy-MM-dd HH:mm:ss".substring( 0, time.length() );
 			this.dateTimeObr = UtilDateUtilities.getDateFromString(time, dateFormat);
 		}else if(CML.equals(this.labType)){

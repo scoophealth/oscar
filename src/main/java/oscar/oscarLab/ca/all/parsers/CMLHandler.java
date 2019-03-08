@@ -145,6 +145,14 @@ public class CMLHandler implements MessageHandler {
         }
     }
 
+    public String getOBXBlocked(int i, int j){
+        try{
+            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getUserDefinedAccessChecks().getValue()));
+        }catch(Exception e){
+            return("");
+        }
+    }
+
     public String getObservationHeader(int i, int j){
         try{
             return (getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),4,0,1,1))+" "+
@@ -625,5 +633,21 @@ public class CMLHandler implements MessageHandler {
     }
     public String getNteForPID() {
     	return "";
+    }
+    
+    
+    
+    /*
+     * for OMD validation (imported files)
+     */
+    public boolean isTestResultBlocked(int i, int j){
+        try{
+            String status = getOBXBlocked(i, j);
+            return "BLOCKED".equals(status);
+            
+        }catch(Exception e){
+            logger.error("error returning obx identifier", e);
+            return false;
+        }
     }
 }
