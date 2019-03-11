@@ -863,6 +863,15 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
        </oscar:newUnclaimedLab>
    </li>
   </security:oscarSec>
+  
+<security:oscarSec roleName="<%=roleName$%>" objectName="_hrm,_admin.hrm,_hrm.administrator" rights="r">
+   <li>
+       <a HREF="#" ONCLICK ="popupInboxManager('../hospitalReportManager/inbox.jsp', 'HRM');return false;" TITLE='View HRM Reports'>
+	  	HRM
+       </a>
+   </li>
+  </security:oscarSec>
+
 </oscar:oscarPropertiesCheck>
 
  </caisi:isModuleLoad>

@@ -482,7 +482,7 @@ public class ProviderDao extends HibernateDaoSupport {
         
         public List<Provider> getBillableProvidersOnTeam(Provider p) {                        
             
-            List<Provider> providers = this.getHibernateTemplate().find("from Provider p where status='1' and ohip_no!='' and p.team=? order by last_name, first_name", p.getTeam());            
+            List<Provider> providers = this.getHibernateTemplate().find("from Provider p where status='1' and ohip_no!='' and p.Team=? order by last_name, first_name", p.getTeam());            
             
             return providers;
         }

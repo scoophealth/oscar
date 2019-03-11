@@ -9291,6 +9291,16 @@ CREATE TABLE `HRMDocument` (
   `sourceFacility` varchar(120) ,
   `hrmCategoryId` int ,
   `description` varchar(255),
+  `formattedName` varchar(100),
+  `dob` varchar(10),
+  `gender` varchar(1),
+  `hcn` varchar(20),
+  `recipientId` varchar(15),
+  `recipientName` varchar(255),
+  `recipientProviderNo` varchar(25),
+  `className` varchar(255),
+  `subClassName` varchar(255),
+  `sourceFacilityReportNo` varchar(100),
   PRIMARY KEY (`id`)
 ) ;
 
@@ -12306,6 +12316,36 @@ CREATE TABLE DHIRSubmissionLog (
     clientRequestId varchar(100),
     clientResponseId varchar(100),
     PRIMARY KEY(id)
+);
+
+
+create table HrmLog (
+  id int(11) auto_increment,
+  started timestamp not null,
+  initiatingProviderNo varchar(25),
+  transactionType varchar(25),
+  externalSystem varchar(50),
+  error varchar(255),
+  connected tinyint(1), 
+  downloadedFiles tinyint(1), 
+  numFilesDownloaded int,
+  deleted tinyint(1), 
+  PRIMARY KEY(id)
+);
+
+create table HrmLogEntry (
+  id int(11) auto_increment,
+  hrmLogId int(11),
+  encryptedFileName varchar(255),
+  decrypted tinyint(1), 
+  decryptedFileName varchar(255),
+  filename varchar(255),
+  error varchar(255),
+  parsed tinyint(1),
+  recipientId varchar(100),
+  recipientName varchar(255),
+  distributed tinyint(1),
+  PRIMARY KEY(id)
 );
 
 CREATE TABLE consultationRequestsArchive (

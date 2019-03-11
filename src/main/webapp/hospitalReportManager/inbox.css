@@ -1,0 +1,215 @@
+/**
+
+    Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+    This software is published under the GPL GNU General Public License.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+    This software was written for the
+    Department of Family Medicine
+    McMaster University
+    Hamilton
+    Ontario, Canada
+
+**/
+
+@CHARSET "UTF-8";
+
+@MEDIA print {
+	body {margin:0; padding:0; line-height: 1em; word-spacing:1px; letter-spacing:0.2px; 
+		font: 11px Arial, Helvetica,"Lucida Grande", serif; color: #000; background-image:none; }
+	#logo, tfoot, #catnavi, .topnavi, .more-link, .navigation, #sidebartop, #related, 
+	#social, #sponsors, .tabs, #allpost, .toolbar, .splitbox, 
+	#commentform, #commentabs .idTabs, .postmeta-content .comments, 
+	#respond h3, .tag, .footerlinks {display:none;}
+	
+	.donotprint, .dataTables_length, .dataTables_filter, .dataTables_info, .dataTables_paginate {
+		display:none;
+	}
+	
+	table {
+	  border-collapse: collapse;
+	}
+	
+	table th {
+		font: 13px Arial, Helvetica,"Lucida Grande", serif;
+	}
+	
+	table td, table th {
+		padding:0px;
+		margin:0px;
+	}
+	
+	.printonly {
+	 	display:block;
+  	}
+}
+
+@MEDIA screen {
+	
+	.indicatorHeading div {
+		min-height: 40px !important;
+		text-align: left !important;	
+	}
+
+	.glyphicon-refresh-animate {
+	    -animation: spin .7s infinite linear;
+	    -webkit-animation: spin2 .7s infinite linear;
+	    margin:0px !important;
+		padding:0px !important;
+    	height:17px !important;
+	}
+	
+	@-webkit-keyframes spin2 {
+	    from { -webkit-transform: rotate(0deg);}
+	    to { -webkit-transform: rotate(360deg);}
+	}
+	
+	@keyframes spin {
+	    from { transform: scale(1) rotate(0deg);}
+	    to { transform: scale(1) rotate(360deg);}
+	}
+	
+	.printonly {
+		display: none;
+	}
+	
+	#libraryTable_length, #drilldownTable_length {
+		float: left;
+	}
+	
+	@-moz-document url-prefix () {
+		fieldset { 
+			display:table-cell; 
+		}
+	}
+	
+	.indicatorDefinition {
+		height: 100px;
+		overflow-y: hidden;
+	}
+	
+	.img-responsive {
+		display: block;
+		height: auto;
+		max-width: 100%;
+	}
+	
+	.indicatorWrapper {
+		border: thin solid #F5F5F5;
+		border-radius: 5px;
+		margin: 0.5%;
+	}
+	
+	.indicatorHeading {
+		border-bottom: thin solid #F5F5F5;
+		background-color: #F5F5F5;
+		margin-bottom: 5px;
+	}
+	
+	.indicatorFooter {
+		margin-top: 5px;
+		border-top: thin solid #F5F5F5;
+		background-color: #F5F5F5;
+	}
+	
+	.navbar {
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+	
+	.content {
+		margin-top: 50px;
+	}
+	
+	#libraryTableContainer {
+		margin-top: 80px;
+	}
+
+	.switch {
+		position: relative;
+		display: inline-block;
+		width: 60px;
+		height: 34px;
+	}
+	
+
+	.switch input {
+		display: none;
+	}
+	
+
+	.slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #ccc;
+		-webkit-transition: .4s;
+		transition: .4s;
+	}
+	
+	.slider:before {
+		position: absolute;
+		content: "";
+		height: 26px;
+		width: 26px;
+		left: 4px;
+		bottom: 4px;
+		background-color: white;
+		-webkit-transition: .4s;
+		transition: .4s;
+	}
+	
+	input:checked+.slider {
+		background-color: #2196F3;
+	}
+	
+	input:focus+.slider {
+		box-shadow: 0 0 1px #2196F3;
+	}
+	
+	input:checked+.slider:before {
+		-webkit-transform: translateX(26px);
+		-ms-transform: translateX(26px);
+		transform: translateX(26px);
+	}
+	
+	.slider.round {
+		border-radius: 34px;
+	}
+	
+	.slider.round:before {
+		border-radius: 50%;
+	}
+	
+	table.dataTable tfoot th, table.dataTable tfoot td {
+		padding:5px 0px !important;
+	}
+	
+	#actionMenu, #actionMenu .btn {
+		padding:0px !important;
+		margin:0px !important;
+	}
+	
+	.dataTables_wrapper .dataTables_filter input {
+	    margin-left: 0 !important;
+	  }
+	
+	form.inlineForm {
+		display: inline;
+	}
+}

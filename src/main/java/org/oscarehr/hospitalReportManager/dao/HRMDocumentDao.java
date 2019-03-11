@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.dao.AbstractDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocument;
 import org.springframework.stereotype.Repository;
@@ -124,4 +125,69 @@ public class HRMDocumentDao extends AbstractDao<HRMDocument> {
 		return documents;
     }
 	
+	public List<HRMDocument> findByKey(String sourceFacility, String sourceFacilityReportNo, String deliverToId) {
+		String sql = "select x from " + this.modelClass.getName() + " x where x.sourceFacility=? AND x.sourceFacilityReportNo = ? AND x.recipientId = ?";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, sourceFacility);
+		query.setParameter(2, sourceFacilityReportNo);
+		query.setParameter(3, deliverToId);
+		
+		@SuppressWarnings("unchecked")
+		List<HRMDocument> documents = query.getResultList();
+		return documents;
+    }
+	
+	
+	public List<HRMDocument> query(String providerNo, boolean providerUnmatched, boolean noSignOff, boolean demographicUnmatched, int start, int length, String orderColumn, String orderDirection) {
+		
+		String sql = "select x from " + this.modelClass.getName() + " x   ";
+
+	//	if(providerNo != null || providerUnmatched) {
+			sql += " inner JOIN x.matchedProviders p ";
+	//	} 
+		
+		sql += " WHERE x.parentReport IS NULL  ";
+		
+		if(demographicUnmatched) {
+			sql = sql + " AND SIZE(x.matchedDemographics) = 0 ";
+		}
+		
+		if(providerUnmatched) {
+			sql += "  AND p.providerNo = :pNo ";
+		} else {
+			if(providerNo != null) {
+				sql += "  AND p.providerNo = :pNo ";
+			}
+			if(noSignOff) {
+				sql += " AND p.signedOff = 0" ;
+			}
+		}
+		
+		
+		if(!StringUtils.isEmpty(orderColumn)) {
+			sql = sql + " ORDER BY x." + orderColumn + " " + orderDirection;
+		}
+		
+		
+		Query query = entityManager.createQuery(sql);
+		if(providerNo != null || providerUnmatched) {
+			
+		}
+		
+		if(providerUnmatched) {
+			query.setParameter("pNo", "-1");
+		} else {
+			if(providerNo != null) {
+				query.setParameter("pNo", providerNo);
+			}
+		}
+		
+	
+		query.setFirstResult(start);
+		query.setMaxResults(length);
+		
+		@SuppressWarnings("unchecked")
+		List<HRMDocument> documents = query.getResultList();
+		return documents;
+	}
 }
