@@ -275,6 +275,8 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/ClinicalReportManager.java:List&lt;Numerator&gt; numeratorList = null ; //new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator.java://           Collection v = ect.getMeasurementsDataVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator2.java://           Collection v = ect.getMeasurementsDataVector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator4.java://           Collection v = ect.getMeasurementsDataVector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator5.java://           Collection v = ect.getMeasurementsDataVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/PageUtil/RunClinicalReportAction.java:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/PageUtil/RunClinicalReportAction.java:arrList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/ReportEvaluator.java:Collection&lt;EctMeasurementsDataBean&gt; v = ect.getMeasurementsDataVector();</ViolationValue>
@@ -407,8 +409,6 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxWriteScriptAction.java:List&lt;Integer&gt; allIndex = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxWriteScriptAction.java:List&lt;Integer&gt; existingIndex = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxWriteScriptAction.java:List&lt;RxPrescriptionData.Prescription&gt; listRxDrugs = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxWriteScriptAction.java:List&lt;String&gt; paramList = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxWriteScriptAction.java:List&lt;String&gt; randNum = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Hashtable retHash = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector params = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = new Vector();</ViolationValue>
@@ -659,6 +659,7 @@
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable rep = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable repNum = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Vector&lt;EctMeasurementTypesBean&gt; vec = hd.getMeasurementTypeVector();</ViolationValue>
+        <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:arrRepNum[x] = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportBCARDemo2.jsp:Vector vecARCaption = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportBCARDemo2.jsp:Vector vecDateFormat = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportBCARDemo2.jsp:Vector vecFieldCaption = new Vector();</ViolationValue>
@@ -2044,6 +2045,26 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator2.java:public Hashtable getOutputValues() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator2.java:public Hashtable getReplaceableValues() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator2.java:public void setReplaceableValues(Hashtable vals) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator3.java:Hashtable outputValues = null;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator3.java:Hashtable replaceableValues = null;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator3.java:import java.util.Hashtable;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator3.java:public Hashtable getOutputValues() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator3.java:public Hashtable getReplaceableValues() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator3.java:public void setReplaceableValues(Hashtable vals) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator4.java://           Collection v = ect.getMeasurementsDataVector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator4.java:Hashtable outputValues = null;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator4.java:Hashtable replaceableValues = null;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator4.java:import java.util.Hashtable;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator4.java:public Hashtable getOutputValues() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator4.java:public Hashtable getReplaceableValues() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator4.java:public void setReplaceableValues(Hashtable vals) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator5.java://           Collection v = ect.getMeasurementsDataVector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator5.java:Hashtable outputValues = null;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator5.java:Hashtable replaceableValues = null;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator5.java:import java.util.Hashtable;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator5.java:public Hashtable getOutputValues() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator5.java:public Hashtable getReplaceableValues() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator5.java:public void setReplaceableValues(Hashtable vals) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/Numerator.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/Numerator.java:public Hashtable getOutputValues();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/Numerator.java:public Hashtable getReplaceableValues();</ViolationValue>
@@ -2134,6 +2155,7 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:public Vector getTableNameCaption(String tableName)  {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptGroupNameBeanHandler.java:List&lt;RptGroupNameBean&gt; groupNameVector = new ArrayList&lt;RptGroupNameBean&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptGroupNameBeanHandler.java:groupNameVector.add(groupName);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptGroupNameBeanHandler.java:if(!groupNameVector.contains(groupName)) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptGroupNameBeanHandler.java:public Collection getGroupNameVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptGroupNameBeanHandler.java:return groupNameVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:Vector&lt;RptMeasurementTypesBean&gt; measurementTypeVector = new Vector&lt;RptMeasurementTypesBean&gt;();</ViolationValue>
@@ -3082,12 +3104,14 @@
         <ViolationValue>/src/main/webapp/provider/providerupdatepassword.jsp:StringBuffer sbTemp = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/providerupdatepassword.jsp:sbTemp = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:ArrayList&lt;Hashtable&gt; list = (ArrayList) request.getAttribute("list");</ViolationValue>
+        <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable arrRepNum[] = new Hashtable[11];</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable demoHash = deName.getNameAgeSexHashtable(LoggedInInfo.getLoggedInInfoFromSession(request), "" + h.get("_demographic_no"));</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable forView = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable rep = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable repNum = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:String commonRow(String heading,Hashtable demoHash,org.oscarehr.common.model.Demographic demoObj){</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Vector&lt;EctMeasurementTypesBean&gt; vec = hd.getMeasurementTypeVector();</ViolationValue>
+        <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:arrRepNum[x] = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:for (Hashtable h : list) {</ViolationValue>
         <ViolationValue>/src/main/webapp/report/GenerateLetters.jsp:Hashtable h = (Hashtable) list.get(i);%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/report/GenerateLetters.jsp:Hashtable h = deName.getNameAgeSexHashtable(LoggedInInfo.getLoggedInInfoFromSession(request), demos[i]);</ViolationValue>

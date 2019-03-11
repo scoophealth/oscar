@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,37 +21,30 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.common.dao;
 
-package oscar.oscarReport.oscarMeasurements.pageUtil;
-
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import org.oscarehr.common.dao.MeasurementGroupDao;
-import org.oscarehr.common.model.MeasurementGroup;
-import org.oscarehr.util.SpringUtils;
+import javax.persistence.Query;
 
-public class RptGroupNameBeanHandler {
+import org.oscarehr.common.model.PreventionReport;
+import org.springframework.stereotype.Repository;
 
-	List<RptGroupNameBean> groupNameVector = new ArrayList<RptGroupNameBean>();
+@Repository
+public class PreventionReportDao extends AbstractDao<PreventionReport> {
 
-	public RptGroupNameBeanHandler() {
-		init();
+	public PreventionReportDao() {
+		super(PreventionReport.class);
 	}
+    
+    public List<PreventionReport> getPreventionReports() {
+    	String sql = "select x from "+modelClass.getSimpleName()+" x where x.archived = false order by x.createDate desc";
+    	Query query = entityManager.createQuery(sql);
+   
+        @SuppressWarnings("unchecked")
+        List<PreventionReport> allergies = query.getResultList();
+        return allergies;
+    }
 
-	public boolean init() {
-		MeasurementGroupDao dao = SpringUtils.getBean(MeasurementGroupDao.class);
-		for (MeasurementGroup mg : dao.findAll()) {
-			RptGroupNameBean groupName = new RptGroupNameBean(mg.getName());
-			if(!groupNameVector.contains(groupName)) {
-				groupNameVector.add(groupName);
-			}
-		}
-		return true;
-	}
-
-	public Collection getGroupNameVector() {
-		return groupNameVector;
-	}
+   
 }
