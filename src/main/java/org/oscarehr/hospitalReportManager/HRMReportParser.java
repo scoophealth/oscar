@@ -541,7 +541,6 @@ public class HRMReportParser {
 		HRMDocumentToProviderDao hrmDocumentToProviderDao = (HRMDocumentToProviderDao) SpringUtils.getBean("HRMDocumentToProviderDao");
 		ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao"); 
 
-		//TODO: fix this to be college specific!
 		Provider sendToProvider = null;
 		String collegeId = report.getDeliverToUserId();
 		if(collegeId != null && !StringUtils.isEmpty(collegeId)) {
