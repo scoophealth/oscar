@@ -24,7 +24,6 @@
 
 --%>
 <%@page import="org.oscarehr.util.MiscUtils"%>
-<%@page import="org.oscarehr.caisi_integrator.util.MiscUtils"%>
 <%@page import="org.apache.commons.lang3.StringUtils"%>
 <%@page import="java.util.LinkedList"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
@@ -103,7 +102,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <body>
         <table class="MainTable" id="scrollNumber1" name="encounterTable" style="margin: 0px;width:80%">
             <tr class="topbar">
-                <td class="MainTableTopRowLeftColumn" width="60px"</td>
+                <td class="MainTableTopRowLeftColumn" width="60px"></td>
                 <td class="MainTableTopRowRightColumn">
                     <table class="TopStatusBar">
                         <tr>
