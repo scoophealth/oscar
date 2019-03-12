@@ -8,8 +8,12 @@
  */
 package org.oscarehr.olis.model;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.oscarehr.common.model.AbstractModel;
 
@@ -20,6 +24,9 @@ public class OLISProviderPreferences extends AbstractModel<String> {
 
 	private String startTime;
 
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastRun;
+	
 	@Override
 	public String getId() {
 		return providerId;
@@ -40,6 +47,14 @@ public class OLISProviderPreferences extends AbstractModel<String> {
 	public void setStartTime(String startTime) {
     	this.startTime = startTime;
     }
+
+	public Date getLastRun() {
+		return lastRun;
+	}
+
+	public void setLastRun(Date lastRun) {
+		this.lastRun = lastRun;
+	}
 
 	public OLISProviderPreferences(){
 		super();
