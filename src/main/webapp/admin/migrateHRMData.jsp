@@ -23,6 +23,8 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.MiscUtils"%>
+<%@page import="org.oscarehr.caisi_integrator.util.MiscUtils"%>
 <%@page import="org.apache.commons.lang3.StringUtils"%>
 <%@page import="java.util.LinkedList"%>
 <%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
@@ -136,6 +138,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
         	//loop all HRMDocuments
         	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
         	HRMDocumentDao hrmDocumentDao = SpringUtils.getBean(HRMDocumentDao.class);
+        	boolean result =true;
+        	
         	for(HRMDocument hrmDocument : hrmDocumentDao.findAll() ) {
         		List<Throwable> errors = new ArrayList<Throwable>();
         		String filename = hrmDocument.getReportFile();
@@ -175,13 +179,17 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
         				hrmDocument.setRecipientProviderNo(sendToProvider.getProviderNo());
         			}
         			
+        			hrmDocumentDao.merge(hrmDocument);
         		} else {
-        			//wtf
-        			System.out.println("report is null " + filename);
+        			result=false;
+        			MiscUtils.getLogger().warn("report is null " + filename);
+        			for(Throwable error:errors) {
+        				MiscUtils.getLogger().error("Error",error);
+        			}
         		}
         	}
         	
-        	boolean result =true;
+        	
         	if(result) {
         		%><h4>Changes were successful</h4><%
         	} else {
