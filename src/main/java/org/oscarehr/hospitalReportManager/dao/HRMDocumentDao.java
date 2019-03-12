@@ -9,6 +9,7 @@
 
 package org.oscarehr.hospitalReportManager.dao;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -149,6 +150,12 @@ public class HRMDocumentDao extends AbstractDao<HRMDocument> {
 	
 	public List<HRMDocument> query(String providerNo, boolean providerUnmatched, boolean noSignOff, boolean demographicUnmatched, int start, int length, String orderColumn, String orderDirection) {
 		
+		if(!orderColumn.equals("formattedName") && !orderColumn.equals("dob") ) {
+			return new ArrayList<HRMDocument>();
+		}
+		if(!orderDirection.equalsIgnoreCase("ASC") && !orderDirection.equalsIgnoreCase("DESC")) {
+			return new ArrayList<HRMDocument>();
+		}
 		String sql = "select x from " + this.modelClass.getName() + " x   ";
 
 	//	if(providerNo != null || providerUnmatched) {
