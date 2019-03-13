@@ -423,7 +423,7 @@ public class CreateHRMFile {
             if (report.getMessageUniqueID()!=null) transactionInfo.setMessageUniqueID(report.getMessageUniqueID());
             else transactionInfo.setMessageUniqueID("");
             transactionInfo.setDeliverToUserID("");
-            PersonNameSimple physician = transactionInfo.addNewPhysician();
+   //         PersonNameSimple physician = transactionInfo.addNewPhysician();
         }
     }
 

@@ -2692,7 +2692,8 @@
 		</action>
 		<action path="/hospitalReportManager/HRMDownloadFile" type="org.oscarehr.hospitalReportManager.HRMDownloadFileAction" />
 		
-
+		<action path="/hospitalReportManager/hrm" type="org.oscarehr.hospitalReportManager.v2018.HRMAction" parameter="method">		
+		</action>
 
 		<action path="/caseload/CaseloadContent" scope="request" type="org.oscarehr.caseload.CaseloadContentAction" parameter="method" />
 

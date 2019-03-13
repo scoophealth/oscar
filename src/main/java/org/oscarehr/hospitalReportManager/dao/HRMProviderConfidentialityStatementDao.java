@@ -33,6 +33,13 @@ public class HRMProviderConfidentialityStatementDao extends AbstractDao<HRMProvi
 			return "";
 		}
 	}
+	
+	public HRMProviderConfidentialityStatement findByProvider(String providerNo) {
+		String sql = "select x from " + this.modelClass.getName() + " x where x.providerNo=?";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, providerNo);
+		return this.getSingleResultOrNull(query);
+	}
 
 
 }

@@ -548,7 +548,7 @@
 		<dependency>
 			<groupId>cds</groupId>
 			<artifactId>cds_hrm</artifactId>
-			<version>1.0</version>
+			<version>4.3.1</version>
 		</dependency>
 
 		<!-- HRM module -->

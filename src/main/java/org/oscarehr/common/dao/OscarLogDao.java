@@ -100,12 +100,12 @@ public class OscarLogDao extends AbstractDao<OscarLog> {
     public List<OscarLog> findByAction(String action, int start, int length, String orderBy, String orderByDirection) {
     	if(!"asc".equalsIgnoreCase(orderByDirection) && !"desc".equalsIgnoreCase(orderByDirection)) {
     		return new ArrayList<OscarLog>();
-    	}
-    	
+    	}	
     	if(!"id".equals(orderBy) && !"created".equals(orderBy) && !"providerNo".equals(orderBy) && !"action".equals(orderBy) && !"content".equals(orderBy) &&
     			!"contentId".equals(orderBy) && !"ip".equals(orderBy) && !"demographicId".equals(orderBy) && !"data".equals(orderBy) && !"securityId".equals(orderBy)) {
-    		return new ArrayList<OscarLog>();
+    		return new ArrayList<OscarLog>();	
     	}
+
     	String sqlCommand="select x from "+modelClass.getSimpleName()+" x where x.action = ?1 order by x."+orderBy+" " + orderByDirection;
     	Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, action);

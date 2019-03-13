@@ -896,7 +896,7 @@ if(temp.equals("diab2") || temp.equals("chf")) {
 		code = "428";
 	DrugReasonDao drugReasonDao = SpringUtils.getBean(DrugReasonDao.class);
 	DrugDao drugDao = SpringUtils.getBean(DrugDao.class);
-	List<DrugReason> reasons = drugReasonDao.getReasonsByIcd9CodeAndDemographicNo(code,demographic_no);
+	List<DrugReason> reasons = drugReasonDao.getReasonsByIcd9CodeAndDemographicNo(code,Integer.parseInt(demographic_no));
 	//group them by drug
 	Map<String,Drug> uniqueDrugs = new HashMap<String,Drug>();
 	List<Drug> allDrugs = new ArrayList<Drug>();
