@@ -21,33 +21,28 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.hospitalReportManager.dao;
+package org.oscarehr.common.dao;
 
-import static org.junit.Assert.assertNotNull;
+import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.oscarehr.common.dao.DaoTestFixtures;
-import org.oscarehr.common.dao.utils.EntityDataGenerator;
-import org.oscarehr.common.dao.utils.SchemaUtils;
-import org.oscarehr.hospitalReportManager.model.HRMDocument;
-import org.oscarehr.util.SpringUtils;
+import javax.persistence.Query;
 
-public class HRMDocumentDaoTest extends DaoTestFixtures {
+import org.oscarehr.common.model.HrmLogEntry;
+import org.springframework.stereotype.Repository;
 
-	public HRMDocumentDao dao = SpringUtils.getBean(HRMDocumentDao.class);
+@Repository
+public class HrmLogEntryDao  extends AbstractDao<HrmLogEntry> {
 
-
-	@Before
-	public void before() throws Exception {
-		SchemaUtils.restoreTable("HRMDocument","HRMDocumentSubClass","HRMDocumentToDemographic","HRMDocumentToProvider");
+	public HrmLogEntryDao() {
+		super(HrmLogEntry.class);
 	}
-
-	@Test
-	public void testCreate() throws Exception {
-		HRMDocument entity = new HRMDocument();
-		EntityDataGenerator.generateTestDataForModelClass(entity);
-		dao.persist(entity);
-		assertNotNull(entity.getId());
-	}
+	
+	@SuppressWarnings("unchecked")
+    public List<HrmLogEntry> findByHrmLogId(int hrmLogId) {
+		Query query = entityManager.createQuery("FROM HrmLogEntry d where d.hrmLogId=?1");
+		query.setParameter(1, hrmLogId);
+		
+	    return query.getResultList();
+    }
+	
 }

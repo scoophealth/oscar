@@ -953,14 +953,11 @@ String curProvider_no = (String)session.getAttribute("user");
 						key="admin.admin.btnAuditLogPurge" /></a></li>
 						
 					<li><a href='javascript:void(0);'
-						class="xlink" rel="${ctx}/admin/upgradeRosterData.jsp">
-							Upgrade Roster Data
-						</a></li>
-						
-					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/migrateCustomAllergyNonDrug.jsp">
 							Bulk set Custom Allergy Non-Drug flag
 						</a></li>
+						
+					
 				</ul>
 				
 				</div>
@@ -1054,6 +1051,16 @@ String curProvider_no = (String)session.getAttribute("user");
 				<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/migrateToNewContacts.jsp"><bean:message key="admin.admin.updates.migrate_newcontacts"/></a></li>
 						
+				<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/upgradeRosterData.jsp">
+							Upgrade Roster Data
+						</a></li>
+						
+				<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/migrateHRMData.jsp">
+							Migrate HRM Data
+						</a></li>
+								
 				</ul>
 				</div>
 				</div>

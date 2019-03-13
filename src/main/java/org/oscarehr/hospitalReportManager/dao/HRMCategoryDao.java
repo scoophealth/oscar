@@ -54,4 +54,14 @@ public class HRMCategoryDao extends AbstractDao<HRMCategory> {
 	    }
 	}
 	
+	public List<HRMCategory> search(String q) {
+		String sql = "select x from " + this.modelClass.getName() + " x WHERE x.categoryName LIKE ?1 OR x.subClassNameMnemonic LIKE ?2";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, q + "%");
+		query.setParameter(2, q + "%");
+		
+		@SuppressWarnings("unchecked")
+		List<HRMCategory> documents = query.getResultList();
+		return documents;
+	}
 }

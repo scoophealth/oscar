@@ -64,11 +64,11 @@ public class HRMDisplayReportAction extends DispatchAction {
         	throw new SecurityException("missing required security object (_hrm)");
         }
 		
-		if (hrmDocumentId != null) {
-                    HRMDocument document = hrmDocumentDao.findById(Integer.parseInt(hrmDocumentId)).get(0);
+		if (hrmDocumentId != null && !hrmDocumentId.isEmpty()) {
+                    HRMDocument document = hrmDocumentDao.find(Integer.parseInt(hrmDocumentId));
 
                     if (document != null) {
-                        logger.debug("reading repotFile : "+document.getReportFile());
+                        logger.debug("reading reportFile : "+document.getReportFile());
                         HRMReport report = HRMReportParser.parseReport(loggedInInfo, document.getReportFile());
                         
                         request.setAttribute("hrmDocument", document);
@@ -83,9 +83,11 @@ public class HRMDisplayReportAction extends DispatchAction {
                             HRMDocumentToDemographic demographicLink = (demographicLinkList.size() > 0 ? demographicLinkList.get(0) : null);
                             request.setAttribute("demographicLink", demographicLink);
 
+                            //TODO: need to support multiples here
                             List<HRMDocumentToProvider> providerLinkList = hrmDocumentToProviderDao.findByHrmDocumentIdNoSystemUser(document.getId().toString());
                             request.setAttribute("providerLinkList", providerLinkList);
 
+                            //this is the accompanying sub-class list for DI reports. 
                             List<HRMDocumentSubClass> subClassList = hrmDocumentSubClassDao.getSubClassesByDocumentId(document.getId());
                             request.setAttribute("subClassList", subClassList);
 
@@ -96,35 +98,22 @@ public class HRMDisplayReportAction extends DispatchAction {
                                 thisProviderLink.setViewed(1);
                                 hrmDocumentToProviderDao.merge(thisProviderLink);
                             }
-
-                            HRMDocumentSubClass hrmDocumentSubClass=null;
-                            if (subClassList!= null)
-                            {
-                            	for (HRMDocumentSubClass temp : subClassList)
-                            	{
-                            		if (temp.isActive())
-                            		{
-                            			hrmDocumentSubClass=temp;
-                            			break;
-                            		}
-                            	}
-                            }
                             
                             HRMCategory category = null;
-                            if (hrmDocumentSubClass != null) {
-                                category = hrmCategoryDao.findBySubClassNameMnemonic(hrmDocumentSubClass.getSubClass()+':'+hrmDocumentSubClass.getSubClassMnemonic());
+                            if(document.getHrmCategoryId() != null) {
+                            	category = hrmCategoryDao.find(document.getHrmCategoryId());
                             }
-                            else
-                            {
-                            	category=hrmCategoryDao.findBySubClassNameMnemonic("DEFAULT");
-                            }
-                            
+                           
                             request.setAttribute("category", category);                            
 
-                            // Get all the other HRM documents that are either a child, sibling, or parent
-                            List<HRMDocument> allDocumentsWithRelationship = hrmDocumentDao.findAllDocumentsWithRelationship(document.getId());
-                            request.setAttribute("allDocumentsWithRelationship", allDocumentsWithRelationship);
+                            
+                            
+                            // Get all the other HRM documents that are either a child, sibling, or parent. Marc: not sure how this works
+                           // List<HRMDocument> allDocumentsWithRelationship = hrmDocumentDao.findAllDocumentsWithRelationship(document.getId());
+                           // request.setAttribute("allDocumentsWithRelationship", allDocumentsWithRelationship);
 
+                            request.setAttribute("children", hrmDocumentDao.getAllChildrenOf(document.getId()));
+                            request.setAttribute("parent", document.getParentReport() != null ? hrmDocumentDao.find(document.getParentReport()) : null);
 
                             List<HRMDocumentComment> documentComments = hrmDocumentCommentDao.getCommentsForDocument(Integer.parseInt(hrmDocumentId));
                             request.setAttribute("hrmDocumentComments", documentComments);
@@ -133,6 +122,7 @@ public class HRMDisplayReportAction extends DispatchAction {
                             String confidentialityStatement = hrmProviderConfidentialityStatementDao.getConfidentialityStatementForProvider(loggedInInfo.getLoggedInProviderNo());
                             request.setAttribute("confidentialityStatement", confidentialityStatement);
                             
+                            //return report dates, and time received of the duplicates
                             String duplicateLabIdsString=StringUtils.trimToNull(request.getParameter("duplicateLabIds"));
                             Map<Integer,Date> dupReportDates = new HashMap<Integer,Date>();
                             Map<Integer,Date> dupTimeReceived = new HashMap<Integer,Date>();
