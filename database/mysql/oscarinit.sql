@@ -12342,6 +12342,7 @@ CREATE TABLE OLISQueryLog (
     requestingHIC varchar(30),
     demographicNo integer,
     PRIMARY KEY(id)
+);
 
 create table HrmLog (
   id int(11) auto_increment,
