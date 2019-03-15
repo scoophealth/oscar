@@ -150,6 +150,7 @@
         <ViolationValue>/src/main/java/oscar/oscarDemographic/PrintDemoAddressLabelAction.java:HashMap parameters = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:static Hashtable hashtable = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction4.java:List c = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/immunization/config/data/EctImmImmunizationSetData.java:createDateVec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/immunization/config/data/EctImmImmunizationSetData.java:setIdVec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/immunization/config/data/EctImmImmunizationSetData.java:setNameVec = new Vector();</ViolationValue>
@@ -1518,6 +1519,7 @@
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:public Hashtable getNameAgeSexHashtable(LoggedInInfo loggedInInfo, String demoNo){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:static Hashtable hashtable = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/Util.java:tzd = new StringBuffer(tzd).insert(tzd.length()-2, ":").toString();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctSplitChart.java:Vector&lt;String[]&gt; vec = new Vector&lt;String[]&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctSplitChart.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctSplitChart.java:public Vector&lt;String[]&gt; getSplitCharts(String demographicNo) {</ViolationValue>

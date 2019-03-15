@@ -25,6 +25,7 @@
 
 package oscar.oscarDemographic.pageUtil;
 
+import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -36,6 +37,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,8 +45,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
@@ -53,6 +57,8 @@ import java.util.zip.ZipInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -64,10 +70,13 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
+import org.codehaus.jettison.json.JSONObject;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
+import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
@@ -76,36 +85,51 @@ import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.AdmissionDao;
 import org.oscarehr.common.dao.AllergyDao;
+import org.oscarehr.common.dao.AppointmentStatusDao;
+import org.oscarehr.common.dao.ContactDao;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
+import org.oscarehr.common.dao.DemographicPharmacyDao;
+import org.oscarehr.common.dao.DocumentExtraReviewerDao;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.DrugReasonDao;
 import org.oscarehr.common.dao.MeasurementsExtDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.PartialDateDao;
+import org.oscarehr.common.dao.PharmacyInfoDao;
 import org.oscarehr.common.dao.ProviderDataDao;
 import org.oscarehr.common.dao.ProviderLabRoutingDao;
 import org.oscarehr.common.model.Admission;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
+import org.oscarehr.common.model.AppointmentStatus;
+import org.oscarehr.common.model.Contact;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
+import org.oscarehr.common.model.DemographicPharmacy;
+import org.oscarehr.common.model.DocumentExtraReviewer;
 import org.oscarehr.common.model.Drug;
+import org.oscarehr.common.model.DrugReason;
 import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.MeasurementsExt;
 import org.oscarehr.common.model.PartialDate;
+import org.oscarehr.common.model.PharmacyInfo;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.hospitalReportManager.HRMReport;
+import org.oscarehr.hospitalReportManager.HRMReportParser;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentCommentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentSubClassDao;
 import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentToProviderDao;
 import org.oscarehr.hospitalReportManager.model.HRMDocument;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentComment;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentSubClass;
 import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentToProvider;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -122,35 +146,48 @@ import ca.uhn.hl7v2.model.v23.datatype.XTN;
 import ca.uhn.hl7v2.model.v23.group.ORU_R01_ORDER_OBSERVATION;
 import ca.uhn.hl7v2.model.v23.message.ORU_R01;
 import ca.uhn.hl7v2.model.v23.segment.MSH;
+import ca.uhn.hl7v2.model.v23.segment.NTE;
 import ca.uhn.hl7v2.model.v23.segment.OBR;
 import ca.uhn.hl7v2.model.v23.segment.OBX;
 import ca.uhn.hl7v2.model.v23.segment.PID;
+import ca.uhn.hl7v2.util.Terser;
 import cds.AlertsAndSpecialNeedsDocument.AlertsAndSpecialNeeds;
 import cds.AllergiesAndAdverseReactionsDocument.AllergiesAndAdverseReactions;
 import cds.AppointmentsDocument.Appointments;
 import cds.CareElementsDocument.CareElements;
 import cds.ClinicalNotesDocument.ClinicalNotes;
 import cds.DemographicsDocument.Demographics;
-import cds.DemographicsDocument.Demographics.Enrolment;
+import cds.DemographicsDocument.Demographics.Enrolment.EnrolmentHistory;
+import cds.DemographicsDocument.Demographics.Enrolment.EnrolmentHistory.EnrolledToPhysician;
+import cds.DemographicsDocument.Demographics.PreferredPharmacy;
 import cds.FamilyHistoryDocument.FamilyHistory;
 import cds.ImmunizationsDocument.Immunizations;
 import cds.LaboratoryResultsDocument.LaboratoryResults;
 import cds.LaboratoryResultsDocument.LaboratoryResults.ResultReviewer;
 import cds.MedicationsAndTreatmentsDocument.MedicationsAndTreatments;
+import cds.NewCategoryDocument.NewCategory;
 import cds.OmdCdsDocument;
 import cds.PastHealthDocument.PastHealth;
 import cds.PatientRecordDocument.PatientRecord;
 import cds.PersonalHistoryDocument.PersonalHistory;
 import cds.ProblemListDocument.ProblemList;
-import cds.ReportsReceivedDocument.ReportsReceived;
+import cds.ReportsDocument.Reports;
+import cds.ReportsDocument.Reports.OBRContent;
+import cds.ReportsDocument.Reports.ReportReviewed;
+import cds.ReportsDocument.Reports.SourceAuthorPhysician;
 import cds.RiskFactorsDocument.RiskFactors;
+import cdsDt.AddressType;
+import cdsDt.AdverseReactionType;
 import cdsDt.DateTimeFullOrPartial;
 import cdsDt.DiabetesComplicationScreening.ExamCode;
 import cdsDt.DiabetesMotivationalCounselling.CounsellingPerformed;
+import cdsDt.PersonNamePartQualifierCode;
+import cdsDt.PersonNamePartTypeCode;
+import cdsDt.PersonNameSimple;
 import cdsDt.PersonNameStandard.LegalName;
 import cdsDt.PersonNameStandard.OtherNames;
+import cdsDt.YIndicator;
 import oscar.OscarProperties;
-import oscar.appt.ApptStatusData;
 import oscar.dms.EDocUtil;
 import oscar.oscarDemographic.data.DemographicAddResult;
 import oscar.oscarDemographic.data.DemographicData;
@@ -166,6 +203,8 @@ import oscar.oscarLab.ca.all.util.Utilities;
 import oscar.oscarLab.ca.on.LabResultImport;
 import oscar.oscarPrevention.PreventionData;
 import oscar.oscarProvider.data.ProviderData;
+import oscar.oscarRx.data.RxDrugData;
+import oscar.oscarRx.data.RxDrugData.DrugMonograph;
 import oscar.util.ConversionUtils;
 import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
@@ -219,6 +258,9 @@ import oscar.util.UtilDateUtilities;
     OscarAppointmentDao appointmentDao = (OscarAppointmentDao)SpringUtils.getBean("oscarAppointmentDao");
     ProviderLabRoutingDao providerLabRoutingDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
     MeasurementsExtDao measurementsExtDao = SpringUtils.getBean(MeasurementsExtDao.class);
+    IssueDAO issueDao = SpringUtils.getBean(IssueDAO.class);
+    DemographicContactDao contactDao = (DemographicContactDao) SpringUtils.getBean("demographicContactDao");
+
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception  {
@@ -236,7 +278,7 @@ import oscar.util.UtilDateUtilities;
         }
 
         ImportDemographicDataForm frm = (ImportDemographicDataForm) form;
-        logger.info("import to course id "  + frm.getCourseId() + " using timeshift value " + frm.getTimeshiftInDays());
+        logger.debug("import to course id "  + frm.getCourseId() + " using timeshift value " + frm.getTimeshiftInDays());
         List<Provider> students = new ArrayList<Provider>();
         int courseId = 0;
         if(frm.getCourseId()!=null && frm.getCourseId().length()>0) {
@@ -252,7 +294,7 @@ import oscar.util.UtilDateUtilities;
                 }
             }
         }
-        logger.info("apply this patient to " + students.size() + " students");
+        logger.debug("apply this patient to " + students.size() + " students");
         matchProviderNames = frm.getMatchProviderNames();
         FormFile imp = frm.getImportFile();
         String ifile = tmpDir + imp.getFileName();
@@ -270,6 +312,7 @@ import oscar.util.UtilDateUtilities;
             os.close();
 
             if (matchFileExt(ifile, "zip")) {
+            	saveParts(tmpDir,ifile);
                 ZipInputStream in = new ZipInputStream(new FileInputStream(ifile));
                 boolean noXML = true;
                 ZipEntry entry = in.getNextEntry();
@@ -283,9 +326,14 @@ import oscar.util.UtilDateUtilities;
                     String ofile = tmpDir + entryName;
                     if (matchFileExt(ofile, "xml")) {
                         noXML = false;
-                        OutputStream out = new FileOutputStream(ofile);
-                        while ((len=in.read(buf)) > 0) out.write(buf,0,len);
-                        out.close();
+                        OutputStream out = null;    
+                        try {
+	                        out = new FileOutputStream(ofile);
+	                        while ((len=in.read(buf)) > 0) out.write(buf,0,len);
+	                        out.close();
+	                    } finally {
+	                    	IOUtils.closeQuietly(out);
+	                    }
                         logs.add(importXML(LoggedInInfo.getLoggedInInfoFromSession(request) , ofile, warnings, request,frm.getTimeshiftInDays(),students,courseId));
                         importNo++;
                         demographicNo=null;
@@ -318,9 +366,57 @@ import oscar.util.UtilDateUtilities;
         request.setAttribute("warnings",warnings);
         if (importLog!=null) request.setAttribute("importlog",importLog.getPath());
 
+        resetProviderBean(request);
+        
         return mapping.findForward("success");
     }
 
+    void saveParts(String tmpDir,String ifile) throws Exception {
+    	int len = 0;
+    	byte[] buf = new byte[1024];
+    	
+        ZipInputStream in = new ZipInputStream(new FileInputStream(ifile));
+        ZipEntry entry = in.getNextEntry();
+        String entryDir = "";
+
+        while (entry!=null) {
+            String entryName = entry.getName();
+            if (entry.isDirectory()) 
+            	entryDir = entryName;
+            if (entryName.startsWith(entryDir)) 
+            	entryName = entryName.substring(entryDir.length());
+
+            if(entryName.isEmpty()) {
+            	entry = in.getNextEntry();
+            	continue;
+            }
+            	
+            
+            String ofile = tmpDir + entryName;
+            
+            if (!matchFileExt(ofile, "xml")) {
+                OutputStream out = null;    
+                try {
+                    out = new FileOutputStream(ofile);
+                    while ((len=in.read(buf)) > 0) out.write(buf,0,len);
+                    out.close();
+                } finally {
+                	IOUtils.closeQuietly(out);
+                }
+            }
+            entry = in.getNextEntry();
+        }
+        in.close();
+    }
+    
+    void resetProviderBean(HttpServletRequest request) {
+    	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+    	Properties providerBean = new Properties();
+    	for(Provider p : providerDao.getActiveProviders()) {
+    		providerBean.setProperty(p.getProviderNo(),p.getFormattedName());
+    	}
+    	request.getSession().setAttribute("providerBean", providerBean);
+    }
     String[] importXML(LoggedInInfo loggedInInfo, String xmlFile, ArrayList<String> warnings, HttpServletRequest request, int timeShiftInDays,List<Provider> students, int courseId) throws SQLException, Exception {
         if(students == null || students.isEmpty()) {
             return importXML(loggedInInfo, xmlFile,warnings,request,timeShiftInDays,null,null,0);
@@ -369,8 +465,14 @@ import oscar.util.UtilDateUtilities;
         OmdCdsDocument.OmdCds omdCds=null;
         try {
         	XmlOptions opts = new XmlOptions(); 
+        	List c = new ArrayList();
+        	
+        	opts.setErrorListener(c);
         	opts.setDocumentType(OmdCdsDocument.Factory.newInstance().schemaType()); 
-            omdCds = OmdCdsDocument.Factory.parse(xmlF,opts).getOmdCds();
+        	omdCds = OmdCdsDocument.Factory.parse(xmlF,opts).getOmdCds();
+
+        	omdCds.validate(opts);
+        	
            
         } catch (IOException ex) {logger.error("Error", ex);
         } catch (XmlException ex) {logger.error("Error", ex);
@@ -401,13 +503,17 @@ import oscar.util.UtilDateUtilities;
         }
 
         //other names
-        String legalOtherNameTxt=null, otherNameTxt=null;
+        String  otherNameTxt=null;
 
         LegalName.OtherName[] legalOtherNames = legalName.getOtherNameArray();
+        String middleNames = "";
+        
         for (LegalName.OtherName otherName : legalOtherNames) {
-            if (legalOtherNameTxt==null) legalOtherNameTxt = otherName.getPart();
-            else legalOtherNameTxt += ", "+otherName.getPart();
+            if(otherName.getPartQualifier() == PersonNamePartQualifierCode.CL && otherName.getPartType() == PersonNamePartTypeCode.GIV) {
+            	middleNames += (otherName.getPart() + " ");
+            }
         }
+        middleNames = middleNames.trim();
 
         OtherNames[] otherNames = demo.getNames().getOtherNamesArray();
         for (OtherNames otherName : otherNames) {
@@ -420,7 +526,7 @@ import oscar.util.UtilDateUtilities;
         		otherNameTxt = Util.addLine(mapNamePurpose(otherName.getNamePurpose())+": ", otherNameTxt);
         	}
         }
-        otherNameTxt = Util.addLine(legalOtherNameTxt, otherNameTxt);
+        otherNameTxt = Util.addLine("", otherNameTxt);
 
         String title = demo.getNames().getNamePrefix()!=null ? demo.getNames().getNamePrefix().toString() : "";
         String suffix = demo.getNames().getLastNameSuffix()!=null ? demo.getNames().getLastNameSuffix().toString() : "";
@@ -474,15 +580,19 @@ import oscar.util.UtilDateUtilities;
             }
         } else {
             err_data.add("Error! No Person Status Code");
+        }       
+        
+        EnrolmentHistory[] enrolments =  new EnrolmentHistory[0];
+        if(demo.getEnrolment()!=null) {
+        	enrolments = demo.getEnrolment().getEnrolmentHistoryArray(); 
         }
-
-        Enrolment[] enrolments = demo.getEnrolmentArray();
         int enrolTotal = enrolments.length;
         String[] roster_status=new String[enrolTotal],
         		 roster_date=new String[enrolTotal],
         		 term_date=new String[enrolTotal],
-        		 term_reason=new String[enrolTotal];
-
+        		 term_reason=new String[enrolTotal],
+        		 roster_enrolledTo = new String[enrolTotal];
+        		
         String rosterInfo = null;
         Calendar enrollDate=null, currentEnrollDate=null;
 
@@ -494,6 +604,17 @@ import oscar.util.UtilDateUtilities;
             term_date[i] = getCalDate(enrolments[i].getEnrollmentTerminationDate(), timeShiftInDays);
             if (enrolments[i].getTerminationReason()!=null)
             	term_reason[i] = enrolments[i].getTerminationReason().toString();
+            if(enrolments[i].getEnrolledToPhysician() != null) {
+            	EnrolledToPhysician enrolledToPhysician = enrolments[i].getEnrolledToPhysician();
+            	
+            	HashMap<String,String> personName = getPersonName(enrolledToPhysician.getName());
+                String personOHIP = enrolledToPhysician.getOHIPPhysicianId();
+                if (StringUtils.empty(personName.get("firstname"))) err_data.add("Error! No Enrolled To Physician first name");
+                if (StringUtils.empty(personName.get("lastname"))) err_data.add("Error! No Enrolled To Physician last name");
+                if (StringUtils.empty(personOHIP)) err_data.add("Error! No Enrolled To Physician OHIP billing number");
+               
+                roster_enrolledTo[i] = writeProviderData(personName.get("firstname"), personName.get("lastname"), personOHIP, null);
+            }
 
             //Sort enrolments by date
             if (enrolments[i].getEnrollmentDate()!=null) currentEnrollDate = enrolments[i].getEnrollmentDate();
@@ -510,16 +631,18 @@ import oscar.util.UtilDateUtilities;
                     rosterInfo=roster_date[j];   roster_date[j]=roster_date[i];     roster_date[i]=rosterInfo;
             		rosterInfo=term_date[j];     term_date[j]=term_date[i];         term_date[i]=rosterInfo;
     				rosterInfo=term_reason[j];   term_reason[j]=term_reason[i];     term_reason[i]=rosterInfo;
+    				rosterInfo=roster_enrolledTo[j];	roster_enrolledTo[j]=roster_enrolledTo[i];	roster_enrolledTo[i]=rosterInfo;
                 }
             }
         }
 
-        String rosterStatus=null, rosterDate=null, termDate=null, termReason=null;
+        String rosterStatus=null, rosterDate=null, termDate=null, termReason=null, rosterEnrolledTo=null;
         if (enrolTotal>0) {
         	rosterStatus=roster_status[enrolTotal-1];
         	rosterDate=roster_date[enrolTotal-1];
         	termDate=term_date[enrolTotal-1];
         	termReason=term_reason[enrolTotal-1];
+        	rosterEnrolledTo = roster_enrolledTo[enrolTotal-1];
         }
 
         String sin = StringUtils.noNull(demo.getSIN());
@@ -566,22 +689,50 @@ import oscar.util.UtilDateUtilities;
         }
 
         String address="", city="", province="", postalCode="";
-        if (demo.getAddressArray().length>0) {
-            cdsDt.Address addr = demo.getAddressArray(0);	//only get 1st address, other ignored
-            if (addr!=null) {
-                if (StringUtils.filled(addr.getFormatted())) {
-                    address = addr.getFormatted();
-                } else {
-                    cdsDt.AddressStructured addrStr = addr.getStructured();
-                    if (addrStr!=null) {
-                        address = StringUtils.noNull(addrStr.getLine1()) + StringUtils.noNull(addrStr.getLine2()) + StringUtils.noNull(addrStr.getLine3());
-                        city = StringUtils.noNull(addrStr.getCity());
-                        province = getCountrySubDivCode(addrStr.getCountrySubdivisionCode());
-                        cdsDt.PostalZipCode postalZip = addrStr.getPostalZipCode();
-                        if (postalZip!=null) postalCode = StringUtils.noNull(postalZip.getPostalCode());
-                    }
-                }
-            }
+        String mailingAddress="", mailingCity="",mailingProvince="",mailingPostalCode="";
+		
+        if(demo.getAddressArray()!= null) {
+	        for (cdsDt.Address addr :demo.getAddressArray()) {
+	        	if(addr.getAddressType() == AddressType.R) {
+	                if (StringUtils.filled(addr.getFormatted())) {
+	                    address = addr.getFormatted();
+	                } else {
+	                    cdsDt.AddressStructured addrStr = addr.getStructured();
+	                    if (addrStr!=null) {
+	                        address = StringUtils.noNull(addrStr.getLine1()) + StringUtils.noNull(addrStr.getLine2()) + StringUtils.noNull(addrStr.getLine3());
+	                        city = StringUtils.noNull(addrStr.getCity());
+	                        province = getCountrySubDivCode(addrStr.getCountrySubdivisionCode());
+	                        cdsDt.PostalZipCode postalZip = addrStr.getPostalZipCode();
+	                        if (postalZip!=null) postalCode = StringUtils.noNull(postalZip.getPostalCode());
+	                    }
+	                }
+	        	} else {
+	        		
+	        		//there's an address we don't support
+	        		 if (StringUtils.filled(addr.getFormatted())) {
+		                    mailingAddress = addr.getFormatted();
+		                    extra = Util.addLine(extra, "Mailing Address: ", mailingAddress);
+		                } else {
+		                    cdsDt.AddressStructured addrStr = addr.getStructured();
+		                    if (addrStr!=null) {
+		                        mailingAddress = StringUtils.noNull(addrStr.getLine1()) + StringUtils.noNull(addrStr.getLine2()) + StringUtils.noNull(addrStr.getLine3());
+		                        mailingCity = StringUtils.noNull(addrStr.getCity());
+		                        mailingProvince = getCountrySubDivCode(addrStr.getCountrySubdivisionCode());
+		                        cdsDt.PostalZipCode mailingPostalZip = addrStr.getPostalZipCode();
+		                        if (mailingPostalZip!=null)
+		                        	mailingPostalCode = StringUtils.noNull(mailingPostalZip.getPostalCode());
+		                        
+		                        extra = Util.addLine(extra, "Mailing Address: ", mailingAddress);
+		                        extra = Util.addLine(extra, "Mailing City: ", mailingCity);
+		                        extra = Util.addLine(extra, "Mailing Province: ", mailingProvince);
+		                        extra = Util.addLine(extra, "Mailing Postal Code: ", mailingPostalCode);
+		                        
+		                        
+		                    }
+		                
+		              }
+	        	}   	
+	        }
         }
         cdsDt.PhoneNumber[] pn = demo.getPhoneNumberArray();
         String workPhone="", workExt="", homePhone="", homeExt="", cellPhone="", ext="", patientPhone="";
@@ -658,6 +809,7 @@ import oscar.util.UtilDateUtilities;
         	//found contact-only demo, replace!
         	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             demographic.setTitle(title);
+            demographic.setMiddleNames(middleNames);
             demographic.setAddress(address);
             demographic.setCity(city);
             demographic.setProvince(province);
@@ -668,6 +820,7 @@ import oscar.util.UtilDateUtilities;
             demographic.setHin(hin);
             demographic.setVer(versionCode);
             demographic.setRosterStatus(rosterStatus);
+            demographic.setRosterEnrolledTo(rosterEnrolledTo);
             
             Date dDate;
             try {
@@ -719,7 +872,7 @@ import oscar.util.UtilDateUtilities;
             err_note.add("Replaced Contact-only patient "+patientName+" (Demo no="+demographicNo+")");
 
         } else { //add patient!
-            demoRes = dd.addDemographic(loggedInInfo, title, lastName, firstName, "",address, city, province, postalCode, "","","","",homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, rosterStatus, rosterDate, termDate, termReason, null,patient_status, psDate, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, hc_type, hc_renew_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
+            demoRes = dd.addDemographic(loggedInInfo, title, lastName, firstName, middleNames, address, city, province, postalCode, mailingAddress, mailingCity, mailingProvince, mailingPostalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, rosterStatus, rosterDate, termDate, termReason, rosterEnrolledTo, patient_status, psDate, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, hc_type, hc_renew_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
             demographicNo = demoRes.getId();
         }
 
@@ -743,6 +896,7 @@ import oscar.util.UtilDateUtilities;
             	demographicArchive.setRosterDate(UtilDateUtilities.StringToDate(roster_date[i]));
             	demographicArchive.setRosterTerminationDate(UtilDateUtilities.StringToDate(term_date[i]));
             	demographicArchive.setRosterTerminationReason(term_reason[i]);
+            	demographicArchive.setRosterEnrolledTo(roster_enrolledTo[i]);
             	demoArchiveDao.persist(demographicArchive);
             }
 
@@ -762,10 +916,88 @@ import oscar.util.UtilDateUtilities;
             if (!cellPhone.equals("")) demographicExtDao.addKey(primaryPhysician, Integer.parseInt(demographicNo), "demo_cell", cellPhone);
             if(courseId>0) demographicExtDao.addKey(primaryPhysician, Integer.parseInt(demographicNo), "course", String.valueOf(courseId));
 
+            PharmacyInfoDao pharmacyInfoDao = SpringUtils.getBean(PharmacyInfoDao.class);
+            DemographicPharmacyDao demographicPharmacyDao = SpringUtils.getBean(DemographicPharmacyDao.class);
+            
+            if(demo.getPreferredPharmacy() != null) {
+            	PreferredPharmacy pp = demo.getPreferredPharmacy();
+            	
+            	PharmacyInfo pi = new PharmacyInfo();
+            	pi.setName(pp.getName());
+            	pi.setEmail(pp.getEmailAddress());
+            	if(pp.getPhoneNumber() != null) {
+            		pi.setPhone1(pp.getPhoneNumber().getPhoneNumber().replaceAll("\\-", ""));
+            	}
+            	if(pp.getFaxNumber() != null) {
+            		pi.setFax(pp.getFaxNumber().getPhoneNumber().replaceAll("\\-", ""));
+            	}
+            	if(pp.getAddress() != null) {
+            		 cdsDt.AddressStructured addrStr = pp.getAddress().getStructured();
+	                 if (addrStr!=null) {
+	                	 	pi.setAddress((StringUtils.noNull(addrStr.getLine1()) + " " + StringUtils.noNull(addrStr.getLine2()) + " " + StringUtils.noNull(addrStr.getLine3())).trim());
+	                        pi.setCity(StringUtils.noNull(addrStr.getCity()));
+	                        pi.setProvince(getCountrySubDivCode(addrStr.getCountrySubdivisionCode()));
+	                        cdsDt.PostalZipCode postalZip = addrStr.getPostalZipCode();
+	                        if (postalZip!=null)  pi.setPostalCode(StringUtils.noNull(postalZip.getPostalCode()));
+	                 }
+	                  
+            	}
+            	pi.setStatus('1');
+            	pi.setNotes("");
+            	pi.setServiceLocationIdentifier("");
+            	pharmacyInfoDao.persist(pi);
+            	
+            	DemographicPharmacy dp = new DemographicPharmacy();
+            	dp.setPharmacyId(pi.getId());
+            	dp.setDemographicNo(Integer.parseInt(demographicNo));
+            	dp.setAddDate(new Date());
+            	dp.setPreferredOrder(1);
+            	dp.setStatus("1");
+            	
+            	demographicPharmacyDao.persist(dp);
+            }
+            
+            ContactDao contactDao1 = SpringUtils.getBean(ContactDao.class);
+            
+            if(demo.getReferredPhysician() != null) {      	
+            	Contact c = new Contact();
+            	c.setFirstName(demo.getReferredPhysician().getFirstName());
+            	c.setLastName(demo.getReferredPhysician().getLastName());
+            	contactDao1.persist(c);
+            	
+            	DemographicContact demoContact = new DemographicContact();
+                demoContact.setCreated(new Date());
+                demoContact.setUpdateDate(new Date());
+                demoContact.setDemographicNo(Integer.valueOf(demographicNo));
+                demoContact.setContactId(c.getId().toString());
+                demoContact.setType(2); //should be "type" - display problem
+                demoContact.setCategory("professional");
+             	demoContact.setRole("Referring Doctor");
+                demoContact.setCreator(loggedInInfo.getLoggedInProviderNo());
+             	contactDao.persist(demoContact);
+             	
+            }
+            
+            if(demo.getFamilyPhysician() != null) {
+               	Contact c = new Contact();
+            	c.setFirstName(demo.getFamilyPhysician().getFirstName());
+            	c.setLastName(demo.getFamilyPhysician().getLastName());
+            	contactDao.persist(c);
+            	
+            	DemographicContact demoContact = new DemographicContact();
+                demoContact.setCreated(new Date());
+                demoContact.setUpdateDate(new Date());
+                demoContact.setDemographicNo(Integer.valueOf(demographicNo));
+                demoContact.setContactId(c.getId().toString());
+                demoContact.setType(2); //should be "type" - display problem
+                demoContact.setCategory("professional");
+             	demoContact.setRole("Family Doctor");
+                demoContact.setCreator(loggedInInfo.getLoggedInProviderNo());
+             	contactDao.persist(demoContact);
+            }
 
             //Demographic Contacts
-            DemographicContactDao contactDao = (DemographicContactDao) SpringUtils.getBean("demographicContactDao");
-
+           
             Demographics.Contact[] contt = demo.getContactArray();
             for (int i=0; i<contt.length; i++) {
                 HashMap<String,String> contactName = getPersonName(contt[i].getName());
@@ -804,8 +1036,8 @@ import oscar.util.UtilDateUtilities;
                 String cPatient = cLastName+","+cFirstName;
                 if (StringUtils.empty(cDemoNo)) {   //add new demographic as contact
                     psDate = UtilDateUtilities.DateToString(new Date(),"yyyy-MM-dd");
-                    demoRes = dd.addDemographic(loggedInInfo, ""/*title*/, cLastName, cFirstName,"", ""/*address*/, ""/*city*/, ""/*province*/, ""/*postal*/,
-                    			"","","","",homePhone, workPhone, ""/*year_of_birth*/, ""/*month_*/, ""/*date_*/, ""/*hin*/, ""/*ver*/, ""/*roster_status*/, "", "", "",null,
+                    demoRes = dd.addDemographic(loggedInInfo, ""/*title*/, cLastName, cFirstName,"" /*middleNames*/, ""/*address*/, ""/*city*/, ""/*province*/, ""/*postal*/,"","","","",
+                    			homePhone, workPhone, ""/*year_of_birth*/, ""/*month_*/, ""/*date_*/, ""/*hin*/, ""/*ver*/, ""/*roster_status*/, "", "", "",null,
                     			"Contact-only", psDate, ""/*date_joined*/, ""/*chart_no*/, ""/*official_lang*/, ""/*spoken_lang*/, ""/*provider_no*/,
                     			"F", ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, ""/*hc_type*/, ""/*hc_renew_date*/, ""/*family_doctor*/,
                     			cEmail, "", "", "", "", "", "", "");
@@ -838,6 +1070,7 @@ import oscar.util.UtilDateUtilities;
                     else if (cPurpose.equals("PA")) rel[j] = "Power of Attorney";
                     else if (cPurpose.equals("IN")) rel[j] = "Insurance";
                     else if (cPurpose.equals("GT")) rel[j] = "Guarantor";
+                    else if (cPurpose.equals("O")) rel[j] = "Other";
                     else {
                         rel[j] = cPurpose;
                     }
@@ -859,6 +1092,7 @@ import oscar.util.UtilDateUtilities;
                             demoContact.setEc(emc);
                             demoContact.setSdm(sdm);
                             demoContact.setNote(contactNote);
+                            demoContact.setCreator(loggedInInfo.getLoggedInProviderNo());
                         	contactDao.persist(demoContact);
 
                         	//clear emc, sdm, contactNote after 1st save
@@ -922,11 +1156,16 @@ import oscar.util.UtilDateUtilities;
                 if (fHist[i].getDiagnosisProcedureCode()==null) {
                     cmNote.setIssues(scmi);
                 } else {
-                    cmNote.setIssues(getCMIssue("FamHistory", fHist[i].getDiagnosisProcedureCode()));
+                    cmNote.setIssues(getCMIssue("FamHistory", fHist[i].getDiagnosisProcedureCode(),false));
                 }
 
                 //main field
                 String familyHist = fHist[i].getProblemDiagnosisProcedureDescription();
+                if (StringUtils.empty(familyHist)) {
+                	if(fHist[i].isSetDiagnosisProcedureCode()) {
+                		familyHist = fHist[i].getDiagnosisProcedureCode().getStandardCodeDescription();
+                	}
+                }
                 if (StringUtils.empty(familyHist)) familyHist = "Imported Family History";
                 cmNote.setNote(familyHist);
                 caseManagementManager.saveNoteSimple(cmNote);
@@ -948,8 +1187,8 @@ import oscar.util.UtilDateUtilities;
                 }
                 dump = Util.addLine(dump, summary);
                 */
-                String diagCode = getCode(fHist[i].getDiagnosisProcedureCode(),"Diagnosis/Procedure");
-                dump = Util.addLine(dump, diagCode);
+                //String diagCode = getCode(fHist[i].getDiagnosisProcedureCode(),"Diagnosis/Procedure");
+                //dump = Util.addLine(dump, diagCode);
                 dump = Util.addLine(dump, getResidual(fHist[i].getResidualInfo()));
                 cmNote = prepareCMNote("2",null);
                 cmNote.setNote(dump);
@@ -1000,11 +1239,17 @@ import oscar.util.UtilDateUtilities;
                 if (pHealth[i].getDiagnosisProcedureCode()==null) {
                     cmNote.setIssues(scmi);
                 } else {
-                    cmNote.setIssues(getCMIssue("MedHistory", pHealth[i].getDiagnosisProcedureCode()));
+                    cmNote.setIssues(getCMIssue("MedHistory", pHealth[i].getDiagnosisProcedureCode(),pHealth[i].isSetResolvedDate()));
+                   
                 }
 
                 //main field
                 String medicalHist = pHealth[i].getPastHealthProblemDescriptionOrProcedures();
+                if (StringUtils.empty(medicalHist)) {
+                	if(pHealth[i].isSetDiagnosisProcedureCode()) {
+                		medicalHist = pHealth[i].getDiagnosisProcedureCode().getStandardCodeDescription();
+                	}
+                }
                 if (StringUtils.empty(medicalHist)) medicalHist = "Imported Medical History";
                 cmNote.setNote(medicalHist);
                 caseManagementManager.saveNoteSimple(cmNote);
@@ -1027,7 +1272,7 @@ import oscar.util.UtilDateUtilities;
                 }
                 dump = Util.addLine(dump, summary);
                 */
-                String diagCode = isICD9(pHealth[i].getDiagnosisProcedureCode()) ? null : getCode(pHealth[i].getDiagnosisProcedureCode(),"Diagnosis/Procedure");
+                String diagCode = isICD9(pHealth[i].getDiagnosisProcedureCode()) || isICD9CM(pHealth[i].getDiagnosisProcedureCode()) || isICD10(pHealth[i].getDiagnosisProcedureCode()) ? null : getCode(pHealth[i].getDiagnosisProcedureCode(),"Diagnosis/Procedure");
                 dump = Util.addLine(dump, diagCode);
                 dump = Util.addLine(dump, getResidual(pHealth[i].getResidualInfo()));
                 cmNote = prepareCMNote("2",null);
@@ -1061,6 +1306,12 @@ import oscar.util.UtilDateUtilities;
                         cme.setValue(pHealth[i].getLifeStage().toString());
                         caseManagementManager.saveNoteExt(cme);
                     }
+                    if (StringUtils.filled(pHealth[i].getProblemStatus())) {
+                        cme.setKeyVal(CaseManagementNoteExt.PROBLEMSTATUS);
+                        cme.setDateValue((Date)null);
+                        cme.setValue(pHealth[i].getProblemStatus());
+                        caseManagementManager.saveNoteExt(cme);
+                    }
                 }
 
                 //PROBLEM LIST
@@ -1073,11 +1324,16 @@ import oscar.util.UtilDateUtilities;
                     if (probList[i].getDiagnosisCode()==null) {
                         cmNote.setIssues(scmi);
                     } else {
-                        cmNote.setIssues(getCMIssue("Concerns", probList[i].getDiagnosisCode()));
+                        cmNote.setIssues(getCMIssue("Concerns", probList[i].getDiagnosisCode(),probList[i].isSetResolutionDate()));
                     }
 
                     //main field
                     String ongConcerns = probList[i].getProblemDiagnosisDescription();
+                    if (StringUtils.empty(ongConcerns)) {
+                    	if(probList[i].isSetDiagnosisCode()) {
+                    		ongConcerns = probList[i].getDiagnosisCode().getStandardCodeDescription();
+                    	}
+                    }
                     if (StringUtils.empty(ongConcerns)) ongConcerns = "Imported Concern";
                     cmNote.setNote(ongConcerns);
                     caseManagementManager.saveNoteSimple(cmNote);
@@ -1100,7 +1356,7 @@ import oscar.util.UtilDateUtilities;
                     }
                     dump = Util.addLine(dump, summary);
                     */
-                    String diagCode = isICD9(probList[i].getDiagnosisCode()) ? null : getCode(probList[i].getDiagnosisCode(),"Diagnosis");
+                    String diagCode = isICD9(probList[i].getDiagnosisCode()) || isICD9CM(probList[i].getDiagnosisCode()) || isICD10(probList[i].getDiagnosisCode())? null : getCode(probList[i].getDiagnosisCode(),"Diagnosis");
                     dump = Util.addLine(dump, diagCode);
                     dump = Util.addLine(dump, getResidual(probList[i].getResidualInfo()));
                     cmNote = prepareCMNote("2",null);
@@ -1276,23 +1532,27 @@ import oscar.util.UtilDateUtilities;
                     //encounter note
                     String encounter = cNotes[i].getMyClinicalNotesContent();
                     if (StringUtils.empty(encounter)) {
-                    	err_data.add("Empty clinical note - not added ("+(i+1)+")");
-                    	continue;
+                    	err_data.add("Empty clinical note ("+(i+1)+")");
+                    	//continue;
+                    	encounter = org.apache.commons.lang.StringUtils.trimToEmpty(encounter);
                     }
+                    
 
                     //create date
+                    /*
                     if (cNotes[i].getEnteredDateTime()!=null) {
                     	createDate = dateTimeFPtoDate(cNotes[i].getEnteredDateTime(),timeShiftInDays);
                     	observeDate = createDate;
                     }
+                    */
 
                     //observation date
                     if (cNotes[i].getEventDateTime()!=null) {
                     	observeDate = dateTimeFPtoDate(cNotes[i].getEventDateTime(),timeShiftInDays);
-                    	if (cNotes[i].getEnteredDateTime()==null) createDate = observeDate;
+                    	//if (cNotes[i].getEnteredDateTime()==null) createDate = observeDate;
 
                     }
-
+                    //NOTE: sets the createdate and observationdate to current datetime if they are not set in XML. 
                     CaseManagementNote cmNote = prepareCMNote("1",null);
                     cmNote.setCreate_date(createDate);
                     cmNote.setObservation_date(observeDate);
@@ -1361,15 +1621,12 @@ import oscar.util.UtilDateUtilities;
                             uuid = cmNote.getUuid();
 
                             //create "header", cms4 only
-                        	if (cNotes[i].getEnteredDateTime()!=null && !createDate.equals(cmNote.getUpdate_date())) {
-                        		CaseManagementNote headNote = prepareCMNote("2",null);
-                        		headNote.setCreate_date(createDate);
-                        		headNote.setUpdate_date(createDate);
-                        		headNote.setObservation_date(observeDate);
-                        		headNote.setNote("imported.cms4.2011.06"+uuid);
-                        		caseManagementManager.saveNoteSimple(headNote);
-                        	}
-
+                        	CaseManagementNote headNote = prepareCMNote("2",null);
+                    		headNote.setCreate_date(createDate);
+                    		headNote.setUpdate_date(createDate);
+                    		headNote.setObservation_date(observeDate);
+                    		headNote.setNote("imported.cms4.2011.06"+uuid);
+                    		caseManagementManager.saveNoteSimple(headNote);
                         }
                     }
                     if (p_total==0) {
@@ -1393,7 +1650,9 @@ import oscar.util.UtilDateUtilities;
                 for (int i=0; i<aaReactArray.length; i++) {
                     String description="", regionalId="", reaction="", severity="", entryDate="", startDate="", typeCode="", lifeStage="", alg_extra="";
                     String entryDateFormat=null, startDateFormat=null;
-
+                    boolean intolerant = false;
+                    boolean nonDrug = false;
+                    
                     reaction = StringUtils.noNull(aaReactArray[i].getReaction());
                     description = StringUtils.noNull(aaReactArray[i].getOffendingAgentDescription());
                     entryDate = dateFPtoString(aaReactArray[i].getRecordedDate(), timeShiftInDays);
@@ -1406,13 +1665,20 @@ import oscar.util.UtilDateUtilities;
                     else startDateFormat = dateFPGetPartial(aaReactArray[i].getStartDate());
 
                     if (aaReactArray[i].getCode()!=null) regionalId = StringUtils.noNull(aaReactArray[i].getCode().getCodeValue());
-                    alg_extra = Util.addLine(alg_extra,"Offending Agent Description: ",aaReactArray[i].getOffendingAgentDescription());
-                    if (aaReactArray[i].getReactionType()!=null) alg_extra = Util.addLine(alg_extra,"Reaction Type: ",aaReactArray[i].getReactionType().toString());
+                  //  alg_extra = Util.addLine(alg_extra,"Offending Agent Description: ",aaReactArray[i].getOffendingAgentDescription());
+                    if (aaReactArray[i].getReactionType()!=null) { 
+                    		//alg_extra = Util.addLine(alg_extra,"Reaction Type: ",aaReactArray[i].getReactionType().toString());
+                    		if(aaReactArray[i].getReactionType() == AdverseReactionType.AR) {
+                    			intolerant = true;
+                    		} 
+                    }
 
                     if (typeCode.equals("") && aaReactArray[i].getPropertyOfOffendingAgent()!=null) {
                         if (aaReactArray[i].getPropertyOfOffendingAgent()==cdsDt.PropertyOfOffendingAgent.DR) typeCode="13"; //drug
-                        else if (aaReactArray[i].getPropertyOfOffendingAgent()==cdsDt.PropertyOfOffendingAgent.ND) typeCode="0"; //non-drug
-                    else if (aaReactArray[i].getPropertyOfOffendingAgent()==cdsDt.PropertyOfOffendingAgent.UK) typeCode="0"; //unknown
+                        else if (aaReactArray[i].getPropertyOfOffendingAgent()==cdsDt.PropertyOfOffendingAgent.ND) {
+                        	typeCode="0"; //non-drug
+                        	nonDrug=true;
+                        } else if (aaReactArray[i].getPropertyOfOffendingAgent()==cdsDt.PropertyOfOffendingAgent.UK) typeCode="0"; //unknown
                     }
                     if (aaReactArray[i].getSeverity()!=null) {
                         if (aaReactArray[i].getSeverity()==cdsDt.AdverseReactionSeverity.MI) severity="1"; //mild
@@ -1428,7 +1694,7 @@ import oscar.util.UtilDateUtilities;
 
                     Date entryDateDate=toDateFromString(entryDate);
                     Date startDateDate=toDateFromString(startDate);
-                    Integer allergyId = saveRxAllergy(Integer.valueOf(demographicNo), entryDateDate, description, "".equals(typeCode)?0:Integer.parseInt(typeCode), reaction, startDateDate, severity, regionalId, lifeStage);
+                    Integer allergyId = saveRxAllergy(Integer.valueOf(demographicNo), entryDateDate, description, "".equals(typeCode)?0:Integer.parseInt(typeCode), reaction, startDateDate, severity, regionalId, lifeStage, intolerant, nonDrug);
                     addOneEntry(ALLERGY);
 
                     //write partial dates
@@ -1452,7 +1718,8 @@ import oscar.util.UtilDateUtilities;
                     */
                     dump = Util.addLine(dump, alg_extra);
                     dump = Util.addLine(dump, getResidual(aaReactArray[i].getResidualInfo()));
-
+                    dump = Util.addLine(dump, "Reaction Type=" + aaReactArray[i].getReactionType().toString());
+                
                     cmNote = prepareCMNote("2",null);
                     cmNote.setNote(dump);
                     saveLinkNote(cmNote, CaseManagementNoteLink.ALLERGIES, Long.valueOf(allergyId));
@@ -1461,14 +1728,16 @@ import oscar.util.UtilDateUtilities;
 
                 //MEDICATIONS & TREATMENTS
                 MedicationsAndTreatments[] medArray = patientRec.getMedicationsAndTreatmentsArray();
-                String duration, quantity, dosage, special;
                 for (int i=0; i<medArray.length; i++) {
+                	String duration, quantity, dosage, special;
                     Drug drug = new Drug();
                     drug.setCreateDate(new Date());
                     drug.setWrittenDate(dateTimeFPtoDate(medArray[i].getPrescriptionWrittenDate(), timeShiftInDays));
                     String writtenDateFormat = dateFPGetPartial(medArray[i].getPrescriptionWrittenDate());
 
                     drug.setRxDate(dateFPtoDate(medArray[i].getStartDate(), timeShiftInDays));
+                    
+                    
                     if (medArray[i].getStartDate()==null) drug.setRxDate(drug.getWrittenDate());
 
                     duration = medArray[i].getDuration();
@@ -1514,8 +1783,8 @@ import oscar.util.UtilDateUtilities;
                     drug.setDrugForm(medArray[i].getForm());
                     drug.setLongTerm(getYN(medArray[i].getLongTermMedication()).equals("Yes"));
                     drug.setPastMed(getYN(medArray[i].getPastMedications()).equals("Yes"));
-                    drug.setPatientCompliance(getYN(medArray[i].getPatientCompliance()));
-
+                    drug.setPatientCompliance(getBoolean(medArray[i].getPatientCompliance()));
+                    
                     if (NumberUtils.isDigits(medArray[i].getNumberOfRefills())) drug.setRepeat(Integer.valueOf(medArray[i].getNumberOfRefills()));
                     duration = medArray[i].getRefillDuration();
                     if (StringUtils.filled(duration)) {
@@ -1534,32 +1803,57 @@ import oscar.util.UtilDateUtilities;
 
                     drug.setETreatmentType(medArray[i].getTreatmentType());
                     //no need: DrugReason drugReason = new DrugReason();
-                    //no need: drug.setRxStatus(medArray[i].getPrescriptionStatus());
+                    
+                    drug.setRxStatus(medArray[i].getPrescriptionStatus());
 
-                    //no need: String nosub = medArray[i].getSubstitutionNotAllowed();
-                    //no need: if (nosub!=null) drug.setNoSubs(nosub.equalsIgnoreCase("Y"));
+                    String nosub = medArray[i].getSubstitutionNotAllowed();
+                    if (nosub!=null && "Y".equals(nosub)) drug.setNoSubs(nosub.equalsIgnoreCase("Y"));
 
-                    //no need: String non_auth = medArray[i].getNonAuthoritativeIndicator();
-                    //no need: if (non_auth!=null) drug.setNonAuthoritative(non_auth.equalsIgnoreCase("Y"));
-                    //no need: else  err_data.add("Error! No non-authoritative indicator for Medications & Treatments ("+(i+1)+")");
+                    String non_auth = medArray[i].getNonAuthoritativeIndicator();
+                    if (non_auth!=null && "Y".equals(non_auth)) drug.setNonAuthoritative(non_auth.equalsIgnoreCase("Y"));
+                  //  else  err_data.add("Error! No non-authoritative indicator for Medications & Treatments ("+(i+1)+")");
 
-                    //no need: if (NumberUtils.isDigits(medArray[i].getDispenseInterval())) drug.setDispenseInterval(Integer.parseInt(medArray[i].getDispenseInterval()));
-                    //no need: else err_data.add("Error! Invalid Dispense Interval for Medications & Treatments ("+(i+1)+")");
+                   drug.setDispenseInterval(medArray[i].getDispenseInterval() != null ?medArray[i].getDispenseInterval() : "" );
+                  //  else err_data.add("Error! Invalid Dispense Interval for Medications & Treatments ("+(i+1)+")");
 
+                    String protocolIdentifier = medArray[i].getProtocolIdentifier();
+                    if(protocolIdentifier != null) {
+                    	drug.setProtocol(protocolIdentifier);
+                    }
+                    
+                    String priorRxProtocol = medArray[i].getPriorPrescriptionReferenceIdentifier();
+                    if(priorRxProtocol != null) {
+                    	drug.setPriorRxProtocol(priorRxProtocol);
+                    }
+                    
                     String take = StringUtils.noNull(medArray[i].getDosage()).trim();
                     drug.setTakeMin(Util.leadingNumF(take));
                     int sep = take.indexOf("-");
                     if (sep>0) drug.setTakeMax(Util.leadingNumF(take.substring(sep+1)));
                     else drug.setTakeMax(drug.getTakeMin());
                     drug.setUnit(medArray[i].getDosageUnitOfMeasure());
-                    if ("table".equalsIgnoreCase(drug.getUnit())) drug.setUnit("tab");
+                    if ("table".equalsIgnoreCase(drug.getUnit()) || "tablet".equalsIgnoreCase(drug.getUnit())) drug.setUnit("tab");
 
                     drug.setDemographicId(Integer.valueOf(demographicNo));
                     drug.setArchived(false);
 
-                    drug.setBrandName(medArray[i].getDrugName());
-                    drug.setCustomName(medArray[i].getDrugDescription());
-
+                    boolean custom=false;
+                    if(!StringUtils.isNullOrEmpty(medArray[i].getDrugIdentificationNumber())) {
+                    	drug.setBrandName(medArray[i].getDrugName());
+                    } else {
+                    	drug.setCustomName(medArray[i].getDrugName());
+                    	drug.setSpecialInstruction(medArray[i].getDrugDescription());	
+                    	custom=true;
+                    }
+                    
+                    if (StringUtils.filled(medArray[i].getPrescriptionInstructions())) {
+                    	drug.setSpecialInstruction( medArray[i].getPrescriptionInstructions());
+                    	if(custom) {
+                    		drug.setSpecialInstruction( medArray[i].getPrescriptionInstructions() + " " + medArray[i].getDrugDescription());
+                    	}
+                    }
+                    
+                  
                     special = StringUtils.noNull(drug.getBrandName());
                     if (special.equals("")) {
                         special = StringUtils.noNull(drug.getCustomName());
@@ -1588,22 +1882,14 @@ import oscar.util.UtilDateUtilities;
                     if (drug.getDuration()!=null) {
                     	special = addSpaced(special, "for "+drug.getDuration()+" days");
                     }
-                    drug.setSpecial(special);
-
-                    //no need: special = Util.addLine(special, "Prescription Status: ", medArray[i].getPrescriptionStatus());
-                    //no need: special = Util.addLine(special, "Dispense Interval: ", medArray[i].getDispenseInterval());
-                    //no need: special = Util.addLine(special, "Protocol Id: ", medArray[i].getProtocolIdentifier());
-                    //no need: special = Util.addLine(special, "Prescription Id: ", medArray[i].getPrescriptionIdentifier());
-                    //no need: special = Util.addLine(special, "Prior Prescription Id: ", medArray[i].getPriorPrescriptionReferenceIdentifier());
-
-
-                    if (StringUtils.filled(medArray[i].getPrescriptionInstructions())) {
-                    	drug.setSpecialInstruction(medArray[i].getPrescriptionInstructions());
-                    }
+                    drug.setSpecial(special);   
+                    
+                   
 
                     if (medArray[i].getPrescribedBy()!=null) {
                         HashMap<String,String> personName = getPersonName(medArray[i].getPrescribedBy().getName());
                         String personOHIP = medArray[i].getPrescribedBy().getOHIPPhysicianId();
+                       // writeProviderData(personName.get("firstname"), personName.get("lastname"), personOHIP, null);
                         ProviderData pd = getProviderByOhip(personOHIP);
                         if (pd!=null && Integer.valueOf(pd.getProviderNo())>-1000) drug.setProviderNo(pd.getProviderNo());
                         else { //outside provider
@@ -1620,12 +1906,35 @@ import oscar.util.UtilDateUtilities;
                     }
                     
                     drug.setPosition(0);
-                    drug.setDispenseInterval("0");
+               
+                    //use drugref to add more info to the record
+                    if(!StringUtils.isNullOrEmpty(drug.getRegionalIdentifier())) {
+                    	try {
+	                    	RxDrugData rxDrugData = new RxDrugData();
+	                    	DrugMonograph dm = rxDrugData.getDrugByDIN(drug.getRegionalIdentifier());
+	                    	if(dm != null) {
+	                    		drug.setAtc(dm.getAtc());
+	                    		if(dm.drugCode != null) {
+	                    			drug.setGcnSeqNo(Integer.parseInt(dm.drugCode));
+	                    		}
+	                    	}
+                    	}catch(Exception e) {
+                    		logger.warn("Error looking up DIN");
+                    	}
+                    }
+                    
+                    
                     drugDao.persist(drug);
+                             
+                    if (!StringUtils.isNullOrEmpty( dateFPGetPartial(medArray[i].getPrescriptionWrittenDate()))) partialDateDao.setPartialDate(PartialDate.DRUGS, drug.getId(), PartialDate.DRUGS_WRITTENDATE, dateFPGetPartial(medArray[i].getPrescriptionWrittenDate()));
+                    if (!StringUtils.isNullOrEmpty( dateFPGetPartial(medArray[i].getStartDate()))) partialDateDao.setPartialDate(PartialDate.DRUGS, drug.getId(), PartialDate.DRUGS_STARTDATE, dateFPGetPartial(medArray[i].getStartDate()));
+                      
                     addOneEntry(MEDICATION);
 
-                    /* no need:
+                   
                     if (medArray[i].getProblemCode()!=null) {
+                    	DrugReason drugReason = new DrugReason();
+                    	drugReason.setCodingSystem("icd9"); //a guess here
                         drugReason.setCode(medArray[i].getProblemCode());
                         drugReason.setDemographicNo(Integer.valueOf(demographicNo));
                         drugReason.setDrugId(drug.getId());
@@ -1634,8 +1943,7 @@ import oscar.util.UtilDateUtilities;
                         drugReason.setArchivedFlag(false);
                         drugReasonDao.persist(drugReason);
                     }
-                     *
-                     */
+                   
 
                     //partial date
                     partialDateDao.setPartialDate(PartialDate.DRUGS, drug.getId(), PartialDate.DRUGS_WRITTENDATE, writtenDateFormat);
@@ -1648,15 +1956,9 @@ import oscar.util.UtilDateUtilities;
 
                     //to dumpsite
                     String dump = "imported.cms4.2011.06";
-                    /*
-                    String summary = medArray[i].getCategorySummaryLine();
-                    if (StringUtils.empty(summary)) {
-                        err_summ.add("No Summary for Medications & Treatments ("+(i+1)+")");
-                    }
-                    dump = Util.addLine(dump, summary);
-                    */
                     dump = Util.addLine(dump, getResidual(medArray[i].getResidualInfo()));
-
+                    dump = Util.addLine(dump, "Prescription Id: ", medArray[i].getPrescriptionIdentifier());
+                    
                     cmNote = prepareCMNote("2",null);
                     cmNote.setNote(dump);
                     saveLinkNote(cmNote, CaseManagementNoteLink.DRUGS, (long)drug.getId());
@@ -1687,6 +1989,10 @@ import oscar.util.UtilDateUtilities;
                     	err_note.add("Cannot map Immunization Type, "+immuArray[i].getImmunizationName()+" mapped to Other Layout A");
                     }
 
+                    Map<String,String> iht = new HashMap<String,String>();
+                    iht.put("imported","true");
+                    preventionExt.add(iht);
+                    
                     if (StringUtils.filled(immuArray[i].getManufacturer())) {
                         Map<String,String> ht = new HashMap<String,String>();
                         ht.put("manufacture", immuArray[i].getManufacturer());
@@ -1699,13 +2005,17 @@ import oscar.util.UtilDateUtilities;
                     }
                     if (StringUtils.filled(immuArray[i].getRoute())) {
                         Map<String,String> ht = new HashMap<String,String>();
-                        ht.put("route", immuArray[i].getRoute());
+                        ht.put("route", tryToMapRoute(immuArray[i].getRoute()));
                         preventionExt.add(ht);
                     }
                     if (StringUtils.filled(immuArray[i].getSite())) {
                         Map<String,String> ht = new HashMap<String,String>();
-                        ht.put("location", immuArray[i].getSite());
+                        ht.put("location", "Other");
                         preventionExt.add(ht);
+                        
+                        Map<String,String> ht2 = new HashMap<String,String>();
+                        ht2.put("location2", immuArray[i].getSite());
+                        preventionExt.add(ht2);
                     }
                     if (StringUtils.filled(immuArray[i].getDose())) {
                         Map<String,String> ht = new HashMap<String,String>();
@@ -1718,31 +2028,36 @@ import oscar.util.UtilDateUtilities;
                         ht.put("comments", immuArray[i].getNotes());
                         preventionExt.add(ht);
                     }
+                    
 
                     preventionDate = dateFPtoString(immuArray[i].getDate(), timeShiftInDays);
+                    
+                   
+                    
                     refused = getYN(immuArray[i].getRefusedFlag()).equals("Yes") ? "1" : "0";
                     if (immuArray[i].getRefusedFlag()==null) err_data.add("Error! No Refused Flag for Immunizations ("+(i+1)+")");
-/*
-                    String iSummary="";
-                    if (immuArray[i].getCategorySummaryLine()!=null) {
-                        iSummary = immuArray[i].getCategorySummaryLine().trim();
-                    } else {
-                        err_summ.add("No Summary for Immunizations ("+(i+1)+")");
+
+                    String din = null;
+                    if(immuArray[i].getImmunizationCode() != null && "DIN".equals(immuArray[i].getImmunizationCode().getCodingSystem())) {
+                    	din = immuArray[i].getImmunizationCode().getValue();
+                    	 Map<String,String> ht = new HashMap<String,String>();
+                         ht.put("din",din);
+                         preventionExt.add(ht);
                     }
-
-
-                    if (StringUtils.filled(iSummary)) {
-                        comments = Util.addLine(comments, "Summary: ", iSummary);
-                        err_note.add("Immunization Summary imported in [comments] ("+(i+1)+")");
-                    }
- *
- */
-
+                    
                     immExtra = Util.addLine(immExtra, getCode(immuArray[i].getImmunizationCode(),"Immunization Code"));
                     immExtra = Util.addLine(immExtra, "Instructions: ", immuArray[i].getInstructions());
                     immExtra = Util.addLine(immExtra, getResidual(immuArray[i].getResidualInfo()));
 
-                    Integer preventionId = PreventionData.insertPreventionData(admProviderNo, demographicNo, preventionDate, defaultProviderNo(), "", preventionType, refused, "", "", preventionExt,null,null);
+                    if("".equals(tryToMapRoute(immuArray[i].getRoute()))) {
+                    	immExtra = Util.addLine(immExtra, "Unmapped Route: ",immuArray[i].getRoute());  
+                    }
+                    
+                    Integer preventionId = PreventionData.insertPreventionData(admProviderNo, demographicNo, preventionDate, defaultProviderNo(), "", preventionType, refused, "", "", preventionExt,null,din);
+                    
+                    if (!StringUtils.isNullOrEmpty( dateFPGetPartial(immuArray[i].getDate()))) partialDateDao.setPartialDate(PartialDate.PREVENTION, preventionId, PartialDate.PREVENTION_PREVENTIONDATE, dateFPGetPartial(immuArray[i].getDate()));
+                    
+                    
                     addOneEntry(IMMUNIZATION);
 
                     //to dumpsite: Extra immunization data
@@ -1761,13 +2076,17 @@ import oscar.util.UtilDateUtilities;
 
                 //APPOINTMENTS
                 Appointments[] appArray = patientRec.getAppointmentsArray();
-                Date appointmentDate = null;
-                String notes="", reason="", status="", startTime="", endTime="", apptProvider="";
-                ApptStatusData asd = new ApptStatusData();
-                String[] allStatus = asd.getAllStatus();
-                String[] allTitle = asd.getAllTitle();
+                //   ApptStatusData asd = new ApptStatusData();
+             //   String[] allStatus = asd.getAllStatus();
+             //   String[] allTitle = asd.getAllTitle();
+                AppointmentStatusDao appointmentStatusDao = SpringUtils.getBean(AppointmentStatusDao.class);
+                List<AppointmentStatus> appointmentStatusList = appointmentStatusDao.findAll();                
 
                 for (int i=0; i<appArray.length; i++) {
+                	Date appointmentDate = null;
+                    String notes="", reason="", status="", startTime="", endTime="", apptProvider="";
+                 
+                    
                     String apptDateStr = dateFPtoString(appArray[i].getAppointmentDate(), timeShiftInDays);
                     if (StringUtils.filled(apptDateStr)) {
                         appointmentDate = UtilDateUtilities.StringToDate(apptDateStr);
@@ -1794,22 +2113,27 @@ import oscar.util.UtilDateUtilities;
                         notes = appArray[i].getAppointmentNotes();
                     }
                     String apptStatus = appArray[i].getAppointmentStatus();
+                   
+                    boolean failedToMapStatus = false;
+            		
                     if (apptStatus!=null) {
-                        for (int j=1; j<allStatus.length; j++) {
-                            String msg = getResources(request).getMessage(allTitle[j]);
-                            if (apptStatus.trim().equalsIgnoreCase(msg)) {
-                                status = allStatus[j];
-                                apptStatus = null;
-                                break;
-                            }
-                        }
-                        if (StringUtils.empty(status)) {
-                        	status = allStatus[0];
-//                        	err_note.add("Cannot map appointment status ["+apptStatus+"]. Appointment Status set to [To Do]");
-                        }
-
+                    	for(AppointmentStatus as : appointmentStatusList) {
+                    		if(isMappedStatus(as,apptStatus) != null) {
+                    			status = as.getStatus();
+                    			break;
+                    		}
+                    	}
+                    	 if (StringUtils.empty(status)) {
+                    		AppointmentStatus tmp =  createNewAppointmentStatus(apptStatus);
+                    		 
+                         	status = tmp.getStatus();
+                         //	err_note.add("Cannot map appointment status ["+apptStatus+"]. Appointment Status set to [Imported]");
+                         //	failedToMapStatus=true;
+                         }
+                    }else {
+                    	status = "t";
                     }
-
+                   
                     reason = StringUtils.noNull(appArray[i].getAppointmentPurpose());
                     if (appArray[i].getProvider()!=null) {
                         HashMap<String,String> providerName = getPersonName(appArray[i].getProvider().getName());
@@ -1832,10 +2156,22 @@ import oscar.util.UtilDateUtilities;
                     appt.setReason(reason);
                     appt.setStatus(status);
                     appt.setImportedStatus(apptStatus);
-                    
+                    appt.setLocation("");
+                    appt.setCreator(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProvider().getFormattedName());
+                    appt.setLastUpdateUser(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo());
+                    appt.setResources("");
+                    appt.setType("");
                     appointmentDao.persist(appt);
                     
                     addOneEntry(APPOINTMENT);
+                    
+                    if(failedToMapStatus) {
+	                	String dump = Util.addLine("imported.cms4.2011.06", "Appointment Status:",apptStatus);
+	    	            CaseManagementNote imNote = prepareCMNote("2",null);
+	    	            imNote.setNote(dump);
+	    	            saveLinkNote(imNote, CaseManagementNoteLink.APPOINTMENT, Long.valueOf(appt.getId()));
+                    }
+                    
                 }
 
                 //REPORTS RECEIVED
@@ -1845,12 +2181,14 @@ import oscar.util.UtilDateUtilities;
                 HRMDocumentSubClassDao hrmDocSubClassDao = (HRMDocumentSubClassDao) SpringUtils.getBean("HRMDocumentSubClassDao");
                 HRMDocumentToDemographicDao hrmDocToDemoDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
 
-                ReportsReceived[] repR = patientRec.getReportsReceivedArray();
-                List<ReportsReceived> HRMreports = new ArrayList<ReportsReceived>();
-                String HRMfile = docDir + "HRM_"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss");
+                Reports[] repR = patientRec.getReportsArray();
+                List<Reports> HRMreports = new ArrayList<Reports>();
                 for (int i=0; i<repR.length; i++) {
-
+                	Reports reportItem = repR[i];
+                	
                     if (repR[i].getHRMResultStatus()!=null || repR[i].getOBRContentArray().length>0) { //HRM reports
+                    	String HRMfile = "HRM_"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss") + "_" + repR[i].getSendingFacilityId() + "_" + repR[i].getSendingFacilityReport() + ".xml";
+                        
                         HRMDocument hrmDoc = new HRMDocument();
                         HRMDocumentComment hrmDocComment = new HRMDocumentComment();
                         HRMDocumentToDemographic hrmDocToDemo = new HRMDocumentToDemographic();
@@ -1865,6 +2203,25 @@ import oscar.util.UtilDateUtilities;
                         if (repR[i].getHRMResultStatus()!=null) hrmDoc.setReportStatus(repR[i].getHRMResultStatus());
                         if (repR[i].getClass1()!=null) hrmDoc.setReportType(repR[i].getClass1().toString());
                         if (repR[i].getEventDateTime()!=null) hrmDoc.setReportDate(dateTimeFPtoDate(repR[i].getEventDateTime(), timeShiftInDays));
+                       
+                        
+                        hrmDoc.setSourceFacility(repR[i].getSourceFacility());
+                        hrmDoc.setDescription("");
+                        hrmDoc.setFormattedName(demographic.getFormattedName());
+                        hrmDoc.setDob(demographic.getFormattedDob());
+                        hrmDoc.setGender(demographic.getSex());
+                        hrmDoc.setHcn(demographic.getHin());
+                        
+                        hrmDoc.setClassName(reportItem.getClass1().toString());
+                        hrmDoc.setSubClassName(reportItem.getSubClass());
+                        
+                        hrmDoc.setRecipientId("");
+                        hrmDoc.setRecipientName("");
+                      
+                    //    hrmDoc.setHrmCategoryId(hrmCategoryId);
+                        
+                    //    hrmDoc.setSourceFacilityReportNo(repR[i].getSendingFacilityReport());
+                        
                         hrmDocDao.persist(hrmDoc);
 
                         if (repR[i].getNotes()!=null) {
@@ -1877,7 +2234,35 @@ import oscar.util.UtilDateUtilities;
                         hrmDocToDemo.setHrmDocumentId(hrmDoc.getId().toString());
                         hrmDocToDemoDao.persist(hrmDocToDemo);
 
-                        ReportsReceived.OBRContent[] obr = repR[i].getOBRContentArray();
+                        for(Reports.ReportReviewed reportReviewed : repR[i].getReportReviewedArray()) {
+                        	
+                        	HashMap<String,String> reviewerName = getPersonName(reportReviewed.getName());
+                        	String reviewer = writeProviderData(reviewerName.get("firstname"), reviewerName.get("lastname"), reportReviewed.getReviewingOHIPPhysicianId());
+                        	String reviewDateTime = dateFPtoString(reportReviewed.getDateTimeReportReviewed(), timeShiftInDays);
+                        	
+                        	HRMDocumentToProvider hrmDocProvider = new HRMDocumentToProvider();
+                        	hrmDocProvider.setHrmDocumentId(hrmDoc.getId().toString());
+                        	hrmDocProvider.setProviderNo(reviewer);
+                        	hrmDocProvider.setSignedOff(1);
+                        	
+                        	SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+                    		
+                        	try {
+                        		hrmDocProvider.setSignedOffTimestamp(f.parse(reviewDateTime));
+                        	}catch(ParseException e) {
+                        		
+                        	}
+                        	
+                        	HRMDocumentToProviderDao hRMDocumentToProviderDao = SpringUtils.getBean(HRMDocumentToProviderDao.class);
+                        	hRMDocumentToProviderDao.persist(hrmDocProvider);
+                        }
+                      
+                        if(repR[i].getRecipientName() != null) {
+                        	PersonNameSimple recipient = repR[i].getRecipientName();
+                        	recipient.getLastName();
+                        	recipient.getFirstName();
+                        }
+                        OBRContent[] obr = repR[i].getOBRContentArray();
                         for (int j=0; j<obr.length; j++) {
                             HRMDocumentSubClass hrmDocSc = new HRMDocumentSubClass();
                             if (obr[j].getAccompanyingSubClass()!=null) hrmDocSc.setSubClass(obr[j].getAccompanyingSubClass());
@@ -1885,11 +2270,30 @@ import oscar.util.UtilDateUtilities;
                             if (obr[j].getAccompanyingMnemonic()!=null) hrmDocSc.setSubClassMnemonic(obr[j].getAccompanyingMnemonic());
                             if (obr[j].getObservationDateTime()!=null) hrmDocSc.setSubClassDateTime(dateTimeFPtoDate(obr[j].getObservationDateTime(), timeShiftInDays));
                             hrmDocSc.setHrmDocumentId(hrmDoc.getId());
-                            hrmDocSc.setActive(true);
+                            hrmDocSc.setActive(j == 0 ? true: false);
                             hrmDocSubClassDao.persist(hrmDocSc);
                         }
+                        HRMreports.clear();
                         HRMreports.add(repR[i]);
+                        CreateHRMFile.create(demo, HRMreports, HRMfile);
 
+                        HRMReport report = HRMReportParser.parseReport(loggedInInfo, hrmDoc.getReportFile());
+                        
+                        String reportFileData = report.getFileData();
+
+                		String noMessageIdFileData = reportFileData.replaceAll("<MessageUniqueID>.*?</MessageUniqueID>", "<MessageUniqueID></MessageUniqueID>");
+                		String noTransactionInfoFileData = reportFileData.replaceAll("<TransactionInformation>.*?</TransactionInformation>", "<TransactionInformation></TransactionInformation>");
+                		String noDemograhpicInfoFileData = reportFileData.replaceAll("<Demographics>.*?</Demographics>", "<Demographics></Demographics").replaceAll("<MessageUniqueID>.*?</MessageUniqueID>", "<MessageUniqueID></MessageUniqueID>");
+
+                		String noMessageIdHash = DigestUtils.md5Hex(noMessageIdFileData);
+                		String noTransactionInfoHash = DigestUtils.md5Hex(noTransactionInfoFileData);
+                		String noDemographicInfoHash = DigestUtils.md5Hex(noDemograhpicInfoFileData);
+
+                		hrmDoc.setReportHash(noMessageIdHash);
+                		hrmDoc.setReportLessTransactionInfoHash(noTransactionInfoHash);
+                		hrmDoc.setReportLessDemographicInfoHash(noDemographicInfoHash);
+
+                		hrmDocDao.merge(hrmDoc);
                     } else { //non-HRM reports
                         boolean binaryFormat = false;
                         if (repR[i].getFormat()!=null) {
@@ -1898,17 +2302,20 @@ import oscar.util.UtilDateUtilities;
                             err_data.add("Error! No Report Format for Report ("+(i+1)+")");
                         }
                         cdsDt.ReportContent repCt = repR[i].getContent();
-                        if (repCt!=null) {
+                        String filePath = repR[i].getFilePath();
+                        if (repCt!=null || filePath != null) {
+                        	
                             byte[] b = null;
-                            if (repCt.getMedia()!=null) b = repCt.getMedia();
-                            else if (repCt.getTextContent()!=null) b = repCt.getTextContent().getBytes();
-                            if (b==null) {
+                            if (repCt != null && repCt.getMedia()!=null) b = repCt.getMedia();
+                            else if (repCt != null && repCt.getTextContent()!=null) b = repCt.getTextContent().getBytes();
+                            if (b==null && filePath == null) {
                                 err_othe.add("Error! No report file in xml ("+(i+1)+")");
                             } else {
                                 String docFileName = "ImportReport"+(i+1)+"-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss");
                                 String docClass=null, docSubClass=null, contentType="", contentDateTime=null, observationDate=null, updateDateTime=null, docCreator=admProviderNo;
                                 String reviewer=null, reviewDateTime=null, source=null, sourceFacility=null, reportExtra=null;
                                 Integer docNum=null;
+                                String docType = repR[i].getMedia().toString();
 
                                 if (StringUtils.filled(repR[i].getFileExtensionAndVersion())) {
                                     contentType = repR[i].getFileExtensionAndVersion();
@@ -1918,10 +2325,16 @@ import oscar.util.UtilDateUtilities;
                                 }
                                 String docDesc = repR[i].getSubClass();
                                 if (StringUtils.empty(docDesc)) docDesc = "ImportReport"+(i+1);
-                                FileOutputStream f = new FileOutputStream(docDir + docFileName);
                                 
-                                f.write(b);
-                                f.close();
+                                if(b != null) {
+                                	FileOutputStream f = new FileOutputStream(docDir + docFileName);
+                                	f.write(b);
+                                	f.close();
+                                } else {
+                                	 String tmpDir = oscarProperties.getProperty("TMP_DIR");
+                                     tmpDir = Util.fixDirName(tmpDir);
+                                     FileUtils.copyFile(new File(tmpDir + repR[i].getFilePath().substring(repR[i].getFilePath().lastIndexOf("\\")+1)), new File(docDir + docFileName));
+                                }
 
                                 if (repR[i].getClass1()!=null) {
                                     docClass = repR[i].getClass1().toString();
@@ -1940,7 +2353,7 @@ import oscar.util.UtilDateUtilities;
                                 	reportExtra = Util.addLine(reportExtra, "Media: ", repR[i].getMedia().toString());
                                 }
 
-                                ReportsReceived.SourceAuthorPhysician authorPhysician = repR[i].getSourceAuthorPhysician();
+                                SourceAuthorPhysician authorPhysician = repR[i].getSourceAuthorPhysician();
                                 if (authorPhysician!=null) {
                                     if (authorPhysician.getAuthorName()!=null) {
                                         HashMap<String,String> author = getPersonName(authorPhysician.getAuthorName());
@@ -1950,7 +2363,7 @@ import oscar.util.UtilDateUtilities;
                                     }
                                 }
 
-                                ReportsReceived.ReportReviewed[] reportReviewed = repR[i].getReportReviewedArray();
+                                Reports.ReportReviewed[] reportReviewed = repR[i].getReportReviewedArray();
                                 if (reportReviewed.length>0) {
                                     HashMap<String,String> reviewerName = getPersonName(reportReviewed[0].getName());
                                     reviewer = writeProviderData(reviewerName.get("firstname"), reviewerName.get("lastname"), reportReviewed[0].getReviewingOHIPPhysicianId());
@@ -1959,12 +2372,45 @@ import oscar.util.UtilDateUtilities;
 
                                 observationDate = dateFPtoString(repR[i].getEventDateTime(), timeShiftInDays);
                                 updateDateTime = dateFPtoString(repR[i].getReceivedDateTime(), timeShiftInDays);
-                                contentDateTime= dateFPtoString(repR[i].getReceivedDateTime(), timeShiftInDays);
-                                docNum = EDocUtil.addDocument(demographicNo,docFileName,docDesc,"",docClass,docSubClass,contentType,contentDateTime,observationDate,updateDateTime,docCreator,admProviderNo,reviewer,reviewDateTime,source,sourceFacility,null);
+                                contentDateTime= dateFPtoString(repR[i].getEventDateTime(), timeShiftInDays);
+                                
+                                String receivedDate = dateFPtoString(repR[i].getReceivedDateTime(), timeShiftInDays);
+                                
+                                String responsibleId = admProviderNo;
+                              //  DemographicDao dDao = SpringUtils.getBean(DemographicDao.class);
+                              //  Demographic demographic =dDao.getDemographic(demographicNo);
+                                if(demographic != null && !StringUtils.isNullOrEmpty(demographic.getProviderNo())) {
+                                	responsibleId = demographic.getProviderNo();
+                                }
+                                docNum = EDocUtil.addDocument(demographicNo,docFileName,docDesc,docType,docClass,docSubClass,mapContentType(contentType),contentDateTime,observationDate,updateDateTime,docCreator,responsibleId,reviewer,reviewDateTime,source,sourceFacility,receivedDate);
                                 if (docNum==null) docNum = 0;
                                 if (binaryFormat) addOneEntry(REPORTBINARY);
                                 else addOneEntry(REPORTTEXT);
 
+                                
+                                String notes = Util.addLine("Report Notes:", repR[i].getNotes());
+                                CaseManagementNote rpNote1 = prepareCMNote("2",null);
+                	            rpNote1.setNote(notes);
+                	            saveLinkNote(rpNote1, CaseManagementNoteLink.DOCUMENT, Long.valueOf(docNum));
+                	 
+                	            if(repR[i].getReportReviewedArray() != null && repR[i].getReportReviewedArray().length>1) {
+                	            	DocumentExtraReviewerDao derDao = SpringUtils.getBean(DocumentExtraReviewerDao.class); 
+                	            	for(int x=1;x<repR[i].getReportReviewedArray().length;x++) {
+                	            		ReportReviewed rr = repR[i].getReportReviewedArray()[x];
+                	            		
+                	            		DocumentExtraReviewer der = new DocumentExtraReviewer();
+                	            		der.setDocumentNo(docNum);
+                	            		
+                                        String extraReviewer = writeProviderData(rr.getName().getFirstName(), rr.getName().getLastName(), rr.getReviewingOHIPPhysicianId());
+                                        //String extraReviewDateTime = dateFPtoString(rr.getDateTimeReportReviewed(), timeShiftInDays);
+
+                                        
+                	            		der.setReviewDateTime(rr.getDateTimeReportReviewed().getFullDate().getTime());
+                	            		der.setReviewerProviderNo(extraReviewer);
+                	            		
+                	            		derDao.persist(der);
+                	            	}
+                	            }
                                 //to dumpsite: Extra report data
                                 if (StringUtils.filled(reportExtra)) {
                     	            reportExtra = Util.addLine("imported.cms4.2011.06", reportExtra);
@@ -1976,8 +2422,7 @@ import oscar.util.UtilDateUtilities;
                         }
                     }
                 }
-                CreateHRMFile.create(demo, HRMreports, HRMfile);
-
+               
                 //CARE ELEMENTS
                 CareElements[] careElems = patientRec.getCareElementsArray();
                 for (int i=0; i<careElems.length; i++) {
@@ -2119,7 +2564,7 @@ import oscar.util.UtilDateUtilities;
                             } else if (ds.getExamCode().equals(ExamCode.X_11397_7)) {
                                 ImportExportMeasurements.saveMeasurements("FTE", demographicNo, admProviderNo, dataField, dateObserved);
                                 addOneEntry(CAREELEMENTS);
-                            } else if (ds.getExamCode().equals(ExamCode.NEUROLOGICAL_EXAM)) {
+                            } else if (ds.getExamCode().equals(ExamCode.X_67536_3)) {
                                 ImportExportMeasurements.saveMeasurements("FTLS", demographicNo, admProviderNo, dataField, dateObserved);
                                 addOneEntry(CAREELEMENTS);
                             }
@@ -2148,6 +2593,26 @@ import oscar.util.UtilDateUtilities;
                         addOneEntry(CAREELEMENTS);
                     }
                 }
+                
+                //NEW CATEGORY - data that doesn't fit into other categories
+                NewCategory[] newCategories = patientRec.getNewCategoryArray();
+                String extraCategoryData = "";
+                for (int i=0; i<newCategories.length; i++) {
+                	NewCategory ce = newCategories[i];  
+                	
+                	Util.addLine("Uncategorized Data: ", ce.getCategoryName() + " : " + ce.getCategoryDescription());
+                	for(int x=0;x<ce.getResidualInfoArray().length;x++) {
+                		Util.addLine(extraCategoryData, getResidual(ce.getResidualInfoArray(x)));
+                	}
+                }
+                if (StringUtils.filled(extraCategoryData)) {
+    	            extra = Util.addLine("imported.cms4.2011.06", extra);
+    	            CaseManagementNote dmNote = prepareCMNote("2",null);
+    	            dmNote.setNote(extra);
+    	            saveLinkNote(dmNote, CaseManagementNoteLink.DEMOGRAPHIC, Long.valueOf(demographicNo));
+                }
+
+                
             }
             if(demoRes != null) {
                 err_demo.addAll(demoRes.getWarningsCollection());
@@ -2158,6 +2623,28 @@ import oscar.util.UtilDateUtilities;
 	}
 
 
+    protected String mapContentType(String contentType) {
+    	
+    	if(".jpeg".equals(contentType) || ".jpg".equals(contentType)) {
+    		return "image/jpeg";
+    	}
+    	if(".doc".equals(contentType)) {
+    		return "application/msword";
+    	}
+    	if(".pdf".equals(contentType)) {
+    		return "application/pdf";
+    	}
+    	if(".txt".equals(contentType)) {
+    		return "text/plain";
+    	}
+    	if(".html".equals(contentType)) {
+    		return "text/html";
+    	}
+    	if(".rtf".equals(contentType)) {
+    		return "application/rtf";
+    	}
+    	return contentType;
+    }
 	File makeImportLog(ArrayList<String[]> demo, String dir) throws IOException {
 		String[][] keyword = new String[2][16];
 		keyword[0][0] = PATIENTID;
@@ -2316,12 +2803,96 @@ import oscar.util.UtilDateUtilities;
 		return f.format(c.getTime());
 	}
 
+	
+	Map<String,List<JSONObject>> map = null;
+	
+	boolean verifyISO3661(String value) {
+		if(map == null) {
+			JSONObject obj = null;
+			try {
+				InputStream  in = getClass().getClassLoader()
+	                    .getResourceAsStream("iso-3166-2.json");
+				String theString = IOUtils.toString(in, "UTF-8");
+				obj = new org.codehaus.jettison.json.JSONObject(theString);
+			}catch(Exception e) {
+				MiscUtils.getLogger().error("Error",e);
+				return false;
+			}
+			
+			map = new HashMap<String,List<JSONObject>>();
+			try {
+				if(obj != null) {				
+					Iterator iter =  obj.keys();
+					while(iter.hasNext()) {
+						String countryCode = (String)iter.next();
+						//String countryName = ((org.codehaus.jettison.json.JSONObject)obj.get(countryCode)).getString("name");
+						//org.codehaus.jettison.json.JSONObject divisions = ((org.codehaus.jettison.json.JSONObject)obj.get(countryCode)).get("divisions");
+						JSONObject divisions = obj.getJSONObject(countryCode).getJSONObject("divisions");
+						Iterator iter2 =  divisions.keys();
+						List<JSONObject> rList = new ArrayList<JSONObject>();
+						while(iter2.hasNext()) {
+							String divisionCode = (String)iter2.next();
+							String divisionName = divisions.getString(divisionCode);
+							org.codehaus.jettison.json.JSONObject r = new org.codehaus.jettison.json.JSONObject();
+							r.put("value", divisionCode);
+							r.put("label", divisionName);
+							rList.add(r);
+						}
+						map.put(countryCode,rList);
+					}
+				}
+			}catch(Exception e) {
+				MiscUtils.getLogger().error("Error",e);
+				return false;
+			}
+		}
+		
+		if(map == null) {
+			return false;
+		}
+		
+		String[] csdc = value.split("-");
+		
+		if(csdc.length == 2) {
+			String country = csdc[0];
+		//	String province = csdc[1];
+			
+			List<JSONObject> divisions = 
+					map.get(country);
+			
+			if(divisions == null) {
+				return false;
+			}
+			
+			for(JSONObject rI : divisions) {
+				try {
+					if(rI.has("value") && value.equals(rI.getString("value"))) {
+						return true;
+					}
+				}catch(Exception e) {
+					MiscUtils.getLogger().error("Error",e);
+				}
+			}
+		} else {
+			return false;
+		}
+		
+		return false;
+		
+	}
 	String getCountrySubDivCode(String countrySubDivCode) {
 		if (StringUtils.empty(countrySubDivCode)) return "";
+		
+		
+		//use full ISO 3661-2
+		if(!verifyISO3661(countrySubDivCode)) {
+			return "OT";
+		}
+		
 		String[] csdc = countrySubDivCode.split("-");
 		if (csdc.length==2) {
 			if (csdc[0].trim().equals("CA")) return csdc[1].trim(); //return w/o "CA-"
-			if (csdc[1].trim().equals("US")) return countrySubDivCode.trim(); //return w/ "US-"
+			return countrySubDivCode;
 		}
 		return "OT"; //Other
 	}
@@ -2435,15 +3006,52 @@ import oscar.util.UtilDateUtilities;
                 if (diagCode==null) return false;
 
                 String codingSystem = StringUtils.noNull(diagCode.getStandardCodingSystem()).toLowerCase();
-		return (codingSystem.contains("icd") && codingSystem.contains("9"));
+                
+                return codingSystem.equals("icd-9");
+	//	return (codingSystem.contains("icd") && codingSystem.contains("9"));
         }
 
         boolean isICD9(cdsDt.Code diagCode) {
                 if (diagCode==null) return false;
 
                 String codingSystem = StringUtils.noNull(diagCode.getCodingSystem()).toLowerCase();
-		return (codingSystem.contains("icd") && codingSystem.contains("9"));
+                return codingSystem.equals("icd-9");
+                //return (codingSystem.contains("icd") && codingSystem.contains("9"));
         }
+        
+        
+        boolean isICD10(cdsDt.StandardCoding diagCode) {
+            if (diagCode==null) return false;
+
+            String codingSystem = StringUtils.noNull(diagCode.getStandardCodingSystem()).toLowerCase();
+            //return (codingSystem.contains("icd") && codingSystem.contains("10"));
+            return codingSystem.equals("icd-10");
+        }
+
+        boolean isICD10(cdsDt.Code diagCode) {
+            if (diagCode==null) return false;
+
+            String codingSystem = StringUtils.noNull(diagCode.getCodingSystem()).toLowerCase();
+            //return (codingSystem.contains("icd") && codingSystem.contains("10"));
+            return codingSystem.equals("icd-10");
+        }
+    
+        boolean isICD9CM(cdsDt.StandardCoding diagCode) {
+            if (diagCode==null) return false;
+
+            String codingSystem = StringUtils.noNull(diagCode.getStandardCodingSystem()).toLowerCase();
+            //return (codingSystem.contains("icd") && codingSystem.contains("10"));
+            return codingSystem.equals("icd-9-cm");
+        }
+
+        boolean isICD9CM(cdsDt.Code diagCode) {
+            if (diagCode==null) return false;
+
+            String codingSystem = StringUtils.noNull(diagCode.getCodingSystem()).toLowerCase();
+            //return (codingSystem.contains("icd") && codingSystem.contains("10"));
+            return codingSystem.equals("icd-9-cm");
+        }
+    
 
 	Set<CaseManagementIssue> getCMIssue(String code) {
 		CaseManagementIssue cmIssu = new CaseManagementIssue();
@@ -2458,7 +3066,7 @@ import oscar.util.UtilDateUtilities;
 		return sCmIssu;
 	}
 
-	Set<CaseManagementIssue> getCMIssue(String issueCode, cdsDt.StandardCoding diagCode) {
+	Set<CaseManagementIssue> getCMIssue(String issueCode, cdsDt.StandardCoding diagCode, boolean resolved) {
 		Set<CaseManagementIssue> sCmIssu = new HashSet<CaseManagementIssue>();
 		Issue isu = caseManagementManager.getIssueInfoByCode(StringUtils.noNull(issueCode));
 		if (isu!=null) {
@@ -2466,20 +3074,45 @@ import oscar.util.UtilDateUtilities;
 			cmIssu.setDemographic_no(Integer.valueOf(demographicNo));
 			cmIssu.setIssue_id(isu.getId());
 			cmIssu.setType(isu.getType());
+			cmIssu.setResolved(resolved);
 			caseManagementManager.saveCaseIssue(cmIssu);
 			sCmIssu.add(cmIssu);
 		}
-		if (isICD9(diagCode)) {
-			isu = caseManagementManager.getIssueInfoByCode(noDot(diagCode.getStandardCode()));
-			if (isu!=null) {
+		if (isICD9(diagCode) || isICD10(diagCode) || isICD9CM(diagCode)) {
+			//TODO: find issue by the code AND the type!!!!!!!!!!!!!!!!
+			String type = null;
+			if(isICD9(diagCode)) {
+				type = "icd9";
+			}
+			if(isICD9CM(diagCode)) {
+				type = "icd9cm";
+			}
+			if(isICD10(diagCode)) {
+				type = "icd10";
+			}
+			isu = caseManagementManager.getIssueInfoByTypeAndCode(type,noDot(diagCode.getStandardCode()));
+			if(isu == null) {
+				isu = new Issue();
+				isu.setCode(noDot(diagCode.getStandardCode()));
+				isu.setDescription(diagCode.getStandardCodeDescription());
+				isu.setRole("doctor");
+				
+				isu.setType(type);
+				isu.setUpdate_date(new Date());
+				issueDao.saveIssue(isu);
+			}
+			if (isu!=null && isu.getId() != null) {
 				CaseManagementIssue cmIssu = new CaseManagementIssue();
 				cmIssu.setDemographic_no(Integer.valueOf(demographicNo));
 				cmIssu.setIssue_id(isu.getId());
 				cmIssu.setType(isu.getType());
+				cmIssu.setResolved(resolved);
 				caseManagementManager.saveCaseIssue(cmIssu);
+				cmIssu.setIssue(isu);
 				sCmIssu.add(cmIssu);
 			}
 		}
+		
 		return sCmIssu;
 	}
 
@@ -2494,17 +3127,39 @@ import oscar.util.UtilDateUtilities;
 			caseManagementManager.saveCaseIssue(cmIssu);
 			sCmIssu.add(cmIssu);
 		}
-                if (isICD9(diagCode)) {
-			isu = caseManagementManager.getIssueInfoByCode(StringUtils.noNull(diagCode.getValue()));
-			if (isu!=null) {
+		if (isICD9(diagCode) || isICD10(diagCode) || isICD9CM(diagCode)) {
+			isu = caseManagementManager.getIssueInfoByCode(noDot(diagCode.getValue()));
+			if(isu == null) {
+				isu = new Issue();
+				isu.setCode(noDot(diagCode.getValue()));
+				isu.setDescription(diagCode.getDescription());
+				isu.setRole("doctor");
+				String type = null;
+				if(isICD9(diagCode)) {
+					type = "icd9";
+				}
+				if(isICD9CM(diagCode)) {
+					type = "icd9cm";
+				}
+				if(isICD10(diagCode)) {
+					type = "icd10";
+				}
+				isu.setType(type);
+				isu.setUpdate_date(new Date());
+				issueDao.saveIssue(isu);
+			}
+			if (isu!=null && isu.getId() != null) {
 				CaseManagementIssue cmIssu = new CaseManagementIssue();
 				cmIssu.setDemographic_no(Integer.valueOf(demographicNo));
 				cmIssu.setIssue_id(isu.getId());
 				cmIssu.setType(isu.getType());
+				//cmIssu.setResolved(resolved);
 				caseManagementManager.saveCaseIssue(cmIssu);
+				cmIssu.setIssue(isu);
 				sCmIssu.add(cmIssu);
 			}
 		}
+      
 		return sCmIssu;
 	}
 
@@ -2602,6 +3257,19 @@ import oscar.util.UtilDateUtilities;
 		return ret;
 	}
 
+	Boolean getBoolean(cdsDt.YnIndicator yn) {
+		if (yn==null) return null;
+
+		boolean ret = false;
+		if (yn.getYnIndicatorsimple()==cdsDt.YnIndicatorsimple.Y || yn.getYnIndicatorsimple()==cdsDt.YnIndicatorsimple.Y_2) {
+			ret = true;
+		} else if (yn.getBoolean()) {
+			ret = true;
+		}
+		return ret;
+	}
+
+	
         Boolean getYN(cdsDt.YnIndicatorAndBlank yn) {
 		if (yn==null) return null;
 
@@ -2926,7 +3594,7 @@ import oscar.util.UtilDateUtilities;
     	return s;
     }
 
-	private static Integer saveRxAllergy(Integer demographicNo, Date entryDate, String description, Integer typeCode, String reaction, Date startDate, String severity, String regionalId, String lifeStage) {
+	private static Integer saveRxAllergy(Integer demographicNo, Date entryDate, String description, Integer typeCode, String reaction, Date startDate, String severity, String regionalId, String lifeStage, boolean intolerance, boolean nonDrug) {
 
 		AllergyDao allergyDao=(AllergyDao) SpringUtils.getBean("allergyDao");
 
@@ -2940,7 +3608,7 @@ import oscar.util.UtilDateUtilities;
 		allergy.setSeverityOfReaction(severity);
 		allergy.setRegionalIdentifier(regionalId);
 		allergy.setLifeStage(lifeStage);
-
+		allergy.setNonDrug(nonDrug);
 		allergyDao.persist(allergy);
 		return(allergy.getId());
 	}
@@ -3114,35 +3782,44 @@ import oscar.util.UtilDateUtilities;
 					obr.getUniversalServiceIdentifier().getIdentifier().setValue(result.getLabTestCode());
 					obr.getUniversalServiceIdentifier().getText().setValue(result.getTestNameReportedByLab());
 					obr.getUniversalServiceIdentifier().getNameOfCodingSystem().setValue("0000");
-					obr.getUniversalServiceIdentifier().getAlternateIdentifier().setValue("Imported Test Results");
+					obr.getUniversalServiceIdentifier().getAlternateIdentifier().setValue(result.getTestNameReportedByLab());
 					obr.getPriority().setValue("R"); //hard coded..not in OMD spec
 					
 					Calendar cal = Calendar.getInstance();
 					if(result.getCollectionDateTime().isSetFullDate()) {
 						cal = result.getCollectionDateTime().getFullDate();
+						obr.getObservationDateTime().getTimeOfAnEvent().setDatePrecision(cal.get(Calendar.YEAR),
+								cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH));
+						
 					} else {
 						cal = result.getCollectionDateTime().getFullDateTime();
+						obr.getObservationDateTime().getTimeOfAnEvent().setDateSecondPrecision(cal.get(Calendar.YEAR),
+								cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
+						
 					}
 					
-					obr.getObservationDateTime().getTimeOfAnEvent().setDateSecondPrecision(cal.get(Calendar.YEAR),
-							cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
-					
+				
 					if(result.getLabRequisitionDateTime() != null) {
 						if(result.getLabRequisitionDateTime().isSetFullDate()) {
 							cal = result.getLabRequisitionDateTime().getFullDate();
+							obr.getRequestedDateTime().getTimeOfAnEvent().setDatePrecision(cal.get(Calendar.YEAR),
+									cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH));
 						} else {
 							cal = result.getLabRequisitionDateTime().getFullDateTime();
+							obr.getRequestedDateTime().getTimeOfAnEvent().setDateSecondPrecision(cal.get(Calendar.YEAR),
+									cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
 						}
 						
-						obr.getRequestedDateTime().getTimeOfAnEvent().setDateSecondPrecision(cal.get(Calendar.YEAR),
-								cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND));
+						
 					}
+					
+					//obr-16 requesting
 					
 					//NOTE: obr-17 lost - ordering physician
 					
 					//OBX
 					OBX obx = grp.getOBSERVATION().getOBX();
-					obx.getSetIDOBX().setValue("1");
+					obx.getSetIDOBX().setValue(String.valueOf(x));
 					
 					obx.getObx2_ValueType().setValue("ST");
 					obx.getObx3_ObservationIdentifier().getIdentifier().setValue(result.getLabTestCode());
@@ -3158,16 +3835,54 @@ import oscar.util.UtilDateUtilities;
 					
 					
 					if(result != null && result.getResult() != null && result.getResult().getUnitOfMeasure() != null) {
-						obx.getObx6_Units().getCe2_Text().setValue(result.getResult().getUnitOfMeasure());
+					//	obx.getObx6_Units().getCe2_Text().setValue(result.getResult().getUnitOfMeasure());
+						obx.getObx6_Units().getCe1_Identifier().setValue(result.getResult().getUnitOfMeasure());
 					}
 					
 					if(result.getReferenceRange() != null) {
-						obx.getObx7_ReferencesRange().setValue(result.getReferenceRange().getReferenceRangeText());
+						String refRange = "";
+						if(result.getReferenceRange().isSetReferenceRangeText()) {
+							refRange = result.getReferenceRange().getReferenceRangeText();
+						}
+						
+						if(result.getReferenceRange().isSetLowLimit()) {
+							refRange = result.getReferenceRange().getLowLimit();
+						}
+
+						if(result.getReferenceRange().isSetHighLimit()) {
+							refRange += ("-" + result.getReferenceRange().getHighLimit());
+						}
+
+						obx.getObx7_ReferencesRange().setValue(refRange);
 					}
 					
 					if(result.getResultNormalAbnormalFlag() != null) {
 						ID abnormalFlags = obx.insertAbnormalFlags(0);
-						abnormalFlags.setValue(result.getResultNormalAbnormalFlag().toString());
+						if(result.getResultNormalAbnormalFlag().isSetResultNormalAbnormalFlagAsPlainText()) {
+							abnormalFlags.setValue(result.getResultNormalAbnormalFlag().getResultNormalAbnormalFlagAsPlainText());
+						} else {
+							abnormalFlags.setValue(result.getResultNormalAbnormalFlag().getResultNormalAbnormalFlagAsEnum().toString());
+						}
+					
+					}
+					
+					if(result.getBlockedTestResult() != null && result.getBlockedTestResult() == YIndicator.Y) {
+						obx.getUserDefinedAccessChecks().setValue("BLOCKED");
+					}
+					
+					
+					if(!StringUtils.isNullOrEmpty(result.getTestResultStatus())) {
+						obx.getNatureOfAbnormalTest().setValue(result.getTestResultStatus());
+					}
+					
+					if(!StringUtils.isNullOrEmpty(result.getLaboratoryName())) {
+						obr.insertObr39_CollectorSComment(0).getCe1_Identifier().setValue(result.getLaboratoryName());
+					}
+					
+					if(!StringUtils.isNullOrEmpty(result.getNotesFromLab())) {
+						NTE nte = grp.getOBSERVATION().insertNTE(0);
+						nte.getNte1_SetIDNotesAndComments().setValue(obx.getSetIDOBX().getValue());
+						Terser.set(nte, 3, 0, 1, 1, result.getNotesFromLab());
 					}
 					
 				}
@@ -3227,7 +3942,7 @@ import oscar.util.UtilDateUtilities;
 			        	String status = StringUtils.filled(reviewer) ? "A" : "N";
 	                    reviewer = status.equals("A") ? reviewer : "0";
 	                 
-	                    LabResultImport.saveProviderLabRouting(reviewer, labNo.toString() , status, "", reviewDate);
+	                    LabResultImport.updateProviderLabRouting(reviewer, labNo.toString() , status, "", reviewDate,"HL7");
 	                    
 	                   
 			        }
@@ -3240,15 +3955,16 @@ import oscar.util.UtilDateUtilities;
 	                		saveMeasurementsExt(measId, "comments", result.getNotesFromLab());
 	                	}
 	                	
+	                	
 	                	String annotation = labResult.getPhysiciansNotes();
 		                if (StringUtils.filled(annotation)) {
 		                    saveMeasurementsExt(measId, "other_id", "0-0");
 		                    CaseManagementNote cmNote = prepareCMNote("2",null);
 		                    cmNote.setNote(annotation);
-		                    saveLinkNote(cmNote, CaseManagementNoteLink.LABTEST2, labNo.longValue(), "0-0");
+		                    saveLinkNote(cmNote, CaseManagementNoteLink.LABTEST, labNo.longValue(), "0-0");
 		                }
 
-						String olis_status = result.getOLISTestResultStatus();
+						String olis_status = result.getTestResultStatus();
 						if (StringUtils.filled(olis_status))  {
 							if(measId != null) {
 								saveMeasurementsExt(measId, "olis_status", olis_status);
@@ -3257,18 +3973,141 @@ import oscar.util.UtilDateUtilities;
 			               
 	                }
 	                
-	                String testResultsInfo = labResult.getTestResultsInformationReportedByTheLab();
-	                if (StringUtils.filled(testResultsInfo)) {
-	                    String dump = Util.addLine("imported.cms4.2011.06", "Test Results Info: ", testResultsInfo);
-	                    CaseManagementNote cmNote = prepareCMNote("2",null);
-	                    cmNote.setNote(dump);
-	                    saveLinkNote(cmNote, CaseManagementNoteLink.LABTEST2, labNo.longValue(), "0-0");
-	                }
+			        
+			 
+			        String dump = Util.addLine("imported.cms4.2011.06",  "Physician Notes: ", org.apache.commons.lang.StringUtils.trimToEmpty(labResult.getPhysiciansNotes()));
+			        dump = Util.addLine(dump,  "Test Results Info: ", org.apache.commons.lang.StringUtils.trimToEmpty(labResult.getTestResultsInformationReportedByTheLab()));
+			        dump = Util.addLine(dump,  "Test Code: ", org.apache.commons.lang.StringUtils.trimToEmpty(labResult.getLabTestCode()));
+			        dump = Util.addLine(dump,  "Test Name: ", org.apache.commons.lang.StringUtils.trimToEmpty(labResult.getTestName()));
+			     //   dump = Util.addLine(dump,  "Lab Requisition DateTime: ", org.apache.commons.lang.StringUtils.trimToEmpty((dateFPtoString(labResult.getLabRequisitionDateTime(),0))));
+
+			        CaseManagementNote cmNote = prepareCMNote("2",null);
+                    cmNote.setNote(dump);
+                    saveLinkNote(cmNote, CaseManagementNoteLink.LABTEST, labNo.longValue(), "0-0");
 		        }
                   
 			}catch(Exception e) {
 				logger.error("error", e);
 			}
 		}
+	}
+	
+	//"Confirmed, Cancelled, No-Show, No-Cancellation Allowed and other descriptors possible"
+	protected String isMappedStatus(AppointmentStatus as, String status) {
+		
+		if(status.equals(as.getDescription())) {
+			return as.getStatus();
+		}
+/*		
+		if("Confirmed".equals(status) && "Here".equals(as.getDescription())) {
+			return as.getStatus();
+		}
+*/		
+		if("No-Show".equals(status) && "No Show".equals(as.getDescription())) {
+			return as.getStatus();
+		}
+		
+		return null;
+	}
+
+	protected AppointmentStatus createNewAppointmentStatus(String description) {
+		AppointmentStatusDao appointmentStatusDao = SpringUtils.getBean(AppointmentStatusDao.class);
+		List<String> usedStatusCodes = new ArrayList<String>();
+		for(AppointmentStatus as : appointmentStatusDao.findAll()) {
+			 if(description.equals(as.getDescription())) {
+				 return as;
+			 }
+			 usedStatusCodes.add(as.getStatus());
+		 }
+		
+		 AppointmentStatus importedStatus = new AppointmentStatus();
+		 importedStatus.setActive(1);
+		 importedStatus.setDescription(description);
+		 importedStatus.setEditable(1);
+		 importedStatus.setIcon("5.gif");
+		
+		 
+		 
+		 importedStatus.setStatus(findStatus(usedStatusCodes));
+		 importedStatus.setColor(generateRandomColor());
+		 
+		 appointmentStatusDao.persist(importedStatus);
+		 
+		 return importedStatus;
+	}
+	
+	String findStatus(List<String> usedStatusCodes) {
+		String alpha = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		for(char c: alpha.toCharArray()) {
+			if(!usedStatusCodes.contains(String.valueOf(c))) {
+				return String.valueOf(c);
+			}
+		}
+		return null;
+	}
+	
+	String generateRandomColor() {
+		int R = (int)(Math.random()*256);
+		int G = (int)(Math.random()*256);
+		int B= (int)(Math.random()*256);
+		Color color = new Color(R, G, B); 
+		return getHTMLColorString(color);
+	}
+	
+	public String getHTMLColorString(Color color) {
+	    String red = Integer.toHexString(color.getRed());
+	    String green = Integer.toHexString(color.getGreen());
+	    String blue = Integer.toHexString(color.getBlue());
+
+	    return "#" + 
+	            (red.length() == 1? "0" + red : red) +
+	            (green.length() == 1? "0" + green : green) +
+	            (blue.length() == 1? "0" + blue : blue);        
+	}
+	
+	protected String getImportStatus() {
+		//create if necessary
+		 AppointmentStatusDao appointmentStatusDao = SpringUtils.getBean(AppointmentStatusDao.class);
+		 AppointmentStatus importedStatus = null;
+		 for(AppointmentStatus as : appointmentStatusDao.findAll()) {
+			 if(as.getDescription().equals("Imported")) {
+				 importedStatus = as;
+				 break;
+			 }
+		 }
+		 if(importedStatus == null) {
+			 importedStatus = new AppointmentStatus();
+			 importedStatus.setActive(1);
+			 importedStatus.setColor("#DDDDDD");
+			 importedStatus.setDescription("Imported");
+			 importedStatus.setEditable(1);
+			 importedStatus.setIcon("5.gif");
+			 if(appointmentStatusDao.findByStatus("i") == null) {
+				 importedStatus.setStatus("i");
+			 } else {
+				 importedStatus.setStatus("I");
+			 }
+			 appointmentStatusDao.persist(importedStatus);
+		 }
+		return importedStatus.getStatus();
+	}
+	
+	String tryToMapRoute(String route) {
+		String ret = "";
+		
+		if("Oral".equals(route)) {
+			ret = "PO";
+		}
+		else if("Intramuscular".equals(route)) {
+			ret = "IM";
+		} else if("Intradermal".equals(route)) {
+			ret = "ID";
+		} else if("Intranasal".equals(route)) {
+			ret = "IN";
+		} else if("Subcutaneous".equals(route)) {
+			ret = "SC";
+		}
+		
+		return ret;
 	}
 }

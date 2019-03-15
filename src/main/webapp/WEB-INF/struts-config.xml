@@ -206,7 +206,6 @@
 		<form-bean name="LabUploadForm" type="oscar.oscarLab.ca.bc.PathNet.pageUtil.LabUploadForm" />
 		<form-bean name="CMLLabUploadForm" type="oscar.oscarLab.ca.on.CML.Upload.LabUploadForm" />
 		<form-bean name="DemographicExportForm" type="oscar.oscarDemographic.pageUtil.DemographicExportForm" />
-		<form-bean name="DiabetesExportForm" type="oscar.oscarDemographic.pageUtil.DiabetesExportForm" />
 		<form-bean name="DemographicSetEditForm" type="oscar.oscarReport.pageUtil.DemographicSetEditForm" />
 		<form-bean name="eFormHtmlUpload" type="oscar.eform.upload.HtmlUploadForm" />
 		<form-bean name="eFormEdit" type="oscar.eform.data.HtmlEditForm" />
@@ -1888,8 +1887,7 @@
 			<!-- Sharing Center forward -->
 			<forward name="sendToAffinityDomain" path="/sharingcenter/documents/shareDocumentsAction.jsp" />
 		</action>
-		<action input="/demographic/diabetesExport.jsp" name="DiabetesExportForm" path="/demographic/DiabetesExport" scope="request" type="oscar.oscarDemographic.pageUtil.DiabetesExportAction">
-		</action>
+
 		<action input="/demographic/cihiExport.jsp" name="CihiExportForm" path="/demographic/cihiExportOMD4" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
 			<forward name="display" path="/demographic/cihiExport.jsp" />
 		</action>

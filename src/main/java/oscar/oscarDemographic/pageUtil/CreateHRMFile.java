@@ -32,15 +32,21 @@ package oscar.oscarDemographic.pageUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.xmlbeans.XmlOptions;
+import org.oscarehr.caisi_integrator.util.MiscUtils;
 
 import cds.DemographicsDocument;
-import cds.ReportsReceivedDocument;
+import cds.DemographicsDocument.Demographics.Enrolment.EnrolmentHistory;
+import cds.ReportsDocument.Reports;
+import cds.ReportsDocument.Reports.OBRContent;
+import cds.ReportsDocument.Reports.ReportReviewed;
+import cds.ReportsDocument.Reports.SourceAuthorPhysician;
 import cdsDt.PersonNameStandard.OtherNames;
 import cdsDtHrm.Address;
 import cdsDtHrm.AddressStructured;
@@ -74,6 +80,7 @@ import cdshrm.PatientRecordDocument.PatientRecord;
 import cdshrm.ReportsReceivedDocument.ReportsReceived;
 import cdshrm.ReportsReceivedDocument.ReportsReceived.ResultStatus;
 import cdshrm.TransactionInformationDocument.TransactionInformation;
+import oscar.OscarProperties;
 
 /**
  *
@@ -81,7 +88,7 @@ import cdshrm.TransactionInformationDocument.TransactionInformation;
  */
 public class CreateHRMFile {
 
-    static public void create(DemographicsDocument.Demographics demographic, List<ReportsReceivedDocument.ReportsReceived> reports, String filepath) {
+    static public void create(DemographicsDocument.Demographics demographic, List<Reports> reports, String filepath) {
 
         OmdCdsDocument omdCdsDoc = OmdCdsDocument.Factory.newInstance();
         OmdCds omdCds = omdCdsDoc.addNewOmdCds();
@@ -102,12 +109,17 @@ public class CreateHRMFile {
         options.setSaveSuggestedPrefixes(suggestedPrefix);
 	options.setSaveOuter();
 
+	if(!filepath.contains(File.separator)) {
+		filepath = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + File.separator + filepath;
+	}
         File file = new File(filepath);
         try {
             omdCdsDoc.save(file, options);
         } catch (IOException ex) {
             Logger.getLogger(CreateHRMFile.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        MiscUtils.getLogger().info("saved HRM file: " + filepath);
     }
 
     static private void writeDemographics(DemographicsDocument.Demographics demo, Demographics HRMdemo) {
@@ -197,19 +209,21 @@ public class CreateHRMFile {
         if (demo.getPersonStatusDate()!=null) HRMdemo.addNewPersonStatusDate().setFullDate(demo.getPersonStatusDate());
 
         //EnrollmentStatus
-        DemographicsDocument.Demographics.Enrolment[] enrolments = demo.getEnrolmentArray();
-        if (enrolments!=null && enrolments.length>0) {
-            cdsDt.EnrollmentStatus.Enum enrollmentStatus = enrolments[0].getEnrollmentStatus();
-            if (enrollmentStatus!=null) HRMdemo.setEnrollmentStatus(EnrollmentStatus.Enum.forString(enrollmentStatus.toString()));
-
-            if (enrolments[0].getEnrollmentDate()!=null) {
-                HRMdemo.addNewEnrollmentDate().setFullDate(enrolments[0].getEnrollmentDate());
-            }
-            if (enrolments[0].getEnrollmentTerminationDate()!=null) {
-                HRMdemo.addNewEnrollmentTerminationDate().setFullDate(enrolments[0].getEnrollmentTerminationDate());
-            }
+        if(demo.getEnrolment() != null) {
+	        EnrolmentHistory[] enrolments = demo.getEnrolment().getEnrolmentHistoryArray();
+	        if (enrolments!=null && enrolments.length>0) {
+	            cdsDt.EnrollmentStatus.Enum enrollmentStatus = enrolments[0].getEnrollmentStatus();
+	            if (enrollmentStatus!=null) HRMdemo.setEnrollmentStatus(EnrollmentStatus.Enum.forString(enrollmentStatus.toString()));
+	
+	            if (enrolments[0].getEnrollmentDate()!=null) {
+	                HRMdemo.addNewEnrollmentDate().setFullDate(enrolments[0].getEnrollmentDate());
+	            }
+	            if (enrolments[0].getEnrollmentTerminationDate()!=null) {
+	                HRMdemo.addNewEnrollmentTerminationDate().setFullDate(enrolments[0].getEnrollmentTerminationDate());
+	            }
+	        }
         }
-
+	        
         //HealhCard
         cdsDt.HealthCard healthCard = demo.getHealthCard();
         if (healthCard!=null) {
@@ -343,12 +357,12 @@ public class CreateHRMFile {
         }
     }
 
-    static private void writeReportsReceived(List<ReportsReceivedDocument.ReportsReceived> reports, PatientRecord patientRecord) {
-        for (ReportsReceivedDocument.ReportsReceived report : reports) {
+    static private void writeReportsReceived(List<Reports> reports, PatientRecord patientRecord) {
+        for (Reports report : reports) {
             ReportsReceived HRMreport = patientRecord.addNewReportsReceived();
 
             //AuthorPhysician
-            ReportsReceivedDocument.ReportsReceived.SourceAuthorPhysician authorPhysician = report.getSourceAuthorPhysician();
+            SourceAuthorPhysician authorPhysician = report.getSourceAuthorPhysician();
             if (authorPhysician!=null && authorPhysician.getAuthorName()!=null) {
                 copyPersonNameSimple(HRMreport.addNewAuthorPhysician(), authorPhysician.getAuthorName());
             }
@@ -362,8 +376,14 @@ public class CreateHRMFile {
             //Content
             cdsDt.ReportContent reportContent = report.getContent();
             if (reportContent!=null && reportContent.getTextContent()!=null) {
-                ReportContent HRMreportContent = HRMreport.addNewContent();
-                HRMreportContent.setTextContent(reportContent.getTextContent());
+            	if(report.getFormat() == cdsDt.ReportFormat.BINARY) {
+            		ReportContent HRMreportContent = HRMreport.addNewContent();
+            		HRMreportContent.setMedia(Base64.getDecoder().decode(reportContent.getTextContent()));
+            	} else {
+            		ReportContent HRMreportContent = HRMreport.addNewContent();
+            		HRMreportContent.setTextContent(reportContent.getTextContent());
+            	}
+              
             }
 
             //FileExtensionAndVersion
@@ -384,7 +404,7 @@ public class CreateHRMFile {
             if (report.getReceivedDateTime()!=null) copyDateFP(HRMreport.addNewReceivedDateTime(), report.getReceivedDateTime());
 
             //Reviews
-            ReportsReceivedDocument.ReportsReceived.ReportReviewed[] reportReviews = report.getReportReviewedArray();
+            ReportReviewed[] reportReviews = report.getReportReviewedArray();
             if (reportReviews!=null && reportReviews.length>0) {
                 if (reportReviews[0].getDateTimeReportReviewed()!=null) {
                     copyDateFP(HRMreport.addNewReviewedDateTime(), reportReviews[0].getDateTimeReportReviewed());
@@ -404,9 +424,9 @@ public class CreateHRMFile {
             if (report.getSendingFacilityReport()!=null) HRMreport.setSendingFacilityReportNumber(report.getSendingFacilityReport());
 
             //OBRConent
-            ReportsReceivedDocument.ReportsReceived.OBRContent[] OBRs = report.getOBRContentArray();
+            OBRContent[] OBRs = report.getOBRContentArray();
             if (OBRs!=null && OBRs.length>0) {
-                for (ReportsReceivedDocument.ReportsReceived.OBRContent OBR : OBRs) {
+                for (OBRContent OBR : OBRs) {
                     ReportsReceived.OBRContent HRMobr = HRMreport.addNewOBRContent();
 
                     if (OBR.getAccompanyingDescription()!=null) HRMobr.setAccompanyingDescription(OBR.getAccompanyingDescription());
@@ -423,7 +443,8 @@ public class CreateHRMFile {
             if (report.getMessageUniqueID()!=null) transactionInfo.setMessageUniqueID(report.getMessageUniqueID());
             else transactionInfo.setMessageUniqueID("");
             transactionInfo.setDeliverToUserID("");
-   //         PersonNameSimple physician = transactionInfo.addNewPhysician();
+            PersonNameSimple physician = transactionInfo.addNewProvider();
+           // PersonNameSimple physician = transactionInfo.addNewPhysician();
         }
     }
 
