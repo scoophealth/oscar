@@ -9,10 +9,16 @@
 
 package com.indivica.olis.queries;
 
+import java.util.Date;
+
 import com.indivica.olis.parameters.ZPD1;
 
 public abstract class Query implements Cloneable {
 
+	private Date queryExecutionDate;
+	private String initiatingProviderNo;
+	private String uuid;
+	
 	public String demographicNo;
 	
 	public String getDemographicNo() {
@@ -37,4 +43,41 @@ public abstract class Query implements Cloneable {
 	        throw new InternalError(e.toString());
 	    }
 	}	
+	 
+	 
+	 public String getRequestingHICProviderNo() {
+		 if(this instanceof Z04Query) {
+			 return ((Z04Query)this).getRequestingHicIdNumber();
+		 }
+		 if(this instanceof Z01Query) {
+			 return ((Z01Query)this).getRequestingHicIdNumber();
+		 }
+		 return null;
+	 }
+
+	public Date getQueryExecutionDate() {
+		return queryExecutionDate;
+	}
+
+	public void setQueryExecutionDate(Date queryExecutionDate) {
+		this.queryExecutionDate = queryExecutionDate;
+	}
+
+	public String getInitiatingProviderNo() {
+		return initiatingProviderNo;
+	}
+
+	public void setInitiatingProviderNo(String initiatingProviderNo) {
+		this.initiatingProviderNo = initiatingProviderNo;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+	 
+	
 }
