@@ -118,36 +118,36 @@ public class CppPreferencesUIBean {
 	private String resolvedIssuesDisplay = "SHOW";
 	private String episodesDisplay = "SHOW";
 	
-	private String socialHxStartDate;
-	private String socialHxResDate;
-	private String medHxStartDate;
-	private String medHxResDate;
-	private String medHxTreatment;
-	private String medHxProcedureDate;
-	private String ongoingConcernsStartDate;
-	private String ongoingConcernsResDate;
-	private String ongoingConcernsProblemStatus;
-	private String remindersStartDate;
-	private String remindersResDate;
-	private String enable;
+	private String socialHxStartDate = "";
+	private String socialHxResDate = "";
+	private String medHxStartDate = "";
+	private String medHxResDate = "";
+	private String medHxTreatment = "";
+	private String medHxProcedureDate = "";
+	private String ongoingConcernsStartDate = "";
+	private String ongoingConcernsResDate = "";
+	private String ongoingConcernsProblemStatus = "";
+	private String remindersStartDate = "";
+	private String remindersResDate = "";
+	private String enable = "";
 	
-	private String riskFactorsStartDate;
-	private String riskFactorsResDate;
-	private String otherMedsStartDate;
-	private String otherMedsResDate;
-	private String familyHistoryStartDate;
-	private String familyHistoryResDate;
-	private String familyHistoryTreatment;
-	private String familyHistoryRelationship;
+	private String riskFactorsStartDate = "";
+	private String riskFactorsResDate = "";
+	private String otherMedsStartDate = "";
+	private String otherMedsResDate = "";
+	private String familyHistoryStartDate = "";
+	private String familyHistoryResDate = "";
+	private String familyHistoryTreatment = "";
+	private String familyHistoryRelationship = "";
 	
-	private String allergyStartDate;
-	private String allergySeverity;
+	private String allergyStartDate = "";
+	private String allergySeverity = "";
 	
-	private String medicationStartDate;
-	private String medicationEndDate;
-	private String medicationQty;
-	private String medicationRepeats;
-	private String medicationInstructions;
+	private String medicationStartDate = "";
+	private String medicationEndDate = "";
+	private String medicationQty = "";
+	private String medicationRepeats = "";
+	private String medicationInstructions = "";
 	
 	public Map<String,String> serialize() {
 		Map<String,String> map = new HashMap<String,String>();
