@@ -172,6 +172,21 @@ public class EctValidation{
                
         return validation;
     }
+    
+    public boolean isNumeric(Boolean numeric, String inputValue){
+
+        boolean validation = true;
+       
+        if(numeric != null && numeric.booleanValue() == true) {
+	        try {
+	        	Double.valueOf(inputValue);
+	        } catch(NumberFormatException e) {
+	        	validation = false;
+	        }
+        }
+               
+        return validation;
+    }
 
      public boolean isValidBloodPressure(String regExp, String inputValue){
 

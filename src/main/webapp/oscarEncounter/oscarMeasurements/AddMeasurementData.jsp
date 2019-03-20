@@ -111,6 +111,17 @@
 	function doSubmit() {
 		
 		 jQuery.post(jQuery("#measurementForm").attr('action') + '?ajax=true&skipCreateNote=true',jQuery('#measurementForm').serialize(),function(data){
+			 
+			 if(data && data.errors && data.errors.length>0) {
+				 jQuery("#errorList").empty();
+				 for(var x=0;x<data.errors.length;x++) {
+					jQuery("#errorList").append(data.errors[x]);
+				 }
+				jQuery("#errorDiv").show();
+				 return false;
+				 
+			 }	
+			 
 			 	if(opener != null && opener.opener != null) {	
 					opener.opener.postMessage(data,"*");
 			 	}
@@ -118,7 +129,7 @@
 					opener.location.reload();
 			 	}
 	      		window.close();
-	      	 });
+	      	 },"json");
 		 
 		 return false;
 		 
@@ -421,6 +432,12 @@ clear: left;
                             <%}%>
                          </div>
                           <br/>
+                 
+                 		  <div id="errorDiv" style="display:none">
+                 		  	<ul id="errorList" style="color:red">
+                 		  	
+                 		  	</ul>
+                 		  </div>
                          <fieldset >
                           <legend >Comments</legend>
                            <textarea name="<%= "value(comments-" + ctr + ")" %>" ><%=comment%></textarea>
