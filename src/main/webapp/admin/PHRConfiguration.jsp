@@ -69,9 +69,14 @@
 		<div class="jumbotron" ng-if="!audit.onlineBookingConfigured">
 		  <h3>Online Booking Configuration</h3>
 		 
-		  <select>
+		  <select ng-model="bookingProviderNo">
 		  	<option ng-repeat="pro in activeProviders" value="pro.providerNo">{{pro.lastName}}, {{pro.firstName}} ({{pro.providerNo}})</option>
 		  </select>
+		  <label><bean:message key="admin.phr.clinicPassword"/><small> (This will be supplied by the PHR)</small></label>
+		  <div class="controls">
+			<input class="form-control" name="bookingPassword" ng-model="bookingPassword" type="password" maxlength="255"/>  <br/>
+		  </div>
+		  <input type="button" class="btn btn-primary" ng-disabled="bookingProviderNo==null || bookingProviderNo=='' || bookingPassword==null || bookingPassword==''" value="<bean:message key="admin.phr.initbtn"/>"  ng-click="setOscarCreds()"/>
 		  <div class="alert alert-info" role="alert">Clinic Information</div>
 		  <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
 		</div>
@@ -127,23 +132,8 @@
 			}
 		    checkStatus();
 		    
-		    getAllActiveProviders = function(){
-    			providerService.getAllActiveProviders().then(function(data){
-		    			$scope.activeProviders = data;
-		    			console.log("$scope.activeProviders",data);
-		    			angular.forEach($scope.activeProviders, function(provider) {
-		    				activeProvidersHash[provider.providerNo] = provider;
-		    			});
-		    			console.log("getAllActiveProviders", activeProvidersHash); //data);
-				});
-	    		};
-    		
-    			getAllActiveProviders();
-    		
-		     
-		    
 		    getPhrSetupAudit = function(){  
-		    	phrService.phrSetupAudit().then(function(resp){
+		    		phrService.phrSetupAudit().then(function(resp){
 				    	console.log("abilities coming back",resp);
 				    	if(resp.status === 268){
 				    		$scope.serverOffline = true;
@@ -159,6 +149,19 @@
 				    	}
 				});
 		    }
+		    
+		    getAllActiveProviders = function(){
+    			providerService.getAllActiveProviders().then(function(data){
+		    			$scope.activeProviders = data;
+		    			console.log("$scope.activeProviders",data);
+		    			angular.forEach($scope.activeProviders, function(provider) {
+		    				activeProvidersHash[provider.providerNo] = provider;
+		    			});
+		    			console.log("getAllActiveProviders", activeProvidersHash); //data);
+				});
+	    		};
+    		
+    			getAllActiveProviders();
 		    
 		    getAbilities = function(){  
 			    	phrService.phrAbilities().then(function(resp){
@@ -207,7 +210,17 @@
 			    	phrService.initPHR(clinic).then(function(data){
 			    		checkStatus();
 			    	});
-		    }   
+		    } 
+		    
+		    $scope.setOscarCreds = function(){
+			    	console.log($scope.clinicName);
+			    	var clinic = {};
+			    	clinic.username = $scope.bookingProviderNo;
+			    	clinic.password = $scope.bookingPassword;
+			    	phrService.initOscarCreds(clinic).then(function(data){
+			    		checkStatus();
+			    	});
+		    }
 		});
 	
 	</script>
