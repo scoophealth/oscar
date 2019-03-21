@@ -34,12 +34,19 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+
+import org.apache.log4j.Logger;
+import org.oscarehr.hospitalReportManager.SFTPConnector;
 import org.oscarehr.hospitalReportManager.xsd.DateFullOrPartial;
 import org.oscarehr.hospitalReportManager.xsd.OmdCds;
 import org.oscarehr.hospitalReportManager.xsd.PatientRecord;
@@ -51,6 +58,8 @@ import org.oscarehr.hospitalReportManager.xsd.ReportMedia;
 import org.oscarehr.hospitalReportManager.xsd.ReportsReceived;
 import org.oscarehr.hospitalReportManager.xsd.ReportsReceived.OBRContent;
 import org.oscarehr.hospitalReportManager.xsd.TransactionInformation;
+import org.oscarehr.util.MiscUtils;
+import org.xml.sax.SAXException;
 
 
 /**
@@ -58,6 +67,7 @@ import org.oscarehr.hospitalReportManager.xsd.TransactionInformation;
  * @author ronnie
  */
 public class ReadHRMFile {
+	private static final Logger logger = MiscUtils.getLogger();
     private List<ReportsReceived> reportsReceived = null;
     private List<TransactionInformation> transactionInformation = null;
 /*
@@ -76,6 +86,19 @@ public class ReadHRMFile {
             if (!hrm.exists()) {
                 return;
             }
+            
+            // Create a SchemaFactory capable of understanding WXS schemas.
+            //SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");//XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+            // Load a WXS schema, represented by a Schema instance.
+            Source schemaFile = new StreamSource(new File(SFTPConnector.OMD_directory + "report_manager_cds.xsd"));
+            try {
+            	Schema schema = factory.newSchema(schemaFile);
+            } catch (SAXException e) {
+            	logger.error(e.getMessage());
+            } 
+
             JAXBContext jc = JAXBContext.newInstance("org.oscarehr.hospitalReportManager.xsd");
             Unmarshaller u = jc.createUnmarshaller();
             OmdCds root = (OmdCds) u.unmarshal(hrm);
@@ -85,7 +108,7 @@ public class ReadHRMFile {
             transactionInformation = pr.getTransactionInformation();
             
         } catch (JAXBException ex) {
-            Logger.getLogger(ReadHRMFile.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage());
         }
     }
 
@@ -100,8 +123,15 @@ public class ReadHRMFile {
 
         PersonNameSimple author = getReportsReceived(r).getAuthorPhysician();
         if (author!=null) {
-            authorPhysician.put("firstname", author.getFirstName());
-            authorPhysician.put("lastname", author.getLastName());
+        	//TODO: Fix this properly.
+        	if (author.getLastName().split("\\^").length == 7) {
+        		String[] nameArray = author.getLastName().split("\\^");
+        		authorPhysician.put("firstname", nameArray[1]);
+        		authorPhysician.put("lastname", nameArray[2]);
+        	} else {  // previous behaviour
+        		authorPhysician.put("firstname",  author.getFirstName());
+        		authorPhysician.put("lastname", author.getLastName());
+        	}
         }
         return authorPhysician;
     }

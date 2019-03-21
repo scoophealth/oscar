@@ -56,7 +56,10 @@ public final class RxAddAllergyAction extends Action {
 			throw new RuntimeException("missing required security object (_allergy)");
 		}
     	
-            int id = Integer.parseInt(request.getParameter("ID"));
+            String id = request.getParameter("ID");
+            if(id != null && "null".equals(id)) {
+            	id = "";
+            }
 
             String name = request.getParameter("name");
             String type = request.getParameter("type");
@@ -69,9 +72,13 @@ public final class RxAddAllergyAction extends Action {
             String lifeStage = request.getParameter("lifeStage");
             String allergyToArchive = request.getParameter("allergyToArchive");
             
+            String nonDrug = request.getParameter("nonDrug");
+            
             RxPatientData.Patient patient = (RxPatientData.Patient)request.getSession().getAttribute("Patient");
             Allergy allergy = new Allergy();
-            allergy.setDrugrefId(String.valueOf(id));
+            if (type != null && type.equals("13")){
+            	allergy.setDrugrefId(String.valueOf(id));
+            }
             allergy.setDescription(name);
             allergy.setTypeCode(Integer.parseInt(type));
             allergy.setReaction(description);
@@ -89,6 +96,14 @@ public final class RxAddAllergyAction extends Action {
             allergy.setSeverityOfReaction(severityOfReaction);
             allergy.setOnsetOfReaction(onSetOfReaction);
             allergy.setLifeStage(lifeStage);
+            
+            if(nonDrug != null && "on".equals(nonDrug)) {
+            	allergy.setNonDrug(true);
+            
+            } else if(nonDrug != null && "off".equals(nonDrug)) {
+            	allergy.setNonDrug(false);
+            }
+            	
 
             if (type != null && type.equals("13")){
                 RxDrugData drugData = new RxDrugData();

@@ -9,6 +9,22 @@
 
 <ClinicalReports>
     
+    	<Numerator id="omd100" name="Smoker" type="SQL"
+		description="Patients who currently smoke"
+		outputfields="demographicNo,providerNo">
+		select * from measurements m where m.demographicNo = '${demographic_no}' and
+		m.type = 'SKST' and m.dataField = 'Yes' order by dateObserved desc limit 1
+        </Numerator>
+        
+        <Numerator id="omd101" name="Last BMI > 30" type="SQL"
+		description="Patients who have last BMI &gt;30"
+		outputfields="demographicNo,providerNo">
+		select * from measurements m where m.demographicNo = '${demographic_no}' and
+		m.type = 'BMI' and m.dataField > 30 order by dateObserved desc limit 1
+        </Numerator>
+        
+        
+        
     	<Numerator id="omd1" name="Has A1C" type="SQL" description="Date and value of last A1C value" outputfields="demographicNo,providerNo">
 		select * from measurements m where m.demographicNo = '${demographic_no}' and
 		m.type = 'A1C' order by dateObserved 
@@ -24,7 +40,7 @@
 		description="Number of patient in the denom with at least one a1c test in the last 6months"
 		outputfields="demographicNo,providerNo">
 		select * from measurements m where m.demographicNo = '${demographic_no}' and
-		m.type = 'CERV' and m.dataField > 1 and dateObserved > DATE_SUB(now(),INTERVAL 6 Month)    order by dateObserved 
+		m.type = 'CERV' and m.dataField > 0 and dateObserved > DATE_SUB(now(),INTERVAL 6 Month)    order by dateObserved 
         </Numerator>
         
         <Numerator id="omd4" name="Has Exacerbation plan" type="SQL"
@@ -41,6 +57,7 @@
 		select * from measurements m where m.demographicNo = '${demographic_no}' and
 		m.type = 'BMI' and m.dataField >= 30 order by dateObserved 
         </Numerator>
+    
     
     
     
@@ -236,8 +253,19 @@ DATE_FORMAT(CONCAT( (d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birt
             file="testCD4high350.drl"/>
         
   <Numerator id ="customMeas" name="Measurement Values" type="DROOLS2"  description="Number of patient with a selected measurement at a certain value"
-            replaceKeys="measurements,value"/>       
-        
+            replaceKeys="measurements,value"/>    
+            
+            
+ <Numerator id ="customMeas3" name="Measurement Values with Date" type="DROOLS4"  description="Number of patient with a selected measurement with value within range and  within a date range"
+            replaceKeys="measurements,value,startDate,endDate"/>   
+            
+ <Numerator id ="customMeas5" name="Exact Measurement Values with Date" type="DROOLS5"  description="Number of patient with a selected measurement at an exact value within a date range"
+            replaceKeys="measurements,value,startDate,endDate"/>   
+
+ <Numerator id ="customMeas2" name="No Measurement Values with Date" type="DROOLS3"  description="Number of patient with no measurement value within a date range"
+            replaceKeys="measurements,startDate,endDate"/>     
+
+            
 <!--Numerators
   
 --> 
@@ -253,6 +281,21 @@ DATE_FORMAT(CONCAT( (d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birt
  <Denominator id="ActPat" name="Active Patients" 
     type="SQL">select distinct demographic_no from demographic  where roster_status = 'A'</Denominator> 
     -->
+
+<Denominator id="ActPat" name="Active Patients"
+description="Number of active patients"
+type="SQL">select distinct demographic_no from demographic  where patient_status = 'AC'
+</Denominator>
+
+<Denominator id="COPDReg416" name="COPD Registry-416"
+description="Number of patients in COPD reg"
+type="SQL">select distinct dx.demographic_no from dxresearch dx, demographic d where dx.dxresearch_code in ('416') and dx.coding_system = 'icd9' and dx.status = 'A' and d.demographic_no = dx.demographic_no and d.patient_status = 'AC'
+</Denominator>
+
+<Denominator id="HypReg" name="Hypertension Registry"
+description="Number of patients in Hypertension reg"
+type="SQL">select distinct dx.demographic_no from dxresearch dx, demographic d where dx.dxresearch_code in ('401') and dx.coding_system = 'icd9' and dx.status = 'A' and d.demographic_no = dx.demographic_no and d.patient_status = 'AC'
+</Denominator>
     
 <Denominator id="DMReg" name="Diabetes Registry"
 description="Number of patients in DM reg"
@@ -350,15 +393,15 @@ type="SQL">select distinct d.demographic_no from measurements m,measurements m2,
      and  d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.status = 'A' 
      and d.demographic_no = de.demographic_no and de.provider_no = '${provider_no}' and de.demographic_no = d.demographic_no and de.patient_status = 'AC'
 </Denominator>
-     
-<Denominator id="ActPat" name="Active Patients"
-description="Number of active patients"
-type="SQL">select distinct demographic_no from demographic  where patient_status = 'AC'
-</Denominator>
 
 <Denominator id="ActPatbyP" name="Active Patients by practice"
 description="Number of active patients by practice" replaceKeys="provider_no"
 type="SQL">select distinct demographic_no from demographic  where patient_status = 'AC' and provider_no = '${provider_no}'
+</Denominator>
+
+<Denominator id="ActPatbyE" name="Active Patients enrolled to practice"
+description="Number of active patients enrolled to a practice" replaceKeys="provider_no"
+type="SQL">select distinct demographic_no from demographic  where patient_status = 'AC' and roster_enrolled_to = '${provider_no}'
 </Denominator>
     
 <Denominator id="CHFReg" name="Congestive Heart Failure Registry"

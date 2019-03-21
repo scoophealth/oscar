@@ -49,7 +49,7 @@ public class BillingmasterDAOTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("billingmaster", "wcb", "billing","teleplanC12","demographic");
+		SchemaUtils.restoreTable("billingmaster", "wcb", "billing","teleplanC12","demographic","log");
 	}
 
 	@Test

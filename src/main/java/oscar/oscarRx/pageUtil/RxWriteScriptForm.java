@@ -54,12 +54,11 @@ public final class RxWriteScriptForm extends ActionForm {
     boolean nosubs = false;
     boolean prn = false;
     boolean customInstr = false;
-    boolean longTerm = false;
+    Boolean longTerm = null;
     boolean shortTerm = false;
-    boolean pastMed = false;
+    Boolean pastMed = null;
     boolean dispenseInternal = false;
-    boolean patientComplianceY=false;
-    boolean patientComplianceN=false;
+    Boolean patientCompliance=null;
     String special = null;
     String atcCode = null;
     String regionalIdentifier = null;
@@ -270,12 +269,12 @@ public final class RxWriteScriptForm extends ActionForm {
         this.customInstr = c;        
     }
     
-    public boolean getLongTerm() {
-	return this.longTerm;
+    public Boolean getLongTerm() {
+    	return this.longTerm;
     }
     
-    public void setLongTerm(boolean l) {
-	this.longTerm = l;
+    public void setLongTerm(Boolean trueFalseNull) {
+    	this.longTerm = trueFalseNull;
     }
     
     public boolean getShortTerm() {
@@ -286,12 +285,12 @@ public final class RxWriteScriptForm extends ActionForm {
 	this.shortTerm = st;
     }
     
-    public boolean getPastMed() {
+    public Boolean getPastMed() {
 	return this.pastMed;
     }
     
-    public void setPastMed(boolean p) {
-	this.pastMed = p;
+    public void setPastMed(Boolean trueFalseNull) {
+	this.pastMed = trueFalseNull;
     }
     
     public boolean getDispenseInternal() {	
@@ -306,20 +305,12 @@ public final class RxWriteScriptForm extends ActionForm {
     	this.dispenseInternal = dispenseInternal;
     }
     
-    public boolean getPatientComplianceY() {
-	return this.patientComplianceY;
+    public Boolean getPatientCompliance() {
+    	return this.patientCompliance;
     }
     
-    public void setPatientComplianceY(boolean c) {
-	this.patientComplianceY = c;
-    }
-    
-    public boolean getPatientComplianceN() {
-	return this.patientComplianceN;
-    }
-    
-    public void setPatientComplianceN(boolean c) {
-	this.patientComplianceN = c;
+    public void setPatientCompliance(Boolean trueFalseNull) {
+    	this.patientCompliance = trueFalseNull;
     }
     
     /**
@@ -351,11 +342,10 @@ public final class RxWriteScriptForm extends ActionForm {
         this.special = null;
         this.unitName = null;
         this.customInstr = false;
-	this.longTerm = false;
+	this.longTerm = null;
 	this.shortTerm = false;
-	this.pastMed = false;
-	this.patientComplianceY = false;
-	this.patientComplianceN = false;
+	this.pastMed = null;
+	this.patientCompliance = null;
 	this.outsideProviderName = null;
 	this.outsideProviderOhip = null;
     }

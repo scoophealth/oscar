@@ -395,5 +395,13 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 		this.lookupListItem = lookupListItem;
 	}
 
+	public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
+
 
 }

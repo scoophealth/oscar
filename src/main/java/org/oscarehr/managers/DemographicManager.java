@@ -754,6 +754,16 @@ public class DemographicManager {
 			return (results);
 		}
 		
+		public List<DemographicContact> findSDMByDemographicNo(LoggedInInfo loggedInInfo,int demographicNo){
+			if (loggedInInfo == null) throw (new SecurityException("user not logged in?"));
+			checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
+			List<DemographicContact> results =  demographicContactDao.findSDMByDemographicNo(demographicNo);
+
+			LogAction.addLog(loggedInInfo, "DemographicManager.findSDMByDemographicNo", null, null, ""+demographicNo, null);
+			
+			return results; 
+		}
+		
 		
 
 		private void checkPrivilege(LoggedInInfo loggedInInfo, String privilege) {

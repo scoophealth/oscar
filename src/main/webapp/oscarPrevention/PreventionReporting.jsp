@@ -388,9 +388,9 @@ table.ele thead {
             <td valign="top" class="MainTableRightColumn">
                <html:form action="/oscarPrevention/PreventionReport" method="get">
                <div>
-                  Patient Set:
+                  Patient Demographic Query:
                   <html:select property="patientSet">
-                      <html:option value="-1" >--Select Set--</html:option>
+                      <html:option value="-1" >--Select Query--</html:option>
                       <%for (int i =0 ; i < queryArray.size(); i++){
                         RptSearchData.SearchCriteria sc = (RptSearchData.SearchCriteria) queryArray.get(i);
                         String qId = sc.id;
@@ -400,9 +400,9 @@ table.ele thead {
                   </html:select>
                </div>
                <div>
-                  Prevention Query:
+                  Prevention:
                   <html:select property="prevention">
-                      <html:option value="-1" >--Select Query--</html:option>
+                      <html:option value="-1" >--Select Prevention--</html:option>
                       <html:option value="PAP" >PAP</html:option>
                       <html:option value="Mammogram" >Mammogram</html:option>
                       <html:option value="Flu" >Flu</html:option>

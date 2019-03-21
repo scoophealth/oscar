@@ -80,8 +80,9 @@ public class AppointmentTo1 implements Serializable {
 
 	private Demographic demographic;
 	private Provider provider;
-	
-	
+
+	private BillingDetailTo1 billingDetail;
+
 	public Integer getId() {
 		return id;
 	}
@@ -305,7 +306,12 @@ public class AppointmentTo1 implements Serializable {
 	public void setProvider(Provider provider) {
 		this.provider = provider;
 	}
-	
-	
 
+	public BillingDetailTo1 getBillingDetail() {
+		return billingDetail;
+	}
+
+	public void setBillingDetail(BillingDetailTo1 billingDetail) {
+		this.billingDetail = billingDetail;
+	}
 }

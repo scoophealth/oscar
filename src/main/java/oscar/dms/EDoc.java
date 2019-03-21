@@ -77,7 +77,8 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 	private int numberOfPages = 0;
 	private Integer appointmentNo = -1;
 	private boolean restrictToProgram=false;
-	
+	private String abnormal = "0";
+	private String receivedDate = "";
 
 	/** Creates a new instance of EDoc */
 	public EDoc() {
@@ -389,6 +390,30 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 		if (docPublic.equalsIgnoreCase("checked")) this.docPublic = "1";
 		else if (docPublic == null || docPublic.length() == 0) this.docPublic = "0";
 		else this.docPublic = docPublic;
+	}
+
+	
+	public String getAbnormal() {
+		return abnormal;
+	}
+
+	public void setAbnormal(String abnormal) {
+		if (abnormal.equalsIgnoreCase("checked")) this.abnormal = "1";
+		else if (abnormal == null || abnormal.length() == 0) this.abnormal = "0";
+		else this.abnormal = abnormal;
+	}
+
+	public String getReceivedDate() {
+		return receivedDate;
+	}
+
+	public void setReceivedDate(String receivedDate) {
+		this.receivedDate = receivedDate;
+	}
+	
+	public void setReceivedDate(Date receivedDate) {
+		String formattedDate = UtilDateUtilities.DateToString(receivedDate, EDocUtil.DMS_DATE_FORMAT);
+		this.receivedDate = formattedDate;
 	}
 
 	/**

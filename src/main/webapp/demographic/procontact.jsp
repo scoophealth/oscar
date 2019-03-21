@@ -42,6 +42,7 @@
 					&nbsp;
 					
 		            <select name="procontact_<%=id%>.role" id="procontact_<%=id%>.role">
+						<option value="Referring Doctor">Referring Doctor</option>
 						<option value="Family Doctor">Family Doctor</option>
 						<option value="Specialist">Specialist</option>
 						<option value="Dietician">Dietician</option>						   

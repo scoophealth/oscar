@@ -23,6 +23,10 @@
  */
 package org.oscarehr.common.dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
+
 import org.oscarehr.common.model.OscarJobType;
 import org.springframework.stereotype.Repository;
 
@@ -32,4 +36,13 @@ public class OscarJobTypeDao extends AbstractDao<OscarJobType> {
 	public OscarJobTypeDao() {
 		super(OscarJobType.class);
 	}
+	
+	@SuppressWarnings("unchecked")
+    public List<OscarJobType> findByClassName(String className) {
+		Query query = entityManager.createQuery("FROM OscarJobType d WHERE d.className = :className");
+		query.setParameter("className", className);
+		
+	    return query.getResultList();
+    }
+
 }

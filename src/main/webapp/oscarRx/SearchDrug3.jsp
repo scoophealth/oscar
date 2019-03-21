@@ -269,15 +269,16 @@ if (rx_enhance!=null && rx_enhance.equals("true")) {
 
 	        function handleEnter(inField, ev){
 	            var charCode;
-	            if(ev && ev.which)
+	            if(ev && ev.which) {
 	                charCode=ev.which;
-	            else if(window.event){
+	            }else if(window.event){
 	                ev=window.event;
 	                charCode=ev.keyCode;
 	            }
 	            var id=inField.id.split("_")[1];
-	            if(charCode==13)
+	            if(charCode==13) {
 	                showHideSpecInst('siAutoComplete_'+id);
+	            }
 	        }
 
         //has to be in here, not prescribe.jsp for it to work in IE 6/7 and probably 8.
@@ -672,19 +673,6 @@ function checkFav(){
     	}
     }
 
-    function emptyWrittenDate(rand){
-    	var cb = document.getElementById('pastMed_'+rand);
-    	var txt = document.getElementById('writtenDate_'+rand);
-
-    	if(cb.checked){
-    		txt.value='0001-01-01';
-    		txt.disabled=true;
-    	}else{
-    		txt.disabled=false;
-
-    	}
-
-    }
 
     //this is a SJHH specific feature
     function completeMedRec() {
@@ -716,7 +704,8 @@ function checkFav(){
 <!-- .selected { font: Arial, Verdana; color:#000000; text-decoration: none; } -->
 
     .ControlPushButton{
-        font-size:10.5px;
+        font-size:x-small !important;
+        padding:3px !important;
     }
 
     #verificationLink{
@@ -868,22 +857,24 @@ THEME 2*/
                                     <div id="interactingDrugErrorMsg" style="display:none"></div>
                                     <div id="rxText" style="float:left;"></div><br style="clear:left;">
                                     <input type="hidden" id="deleteOnCloseRxBox" value="false">
-
+                                    <input type="hidden" id="rxPharmacyId" name="rxPharmacyId" value="" />
+                                    
                                     <html:hidden property="demographicNo" value="<%=new Integer(patient.getDemographicNo()).toString()%>" />
                                     <table border="0">
                                         <tr valign="top">
-                                            <td style="width:320px;"><bean:message key="SearchDrug.drugSearchTextBox"  />
+                                            <td style="width:330px">
+                                            	<label for="searchString" ><bean:message key="SearchDrug.drugSearchTextBox"  /></label>
                                                 <html:text styleId="searchString" property="searchString" onfocus="changeContainerHeight();" onblur="changeContainerHeight();" onclick="changeContainerHeight();" onkeydown="changeContainerHeight();" style="width:248px;\" autocomplete=\"off"  />
                                                 <div id="autocomplete_choices" style="overflow:auto;width:600px"></div>
                                                 <span id="indicator1" style="display: none"> <!--img src="/images/spinner.gif" alt="Working..." --></span>
                                             </td>
                                             <td>
-                                                <input type="button" name="search" class="ControlPushButton" style="width:48px" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();" title="<bean:message key="SearchDrug.help.Search"/>">
-                                                <input id="customDrug" type="button" class="ControlPushButton" style="width:86px" onclick="customWarning2();" value="<bean:message key="SearchDrug.msgCustomDrugRx3"/>" title="<bean:message key="SearchDrug.help.CustomDrug"/>" />
-                                                <input id="customNote" type="button" class="ControlPushButton" style="width:40px"   onclick="customNoteWarning();" value="<bean:message key="SearchDrug.msgNoteRx3"/>" title="<bean:message key="SearchDrug.help.CustomNote"/>"/>
-                                                <input id="reset" type="button" class="ControlPushButton" style="width:42px" title="Clear pending prescriptions"   onclick="resetStash();" value="<bean:message key="SearchDrug.msgResetPrescriptionRx3"/>"/>
+                                                <input type="button" name="search" class="ControlPushButton" value="<bean:message key="SearchDrug.msgSearch"/>" onclick="popupRxSearchWindow();" title="<bean:message key="SearchDrug.help.Search"/>">
+                                                <input id="customDrug" type="button" class="ControlPushButton" onclick="customWarning2();" value="<bean:message key="SearchDrug.msgCustomDrugRx3"/>" title="<bean:message key="SearchDrug.help.CustomDrug"/>" />
+                                                <input id="customNote" type="button" class="ControlPushButton" onclick="customNoteWarning();" value="<bean:message key="SearchDrug.msgNoteRx3"/>" title="<bean:message key="SearchDrug.help.CustomNote"/>"/>
+                                                <input id="reset" type="button" class="ControlPushButton" title="Clear pending prescriptions"   onclick="resetStash();" value="<bean:message key="SearchDrug.msgResetPrescriptionRx3"/>"/>
                                                 <% if(!OscarProperties.getInstance().getProperty("rx.drugofchoice.hide","false").equals("true")) { %>
-                                                <input type="button" class="ControlPushButton" style="width:92px" onclick="callTreatments('searchString','treatmentsMyD')" value="<bean:message key="SearchDrug.msgDrugOfChoiceRx3"/>" title="<bean:message key="SearchDrug.help.DrugOfChoice"/>"/>
+                                                <input type="button" class="ControlPushButton" onclick="callTreatments('searchString','treatmentsMyD')" value="<bean:message key="SearchDrug.msgDrugOfChoiceRx3"/>" title="<bean:message key="SearchDrug.help.DrugOfChoice"/>"/>
                                                 <%} %>
                                                 <%if (OscarProperties.getInstance().hasProperty("ONTARIO_MD_INCOMINGREQUESTOR")) {%>
                                                 <a href="javascript:goOMD();" title="<bean:message key="SearchDrug.help.OMD"/>"><bean:message key="SearchDrug.msgOMDLookup"/></a>
@@ -897,7 +888,7 @@ THEME 2*/
 												<%
                                                     	if(OscarProperties.getInstance().getProperty("oscarrx.medrec","false").equals("true")) {
                                                 %>
-                                                    <input id="completeMedRecButton" type="button"  onclick="completeMedRec();" value="Complete Med Rec" />
+                                                    <input id="completeMedRecButton" class="ControlPushButton" type="button"  onclick="completeMedRec();" value="Complete Med Rec" />
                                                 <% } %>
                                                 
                                                 <% if(eRxEnabled) { %>
@@ -1603,12 +1594,12 @@ function changeLt(drugId){
                  if(json != null && json.id != null && json.DESCRIPTION == null && json.reaction == null) {
                 	 var str = "<font color='red'>Allergy not Found. Please check your allergy list</font>" ;
                 	 $('alleg_'+json.id).innerHTML = str;
-                     document.getElementById('alleg_tbl_'+json.id).style.display='block';
+                     document.getElementById('alleg_tbl_'+json.id).style.display='table';
                  }
                  if(json!=null&&json.DESCRIPTION!=null&&json.reaction!=null){
-                      var str = "<font color='red'>Allergy:</font> "+ json.DESCRIPTION + " <font color='red'>Reaction:</font> "+json.reaction;
+                      var str = "<font color='red'>Allergy:</font> "+ json.DESCRIPTION + " <font color='red'>Reaction:</font> "+json.reaction + " <font color='red'>Severity of Reaction:</font> "+json.severity;
                       $('alleg_'+json.id).innerHTML = str;
-                      document.getElementById('alleg_tbl_'+json.id).style.display='block';
+                      document.getElementById('alleg_tbl_'+json.id).style.display='table';
                  }
             }});
    }
@@ -2219,21 +2210,60 @@ function updateQty(element){
              var params="randomId="+randomId+"&din="+din;
              new Ajax.Updater(divId,url,{method:'get',parameters:params,insertion:Insertion.Bottom,asynchronous:true});
          }
+         
+         function validateRxDate() {
+         	var x = true;
+             jQuery('input[name^="rxDate__"]').each(function(){
+                 var str1  = jQuery(this).val();
 
-      function validateRxDate() {
-          	var rx=true;
-          	jQuery('input[name^="rxDate_"]').each(function(){
-          		var strRx  = jQuery(this).val();
+                 var dt = str1.split("-");
+                 if (dt.length>3) {
+                 	jQuery(this).focus();
+                     alert('Start Date wrong format! Must be yyyy or yyyy-mm or yyyy-mm-dd');
+                     x = false;
+                     return;
+                 }
 
-          		if(!checkAndValidateDate(strRx,null)) {
-          			jQuery(this).focus();
-          			rx=false;
-          			return false;
-          		}
+                 var dt1=1, mon1=0, yr1=parseInt(dt[0],10);
+                 if (isNaN(yr1) || yr1<0 || yr1>9999) {
+                 	jQuery(this).focus();
+                     alert('Invalid Start Date! Please check the year');
+                     x = false;
+                     return;
+                 }
+                 if (dt.length>1) {
+                 	mon1 = parseInt(dt[1],10)-1;
+                 	if (isNaN(mon1) || mon1<0 || mon1>11) {
+                 		jQuery(this).focus();
+                 		alert('Invalid Start Date! Please check the month');
+                         x = false;
+                         return;
+                 	}
+                 }
+                 if (dt.length>2) {
+                 	dt1 = parseInt(dt[2],10);
+                     if (isNaN(dt1) || dt1<1 || dt1>31) {
+                     	jQuery(this).focus();
+                         alert('Invalid Start Date! Please check the day');
+                         x = false;
+                         return;
+                     }
+                 }
+                 var date1 = new Date(yr1, mon1, dt1);
+                 var now  = new Date();
 
-          	});
-          	return rx;
-     }
+                 if(date1 > now) {
+                 	jQuery(this).focus();
+                     alert('Start Date cannot be in the future. (' + str1 +')');
+                     x = false;
+                     return;
+     	        }
+             });
+             return x;
+         }
+
+         
+
 
     function validateWrittenDate() {
     	var x = true;
@@ -2311,7 +2341,7 @@ function updateQty(element){
 			return false;
 		}
 		<%}%>
-		
+		setPharmacyId();
         var data=Form.serialize($('drugForm'));
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateSaveAllDrugs&rand="+ Math.floor(Math.random()*10001);
         new Ajax.Request(url,
@@ -2338,7 +2368,7 @@ function updateQty(element){
 			return false;
 		}
 		<%}%>		
-		
+		setPharmacyId();
         var data=Form.serialize($('drugForm'));
         var url= "<c:out value="${ctx}"/>" + "/oscarRx/WriteScript.do?parameterValue=updateSaveAllDrugs&rand="+ Math.floor(Math.random()*10001);
         new Ajax.Request(url,
@@ -2349,6 +2379,20 @@ function updateQty(element){
                 resetStash();
             }});
         return false;
+    }
+    
+    /**
+    * Gets the selected preferred pharmacy id and then sets it into the 
+    * rxPharmacyId hidden input for submission with each drug in 
+    * a prescription. 
+    */
+    function setPharmacyId() {
+    	var selectedPharmacy = jQuery("#Calcs option:selected").val();
+    	var selectedPharmacyId = "";
+    	if(selectedPharmacy) {
+    		selectedPharmacyId = JSON.parse(selectedPharmacy).id;
+    	}
+    	jQuery("#rxPharmacyId").val(selectedPharmacyId);	
     }
 
 function checkEnterSendRx(){
