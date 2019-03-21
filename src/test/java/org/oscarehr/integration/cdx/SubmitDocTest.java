@@ -22,7 +22,7 @@
  * Victoria, Canada
  */
 
-//package org.oscarehr.integration.cdx;
+package org.oscarehr.integration.cdx;
 //package ca.uvic.leadlab.obibconnector.facade;
 import ca.uvic.leadlab.obibconnector.facade.*;
 

@@ -207,6 +207,12 @@ public final class SendOruR01UIBean {
 		return(professionalSpecialistDao.findByEDataUrlNotNull());
 	}
 
+
+	public static List<ProfessionalSpecialist> getCdxCapableProfessionalSpecialists() {
+		return(professionalSpecialistDao.findByCdxCapable());
+	}
+
+
 	public static String getProfessionalSpecialistDisplayString(ProfessionalSpecialist professionalSpecialist) {
 		StringBuilder sb = new StringBuilder();
 

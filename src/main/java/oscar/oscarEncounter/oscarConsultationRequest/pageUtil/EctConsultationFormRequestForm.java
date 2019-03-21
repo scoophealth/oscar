@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.WebUtils;
 
 public final class EctConsultationFormRequestForm extends ActionForm {
@@ -522,6 +523,31 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 		sb.append(request.getContextPath());
 		sb.append("/lab/CA/ALL/sendOruR01.jsp");
 
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+
+		// buildQueryString will take null into account
+		queryParameters.put("hl7TextMessageId", hl7TextMessageId);
+		queryParameters.put("clientFirstName", patientFirstName);
+		queryParameters.put("clientLastName", patientLastName);
+		queryParameters.put("clientHin", patientHealthNum);
+		queryParameters.put("clientBirthDate", patientDOB);
+		queryParameters.put("clientGender", patientSex);
+
+		sb.append(WebUtils.buildQueryString(queryParameters));
+
+		return (StringEscapeUtils.escapeHtml(sb.toString()));
+	}
+
+	/**
+	 * This url will include the context path.
+	 */
+	public String getCdxUrlString(HttpServletRequest request) {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(request.getContextPath());
+		sb.append("/lab/CA/ALL/sendCdxDocument.jsp");
+		MiscUtils.getLogger().info(sb.toString());
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 
 		// buildQueryString will take null into account

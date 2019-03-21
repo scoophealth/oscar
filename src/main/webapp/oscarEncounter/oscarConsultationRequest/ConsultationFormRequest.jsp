@@ -1584,9 +1584,10 @@ function updateFaxButton() {
 						<% if (!hide_eRequestResponse) { %>
 						<input type="button" value="Send eResponse" onclick="$('saved').value='true';document.location='<%=thisForm.getOruR01UrlString(request)%>'" />
 						<% } %>
-                        <% if (show_CDX) { %>
-                        <input type="button" value="Submit & Send CDX e-Referral" onclick="$('saved').value='true';document.location='<%=thisForm.getOruR01UrlString(request)%>'" />
-                        <% } %>
+                        <% if (show_CDX) { MiscUtils.getLogger().info("show_CDX 2.2:" + show_CDX); %>
+                        <%--<input type="button" value="Submit & Send CDX e-Referral" onclick="$('saved').value='true';document.location='<%=thisForm.getCdxUrlString(request)%>'" />--%>
+						<input name="submitAndPrintCdx" type="button" value="Preview CDX e-Referral" onclick="return checkForm('Submit CDX Consultation Request Preview And Send','EctConsultationFormRequestForm'); " />
+						<% } %>
 					<% } %>
 						<% if (!hide_eRequestResponse) { %>
 					<logic:equal value="true" name="EctConsultationFormRequestForm" property="eReferral">
