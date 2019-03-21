@@ -65,7 +65,7 @@ public class HRMSubClassDao extends AbstractDao<HRMSubClass> {
 		}
 	}
 
-	private HRMSubClass findSubClassMapping(String className, String subClassName, String subClassMnemonic, String sendingFacilityId) {
+	public HRMSubClass findSubClassMapping(String className, String subClassName, String subClassMnemonic, String sendingFacilityId) {
 		String sql = null;
 
 		if (subClassMnemonic != null){
@@ -82,7 +82,7 @@ public class HRMSubClassDao extends AbstractDao<HRMSubClass> {
 			query.setParameter(4, subClassMnemonic);
 		}
 
-		return (HRMSubClass) query.getSingleResult();
+		return getSingleResultOrNull(query);
 	}
 
 	public HRMSubClass findApplicableSubClassMapping(String className, String subClassName, String subClassMnemonic, String sendingFacilityId) {

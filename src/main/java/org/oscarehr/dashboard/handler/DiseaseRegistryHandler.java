@@ -51,7 +51,7 @@ public class DiseaseRegistryHandler {
 		addToDiseaseRegistry(demographicNo, icd9code, getProviderNo());
 	}
 
-	public void addToDiseaseRegistry(int demographicNo, String icd9code, String providerNo) {
+	public Integer addToDiseaseRegistry(int demographicNo, String icd9code, String providerNo) {
 		boolean activeEntryExists = dao.activeEntryExists(demographicNo, ICD9_CODING_SYSTEM, icd9code);
 		if (activeEntryExists) {
 			logger.info(
@@ -59,7 +59,7 @@ public class DiseaseRegistryHandler {
 				") already has active entry for (" +
 				icd9code + ")"
 			);
-			return;
+			return null;
 		}
 
 		Dxresearch dx = new Dxresearch();
@@ -77,6 +77,7 @@ public class DiseaseRegistryHandler {
 			") to disease registry for patient (" + demographicNo + ")" +
 			" with provider no (" + providerNo + ")"
 		);
+		return dx.getId();
 	}
 	
     protected LoggedInInfo getLoggedInInfo() {

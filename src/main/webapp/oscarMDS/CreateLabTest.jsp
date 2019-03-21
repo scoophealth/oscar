@@ -96,8 +96,16 @@ if(!authed) {
                  	<td><label>refRange (text):</label><input type="text" name="test_<%=id%>.refRangeText" id="test_<%=id%>.refRangeText" size="5"/></td>
                  </tr>                
                  
- 			     <tr><td><label>Lab Notes:</label></td><td colspan="4"><textarea name="test_<%=id%>.labnotes" id="test_<%=id%>.labnotes" rows="5" cols="30"></textarea></td></tr>
-	                                                                                                
+ 			     <tr>
+ 			     	<td><label>Lab Notes:</label></td><td colspan="2"><textarea name="test_<%=id%>.labnotes" id="test_<%=id%>.labnotes" rows="5" cols="30"></textarea></td>
+ 			     	<td colspan="2">
+ 			     		<label>Blocked Test Result:</label>
+ 			     		<select name="test_<%=id%>.blocked" id="test_<%=id%>.blocked">
+ 			     			<option value="">No</option>
+ 			     			<option value="BLOCKED">Yes</option>
+ 			     		</select>
+ 			     	</td>
+ 			     </tr>
                                  
                 </table>
                 

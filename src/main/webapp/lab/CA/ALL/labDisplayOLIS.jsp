@@ -8,6 +8,10 @@
     and "gnu.org/licenses/gpl-2.0.html".
 
 --%>
+<%@page import="org.oscarehr.common.model.Demographic"%>
+<%@page import="org.oscarehr.common.dao.DemographicDao"%>
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="oscar.oscarLab.ca.all.upload.MessageUploader"%>
 <%@ page language="java" errorPage="../../../provider/errorpage.jsp" %>
 <%@ page import="java.util.*,java.sql.*,org.oscarehr.olis.*,org.oscarehr.common.dao.PatientLabRoutingDao, org.oscarehr.util.SpringUtils, org.oscarehr.common.model.PatientLabRouting,oscar.oscarLab.ca.all.*,oscar.oscarLab.ca.all.util.*,oscar.oscarLab.ca.all.parsers.*,oscar.oscarLab.LabRequestReportLink,oscar.oscarMDS.data.ReportStatus,oscar.log.*,org.apache.commons.codec.binary.Base64" %>
 <%@page import="org.oscarehr.util.AppointmentUtil" %>
@@ -33,6 +37,8 @@ if(!authed) {
 %>
 
 <%
+	DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
+
 	String segmentID = request.getParameter("segmentID");
 String originalSegmentID = segmentID;
 String providerNo = request.getParameter("providerNo");
@@ -44,10 +50,11 @@ String reqID = reqIDL==null ? "" : reqIDL.toString();
 reqIDL = preview ? null : LabRequestReportLink.getRequestTableIdByReport("hl7TextMessage",Long.valueOf(segmentID));
 String reqTableID = reqIDL==null ? "" : reqIDL.toString();
 
-PatientLabRoutingDao plrDao = preview ? null : (PatientLabRoutingDao) SpringUtils.getBean("patientLabRoutingDao");
+PatientLabRoutingDao plrDao = (PatientLabRoutingDao) SpringUtils.getBean("patientLabRoutingDao");
 PatientLabRouting plr = preview ? null : plrDao.findDemographicByLabId(Integer.valueOf(segmentID));
-String demographicID = preview || plr.getDemographicNo() == null ? "" : plr.getDemographicNo().toString();
+String demographicID = plr != null ? (preview || plr.getDemographicNo() == null ? "" : plr.getDemographicNo().toString()) : "";
 
+Integer demographicIDThatWillMatch = null;
 
 if(demographicID != null && !demographicID.equals("")){
     LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, segmentID, request.getRemoteAddr(),demographicID);
@@ -108,6 +115,11 @@ for (String tempId : multiLabId.split(",")) {
 			org.oscarehr.util.MiscUtils.getLogger().error("error",e);
 		}
 	}
+}
+
+
+if(preview) {
+	demographicIDThatWillMatch = MessageUploader.willOLISLabReportMatch(LoggedInInfo.getLoggedInInfoFromSession(request), handler.getLastName(), handler.getFirstName(), handler.getSex(), handler.getDOB(), handler.getHealthNum());
 }
 
 // check for errors printing
@@ -446,12 +458,25 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                     <td>
                                                                         <div class="FieldData" >
                                                                             <% if ( searchProviderNo == null ) { // we were called from e-chart%>
-                                                                            <a href="javascript:window.close()">
+                                                                            <span><%=handler.getPatientName()%>
+                                                                            	<%
+                                                                            		if(preview) {
+                                                                            			if(demographicIDThatWillMatch != null) {
+                                                                            				Demographic pt =  demographicDao.getDemographicById(demographicIDThatWillMatch);
+                                                                            				if(pt != null) {
+                                                                            				%><a target="_blank" href="<%=request.getContextPath()%>/demographic/demographiccontrol.jsp?demographic_no=<%=demographicIDThatWillMatch %>&displaymode=edit&dboperation=search_detail">(Matched)</a><%
+                                                                            				} } else {
+                                                                            				%>(Unmatched)<%
+                                                                            			}
+                                                                            		}
+                                                                            	%>
+                                                                            </span>
                                                                             <% } else { // we were called from lab module%>
                                                                             <a href="javascript:popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= segmentID %>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
-                                                                                <% } %>
+                                                                              
                                                                                 <%=handler.getPatientName()%>
                                                                             </a>
+                                                                              <% } %>
                                                                         </div>
                                                                     </td>
                                                                 </tr>
@@ -691,6 +716,30 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                 </div>
                                             </td>
                                         </tr>
+                                          <tr>
+                                            <td valign="top">
+                                                <div class="FieldData">
+                                                    <strong>Abnormal Result(s):</strong>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="FieldData">
+                                                 <%
+													boolean abnormalD = false;
+													for(int x=0;x<handler.getOBRCount();x++) {
+														for(int y=0;y<handler.getOBXCount(x);y++) {
+															if(handler.isOBXAbnormal(x,y)) {
+																abnormalD=true;
+																break;
+															}
+														}
+													}
+												%>
+                                                   <%=abnormalD ?  "<span style='color:red'>Yes</span>" : "No" %>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                       
                                         <tr>
                                             <td></td>
                                         </tr>

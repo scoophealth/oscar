@@ -154,7 +154,7 @@ public final class RxWriteScriptAction extends DispatchAction {
 			rx.setLongTerm(frm.getLongTerm());
 			rx.setShortTerm(frm.getShortTerm());
 			rx.setPastMed(frm.getPastMed());
-			rx.setPatientCompliance(frm.getPatientComplianceY(), frm.getPatientComplianceN());
+			rx.setPatientCompliance(frm.getPatientCompliance());
 
 			try {
 				rx.setDrugForm(drugData.getDrugForm(String.valueOf(frm.getGCN_SEQNO())));
@@ -648,16 +648,11 @@ public final class RxWriteScriptAction extends DispatchAction {
 		}
 		logger.debug("=============END createNewRx RxWriteScriptAction.java===============");
 
-//		Place holder for new Medication Module proposal.
-//		if( OscarProperties.getInstance().getBooleanProperty("ENABLE_RX4", "yes") && 
-//				( ! BooleanUtils.toBoolean(propUseRx3.getValue()) ) ) {
-//			success = "newRx4";
-//		}
-	
 		return ( mapping.findForward(success) );
 	}
 
-	public ActionForward updateDrug(ActionMapping mapping, ActionForm aform, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@SuppressWarnings("unused")
+	public ActionForward updateDrug(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		checkPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), PRIVILEGE_WRITE);
 		
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
@@ -668,11 +663,10 @@ public final class RxWriteScriptAction extends DispatchAction {
 
 		String action = request.getParameter("action");
 
-		if (action != null && action.equals("parseInstructions")) {
+		if ("parseInstructions".equals(action)) {
 
 			try {
 				String randomId = request.getParameter("randomId");
-				// p("randomId from request",randomId);
 				RxPrescriptionData.Prescription rx = bean.getStashItem2(Integer.parseInt(randomId));
 				if (rx == null) {
 					logger.error("rx is null", new NullPointerException());
@@ -684,7 +678,8 @@ public final class RxWriteScriptAction extends DispatchAction {
 				RxUtil.instrucParser(rx);
 				bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getIndexFromRx(Integer.parseInt(randomId))));
 				bean.setStashItem(bean.getIndexFromRx(Integer.parseInt(randomId)), rx);
-				HashMap hm = new HashMap();
+				
+				HashMap<String, Object> hm = new HashMap<String, Object>();
 
 				if (rx.getRoute() == null || rx.getRoute().equalsIgnoreCase("null")) {
 					rx.setRoute("");
@@ -707,8 +702,9 @@ public final class RxWriteScriptAction extends DispatchAction {
 			} catch (Exception e) {
 				logger.error("Error", e);
 			}
-			return null;
-		} else if (action != null && action.equals("updateQty")) {
+			
+		} else if ("updateQty".equals(action)) {
+			
 			try {
 				String quantity = request.getParameter("quantity");
 				String randomId = request.getParameter("randomId");
@@ -769,11 +765,11 @@ public final class RxWriteScriptAction extends DispatchAction {
 				}
 				bean.addAttributeName(rx.getAtcCode() + "-" + String.valueOf(bean.getIndexFromRx(Integer.parseInt(randomId))));
 				bean.setStashItem(bean.getIndexFromRx(Integer.parseInt(randomId)), rx);
-				// RxUtil.printStashContent(bean);
+
 				if (rx.getRoute() == null) {
 					rx.setRoute("");
 				}
-				HashMap hm = new HashMap();
+				HashMap<String, Object> hm = new HashMap<String, Object>();
 				hm.put("method", rx.getMethod());
 				hm.put("takeMin", rx.getTakeMin());
 				hm.put("takeMax", rx.getTakeMax());
@@ -789,10 +785,10 @@ public final class RxWriteScriptAction extends DispatchAction {
 			} catch (Exception e) {
 				logger.error("Error", e);
 			}
-			return null;
-		} else {
-			return null;
-		}
+		} 
+			
+		return null;
+
 	}
 
 	public ActionForward iterateStash(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
@@ -869,9 +865,9 @@ public final class RxWriteScriptAction extends DispatchAction {
 		
 		oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean) request.getSession().getAttribute("RxSessionBean");
 		request.getSession().setAttribute("rePrint", null);// set to print.
-		List<String> paramList = new ArrayList();
+		List<String> paramList = new ArrayList<String>();
 		Enumeration em = request.getParameterNames();
-		List<String> randNum = new ArrayList();
+		List<String> randNum = new ArrayList<String>();
 		while (em.hasMoreElements()) {
 			String ele = em.nextElement().toString();
 			paramList.add(ele);
@@ -898,20 +894,17 @@ public final class RxWriteScriptAction extends DispatchAction {
 					existingIndex.add(stashIndex);
 					RxPrescriptionData.Prescription rx = bean.getStashItem(stashIndex);
 
-					boolean patientComplianceY = false;
-					boolean patientComplianceN = false;
+					Boolean patientCompliance = null;
 					boolean isOutsideProvider = false;
-					boolean isLongTerm = false;
+					Boolean isLongTerm = null;
 					boolean isShortTerm = false;
-					boolean isPastMed = false;
+					Boolean isPastMed = null;
 					boolean isDispenseInternal=false;
 					boolean isStartDateUnknown = false;
 	                boolean isNonAuthoritative = false;
-	                Date pickupDate;
-	                Date pickupTime;
-                    int dispenseInterval;
-                    int refillDuration;
-                    int refillQuantity;
+	                boolean nosubs = false;
+	                Date pickupDate = null;
+	                Date pickupTime = null;
 
 					em = request.getParameterNames();
 					while (em.hasMoreElements()) {
@@ -926,7 +919,10 @@ public final class RxWriteScriptAction extends DispatchAction {
 							} else {
 								rx.setBrandName(val);
 							}
-							
+						} else if("rxPharmacyId".equals(elem)) {
+							if(val != null && ! val.isEmpty()) {
+								rx.setPharmacyId(Integer.parseInt(val));
+							}
 						} else if (elem.equals("repeats_" + num)) {
 							if (val.equals("") || val == null) {
 								rx.setRepeat(0);
@@ -958,11 +954,11 @@ public final class RxWriteScriptAction extends DispatchAction {
 								}
 							}
 						} else if (elem.equals("longTerm_" + num)) {
-							if (val.equals("on")) {
+							if ("yes".equals(val)) {
 								isLongTerm = true;
-							} else {
+							} else if("no".equals(val)) {
 								isLongTerm = false;
-							}
+							} 
 						} else if (elem.equals("shortTerm_" + num)) {
 							if (val.equals("on")) {
 								isShortTerm = true;
@@ -975,31 +971,35 @@ public final class RxWriteScriptAction extends DispatchAction {
 							} else {
 								isNonAuthoritative = false;
 							}
+                        } else if (elem.equals("nosubs_" + num)) {
+							nosubs = "on".equals(val);
                         } else if(elem.equals("refillDuration_"+num)) {
                         	rx.setRefillDuration(Integer.parseInt(val));
                         } else if(elem.equals("refillQuantity_"+num)) {
                         	rx.setRefillQuantity(Integer.parseInt(val));
                         } else if(elem.equals("dispenseInterval_"+num)) {
-                        	rx.setDispenseInterval(Integer.parseInt(val));
+                        	rx.setDispenseInterval(val);
+                        } else if(elem.equals("protocol_"+num)) {
+                        	rx.setProtocol(val);
+                        } else if(elem.equals("priorRxProtocol_"+num)) {
+                        	rx.setPriorRxProtocol(val);
 						} else if (elem.equals("lastRefillDate_" + num)) {
 							rx.setLastRefillDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
 						} else if (elem.equals("rxDate_" + num)) {
 							if ((val == null) || (val.equals(""))) {
 								rx.setRxDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
 							} else {
-								rx.setRxDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
-							}
-                                                } else if (elem.equals("pickupDate_" + num)) {
-							if ((val == null) || (val.equals(""))) {
-								rx.setPickupDate(null);
-                                                                rx.setPickupTime(null);
-							} else {
-								rx.setPickupDate(RxUtil.StringToDate(val, "yyyy-MM-dd"));
-							}
-                                                } else if (elem.equals("pickupTime_" + num)) {
+								rx.setRxDateFormat(partialDateDao.getFormat(val));
+								rx.setRxDate(partialDateDao.StringToDate(val));
+							}							
+                        } else if (elem.equals("pickupDate_" + num)) {
+							if ((val != null) && (! val.equals(""))) {
+								pickupDate = RxUtil.StringToDate(val, "yyyy-MM-dd");
+							} 														
+                       } else if (elem.equals("pickupTime_" + num)) {
 							if ((val != null) && (!val.equals(""))) {
-								rx.setPickupTime(RxUtil.StringToDate(val, "hh:mm"));
-							}
+								pickupTime = RxUtil.StringToDate(val, "hh:mm");
+							}							
 						} else if (elem.equals("writtenDate_" + num)) {
 							if (val == null || (val.equals(""))) {
 								rx.setWrittenDate(RxUtil.StringToDate("0000-00-00", "yyyy-MM-dd"));
@@ -1023,11 +1023,11 @@ public final class RxWriteScriptAction extends DispatchAction {
 								isOutsideProvider = false;
 							}
 						} else if (elem.equals("pastMed_" + num)) {
-							if (val.equals("on")) {
+							if ("yes".equals(val)) {
 								isPastMed = true;
-							} else {
+							} else if("no".equals(val)) {
 								isPastMed = false;
-							}
+							} 
 						} else if (elem.equals("dispenseInternal_" + num)) {
 							if (val.equals("on")) {
 								isDispenseInternal = true;
@@ -1042,17 +1042,11 @@ public final class RxWriteScriptAction extends DispatchAction {
 							}
 						} else if (elem.equals("comment_" + num)) {
 							rx.setComment(val);
-						} else if (elem.equals("patientComplianceY_" + num)) {
-							if (val.equals("on")) {
-								patientComplianceY = true;
-							} else {
-								patientComplianceY = false;
-							}
-						} else if (elem.equals("patientComplianceN_" + num)) {
-							if (val.equals("on")) {
-								patientComplianceN = true;
-							} else {
-								patientComplianceN = false;
+						} else if (elem.equals("patientCompliance_" + num)) {
+							if ("yes".equals(val)) {
+								patientCompliance = true;
+							} else if ("no".equals(val)) {
+								patientCompliance = false;
 							}
 						} else if (elem.equals("eTreatmentType_"+num)){
 							if("--".equals(val)){
@@ -1078,12 +1072,22 @@ public final class RxWriteScriptAction extends DispatchAction {
 					}
 					rx.setPastMed(isPastMed);
 					rx.setDispenseInternal(isDispenseInternal);
+					rx.setPatientCompliance(patientCompliance);
 					rx.setStartDateUnknown(isStartDateUnknown);
 					rx.setLongTerm(isLongTerm);
 					rx.setShortTerm(isShortTerm);
-                                        rx.setNonAuthoritative(isNonAuthoritative);
+                    rx.setNonAuthoritative(isNonAuthoritative);
+                    rx.setNosubs(nosubs);
 					String newline = System.getProperty("line.separator");
-					rx.setPatientCompliance(patientComplianceY, patientComplianceN);
+					
+					if( pickupDate != null && pickupTime != null ) {
+						rx.setPickupDate(RxUtil.combineDateTime(pickupDate, pickupTime));
+					} else if(pickupTime != null) {
+						rx.setPickupDate(RxUtil.combineDateTime(new Date(), pickupTime));
+					} else {
+						rx.setPickupDate(pickupDate);
+					}
+
 					String special;
 					if (rx.isCustomNote()) {
 						rx.setQuantity(null);
@@ -1231,6 +1235,9 @@ public final class RxWriteScriptAction extends DispatchAction {
 				//write partial date
 				if (StringUtils.filled(rx.getWrittenDateFormat()))
 					partialDateDao.setPartialDate(PartialDate.DRUGS, rx.getDrugId(), PartialDate.DRUGS_WRITTENDATE, rx.getWrittenDateFormat());
+				
+				if (StringUtils.filled(rx.getRxDateFormat()))
+					partialDateDao.setPartialDate(PartialDate.DRUGS, rx.getDrugId(), PartialDate.DRUGS_STARTDATE, rx.getRxDateFormat());
 			} catch (Exception e) {
 				logger.error("Error", e);
 			}

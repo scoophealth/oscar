@@ -49,7 +49,7 @@ Varicella Immunoglobulin	VarIg
 		resultDesc=""
   		desc="DTaP-Hib=Diphtheria, Tetanus, Acellular Pertussis, Haemophilus Influenzae type b - pediatric"
   		name="DTaP-Hib"
-  		healthCanadaType="DTaP-IPV-HB"
+  		healthCanadaType="DTaP-Hib"
   		layout="injection" atc="" 
   		showIfMinRecordNum="1"/>
 
@@ -65,7 +65,7 @@ Varicella Immunoglobulin	VarIg
 		resultDesc=""
 		desc="Tdap-IPV=Diphtheria, Tetanus and Acellular Pertussis for children 4 - 6 years of age; IPV=Inactivated Poliovirus; eg Adacel-IPV"
 		name="Tdap-IPV"	
-		healthCanadaType="Tdap-IPV"	
+		healthCanadaType="TdapIPV"	
 		layout="injection" atc="J07AJ52" minAge="4" maxAge="6"
 		showIfMinRecordNum="1" />
 
@@ -109,7 +109,7 @@ Varicella Immunoglobulin	VarIg
 		resultDesc=""
  		desc="Rot-1=Rotavirus Vaccine eg Rotarix" 
  		name="Rot"
-		healthCanadaType="Rot"	
+		healthCanadaType="ROT"	
         link="www.novaccine.com/pdffiles/Rotarix_new_package_insert.pdf"
 		layout="injection" atc="J07BH01" minAge="0" maxAge="2"
 		showIfMinRecordNum="1" />
@@ -123,6 +123,13 @@ Varicella Immunoglobulin	VarIg
 		layout="injection" atc="J07AG51" minAge="0" maxAge="6"
 		showIfMinRecordNum="1" />
 
+	<item 
+		resultDesc=""
+		desc="Pneumococcus" 
+		name="Pneumococcus" link="" layout="injection"
+		healthCanadaType="Pneu"
+		atc="" showIfMinRecordNum="1" />
+		
 	<item 
 		resultDesc=""
 		desc="Pneumovax Pneumococcal-Polysaccharide - 23 valent eg Pneumovax" 
@@ -163,12 +170,12 @@ Varicella Immunoglobulin	VarIg
 		link="http://www.phac-aspc.gc.ca/publicat/cig-gci/p04-meas-roug-eng.php"
 		layout="injection" atc="J07BD52" minAge="0" maxAge="9"
 		showIfMinRecordNum="1" />
-
+		
 	<item 
 		resultDesc=""
 		desc="MMRV=Measles, Mumps, Rubella, Varicella eg Priorix-Tetra" 
 		name="MMRV" 
-		healthCanadaType="MMRV"
+		healthCanadaType="MMR-Var"
 		link="http://www.phac-aspc.gc.ca/publicat/ccdr-rmtc/10vol36/acs-9/index-eng.php"
 		layout="injection" atc="J07BD54" minAge="0" maxAge="9"
 		showIfMinRecordNum="1" />		
@@ -196,6 +203,24 @@ Varicella Immunoglobulin	VarIg
 		healthCanadaType="Men-C-ACYW-135"
 		layout="injection" atc="J07AH"
 		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc="Meningococcus"
+		name="Men"
+		healthCanadaType="Men"
+		layout="injection" atc=""
+		showIfMinRecordNum="1" />
+		
+		
+	<item
+		resultDesc=""
+		desc="Neisseria Meningitidis Serogroup B Protein"
+		name="Men-B"
+		healthCanadaType="Men B"
+		layout="injection" atc=""
+		showIfMinRecordNum="1" />
+
 
 	<item 
 		resultDesc=""
@@ -298,7 +323,7 @@ Varicella Immunoglobulin	VarIg
 		resultDesc=""
 		desc="Hepatitis A and Typhoid - Injection"
 		name="HA-Typh-I"
-		healthCanadaType="HA-Typh-I"
+		healthCanadaType="Typh (HA)"
 		layout="injection" atc=""
 		showIfMinRecordNum="1" />
 
@@ -327,6 +352,14 @@ Varicella Immunoglobulin	VarIg
 		healthCanadaType="Chol-Ecol-O"
 		layout="injection" atc=""
 		showIfMinRecordNum="1" />
+		
+		<item
+		resultDesc=""
+		desc="Cholera, Enterotoxigenic Escherichia coli"
+		name="CholEcol"
+		healthCanadaType="CholEcol"
+		layout="injection" atc=""
+		showIfMinRecordNum="1" />
 
 	<item 
 		resultDesc=""
@@ -340,8 +373,13 @@ Varicella Immunoglobulin	VarIg
 
 	<item 
 		resultDesc=""
-		desc="Typhoid=Typhoid" name="Typhoid" link="" layout="injection" healthCanadaType="Typh-I"
+		desc="Typhoid=Typhoid - Injection" name="Typhoid-I" link="" layout="injection" healthCanadaType="Typh-I"
 		atc="J07AP01" showIfMinRecordNum="1" />
+		
+	<item 
+		resultDesc=""
+		desc="Typhoid=Typhoid" name="Typhoid" link="" layout="injection" healthCanadaType="Typh"
+		atc="" showIfMinRecordNum="1" />
   		
   	<item 
 		resultDesc=""
@@ -510,9 +548,7 @@ Varicella Immunoglobulin	VarIg
 		name="H1N1" layout="h1n1"
         minAge="0" 
         atc="J07BB02" 
-		healthCanadaType="H1N1"	
-
-/>
+		healthCanadaType="H1N1" />
 
 	<item
 		resultDesc=""
@@ -520,7 +556,7 @@ Varicella Immunoglobulin	VarIg
 		name="Zostavax"		
 		link="http://webprod5.hc-sc.gc.ca/dpd-bdpp/item-iteme.do?pm-mp=00015056"
 		layout="injection" atc="J07BK"
-		healthCanadaType="Zostavax"	
+		healthCanadaType="Zos"	
 		showIfMinRecordNum="1" />
 
 	<item 
@@ -546,6 +582,20 @@ Varicella Immunoglobulin	VarIg
 		desc= "Periodic Health Visit"
 		name="PHV"		
 		layout="history"	
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc= "Annual Physical"
+		name="Annual Physical"
+		layout="history"
+		showIfMinRecordNum="1" />
+
+	<item
+		resultDesc=""
+		desc= "Obesity"
+		name="Obesity"
+		layout="history"
 		showIfMinRecordNum="1" />
 
 </preventions>

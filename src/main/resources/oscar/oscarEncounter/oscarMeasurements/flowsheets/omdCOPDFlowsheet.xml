@@ -1,142 +1,237 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<flowsheet name="M8" display_name="Chronic Obstructive Pulmonary" dxcode_triggers="icd9:416" ds_rules="diab.drl" top_HTML=""  warning_colour="#E00000"
-	recommendation_colour="yellow">
-    <indicator key="LOW" colour="#9999FF" />
-    <indicator key="HIGH" colour="orange" />
-    <indicator key="HIGH 1" colour="#E00000" />
-    
-    <item measurement_type="FEV1" display_name="Spirometry Results" guideline="FEV 1 percent of Predicted" graphable="no" value_name="Value" />
-    <measurement type="FEV1" typeDesc="Forced Expiratory Volume 1 Second" typeDisplayName="" measuringInstrc="Forced Expiratory Volume 1 Second">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="CODC" display_name="COD Classification" guideline="" graphable="no" value_name="Class" />
-    <measurement type="CODC" typeDesc="COD Classification" typeDisplayName="COD Classification" measuringInstrc="">
-        <validationRule name="No Validations" maxValue="" minValue="" isDate="" isNumeric="" regularExp="" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="02SA" display_name="02 Saturation" guideline="" graphable="yes" value_name="Percent" />
-    <measurement type="02SA" typeDesc="Oxygen Saturation" typeDisplayName="Oxygen Saturation" measuringInstrc="">
-        <validationRule name="Numeric Value: 0 to 100" maxValue="100" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="RABG" display_name="Recommend ABG" guideline="Aterial Blood Gas" graphable="no" value_name="Recommended" />
-    <measurement type="RABG" typeDesc="Recommend ABG" typeDisplayName="Recommend ABG" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="SKST" display_name="Smoking Status" guideline="" graphable="no" value_name="Smoker" />
-    <measurement type="SKST" typeDesc="Smoking Status" typeDisplayName="Smoking Status" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="SMCS" display_name="Smoking Cessation" guideline="" graphable="no" value_name="Discussed" />
-    <measurement type="SMCS" typeDesc="Smoking Cessation" typeDisplayName="Smoking Cessation" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="SMCP" display_name="Smoking Cessation Program" guideline="" graphable="no" value_name="Program" />
-    <measurement type="SMCP" typeDesc="Smoking Cessation Program" typeDisplayName="Smoking Cessation Program" measuringInstrc="">
-        <validationRule name="No Validations" maxValue="" minValue="" isDate="" isNumeric="" regularExp="" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="BMI" display_name="BMI" guideline="" graphable="yes" value_name="BMI" >
-        <ruleset>
-            <rule indicationColor="HIGH">
-                <condition type="getDataAsDouble" param="BMI" value="&gt;27" />
-            </rule>
-        </ruleset>
-    </item>
-    <measurement type="BMI" typeDesc="BMI" typeDisplayName="Body Mass Index" measuringInstrc="BMI">
-        <validationRule name="Numeric Value: 0 to 100" maxValue="100" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="SUO2" display_name="Need For Supplemental 02" guideline="" graphable="no" value_name="Reviewed" >
-        <rules>
-            <recommendation strength="warning" >
-                <condition type="monthrange"  value="&gt;12" />
-            </recommendation>
-            <recommendation strength="warning" >
-                <condition type="monthrange" param="SUO2" value="-1" />
-            </recommendation>
-        </rules>
-    </item>
-    <measurement type="SUO2" typeDesc="Need for supplemental oxygen" typeDisplayName="Need for supplemental oxygen" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="NOVS" display_name="Need for Nocturnal Ventilated Support" guideline="" graphable="no" value_name="Reviewed" >
-        <rules>
-            <recommendation strength="warning" >
-                <condition type="monthrange" param="NOVS" value="&gt;12" />
-            </recommendation>
-            <recommendation strength="warning" >
-                <condition type="monthrange" param="NOVS" value="-1" />
-            </recommendation>
-        </rules>
-    </item>
-    <measurement type="NOVS" typeDesc="Need for nocturnal ventilated support" typeDisplayName="Need for nocturnal ventilated support" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="COPS" display_name="Specialist Referral" guideline="" graphable="no" value_name="Referred" />
-    <measurement type="COPS" typeDesc="COP Specialist Referral" typeDisplayName="COP Specialist Referral" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="RPPT" display_name="Review Pathophysiology, Prognosis, Treatment " guideline="" graphable="no" value_name="Reviewed" >
-        <rules>
-            <recommendation strength="warning" >
-                <condition type="monthrange" param="RPPT" value="&gt;6" />
-            </recommendation>
-            <recommendation strength="warning" >
-                <condition type="monthrange" param="RPPT" value="-1" />
-            </recommendation>
-        </rules>
-    </item>
-    <measurement type="RPPT" typeDesc="Review Pathophysiology, Prognosis, Treatment with Patient" typeDisplayName="Review Pathophysiology, Prognosis, Treatment with Patient" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="PSPA" display_name="Patient Sets Physical Activity Goal" guideline="" graphable="no" value_name="Goal" >
-        <rules>
-            <recommendation strength="warning" >
-                <condition type="monthrange" param="PSPA" value="&gt;6" />
-            </recommendation>
-            <recommendation strength="warning" >
-                <condition type="monthrange" param="PSPA" value="-1" />
-            </recommendation>
-        </rules>
-    </item>
-    <measurement type="PSPA" typeDesc="Patient Sets physical Activity Goal" typeDisplayName="Patient Sets physical Activity Goal" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="COPM" display_name="Medication Use and Side effects" guideline="" graphable="no" value_name="Reviewed" >
-        <rules>
-            <recommendation strength="warning" >
-                <condition type="monthrange" param="COPM" value="&gt;6" />
-            </recommendation>
-            <recommendation strength="warning" >
-                <condition type="monthrange" param="COPM" value="-1" />
-            </recommendation>
-        </rules>
-    </item>
-    <measurement type="COPM" typeDesc="Review COP Med use and Side effects" typeDisplayName="Review COP Med use and Side effects" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="COPE" display_name="Provide Patient Education Materials" guideline="" graphable="no" value_name="Provided" />
-    <measurement type="COPE" typeDesc="Provide COP Education Materials " typeDisplayName="Provide COP Education Materials " measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="PRRF" display_name="Pulmonary Rehabilitation Referral" guideline="" graphable="no" value_name="Referred" />
-    <measurement type="PRRF" typeDesc="Pulmonary Rehabilitation Referral" typeDisplayName="Pulmonary Rehabilitation Referral" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="EPR" display_name="Exacerbations plan in place/reviewed" guideline="" graphable="no" value_name="Review/in place" >
-        <rules>
-            <recommendation strength="warning" >
-                <condition type="monthrange" param="EPR" value="&gt;6" />
-            </recommendation>
-            <recommendation strength="warning" >
-                <condition type="monthrange" param="EPR" value="-1" />
-            </recommendation>
-        </rules>
-    </item>
-    <measurement type="EPR" typeDesc="Exacerbation plan in place or reviewed" typeDisplayName="Exacerbation plan in place or reviewed" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="DOLE" display_name="Date of last Exacerbation" guideline="" graphable="no" value_name="Date" />
-    <measurement type="DOLE" typeDesc="Date of last Exacerbation" typeDisplayName="Date of last Exacerbation" measuringInstrc="">
-        <validationRule name="Date" maxValue="" minValue="" isDate="1" isNumeric="" regularExp="" maxLength="" minLength="" />
-    </measurement>
-    <item prevention_type="Pneumovax" display_name="Pneumococcal vaccine" guideline="" graphable="no" />
-    <item prevention_type="Flu" display_name="Flu Vaccine" guideline="Annually" graphable="no" />
+<!--
+  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. 
+  This software is published under the GPL GNU General Public License.
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version. 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
+-->
+<flowsheet name="COPD" display_name="Chronic Obstructive Pulmonary" dxcode_triggers="icd9:416" ds_rules="diab.drl" top_HTML=""
+		warning_colour="#E00000" recommendation_colour="yellow">
+	<indicator key="LOW" colour="#9999FF" />
+	<indicator key="HIGH" colour="orange" />
+	<indicator key="HIGH 1" colour="#E00000" />
+	
+		
+	<item prevention_type="Flu" display_name="Flu Vaccine" guideline="Annually" graphable="no" />
+	<item prevention_type="Pneumovax" display_name="Pneumococcal vaccine" guideline="" graphable="no" />
+	<item measurement_type="BMI" display_name="BMI" guideline="Target &lt;=27 kg/m2" graphable="yes" value_name="BMI" >
+		<ruleset>
+			<rule indicationColor="HIGH">
+				<condition type="getDataAsDouble" param="BMI" value="&gt;=27" />
+			</rule>
+		</ruleset>
+	</item>
+	<item measurement_type="FEV1BF" display_name="FEV1 (before puff)" guideline="" graphable="yes" value_name="FEV1 (before puff)" />
+	<item measurement_type="FVCBF" display_name="FVC (before puff)" guideline="" graphable="yes" value_name="FVC (before puff)" />
+	<item measurement_type="FEV1PCBF" display_name="FEV1% (before puff)" guideline="" graphable="yes" value_name="FEV1% (before puff)" />
+	<item measurement_type="FEV1PRE" display_name="FEV1 predicted" guideline="" graphable="yes" value_name="FEV1 predicted" />
+	<item measurement_type="FVCPRE" display_name="FVC predicted" guideline="" graphable="yes" value_name="FVC predicted" />
+	<item measurement_type="FEV1PCPRE" display_name="FEV1% predicted" guideline="" graphable="yes" value_name="FEV1% predicted" />
+	<item measurement_type="FEV1PCOFPREBF" display_name="FEV1% of predicted (before puff)" guideline="" graphable="yes" value_name="FEV1% of predicted (before puff)" />
+	<item measurement_type="FVCRTBF" display_name="FVC ratio (before puff)" guideline="" graphable="yes" value_name="FVC ratio (before puff)" />
+	<item measurement_type="FEV1FVCRTBF" display_name="FEV1 / FVC ratio (before puff)" guideline="" graphable="yes" value_name="FEV1 / FVC ratio (before puff)" />
+	<item measurement_type="PEFRBF" display_name="PEF personal (before puff)" guideline="" graphable="yes" value_name="PEF personal (before puff)" />
+	<item measurement_type="FEV1AFT" display_name="FEV1 (after puff)" guideline="" graphable="yes" value_name="FEV1 (after puff)" />
+	<item measurement_type="FVCAFT" display_name="FVC (after puff)" guideline="" graphable="yes" value_name="FVC (after puff)" />
+	<item measurement_type="FEV1PCAFT" display_name="FEV1% (after puff)" guideline="" graphable="yes" value_name="FEV1% (after puff)" />
+	<item measurement_type="FEV1PCOFPREAFT" display_name="FEV1% of predicted (after puff)" guideline="" graphable="yes" value_name="FEV1% of predicted (after puff)" />
+	<item measurement_type="FVCRTAFT" display_name="FVC ratio (after puff)" guideline="" graphable="yes" value_name="FVC ratio (after puff)" />
+	<item measurement_type="FEV1FVCRTAFT" display_name="FEV1 / FVC ratio (after puff)" guideline="" graphable="yes" value_name="FEV1 / FVC ratio (after puff)" />
+	<item measurement_type="PEFRAFT" display_name="PEF personal (after puff)" guideline="" graphable="yes" value_name="PEF personal (after puff)" />
+	
+	<item measurement_type="02" display_name="O2 Saturation" guideline="" graphable="yes" value_name="Percent" />
+	<item measurement_type="SPIRT" display_name="Spirometry Test" guideline="" graphable="no" value_name="Spirometry" />
+	<item measurement_type="ASPR" display_name="Specialist Referral" guideline="" graphable="no" value_name="Referred" />
+	<item measurement_type="COPDC" display_name="COPD Classification" guideline="" graphable="no" value_name="Class" />
+	
+	<item measurement_type="DOLE" display_name="Date of last Exacerbation" guideline="" graphable="no" value_name="Date" />
+	<item measurement_type="CNOLE" display_name="COPD: # of Exacerbations since last assessment" guideline="" graphable="no" value_name="COPD: # of Exacerbations since last assessment" />
+	<item measurement_type="SUO2" display_name="Need For Supplemental O2" guideline="" graphable="no" value_name="Reviewed" >
+		<rules>
+			<recommendation strength="warning" >
+				<condition type="monthrange"  value="&gt;12" />
+			</recommendation>
+			<recommendation strength="warning" >
+				<condition type="monthrange" param="SUO2" value="-1" />
+			</recommendation>
+		</rules>
+	</item>
+	<item measurement_type="NOVS" display_name="Need for Nocturnal Ventilated Support" guideline="" graphable="no" value_name="Reviewed" >
+		<rules>
+			<recommendation strength="warning" >
+				<condition type="monthrange" param="NOVS" value="&gt;12" />
+			</recommendation>
+			<recommendation strength="warning" >
+				<condition type="monthrange" param="NOVS" value="-1" />
+			</recommendation>
+		</rules>
+	</item>
+	<item measurement_type="RABG2" display_name="Recommend ABG" guideline="Aterial Blood Gas" graphable="no" value_name="Recommended" />
+	<item measurement_type="COPM" display_name="Medication Use and Side effects" guideline="" graphable="no" value_name="Reviewed" >
+		<rules>
+			<recommendation strength="warning" >
+				<condition type="monthrange" param="COPM" value="&gt;6" />
+			</recommendation>
+			<recommendation strength="warning" >
+				<condition type="monthrange" param="COPM" value="-1" />
+			</recommendation>
+		</rules>
+	</item>
+	<item measurement_type="RPPT" display_name="Review Pathophysiology, Prognosis, Treatment " guideline="" graphable="no" value_name="Reviewed" >
+		<rules>
+			<recommendation strength="warning" >
+				<condition type="monthrange" param="RPPT" value="&gt;6" />
+			</recommendation>
+			<recommendation strength="warning" >
+				<condition type="monthrange" param="RPPT" value="-1" />
+			</recommendation>
+		</rules>
+	</item>
+	<item measurement_type="SMCS" display_name="Smoking Cessation" guideline="" graphable="no" value_name="Discussed" />
+	<item measurement_type="SMCP" display_name="Smoking Cessation Program" guideline="" graphable="no" value_name="Program" />
+	<item measurement_type="PRRF" display_name="Pulmonary Rehabilitation Referral" guideline="" graphable="no" value_name="Referred" />
+	<item measurement_type="EPR2" display_name="Exacerbations plan in place" guideline="" graphable="no" value_name="Review/in place" >
+		<rules>
+			<recommendation strength="warning" >
+				<condition type="monthrange" param="EPR" value="&gt;6" />
+			</recommendation>
+			<recommendation strength="warning" >
+				<condition type="monthrange" param="EPR" value="-1" />
+			</recommendation>
+		</rules>
+	</item>
+	<item measurement_type="PSPA" display_name="Patient Sets Physical Activity Goal" guideline="" graphable="no" value_name="Goal" >
+		<rules>
+			<recommendation strength="warning" >
+				<condition type="monthrange" param="PSPA" value="&gt;6" />
+			</recommendation>
+			<recommendation strength="warning" >
+				<condition type="monthrange" param="PSPA" value="-1" />
+			</recommendation>
+		</rules>
+	</item>
+	<item measurement_type="COPE" display_name="Provide Patient Education Materials" guideline="" graphable="no" value_name="Provided" />
+	
+	<!--  ??? -->
+	<!-- 
+	<item measurement_type="SKST" display_name="Smoking Status" guideline="" graphable="no" value_name="Smoker" />
+	-->
+	
+	<measurement type="SPIRT" typeDesc="Spirometry Test" typeDisplayName="Spirometry Test" measuringInstrc="">
+		<validationRule name="Yes" maxValue="" minValue="" isDate="" isNumeric="" regularExp="Yes" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="COPDC" typeDesc="COPD Classification" typeDisplayName="COPD Classification" measuringInstrc="">
+		<validationRule name="COPD Classification" maxValue="" minValue="" isDate="" isNumeric="" regularExp="Mild: FEV1 &gt;= 80% predicted|Moderate:50% &lt;= FEV1 &lt; 80% predicted|Severe:30% &lt;= FEV1 &lt; 50% predicted|Very Severe : FEV1 &lt; 30% predicted" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="02" typeDesc="Oxygen Saturation" typeDisplayName="Oxygen Saturation" measuringInstrc="">
+		<validationRule name="Numeric Value: 0 to 100" maxValue="100" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>	
+	<measurement type="RABG2" typeDesc="Recommend ABG" typeDisplayName="Recommend ABG" measuringInstrc="">
+		<validationRule name="Yes/Not Applicable" maxValue="" minValue="" isDate="" isNumeric="" regularExp="Yes|Not Applicable" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="SKST" typeDesc="Smoking Status" typeDisplayName="Smoking Status" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="SMCS" typeDesc="Smoking Cessation" typeDisplayName="Smoking Cessation" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>	
+	<measurement type="SMCP" typeDesc="Smoking Cessation Program" typeDisplayName="Smoking Cessation Program" measuringInstrc="">
+		<validationRule name="No Validations" maxValue="" minValue="" isDate="" isNumeric="" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="BMI" typeDesc="BMI" typeDisplayName="Body Mass Index" measuringInstrc="BMI">
+		<validationRule name="Numeric Value: 0 to 100" maxValue="100" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="SUO2" typeDesc="Need for supplemental oxygen" typeDisplayName="Need for supplemental oxygen" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="NOVS" typeDesc="Need for nocturnal ventilated support" typeDisplayName="Need for nocturnal ventilated support" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="ASPR" typeDesc="Specialist Referral" typeDisplayName="Specialist Referral" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="RPPT" typeDesc="Review Pathophysiology, Prognosis, Treatment with Patient" typeDisplayName="Review Pathophysiology, Prognosis, Treatment with Patient" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="PSPA" typeDesc="Patient Sets physical Activity Goal" typeDisplayName="Patient Sets physical Activity Goal" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="COPM" typeDesc="Review COP Med use and Side effects" typeDisplayName="Review COP Med use and Side effects" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="COPE" typeDesc="Provide COP Education Materials " typeDisplayName="Provide COP Education Materials " measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="PRRF" typeDesc="Pulmonary Rehabilitation Referral" typeDisplayName="Pulmonary Rehabilitation Referral" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="EPR2" typeDesc="Exacerbation plan in place" typeDisplayName="Exacerbation plan in place" measuringInstrc="">
+		<validationRule name="Provided/Revised/Reviewed" maxValue="" minValue="" isDate="" isNumeric="" regularExp="Provided|Revised|Reviewed" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="DOLE" typeDesc="Date of last Exacerbation" typeDisplayName="Date of last Exacerbation" measuringInstrc="">
+		<validationRule name="Date" maxValue="" minValue="" isDate="1" isNumeric="" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="CNOLE" typeDesc="COPD: # of Exacerbations since last assessment" typeDisplayName="COPD: # of Exacerbations since last assessment" measuringInstrc="The number of exacerbations due to COPD since last visit, as reported by the patient">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1BF" typeDesc="FEV1 (before puff)" typeDisplayName="FEV1 (before puff)" measuringInstrc="Forced Expiratory Volume: the volume of air that has been exhaled by the patient at the end of the first second of forced expiration">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FVCBF" typeDesc="FVC (before puff)" typeDisplayName="FVC (before puff)" measuringInstrc="Forced Vital Capacity: the volume of air that has been forcibly and maximally exhaled out by the patient until no more can be expired">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1PCBF" typeDesc="FEV1% (before puff)" typeDisplayName="FEV1% (before puff)" measuringInstrc="The ratio of FEV1 to FVC calculated for the patient">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1PRE" typeDesc="FEV1 predicted" typeDisplayName="FEV1 predicted" measuringInstrc="The FEV1 calculated in the population with similar characteristics (e.g. height, age, sex, race, weight, etc.)">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FVCPRE" typeDesc="FVC predicted" typeDisplayName="FVC predicted" measuringInstrc="Forced Vital Capacity predicted: calculated in the population with similar characteristics (height, age, sex, and sometimes race and weight)">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1PCPRE" typeDesc="FEV1% predicted" typeDisplayName="FEV1% predicted" measuringInstrc="The ratio of FEV1 predicted to FVC predicted, calculated in the population with similar characteristics (height, age, sex, and sometimes race and weight)">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1PCOFPREBF" typeDesc="FEV1% of predicted (before puff)" typeDisplayName="FEV1% of predicted (before puff)" measuringInstrc="FEV1% (before puff) of the patient divided by the average FEV1% predicted in the population with similar characteristics (e.g. height, age, sex, race, weight, etc.)">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FVCRTBF" typeDesc="FVC ratio (before puff)" typeDisplayName="FVC ratio (before puff)" measuringInstrc="FVC actual (before puff) / FVC predicted">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1FVCRTBF" typeDesc="FEV1 / FVC ratio (before puff)" typeDisplayName="FEV1 / FVC ratio (before puff)" measuringInstrc="FEV1 / FVC (before puff) actual divided by FEV1 / FVC predicted">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="PEFRBF" typeDesc="PEF personal (before puff)" typeDisplayName="PEF personal (before puff)" measuringInstrc="Peak Expiratory Flow: the maximal flow (or speed) achieved during the maximally forced expiration initiated at full inspiration">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1AFT" typeDesc="FEV1 (after puff)" typeDisplayName="FEV1 (after puff)" measuringInstrc="Forced Expiratory Volume: the volume of air that has been exhaled by the patient at the end of the first second of forced expiration">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FVCAFT" typeDesc="FVC (after puff)" typeDisplayName="FVC (after puff)" measuringInstrc="Forced Vital Capacity: the volume of air that has been forcibly and maximally exhaled out by the patient until no more can be expired">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1PCAFT" typeDesc="FEV1% (after puff)" typeDisplayName="FEV1% (after puff)" measuringInstrc="The ratio of FEV1 to FVC calculated for the patient">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1PCOFPREAFT" typeDesc="FEV1% of predicted (after puff)" typeDisplayName="FEV1% of predicted (after puff)" measuringInstrc="FEV1% (after puff) of the patient divided by the average FEV1% predicted in the population with similar characteristics (e.g. height, age, sex, race, weight, etc.)">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FVCRTAFT" typeDesc="FVC ratio (after puff)" typeDisplayName="FVC ratio (after puff)" measuringInstrc="FVC actual (after puff) / FVC predicted">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1FVCRTAFT" typeDesc="FEV1 / FVC ratio (after puff)" typeDisplayName="FEV1 / FVC ratio (after puff)" measuringInstrc="FEV1 / FVC (after puff) actual divided by FEV1 / FVC predicted">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="PEFRAFT" typeDesc="PEF personal (after puff)" typeDisplayName="PEF personal (after puff)" measuringInstrc="Peak Expiratory Flow: the maximal flow (or speed) achieved during the maximally forced expiration initiated at full inspiration">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+
 </flowsheet>

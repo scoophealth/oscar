@@ -189,6 +189,15 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		List<Demographic> rs = getHibernateTemplate().find(q, new Object[] { providerNo });
 		return rs;
 	}
+	
+	public List<Integer> getDemographicNosByProvider(String providerNo, boolean onlyActive) {
+		String q = "From Demographic d where d.ProviderNo = ? ";
+		if (onlyActive) {
+			q = "Select d.DemographicNo From Demographic d where d.ProviderNo = ? and d.PatientStatus = 'AC' ";
+		}
+		List<Integer> rs = getHibernateTemplate().find(q, new Object[] { providerNo });
+		return rs;
+	}
 
 	public Demographic getDemographicByMyOscarUserName(String myOscarUserName) {
 		String q = "From Demographic d where d.myOscarUserName = ? ";

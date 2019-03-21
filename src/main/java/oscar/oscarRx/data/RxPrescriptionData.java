@@ -112,20 +112,21 @@ public class RxPrescriptionData {
 		prescription.setDrugForm(drug.getDrugForm());
 		prescription.setCustomInstr(drug.isCustomInstructions());
 		prescription.setDosage(drug.getDosage());
-		prescription.setLongTerm(drug.isLongTerm());
+		prescription.setLongTerm(drug.getLongTerm());
 		prescription.setShortTerm(drug.getShortTerm());
 		prescription.setCustomNote(drug.isCustomNote());
 		prescription.setPastMed(drug.getPastMed());
 		prescription.setDispenseInternal(drug.getDispenseInternal());
 		prescription.setStartDateUnknown(drug.getStartDateUnknown());
 		prescription.setComment(drug.getComment());
-		if (drug.getPatientCompliance() == null) prescription.setPatientCompliance(null);
-		else prescription.setPatientCompliance(drug.getPatientCompliance());
+		prescription.setPatientCompliance(drug.getPatientCompliance());
 		prescription.setOutsideProviderName(drug.getOutsideProviderName());
 		prescription.setOutsideProviderOhip(drug.getOutsideProviderOhip());
 		prescription.setSpecialInstruction(drug.getSpecialInstruction());
 		prescription.setPickupDate(drug.getPickUpDateTime());
 		prescription.setPickupTime(drug.getPickUpDateTime());
+		prescription.setProtocol(drug.getProtocol());
+		prescription.setPriorRxProtocol(drug.getPriorRxProtocol());
 		prescription.setETreatmentType(drug.getETreatmentType());
 		prescription.setRxStatus(drug.getRxStatus());
 		if (drug.getDispenseInterval() != null) prescription.setDispenseInterval(drug.getDispenseInterval());
@@ -137,6 +138,7 @@ public class RxPrescriptionData {
 			logger.warn("data from db is : " + drug.getSpecial());
 		}
 		prescription.setDispenseInternal(drug.getDispenseInternal());
+		prescription.setPharmacyId(drug.getPharmacyId());
 		return prescription;
 	}
 
@@ -229,6 +231,8 @@ public class RxPrescriptionData {
 		if (rePrescribe.getRefillQuantity() != null) prescription.setRefillQuantity(rePrescribe.getRefillQuantity());
 		prescription.setDrugReferenceId(rePrescribe.getDrugId());
 		prescription.setDispenseInternal(rePrescribe.getDispenseInternal());
+		prescription.setProtocol(rePrescribe.getProtocol());
+		prescription.setPriorRxProtocol(rePrescribe.getPriorRxProtocol());
 		return prescription;
 	}
 
@@ -236,7 +240,19 @@ public class RxPrescriptionData {
 		List<Prescription> lst = new ArrayList<Prescription>();
 
 		DrugDao dao = SpringUtils.getBean(DrugDao.class);
-		for (Drug drug : dao.findByDemographicIdOrderByPosition(demographicNo, null)) {
+		for (Drug drug : dao.findByDemographicIdOrderByPosition(demographicNo, false)) {
+			Prescription p = toPrescription(drug, demographicNo);
+			lst.add(p);
+		}
+
+		return lst.toArray(new Prescription[lst.size()]);
+	}
+	
+	public Prescription[] getPrescriptionsByPatientForExport(int demographicNo) {
+		List<Prescription> lst = new ArrayList<Prescription>();
+
+		DrugDao dao = SpringUtils.getBean(DrugDao.class);
+		for (Drug drug : dao.findByDemographicIdOrderByPositionForExport(demographicNo, null)) {
 			Prescription p = toPrescription(drug, demographicNo);
 			lst.add(p);
 		}
@@ -282,19 +298,22 @@ public class RxPrescriptionData {
 		p.setCustomNote(drug.isCustomNote());
 		p.setPastMed(drug.getPastMed());
 		p.setStartDateUnknown(drug.getStartDateUnknown());
-		p.setComment(drug.getComment());
-		if (drug.getPatientCompliance() == null) p.setPatientCompliance(null);
-		else p.setPatientCompliance(drug.getPatientCompliance());
+		p.setComment(drug.getComment());	
+		p.setPatientCompliance(drug.getPatientCompliance());
 		p.setOutsideProviderName(drug.getOutsideProviderName());
 		p.setOutsideProviderOhip(drug.getOutsideProviderOhip());
 		p.setPickupDate(drug.getPickUpDateTime());
 		p.setPickupTime(drug.getPickUpDateTime());
+		p.setProtocol(drug.getProtocol());
+		p.setPriorRxProtocol(drug.getPriorRxProtocol());
 		p.setETreatmentType(drug.getETreatmentType());
 		p.setRxStatus(drug.getRxStatus());
 		if (drug.getDispenseInterval() != null) p.setDispenseInterval(drug.getDispenseInterval());
 		if (drug.getRefillDuration() != null) p.setRefillDuration(drug.getRefillDuration());
 		if (drug.getRefillQuantity() != null) p.setRefillQuantity(drug.getRefillQuantity());
 		p.setHideCpp(drug.getHideFromCpp());
+		p.setPharmacyId(drug.getPharmacyId());
+		if(drug.isNonAuthoritative() != null) p.setNonAuthoritative(drug.isNonAuthoritative());
 		return p;
 	}
 
@@ -427,6 +446,9 @@ public class RxPrescriptionData {
 
 		for (Drug drug : drugList) {
 
+			if(drug.isDeleted())
+				continue;
+			
 			boolean isCustomName = true;
 
 			for (Prescription p : result) {
@@ -588,6 +610,7 @@ public class RxPrescriptionData {
 		java.util.Date pickupTime = null;
 		java.util.Date writtenDate = null;
 		String writtenDateFormat = null;
+		String rxDateFormat = null;
 		java.util.Date printDate = null;
 		int numPrints = 0;
 		String BN = null; // regular
@@ -603,9 +626,9 @@ public class RxPrescriptionData {
 		java.util.Date lastRefillDate = null;
 		boolean nosubs = false;
 		boolean prn = false;
-		boolean longTerm = false;
+		Boolean longTerm = null;
 		boolean shortTerm = false;
-		boolean pastMed = false;
+		Boolean pastMed = null;
 		boolean startDateUnknown = false;
 		Boolean patientCompliance = null;
 		String special = null;
@@ -640,7 +663,7 @@ public class RxPrescriptionData {
 		String rxStatus = null;
 		private Integer refillDuration = 0;
 		private Integer refillQuantity = 0;
-		private Integer dispenseInterval = 0;
+		private String dispenseInterval = "";
 		private int position = 0;
 		private String comment = null;
 
@@ -655,6 +678,10 @@ public class RxPrescriptionData {
 		private String drugReasonCode;
 		private String drugReasonCodeSystem;
 
+		private String protocol;
+		private String priorRxProtocol;
+		private Integer pharmacyId;
+		
 		public String getDrugReasonCode() {
 			return drugReasonCode;
 		}
@@ -782,7 +809,11 @@ public class RxPrescriptionData {
 		}
 
 		public boolean isLongTerm() {
-			return longTerm;
+			boolean trueFalse = Boolean.FALSE;
+			if (longTerm != null) {
+				trueFalse = longTerm;
+			} 
+			return trueFalse;
 		}
 
 		public boolean isDiscontinuedLatest() {
@@ -957,6 +988,39 @@ public class RxPrescriptionData {
 
 		public void setWrittenDateFormat(String RHS) {
 			this.writtenDateFormat = RHS;
+		}
+		
+		public String getRxDateFormat() {
+			return this.rxDateFormat;
+		}
+
+		public void setRxDateFormat(String RHS) {
+			this.rxDateFormat = RHS;
+		}
+
+		public String getProtocol() {
+			return protocol;
+		}
+
+		public void setProtocol(String protocol) {
+			this.protocol = protocol;
+		}
+
+
+		public String getPriorRxProtocol() {
+			return priorRxProtocol;
+		}
+
+		public void setPriorRxProtocol(String priorRxProtocol) {
+			this.priorRxProtocol = priorRxProtocol;
+		}
+
+		public Integer getPharmacyId() {
+			return pharmacyId;
+		}
+
+		public void setPharmacyId(Integer pharmacyId) {
+			this.pharmacyId = pharmacyId;
 		}
 
 		/*
@@ -1204,12 +1268,12 @@ public class RxPrescriptionData {
 			}
 		}
 
-		public boolean getLongTerm() {
+		public Boolean getLongTerm() {
 			return this.longTerm;
 		}
 
-		public void setLongTerm(boolean lt) {
-			this.longTerm = lt;
+		public void setLongTerm(Boolean trueFalseNull) {
+			this.longTerm = trueFalseNull;
 		}
 		
 		public boolean getShortTerm() {
@@ -1229,15 +1293,19 @@ public class RxPrescriptionData {
 		}
 
 		public boolean isPastMed() {
+			boolean trueFalse = Boolean.FALSE;
+			if (this.pastMed != null) {
+				trueFalse = this.pastMed;
+			} 
+			return trueFalse;
+		}
+
+		public Boolean getPastMed() {
 			return this.pastMed;
 		}
 
-		public boolean getPastMed() {
-			return this.pastMed;
-		}
-
-		public void setPastMed(boolean pm) {
-			this.pastMed = pm;
+		public void setPastMed(Boolean trueFalseNull) {
+			this.pastMed = trueFalseNull;
 		}
 
 		public boolean getDispenseInternal() {
@@ -1251,27 +1319,21 @@ public class RxPrescriptionData {
 		public void setDispenseInternal(boolean dispenseInternal) {
 			this.dispenseInternal = dispenseInternal;
 		}
+		
+		public boolean isPatientCompliance() {
+			boolean trueFalse = Boolean.FALSE;
+			if (this.patientCompliance != null) {
+				trueFalse = this.patientCompliance;
+			} 
+			return trueFalse;
+		}
 
 		public Boolean getPatientCompliance() {
 			return this.patientCompliance;
 		}
 
-		public void setPatientCompliance(Boolean pc) {
-			this.patientCompliance = pc;
-		}
-
-		public boolean getPatientCompliance(String YN) {
-			if (YN == null || getPatientCompliance() == null) return false;
-
-			if (YN.equalsIgnoreCase("Y")) return getPatientCompliance().equals(true);
-			if (YN.equalsIgnoreCase("N")) return getPatientCompliance().equals(false);
-			return false;
-		}
-
-		public void setPatientCompliance(boolean Y, boolean N) {
-			if (Y) setPatientCompliance(true);
-			else if (N) setPatientCompliance(false);
-			else setPatientCompliance(null);
+		public void setPatientCompliance(Boolean trueFalseNull) {
+			this.patientCompliance = trueFalseNull;
 		}
 
 		public String getSpecial() {
@@ -1358,7 +1420,15 @@ public class RxPrescriptionData {
 		}
 
 		public String getFullOutLine() {
-			return (RxPrescriptionData.getFullOutLine(getSpecial()));
+			String extra = "";
+			
+			if(getNosubs()) {
+				extra += "SUBSTITUTION NOT ALLOWED";
+			}			
+			if((getRefillQuantity() != null && getRefillQuantity() > 0) || (getRefillDuration() != null && getRefillDuration() > 0)) {
+				extra = "Refill: Qty:" + (getRefillQuantity() != null ? getRefillQuantity() : "0") + " Duration:" + (getRefillDuration() != null ? getRefillDuration() : "0") + " Days";
+			}
+			return (RxPrescriptionData.getFullOutLine(getSpecial() + "\n" + extra));
 		}
 
 		public String getDosageDisplay() {
@@ -1558,31 +1628,14 @@ public class RxPrescriptionData {
 
 			if (getSpecial() == null || getSpecial().length() < 6) logger.warn("drug special appears to be null or empty : " + getSpecial());
 
-			//  String parsedSpecial = RxUtil.replace(this.getSpecial(), "'", "");//a bug?
 			String escapedSpecial = StringEscapeUtils.escapeSql(this.getSpecial());
 
 			if (escapedSpecial == null || escapedSpecial.length() < 6) logger.warn("drug special after escaping appears to be null or empty : " + escapedSpecial);
 
-			// check to see if there is an identitical prescription in
-			// the database. If there is we'll return that drugid instead
-			// of adding a new prescription.
-			/*
-						String endDate;
-						if (this.getEndDate() == null) {
-							endDate = "0001-01-01";
-						} else {
-							endDate = RxUtil.DateToString(this.getEndDate());
-						}
-			*/
 			DrugDao dao = SpringUtils.getBean(DrugDao.class);
-			// double check if we don't h
-			Drug drug = dao.findByEverything(this.getProviderNo(), this.getDemographicNo(), this.getRxDate(), this.getEndDate(), this.getWrittenDate(), this.getBrandName(), this.getGCN_SEQNO(), this.getCustomName(), this.getTakeMin(), this.getTakeMax(), this.getFrequencyCode(), this.getDuration(), this.getDurationUnit(), this.getQuantity(), this.getUnitName(), this.getRepeat(), this.getLastRefillDate(), this.getNosubs(), this.getPrn(), escapedSpecial, this.getOutsideProviderName(),
-			        this.getOutsideProviderOhip(), this.getCustomInstr(), this.getLongTerm(), this.isCustomNote(), this.getPastMed(), this.getPatientCompliance(), this.getSpecialInstruction(), this.getComment(), this.getStartDateUnknown());
+			Drug drug = new Drug();
 
-			drug = new Drug();
-
-			int position = this.getNextPosition();
-			this.position = position;
+			this.position = this.getNextPosition();
 			syncDrug(drug, ConversionUtils.fromIntString(scriptId));
 			dao.persist(drug);
 			drugId = drug.getId();
@@ -1643,6 +1696,9 @@ public class RxPrescriptionData {
 			drug.setComment(getComment());
 			drug.setStartDateUnknown(getStartDateUnknown());
 			drug.setDispenseInternal(getDispenseInternal());
+			drug.setProtocol(protocol);
+			drug.setPriorRxProtocol(priorRxProtocol);
+			drug.setPharmacyId(getPharmacyId());
 		}
 
 		public boolean AddToFavorites(String providerNo, String favoriteName) {
@@ -1844,11 +1900,11 @@ public class RxPrescriptionData {
 			this.refillQuantity = refillQuantity;
 		}
 
-		public Integer getDispenseInterval() {
+		public String getDispenseInterval() {
 			return dispenseInterval;
 		}
 
-		public void setDispenseInterval(int dispenseInterval) {
+		public void setDispenseInterval(String dispenseInterval) {
 			this.dispenseInterval = dispenseInterval;
 		}
 

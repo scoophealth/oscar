@@ -1046,10 +1046,23 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
 	                                            <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../lab/CA/ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier='+encodeURIComponent('<%= handler.getOBXIdentifier(j, k)%>'))"><%=obxName %></a></td><%}%>
 	                                            <%
 	                                          	//for pathl7, if it is an SG/CDC result greater than 100 characters, left justify it 
-	                                            if((handler.getOBXResult(j, k).length() > 100) && isSGorCDC){%>
+	                                            if((handler.getOBXResult(j, k) != null && handler.getOBXResult(j, k).length() > 100) && isSGorCDC){%>
 	                                            	<td align="left"><%= handler.getOBXResult( j, k) %></td><%
 	                                            }else{%>
+	                                            											<%
+												if((handler.getMsgType().equals("ExcellerisON") || handler.getMsgType().equals("PATHL7")) && handler.getOBXValueType(j,k).equals("ED")) {
+													String legacy = "";
+													if(handler.getMsgType().equals("PATHL7") && ((PATHL7Handler)handler).isLegacy(j,k) ) {
+														legacy ="&legacy=true";
+													}
+												
+												%>	
+													 <td align="right"><a href="<%=request.getContextPath() %>/lab/DownloadEmbeddedDocumentFromLab.do?labNo=<%=segmentID%>&segment=<%=j%>&group=<%=k%><%=legacy%>">PDF Report</a></td>
+													 <%
+												} else {
+											%>
 	                                            <td align="right"><%= handler.getOBXResult( j, k) %></td><%}%>
+	                                            <% } %>
 	                                            <td align="center">
 	                                                    <%= handler.getOBXAbnormalFlag(j, k)%>
 	                                            </td>

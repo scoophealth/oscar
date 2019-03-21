@@ -61,7 +61,7 @@ public class OLISPreferencesAction extends DispatchAction  {
 	     		olisPrefs.setStartTime(startTime);
 	     		olisPrefs.setEndTime(endTime);
 	     		olisPrefs.setFilterPatients((filterPatients!=null)?true:false);
-	     		boolean restartTimer = olisPrefs.getPollFrequency() != pollFrequency;	     		
+	     		boolean restartTimer = !pollFrequency.equals(olisPrefs.getPollFrequency());	     		
 	     		olisPrefs.setPollFrequency(pollFrequency);
 	     		olisPrefDao.save(olisPrefs);
 	     		request.setAttribute("success", true);
@@ -77,7 +77,6 @@ public class OLISPreferencesAction extends DispatchAction  {
 	     		MiscUtils.getLogger().error("Changing Preferences failed", e); 
 				request.setAttribute("success", false);
 	     	}
-		 
 	     	return mapping.findForward("success");
 		 
 	    }

@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.apache.commons.lang.StringUtils"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -49,7 +50,13 @@ String userlastname = (String) session.getAttribute("userlastname");
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ page
-	import="java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarProvider.data.ProviderData, org.oscarehr.util.SpringUtils, org.oscarehr.common.dao.CtlDocClassDao"%><%
+	import="java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarProvider.data.ProviderData, org.oscarehr.util.SpringUtils, org.oscarehr.common.dao.CtlDocClassDao"%>
+<%@ page import="org.oscarehr.common.model.DocumentExtraReviewer"%>
+<%@ page import="org.oscarehr.common.dao.DocumentExtraReviewerDao"%>
+<%
+	DocumentExtraReviewerDao documentExtraReviewerDao = SpringUtils.getBean(DocumentExtraReviewerDao.class);
+	List<DocumentExtraReviewer> extraReviewers = new ArrayList<DocumentExtraReviewer>();
+
 String editDocumentNo = "";
 if (request.getAttribute("editDocumentNo") != null) {
     editDocumentNo = (String) request.getAttribute("editDocumentNo");
@@ -98,6 +105,10 @@ if (request.getAttribute("completedForm") != null) {
     formdata.setRestrictToProgram(currentDoc.isRestrictToProgram());
     lastUpdate = currentDoc.getDateTimeStamp();
     fileName = currentDoc.getFileName();
+    formdata.setAbnormal((currentDoc.getAbnormal().equals("1"))?"checked":"");
+    formdata.setReceivedDate(currentDoc.getReceivedDate());
+    
+    extraReviewers = documentExtraReviewerDao.findByDocumentNo(Integer.parseInt(editDocumentNo));
 }
 
 List<Map<String,String>> pdList = new ProviderData().getProviderList();
@@ -191,9 +202,18 @@ for (String reportClass : reportClasses) {
                 return ans;
             }
 	    function reviewed(ths) {
-		thisForm = ths.form;
-		thisForm.reviewDoc.value = true;
-		thisForm.submit();
+	    	if(ths.form.reviewerId.value == 'null') {
+	    		thisForm = ths.form;
+				thisForm.reviewerId.value = <%=user_no%>;
+				thisForm.reviewDoc.value = true;
+				thisForm.submit();
+	    	} else {
+	    		alert('set extra');
+	    		thisForm = ths.form;
+				thisForm.extraReviewerId.value = <%=user_no%>;
+				thisForm.extraReviewDoc.value = true;
+				thisForm.submit();
+	    	}
 	    }
 
             var docSubClassList = [
@@ -221,6 +241,10 @@ for (String reportClass : reportClasses) {
 	<input type="hidden" name="reviewerId" value="<%=formdata.getReviewerId()%>" />
 	<input type="hidden" name="reviewDateTime" value="<%=formdata.getReviewDateTime()%>" />
 	<input type="hidden" name="reviewDoc" value="false" />
+	
+	<input type="hidden" name="extraReviewerId" value="" />
+	<input type="hidden" name="extraReviewDoc" value="false" />
+	
 	<table class="layouttable">
 		<tr>
 			<td>Type:</td>
@@ -301,11 +325,11 @@ for (String reportClass : reportClasses) {
 		</tr>
 		<tr>
 			<td>Source Author:</td>
-			<td><input type="text" name="source" size="15" value="<%=formdata.getSource()%>"/></td>
+			<td><input type="text" name="source" size="15" value="<%=StringUtils.trimToEmpty(formdata.getSource())%>"/></td>
 		</tr>
 		<tr>
 			<td>Source Facility:</td>
-			<td><input type="text" name="sourceFacility" size="15" value="<%=formdata.getSourceFacility()%>"/></td>
+			<td><input type="text" name="sourceFacility" size="15" value="<%=StringUtils.trimToEmpty(formdata.getSourceFacility())%>"/></td>
 		</tr>
 		<% if (module.equals("provider")) {%>
 		<tr>
@@ -324,6 +348,20 @@ for (String reportClass : reportClasses) {
 			<td>
 				<%=formdata.isRestrictToProgram() %>
 			</td>
+		</tr>
+		
+		<tr>
+			<td>Date Received:</td>
+			<td><input id="receivedDate" name="receivedDate"
+				type="text" value="<%=formdata.getReceivedDate()%>"><a
+				id="rdate"><img title="Calendar" src="../images/cal.gif"
+				alt="Calendar" border="0" /></a></td>
+		</tr>
+		
+		<tr>
+			<td>Abnormal Result(s):</td>
+			<td><input type="checkbox" name="abnormal"
+				<%=formdata.getAbnormal() + " "%> value="checked"></td>
 		</tr>
 		
 		<tr>
@@ -347,10 +385,29 @@ for (String reportClass : reportClasses) {
                 </tr>
                 <tr>
 		    <td colspan=2>
-			<% if (formdata.getReviewerId()!=null && !formdata.getReviewerId().equals("")) { %>
+			<% 
+			boolean reviewedByMe = false;
+			if (formdata.getReviewerId()!=null && !formdata.getReviewerId().equals("")) { 
+				if(formdata.getReviewerId().equals(user_no)) {
+					reviewedByMe=true;
+				}
+			%>
 			Reviewed: &nbsp; <%=EDocUtil.getProviderName(formdata.getReviewerId())%>
 			&nbsp; [<%=formdata.getReviewDateTime()%>]
-			<% } else { %>
+			<% } %>
+			<% 
+			for(DocumentExtraReviewer der : extraReviewers) { 
+				if(der.getReviewerProviderNo().equals(user_no)) {
+					reviewedByMe=true;
+				}
+			%>
+				<br/>
+				Reviewed: &nbsp; <%=EDocUtil.getProviderName(der.getReviewerProviderNo())%>
+			&nbsp; [<%=der.getReviewDateTime()%>]
+			<% } %>
+			
+			<%if(!reviewedByMe) { %>
+			<br/>
 			<input type="button" value="Reviewed" title="Click to set Reviewed" onclick="reviewed(this);" />
 			<% } %>
 		    </td>
@@ -373,6 +430,7 @@ for (String reportClass : reportClasses) {
 	</table>
 </html:form> <script type="text/javascript">
                Calendar.setup( { inputField : "observationDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "obsdate", singleClick : true, step : 1 } );
+               Calendar.setup( { inputField : "receivedDate", ifFormat : "%Y/%m/%d", showsTime :false, button : "rdate", singleClick : true, step : 1 } );
            </script></div>
 </body>
 </html>

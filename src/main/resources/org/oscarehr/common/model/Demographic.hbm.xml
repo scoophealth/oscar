@@ -16,6 +16,7 @@
 		<property column="title" name="title" type="string" />
 		<property column="first_name" length="30" name="FirstName" not-null="true" type="string" />
 		<property column="last_name" length="30" name="LastName" not-null="true" type="string" />
+		<property column="middleNames" length="30" name="middleNames" not-null="true" type="string" />
 		<property column="sex" length="1" name="Sex" not-null="true" type="string" />
 		<property name="SexDesc" not-null="true" type="string" formula="(select lst.description from lst_gender lst where lst.code=sex)" />
 		<property column="month_of_birth" length="2" name="MonthOfBirth" type="string" />
@@ -25,6 +26,10 @@
 		<property column="city" length="50" name="City" type="string" />
 		<property column="province" length="20" name="Province" type="string" />
 		<property column="postal" length="9" name="Postal" type="string" />
+		<property column="mailingAddress" length="60" name="MailingAddress" type="string" />
+		<property column="mailingCity" length="50" name="MailingCity" type="string" />
+		<property column="mailingProvince" length="20" name="MailingProvince" type="string" />
+		<property column="mailingPostal" length="9" name="MailingPostal" type="string" />
 		<property column="email" length="100" name="Email" type="string" />
 		<property column="phone" length="20" name="Phone" type="string" />
 		<property column="phone2" length="20" name="Phone2" type="string" />
@@ -36,6 +41,7 @@
 		<property column="hc_renew_date" length="10" name="HcRenewDate" type="date" />
 
 		<property column="roster_status" length="20" name="RosterStatus" type="string" />
+		<property column="roster_enrolled_to" length="20" name="rosterEnrolledTo" type="string" />
 		<property column="patient_status" length="20" name="PatientStatus" type="string" />
 		<property column="patient_status_date" length="10" name="PatientStatusDate" type="date"/>
 		<property column="date_joined" length="10" name="DateJoined" type="date" />

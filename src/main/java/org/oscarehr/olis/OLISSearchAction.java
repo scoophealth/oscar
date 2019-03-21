@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -63,6 +64,7 @@ import com.indivica.olis.parameters.ZPD1;
 import com.indivica.olis.parameters.ZPD3;
 import com.indivica.olis.parameters.ZRP1;
 import com.indivica.olis.queries.Query;
+import com.indivica.olis.queries.QueryType;
 import com.indivica.olis.queries.Z01Query;
 import com.indivica.olis.queries.Z02Query;
 import com.indivica.olis.queries.Z04Query;
@@ -97,22 +99,33 @@ public class OLISSearchAction extends DispatchAction {
 				// Log the consent override
 				OscarLogDao logDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
 				OscarLog logItem = new OscarLog();
-				logItem.setAction("OLIS search");
+				logItem.setAction("OLIS");
 				logItem.setContent("consent override");
-				logItem.setContentId("demographicNo=" + q.getDemographicNo() + ",givenby=" + blockedInfoIndividual);					
-				if (loggedInInfo.getLoggedInProvider() != null) {
-					logItem.setProviderNo(loggedInInfo.getLoggedInProviderNo());
-				}
-				else {
-					logItem.setProviderNo("-1");
-				}
+				//logItem.setContentId("demographicNo=" + q.getDemographicNo() + ",givenby=" + blockedInfoIndividual);			
+				logItem.setContentId(uuid);
+				logItem.setProviderNo(loggedInInfo.getLoggedInProviderNo());
+				
+				StringBuilder data = new StringBuilder();
+				data.append("Initiating Provider: " + providerDao.getProvider(loggedInInfo.getLoggedInProviderNo()).getFormattedName() + "\n");
+				data.append("Requesting HIC: " + providerDao.getProviderByPractitionerNo(q.getRequestingHICProviderNo()) + "\n");
+				data.append("Authorized by:" + blockedInfoIndividual + "\n");
+				
+				logItem.setData(data.toString());
 
 				logItem.setIp(request.getRemoteAddr());
 
+
+				if(q.getQueryType() == QueryType.Z01) {
+					String demographicNo = ((Z01Query)q).getDemographicNo();
+					if(!StringUtils.isEmpty(demographicNo)) {
+						logItem.setDemographicId( Integer.parseInt(demographicNo));
+					}
+				}
+				
 				logDao.persist(logItem);
 
 			}
-			Driver.submitOLISQuery(request, q);
+			Driver.submitOLISQuery(loggedInInfo, request, q);
 			
 		}
 		else if (queryType != null) {
@@ -788,8 +801,10 @@ public class OLISSearchAction extends DispatchAction {
 			}
 			
 			String searchUuid = UUID.randomUUID().toString();
+			query.setUuid(searchUuid);
 			searchQueryMap.put(searchUuid, query);
 			request.setAttribute("searchUuid", searchUuid);
+
 			if(queryType.equals("Z04") && request.getParameterValues("requestingHic") != null && request.getParameterValues("requestingHic").length>1) {
 				for(String providerNo:request.getParameterValues("requestingHic")) {
 					Provider provider = providerDao.getProvider(providerNo);
@@ -798,10 +813,10 @@ public class OLISSearchAction extends DispatchAction {
 							userPropertyDAO.getStringValue(provider.getProviderNo(),UserProperty.OFFICIAL_FIRST_NAME), 
 							userPropertyDAO.getStringValue(provider.getProviderNo(),UserProperty.OFFICIAL_SECOND_NAME));
 					((Z04Query) query).setRequestingHic(zrp1);
-					Driver.submitOLISQuery(request, query);
+					Driver.submitOLISQuery(loggedInInfo, request, query);
 				}
 			} else {
-				Driver.submitOLISQuery(request, query);
+				Driver.submitOLISQuery(loggedInInfo, request, query);
 			}
 
 		}
@@ -818,4 +833,6 @@ public class OLISSearchAction extends DispatchAction {
 		c.set(Calendar.SECOND,59);
 		return c.getTime();
 	}
+	
+	
 }

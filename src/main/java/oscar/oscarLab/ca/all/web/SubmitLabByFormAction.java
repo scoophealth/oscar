@@ -84,8 +84,8 @@ public class SubmitLabByFormAction extends DispatchAction {
 		String pLastName = request.getParameter("pLastname");
 		String pFirstName = request.getParameter("pFirstname");
 		String cc = request.getParameter("cc");
-
-                String ipAddr = request.getRemoteAddr();
+		
+		String ipAddr = request.getRemoteAddr();
 		SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -127,6 +127,7 @@ public class SubmitLabByFormAction extends DispatchAction {
     			String refRangeText = request.getParameter("test_"+x+".refRangeText");
     			String flag = request.getParameter("test_"+x+".flag");
     			String stat = request.getParameter("test_"+x+".stat");
+    			String blocked = request.getParameter("test_"+x+".blocked");
     			String labNotes = request.getParameter("test_"+x+".labnotes");
     			LabTest test = new LabTest();
     			test.setDate(dateTimeFormatter.parse(testDate));
@@ -141,6 +142,7 @@ public class SubmitLabByFormAction extends DispatchAction {
     			test.setRefRangeText(refRangeText);
     			test.setFlag(flag);
     			test.setStat(stat);
+    			test.setBlocked(blocked);
     			test.setNotes(labNotes);
     			lab.getTests().add(test);
     		}
@@ -192,7 +194,7 @@ public class SubmitLabByFormAction extends DispatchAction {
 		sb.append(generateOBR(lab)).append("\n");
 
 		for(LabTest test:lab.getTests()) {
-			sb.append(generateTest(test));
+			sb.append(generateTest(test)).append("\n");
 
 		}
 		return sb.toString();
@@ -223,9 +225,9 @@ public class SubmitLabByFormAction extends DispatchAction {
 				if(x>0)ccString.append("~");
 				ccString.append(idName[0]);
 				ccString.append("^");
-				ccString.append(idName[1]);
+				ccString.append(idName.length>1 ? idName[1] : "");
 				ccString.append("^");
-				ccString.append(idName[2]);
+				ccString.append(idName.length>2 ? idName[2] : "");
 			}
 		}
 		return "OBR|1|||UR^General Lab^L1^GENERAL LAB||"+sdf.format(lab.getLabReqDate())+"|"+sdf.format(lab.getTests().get(0).getDate())+"|||||||"+sdf.format(lab.getLabReqDate())+"||"+lab.getBillingNo()+"^"+lab.getProviderLastName()+"^"+lab.getProviderFirstName()+"||||||"+sdf.format(lab.getTests().get(0).getDate())+"||LAB|F|||"+ccString.toString();
@@ -242,7 +244,7 @@ public class SubmitLabByFormAction extends DispatchAction {
 		if(test.getRefRangeText().length()>0) {
 			refRange = test.getRefRangeText();
 		}
-		sb.append("OBX|1|" + test.getCodeType() + "|" + test.getCode() + "^" + test.getDescription() + "|GENERAL|" + test.getCodeValue() + "|" + test.getCodeUnit() + "|" + refRange + "|"+test.getFlag()+"|||" + test.getStat() + "|||" + sdf.format(test.getDate()));
+		sb.append("OBX|1|" + test.getCodeType() + "|" + test.getCode() + "^" + test.getDescription() + "|GENERAL|" + test.getCodeValue() + "|" + test.getCodeUnit() + "|" + refRange + "|"+test.getFlag()+"|||" + test.getStat() + "||" + test.getBlocked() + "|" + sdf.format(test.getDate()));
 		if(test.getNotes().length()>0) {
 			sb.append("\n");
 			sb.append("NTE|1|L|NOTE: " + test.getNotes());

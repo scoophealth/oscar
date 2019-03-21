@@ -28,6 +28,8 @@ package oscar.oscarEncounter.pageUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -35,6 +37,7 @@ import org.apache.struts.util.MessageResources;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
+import org.oscarehr.provider.web.CppPreferencesUIBean;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
@@ -81,6 +84,9 @@ public class EctDisplayRxAction extends EctDisplayAction {
         for (Prescription p : arr) uniqueDrugs.add(p);
         
         int demographicId=Integer.parseInt(bean.demographicNo);
+        
+        CppPreferencesUIBean prefsBean = new CppPreferencesUIBean(loggedInInfo.getLoggedInProviderNo());
+        prefsBean.loadValues();
         
 		// --- get integrator drugs ---
 		if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
@@ -144,13 +150,52 @@ public class EctDisplayRxAction extends EctDisplayAction {
             date = drug.getRxDate();
             serviceDateStr = DateUtils.formatDate(date, request.getLocale());
 
-            String tmp = "";
-            if (drug.getFullOutLine()!=null) tmp=drug.getFullOutLine().replaceAll(";", " ");
-            String strTitle = StringUtils.maxLenString(tmp, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
-           // strTitle = "<span " + styleColor + ">" + strTitle + "</span>";
-            strTitle = "<span " + getClassColour(drug, now, month) + ">" + strTitle + "</span>";
-            item.setTitle(strTitle);
-            item.setLinkTitle(tmp + " " + serviceDateStr + " - " + drug.getEndDate());
+            if(prefsBean != null && "on".equals(prefsBean.getEnable())) {
+            	Locale locale=request.getLocale();
+            	
+            	String descr = "";
+            	String title = "";
+            	
+            	if(!StringUtils.isNullOrEmpty(drug.getCustomName())) {
+            		descr = drug.getCustomName();
+            	} else {
+            		descr = drug.getBrandName();
+            	}
+            	
+            	if(prefsBean != null && "on".equals(prefsBean.getMedicationStartDate())) {
+        			descr += " Start Date:" + DateUtils.formatDate(drug.getRxDate(), locale);
+        		}
+            	if(prefsBean != null && "on".equals(prefsBean.getMedicationEndDate()) && !drug.isLongTerm()) {
+        			descr += " End Date:" + DateUtils.formatDate(drug.getEndDate(), locale);
+        		}
+            	if(prefsBean != null && "on".equals(prefsBean.getMedicationQty())) {
+        			descr += " Qty:" + drug.getQuantity();
+        		}
+            	if(prefsBean != null && "on".equals(prefsBean.getMedicationRepeats())) {
+        			descr += " Repeats:" + drug.getRepeat();
+        		}
+            	
+            	String tmp = "";
+	            if (drug.getFullOutLine()!=null) 
+	            	tmp=drug.getFullOutLine().replaceAll(";", " ");
+	            
+	            descr = "<span " + getClassColour(drug, now, month) + ">" + descr + "</span>";
+	            
+	            item.setTitle(descr);
+            	item.setLinkTitle(tmp + " " + serviceDateStr + " - " + drug.getEndDate());
+            	
+            } else {
+	            String tmp = "";
+	            if (drug.getFullOutLine()!=null) 
+	            	tmp=drug.getFullOutLine().replaceAll(";", " ");
+	            
+	            String strTitle = StringUtils.maxLenString(tmp, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+	           // strTitle = "<span " + styleColor + ">" + strTitle + "</span>";
+	            strTitle = "<span " + getClassColour(drug, now, month) + ">" + strTitle + "</span>";
+	            item.setTitle(strTitle);
+	            item.setLinkTitle(tmp + " " + serviceDateStr + " - " + drug.getEndDate());
+            }
+            
             item.setURL("return false;");
             Dao.addItem(item);
         }
