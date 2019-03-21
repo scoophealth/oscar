@@ -62,6 +62,11 @@
 			<id>new_oscar_repo</id>
 			<url>http://mvn.oscar-emr.com/repository</url>
 		</repository>
+
+		<repository>
+			<id>obib_repo</id>
+			<url>https://mymavenrepo.com/repo/kjxRkPH3arQlcMCuiDhp/</url>
+		</repository>
 		
 		<!-- MARC-HI (Everest & SHIC) -->
 		<repository>
@@ -549,6 +554,13 @@
 			<groupId>cds</groupId>
 			<artifactId>cds_hrm</artifactId>
 			<version>1.0</version>
+		</dependency>
+
+		<!-- BC Oscar Bidirectional Interoperability Bus (OBIB) connector -->
+		<dependency>
+			<groupId>ca.uvic.leadlab</groupId>
+			<artifactId>obibconnector</artifactId>
+			<version>1.0-1</version>
 		</dependency>
 
 		<!-- HRM module -->
