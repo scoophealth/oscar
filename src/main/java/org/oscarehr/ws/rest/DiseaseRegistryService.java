@@ -29,12 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 import org.oscarehr.casemgmt.dao.IssueDAO;
@@ -134,6 +129,15 @@ public class DiseaseRegistryService extends AbstractServiceImpl {
 		}
 		
 		return Response.ok().build();
+	}
+
+	@GET
+	@Path("/getDiseaseRegistry")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public Response getDiseaseRegistry(@QueryParam("demographicNo") Integer demographicNo) {
+		List<Dxresearch> dxresearchList = dxresearchDao.getByDemographicNo(demographicNo);
+		return Response.ok(dxresearchList).build();
 	}
 	
 }

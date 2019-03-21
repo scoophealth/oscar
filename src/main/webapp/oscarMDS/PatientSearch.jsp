@@ -88,6 +88,7 @@ function checkTypeIn() {
 
 //-->
 </SCRIPT>
+
 </head>
 <body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -100,7 +101,10 @@ function checkTypeIn() {
 <table border="0" cellpadding="1" cellspacing="0" width="100%"
 	bgcolor="#C4D9E7">
 	<form method="post" name="titlesearch" action="PatientSearch.jsp"
-		onSubmit="return checkTypeIn();"><input type="hidden"
+		onSubmit="return checkTypeIn();">
+		<input type="hidden"
+		name="from" value="<%=request.getParameter("from")%>" /> 
+		<input type="hidden"
 		name="labNo" value="<%=request.getParameter("labNo")%>" /> <input
 		type="hidden" name="labType"
 		value="<%=request.getParameter("labType")%>" /> <%--@ include file="zdemographictitlesearch.htm"--%>
@@ -162,7 +166,15 @@ function checkTypeIn() {
         }
         //-->
    </SCRIPT>
-
+<script>
+function updateOpener(t1,t2) {
+	<%if(request.getParameter("from") != null && "olis".equals(request.getParameter("from"))) {
+		%>window.opener.updateLabDemoStatus2(t1,t2);<%
+	} else {
+		%>window.opener.updateLabDemoStatus(t1);<%
+	}%>
+}
+</script>
 <CENTER>
 <table width="100%" border="1" cellpadding="0" cellspacing="1"
 	bgcolor="#ffffff">
@@ -323,7 +335,7 @@ function checkTypeIn() {
 
 	<tr bgcolor="<%=bodd?"ivory":"white"%>" align="center">
 		<td><input type="submit" name="demographicNo"
-			value="<%=oscar.Misc.getString(rs,"demographic_no")%>" onclick="window.opener.updateLabDemoStatus('<%=request.getParameter("labNo")%>');"></td>
+			value="<%=oscar.Misc.getString(rs,"demographic_no")%>" onclick="updateOpener('<%=request.getParameter("labNo")%>','<%=oscar.Misc.getString(rs,"demographic_no")%>');"></td>
 		<td><%=nbsp( Misc.toUpperLowerCase(oscar.Misc.getString(rs,"last_name")) )%></td>
 		<td><%=nbsp( Misc.toUpperLowerCase(oscar.Misc.getString(rs,"first_name")) )%></td>
 		<td><%= age %></td>
@@ -352,11 +364,11 @@ function checkTypeIn() {
 %> <script language="JavaScript">
 <!--
 function last() {
-  document.nextform.action="PatientSearch.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>" ;
+  document.nextform.action="PatientSearch.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nLastPage%>&limit2=<%=strLimit2%>&from=<%=request.getParameter("from")%>" ;
   //document.nextform.submit();  
 }
 function next() {
-  document.nextform.action="PatientSearch.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>" ;
+  document.nextform.action="PatientSearch.jsp?keyword=<%=request.getParameter("keyword")%>&search_mode=<%=request.getParameter("search_mode")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>&from=<%=request.getParameter("from")%>" ;
   //document.nextform.submit();  
 }
 //-->

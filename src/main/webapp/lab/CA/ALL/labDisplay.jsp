@@ -973,15 +973,26 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                                     <%= handler.getServiceDate() %>
                                                 </div>
                                             </td>
+                                        </tr> 
+                                        
+                                         <tr>
+                                            <td>
+                                                <div class="FieldData">
+                                               <strong>Date of Request:</strong>
+											
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="FieldData" nowrap="nowrap">
+                                                    <%= handler.getRequestDate(0) %>
+                                                </div>
+                                            </td>
                                         </tr>
                                         <tr>
                                         	<td>
                                         		<div class="FieldData">
-                                                <% if ("CLS".equals(handler.getMsgType())) { %>
                                                     <strong><bean:message key="oscarMDS.segmentDisplay.formDateReceivedCLS"/>:</strong>
-												<% } else { %>
-                                                    <strong><bean:message key="oscarMDS.segmentDisplay.formDateReceived"/>:</strong>
-												<% } %>
+												
                                                 </div>
                                             </td>
                                             <td>
@@ -1471,7 +1482,10 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                                 	<a href="javascript:popupStart('660','1000','http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.1&mainSearchCriteria.v.c=<%=loincCode%>&informationRecipient.languageCode.c=en')"> info</a>
                                                 	<%} %>
                                                 	</td>
-		                                            <td align="right"><%= handler.getOBXResult( j, k) %></td>
+		                                            <td align="right">
+		                                            	<%= handler.getOBXResult( j, k) %>
+		                                            	<%= handler.isTestResultBlocked(j, k) ? "<a href='#' title='Do Not Disclose Without Explicit Patient Consent'>(BLOCKED)</a>" : ""%>
+		                                            </td>
 
 		                                            <td align="center">
 		                                                    <%= handler.getOBXAbnormalFlag(j, k)%>
@@ -1488,7 +1502,9 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 	                                       		</tr>
 	                                       <% } else if (handler.getOBXIdentifier(j,k).equals(headers.get(i)) && obxName.equals("")) { %>
 	                                       			<tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
-	                                                    <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXResult( j, k)%></pre></td>
+	                                                    <td valign="top" align="left" colspan="8">
+	                                                    	<pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXResult( j, k)%><%= handler.isTestResultBlocked(j, k) ? "<a href='#' title='Do Not Disclose Without Explicit Patient Consent'>(BLOCKED)</a>" : ""%></pre>
+                                                    	</td>
 
 	                                                </tr>
 	                                       	<% }
@@ -1501,7 +1517,10 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 		                                            <%if(loincCode != null){ %>
                                                 	<a href="javascript:popupStart('660','1000','http://apps.nlm.nih.gov/medlineplus/services/mpconnect.cfm?mainSearchCriteria.v.cs=2.16.840.1.113883.6.1&mainSearchCriteria.v.c=<%=loincCode%>&informationRecipient.languageCode.c=en')"> info</a>
                                                 	<%} %> </td>
-		                                            <td align="right"><%= handler.getOBXResult( j, k) %></td>
+		                                            <td align="right">
+		                                            	<%= handler.getOBXResult( j, k) %>
+		                                            	<%= handler.isTestResultBlocked(j, k) ? "<a href='#' title='Do Not Disclose Without Explicit Patient Consent'>(BLOCKED)</a>" : ""%>
+	                                            	</td>
 
 		                                            <td align="center">
 		                                                    <%= handler.getOBXAbnormalFlag(j, k)%>
@@ -1519,7 +1538,9 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 
                                    	 	<%} else { %>
                                    		   <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
-	      	                                     <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXResult( j, k)%></pre></td>
+	      	                                     <td valign="top" align="left" colspan="8">
+	      	                                     	<pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXResult( j, k)%><%= handler.isTestResultBlocked(j, k) ? "<a href='#' title='Do Not Disclose Without Explicit Patient Consent'>(BLOCKED)</a>" : ""%></pre>
+    	                                     	</td>
 
 	      	                                   </tr>
                                    	 	<%}
@@ -1543,7 +1564,10 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                            <% 	if (handler.getOBXResult( j, k).length() > 20) {
 													%>
 
-													<td align="left" colspan="4"><%= handler.getOBXResult( j, k) %></td>
+													<td align="left" colspan="4">
+														<%= handler.getOBXResult( j, k) %>
+														<%= handler.isTestResultBlocked(j, k) ? "<a href='#' title='Do Not Disclose Without Explicit Patient Consent'>(BLOCKED)</a>" : ""%>
+													</td>
 
 													<% 	String abnormalFlag = handler.getOBXAbnormalFlag(j, k);
 														if (abnormalFlag != null && abnormalFlag.length() > 0) {
@@ -1567,7 +1591,10 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 												<%
 												} else {
 												%>
-												   <td align="right" colspan="1"><%= handler.getOBXResult( j, k) %></td>
+												   <td align="right" colspan="1">
+												   		<%= handler.getOBXResult( j, k) %>
+												   		<%= handler.isTestResultBlocked(j, k) ? "<a href='#' title='Do Not Disclose Without Explicit Patient Consent'>(BLOCKED)</a>" : ""%>
+												   </td>
 		                                           <td align="center"> <%= handler.getOBXAbnormalFlag(j, k)%> </td>
 		                                           <td align="left"> <%=handler.getOBXReferenceRange(j, k)%> </td>
 		                                           <td align="left"> <%=handler.getOBXUnits(j, k) %> </td>
@@ -1616,9 +1643,7 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 										    	<td align="left"><%= rtfText + disclaimer %></td>
 										    <%}else{%>
                                            		<td align="left">
-	                                           		<pre>
-	                                           			<%= handler.getOBXResult( j, k) %>
-	                                           		</pre>
+	                                           		<pre><%= handler.getOBXResult( j, k) %><%= handler.isTestResultBlocked(j, k) ? "<a href='#' title='Do Not Disclose Without Explicit Patient Consent'>(BLOCKED)</a>" : ""%></pre>
                                            		</td>
                                            	<%} %>
                                            	
@@ -1655,12 +1680,17 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                            
                                            
                                            <% if(handler instanceof AlphaHandler && "FT".equals(handler.getOBXValueType(j, k))) { %>
-                                           		<td colspan="4"><pre style="font-family:Courier New, monospace;">       <%= handler.getOBXResult( j, k) %></pre></td>
+                                           		<td colspan="4">
+                                           			<pre style="font-family:Courier New, monospace;">       <%= handler.getOBXResult( j, k) %><%= handler.isTestResultBlocked(j, k) ? "<a href='#' title='Do Not Disclose Without Explicit Patient Consent'>(BLOCKED)</a>" : ""%></pre>
+                                          		</td>
                                            <%
                                        			lastObxSetId = ((AlphaHandler)handler).getObxSetId(j,k);
                                     	  
                                            } else if(handler instanceof PATHL7Handler && "FT".equals(handler.getOBXValueType(j, k)) && (handler.getOBXReferenceRange(j,k).isEmpty() && handler.getOBXUnits(j,k).isEmpty())){ 
-                                        	  %> <td colspan="4"><%= handler.getOBXResult( j, k) %></td> <%
+                                        	  %> <td colspan="4">
+                                        	  		<%= handler.getOBXResult( j, k) %>
+                                        	  		<%= handler.isTestResultBlocked(j, k) ? "<a href='#' title='Do Not Disclose Without Explicit Patient Consent'>(BLOCKED)</a>" : ""%>
+                                       	  		</td> <%
                                            } else { %> 
                                            <%
                                            	String align = "right";
@@ -1677,7 +1707,10 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                            		//CLS textual results - use 4 columns.
                                            		if(handler instanceof CLSHandler && ( (oscar.oscarLab.ca.all.parsers.CLSHandler) handler).isUnstructured()) {
                                            	%>
-                                           		<td align="left" colspan="4"><%= handler.getOBXResult( j, k) %></td>
+                                           		<td align="left" colspan="4">
+                                           			<%= handler.getOBXResult( j, k) %>
+                                           			<%= handler.isTestResultBlocked(j, k) ? "<a href='#' title='Do Not Disclose Without Explicit Patient Consent'>(BLOCKED)</a>" : ""%>
+                                          		</td>
                                            	
                                            	<%		
                                            		} 
@@ -1686,13 +1719,14 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                            	%>
                                            	
 				                                        <pre>
-					                             		<%= handler.getOBXResult(j,k) %>
+					                             		<%= handler.getOBXResult(j,k) %><%= handler.isTestResultBlocked(j, k) ? "<a href='#' title='Do Not Disclose Without Explicit Patient Consent'>(BLOCKED)</a>" : ""%>
 					                             		</pre>  
 					                             		                                                 
 											<% } else if(handler.getMsgType().equals("MEDITECH")  && ((MEDITECHHandler) handler).isReportData() ) { %>
 				                                    	<tr>
 				                                    		<td>
 					                             				<%= handler.getOBXResult(j,k) %>
+					                             				<%= handler.isTestResultBlocked(j, k) ? "<a href='#' title='Do Not Disclose Without Explicit Patient Consent'>(BLOCKED)</a>" : ""%>
 					                             			</td>
 					                             		</tr>
 				                                 
@@ -1713,7 +1747,10 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 													 <%
 												} else {
 											%>
-                                           <td align="<%=align%>"><%= handler.getOBXResult( j, k) %></td>
+                                           <td align="<%=align%>">
+                                           		<%= handler.getOBXResult( j, k) %>
+                                           		<%= handler.isTestResultBlocked(j, k) ? "<a href='#' title='Do Not Disclose Without Explicit Patient Consent'>(BLOCKED)</a>" : ""%>
+                                           </td>
                                           
                                           	<% } %>
                                            <td align="center">
@@ -1725,7 +1762,19 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                            <%}%>
                                            
                                            <td align="center"><%= handler.getTimeStamp(j, k) %></td>
-                                           <td align="center"><%= handler.getOBXResultStatus( j, k) %></td>
+                                           <td align="center">
+                                           	<%
+                                           		String status = handler.getOBXResultStatus( j, k);
+                                           		if("GDML".equals(handler.getMsgType()) && ((GDMLHandler)handler).isTestResultBlocked(j, k) ) {
+                                           			if(!StringUtils.isEmpty(status)) {
+                                           				status += "/";
+                                           			}
+                                           			status += "BLOCKED";
+                                           		}
+                                           	%>
+                                           	<%=status %>
+                                           	
+                                           	</td>
                                       		<td align="center" valign="top">                                           <a href="javascript:void(0);" title="Annotation" onclick="window.open('<%=request.getContextPath()%>/annotation/annotation.jsp?display=<%=annotation_display%>&amp;table_id=<%=segmentID%>&amp;demo=<%=demographicID%>&amp;other_id=<%=String.valueOf(j) + "-" + String.valueOf(k) %>','anwin','width=400,height=500');">
 	                                                	<%if(!isPrevAnnotation){ %><img src="../../../images/notes.gif" alt="rxAnnotation" height="16" width="13" border="0"/><%}else{ %><img src="../../../images/filledNotes.gif" alt="rxAnnotation" height="16" width="13" border="0"/> <%} %>
 	                                                </a>

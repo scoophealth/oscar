@@ -9,13 +9,20 @@
 
 package org.oscarehr.hospitalReportManager.model;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
 import org.oscarehr.common.model.AbstractModel;
 
@@ -33,7 +40,7 @@ public class HRMDocument extends AbstractModel<Integer> {
 	private String reportLessDemographicInfoHash;
 	private String reportStatus;
 	private String reportFile;
-        private String sourceFacility;
+    private String sourceFacility;
 	
 	private String unmatchedProviders;
 	private Integer numDuplicatesReceived;
@@ -44,6 +51,33 @@ public class HRMDocument extends AbstractModel<Integer> {
 	private Integer hrmCategoryId;
 
 	private String description = "";
+	
+	private String formattedName;
+	private String dob;
+	private String gender;
+	private String hcn;
+	
+	private String recipientName;
+	private String recipientId;
+	private String recipientProviderNo;
+	
+	private String className;
+	private String subClassName;
+	
+	private String sourceFacilityReportNo;
+	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name = "hrmDocumentId")
+	private List<HRMDocumentToDemographic> matchedDemographics = new ArrayList<HRMDocumentToDemographic>();
+	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name = "hrmDocumentId")
+	private Set<HRMDocumentToProvider > matchedProviders = new HashSet<HRMDocumentToProvider>();
+	
+	@OneToMany(fetch=FetchType.EAGER)
+	@JoinColumn(name = "hrmDocumentId")
+	private Set<HRMDocumentSubClass> accompanyingSubClasses = new HashSet<HRMDocumentSubClass>();
+	
 	
 	@Override
 	public Integer getId() {
@@ -162,6 +196,118 @@ public class HRMDocument extends AbstractModel<Integer> {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	
+	public String getFormattedName() {
+		return formattedName;
+	}
+
+	public void setFormattedName(String formattedName) {
+		this.formattedName = formattedName;
+	}
+
+	public String getDob() {
+		return dob;
+	}
+
+	public void setDob(String dob) {
+		this.dob = dob;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getHcn() {
+		return hcn;
+	}
+
+	public void setHcn(String hcn) {
+		this.hcn = hcn;
+	}
+
+	public String getRecipientName() {
+		return recipientName;
+	}
+
+	public void setRecipientName(String recipientName) {
+		this.recipientName = recipientName;
+	}
+
+	public String getRecipientId() {
+		return recipientId;
+	}
+
+	public void setRecipientId(String recipientId) {
+		this.recipientId = recipientId;
+	}
+
+	public String getRecipientProviderNo() {
+		return recipientProviderNo;
+	}
+
+	public void setRecipientProviderNo(String recipientProviderNo) {
+		this.recipientProviderNo = recipientProviderNo;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
+	public String getSubClassName() {
+		return subClassName;
+	}
+
+	public void setSubClassName(String subClassName) {
+		this.subClassName = subClassName;
+	}
+
+
+
+	public String getSourceFacilityReportNo() {
+		return sourceFacilityReportNo;
+	}
+
+	public void setSourceFacilityReportNo(String sourceFacilityReportNo) {
+		this.sourceFacilityReportNo = sourceFacilityReportNo;
+	}
+
+	public List<HRMDocumentToDemographic> getMatchedDemographics() {
+		return matchedDemographics;
+	}
+
+	public void setMatchedDemographics(List<HRMDocumentToDemographic> matchedDemographics) {
+		this.matchedDemographics = matchedDemographics;
+	}
+
+
+	
+
+	public Set<HRMDocumentToProvider> getMatchedProviders() {
+		return matchedProviders;
+	}
+
+	public void setMatchedProviders(Set<HRMDocumentToProvider> matchedProviders) {
+		this.matchedProviders = matchedProviders;
+	}
+
+	public Set<HRMDocumentSubClass> getAccompanyingSubClasses() {
+		return accompanyingSubClasses;
+	}
+
+	public void setAccompanyingSubClasses(Set<HRMDocumentSubClass> accompanyingSubClasses) {
+		this.accompanyingSubClasses = accompanyingSubClasses;
+	}
+
+
 
 
 	/**

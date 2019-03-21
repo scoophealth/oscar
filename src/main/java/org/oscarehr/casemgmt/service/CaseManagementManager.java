@@ -528,6 +528,7 @@ public class CaseManagementManager {
 		else if (disp.equals(CaseManagementNoteLink.DISP_PRESCRIP)) tName = CaseManagementNoteLink.DRUGS;
 		else if (disp.equals(CaseManagementNoteLink.DISP_DEMO)) tName = CaseManagementNoteLink.DEMOGRAPHIC;
 		else if (disp.equals(CaseManagementNoteLink.DISP_PREV)) tName = CaseManagementNoteLink.PREVENTIONS;
+		else if (disp.equals(CaseManagementNoteLink.DISP_APPOINTMENT)) tName = CaseManagementNoteLink.APPOINTMENT;
 
 		return tName;
 	}
@@ -711,6 +712,10 @@ public class CaseManagementManager {
 
 	public Issue getIssueInfoByCode(String code) {
 		return issueDAO.findIssueByCode(code);
+	}
+	
+	public Issue getIssueInfoByTypeAndCode(String type, String code) {
+		return issueDAO.findIssueByTypeAndCode(type, code);
 	}
 
 	public List<Issue> getIssueInfoBySearch(String providerNo, String search, List accessRight) {

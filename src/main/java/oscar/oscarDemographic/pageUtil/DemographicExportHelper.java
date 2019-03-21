@@ -249,13 +249,30 @@ public class DemographicExportHelper {
 				medi.setRefillQuantity(String.valueOf(arr[p].getRefillQuantity()));
 				mSummary = Util.addSummary(mSummary, "Refill Quantity", arr[p].getRefillQuantity().toString());
 			}
+			
+			Boolean isLongTerm = arr[p].getLongTerm();
+			String longTerm =  "No";
+			if(isLongTerm == null) {
+				longTerm = "Unknown";
+			} else if(isLongTerm) {
+				longTerm = "Yes";
+			}
 
-			medi.addNewLongTermMedication().setBoolean(arr[p].getLongTerm());
-			mSummary = Util.addSummary(mSummary, "Long Term Medication", arr[p].getLongTerm() ? "Yes" : "No");
+			medi.addNewLongTermMedication().setBoolean(arr[p].isLongTerm());
+			mSummary = Util.addSummary(mSummary, "Long Term Medication", longTerm);
 
-			medi.addNewPastMedications().setBoolean(arr[p].getPastMed());
-			mSummary = Util.addSummary(mSummary, "Past Medcation", arr[p].getPastMed() ? "Yes" : "No");
-
+			
+			Boolean isPastMed = arr[p].getPastMed();
+			String pastMed =  "No";
+			if(isPastMed == null) {
+				pastMed = "Unknown";
+			} else if(isPastMed) {
+				pastMed = "Yes";
+			}
+			//TODO change the library class so that it can handle null values.
+			medi.addNewPastMedications().setBoolean(arr[p].isPastMed());
+			mSummary = Util.addSummary(mSummary, "Past Medcation", pastMed);
+/*
 			cdsDt.YnIndicatorAndBlank pc = medi.addNewPatientCompliance();
 			if (arr[p].getPatientCompliance() == null) {
 				pc.setBlank(cdsDt.Blank.X);
@@ -264,7 +281,7 @@ public class DemographicExportHelper {
 				pc.setBoolean(arr[p].getPatientCompliance());
 				mSummary = Util.addSummary(mSummary, "Patient Compliance", patientCompliance);
 			}
-
+*/
 			String outsideProviderName = arr[p].getOutsideProviderName();
 			if (StringUtils.filled(outsideProviderName)) {
 				MedicationsAndTreatments.PrescribedBy pcb = medi.addNewPrescribedBy();
@@ -293,7 +310,7 @@ public class DemographicExportHelper {
 			}
 
 			if (StringUtils.empty(mSummary)) exportErrors.add("Error! No Category Summary Line (Medications & Treatments) for Patient " + demoNo + " (" + (p + 1) + ")");
-			medi.setCategorySummaryLine(mSummary);
+		//	medi.setCategorySummaryLine(mSummary);
 		}
 	}
 

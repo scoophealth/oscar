@@ -31,6 +31,7 @@ LINES TERMINATED BY '\n'
 CREATE TABLE OLISProviderPreferences (
      providerId  VARCHAR(10),
      startTime VARCHAR(20),
+	lastRun datetime,
          PRIMARY KEY(providerId));
 CREATE TABLE OLISSystemPreferences (
      id INT NOT NULL AUTO_INCREMENT,

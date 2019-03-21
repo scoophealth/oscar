@@ -84,6 +84,10 @@ public class Z04Query extends Query {
 	public void addToTestResultCodeList(OBX3 testResultCode) {
 		this.testResultCodeList.add(testResultCode);
 	}
+	
+	public String getRequestingHicIdNumber() {
+		return requestingHic.getIdNumber();
+	}
 
 	@Override
 	public QueryType getQueryType() {

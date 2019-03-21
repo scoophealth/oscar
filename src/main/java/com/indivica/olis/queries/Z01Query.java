@@ -230,4 +230,7 @@ public class Z01Query extends Query {
 	   return QueryType.Z01;
     }
 	
+	public String getRequestingHicIdNumber() {
+		return requestingHic.getIdNumber();
+	}
 }

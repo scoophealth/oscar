@@ -79,6 +79,31 @@
 					</select>
 			</td>
 			</tr>
+							
+			<tr>
+				<th width="20%">Automated Polling Frequency (in minutes)</th>
+				<td width="30%">
+					<%
+						val1 = (String)request.getAttribute("pollingFrequency");
+						if(val1 == null) val1 = "";
+					%>
+					<input type="text" id="pollingFrequency" name="pollingFrequency" value="<%=val1%>">
+						
+				</td>
+			</tr>
+			
+			<tr>
+				<th width="20%">Start Time (for polling):</th>
+				<td width="30%">
+					<%
+						val1 = (String)request.getAttribute("olis_provider_start_time");
+						if(val1 == null) val1 = "";
+					%>
+					<input type="text" id="providerStartTime" name="providerStartTime" value="<%=val1%>"> (YYYY-MM-DD hh:mm:ss [-/+]ZZZZ)
+						<br>
+						<h6 style="color:red">note: this field will be auto-updated by the system</h6>
+				</td>
+			</tr>
 								
 			
 		</table>
