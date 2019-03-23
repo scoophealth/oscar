@@ -365,11 +365,10 @@ public class DemographicService extends AbstractServiceImpl {
 		return result;
 	}
 	
-	@POST
+	@PUT
 	@Path("/writePHRId")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces({MediaType.APPLICATION_JSON})
-	public DemographicTo1 writePHRId(JSONObject json) {
+	public String writePHRId(JSONObject json) {
 		Integer demographicNo = json.getInt("demographicNo");
 		String phrId = json.getString("phrId");
 		
@@ -378,9 +377,9 @@ public class DemographicService extends AbstractServiceImpl {
 			demo.setMyOscarUserName(phrId);
 			demographicManager.updateDemographic(getLoggedInInfo(), demo);
 			
-		    return demoConverter.getAsTransferObject(getLoggedInInfo(), demo);
+		    return "success";
 		}
-		return null;
+		return "fail";
 	}
 
 	/**
