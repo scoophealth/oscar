@@ -25,6 +25,9 @@
 
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
+import java.awt.*;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -44,10 +47,12 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import ca.uvic.leadlab.obibconnector.facades.*;
+import ca.uvic.leadlab.obibconnector.facades.datatypes.AttachmentType;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.AddressType;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.NameType;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.PhoneType;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
@@ -536,7 +541,31 @@ public class EctConsultationFormRequestAction extends Action {
 		Provider sendingProvider=loggedInInfo.getLoggedInProvider();
 		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 		Demographic demographic=demographicManager.getDemographic(loggedInInfo, consultationRequest.getDemographicId());
-		MiscUtils.getLogger().info("doCdxSend 6");
+		MiscUtils.getLogger().info("here1");
+		String filename = null;
+		MiscUtils.getLogger().info("calling frm requestId: "+consultationRequestId);
+		EctConsultationFormRequestPrintPdf pdf = new EctConsultationFormRequestPrintPdf(consultationRequestId.toString(), professionalSpecialist.getAddress(), professionalSpecialist.getPhone(), professionalSpecialist.getFax(), demographic.getDemographicNo().toString());
+		MiscUtils.getLogger().info("here2");
+		try {
+			filename = pdf.printPdf(loggedInInfo);
+		} catch (DocumentException e) {
+			MiscUtils.getLogger().info(e.getMessage());
+		}
+		MiscUtils.getLogger().info("here3");
+		byte[] bytes = null;
+		if (filename!=null && !filename.isEmpty()) {
+			File file = new File(filename);
+			bytes = new byte[(int) file.length()];
+			FileInputStream fis = new FileInputStream(file);
+			fis.read(bytes);
+			fis.close();
+		}
+		Byte[] newBytes = new Byte[bytes.length];
+		int i = 0;
+		for (byte b: bytes) {
+			newBytes[i++] = b;
+		}
+		MiscUtils.getLogger().info("here4");
 		String response = new SubmitDoc(clinic.getCdxOid())
 				.patient()
 				.id(demographic.getDemographicNo().toString())
@@ -559,9 +588,8 @@ public class EctConsultationFormRequestAction extends Action {
 //				.name(NameType.LEGAL, "Joseph", "Cloud")
 //				.address(AddressType.HOME, "111 Main St", "Victoria", "BC", "V8V Z9Z", "CA")
 //				.phone(PhoneType.HOME, "250-111-1234")
+				.and().content("Referral "+consultationRequestId).attach(AttachmentType.PDF, newBytes)
 				.submit();
 		MiscUtils.getLogger().info("obibconnector: "+response);
 	}
-
-
 }
