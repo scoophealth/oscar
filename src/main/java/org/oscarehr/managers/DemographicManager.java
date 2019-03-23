@@ -186,6 +186,21 @@ public class DemographicManager {
 
 		return (results);
 	}
+	
+	public List<Demographic> getActiveDemographicSince(LoggedInInfo loggedInInfo, Date lastDate) {
+		// lastDate format: yyyy-MM-dd HH:mm:ss
+		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
+		List<Demographic> result = demographicDao.getActiveDemographicSince(lastDate);
+		
+		//--- log action ---
+		if (result != null) {
+			for (Demographic item : result) {
+				LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getActiveDemographicSincePatientStatusDate", "id=" + item.getId());
+			}
+		}
+
+		return result;
+	}
 
 	public List<DemographicExt> getDemographicExts(LoggedInInfo loggedInInfo, Integer id) {
 		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
