@@ -3,13 +3,10 @@ package org.oscarehr.integration.cdx;
 import ca.uvic.leadlab.obibconnector.facades.receive.*;
 import ca.uvic.leadlab.obibconnector.impl.receive.mock.ReceiveDocMock;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.common.dao.CtlDocumentDao;
-import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.common.dao.ProviderLabRoutingDao;
+import org.oscarehr.common.dao.*;
 import org.oscarehr.common.model.*;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import org.oscarehr.common.dao.DocumentDao;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,6 +17,13 @@ import java.util.List;
 public class CDXImport {
 
     private IReceiveDoc receiver = new ReceiveDocMock();
+    ClinicDAO clinicDao = SpringUtils.getBean(ClinicDAO.class);
+
+    private String clinicId;
+
+    public CDXImport() {
+        clinicId = clinicDao.getClinic().getCdxOid();
+    }
 
 
     public void importNewDocs() {
@@ -44,7 +48,7 @@ public class CDXImport {
     }
 
     private void storeDocument(IDocument doc) {
-
+        Boolean routed = false;
         DocumentDao docdao = SpringUtils.getBean(DocumentDao.class);
         Document docEntity = new Document();
 
@@ -74,10 +78,14 @@ public class CDXImport {
         docEntity.setContentdatetime(doc.getAuthoringTime());
         docdao.persist(docEntity);
 
-        addProviderRouting(docEntity, doc.getPrimaryRecipient());
+        routed = addProviderRouting(docEntity, doc.getPrimaryRecipient());
 
         for (IProvider p : doc.getSecondaryRecipients()) {
-            addProviderRouting(docEntity, p);
+            routed = routed || addProviderRouting(docEntity, p);
+        }
+
+        if (!routed) { // even if none of the recipients appears to work at our clinic, we will route to the default provider
+            addDefaultProviderRouting(docEntity);
         }
 
         addPatient(docEntity, doc.getPatient());
@@ -132,11 +140,12 @@ public class CDXImport {
         ctlDocDao.persist(ctlDoc);
     }
 
-    private void addProviderRouting(Document docEntity, IProvider prov) {
+    private Boolean addProviderRouting(Document docEntity, IProvider prov) {
 
         ProviderLabRoutingDao plrDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
         ProviderLabRoutingModel plr = new ProviderLabRoutingModel();
         Provider provEntity;
+        Boolean routed = false;
 
         if (providerBelongsToUs(prov)) {
 
@@ -152,7 +161,26 @@ public class CDXImport {
             plr.setProviderNo(provEntity.getProviderNo());
 
             plrDao.persist(plr);
+            routed = true;
         }
+        return routed;
+    }
+
+    private void addDefaultProviderRouting(Document docEntity) {
+
+        ProviderLabRoutingDao plrDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+        ProviderLabRoutingModel plr = new ProviderLabRoutingModel();
+        Provider provEntity;
+
+        plr.setLabNo(docEntity.getDocumentNo());
+        plr.setStatus("N"); // Staus:New? (need to confirm semantics)
+        plr.setLabType("DOC");
+
+        provEntity = getDefaultProvider();
+
+        plr.setProviderNo(provEntity.getProviderNo());
+
+        plrDao.persist(plr);
     }
 
     private Provider getDefaultProvider() {
@@ -177,7 +205,6 @@ public class CDXImport {
     }
 
     private boolean providerBelongsToUs(IProvider prov) {
-        return true;
-        // needs to be implemented - looking up clinic ID in the clinic_location table etc.
+        return clinicId.equals(prov.getClinicID());
     }
 }
