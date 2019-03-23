@@ -266,7 +266,7 @@ CREATE TABLE clinic (
   clinic_province varchar(40) default NULL,
   clinic_delim_phone text,
   clinic_delim_fax text,
-  cdx_oid varchar(30) UNIQUE ( cdx_oid ),
+  cdx_oid varchar(30),
   PRIMARY KEY  (clinic_no)
 ) ;
 
