@@ -1,0 +1,1 @@
+ALTER TABLE document ADD report_status varchar(30);
