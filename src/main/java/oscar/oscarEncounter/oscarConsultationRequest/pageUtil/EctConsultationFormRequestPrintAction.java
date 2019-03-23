@@ -68,7 +68,7 @@ public class EctConsultationFormRequestPrintAction extends Action {
     	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_con", "r", null)) {
 			throw new SecurityException("missing required security object (_con)");
 		}
-    	MiscUtils.getLogger().info("inside EctConsulationFormRequestPrintAction");
+    	
         try {
             EctConsultationFormRequestPrintPdf pdf = new EctConsultationFormRequestPrintPdf(request, response);
             pdf.printPdf(loggedInInfo);

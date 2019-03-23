@@ -111,9 +111,7 @@ for pre-populating data.
 				<select name="professionalSpecialistId" id="professionalSpecialistId">
 					<option value="">--- none selected ---</option>
 					<%
-						//if ("bc".equalsIgnoreCase())
-						//for (ProfessionalSpecialist professionalSpecialist : SendOruR01UIBean.getRemoteCapableProfessionalSpecialists()) 						{
-						for (ProfessionalSpecialist professionalSpecialist : SendOruR01UIBean.getCdxCapableProfessionalSpecialists()) 						{
+						for (ProfessionalSpecialist professionalSpecialist : SendOruR01UIBean.getRemoteCapableProfessionalSpecialists()) 						{
 					%>
 					<option value="<%=professionalSpecialist.getId()%>" <%=sendOruR01UIBean.renderSelectedProfessionalSpecialistOption(professionalSpecialist.getId())%> ><%=SendOruR01UIBean.getProfessionalSpecialistDisplayString(professionalSpecialist)%></option>
 					<%
