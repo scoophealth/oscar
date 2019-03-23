@@ -685,6 +685,7 @@ CREATE TABLE document (
   number_of_pages int(6),
   appointment_no int(11) default NULL,
   restrictToProgram tinyint(1) NOT NULL,
+  report_status varchar(30),
   PRIMARY KEY  (document_no)
 ) ;
 
