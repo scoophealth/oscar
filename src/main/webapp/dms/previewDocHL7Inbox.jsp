@@ -314,7 +314,7 @@ function checkAll(formId){
 		<td nowrap><%= (String) result.getRequestingClient()%></td>
 		<td nowrap><%= (result.isAbnormal() ? "Abnormal" : "" ) %></td>
 
-		<td nowrap><%= ( (String) ( result.isFinal() ? "Final" : "Partial") )%>
+		<td nowrap><%= ( (String) ( result.isFinal() ? "Final" : result.getReportStatus()) )%>
 		</td>
 	</tr>
 	<% }
