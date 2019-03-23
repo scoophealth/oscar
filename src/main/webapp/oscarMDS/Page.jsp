@@ -406,7 +406,9 @@ String curUser_no = (String) session.getAttribute("user");
                                     <%=result.isDocument() ? result.description == null ? "" : result.description : result.getDisciplineDisplayString()%>
                                 </td>
                                 <td nowrap> <!--  -->
-                                    <%= ((result.isReportCancelled())? "Cancelled" : result.isFinal() ? "Final" : "Partial")%>
+                                    <%= ((result.isReportCancelled())? "Cancelled" :
+                                            result.isFinal() ? "Final" :
+                                                    result.getReportStatus()==null ? "Partial" : result.getReportStatus())%>
                                 </td>
                                 <td nowrap>
                                     <% int multiLabCount = result.getMultipleAckCount(); %>

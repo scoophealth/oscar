@@ -449,6 +449,22 @@ public class ProviderDao extends HibernateDaoSupport {
 		return null;
 	}
 
+	public Provider getProviderByOhipNo(String ohipNo) {
+		if (ohipNo == null || ohipNo.length() <= 0) {
+			throw new IllegalArgumentException();
+		}
+
+		List<Provider> providerList = getHibernateTemplate().find("From Provider p where p.ohipNo=?",new Object[]{ohipNo});
+
+		if(providerList.size()>1) {
+			logger.warn("Found more than 1 provider with ohipNo="+ohipNo);
+		}
+		if(providerList.size()>0)
+			return providerList.get(0);
+
+		return null;
+	}
+
 	public List<String> getUniqueTeams() {
 		
 		List<String> providerList = getHibernateTemplate().find("select distinct p.Team From Provider p");

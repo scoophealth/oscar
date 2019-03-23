@@ -124,6 +124,8 @@ public class Document extends AbstractModel<Integer> implements Serializable {
     @Basic(optional = false)
     @Column(name = "status")
     private char status;
+    @Column(name = "report_status")
+    private String reportStatus;
     @Basic(optional = false)
     @Column(name = "contenttype")
     private String contenttype;
@@ -190,6 +192,14 @@ public class Document extends AbstractModel<Integer> implements Serializable {
 
     public String getDocdesc() {
         return docdesc;
+    }
+
+    public void setReportStatus(String status) {
+        this.reportStatus = status;
+    }
+
+    public String getReportStatus() {
+        return reportStatus;
     }
 
     public void setDocdesc(String docdesc) {
