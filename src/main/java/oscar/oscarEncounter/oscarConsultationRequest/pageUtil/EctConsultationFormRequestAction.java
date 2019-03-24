@@ -513,61 +513,59 @@ public class EctConsultationFormRequestAction extends Action {
 
 	private void doCdxSend(LoggedInInfo loggedInInfo, Integer consultationRequestId) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, IOException, HL7Exception, ServletException {
 
-		ConsultationRequestDao consultationRequestDao=(ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
-		ProfessionalSpecialistDao professionalSpecialistDao=(ProfessionalSpecialistDao)SpringUtils.getBean("professionalSpecialistDao");
-		Hl7TextInfoDao hl7TextInfoDao=(Hl7TextInfoDao)SpringUtils.getBean("hl7TextInfoDao");
-		ClinicDAO clinicDAO=(ClinicDAO)SpringUtils.getBean("clinicDAO");
+		ConsultationRequestDao consultationRequestDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
+		ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
+		Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
+		ClinicDAO clinicDAO = (ClinicDAO) SpringUtils.getBean("clinicDAO");
 
-		ConsultationRequest consultationRequest=consultationRequestDao.find(consultationRequestId);
-		ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(consultationRequest.getSpecialistId());
-		Clinic clinic=clinicDAO.getClinic();
+		ConsultationRequest consultationRequest = consultationRequestDao.find(consultationRequestId);
+		ProfessionalSpecialist professionalSpecialist = professionalSpecialistDao.find(consultationRequest.getSpecialistId());
+		Clinic clinic = clinicDAO.getClinic();
 
 		// set status now so the remote version shows this status
 		consultationRequest.setStatus("2");
 
-		REF_I12 refI12=RefI12.makeRefI12(clinic, consultationRequest);
+		REF_I12 refI12 = RefI12.makeRefI12(clinic, consultationRequest);
 		String message = refI12.getMessage().encode();
 
 		// save after the sending just in case the sending fails.
 		consultationRequestDao.merge(consultationRequest);
 
 		//--- add attachments to message ---
-		Provider sendingProvider=loggedInInfo.getLoggedInProvider();
+		Provider sendingProvider = loggedInInfo.getLoggedInProvider();
 		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
-		Demographic demographic=demographicManager.getDemographic(loggedInInfo, consultationRequest.getDemographicId());
+		Demographic demographic = demographicManager.getDemographic(loggedInInfo, consultationRequest.getDemographicId());
 
 
 		//--- process all documents ---
-		ArrayList<EDoc> attachments=EDocUtil.listDocs(loggedInInfo, demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), EDocUtil.ATTACHED);
-		for (EDoc attachment : attachments)
-		{
-			ObservationData observationData=new ObservationData();
-			observationData.subject=attachment.getDescription();
-			observationData.textMessage="Attachment for consultation : "+consultationRequestId;
-			observationData.binaryDataFileName=attachment.getFileName();
-			observationData.binaryData=attachment.getFileBytes();
+		ArrayList<EDoc> attachments = EDocUtil.listDocs(loggedInInfo, demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), EDocUtil.ATTACHED);
+		for (EDoc attachment : attachments) {
+			ObservationData observationData = new ObservationData();
+			observationData.subject = attachment.getDescription();
+			observationData.textMessage = "Attachment for consultation : " + consultationRequestId;
+			observationData.binaryDataFileName = attachment.getFileName();
+			observationData.binaryData = attachment.getFileBytes();
 
-			ORU_R01 hl7Message=OruR01.makeOruR01(clinic, demographic, observationData, sendingProvider, professionalSpecialist);
+			ORU_R01 hl7Message = OruR01.makeOruR01(clinic, demographic, observationData, sendingProvider, professionalSpecialist);
 			message += hl7Message.encode();
 		}
 
 		//--- process all labs ---
 		CommonLabResultData labData = new CommonLabResultData();
 		ArrayList<LabResultData> labs = labData.populateLabResultsData(loggedInInfo, demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), CommonLabResultData.ATTACHED);
-		for (LabResultData attachment : labs)
-		{
+		for (LabResultData attachment : labs) {
 			try {
-				byte[] dataBytes=LabPDFCreator.getPdfBytes(attachment.getSegmentID(), sendingProvider.getProviderNo());
-				Hl7TextInfo hl7TextInfo=hl7TextInfoDao.findLabId(Integer.parseInt(attachment.getSegmentID()));
+				byte[] dataBytes = LabPDFCreator.getPdfBytes(attachment.getSegmentID(), sendingProvider.getProviderNo());
+				Hl7TextInfo hl7TextInfo = hl7TextInfoDao.findLabId(Integer.parseInt(attachment.getSegmentID()));
 
-				ObservationData observationData=new ObservationData();
-				observationData.subject=hl7TextInfo.getDiscipline();
-				observationData.textMessage="Attachment for consultation : "+consultationRequestId;
-				observationData.binaryDataFileName=hl7TextInfo.getDiscipline()+".pdf";
-				observationData.binaryData=dataBytes;
+				ObservationData observationData = new ObservationData();
+				observationData.subject = hl7TextInfo.getDiscipline();
+				observationData.textMessage = "Attachment for consultation : " + consultationRequestId;
+				observationData.binaryDataFileName = hl7TextInfo.getDiscipline() + ".pdf";
+				observationData.binaryData = dataBytes;
 
 
-				ORU_R01 hl7Message=OruR01.makeOruR01(clinic, demographic, observationData, sendingProvider, professionalSpecialist);
+				ORU_R01 hl7Message = OruR01.makeOruR01(clinic, demographic, observationData, sendingProvider, professionalSpecialist);
 				message += hl7Message.encode();
 			} catch (DocumentException e) {
 				logger.error("Unexpected error.", e);
@@ -582,8 +580,8 @@ public class EctConsultationFormRequestAction extends Action {
 			MiscUtils.getLogger().info(e.getMessage());
 		}
 		byte[] bytes = null;
-		if (filename!=null && !filename.isEmpty()) {
-			MiscUtils.getLogger().info("pdffile: "+filename);
+		if (filename != null && !filename.isEmpty()) {
+			MiscUtils.getLogger().info("pdffile: " + filename);
 			File file = new File(filename);
 			bytes = new byte[(int) file.length()];
 			FileInputStream fis = new FileInputStream(file);
@@ -592,23 +590,37 @@ public class EctConsultationFormRequestAction extends Action {
 		}
 		Byte[] newBytes = new Byte[bytes.length];
 		int i = 0;
-		for (byte b: bytes) {
+		for (byte b : bytes) {
 			newBytes[i++] = b;
 		}
+
+		String patientId = demographic.getHin();
+		if (patientId == null || patientId.isEmpty()) {
+			patientId = demographic.getDemographicNo().toString();
+		}
+		String authorId = sendingProvider.getOhipNo();
+		if (authorId == null || authorId.isEmpty()) {
+			authorId = sendingProvider.getProviderNo();
+		}
+		String recipientId = professionalSpecialist.getCdxId();
+		if (recipientId == null || recipientId.isEmpty()) {
+			recipientId = professionalSpecialist.getId().toString();
+		}
+
 		String response = new SubmitDoc(clinic.getCdxOid())
 				.patient()
-				.id(demographic.getDemographicNo().toString())
+				.id(patientId)
 				.name(NameType.LEGAL, demographic.getFirstName(), demographic.getLastName())
 				.address(AddressType.HOME, demographic.getAddress(), demographic.getCity(), demographic.getProvince(), demographic.getPostal(), "CA")
 				.phone(PhoneType.HOME, demographic.getPhone())
 				.and().author()
-				.id(sendingProvider.getOhipNo())
+				.id(authorId)
 				.participantTime(new Date())
 				.name(NameType.LEGAL, sendingProvider.getFirstName(), sendingProvider.getLastName())
 				.address(AddressType.HOME, clinic.getAddress(), clinic.getCity(), clinic.getProvince(), clinic.getPostal(), "CA")
 				.phone(PhoneType.HOME, clinic.getPhone())
 				.and().recipient()
-				.id(professionalSpecialist.getCdxId())
+				.id(recipientId)
 				.name(NameType.LEGAL, professionalSpecialist.getFirstName(), professionalSpecialist.getLastName())
 				.address(AddressType.HOME, professionalSpecialist.getAddress(), professionalSpecialist.getCity(), professionalSpecialist.getProvince(), professionalSpecialist.getPostal(), "CA")
 				.phone(PhoneType.HOME, professionalSpecialist.getPhoneNumber())
