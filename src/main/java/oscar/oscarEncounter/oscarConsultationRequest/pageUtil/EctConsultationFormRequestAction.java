@@ -410,6 +410,15 @@ public class EctConsultationFormRequestAction extends Action {
 		} else if (submission.endsWith("And Save")) {  //for BC CDX messages
 			// upon success continue as normal with success message
 			// upon failure, go to consultation update page with message
+			ConsultationRequest consultationRequest=consultationRequestDao.find(Integer.parseInt(requestId));
+			ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(consultationRequest.getSpecialistId());
+			if (!professionalSpecialist.getCdxCapable()) {
+				WebUtils.addLocalisedErrorMessage(request, "The selected professional specialist is not CDX enabled.");
+				ParameterActionForward forward = new ParameterActionForward(mapping.findForward("failESend"));
+				forward.addParameter("de", demographicNo);
+				forward.addParameter("requestId", requestId);
+				return forward;
+			}
 			try {
 				doCdxSend(loggedInInfo, Integer.parseInt(requestId));
 				WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreatedUpdateESent");

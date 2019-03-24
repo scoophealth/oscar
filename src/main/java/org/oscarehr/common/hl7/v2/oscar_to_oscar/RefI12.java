@@ -139,7 +139,7 @@ public final class RefI12 {
 			DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CURRENT_MEDICATIONS.name(), null, temp.getBytes());
 			noteCounter++;
 		}
-		
+
 		temp=consultationRequest.getAllergies();
 		if (temp!=null) DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.ALLERGIES.name(), null, temp.getBytes());
 	}
