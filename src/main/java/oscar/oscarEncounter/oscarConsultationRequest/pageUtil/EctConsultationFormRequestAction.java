@@ -383,22 +383,6 @@ public class EctConsultationFormRequestAction extends Action {
 			} else {
 				return mapping.findForward("print");
 			}
-
-		} else if (submission.endsWith("And Save")) {
-			// upon success continue as normal with success message
-			// upon failure, go to consultation update page with message
-			try {
-				doCdxSend(loggedInInfo, Integer.parseInt(requestId));
-				WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreatedUpdateESent");
-			} catch (Exception e) {
-				logger.error("Error contacting remote server.", e);
-
-				WebUtils.addLocalisedErrorMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreatedUpdateESendError");
-				ParameterActionForward forward = new ParameterActionForward(mapping.findForward("failESend"));
-				forward.addParameter("de", demographicNo);
-				forward.addParameter("requestId", requestId);
-				return forward;
-			}
 		} else if (submission.endsWith("And Fax")) {
 
 			request.setAttribute("reqId", requestId);
@@ -408,10 +392,7 @@ public class EctConsultationFormRequestAction extends Action {
 			else {
 				return mapping.findForward("fax");
 			}
-
-		} 
-		else if (submission.endsWith("esend"))
-		{
+		} else if (submission.endsWith("esend")) {
 			// upon success continue as normal with success message
 			// upon failure, go to consultation update page with message
 			try {
@@ -426,8 +407,22 @@ public class EctConsultationFormRequestAction extends Action {
 	    		forward.addParameter("requestId", requestId);
 	    		return forward;
             }
+		} else if (submission.endsWith("And Save")) {  //for BC CDX messages
+			// upon success continue as normal with success message
+			// upon failure, go to consultation update page with message
+			try {
+				doCdxSend(loggedInInfo, Integer.parseInt(requestId));
+				WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreatedUpdateESent");
+			} catch (Exception e) {
+				logger.error("Error sending CDX consultation request.", e);
+
+				WebUtils.addLocalisedErrorMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreatedUpdateESendError");
+				ParameterActionForward forward = new ParameterActionForward(mapping.findForward("failESend"));
+				forward.addParameter("de", demographicNo);
+				forward.addParameter("requestId", requestId);
+				return forward;
+			}
 		}
-			
 
 		ParameterActionForward forward = new ParameterActionForward(mapping.findForward("success"));
 		forward.addParameter("de", demographicNo);

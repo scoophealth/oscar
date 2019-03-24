@@ -182,8 +182,13 @@ public class EctViewRequestAction extends Action {
             thisForm.setProviderName(prov.getFormattedName());
 
             thisForm.seteReferral(false);
-            thisForm.setCDXeReferral(false);
+            if ("bc".equalsIgnoreCase(oscar.OscarProperties.getInstance().getProperty("billregion"))) {
+                thisForm.setCDXeReferral(true);
+            } else {
+                thisForm.setCDXeReferral(false);
+            }
             thisForm.setFdid(consult.getFdid());
+            MiscUtils.getLogger().info("in form 1");
         }
 
 	public static void fillFormValues(EctConsultationFormRequestForm thisForm, EctConsultationFormRequestUtil consultUtil)
@@ -230,9 +235,14 @@ public class EctViewRequestAction extends Action {
         thisForm.setProviderName(consultUtil.getProviderName(consultUtil.providerNo));
         
         thisForm.seteReferral(false);
-        thisForm.setCDXeReferral(false);
+//        if ("bc".equalsIgnoreCase(oscar.OscarProperties.getInstance().getProperty("billregion"))) {
+//            thisForm.setCDXeReferral(true);
+//        } else {
+            thisForm.setCDXeReferral(false);
+//        }
         
         thisForm.setFdid(consultUtil.fdid);
+        MiscUtils.getLogger().info("in form 2");
         
 	}
 	
@@ -298,7 +308,11 @@ public class EctViewRequestAction extends Action {
         thisForm.setProviderName(provider.getLastName()+", "+provider.getFirstName());
 
         thisForm.seteReferral(true);
-        thisForm.setCDXeReferral(true);
+        if ("bc".equalsIgnoreCase(oscar.OscarProperties.getInstance().getProperty("billregion"))) {
+            thisForm.setCDXeReferral(true);
+        } else {
+            thisForm.setCDXeReferral(false);
+        }
 
         // referredTo specialist
         PRD referredToPrd=RefI12.getPrdByRoleId(refI12, "RT");
@@ -307,6 +321,7 @@ public class EctViewRequestAction extends Action {
         thisForm.setProfessionalSpecialistAddress(professionalSpecialist.getStreetAddress());
         thisForm.setProfessionalSpecialistPhone(professionalSpecialist.getPhoneNumber());
 
+        MiscUtils.getLogger().info("in form 3");
 	}
 	
 	

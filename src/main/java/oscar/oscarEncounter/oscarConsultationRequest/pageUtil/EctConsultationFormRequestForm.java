@@ -109,7 +109,7 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	private String professionalSpecialistName;
 	private String professionalSpecialistPhone;
 	private String professionalSpecialistAddress;
-        private String followUpDate;
+	private String followUpDate;
 	private boolean eReferral = false;
 	private boolean CDXeReferral = false;
 	private Integer hl7TextMessageId;
@@ -156,7 +156,11 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 
 	public boolean isCDXeReferral() {
-		return CDXeReferral;
+//		if ("bc".equalsIgnoreCase(oscar.OscarProperties.getInstance().getProperty("billregion"))) {
+//			return true;
+//		} else {
+			return CDXeReferral;
+//		}
 	}
 
 	public void setCDXeReferral(boolean CDXeReferral) {
