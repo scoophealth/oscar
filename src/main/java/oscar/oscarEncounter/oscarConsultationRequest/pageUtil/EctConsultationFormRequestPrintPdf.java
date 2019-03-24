@@ -193,6 +193,7 @@ public class EctConsultationFormRequestPrintPdf {
 
         // combine the recently created pdf with any pdfs that were added to the consultation request form
         combinePDFs(loggedInInfo, fileName);
+        MiscUtils.getLogger().info("wrote "+fileName);
         return fileName;
 
     }

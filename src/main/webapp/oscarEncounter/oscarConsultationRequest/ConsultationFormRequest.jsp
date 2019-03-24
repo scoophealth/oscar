@@ -1586,7 +1586,7 @@ function updateFaxButton() {
 						<% } %>
                         <% if (show_CDX) { MiscUtils.getLogger().info("show_CDX 2.2:" + show_CDX); %>
                         <%--<input type="button" value="Submit & Send CDX e-Referral" onclick="$('saved').value='true';document.location='<%=thisForm.getCdxUrlString(request)%>'" />--%>
-						<input name="submitAndPrintCdx" type="button" value="Preview CDX e-Referral" onclick="return checkForm('Submit CDX Consultation Request Preview And Send','EctConsultationFormRequestForm'); " />
+						<input name="submitAndPrintCdx" type="button" value="Submit and Save CDX e-Referral" onclick="return checkForm('Submit CDX Consultation Request And Save','EctConsultationFormRequestForm'); " />
 						<% } %>
 					<% } %>
 						<% if (!hide_eRequestResponse) { %>

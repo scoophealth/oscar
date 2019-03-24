@@ -47,7 +47,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import ca.uvic.leadlab.obibconnector.facades.*;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.AttachmentType;
+//import ca.uvic.leadlab.obibconnector.facades.datatypes.AttachmentType;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.AddressType;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.NameType;
@@ -384,7 +384,7 @@ public class EctConsultationFormRequestAction extends Action {
 				return mapping.findForward("print");
 			}
 
-		} else if (submission.endsWith("Preview And Send")) {
+		} else if (submission.endsWith("And Save")) {
 			// upon success continue as normal with success message
 			// upon failure, go to consultation update page with message
 			try {
@@ -399,20 +399,6 @@ public class EctConsultationFormRequestAction extends Action {
 				forward.addParameter("requestId", requestId);
 				return forward;
 			}
-//			request.setAttribute("reqId", requestId);
-//			if (OscarProperties.getInstance().isConsultationFaxEnabled()) {
-//				MiscUtils.getLogger().info("fax enabled");
-//				return mapping.findForward("printIndivica");
-//			} else if (IsPropertiesOn.propertiesOn("CONSULT_PRINT_PDF")) {
-//				MiscUtils.getLogger().info("consult_print_pdf");
-//				return mapping.findForward("printpdf");
-//			} else if (IsPropertiesOn.propertiesOn("CONSULT_PRINT_ALT")) {
-//				MiscUtils.getLogger().info("consult_print_alt");
-//				return mapping.findForward("printalt");
-//			} else {
-//				MiscUtils.getLogger().info("print");
-//				return mapping.findForward("print");
-//			}
 		} else if (submission.endsWith("And Fax")) {
 
 			request.setAttribute("reqId", requestId);
@@ -535,25 +521,65 @@ public class EctConsultationFormRequestAction extends Action {
 		// set status now so the remote version shows this status
 		consultationRequest.setStatus("2");
 
+		REF_I12 refI12=RefI12.makeRefI12(clinic, consultationRequest);
+		String message = refI12.getMessage().encode();
+
 		// save after the sending just in case the sending fails.
 		consultationRequestDao.merge(consultationRequest);
 
+		//--- add attachments to message ---
 		Provider sendingProvider=loggedInInfo.getLoggedInProvider();
 		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 		Demographic demographic=demographicManager.getDemographic(loggedInInfo, consultationRequest.getDemographicId());
-		MiscUtils.getLogger().info("here1");
+
+
+		//--- process all documents ---
+		ArrayList<EDoc> attachments=EDocUtil.listDocs(loggedInInfo, demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), EDocUtil.ATTACHED);
+		for (EDoc attachment : attachments)
+		{
+			ObservationData observationData=new ObservationData();
+			observationData.subject=attachment.getDescription();
+			observationData.textMessage="Attachment for consultation : "+consultationRequestId;
+			observationData.binaryDataFileName=attachment.getFileName();
+			observationData.binaryData=attachment.getFileBytes();
+
+			ORU_R01 hl7Message=OruR01.makeOruR01(clinic, demographic, observationData, sendingProvider, professionalSpecialist);
+			message += hl7Message.encode();
+		}
+
+		//--- process all labs ---
+		CommonLabResultData labData = new CommonLabResultData();
+		ArrayList<LabResultData> labs = labData.populateLabResultsData(loggedInInfo, demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), CommonLabResultData.ATTACHED);
+		for (LabResultData attachment : labs)
+		{
+			try {
+				byte[] dataBytes=LabPDFCreator.getPdfBytes(attachment.getSegmentID(), sendingProvider.getProviderNo());
+				Hl7TextInfo hl7TextInfo=hl7TextInfoDao.findLabId(Integer.parseInt(attachment.getSegmentID()));
+
+				ObservationData observationData=new ObservationData();
+				observationData.subject=hl7TextInfo.getDiscipline();
+				observationData.textMessage="Attachment for consultation : "+consultationRequestId;
+				observationData.binaryDataFileName=hl7TextInfo.getDiscipline()+".pdf";
+				observationData.binaryData=dataBytes;
+
+
+				ORU_R01 hl7Message=OruR01.makeOruR01(clinic, demographic, observationData, sendingProvider, professionalSpecialist);
+				message += hl7Message.encode();
+			} catch (DocumentException e) {
+				logger.error("Unexpected error.", e);
+			}
+		}
+
 		String filename = null;
-		MiscUtils.getLogger().info("calling frm requestId: "+consultationRequestId);
 		EctConsultationFormRequestPrintPdf pdf = new EctConsultationFormRequestPrintPdf(consultationRequestId.toString(), professionalSpecialist.getAddress(), professionalSpecialist.getPhone(), professionalSpecialist.getFax(), demographic.getDemographicNo().toString());
-		MiscUtils.getLogger().info("here2");
 		try {
 			filename = pdf.printPdf(loggedInInfo);
 		} catch (DocumentException e) {
 			MiscUtils.getLogger().info(e.getMessage());
 		}
-		MiscUtils.getLogger().info("here3");
 		byte[] bytes = null;
 		if (filename!=null && !filename.isEmpty()) {
+			MiscUtils.getLogger().info("pdffile: "+filename);
 			File file = new File(filename);
 			bytes = new byte[(int) file.length()];
 			FileInputStream fis = new FileInputStream(file);
@@ -565,7 +591,6 @@ public class EctConsultationFormRequestAction extends Action {
 		for (byte b: bytes) {
 			newBytes[i++] = b;
 		}
-		MiscUtils.getLogger().info("here4");
 		String response = new SubmitDoc(clinic.getCdxOid())
 				.patient()
 				.id(demographic.getDemographicNo().toString())
@@ -588,7 +613,8 @@ public class EctConsultationFormRequestAction extends Action {
 //				.name(NameType.LEGAL, "Joseph", "Cloud")
 //				.address(AddressType.HOME, "111 Main St", "Victoria", "BC", "V8V Z9Z", "CA")
 //				.phone(PhoneType.HOME, "250-111-1234")
-				.and().content("Referral "+consultationRequestId).attach(AttachmentType.PDF, newBytes)
+				.and().content(message)
+				//.attach(AttachmentType.PDF, newBytes)
 				.submit();
 		MiscUtils.getLogger().info("obibconnector: "+response);
 	}
