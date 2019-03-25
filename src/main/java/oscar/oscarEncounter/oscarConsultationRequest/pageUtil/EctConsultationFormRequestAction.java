@@ -529,53 +529,17 @@ public class EctConsultationFormRequestAction extends Action {
 		// set status now so the remote version shows this status
 		consultationRequest.setStatus("2");
 
-		REF_I12 refI12 = RefI12.makeRefI12(clinic, consultationRequest);
-		String message = refI12.getMessage().encode();
+		//REF_I12 refI12 = RefI12.makeRefI12(clinic, consultationRequest);
+		String message = fillReferralNotes(consultationRequest);
 
 		// save after the sending just in case the sending fails.
 		consultationRequestDao.merge(consultationRequest);
 
-		//--- add attachments to message ---
 		Provider sendingProvider = loggedInInfo.getLoggedInProvider();
 		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 		Demographic demographic = demographicManager.getDemographic(loggedInInfo, consultationRequest.getDemographicId());
 
-
-		//--- process all documents ---
-		ArrayList<EDoc> attachments = EDocUtil.listDocs(loggedInInfo, demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), EDocUtil.ATTACHED);
-		for (EDoc attachment : attachments) {
-			ObservationData observationData = new ObservationData();
-			observationData.subject = attachment.getDescription();
-			observationData.textMessage = "Attachment for consultation : " + consultationRequestId;
-			observationData.binaryDataFileName = attachment.getFileName();
-			observationData.binaryData = attachment.getFileBytes();
-
-			ORU_R01 hl7Message = OruR01.makeOruR01(clinic, demographic, observationData, sendingProvider, professionalSpecialist);
-			message += hl7Message.encode();
-		}
-
-		//--- process all labs ---
-		CommonLabResultData labData = new CommonLabResultData();
-		ArrayList<LabResultData> labs = labData.populateLabResultsData(loggedInInfo, demographic.getDemographicNo().toString(), consultationRequest.getId().toString(), CommonLabResultData.ATTACHED);
-		for (LabResultData attachment : labs) {
-			try {
-				byte[] dataBytes = LabPDFCreator.getPdfBytes(attachment.getSegmentID(), sendingProvider.getProviderNo());
-				Hl7TextInfo hl7TextInfo = hl7TextInfoDao.findLabId(Integer.parseInt(attachment.getSegmentID()));
-
-				ObservationData observationData = new ObservationData();
-				observationData.subject = hl7TextInfo.getDiscipline();
-				observationData.textMessage = "Attachment for consultation : " + consultationRequestId;
-				observationData.binaryDataFileName = hl7TextInfo.getDiscipline() + ".pdf";
-				observationData.binaryData = dataBytes;
-
-
-				ORU_R01 hl7Message = OruR01.makeOruR01(clinic, demographic, observationData, sendingProvider, professionalSpecialist);
-				message += hl7Message.encode();
-			} catch (DocumentException e) {
-				logger.error("Unexpected error.", e);
-			}
-		}
-
+		// Create pdf version of Consultation Request which can be attached to request.
 		String filename = null;
 		EctConsultationFormRequestPrintPdf pdf = new EctConsultationFormRequestPrintPdf(consultationRequestId.toString(), professionalSpecialist.getAddress(), professionalSpecialist.getPhone(), professionalSpecialist.getFax(), demographic.getDemographicNo().toString());
 		try {
@@ -583,20 +547,8 @@ public class EctConsultationFormRequestAction extends Action {
 		} catch (DocumentException e) {
 			MiscUtils.getLogger().info(e.getMessage());
 		}
-		byte[] bytes = null;
-		if (filename != null && !filename.isEmpty()) {
-			MiscUtils.getLogger().info("pdffile: " + filename);
-			File file = new File(filename);
-			bytes = new byte[(int) file.length()];
-			FileInputStream fis = new FileInputStream(file);
-			fis.read(bytes);
-			fis.close();
-		}
-		Byte[] newBytes = new Byte[bytes.length];
-		int i = 0;
-		for (byte b : bytes) {
-			newBytes[i++] = b;
-		}
+		MiscUtils.getLogger().info("Consultation Request PDF: " + filename);
+		Byte[] newBytes = pdfFileToByteArray(filename);
 
 		String patientId = demographic.getHin();
 		if (patientId == null || patientId.isEmpty()) {
@@ -637,5 +589,54 @@ public class EctConsultationFormRequestAction extends Action {
 				//.attach(AttachmentType.PDF, newBytes)
 				.submit();
 		MiscUtils.getLogger().info("obibconnector: "+response);
+	}
+
+	private String fillReferralNotes(ConsultationRequest consultationRequest) {
+
+		StringBuilder sb = new StringBuilder();
+		String temp = consultationRequest.getReasonForReferral();
+		String br ="\r\n";
+		if (temp != null && !temp.trim().isEmpty()) {
+			sb.append("REASON FOR CONSULTATION: " + temp + br);
+		}
+
+		temp=consultationRequest.getClinicalInfo();
+		if (temp!=null && !temp.trim().isEmpty()) {
+			sb.append("CLINICAL INFORMATION: " + temp  + br);
+		}
+
+		temp=consultationRequest.getConcurrentProblems();
+		if (temp!=null && !temp.trim().isEmpty()) {
+			sb.append("CONCURRENT PROBLEMS: " + temp + br);
+		}
+
+		temp=consultationRequest.getCurrentMeds();
+		if (temp!=null && !temp.trim().isEmpty()) {
+			sb.append("CURRENT MEDICATIONS: " + temp + br);
+		}
+
+		temp=consultationRequest.getAllergies();
+		if (temp!=null && !temp.trim().isEmpty()) {
+			sb.append("ALLERGIES: " + temp);
+		}
+
+		return sb.toString();
+	}
+
+	private Byte[] pdfFileToByteArray(String filename) throws IOException {
+		byte[] bytes = null;
+		if (filename != null && !filename.isEmpty()) {
+			File file = new File(filename);
+			bytes = new byte[(int) file.length()];
+			FileInputStream fis = new FileInputStream(file);
+			fis.read(bytes);
+			fis.close();
+		}
+		Byte[] newBytes = new Byte[bytes.length];
+		int i = 0;
+		for (byte b : bytes) {
+			newBytes[i++] = b;
+		}
+		return newBytes;
 	}
 }

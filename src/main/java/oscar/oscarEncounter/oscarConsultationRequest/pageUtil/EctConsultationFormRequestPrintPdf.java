@@ -190,9 +190,10 @@ public class EctConsultationFormRequestPrintPdf {
         writer.close();
         out.close();
 
-        // combine the recently created pdf with any pdfs that were added to the consultation request form
-        combinePDFs(loggedInInfo, fileName);
-        MiscUtils.getLogger().info("wrote "+fileName);
+        if (consultationRequestId == null) {
+            // combine the recently created pdf with any pdfs that were added to the consultation request form
+            combinePDFs(loggedInInfo, fileName);
+        }
         return fileName;
 
     }
@@ -306,15 +307,8 @@ public class EctConsultationFormRequestPrintPdf {
 
     private void combinePDFs(LoggedInInfo loggedInInfo, String currentFileName) throws IOException{
 
-        String demoNo = null;
-        String reqId = null;
-        if (consultationRequestId == null) {
-            demoNo = (String) request.getAttribute("demo");
-            reqId = (String) request.getAttribute("reqId");
-        } else {
-            demoNo = this.demoNo;
-            reqId = this.consultationRequestId;
-        }
+        String demoNo = (String) request.getAttribute("demo");
+        String reqId = (String) request.getAttribute("reqId");
         ArrayList<EDoc> consultdocs = EDocUtil.listDocs(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
         ArrayList<Object> pdfDocs = new ArrayList<Object>();
 
@@ -335,15 +329,13 @@ public class EctConsultationFormRequestPrintPdf {
             	PatientLabRouting p = (PatientLabRouting) i[0];
             	
                 String segmentId = "" + p.getLabNo();
-                if (consultationRequestId == null) request.setAttribute("segmentID", segmentId);
+                request.setAttribute("segmentID", segmentId);
                 MessageHandler handler = Factory.getHandler(segmentId);
                 String fileName = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"//"+handler.getPatientName().replaceAll("\\s", "_")+"_"+handler.getMsgDate()+"_LabReport.pdf";
                 OutputStream os = new FileOutputStream(fileName);
-                if (consultationRequestId == null) {
-                    LabPDFCreator pdf = new LabPDFCreator(request, os);
-                    pdf.printPdf();
-                    pdfDocs.add(fileName);
-                }
+                LabPDFCreator pdf = new LabPDFCreator(request, os);
+                pdf.printPdf();
+                pdfDocs.add(fileName);
             }
         }catch(DocumentException de) {
             request.setAttribute("printError", new Boolean(true));
@@ -353,11 +345,9 @@ public class EctConsultationFormRequestPrintPdf {
             request.setAttribute("printError", new Boolean(true));
         }
 
-        if (consultationRequestId == null) {
-            response.setContentType("application/pdf");  //octet-stream
-            response.setHeader("Content-Disposition", "attachment; filename=\"ConsultationFormRequest.pdf\"");
-            ConcatPDF.concat(pdfDocs, response.getOutputStream());
-        }
+        response.setContentType("application/pdf");  //octet-stream
+        response.setHeader("Content-Disposition", "attachment; filename=\"ConsultationFormRequest.pdf\"");
+        ConcatPDF.concat(pdfDocs,response.getOutputStream());
 
     }
 }
