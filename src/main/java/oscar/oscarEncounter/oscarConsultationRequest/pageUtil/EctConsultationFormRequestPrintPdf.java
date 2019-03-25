@@ -48,6 +48,7 @@ import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
@@ -91,24 +92,57 @@ public class EctConsultationFormRequestPrintPdf {
     private final float LINEHEIGHT = 14;
     private final float FONTSIZE = 10;
 
+    private String consultationRequestId = null;
+    private String specAddr = null;
+    private String specPhone = null;
+    private String specFax = null;
+    private String demoNo = null;
+
     /** Creates a new instance of EctConsultationFormRequestPrintPdf */
     public EctConsultationFormRequestPrintPdf(HttpServletRequest request,HttpServletResponse response) {
         this.request = request;
         this.response = response;
     }
 
-    public void printPdf(LoggedInInfo loggedInInfo) throws IOException, DocumentException{
+    public EctConsultationFormRequestPrintPdf(String consultationRequestId, String specAddr, String specPhone, String specFax, String demoNo ) {
+        this.consultationRequestId = consultationRequestId;
+        this.specAddr = specAddr;
+        this.specPhone = specPhone;
+        this.specFax = specFax;
+        this.demoNo = demoNo;
+    }
+
+    public String printPdf(LoggedInInfo loggedInInfo) throws IOException, DocumentException{
 
         EctConsultationFormRequestUtil reqForm = new EctConsultationFormRequestUtil();
-        reqForm.estRequestFromId(loggedInInfo, (String) request.getAttribute("reqId"));
 
         // init req form info
-        reqForm.specAddr = request.getParameter("address");
-        if (reqForm.specAddr == null){reqForm.specAddr = new String(); }
-        reqForm.specPhone = request.getParameter("phone");
-        if (reqForm.specPhone == null){ reqForm.specPhone = ""; }
-        reqForm.specFax = request.getParameter("fax");
-        if (reqForm.specFax == null){ reqForm.specFax = ""; }
+        if (consultationRequestId == null) {
+            reqForm.estRequestFromId(loggedInInfo, (String)request.getAttribute("reqId"));
+            MiscUtils.getLogger().info("reqId: "+request.getAttribute("reqId"));
+            reqForm.specAddr = request.getParameter("address");
+            if (reqForm.specAddr == null) {
+                reqForm.specAddr = new String();
+            }
+            reqForm.specPhone = request.getParameter("phone");
+            if (reqForm.specPhone == null) {
+                reqForm.specPhone = "";
+            }
+            reqForm.specFax = request.getParameter("fax");
+            if (reqForm.specFax == null) {
+                reqForm.specFax = "";
+            }
+        } else {
+            MiscUtils.getLogger().info("consultreqid: "+consultationRequestId);
+            reqForm.estRequestFromId(loggedInInfo, consultationRequestId);
+            MiscUtils.getLogger().info("after estRequestFromId");
+            reqForm.specAddr = specAddr;
+            if (reqForm.specAddr == null){reqForm.specAddr = new String(); }
+            reqForm.specPhone = specPhone;
+            if (reqForm.specPhone == null){ reqForm.specPhone = ""; }
+            reqForm.specFax = specFax;
+            if (reqForm.specFax == null){ reqForm.specFax = ""; }
+        }
 
         //Create new file to save form to
         String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
@@ -158,6 +192,8 @@ public class EctConsultationFormRequestPrintPdf {
 
         // combine the recently created pdf with any pdfs that were added to the consultation request form
         combinePDFs(loggedInInfo, fileName);
+        MiscUtils.getLogger().info("wrote "+fileName);
+        return fileName;
 
     }
 
@@ -270,8 +306,15 @@ public class EctConsultationFormRequestPrintPdf {
 
     private void combinePDFs(LoggedInInfo loggedInInfo, String currentFileName) throws IOException{
 
-        String demoNo = (String) request.getAttribute("demo");
-        String reqId = (String) request.getAttribute("reqId");
+        String demoNo = null;
+        String reqId = null;
+        if (consultationRequestId == null) {
+            demoNo = (String) request.getAttribute("demo");
+            reqId = (String) request.getAttribute("reqId");
+        } else {
+            demoNo = this.demoNo;
+            reqId = this.consultationRequestId;
+        }
         ArrayList<EDoc> consultdocs = EDocUtil.listDocs(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
         ArrayList<Object> pdfDocs = new ArrayList<Object>();
 
@@ -292,13 +335,15 @@ public class EctConsultationFormRequestPrintPdf {
             	PatientLabRouting p = (PatientLabRouting) i[0];
             	
                 String segmentId = "" + p.getLabNo();
-                request.setAttribute("segmentID", segmentId);
+                if (consultationRequestId == null) request.setAttribute("segmentID", segmentId);
                 MessageHandler handler = Factory.getHandler(segmentId);
                 String fileName = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"//"+handler.getPatientName().replaceAll("\\s", "_")+"_"+handler.getMsgDate()+"_LabReport.pdf";
                 OutputStream os = new FileOutputStream(fileName);
-                LabPDFCreator pdf = new LabPDFCreator(request, os);
-                pdf.printPdf();
-                pdfDocs.add(fileName);
+                if (consultationRequestId == null) {
+                    LabPDFCreator pdf = new LabPDFCreator(request, os);
+                    pdf.printPdf();
+                    pdfDocs.add(fileName);
+                }
             }
         }catch(DocumentException de) {
             request.setAttribute("printError", new Boolean(true));
@@ -308,9 +353,11 @@ public class EctConsultationFormRequestPrintPdf {
             request.setAttribute("printError", new Boolean(true));
         }
 
-        response.setContentType("application/pdf");  //octet-stream
-        response.setHeader("Content-Disposition", "attachment; filename=\"ConsultationFormRequest.pdf\"");
-        ConcatPDF.concat(pdfDocs,response.getOutputStream());
+        if (consultationRequestId == null) {
+            response.setContentType("application/pdf");  //octet-stream
+            response.setHeader("Content-Disposition", "attachment; filename=\"ConsultationFormRequest.pdf\"");
+            ConcatPDF.concat(pdfDocs, response.getOutputStream());
+        }
 
     }
 }

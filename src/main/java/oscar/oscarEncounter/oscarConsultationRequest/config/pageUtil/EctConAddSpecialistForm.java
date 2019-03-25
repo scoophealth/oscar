@@ -49,6 +49,8 @@ public final class EctConAddSpecialistForm extends ActionForm {
 	String eDataOscarKey;
 	String eDataServiceKey;
 	String eDataServiceName;
+	Boolean cdxCapable;
+	String cdxId;
 	String annotation;
 	String institution;
 	String department;
@@ -199,6 +201,8 @@ public final class EctConAddSpecialistForm extends ActionForm {
 		eDataUrl = null;
 		eDataOscarKey = null;
 		eDataServiceKey = null;
+		cdxCapable = null;
+		cdxId = null;
 		annotation = null;
 		referralNo = null;
 		privatePhoneNumber = null;
@@ -257,6 +261,14 @@ public final class EctConAddSpecialistForm extends ActionForm {
 	public void seteDataServiceName(String eDataServiceName) {
 		this.eDataServiceName = eDataServiceName;
 	}
+
+	public Boolean getCdxCapable() { return cdxCapable; }
+
+	public void setCdxCapable(Boolean cdxCapable) { this.cdxCapable = cdxCapable; }
+
+	public String getCdxId() { return cdxId; }
+
+	public void setCdxId(String cdxId) { this.cdxId = cdxId; }
 
 	public String getAnnotation() {
 		return annotation;

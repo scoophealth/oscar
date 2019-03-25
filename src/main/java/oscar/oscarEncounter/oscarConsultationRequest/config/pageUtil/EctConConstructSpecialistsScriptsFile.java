@@ -42,6 +42,7 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarEncounter.oscarConsultationRequest.config.data.EctConConfigurationJavascriptData;
 import oscar.util.ConversionUtils;
+import oscar.OscarProperties;
 
 public class EctConConstructSpecialistsScriptsFile {
 	private ConsultationServiceDao consultationServiceDao = (ConsultationServiceDao) SpringUtils.getBean("consultationServiceDao");
@@ -50,6 +51,7 @@ public class EctConConstructSpecialistsScriptsFile {
 	Vector<String> serviceDesc;
 	String javaScriptString;
 	String retval;
+	OscarProperties oscarVariables = oscar.OscarProperties.getInstance();
 
 	public EctConConstructSpecialistsScriptsFile() {
 		retval = null;
@@ -79,11 +81,23 @@ public class EctConConstructSpecialistsScriptsFile {
 				String servId = serviceId.elementAt(i);
 				String servDesc = serviceDesc.elementAt(i);
 				fileWriter.write("K(" + servId + ",\"" + servDesc + "\");\n");
-				for (Object[] o : dao.findSpecialists(ConversionUtils.fromIntString(servId))) {
+				List<Object[]> specialists = null;
+
+				if ("bc".equals(oscarVariables.getProperty("billregion","").toLowerCase())) {
+					specialists = dao.findSpecialistsBcCdxFirst(ConversionUtils.fromIntString(servId));
+				} else {
+					specialists = dao.findSpecialists(ConversionUtils.fromIntString(servId));
+				}
+
+				for (Object[] o : specialists ) {
 					ServiceSpecialists ser = (ServiceSpecialists) o[0];
 					ProfessionalSpecialist pro = (ProfessionalSpecialist) o[1];
 
 					String name = pro.getLastName() + ", " + pro.getFirstName() + " " + pro.getProfessionalLetters();
+
+					if (pro.getCdxCapable()) {
+						name = "(CDX) " + name;
+					}
 
 					String specId = "" + ser.getId().getSpecId();
 					String phone = pro.getPhoneNumber();
@@ -127,11 +141,23 @@ public class EctConConstructSpecialistsScriptsFile {
 			String servDesc = serviceDesc.elementAt(i);
 			stringBuffer.append(String.valueOf(String.valueOf((new StringBuilder("K(")).append(servId).append(",\"").append(servDesc).append("\");\n"))));
 
-			for (Object[] o : dao.findSpecialists(ConversionUtils.fromIntString(servId))) {
+			List<Object[]> specialists = null;
+
+			if ("bc".equals(oscarVariables.getProperty("billregion","").toLowerCase())) {
+				specialists = dao.findSpecialistsBcCdxFirst(ConversionUtils.fromIntString(servId));
+			} else {
+				specialists = dao.findSpecialists(ConversionUtils.fromIntString(servId));
+			}
+
+			for (Object[] o : specialists ) {
 				ServiceSpecialists ser = (ServiceSpecialists) o[0];
 				ProfessionalSpecialist pro = (ProfessionalSpecialist) o[1];
 				
 				String name = pro.getLastName() + ", " + pro.getFirstName()  + (pro.getProfessionalLetters() == null ? "" : " " + pro.getProfessionalLetters());
+				if (pro.getCdxCapable()) {
+					name = "(CDX) " + name;
+				}
+
 				name = this.escapeString(name);
 				String specId = "" + ser.getId().getSpecId();
 				String phone = pro.getPhoneNumber();

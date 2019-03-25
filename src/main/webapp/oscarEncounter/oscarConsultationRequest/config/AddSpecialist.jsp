@@ -58,6 +58,7 @@ if(!authed) {
 <%@page import="org.oscarehr.common.dao.DepartmentDao" %>
 <%@page import="org.oscarehr.common.model.Department" %>
 <%@page import="org.oscarehr.common.model.EForm" %>
+<%@page import="oscar.OscarProperties" %>
 
 <%
 	InstitutionDao institutionDao = SpringUtils.getBean(InstitutionDao.class);
@@ -198,6 +199,8 @@ function BackToOscar() {
 							   thisForm.seteDataOscarKey( (String) request.getAttribute("eDataOscarKey"));
 							   thisForm.seteDataServiceKey( (String) request.getAttribute("eDataServiceKey"));
 							   thisForm.seteDataServiceName( (String) request.getAttribute("eDataServiceName"));
+							   thisForm.setCdxCapable( (Boolean) request.getAttribute("cdxCapable"));
+							   thisForm.setCdxId( (String) request.getAttribute("cdxId"));
 							   thisForm.setAnnotation((String)request.getAttribute("annotation"));
 							   thisForm.setReferralNo((String)request.getAttribute("referralNo"));
 							   thisForm.setInstitution((String)request.getAttribute("institution"));
@@ -310,12 +313,16 @@ function BackToOscar() {
 							
 								<html:select property="department" styleId="department">
 									<option value="0">Select Below</option>
+									<%for(Department department: departmentDao.findAll()) { %>
+									<option value="<%=department.getId()%>"><%=department.getName() %></option>
+									<%} %>
 								</html:select>
 							</td>
 						</tr>
 						<tr>
 							<td colspan="7"><hr /></td>
 						</tr>
+						<% if (!((OscarProperties) oscarVariables).isPropertyActive("hide_add_specialist_edata")) { %>
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eDataUrl" /></td>
 							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eDataUrl" /></td>
@@ -332,6 +339,22 @@ function BackToOscar() {
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eDataServiceName" /></td>
 							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eDataServiceName" /></td>
 						</tr>
+						<% } %>
+						<% if ("bc".equalsIgnoreCase(oscarVariables.getProperty("billregion"))) { %>
+						<tr>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.cdxCapable" /></td>
+							<td colspan="5">
+								<html:select name="EctConAddSpecialistForm" property="cdxCapable">
+									<html:option value="false"></html:option>
+									<html:option value="true"></html:option>
+								</html:select>
+							</td>
+						</tr>
+						<tr>
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.cdxId" /></td>
+							<td colspan="5"><html:text style="width:20%" name="EctConAddSpecialistForm" property="cdxId" /></td>
+						</tr>
+						<% } %>
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.hideFromView" /></td>
 							<td colspan="5">

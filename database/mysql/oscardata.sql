@@ -15,7 +15,7 @@ INSERT INTO `ContactSpecialty` VALUES ('0', 'FAMILY PHYSICIAN', null), ('1', 'DE
 -- Dumping data for table 'clinic'
 --
 
-INSERT INTO clinic VALUES (1234,'McMaster Hospital','Hamilton','Hamilton','L0R 4K3','555-555-5555','555-555-5555','444','A','Ontario','','');
+INSERT INTO clinic VALUES (1234,'McMaster Hospital','Hamilton','Hamilton','L0R 4K3','555-555-5555','555-555-5555','444','A','Ontario','','','');
 
 --
 -- Dumping data for table 'clinic_location'

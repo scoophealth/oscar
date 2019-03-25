@@ -116,21 +116,30 @@ public final class RefI12 {
 		
 		int noteCounter=0;
 		String temp=consultationRequest.getReasonForReferral();
-		if (temp!=null) DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.REASON_FOR_CONSULTATION.name(), null, temp.getBytes());
+		if (temp!=null) {
+			DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.REASON_FOR_CONSULTATION.name(), null, temp.getBytes());
+			noteCounter++;
+		}
 
-		noteCounter++;
 		temp=consultationRequest.getClinicalInfo();
-		if (temp!=null) DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CLINICAL_INFORMATION.name(), null, temp.getBytes());
-		
-		noteCounter++;
+		if (temp!=null) {
+			DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CLINICAL_INFORMATION.name(), null, temp.getBytes());
+			noteCounter++;
+		}
+
 		temp=consultationRequest.getConcurrentProblems();
-		if (temp!=null) DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CONCURRENT_PROBLEMS.name(), null, temp.getBytes());
+		if (temp!=null) {
+			DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CONCURRENT_PROBLEMS.name(), null, temp.getBytes());
+			noteCounter++;
+		}
 		
-		noteCounter++;
+
 		temp=consultationRequest.getCurrentMeds();
-		if (temp!=null) DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CURRENT_MEDICATIONS.name(), null, temp.getBytes());
-		
-		noteCounter++;
+		if (temp!=null) {
+			DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.CURRENT_MEDICATIONS.name(), null, temp.getBytes());
+			noteCounter++;
+		}
+
 		temp=consultationRequest.getAllergies();
 		if (temp!=null) DataTypeUtils.fillNte(referralMsg.getNTE(noteCounter), REF_NTE_TYPE.ALLERGIES.name(), null, temp.getBytes());
 	}

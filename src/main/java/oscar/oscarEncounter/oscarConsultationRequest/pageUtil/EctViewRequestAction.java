@@ -182,6 +182,11 @@ public class EctViewRequestAction extends Action {
             thisForm.setProviderName(prov.getFormattedName());
 
             thisForm.seteReferral(false);
+            if ("bc".equalsIgnoreCase(oscar.OscarProperties.getInstance().getProperty("billregion"))) {
+                thisForm.setCDXeReferral(true);
+            } else {
+                thisForm.setCDXeReferral(false);
+            }
             thisForm.setFdid(consult.getFdid());
         }
 
@@ -229,6 +234,11 @@ public class EctViewRequestAction extends Action {
         thisForm.setProviderName(consultUtil.getProviderName(consultUtil.providerNo));
         
         thisForm.seteReferral(false);
+//        if ("bc".equalsIgnoreCase(oscar.OscarProperties.getInstance().getProperty("billregion"))) {
+//            thisForm.setCDXeReferral(true);
+//        } else {
+            thisForm.setCDXeReferral(false);
+//        }
         
         thisForm.setFdid(consultUtil.fdid);
         
@@ -296,6 +306,11 @@ public class EctViewRequestAction extends Action {
         thisForm.setProviderName(provider.getLastName()+", "+provider.getFirstName());
 
         thisForm.seteReferral(true);
+        if ("bc".equalsIgnoreCase(oscar.OscarProperties.getInstance().getProperty("billregion"))) {
+            thisForm.setCDXeReferral(true);
+        } else {
+            thisForm.setCDXeReferral(false);
+        }
 
         // referredTo specialist
         PRD referredToPrd=RefI12.getPrdByRoleId(refI12, "RT");
