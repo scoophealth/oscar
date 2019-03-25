@@ -34,8 +34,6 @@ import org.apache.cxf.annotations.GZIP;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementMap;
 import org.oscarehr.managers.MeasurementManager;
-import org.oscarehr.managers.ProgramManager2;
-import org.oscarehr.managers.ScheduleManager;
 import org.oscarehr.ws.transfer_objects.MeasurementMapTransfer;
 import org.oscarehr.ws.transfer_objects.MeasurementTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +45,6 @@ import org.springframework.stereotype.Component;
 public class MeasurementWs extends AbstractWs {
 	@Autowired
 	private MeasurementManager measurementManager;
-
-	@Autowired
-	private ScheduleManager scheduleManager;
-
-	@Autowired
-	private ProgramManager2 programManager;
 
 	public MeasurementTransfer getMeasurement(Integer measurementId) {
 		Measurement measurement = measurementManager.getMeasurement(getLoggedInInfo(), measurementId);

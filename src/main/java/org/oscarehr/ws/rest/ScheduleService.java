@@ -31,7 +31,6 @@ import org.oscarehr.common.model.*;
 import org.oscarehr.managers.AppointmentManager;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.ScheduleManager;
-import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.web.PatientListApptBean;
@@ -63,8 +62,6 @@ public class ScheduleService extends AbstractServiceImpl {
 	private AppointmentManager appointmentManager;
 	@Autowired
 	private DemographicManager demographicManager;
-	@Autowired
-	private SecurityInfoManager securityInfoManager;
 	@Autowired
 	private BillingONCHeader1Dao billingONCHeader1Dao;
 
