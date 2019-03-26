@@ -87,6 +87,7 @@ public class LabResultData implements Comparable<LabResultData> {
 	public String multiLabId;
 	public String label;
 	public String description;
+	public boolean isCdxDoc = false;
 	public boolean cancelledReport = false;
 
 	private Integer ackCount = null;

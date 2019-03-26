@@ -251,7 +251,8 @@ String curUser_no = (String) session.getAttribute("user");
 
                                 if (!isListView) {
                                 	try {
-                                		if (result.isDocument()) { %>
+                                		if (result.isDocument()) {
+                                		    if (!result.isCdxDoc) { %>
                                 <!-- segment ID <%= segmentID %>  -->
                                 <!-- demographic name <%=StringEscapeUtils.escapeJavaScript(result.getPatientName()) %>  -->
                                 <form id="frmDocumentDisplay_<%=segmentID%>">
@@ -270,8 +271,27 @@ String curUser_no = (String) session.getAttribute("user");
                         				<jsp:param name="status" value="<%=status%>"/>
                         			</jsp:include>
 								</div>
+                                            <% } else /* CDX Document */ { %>
+                                <form id="frmDocumentDisplay_<%=segmentID%>">
+                                    <input type="hidden" name="segmentID" value="<%=segmentID%>"/>
+                                    <input type="hidden" name="demoName" value="<%=demoName%>"/>
+                                    <input type="hidden" name="providerNo" value="<%=providerNo%>"/>
+                                    <input type="hidden" name="searchProviderNo" value="<%=searchProviderNo%>"/>
+                                    <input type="hidden" name="status" value="<%=status%>"/>
+                                </form>
+                                <div id="document_<%=segmentID%>">
+                                    <jsp:include page="../dms/showCDXDocument.jsp" flush="true">
+                                        <jsp:param name="segmentID" value="<%=segmentID%>"/>
+                                        <jsp:param name="demoName" value="<%=demoName%>"/>
+                                        <jsp:param name="providerNo" value="<%=providerNo%>"/>
+                                        <jsp:param name="searchProviderNo" value="<%=searchProviderNo%>"/>
+                                        <jsp:param name="status" value="<%=status%>"/>
+                                    </jsp:include>
+                                </div>
+
+
                         		<%
-                                		}
+                                		}}
                                 		else if (result.isHRM()) {
 
                                 			StringBuilder duplicateLabIds=new StringBuilder();
@@ -352,8 +372,13 @@ String curUser_no = (String) session.getAttribute("user");
                                     }
                                     else if (result.isDocument()){ 
                                 	String patientName = result.getPatientName();
-                                    	StringBuilder url = new StringBuilder(request.getContextPath());                                    	
-                                    	url.append("/dms/showDocument.jsp?inWindow=true&segmentID=");
+                                    	StringBuilder url = new StringBuilder(request.getContextPath());
+
+                                    	if (result.isCdxDoc)
+                                            url.append("/dms/showCdxDocument.jsp?inWindow=true&segmentID=");
+                                    	else
+                                    	    url.append("/dms/showDocument.jsp?inWindow=true&segmentID=");
+
                                     	url.append(segmentID);
                                     	url.append("&providerNo=");
                                     	url.append(providerNo);

@@ -51,7 +51,7 @@ import ca.uvic.leadlab.obibconnector.facades.*;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.AddressType;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.NameType;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.PhoneType;
+import ca.uvic.leadlab.obibconnector.facades.datatypes.TelcoType;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -568,18 +568,18 @@ public class EctConsultationFormRequestAction extends Action {
 				.id(patientId)
 				.name(NameType.LEGAL, demographic.getFirstName(), demographic.getLastName())
 				.address(AddressType.HOME, demographic.getAddress(), demographic.getCity(), demographic.getProvince(), demographic.getPostal(), "CA")
-				.phone(PhoneType.HOME, demographic.getPhone())
+				.phone(TelcoType.HOME, demographic.getPhone())
 				.and().author()
 				.id(authorId)
 				.participantTime(new Date())
 				.name(NameType.LEGAL, sendingProvider.getFirstName(), sendingProvider.getLastName())
 				.address(AddressType.HOME, clinic.getAddress(), clinic.getCity(), clinic.getProvince(), clinic.getPostal(), "CA")
-				.phone(PhoneType.HOME, clinic.getPhone())
+				.phone(TelcoType.HOME, clinic.getPhone())
 				.and().recipient()
 				.id(recipientId)
 				.name(NameType.LEGAL, professionalSpecialist.getFirstName(), professionalSpecialist.getLastName())
 				.address(AddressType.HOME, professionalSpecialist.getAddress(), professionalSpecialist.getCity(), professionalSpecialist.getProvince(), professionalSpecialist.getPostal(), "CA")
-				.phone(PhoneType.HOME, professionalSpecialist.getPhoneNumber())
+				.phone(TelcoType.HOME, professionalSpecialist.getPhoneNumber())
 //				.and().participant()
 //				.id("555")
 //				.name(NameType.LEGAL, "Joseph", "Cloud")

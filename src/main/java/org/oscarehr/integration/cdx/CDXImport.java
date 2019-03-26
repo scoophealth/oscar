@@ -77,7 +77,7 @@ public class CDXImport {
         Document docEntity = new Document();
 
         docEntity.setDoctype(doc.getTemplateName());
-//        docEntity.setDocdesc(doc.getTemplateName());
+        docEntity.setDocdesc("CDX");
         docEntity.setDocClass(doc.getLoingCodeDisplayName());
         docEntity.setDocxml(doc.getContents());
         docEntity.setDocfilename(doc.getDocumentID());
@@ -131,27 +131,41 @@ public class CDXImport {
 
     }
 
+
+    private String selectIDType(IId[] ids, String type) {
+
+        for (IId i : ids) {
+            if (i.getIdType().equals(type))
+                return i.getIdCode();
+        }
+
+        return null;
+    }
+
     private void addPatient(Document docEntity, IPerson patient) {
         DemographicDao demoDao = SpringUtils.getBean(DemographicDao.class);
         CtlDocumentDao ctlDocDao = SpringUtils.getBean(CtlDocumentDao.class);
-
-        List<Demographic> demos = demoDao.getDemographicsByHealthNum(patient.getID());
         int demoId = -1;
 
-        if (demos.size()==1) { // unique match of HIN
-            Demographic demo = demos.get(0);
+        String hin = selectIDType(patient.getIDs(), "HIN");
 
-            if (demo.getLastName().equals(patient.getLastName())) {
+        if (hin != null) {
+            List<Demographic> demos = demoDao.getDemographicsByHealthNum(hin);
 
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    Date d = sdf.parse(demo.getFormattedDob());
+            if (demos.size() == 1) {
+                Demographic demo = demos.get(0);
+                if (demo.getLastName().equals(patient.getLastName())) {
 
-                    if (d.equals(patient.getBirthdate())) {
-                        demoId = demo.getId(); // we found the patient
+                    try {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        Date d = sdf.parse(demo.getFormattedDob());
+
+                        if (d.equals(patient.getBirthdate())) {
+                            demoId = demo.getId(); // we found the patient
+                        }
+                    } catch (ParseException e) {
+                        MiscUtils.getLogger().error("Error", e);
                     }
-                } catch (ParseException e) {
-                    MiscUtils.getLogger().error("Error", e);
                 }
             }
         }
@@ -215,7 +229,9 @@ public class CDXImport {
         ProviderDao provdao = SpringUtils.getBean(ProviderDao.class);
         Provider provEntity;
 
-        provEntity = provdao.getProviderByOhipNo(prov.getID());
+        String id = selectIDType(prov.getIDs(), "MSP");
+
+        provEntity = provdao.getProviderByOhipNo(id);
 
         if (provEntity == null) {
 
