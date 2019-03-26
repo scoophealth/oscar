@@ -34,6 +34,9 @@ import org.oscarehr.common.model.AbstractModel;
 @Table(name = "cdx_telco")
 public class CdxTelco extends AbstractModel<Integer> implements Serializable {
 
+    public static final String kindEmail = "email";
+    public static final String kindPhone = "phone";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

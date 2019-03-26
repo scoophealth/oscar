@@ -35,6 +35,15 @@ import org.oscarehr.common.model.AbstractModel;
 @Table(name = "cdx_person")
 public class CdxPerson extends AbstractModel<Integer> implements Serializable {
 
+    public static final String rolePatient = "PAT";
+    public static final String roleAuthor = "AUT";
+    public static final String rolePrimaryRecipient = "PRI";
+    public static final String roleSecondaryRecipient = "SEC";
+    public static final String roleOrderingProvider = "OP";
+    public static final String roleFamilyProvider = "FP";
+    public static final String roleParticipatingProvider = "PP";
+    public static final String roleProcedurePerformer = "PER";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -54,6 +63,8 @@ public class CdxPerson extends AbstractModel<Integer> implements Serializable {
     private String streetAddress;
     @Column(name = "city")
     private String city;
+    @Column(name = "postal_code")
+    private String postalCode;
     @Column(name = "province")
     private String province;
     @Column(name = "country")
@@ -131,6 +142,14 @@ public class CdxPerson extends AbstractModel<Integer> implements Serializable {
 
     public String getCity() {
         return city;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 
     public void setCity(String city) {
