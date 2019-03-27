@@ -96,10 +96,6 @@ public class CdxDocument extends AbstractModel<Integer> implements Serializable 
     private String disposition;
     @Column(name = "contents")
     private String contents;
-    @Column(name = "attachment_type")
-    private String attachmentType;
-    @Lob @Column(name = "attachment")
-    private byte[]  attachment;
 
 
     public CdxDocument() {
@@ -174,6 +170,13 @@ public class CdxDocument extends AbstractModel<Integer> implements Serializable 
         this.authoringTime = authoringTime;
     }
 
+    public String getAuthoringTimeAsString() {
+
+        if (authoringTime == null)
+            return "UNK time";
+        else return authoringTime.toString();
+    }
+
     public String getDevice() {
         return device;
     }
@@ -188,6 +191,13 @@ public class CdxDocument extends AbstractModel<Integer> implements Serializable 
 
     public void setEffectiveTime(Date effectiveTime) {
         this.effectiveTime = effectiveTime;
+    }
+
+    public String getEffectiveTimeAsString() {
+
+        if (effectiveTime == null)
+            return "UNK time";
+        else return effectiveTime.toString();
     }
 
     public String getCustodian() {
@@ -222,6 +232,13 @@ public class CdxDocument extends AbstractModel<Integer> implements Serializable 
         this.observationDate = observationDate;
     }
 
+    public String getObservationDateAsString() {
+
+        if (observationDate == null)
+            return "UNK date";
+        else return observationDate.toString();
+    }
+
     public String getProcedureName() {
         return procedureName;
     }
@@ -250,6 +267,13 @@ public class CdxDocument extends AbstractModel<Integer> implements Serializable 
         return admissionDate;
     }
 
+    public String getAdmissionDateAsString() {
+
+        if (admissionDate == null)
+            return "UNK date";
+        else return admissionDate.toString();
+    }
+
     public void setAdmissionDate(Date admissionDate) {
         this.admissionDate = admissionDate;
     }
@@ -260,6 +284,13 @@ public class CdxDocument extends AbstractModel<Integer> implements Serializable 
 
     public void setDischargeDate(Date dischargeDate) {
         this.dischargeDate = dischargeDate;
+    }
+
+    public String getDischargeDateAsString() {
+
+        if (dischargeDate == null)
+            return "UNK date";
+        else return dischargeDate.toString();
     }
 
     public String getDisposition() {
@@ -278,20 +309,5 @@ public class CdxDocument extends AbstractModel<Integer> implements Serializable 
         this.contents = contents;
     }
 
-    public String getAttachmentType() {
-        return attachmentType;
-    }
-
-    public void setAttachmentType(String attachmentType) {
-        this.attachmentType = attachmentType;
-    }
-
-    public byte[] getAttachment() {
-        return attachment;
-    }
-
-    public void setAttachment(byte[] attachment) {
-        this.attachment = attachment;
-    }
 }
 

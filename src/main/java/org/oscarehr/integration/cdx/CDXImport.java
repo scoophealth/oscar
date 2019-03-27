@@ -29,14 +29,8 @@ import ca.uvic.leadlab.obibconnector.impl.receive.mock.ReceiveDocMock;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.*;
 import org.oscarehr.common.model.*;
-import org.oscarehr.integration.cdx.dao.CdxDocumentDao;
-import org.oscarehr.integration.cdx.dao.CdxPersonDao;
-import org.oscarehr.integration.cdx.dao.CdxPersonIdDao;
-import org.oscarehr.integration.cdx.dao.CdxTelcoDao;
-import org.oscarehr.integration.cdx.model.CdxDocument;
-import org.oscarehr.integration.cdx.model.CdxPerson;
-import org.oscarehr.integration.cdx.model.CdxPersonId;
-import org.oscarehr.integration.cdx.model.CdxTelco;
+import org.oscarehr.integration.cdx.dao.*;
+import org.oscarehr.integration.cdx.model.*;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -106,52 +100,80 @@ public class CDXImport {
         cdxDocEntity.setDischargeDate(doc.getDischargeDate());
         cdxDocEntity.setDisposition(doc.getDischargeDisposition());
         cdxDocEntity.setContents(doc.getContents());
-        cdxDocEntity.setAttachmentType(doc.getAttachmentType().label);
-        cdxDocEntity.setAttachment(doc.getAttachment());
 
         cdxDocDao.persist(cdxDocEntity);
 
         createCdxPerson(cdxDocEntity, CdxPerson.rolePatient, doc.getPatient());
         createCdxPerson(cdxDocEntity, CdxPerson.roleAuthor, doc.getAuthor());
+        createCdxPerson(cdxDocEntity, CdxPerson.roleOrderingProvider, doc.getOrderingProvider());
+        createCdxPerson(cdxDocEntity, CdxPerson.roleFamilyProvider, doc.getFamilyProvider());
+        createCdxPerson(cdxDocEntity, CdxPerson.roleProcedurePerformer, doc.getProcedurePerformer());
+        createCdxPerson(cdxDocEntity, CdxPerson.rolePrimaryRecipient, doc.getPrimaryRecipient());
 
+
+        for (IPerson p : doc.getSecondaryRecipients()) {
+            createCdxPerson(cdxDocEntity, CdxPerson.roleSecondaryRecipient, p);
+        }
+
+        for (IPerson p : doc.getParticipatingProviders()) {
+            createCdxPerson(cdxDocEntity, CdxPerson.roleParticipatingProvider, p);
+        }
+
+        for (IAttachment a : doc.getAttachments()) {
+            createCdxAttachment(cdxDocEntity, a);
+        }
 
     }
 
+    private void createCdxAttachment(CdxDocument cdxDocEntity, IAttachment a) {
+        CdxAttachmentDao dao = SpringUtils.getBean(CdxAttachmentDao.class);
+        CdxAttachment attachmentEntity = new CdxAttachment();
+
+        attachmentEntity.setDocument(cdxDocEntity.getDocumentNo());
+        attachmentEntity.setAttachmentType(a.getType().label);
+        attachmentEntity.setReference(a.getReference());
+        attachmentEntity.setContent(a.getContent());
+
+        dao.persist(attachmentEntity);
+    }
+
+
     private void createCdxPerson(CdxDocument cdxDocEntity, String role, IPerson person) {
-        CdxPersonDao cdxPersonDao = SpringUtils.getBean(CdxPersonDao.class);
-        CdxPerson personEntity = new CdxPerson();
+        if (person != null) {
+            CdxPersonDao cdxPersonDao = SpringUtils.getBean(CdxPersonDao.class);
+            CdxPerson personEntity = new CdxPerson();
 
-        personEntity.setDocument(cdxDocEntity.getDocumentNo());
-        personEntity.setFirstName(person.getFirstName());
-        personEntity.setLastName(person.getLastName());
-        personEntity.setGender(person.getGender().label);
-        personEntity.setBirthdate(person.getBirthdate());
-        personEntity.setStreetAddress(person.getStreetAddress());
-        personEntity.setCity(person.getCity());
-        personEntity.setPostalCode(person.getPostalCode());
-        personEntity.setProvince(person.getProvince());
-        personEntity.setCountry(person.getCountry());
-        personEntity.setPrefix(person.getPrefix());
-        personEntity.setClinicId(person.getClinicID());
-        personEntity.setClinicName(person.getClinicName());
-        personEntity.setRoleInDocument(role);
+            personEntity.setDocument(cdxDocEntity.getDocumentNo());
+            personEntity.setFirstName(person.getFirstName());
+            personEntity.setLastName(person.getLastName());
+            personEntity.setGender(person.getGender().label);
+            personEntity.setBirthdate(person.getBirthdate());
+            personEntity.setStreetAddress(person.getStreetAddress());
+            personEntity.setCity(person.getCity());
+            personEntity.setPostalCode(person.getPostalCode());
+            personEntity.setProvince(person.getProvince());
+            personEntity.setCountry(person.getCountry());
+            personEntity.setPrefix(person.getPrefix());
+            personEntity.setClinicId(person.getClinicID());
+            personEntity.setClinicName(person.getClinicName());
+            personEntity.setRoleInDocument(role);
 
-        cdxPersonDao.persist(personEntity);
+            cdxPersonDao.persist(personEntity);
 
-        for (ITelco p : person.getPhones()) {
-            createCdxTelco(personEntity, CdxTelco.kindPhone, p);
+            for (ITelco p : person.getPhones()) {
+                createCdxTelco(personEntity, CdxTelco.kindPhone, p);
+            }
+
+            for (ITelco e : person.getEmails()) {
+                createCdxTelco(personEntity, CdxTelco.kindEmail, e);
+            }
+
+            for (IId id : person.getIDs()) {
+                createCdxPersonId(personEntity, id);
+            }
+
+
         }
-
-        for (ITelco e : person.getEmails()) {
-            createCdxTelco(personEntity, CdxTelco.kindEmail, e);
-        }
-
-        for (IId id : person.getIDs()) {
-            createCdxPersonId(personEntity, id);
-        }
-
-
-
     }
 
     private void createCdxPersonId(CdxPerson personEntity, IId id) {

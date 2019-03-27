@@ -26,49 +26,31 @@ package org.oscarehr.integration.cdx.dao;
 
 
 import org.oscarehr.common.dao.AbstractDao;
-import org.oscarehr.integration.cdx.model.CdxPerson;
+import org.oscarehr.integration.cdx.model.CdxAttachment;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
-import java.util.ArrayList;
 import java.util.List;
 
 
 @Repository
-public class CdxPersonDao extends AbstractDao<CdxPerson> {
+public class CdxAttachmentDao extends AbstractDao<CdxAttachment> {
 
-    public CdxPersonDao() {
-        super(CdxPerson.class);
+    public CdxAttachmentDao() {
+        super(CdxAttachment.class);
     }
 
 
-    public CdxPerson getCdxPerson(int id) {
+    public CdxAttachment getCdxAttachment(int id) {
         return find(id);
     }
 
-    public List<CdxPerson> findRoleInDocument(int id, String role) {
+    public List<CdxAttachment> findByDocNo(int id) {
 
-        String sql = "FROM cdx_person p where p.document = :docid and p.role_in_doc = :role";
+        String sql = "FROM cdx_attachment a where a.document = :docid";
         Query query = entityManager.createQuery(sql);
         query.setParameter("docid", id);
-        query.setParameter("role", role);
         return query.getResultList();
-
-    }
-
-    public List<String> findRoleInDocumentNamesAsString(int id, String role) {
-
-        List<CdxPerson> persons = findRoleInDocument(id, role);
-        List<String> names = new ArrayList<>();
-
-        for (CdxPerson p : persons) {
-            names.add( p.getPrefix() + " "
-                    + p.getFirstName() + " "
-                    + p.getLastName());
-        }
-        if (names.size() == 0)
-            names.add("(empty)");
-        return names;
 
     }
 
