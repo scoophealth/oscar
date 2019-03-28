@@ -23,10 +23,7 @@
  */
 package org.oscarehr.ws.rest;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -324,62 +321,6 @@ public class DemographicService extends AbstractServiceImpl {
 		}
 		
 		return result;
-	}
-	
-	@GET
-	@Path("/activeSince")
-	@Produces({MediaType.APPLICATION_JSON})
-	public List<DemographicTo1> getActiveDemographicSince(@QueryParam("lastUpdate") String lastUpdate, @QueryParam("fields") String fields) {
-		List<DemographicTo1> result = new ArrayList<DemographicTo1>();
-		
-		Date lastDate = null;
-		if (lastUpdate!=null && lastUpdate.isEmpty()) lastUpdate = null;
-		if (lastUpdate!=null) {
-			try {
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				lastDate = sdf.parse(lastUpdate); //verify lastUpdate date format
-				
-			} catch (ParseException e) {
-				MiscUtils.getLogger().warn("Cannot parse lastUpdate date (expected format: yyyy-MM-dd HH:mm:ss)", e);
-				return result;
-			}
-		}
-		
-		List<Demographic> demographics = demographicManager.getActiveDemographicSince(getLoggedInInfo(), lastDate);
-		
-		if (demographics!=null) {
-			String[] fieldList = fields!=null ? fields.split(",") : null;
-			
-			for (Demographic d : demographics) {
-				DemographicTo1 d1 = demoConverter.getAsTransferObject(getLoggedInInfo(),d);
-				DemographicTo1 d2 = new DemographicTo1();
-				
-				if (fieldList!=null) {
-					d2.copyFields(d1, fieldList);
-				} else {
-					d2 = d1;
-				}
-				result.add(d2);
-			}
-		}
-		return result;
-	}
-	
-	@PUT
-	@Path("/writePHRId")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public String writePHRId(JSONObject json) {
-		Integer demographicNo = json.getInt("demographicNo");
-		String phrId = json.getString("phrId");
-		
-		if (demographicNo!=null && phrId!=null) {
-			Demographic demo = demographicManager.getDemographic(getLoggedInInfo(), demographicNo);
-			demo.setMyOscarUserName(phrId);
-			demographicManager.updateDemographic(getLoggedInInfo(), demo);
-			
-		    return "success";
-		}
-		return "fail";
 	}
 
 	/**
