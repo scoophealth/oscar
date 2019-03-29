@@ -39,23 +39,26 @@
     }
 %>
 
-<%@page import="java.text.SimpleDateFormat"%>
-<%@ page import="org.oscarehr.phr.util.MyOscarUtils,org.oscarehr.myoscar.utils.MyOscarLoggedInInfo,org.oscarehr.util.WebUtils"%>
-<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
-<%@ page import="oscar.dms.*,java.util.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
-<%@ page import="oscar.OscarProperties,oscar.log.*"%>
-<%@ page import="org.oscarehr.common.dao.OscarAppointmentDao" %>
-<%@ page import="org.oscarehr.common.model.Provider" %>
-<%@ page import="oscar.util.ConversionUtils" %>
-<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils,oscar.oscarLab.ca.all.*,oscar.oscarMDS.data.*,oscar.oscarLab.ca.all.util.*"%>
-<%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*,org.oscarehr.util.SpringUtils"%><%
+
+<%@ page import="org.oscarehr.integration.cdx.dao.CdxDocumentDao" %>
+
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*,org.oscarehr.util.SpringUtils"%>
+<%@ page import="org.oscarehr.integration.cdx.model.CdxDocument" %>
+<%@ page import="org.oscarehr.integration.cdx.model.CdxPerson" %>
+<%@ page import="org.oscarehr.integration.cdx.dao.CdxPersonDao" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="org.oscarehr.integration.cdx.model.CdxAttachment" %>
+<%@ page import="org.oscarehr.integration.cdx.dao.CdxAttachmentDao" %>
+<%@ page import="java.util.Iterator" %>
+<%
 
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 
@@ -63,10 +66,12 @@
     String documentNo = request.getParameter("segmentID");
     Integer docNo = Integer.parseInt(documentNo);
     DocumentDao docDao = SpringUtils.getBean(DocumentDao.class);
+    CdxDocumentDao cdxDocDao = SpringUtils.getBean(CdxDocumentDao.class);
+    CdxPersonDao cdxPersonDao = SpringUtils.getBean(CdxPersonDao.class);
+    CdxAttachmentDao cdxAttachmentDao = SpringUtils.getBean(CdxAttachmentDao.class);
 
-    Document doc = docDao.findActiveByDocumentNo(docNo).get(0);
-
-    String docXml = doc.getDocxml();
+    Document    doc = docDao.findActiveByDocumentNo(docNo).get(0);
+    CdxDocument cdxDoc = cdxDocDao.getCdxDocument(documentNo);
 
 %>
 <html>
@@ -93,83 +98,134 @@
             <div class="row">
                 <div class="col-md-6">
                     <h3 >
-                        [Titel of document]
+                        <%out.print(cdxDoc.getTitle());%>
                     </h3>
                     <table class="table table-condensed">
                         <tbody>
                         <tr >
                             <td class="active col-md-1">Document type:</td>
-                            <td class="col-md-3">templatename/specifictype</td>
+                            <td class="col-md-3"><% out.print(cdxDoc.getTemplateName()
+                                                            + "/"
+                                                            + cdxDoc.getLoincName()); %></td>
                         </tr>
                         <tr>
                             <td class="active">Author, Date:</td>
-                            <td>name/time</td>
+                            <td><%
+                                out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleAuthor).get(0) + ",");
+                                out.print(cdxDoc.getAuthoringTimeAsString());
+                            %></td>
                         </tr>
                         <tr>
                             <td class="active">Status:</td>
-                            <td>Status</td>
+                            <td><%
+                                out.print(cdxDoc.getStatusCode());
+                            %></td>
                         </tr>
                         <tr>
                             <td class="active">Custodian:</td>
-                            <td>Custodian</td>
+                            <td><%
+                                out.print(cdxDoc.getCustodian());
+                            %></td>
                         </tr>
                         <tr>
                             <td class="active">Device, Time:</td>
-                            <td>Device/time</td>
+                            <td><%
+                              out.print(cdxDoc.getDevice() + ", ");
+                              out.print(cdxDoc.getEffectiveTimeAsString());
+                            %></td>
                         </tr>
                         <tr>
                             <td class="active">Parent document:</td>
-                            <td>N/A</td>
+                            <td><%
+                              out.print(cdxDoc.getParentDocId());
+                            %></td>
                         </tr>
                         <tr>
                             <td class="active">Procedure, Date:</td>
-                            <td>procedure name, date</td>
+                            <td><%
+                                out.print(cdxDoc.getProcedureName() + ", ");
+                                out.print(cdxDoc.getObservationDateAsString());
+                            %></td>
                         </tr>
                         <tr>
-                            <td class="active">Performer:</td>
-                            <td>procedure performer</td>
+                            <td class="active">Procedure Performer:</td>
+                            <td><%
+                                out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleProcedurePerformer).get(0));
+                            %></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <h3 >
-                        Patient: Name, Name
+                        Patient: <%
+                        out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.rolePatient).get(0));
+                        %>
                     </h3>
 
                     <table class="table table-condensed">
                         <tbody>
                         <tr >
                             <td class="active col-md-1">Primary Recipient:</td>
-                            <td class="col-md-3">name, name</td>
+                            <td class="col-md-3">
+                                <%
+                                    out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.rolePrimaryRecipient).get(0));
+                                %></td>
                         </tr>
                         <tr>
                             <td class="active">Secondary Recipients:</td>
-                            <td>name, name, name</td>
+                            <td>
+                                <%
+                                    for (String p : cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleSecondaryRecipient)) {
+                                        out.println(p);
+                                    }
+                                %>
+                            </td>
                         </tr>
                         <tr>
                             <td class="active">Ordering Provider:</td>
-                            <td>name name</td>
+                            <td><%
+                                out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleOrderingProvider).get(0));
+                            %></td>
                         </tr>
                         <tr>
                             <td class="active">Family Provider:</td>
-                            <td>Custodian</td>
+                            <td><%
+                                out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleFamilyProvider).get(0));
+                            %></td>
                         </tr>
                         <tr>
                             <td class="active">Participating Providers:</td>
-                            <td>name, name</td>
+                            <td><%
+                                List<String> names = cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleParticipatingProvider);
+                                for (int i = 0; i < names.size(); i++) {
+                                    out.print(names.get(i));
+                                    if (i < names.size())
+                                        out.print("<br>");
+                                }
+                            %></td>
                         </tr>
                         <tr>
                             <td class="active">Admission, Discharge:</td>
-                            <td>Time, Time</td>
+                            <td><%
+                                out.print(cdxDoc.getAdmissionDateAsString() + ", ");
+                                out.print(cdxDoc.getDischargeDateAsString());
+                            %></td>
                         </tr>
                         <tr>
                             <td class="active">Disposition:</td>
-                            <td>dispo</td>
+                            <td><%
+                                out.print(cdxDoc.getDisposition());
+                            %></td>
                         </tr>
                         <tr>
                             <td class="active">Attachments:</td>
-                            <td>attach</td>
+                            <td><%
+                                for (CdxAttachment a : cdxAttachmentDao.findByDocNo(cdxDoc.getId())) {
+                                    out.print(a.getReference());
+                                    out.println(" (" + a.getAttachmentType() + ")");
+                                }
+                            %></td>
                         </tr>
                         </tbody>
                     </table>
@@ -177,8 +233,9 @@
 
             </div>
             <div class="jumbotron">
-                <p>
-                    This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.
+                <p><%
+                    out.print(cdxDoc.getContents());
+                %>
                 </p>
 
             </div>
