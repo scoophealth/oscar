@@ -46,29 +46,32 @@ public class CDXImport {
 
     private String clinicId;
 
+    private CdxConfig cdxConfig;
+
     public CDXImport() {
         ClinicDAO clinicDao = SpringUtils.getBean(ClinicDAO.class);
         clinicId = clinicDao.getClinic().getCdxOid();
+
+        CdxDocumentDao docdao = SpringUtils.getBean(CdxDocumentDao.class);
+
+        CdxConfigDao configDao = SpringUtils.getBean(CdxConfigDao.class);
+
+        cdxConfig = configDao.getCdxConfig(1);
     }
 
 
-    public void importNewDocs() {
+    public void importNewDocs() throws Exception {
 
-        String[] docIds;
+        List<String> docIds;
 
-        try {
+        docIds = receiver.pollNewDocIDs();
 
-            docIds = receiver.pollNewDocIDs();
+        for (String id : docIds) {
 
-            for (String id : docIds) {
+            IDocument doc = receiver.retrieveDocument(id);
 
-                IDocument doc = receiver.retrieveDocument(id);
+            storeDocument(doc);
 
-                storeDocument(doc);
-
-            }
-        } catch (Exception e) {
-            // log exception and error
         }
 
     }
@@ -146,7 +149,8 @@ public class CDXImport {
             personEntity.setDocument(cdxDocEntity.getDocumentNo());
             personEntity.setFirstName(person.getFirstName());
             personEntity.setLastName(person.getLastName());
-            personEntity.setGender(person.getGender().label);
+            if (person.getGender()!=null)
+                personEntity.setGender(person.getGender().label);
             personEntity.setBirthdate(person.getBirthdate());
             personEntity.setStreetAddress(person.getStreetAddress());
             personEntity.setCity(person.getCity());
@@ -206,6 +210,12 @@ public class CDXImport {
 
         docEntity.setDoctype(doc.getTemplateName());
         docEntity.setDocdesc("CDX");
+        docEntity.setDocfilename("N/A");
+        docEntity.setDoccreator("CDX");
+        docEntity.setResponsible("CDX");
+        docEntity.setAbnormal(0);
+
+
         docEntity.setDocClass(doc.getLoingCodeDisplayName());
         docEntity.setDocxml(doc.getContents());
         docEntity.setDocfilename(doc.getDocumentID());
@@ -246,7 +256,7 @@ public class CDXImport {
     }
 
 
-    private String selectIDType(IId[] ids, String type) {
+    private String selectIDType(List<IId> ids, String type) {
 
         for (IId i : ids) {
             if (i.getIdType().equals(type))
@@ -336,7 +346,8 @@ public class CDXImport {
     }
 
     private Provider getDefaultProvider() {
-        return new Provider(); // implement by looking up from DB
+        ProviderDao provdao = SpringUtils.getBean(ProviderDao.class);
+        return provdao.getProvider(cdxConfig.getDefaultProvider());
     }
 
     private Provider matchProvider(IPerson prov) {

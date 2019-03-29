@@ -28,7 +28,6 @@
 package org.oscarehr.integration.cdx.model;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.*;
 

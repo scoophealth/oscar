@@ -149,6 +149,8 @@ public class Document extends AbstractModel<Integer> implements Serializable {
     private Integer appointmentNo;
 
     private Boolean restrictToProgram=false;
+
+    private Integer abnormal;
     
     public Document() {
     }
@@ -358,7 +360,15 @@ public class Document extends AbstractModel<Integer> implements Serializable {
     	this.sourceFacility = sourceFacility;
     }
 
-	/**
+    public Integer getAbnormal() {
+        return abnormal;
+    }
+
+    public void setAbnormal(Integer abnormal) {
+        this.abnormal = abnormal;
+    }
+
+    /**
 	 * @returns a string representing the path of the file on disk, i.e. document_dir+'/'+filename
 	 */
 	public String getDocumentFileFullPath()

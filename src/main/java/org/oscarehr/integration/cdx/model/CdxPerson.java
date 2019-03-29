@@ -53,8 +53,6 @@ public class CdxPerson extends AbstractModel<Integer> implements Serializable {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    @Column(name = "external_id")
-    private String externalId;
     @Column(name = "gender")
     private String gender;
     @Column(name = "birthdate")
@@ -77,7 +75,7 @@ public class CdxPerson extends AbstractModel<Integer> implements Serializable {
     private String clinicName;
     @Column(name = "document")
     private int document;
-    @Column(name = "role_in_document")
+    @Column(name = "role_in_doc")
     private String roleInDocument;
 
     public CdxPerson() {
@@ -106,14 +104,6 @@ public class CdxPerson extends AbstractModel<Integer> implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getExternalId() {
-        return externalId;
-    }
-
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
     }
 
     public String getGender() {
@@ -173,7 +163,7 @@ public class CdxPerson extends AbstractModel<Integer> implements Serializable {
     }
 
     public String getPrefix() {
-        return prefix;
+        return (prefix == null ? "" : prefix);
     }
 
     public void setPrefix(String prefix) {

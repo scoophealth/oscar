@@ -37,7 +37,6 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import org.oscarehr.common.model.AbstractModel;
@@ -173,7 +172,7 @@ public class CdxDocument extends AbstractModel<Integer> implements Serializable 
     public String getAuthoringTimeAsString() {
 
         if (authoringTime == null)
-            return "UNK time";
+            return "(no time)";
         else return authoringTime.toString();
     }
 
@@ -196,7 +195,7 @@ public class CdxDocument extends AbstractModel<Integer> implements Serializable 
     public String getEffectiveTimeAsString() {
 
         if (effectiveTime == null)
-            return "UNK time";
+            return "(no time)";
         else return effectiveTime.toString();
     }
 
@@ -235,7 +234,7 @@ public class CdxDocument extends AbstractModel<Integer> implements Serializable 
     public String getObservationDateAsString() {
 
         if (observationDate == null)
-            return "UNK date";
+            return "(no time)";
         else return observationDate.toString();
     }
 
@@ -270,7 +269,7 @@ public class CdxDocument extends AbstractModel<Integer> implements Serializable 
     public String getAdmissionDateAsString() {
 
         if (admissionDate == null)
-            return "UNK date";
+            return "(no time)";
         else return admissionDate.toString();
     }
 
@@ -289,7 +288,7 @@ public class CdxDocument extends AbstractModel<Integer> implements Serializable 
     public String getDischargeDateAsString() {
 
         if (dischargeDate == null)
-            return "UNK date";
+            return "(no time)";
         else return dischargeDate.toString();
     }
 

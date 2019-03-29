@@ -22,37 +22,44 @@
  * Victoria, Canada
  */
 
-package org.oscarehr.integration.cdx.dao;
+package org.oscarehr.integration.cdx.model;
+
+import org.oscarehr.common.model.AbstractModel;
+
+import javax.persistence.*;
+import java.io.Serializable;
+
+@Entity
+@Table(name = "cdx_config")
+public class CdxConfig extends AbstractModel<Integer> implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Basic(optional = false)
+    @Column(name = "default_provider")
+    private String defaultProvider;
 
 
-import org.oscarehr.common.dao.AbstractDao;
-import org.oscarehr.integration.cdx.model.CdxAttachment;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.Query;
-import java.util.List;
-
-
-@Repository
-public class CdxAttachmentDao extends AbstractDao<CdxAttachment> {
-
-    public CdxAttachmentDao() {
-        super(CdxAttachment.class);
+    public CdxConfig() {
     }
 
 
-    public CdxAttachment getCdxAttachment(int id) {
-        return find(id);
+    public Integer getId() {
+        return id;
     }
 
-    public List<CdxAttachment> findByDocNo(int id) {
-
-        String sql = "FROM CdxAttachment a where a.document = :docid";
-        Query query = entityManager.createQuery(sql);
-        query.setParameter("docid", id);
-        return query.getResultList();
-
+    public void setId(Integer id) {
+        this.id = id;
     }
 
+    public String getDefaultProvider() {
+        return defaultProvider;
+    }
 
+    public void setDefaultProvider(String p) {
+        this.defaultProvider = p;
+    }
 }

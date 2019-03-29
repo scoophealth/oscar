@@ -48,7 +48,7 @@ public class CdxPersonDao extends AbstractDao<CdxPerson> {
 
     public List<CdxPerson> findRoleInDocument(int id, String role) {
 
-        String sql = "FROM cdx_person p where p.document = :docid and p.role_in_doc = :role";
+        String sql = "FROM CdxPerson p where p.document = :docid and p.roleInDocument = :role";
         Query query = entityManager.createQuery(sql);
         query.setParameter("docid", id);
         query.setParameter("role", role);
@@ -59,7 +59,7 @@ public class CdxPersonDao extends AbstractDao<CdxPerson> {
     public List<String> findRoleInDocumentNamesAsString(int id, String role) {
 
         List<CdxPerson> persons = findRoleInDocument(id, role);
-        List<String> names = new ArrayList<>();
+        List<String> names = new ArrayList<String>();
 
         for (CdxPerson p : persons) {
             names.add( p.getPrefix() + " "

@@ -73,5 +73,7 @@
 	<context:component-scan base-package="org.oscarehr.PMmodule.dao" />
 	<!-- Sharing Center -->
 	<context:component-scan base-package="org.oscarehr.sharingcenter.dao" />
+	<!-- CDX -->
+	<context:component-scan base-package="org.oscarehr.integration.cdx.dao" />
 
 </beans>

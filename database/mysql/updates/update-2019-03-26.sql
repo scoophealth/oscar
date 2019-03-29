@@ -24,8 +24,7 @@ CREATE TABLE cdx_document (
 														CONSTRAINT id_unique UNIQUE ( document_oid )
 );
 
-ALTER TABLE cdx_document ADD CONSTRAINT fk_cdx_document_document FOREIGN KEY ( document_no ) REFERENCES document( document_no ) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
+ALTER TABLE cdx_document ADD CONSTRAINT fk_cdx_document FOREIGN KEY ( document_no ) REFERENCES document( document_no ) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE cdx_attachment (
 															id                   int  NOT NULL  AUTO_INCREMENT,
@@ -39,7 +38,6 @@ CREATE TABLE cdx_attachment (
 CREATE INDEX idx_cdx_attachment ON cdx_attachment ( document );
 
 ALTER TABLE cdx_attachment ADD CONSTRAINT fk_cdx_attachment FOREIGN KEY ( document ) REFERENCES cdx_document( document_no ) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
 
 CREATE TABLE cdx_person (
 													id                   int  NOT NULL  AUTO_INCREMENT,
@@ -58,10 +56,10 @@ CREATE TABLE cdx_person (
 													role_in_doc          char(3)  NOT NULL  ,
 													postal_code          varchar(10)    ,
 													CONSTRAINT pk_cdx_person_id PRIMARY KEY ( id )
-) engine=MyISAM;
+);
 
 
-ALTER TABLE cdx_person ADD CONSTRAINT fk_cdx_person_cdx_document FOREIGN KEY ( document ) REFERENCES cdx_document( document_no ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE cdx_person ADD CONSTRAINT fk_cdx_person FOREIGN KEY ( document ) REFERENCES cdx_document( document_no ) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 
 
@@ -72,10 +70,9 @@ CREATE TABLE cdx_telco (
 												 address              varchar(100)  NOT NULL  ,
 												 person               int  NOT NULL  ,
 												 CONSTRAINT pk_cdx_telco_id PRIMARY KEY ( id )
-) engine=MyISAM;
+);
 
-
-ALTER TABLE cdx_telco ADD CONSTRAINT fk_cdx_telco_cdx_person FOREIGN KEY ( person ) REFERENCES cdx_person( id  ) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE cdx_telco ADD CONSTRAINT fk_cdx_telco FOREIGN KEY ( person ) REFERENCES cdx_person( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE cdx_person_id (
 														 id                   int  NOT NULL  AUTO_INCREMENT,
@@ -83,7 +80,14 @@ CREATE TABLE cdx_person_id (
 														 id_code              varchar(30)  NOT NULL  ,
 														 person               int  NOT NULL  ,
 														 CONSTRAINT pk_cdx_person_id_id PRIMARY KEY ( id )
-) engine=MyISAM;
+);
 
-ALTER TABLE cdx_person_id ADD CONSTRAINT fk_cdx_person_id_cdx_person FOREIGN KEY ( person ) REFERENCES cdx_person( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+ALTER TABLE cdx_person_id ADD CONSTRAINT fk_cdx_person_id FOREIGN KEY ( person ) REFERENCES cdx_person( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE cdx_config (
+  id									 int NOT NULL AUTO_INCREMENT,
+	default_provider     varchar(6)  NOT NULL
+)
+
+ALTER TABLE cdx_config ADD CONSTRAINT fk_cdx_config FOREIGN KEY ( default_provider ) REFERENCES provider( provider_no ) ON DELETE NO ACTION ON UPDATE NO ACTION;

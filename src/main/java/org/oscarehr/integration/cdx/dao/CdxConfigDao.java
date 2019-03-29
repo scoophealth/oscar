@@ -26,32 +26,19 @@ package org.oscarehr.integration.cdx.dao;
 
 
 import org.oscarehr.common.dao.AbstractDao;
-import org.oscarehr.integration.cdx.model.CdxAttachment;
+import org.oscarehr.integration.cdx.model.CdxConfig;
 import org.springframework.stereotype.Repository;
-
-import javax.persistence.Query;
-import java.util.List;
 
 
 @Repository
-public class CdxAttachmentDao extends AbstractDao<CdxAttachment> {
+public class CdxConfigDao extends AbstractDao<CdxConfig> {
 
-    public CdxAttachmentDao() {
-        super(CdxAttachment.class);
+    public CdxConfigDao() {
+        super(CdxConfig.class);
     }
 
-
-    public CdxAttachment getCdxAttachment(int id) {
+    public CdxConfig getCdxConfig(int id) {
         return find(id);
-    }
-
-    public List<CdxAttachment> findByDocNo(int id) {
-
-        String sql = "FROM CdxAttachment a where a.document = :docid";
-        Query query = entityManager.createQuery(sql);
-        query.setParameter("docid", id);
-        return query.getResultList();
-
     }
 
 
