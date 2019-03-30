@@ -87,7 +87,8 @@ ALTER TABLE cdx_person_id ADD CONSTRAINT fk_cdx_person_id FOREIGN KEY ( person )
 
 CREATE TABLE cdx_config (
   id									 int NOT NULL AUTO_INCREMENT,
-	default_provider     varchar(6)  NOT NULL
+	default_provider     varchar(6)  NOT NULL,
+	primary key(id)
 )
 
 ALTER TABLE cdx_config ADD CONSTRAINT fk_cdx_config FOREIGN KEY ( default_provider ) REFERENCES provider( provider_no ) ON DELETE NO ACTION ON UPDATE NO ACTION;
