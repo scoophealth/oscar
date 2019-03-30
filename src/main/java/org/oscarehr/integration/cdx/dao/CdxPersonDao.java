@@ -62,9 +62,13 @@ public class CdxPersonDao extends AbstractDao<CdxPerson> {
         List<String> names = new ArrayList<String>();
 
         for (CdxPerson p : persons) {
-            names.add( p.getPrefix() + " "
+            String s = p.getPrefix() + " "
                     + p.getFirstName() + " "
-                    + p.getLastName());
+                    + p.getLastName();
+
+            if (p.getClinicName() != null && !p.getClinicName().equals(""))
+                s = s + ", " + p.getClinicName();
+            names.add(s);
         }
         if (names.size() == 0)
             names.add("(empty)");
