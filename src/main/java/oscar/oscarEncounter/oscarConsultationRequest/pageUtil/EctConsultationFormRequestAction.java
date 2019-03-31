@@ -48,6 +48,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ca.uvic.leadlab.obibconnector.facades.*;
 //import ca.uvic.leadlab.obibconnector.facades.datatypes.AttachmentType;
+import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.AddressType;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.NameType;
@@ -563,32 +564,37 @@ public class EctConsultationFormRequestAction extends Action {
 			recipientId = professionalSpecialist.getId().toString();
 		}
 
-		String response = new SubmitDoc(clinic.getCdxOid())
-				.patient()
-					.id(patientId)
-					.name(NameType.LEGAL, demographic.getFirstName(), demographic.getLastName())
-					.address(AddressType.HOME, demographic.getAddress(), demographic.getCity(), demographic.getProvince(), demographic.getPostal(), "CA")
-					.phone(TelcoType.HOME, demographic.getPhone())
-				.and().author()
-					.id(authorId)
-					.participantTime(new Date())
-					.name(NameType.LEGAL, sendingProvider.getFirstName(), sendingProvider.getLastName())
-					.address(AddressType.HOME, clinic.getAddress(), clinic.getCity(), clinic.getProvince(), clinic.getPostal(), "CA")
-					.phone(TelcoType.HOME, clinic.getPhone())
-				.and().recipient()
-					.id(recipientId)
-					.name(NameType.LEGAL, professionalSpecialist.getFirstName(), professionalSpecialist.getLastName())
-					.address(AddressType.HOME, professionalSpecialist.getAddress(), professionalSpecialist.getCity(), professionalSpecialist.getProvince(), professionalSpecialist.getPostal(), "CA")
-					.phone(TelcoType.HOME, professionalSpecialist.getPhoneNumber())
-//				.and().participant()
-//					.id("555")
-//					.name(NameType.LEGAL, "Joseph", "Cloud")
-//					.address(AddressType.HOME, "111 Main St", "Victoria", "BC", "V8V Z9Z", "CA")
-//					.phone(PhoneType.HOME, "250-111-1234")
-				.and().content(message)
-				//.attach(AttachmentType.PDF, newBytes)
-				.submit();
-		MiscUtils.getLogger().info("obibconnector: "+response);
+		String response = null;
+		try {
+			response = new SubmitDoc(clinic.getCdxOid())
+					.patient()
+						.id(patientId)
+						.name(NameType.LEGAL, demographic.getFirstName(), demographic.getLastName())
+						.address(AddressType.HOME, demographic.getAddress(), demographic.getCity(), demographic.getProvince(), demographic.getPostal(), "CA")
+						.phone(TelcoType.HOME, demographic.getPhone())
+					.and().author()
+						.id(authorId)
+						.time(new Date())
+						.name(NameType.LEGAL, sendingProvider.getFirstName(), sendingProvider.getLastName())
+						.address(AddressType.HOME, clinic.getAddress(), clinic.getCity(), clinic.getProvince(), clinic.getPostal(), "CA")
+						.phone(TelcoType.HOME, clinic.getPhone())
+					.and().recipient()
+						.id(recipientId)
+						.name(NameType.LEGAL, professionalSpecialist.getFirstName(), professionalSpecialist.getLastName())
+						.address(AddressType.HOME, professionalSpecialist.getAddress(), professionalSpecialist.getCity(), professionalSpecialist.getProvince(), professionalSpecialist.getPostal(), "CA")
+						.phone(TelcoType.HOME, professionalSpecialist.getPhoneNumber())
+	//				.and().participant()
+	//					.id("555")
+	//					.name(NameType.LEGAL, "Joseph", "Cloud")
+	//					.address(AddressType.HOME, "111 Main St", "Victoria", "BC", "V8V Z9Z", "CA")
+	//					.phone(PhoneType.HOME, "250-111-1234")
+					.and().content(message)
+					//.attach(AttachmentType.PDF, newBytes)
+					.submit();
+		} catch (OBIBException e) {
+			MiscUtils.getLogger().error(e.getMessage());
+		}
+		MiscUtils.getLogger().info("obibconnector response: "+response);
 	}
 
 	private String fillReferralNotes(ConsultationRequest consultationRequest) {
