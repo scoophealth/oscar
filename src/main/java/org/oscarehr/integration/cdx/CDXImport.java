@@ -25,6 +25,7 @@
 package org.oscarehr.integration.cdx;
 
 import ca.uvic.leadlab.obibconnector.facades.receive.*;
+import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
 import ca.uvic.leadlab.obibconnector.impl.receive.mock.ReceiveDocMock;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.*;
@@ -87,12 +88,12 @@ public class CDXImport {
         cdxDocEntity.setTemplateName(doc.getTemplateName());
         cdxDocEntity.setDocumentOid(doc.getDocumentID());
         cdxDocEntity.setLoincCode(doc.getLoincCode());
-        cdxDocEntity.setLoincName(doc.getLoingCodeDisplayName());
+        cdxDocEntity.setLoincName(doc.getLoincCodeDisplayName());
         cdxDocEntity.setTitle(doc.getTitle());
         cdxDocEntity.setAuthoringTime(doc.getAuthoringTime());
         cdxDocEntity.setDevice(doc.getAuthorDevice());
         cdxDocEntity.setEffectiveTime(doc.getAuthoringTime());
-        cdxDocEntity.setCustodian(doc.getCustodian());
+        cdxDocEntity.setCustodian(doc.getCustodianName());
         cdxDocEntity.setOrderId(doc.getOrderID());
         cdxDocEntity.setStatusCode(doc.getStatusCode());
         cdxDocEntity.setObservationDate(doc.getObservationDate());
@@ -106,20 +107,20 @@ public class CDXImport {
 
         cdxDocDao.persist(cdxDocEntity);
 
-        createCdxPerson(cdxDocEntity, CdxPerson.rolePatient, doc.getPatient());
-        createCdxPerson(cdxDocEntity, CdxPerson.roleAuthor, doc.getAuthor());
-        createCdxPerson(cdxDocEntity, CdxPerson.roleOrderingProvider, doc.getOrderingProvider());
-        createCdxPerson(cdxDocEntity, CdxPerson.roleFamilyProvider, doc.getFamilyProvider());
-        createCdxPerson(cdxDocEntity, CdxPerson.roleProcedurePerformer, doc.getProcedurePerformer());
-        createCdxPerson(cdxDocEntity, CdxPerson.rolePrimaryRecipient, doc.getPrimaryRecipient());
+        createCdxPatient(cdxDocEntity, doc.getPatient());
+        createCdxProvider(cdxDocEntity, CdxPerson.roleAuthor, doc.getAuthor());
+        createCdxProvider(cdxDocEntity, CdxPerson.roleOrderingProvider, doc.getOrderingProvider());
+        createCdxProvider(cdxDocEntity, CdxPerson.roleFamilyProvider, doc.getFamilyProvider());
+        createCdxProvider(cdxDocEntity, CdxPerson.roleProcedurePerformer, doc.getProcedurePerformer());
+        createCdxProvider(cdxDocEntity, CdxPerson.rolePrimaryRecipient, doc.getPrimaryRecipient());
 
 
-        for (IPerson p : doc.getSecondaryRecipients()) {
-            createCdxPerson(cdxDocEntity, CdxPerson.roleSecondaryRecipient, p);
+        for (IProvider p : doc.getSecondaryRecipients()) {
+            createCdxProvider(cdxDocEntity, CdxPerson.roleSecondaryRecipient, p);
         }
 
-        for (IPerson p : doc.getParticipatingProviders()) {
-            createCdxPerson(cdxDocEntity, CdxPerson.roleParticipatingProvider, p);
+        for (IProvider p : doc.getParticipatingProviders()) {
+            createCdxProvider(cdxDocEntity, CdxPerson.roleParticipatingProvider, p);
         }
 
         for (IAttachment a : doc.getAttachments()) {
@@ -141,7 +142,43 @@ public class CDXImport {
     }
 
 
-    private void createCdxPerson(CdxDocument cdxDocEntity, String role, IPerson person) {
+    private void createCdxProvider(CdxDocument cdxDocEntity, String role, IProvider person) {
+        if (person != null) {
+            CdxPersonDao cdxPersonDao = SpringUtils.getBean(CdxPersonDao.class);
+            CdxPerson personEntity = new CdxPerson();
+
+            personEntity.setDocument(cdxDocEntity.getDocumentNo());
+            personEntity.setFirstName(person.getFirstName());
+            personEntity.setLastName(person.getLastName());
+            personEntity.setStreetAddress(person.getStreetAddress());
+            personEntity.setCity(person.getCity());
+            personEntity.setPostalCode(person.getPostalCode());
+            personEntity.setProvince(person.getProvince());
+            personEntity.setCountry(person.getCountry());
+            personEntity.setPrefix(person.getPrefix());
+            personEntity.setClinicId(person.getClinicID());
+            personEntity.setClinicName(person.getClinicName());
+            personEntity.setRoleInDocument(role);
+
+            cdxPersonDao.persist(personEntity);
+
+            for (ITelco p : person.getPhones()) {
+                createCdxTelco(personEntity, CdxTelco.kindPhone, p);
+            }
+
+            for (ITelco e : person.getEmails()) {
+                createCdxTelco(personEntity, CdxTelco.kindEmail, e);
+            }
+
+            for (IId id : person.getIDs()) {
+                createCdxPersonId(personEntity, id);
+            }
+
+
+        }
+    }
+
+    private void createCdxPatient(CdxDocument cdxDocEntity, IPatient person) {
         if (person != null) {
             CdxPersonDao cdxPersonDao = SpringUtils.getBean(CdxPersonDao.class);
             CdxPerson personEntity = new CdxPerson();
@@ -158,9 +195,7 @@ public class CDXImport {
             personEntity.setProvince(person.getProvince());
             personEntity.setCountry(person.getCountry());
             personEntity.setPrefix(person.getPrefix());
-            personEntity.setClinicId(person.getClinicID());
-            personEntity.setClinicName(person.getClinicName());
-            personEntity.setRoleInDocument(role);
+            personEntity.setRoleInDocument(CdxPerson.rolePatient);
 
             cdxPersonDao.persist(personEntity);
 
@@ -197,7 +232,7 @@ public class CDXImport {
 
         telcoEntity.setPerson(p.getId());
         telcoEntity.setKind(kind);
-        telcoEntity.setType(t.getType().label);
+        telcoEntity.setType(t.getTelcoType().label);
         telcoEntity.setAddress(t.getAddress());
 
         cdxTelcoDao.persist(telcoEntity);
@@ -216,12 +251,12 @@ public class CDXImport {
         docEntity.setAbnormal(0);
 
 
-        docEntity.setDocClass(doc.getLoingCodeDisplayName());
+        docEntity.setDocClass(doc.getLoincCodeDisplayName());
         docEntity.setDocxml(doc.getContents());
         docEntity.setDocfilename(doc.getDocumentID());
         docEntity.setRestrictToProgram(false); // need to confirm semantics
 
-        IPerson auth = doc.getAuthor();
+        IProvider auth = doc.getAuthor();
 
         docEntity.setSource(auth != null ? auth.getLastName() : "");
         docEntity.setUpdatedatetime(doc.getAuthoringTime());
@@ -234,15 +269,15 @@ public class CDXImport {
         } else
             docEntity.setObservationdate(doc.getAuthoringTime());
 
-        if (doc.getCustodian() != null)
-        docEntity.setSourceFacility(doc.getCustodian());
+        if (doc.getCustodianName() != null)
+        docEntity.setSourceFacility(doc.getCustodianName());
 
         docEntity.setContentdatetime(doc.getAuthoringTime());
         docDao.persist(docEntity);
 
         routed = addProviderRouting(docEntity, doc.getPrimaryRecipient());
 
-        for (IPerson p : doc.getSecondaryRecipients()) {
+        for (IProvider p : doc.getSecondaryRecipients()) {
             routed = routed || addProviderRouting(docEntity, p);
         }
 
@@ -266,7 +301,7 @@ public class CDXImport {
         return null;
     }
 
-    private void addPatient(Document docEntity, IPerson patient) {
+    private void addPatient(Document docEntity, IPatient patient) {
         DemographicDao demoDao = SpringUtils.getBean(DemographicDao.class);
         CtlDocumentDao ctlDocDao = SpringUtils.getBean(CtlDocumentDao.class);
         int demoId = -1;
@@ -302,7 +337,7 @@ public class CDXImport {
         ctlDocDao.persist(ctlDoc);
     }
 
-    private Boolean addProviderRouting(Document docEntity, IPerson prov) {
+    private Boolean addProviderRouting(Document docEntity, IProvider prov) {
 
         ProviderLabRoutingDao plrDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
         ProviderLabRoutingModel plr = new ProviderLabRoutingModel();
@@ -350,7 +385,7 @@ public class CDXImport {
         return provdao.getProvider(cdxConfig.getDefaultProvider());
     }
 
-    private Provider matchProvider(IPerson prov) {
+    private Provider matchProvider(IProvider prov) {
         ProviderDao provdao = SpringUtils.getBean(ProviderDao.class);
         Provider provEntity;
 
@@ -369,7 +404,7 @@ public class CDXImport {
         return provEntity;
     }
 
-    private boolean providerBelongsToUs(IPerson prov) {
+    private boolean providerBelongsToUs(IProvider prov) {
         return clinicId.equals(prov.getClinicID());
     }
 }

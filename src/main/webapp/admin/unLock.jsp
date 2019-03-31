@@ -33,6 +33,7 @@
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.Security" %>
 <%@ page import="org.oscarehr.common.dao.SecurityDao" %>
+<%@ page import="org.oscarehr.integration.cdx.CDXImport" %>
 
 <%
 	SecurityDao securityDao = SpringUtils.getBean(SecurityDao.class);
@@ -56,6 +57,15 @@ if(!authed) {
 <security:oscarSec objectName="_site_access_privacy" roleName="<%=roleName$%>" rights="r" reverse="false"> <%isSiteAccessPrivacy=true; %>
 </security:oscarSec>
 
+<%
+	// this needs to be deleted - just for test purposes
+
+	CDXImport cdxImport = new CDXImport();
+
+	cdxImport.importNewDocs();
+
+
+%>
 
 <%
   String ip = request.getRemoteAddr();
