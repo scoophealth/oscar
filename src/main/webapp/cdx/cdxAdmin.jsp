@@ -36,10 +36,12 @@
 <%@ page import="org.oscarehr.common.model.Provider" %>
 <%@ page import="java.util.List" %>
 <%@ page import="org.oscarehr.integration.cdx.CDXDownloadJob" %>
+<%@ page import="org.oscarehr.integration.cdx.CDXAdminAction" %>
+<%@ page import="org.oscarehr.integration.cdx.CDXConfiguration" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
-    String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    String roleName$ = session.getAttribute("userrole") + "," + session.getAttribute("user");
     boolean authed = true;
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.misc" rights="r" reverse="<%=true%>">
@@ -55,8 +57,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <%
-    CdxConfigDao cdxConfigDao = (CdxConfigDao) SpringUtils.getBean(CdxConfigDao.class);
-    ClinicDAO clinicDAO = (ClinicDAO) SpringUtils.getBean(ClinicDAO.class);
+    CdxConfigDao cdxConfigDao = SpringUtils.getBean(CdxConfigDao.class);
+    ClinicDAO clinicDAO = SpringUtils.getBean(ClinicDAO.class);
     ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
     UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
 
@@ -64,7 +66,9 @@
 
     String defaultProvider = "";
     String cdxOid = "";
-    String pollInterval = "30";
+    String pollEnabled;
+    String pollDisabled;
+    String pollInterval;
     String privateKey = "";
     String decryptionKey = "";
 
@@ -75,13 +79,22 @@
     Clinic clinic = clinicDAO.getClinic();
     if (clinic != null && clinic.getCdxOid() != null) cdxOid = clinic.getCdxOid();
 
-    UserProperty up = null;
-    up = userPropertyDao.getProp("cdx_poll_interval");
-    if (up != null) pollInterval = up.getValue();
+    CDXConfiguration cdxConfiguration = new CDXConfiguration();
+    if (cdxConfiguration.isPollingEnabled()) {
+        pollEnabled = "checked";
+        pollDisabled = "unchecked";
+    } else {
+        pollEnabled = "unchecked";
+        pollDisabled = "checked";
+    }
+    pollInterval = cdxConfiguration.getPollingInterval();
+
+    UserProperty up;
+//    up = userPropertyDao.getProp("cdx_poll_interval");
+//    if (up != null) pollInterval = up.getValue();
 
     up = userPropertyDao.getProp("cdx_privateKey");
     if (up != null) privateKey = up.getValue();
-
 
     up = userPropertyDao.getProp("cdx_decryptionKey");
     if (up != null) decryptionKey = up.getValue();
@@ -102,49 +115,56 @@
 <body>
 <h4>CDX Configuration</h4>
 <form action="<%=request.getContextPath()%>/cdx/CDXAdmin.do" method="post">
-    <fieldset>
-        <div class="control-group">
-            <label class="control-label">Default Provider:</label>
-            <div class="controls">
-                <select name="defaultProvider">
-                    <%
-                        for (Provider provider : providers) {
-                            String selected = new String();
-                            if (!defaultProvider.equals("")
-                                    && defaultProvider.equals(provider.getProviderNo())) {
-                                selected = " selected=\"selected\" ";
-                            }
-                    %>
-                    <option value="<%=provider.getProviderNo()%>" <%=selected%>><%=provider.getFormattedName()%>
-                    </option>
-                    <%
+    <%--    <fieldset>--%>
+    <div class="control-group">
+        <label class="control-label">Default Provider:</label>
+        <div class="controls">
+            <select name="defaultProvider">
+                <%
+                    for (Provider provider : providers) {
+                        String selected = "";
+                        if (!defaultProvider.equals("")
+                                && defaultProvider.equals(provider.getProviderNo())) {
+                            selected = " selected=\"selected\" ";
                         }
-                    %>
-                </select>
-            </div>
+                %>
+                <option value="<%=provider.getProviderNo()%>" <%=selected%>><%=provider.getFormattedName()%>
+                </option>
+                <%
+                    }
+                %>
+            </select>
         </div>
-        <div class="control-group">
-            <label class="control-label">Clinic OID:</label>
-            <div class="controls">
-                <input type="text" name="cdxOid" value="<%=cdxOid%>"/>
-            </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Clinic OID:</label>
+        <div class="controls">
+            <input type="text" name="cdxOid" value="<%=cdxOid%>"/>
         </div>
-        <div class="control-group">
-            <label class="control-label">Auto Polling Interval:</label>
-            <div class="controls">
-                <input type="text" name="cdx_poll_interval" value="<%=pollInterval %>"/>
-            </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Automated Polling:</label>
+        <div class="controls">
+            <label class="radio-inline"><input type="radio" name="cdx_polling_enabled" value="true" <%=pollEnabled%>
+                                               class="form-control">Enabled</label>
+            <label class="radio-inline"><input type="radio" name="cdx_polling_enabled" <%=pollDisabled%> value="false"
+                                               class="form-control">Disabled</label>
         </div>
-        <div class="control-group">
-            <input type="submit" class="btn btn-primary" value="Submit"/>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Polling Interval (minutes):</label>
+        <div class="controls">
+            <input type="text" name="cdx_polling_interval" value="<%=pollInterval %>"/>
         </div>
-        </table>
-        <hr>
-        <table>
-            <div>
-                <input type="button" class="btn" onClick="runFetch()" value="Fetch New Data from CDX"/>
-            </div>
-        </table>
+    </div>
+    <div class="control-group">
+        <input type="submit" class="btn btn-primary" value="Submit"/>
+    </div>
+
+    <hr>
+    <div>
+        <input type="button" class="btn" onClick="runFetch()" value="Fetch New Data from CDX"/>
+    </div>
 </form>
 </body>
 </html>
