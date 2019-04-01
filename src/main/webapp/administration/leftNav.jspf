@@ -694,6 +694,7 @@ String curProvider_no = (String)session.getAttribute("user");
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/keygen/keyManager.jsp"><bean:message key="admin.admin.keyPairGen" /></a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/FacilityManager.do"><bean:message key="admin.admin.manageFacilities" /></a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/oscarEncounter/oscarMeasurements/adminFlowsheet/NewFlowsheet.jsp">Create New Flowsheet</a></li>
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/oscarEncounter/oscarMeasurements/adminFlowsheet/FlowsheetManager.jsp">Manage Custom Flowsheets</a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/manageFlowsheets.jsp"><bean:message key="admin.admin.flowsheetManager"/></a></li>
 			      	<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/lotnraddrecordhtm.jsp"><bean:message key="admin.admin.add_lot_nr.title"/></a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/lotnrsearchrecordshtm.jsp"><bean:message key="admin.lotnrsearchrecordshtm.title"/></a></li>
@@ -950,7 +951,15 @@ String curProvider_no = (String)session.getAttribute("user");
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/auditLogPurge.jsp"><bean:message
 						key="admin.admin.btnAuditLogPurge" /></a></li>
+						
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/migrateCustomAllergyNonDrug.jsp">
+							Bulk set Custom Allergy Non-Drug flag
+						</a></li>
+						
+					
 				</ul>
+				
 				</div>
 				</div>
 	</security:oscarSec>
@@ -1039,7 +1048,19 @@ String curProvider_no = (String)session.getAttribute("user");
 				<div class="accordion-inner">
 				<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/pregnancy/migrateToSplitOnArEnhancedForm.jsp"><bean:message key="admin.admin.updates.migrate_onarenhanced"/></a></li>
+				<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/migrateToNewContacts.jsp"><bean:message key="admin.admin.updates.migrate_newcontacts"/></a></li>
 						
+				<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/upgradeRosterData.jsp">
+							Upgrade Roster Data
+						</a></li>
+						
+				<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/migrateHRMData.jsp">
+							Migrate HRM Data
+						</a></li>
+								
 				</ul>
 				</div>
 				</div>

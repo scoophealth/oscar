@@ -61,7 +61,11 @@ import org.oscarehr.hospitalReportManager.xsd.ReportsReceived;
 import org.oscarehr.hospitalReportManager.xsd.TransactionInformation;
 
 import cds.DemographicsDocument;
-import cds.ReportsReceivedDocument;
+import cds.DemographicsDocument.Demographics.Enrolment.EnrolmentHistory;
+import cds.ReportsDocument.Reports;
+import cds.ReportsDocument.Reports.OBRContent;
+import cds.ReportsDocument.Reports.ReportReviewed;
+import cds.ReportsDocument.Reports.SourceAuthorPhysician;
 
 /**
  *
@@ -69,7 +73,7 @@ import cds.ReportsReceivedDocument;
  */
 public class HRMCreateFile {
 
-    static public void create(DemographicsDocument.Demographics demographic, List<ReportsReceivedDocument.ReportsReceived> reports, String file) throws JAXBException, DatatypeConfigurationException {
+    static public void create(DemographicsDocument.Demographics demographic, List<Reports> reports, String file) throws JAXBException, DatatypeConfigurationException {
 
 
         JAXBContext jc = JAXBContext.newInstance("org.oscarehr.hospitalReportManager.xsd");
@@ -155,15 +159,17 @@ public class HRMCreateFile {
         if (demo.getPersonStatusDate()!=null) HRMdemo.setPersonStatusDate(getDateFP(demo.getPersonStatusDate()));
 
         //EnrollmentStatus
-        DemographicsDocument.Demographics.Enrolment[] enrolments = demo.getEnrolmentArray();
-        if (enrolments!=null && enrolments.length>0) {
-            cdsDt.EnrollmentStatus.Enum enrollmentStatus = enrolments[0].getEnrollmentStatus();
-            if (enrollmentStatus!=null) HRMdemo.setEnrollmentStatus(enrollmentStatus.toString());
-
-            if (enrolments[0].getEnrollmentDate()!=null) HRMdemo.setEnrollmentDate(getDateFP(enrolments[0].getEnrollmentDate()));
-            if (enrolments[0].getEnrollmentTerminationDate()!=null) HRMdemo.setEnrollmentTerminationDate(getDateFP(enrolments[0].getEnrollmentTerminationDate()));
+        if(demo.getEnrolment() != null) {
+	        EnrolmentHistory[] enrolments = demo.getEnrolment().getEnrolmentHistoryArray();
+	        if (enrolments!=null && enrolments.length>0) {
+	            cdsDt.EnrollmentStatus.Enum enrollmentStatus = enrolments[0].getEnrollmentStatus();
+	            if (enrollmentStatus!=null) HRMdemo.setEnrollmentStatus(enrollmentStatus.toString());
+	
+	            if (enrolments[0].getEnrollmentDate()!=null) HRMdemo.setEnrollmentDate(getDateFP(enrolments[0].getEnrollmentDate()));
+	            if (enrolments[0].getEnrollmentTerminationDate()!=null) HRMdemo.setEnrollmentTerminationDate(getDateFP(enrolments[0].getEnrollmentTerminationDate()));
+	        }
         }
-
+        
         //HealhCard
         cdsDt.HealthCard healthCard = demo.getHealthCard();
         if (healthCard!=null) {
@@ -192,13 +198,13 @@ public class HRMCreateFile {
         //PhoneNumbers
     }
 
-    static private void writeReportsReceived(List<ReportsReceivedDocument.ReportsReceived> reports, List<ReportsReceived> HRMreports, List<TransactionInformation> HRMinfos) throws DatatypeConfigurationException {
-        for (ReportsReceivedDocument.ReportsReceived report : reports) {
+    static private void writeReportsReceived(List<Reports> reports, List<ReportsReceived> HRMreports, List<TransactionInformation> HRMinfos) throws DatatypeConfigurationException {
+        for (Reports report : reports) {
             ReportsReceived HRMreport = new ReportsReceived();
             HRMreports.add(HRMreport);
 
             //AuthorPhysician
-            ReportsReceivedDocument.ReportsReceived.SourceAuthorPhysician authorPhysician = report.getSourceAuthorPhysician();
+            SourceAuthorPhysician authorPhysician = report.getSourceAuthorPhysician();
             if (authorPhysician!=null && authorPhysician.getAuthorName()!=null) {
                 HRMreport.setAuthorPhysician(copyPersonNameSimple(authorPhysician.getAuthorName()));
             }
@@ -234,7 +240,7 @@ public class HRMCreateFile {
             if (report.getReceivedDateTime()!=null) HRMreport.setReceivedDateTime(getDateFP(report.getReceivedDateTime()));
 
             //Reviews
-            ReportsReceivedDocument.ReportsReceived.ReportReviewed[] reportReviews = report.getReportReviewedArray();
+            ReportReviewed[] reportReviews = report.getReportReviewedArray();
             if (reportReviews!=null && reportReviews.length>0) {
                 if (reportReviews[0].getDateTimeReportReviewed()!=null) {
                     HRMreport.setReviewedDateTime(getDateFP(reportReviews[0].getDateTimeReportReviewed()));
@@ -253,10 +259,10 @@ public class HRMCreateFile {
             HRMreport.setSendingFacilityReportNumber(report.getSendingFacilityReport());
 
             //OBRConent
-            ReportsReceivedDocument.ReportsReceived.OBRContent[] OBRs = report.getOBRContentArray();
+            OBRContent[] OBRs = report.getOBRContentArray();
             if (OBRs!=null) {
                 List<ReportsReceived.OBRContent> HRMobrs = HRMreport.getOBRContent();
-                for (ReportsReceivedDocument.ReportsReceived.OBRContent OBR : OBRs) {
+                for (OBRContent OBR : OBRs) {
                     ReportsReceived.OBRContent HRMobr = new ReportsReceived.OBRContent();
                     HRMobrs.add(HRMobr);
 

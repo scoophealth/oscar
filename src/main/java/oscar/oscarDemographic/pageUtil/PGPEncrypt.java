@@ -25,8 +25,10 @@
 
 package oscar.oscarDemographic.pageUtil;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.oscarehr.util.MiscUtils;
 
@@ -72,6 +74,20 @@ public class PGPEncrypt {
                 String[] cmd = {this.bin, this.cmd, "null.tmp", this.key};
                 env[0] = this.env;
                 proc = rt.exec(cmd, env, dir);
+                BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+        		BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+
+                // read the output from the command
+                String s= null;
+                while ((s = stdInput.readLine()) != null) {
+                    MiscUtils.getLogger().info(s);
+                }
+
+                // read any errors from the attempted command
+                while ((s = stdError.readLine()) != null) {
+                	 MiscUtils.getLogger().info(s);
+                }
+
                 ecode = proc.waitFor();
                 if (ecode==0) {
                     Util.cleanFile("null.tmp.pgp", dirName);

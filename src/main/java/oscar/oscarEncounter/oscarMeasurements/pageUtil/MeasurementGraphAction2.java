@@ -176,11 +176,13 @@ public class MeasurementGraphAction2 extends Action {
 
         for(String din:dins){
              oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr =  prescriptData.getPrescriptionScriptsByPatientRegionalIdentifier(demographicId,din);
-             TaskSeries ts  = new TaskSeries(arr[0].getBrandName());
-             for(oscar.oscarRx.data.RxPrescriptionData.Prescription pres:arr){
-                 ts.add(new Task(pres.getBrandName(),pres.getRxDate(),pres.getEndDate()));
+             if(arr != null && arr.length>0) {
+	             TaskSeries ts  = new TaskSeries(arr[0].getBrandName());
+	             for(oscar.oscarRx.data.RxPrescriptionData.Prescription pres:arr){
+	                 ts.add(new Task(pres.getBrandName(),pres.getRxDate(),pres.getEndDate()));
+	             }
+	             datasetDrug.add(ts);
              }
-             datasetDrug.add(ts);
         }
 
         XYTaskDataset dataset = new XYTaskDataset(datasetDrug);
@@ -195,7 +197,9 @@ public class MeasurementGraphAction2 extends Action {
         oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
         for(String din:dins){
              oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr =  prescriptData.getPrescriptionScriptsByPatientRegionalIdentifier(demographic,din);
-             list.add( arr[0].getBrandName() );
+             if(arr!= null && arr.length>0) {
+            	 list.add( arr[0].getBrandName() );
+             }
 
         }
         ret = list.toArray( new String[list.size()] );
@@ -539,10 +543,12 @@ public class MeasurementGraphAction2 extends Action {
                     String range = (String) mdb.get("range");
                     if (range.indexOf("-") != -1){
                         String[] sp = range.split("-");
-                        double open = Double.parseDouble(sp[0]);
-                        double high = Double.parseDouble(sp[1]);
-                        double low = Double.parseDouble(sp[0]);
-                        double close = Double.parseDouble(sp[1]);
+                        String sp0 = sp[0].replaceAll("%","").trim();
+                        String sp1 = sp[1].replaceAll("%","").trim();
+                        double open = Double.parseDouble(sp0);
+                        double high = Double.parseDouble(sp1);
+                        double low = Double.parseDouble(sp0);
+                        double close = Double.parseDouble(sp1);
                         double volume = 1045;
                         dataItems.add(new OHLCDataItem(new Day((Date) mdb.get("collDateDate")).getStart(), open, high, low, close, volume));
                     }
@@ -645,10 +651,12 @@ public class MeasurementGraphAction2 extends Action {
                     String range = (String) mdb.get("range");
                     if (range.indexOf("-") != -1){
                         String[] sp = range.split("-");
-                        double open = Double.parseDouble(sp[0]);
-                        double high = Double.parseDouble(sp[1]);
-                        double low = Double.parseDouble(sp[0]);
-                        double close = Double.parseDouble(sp[1]);
+                        String sp0 = sp[0].replaceAll("%","").trim();
+                        String sp1 = sp[1].replaceAll("%","").trim();
+                        double open = Double.parseDouble(sp0);
+                        double high = Double.parseDouble(sp1);
+                        double low = Double.parseDouble(sp0);
+                        double close = Double.parseDouble(sp1);
                         double volume = 1045;
                         dataItems.add(new OHLCDataItem(new Day((Date) mdb.get("collDateDate")).getStart(), open, high, low, close, volume));
                     }

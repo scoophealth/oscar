@@ -42,6 +42,7 @@ public class LabTest {
 	private String refRangeText;
 	private String flag;
 	private String stat;
+	private String blocked;
 	private String notes;
 	
 	public Long getId() {
@@ -121,6 +122,12 @@ public class LabTest {
     }
 	public void setStat(String stat) {
     	this.stat = stat;
+    }
+	public String getBlocked() {
+    	return blocked;
+    }
+	public void setBlocked(String blocked) {
+    	this.blocked = blocked;
     }
 	public String getNotes() {
     	return notes;

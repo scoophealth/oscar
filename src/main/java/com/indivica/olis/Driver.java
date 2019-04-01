@@ -56,8 +56,11 @@ import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 import org.bouncycastle.util.Store;
 import org.bouncycastle.util.encoders.Base64;
+import org.oscarehr.common.dao.OLISQueryLogDao;
 import org.oscarehr.common.dao.OscarLogDao;
+import org.oscarehr.common.model.OLISQueryLog;
 import org.oscarehr.common.model.OscarLog;
+import org.oscarehr.common.model.OscarMsgType;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.olis.OLISProtocolSocketFactory;
 import org.oscarehr.util.LoggedInInfo;
@@ -65,8 +68,8 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 import org.xml.sax.InputSource;
 
-import oscar.OscarProperties;
-import oscar.oscarMessenger.data.MsgProviderData;
+import com.indivica.olis.queries.Query;
+
 import ca.ssha._2005.hial.ArrayOfError;
 import ca.ssha._2005.hial.ArrayOfString;
 import ca.ssha._2005.hial.Response;
@@ -75,27 +78,44 @@ import ca.ssha.www._2005.hial.OLISStub.HIALRequest;
 import ca.ssha.www._2005.hial.OLISStub.HIALRequestSignedRequest;
 import ca.ssha.www._2005.hial.OLISStub.OLISRequest;
 import ca.ssha.www._2005.hial.OLISStub.OLISRequestResponse;
-
-import com.indivica.olis.queries.Query;
-import org.oscarehr.common.model.OscarMsgType;
+import oscar.OscarProperties;
+import oscar.oscarMessenger.data.MsgProviderData;
 
 public class Driver {
 
 	private static OscarLogDao logDao = (OscarLogDao) SpringUtils.getBean("oscarLogDao");
+//	private static OLISResultsDao olisResultsDao = SpringUtils.getBean(OLISResultsDao.class);
+	private static OLISQueryLogDao olisQueryLogDao = SpringUtils.getBean(OLISQueryLogDao.class);
+	
 
-	public static String submitOLISQuery(HttpServletRequest request, Query query) {
+	public static String submitOLISQuery(LoggedInInfo loggedInInfo, HttpServletRequest request, Query query) {
+		
 		try {
-			OLISMessage message = new OLISMessage(query);
+			query.setQueryExecutionDate(new Date());
+			query.setInitiatingProviderNo(loggedInInfo.getLoggedInProviderNo());
+			
+			OLISMessage message = new OLISMessage(loggedInInfo.getLoggedInProvider(), query);
 
-			System.setProperty("javax.net.ssl.trustStore", OscarProperties.getInstance().getProperty("olis_truststore").trim());
-			System.setProperty("javax.net.ssl.trustStorePassword", OscarProperties.getInstance().getProperty("olis_truststore_password").trim());
+			if(OscarProperties.getInstance().getProperty("olis_truststore") != null) {
+				System.setProperty("javax.net.ssl.trustStore", OscarProperties.getInstance().getProperty("olis_truststore").trim());
+			} else {
+				MiscUtils.getLogger().warn("OLIS requires a truststore to be setup. check olis_truststore property");
+			}
+			
+			if(OscarProperties.getInstance().getProperty("olis_truststore_password") != null) {
+				System.setProperty("javax.net.ssl.trustStorePassword", OscarProperties.getInstance().getProperty("olis_truststore_password").trim());
+			} else {
+				MiscUtils.getLogger().warn("OLIS requires a truststore to be setup. check olis_truststore_password property");
+			}
 			
 			OLISRequest olisRequest = new OLISRequest();
 			olisRequest.setHIALRequest(new HIALRequest());
 			String olisRequestURL = OscarProperties.getInstance().getProperty("olis_request_url", "https://olis.ssha.ca/ssha.olis.webservices.ER7/OLIS.asmx");
 			OLISStub olis = new OLISStub(olisRequestURL);
-			olis._getServiceClient().getOptions().setProperty(HTTPConstants.CUSTOM_PROTOCOL_HANDLER, new Protocol("https",(ProtocolSocketFactory)  new OLISProtocolSocketFactory(),443));
 			
+			if (OscarProperties.getInstance().getProperty("olis_simulate", "no").equals("no")) {
+				olis._getServiceClient().getOptions().setProperty(HTTPConstants.CUSTOM_PROTOCOL_HANDLER, new Protocol("https",(ProtocolSocketFactory)  new OLISProtocolSocketFactory(),443));
+			}
 			olisRequest.getHIALRequest().setClientTransactionID(message.getTransactionId());
 			olisRequest.getHIALRequest().setSignedRequest(new HIALRequestSignedRequest());
 
@@ -118,37 +138,50 @@ public class Driver {
 				logItem.setContent("query");
 				logItem.setData(olisHL7String);
 
-				logItem.setProviderNo("-1");
+				logItem.setProviderNo(loggedInInfo.getLoggedInProviderNo());
 
 				logDao.persist(logItem);
+				
+				OLISQueryLog olisQueryLog = new OLISQueryLog();
+				olisQueryLog.setInitiatingProviderNo(loggedInInfo.getLoggedInProviderNo());
+				olisQueryLog.setQueryExecutionDate(new Date());
+				olisQueryLog.setQueryType(query.getQueryType().toString());
+				olisQueryLog.setUuid(query.getUuid());
+				olisQueryLog.setDemographicNo(query.getDemographicNo() != null ? Integer.parseInt(query.getDemographicNo()) : null);
+				olisQueryLog.setRequestingHIC(query.getRequestingHICProviderNo());
+				
+				olisQueryLogDao.persist(olisQueryLog);
 
 			} catch (Exception e) {
 				MiscUtils.getLogger().error("Couldn't write log message for OLIS query", e);
 			}
 
 			if (OscarProperties.getInstance().getProperty("olis_simulate", "no").equals("yes")) {
-				String response = (String) request.getSession().getAttribute("olisResponseContent");
-				request.setAttribute("olisResponseContent", response);
-				request.getSession().setAttribute("olisResponseContent", null);
-				return response;
+				if(request != null) {
+					String response = (String) request.getSession().getAttribute("olisResponseContent");
+					request.setAttribute("olisResponseContent", response);
+					request.getSession().setAttribute("olisResponseContent", response);
+					request.getSession().setAttribute("olisResponseQuery", query);
+					return response;
+				}
+				//this only happens for auto-polling when simulate is enabled
+				return "";
 			} else {
 				OLISRequestResponse olisResponse = olis.oLISRequest(olisRequest);
 
 				String signedData = olisResponse.getHIALResponse().getSignedResponse().getSignedData();
 				String unsignedData = Driver.unsignData(signedData);
-				//MiscUtils.getLogger().info(msgInXML);
-				//MiscUtils.getLogger().info("---------------------------------");			
-				//MiscUtils.getLogger().info(unsignedData);
-
+				
 				if (request != null) {
+					//these seem to just be for the checkOlis.jsp
 					request.setAttribute("msgInXML", msgInXML);
 					request.setAttribute("signedRequest", signedRequest);
 					request.setAttribute("signedData", signedData);
 					request.setAttribute("unsignedResponse", unsignedData);
 				}
 
-				writeToFile(unsignedData);
-				readResponseFromXML(request, unsignedData);
+				writeToFile(unsignedData);	//not sure the point of this, other than debugging maybe
+				readResponseFromXML(loggedInInfo, request, unsignedData);
 
 				return unsignedData;
 
@@ -159,13 +192,12 @@ public class Driver {
 				request.setAttribute("searchException", e);
 			}
 
-			LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 			notifyOlisError(loggedInInfo.getLoggedInProvider(), e.getMessage());
 			return "";
 		}
 	}
 
-	public static void readResponseFromXML(HttpServletRequest request, String olisResponse) {
+	public static void readResponseFromXML(LoggedInInfo loggedInInfo, HttpServletRequest request, String olisResponse) {
 
 		olisResponse = olisResponse.replaceAll("<Content", "<Content xmlns=\"\" ");
 		olisResponse = olisResponse.replaceAll("<Errors", "<Errors xmlns=\"\" ");
@@ -210,8 +242,6 @@ public class Driver {
 			}
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Couldn't read XML from OLIS response.", e);
-			
-			LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 			notifyOlisError(loggedInInfo.getLoggedInProvider(), "Couldn't read XML from OLIS response." + "\n" + e);
 		}
 	}
@@ -267,6 +297,11 @@ public class Driver {
 
 			//Enumeration e = keystore.aliases();
 			String name = "olis";
+			Enumeration e = keystore.aliases();
+			while(e.hasMoreElements()) {
+				name = (String)e.nextElement();
+				
+			}
 
 			// Get the private key and the certificate
 			priv = (PrivateKey) keystore.getKey(name, pwd.toCharArray());
@@ -286,7 +321,7 @@ public class Driver {
 			CMSSignedDataGenerator sgen = new CMSSignedDataGenerator();
 
 			// What digest algorithm i must use? SHA1? MD5? RSA?...
-			ContentSigner sha1Signer = new JcaContentSignerBuilder("SHA1withRSA").setProvider("BC").build(priv);			
+			ContentSigner sha1Signer = new JcaContentSignerBuilder("SHA256withRSA").setProvider("BC").build(priv);			
 			sgen.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(new JcaDigestCalculatorProviderBuilder().setProvider("BC").build())
 	                     .build(sha1Signer, cert));
 			
@@ -364,7 +399,7 @@ public class Driver {
 			result = new String(signedDataB64);
 
 		} catch (Exception e) {
-			MiscUtils.getLogger().error("Can't sign HL7 message for OLIS", e);
+			MiscUtils.getLogger().warn("Can't sign HL7 message for OLIS. No valid keystore defined!");
 		}
 		return result;
 	}

@@ -44,7 +44,9 @@ public class RptGroupNameBeanHandler {
 		MeasurementGroupDao dao = SpringUtils.getBean(MeasurementGroupDao.class);
 		for (MeasurementGroup mg : dao.findAll()) {
 			RptGroupNameBean groupName = new RptGroupNameBean(mg.getName());
-			groupNameVector.add(groupName);
+			if(!groupNameVector.contains(groupName)) {
+				groupNameVector.add(groupName);
+			}
 		}
 		return true;
 	}

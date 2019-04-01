@@ -35,7 +35,6 @@ import javax.xml.ws.WebServiceException;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.cxf.annotations.GZIP;
 import org.apache.log4j.Logger;
-import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.common.model.CtlDocument;
 import org.oscarehr.common.model.Document;
 import org.oscarehr.managers.DocumentManager;
@@ -53,9 +52,6 @@ public class DocumentWs extends AbstractWs {
 
 	@Autowired
 	private DocumentManager documentManager;
-
-	@Autowired
-	private ProgramManager programManager;
 
 	public DocumentTransfer getDocument(Integer documentId) {
 		try {

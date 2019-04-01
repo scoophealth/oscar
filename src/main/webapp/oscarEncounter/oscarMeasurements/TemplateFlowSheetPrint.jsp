@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
 <% long startTime = System.currentTimeMillis(); %>
 <%@ page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,java.net.*"%>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
@@ -121,18 +122,13 @@ maybe use jquery/ajax to post this data instead of submitting a form to send ALL
     boolean dsProblems = false;
 
     String temp = request.getParameter("template");
-    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-
-    FlowSheetCustomizationDao flowSheetCustomizationDao = (FlowSheetCustomizationDao) ctx.getBean("flowSheetCustomizationDao");
-    FlowSheetDrugDao flowSheetDrugDAO = ctx.getBean(FlowSheetDrugDao.class);
-
-    List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( temp,(String) session.getAttribute("user"),Integer.parseInt(demographic_no));
+    
+    FlowSheetCustomizationDao flowSheetCustomizationDao = (FlowSheetCustomizationDao) SpringUtils.getBean("flowSheetCustomizationDao");
+    FlowSheetDrugDao flowSheetDrugDAO = SpringUtils.getBean(FlowSheetDrugDao.class);
 
     ////Start
     MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
-
-
-    MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(temp,custList);
+    MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(temp,LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo() ,Integer.parseInt(demographic_no));
 
     MeasurementInfo mi = new MeasurementInfo(demographic_no);
     List<String> measurementLs = mFlowsheet.getMeasurementList();

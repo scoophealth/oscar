@@ -126,4 +126,16 @@ public class AllergyDao extends AbstractDao<Allergy> {
 		List<Allergy> results = query.getResultList();
 		return (results);
 	}
+	
+	public List<Allergy> findAllCustomAllergiesWithNullNonDrugFlag(int start, int limit) {
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.typeCode=0 and x.nonDrug is NULL order by x.demographicNo";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setFirstResult(start);
+		query.setMaxResults(limit);
+		
+		@SuppressWarnings("unchecked")
+		List<Allergy> results = query.getResultList();
+		return (results);
+	}
 }

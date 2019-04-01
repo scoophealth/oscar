@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -145,10 +146,23 @@
 	Demographic demographic = new Demographic();
 	demographic.setLastName(request.getParameter("last_name").trim());
 	demographic.setFirstName(request.getParameter("first_name").trim());
+	demographic.setMiddleNames(request.getParameter("middleNames").trim());
 	demographic.setAddress(request.getParameter("address"));
 	demographic.setCity(request.getParameter("city"));
-	demographic.setProvince(request.getParameter("province"));
+	if(request.getParameter("province") != null) {
+		demographic.setProvince(request.getParameter("province"));
+	} else {
+		demographic.setProvince("");
+	}
 	demographic.setPostal(request.getParameter("postal"));
+	demographic.setMailingAddress(request.getParameter("mailingAddress"));
+	demographic.setMailingCity(request.getParameter("mailingCity"));
+	if(request.getParameter("mailingProvince") != null) {
+		demographic.setMailingProvince(request.getParameter("mailingProvince"));
+	} else {
+		demographic.setMailingProvince("");
+	}
+	demographic.setMailingPostal(request.getParameter("mailingPostal"));
 	demographic.setPhone(request.getParameter("phone"));
 	demographic.setPhone2(request.getParameter("phone2"));
 	demographic.setEmail(request.getParameter("email"));
@@ -159,6 +173,7 @@
 	demographic.setHin(request.getParameter("hin"));
 	demographic.setVer(request.getParameter("ver"));
 	demographic.setRosterStatus(request.getParameter("roster_status"));
+	demographic.setRosterEnrolledTo(request.getParameter("roster_enrolled_to"));	
 	demographic.setPatientStatus(request.getParameter("patient_status"));
 	demographic.setDateJoined(MyDateFormat.getSysDate(request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date")));
 	demographic.setChartNo(request.getParameter("chart_no"));
@@ -213,7 +228,17 @@
 	demographic.setSpokenLanguage(request.getParameter("spoken_lang"));
 	demographic.setLastUpdateUser(curUser_no);
 	demographic.setLastUpdateDate(new java.util.Date());
-	demographic.setPatientStatusDate(new java.util.Date());
+	
+	if(request.getParameter("patient_status_date") != null) {
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			demographic.setPatientStatusDate(fmt.parse(request.getParameter("patient_status_date")));
+		}catch(Exception e) {
+			demographic.setPatientStatusDate(new java.util.Date());
+		}
+	} else {
+		demographic.setPatientStatusDate(new java.util.Date());
+	}
 	
 	
 	
@@ -327,7 +352,6 @@
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "given_consent", request.getParameter("given_consent"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "rxInteractionWarningLevel", request.getParameter("rxInteractionWarningLevel"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "primaryEMR", request.getParameter("primaryEMR"), "");
-       demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "aboriginal", request.getParameter("aboriginal"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "phoneComment", request.getParameter("phoneComment"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "usSigned", request.getParameter("usSigned"), "");
        demographicExtDao.addKey(proNo, demographic.getDemographicNo(), "privacyConsent", request.getParameter("privacyConsent"), "");

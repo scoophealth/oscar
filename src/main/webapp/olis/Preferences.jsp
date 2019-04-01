@@ -35,7 +35,13 @@
     	DateTime date = input.parseDateTime(endTime);
     	endTime = date.toString(output);
     }
- 	Integer pollFrequency = oscar.Misc.getInt(request.getParameter("pollFrequency"), 30);
+ 	Integer pollFrequency = olisPreferences.getPollFrequency();
+ 	if(pollFrequency == null){
+ 		pollFrequency = 30;
+ 	}
+ 	
+ 	boolean filterPatients = olisPreferences.isFilterPatients();
+
 %>
 <security:oscarSec roleName="<%=roleName$%>"
 	objectName="_admin,_admin.misc" rights="r" reverse="<%=true%>">
