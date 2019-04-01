@@ -57,6 +57,27 @@ public final class PreventionReportUtil {
 		return (false);
 	}
 	
+	
+	
+	public static boolean wasEnrolledToThisProvider(LoggedInInfo loggedInInfo, Integer demographicId, Date onThisDate,String providerNo) {
+		logger.debug("Checking rosterd:" + demographicId+ " for this date "+onThisDate+" for this providerNo "+providerNo);
+		if(providerNo == null){
+			return false;
+		}
+		
+		
+		Demographic demographic = demographicManager.getDemographic(loggedInInfo, demographicId);
+
+		if (rosteredDuringThisTimeDemographic(onThisDate, demographic.getRosterDate(), demographic.getRosterTerminationDate()) && providerNo.equals(demographic.getRosterEnrolledTo())) return (true);
+
+		List<DemographicArchive> archives = demographicArchiveDao.findByDemographicNo(demographicId);
+		for (DemographicArchive archive : archives) {
+			if (rosteredDuringThisTimeDemographicArchive(onThisDate, archive.getRosterDate(), archive.getRosterTerminationDate()) && providerNo.equals(demographic.getRosterEnrolledTo())) return (true);
+		}
+
+		return (false);
+	}
+	
 	public static boolean wasRosteredToThisProvider(LoggedInInfo loggedInInfo, Integer demographicId, Date onThisDate,String providerNo) {
 		logger.debug("Checking rosterd:" + demographicId+ " for this date "+onThisDate+" for this providerNo "+providerNo);
 		if(providerNo == null){

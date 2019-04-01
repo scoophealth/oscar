@@ -23,6 +23,11 @@
     Ontario, Canada
 
 --%>
+<%@page import="org.codehaus.jettison.json.JSONObject"%>
+<%@page import="org.apache.commons.io.IOUtils"%>
+<%@page import="java.io.InputStream"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Date"%>
 <%@page import="org.oscarehr.managers.LookupListManager"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
@@ -151,6 +156,10 @@
 	    PatientConsentManager patientConsentManager = SpringUtils.getBean( PatientConsentManager.class );
 		pageContext.setAttribute( "consentTypes", patientConsentManager.getConsentTypes() );
 	}
+	
+	
+	SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+	String today = fmt.format(new Date());
 %>
 <html:html locale="true">
 <head>
@@ -173,6 +182,25 @@
   				if ( !isPostalCode() ) return false;
   			<% } %>
   
+  			var rosterStatus = document.adddemographic.roster_status.value;
+  			if(rosterStatus == 'RO') {
+  				var rosterEnrolledTo = document.adddemographic.roster_enrolled_to.value;
+  				var rosterDateYear = document.adddemographic.roster_date_year.value;
+  	  			var rosterDateMonth = document.adddemographic.roster_date_month.value;
+  	  			var rosterDateDate = document.adddemographic.roster_date_date.value;
+			
+  	  			if(rosterEnrolledTo == '') {
+  	  				alert('You must choose a valid Enrolled To physician');
+  	  				return false;
+  	  			}
+  	  			
+  	  			if(rosterDateYear == '' || rosterDateMonth == '' || rosterDateDate == '') {
+	  				alert('You must choose a valid Date Rostered');
+	  				return false;
+	  			}
+  				
+  			}
+  			
             return true;
         }        
         
@@ -590,6 +618,133 @@ function consentClearBtn(radioBtnName)
 
 	}
 }
+
+<%
+if("true".equals(OscarProperties.getInstance().getProperty("iso3166.2.enabled","false"))) { 	
+%>
+jQuery(document).ready(function(){
+	
+	jQuery("#country").bind('change',function(){
+		updateProvinces('');
+	});
+	
+	jQuery("#mailingCountry").bind('change',function(){
+		updateMailingProvinces('');
+	});
+	
+    jQuery.ajax({
+        type: "POST",
+        url:  '../demographicSupport.do',
+        data: 'method=getCountryAndProvinceCodes',
+        dataType: 'json',
+        success: function (data) {
+        	jQuery('#country').append(jQuery('<option>').text('').attr('value', ''));
+        	jQuery.each(data, function(i, value) {
+                 jQuery('#country').append(jQuery('<option>').text(value.label).attr('value', value.value));
+             });
+        	
+        	var defaultProvince = '<%=OscarProperties.getInstance().getProperty("demographic.default_province","")%>';
+        	var defaultCountry = '';
+        	
+        	if(defaultProvince == '' && defaultCountry == '') {
+        		defaultProvince = 'CA-ON';
+        	}
+        	defaultCountry = defaultProvince.substring(0,defaultProvince.indexOf('-'));
+        	
+        	jQuery("#country").val(defaultCountry);
+        	
+        	updateProvinces(defaultProvince);
+        	
+        }
+	});
+    
+    jQuery.ajax({
+        type: "POST",
+        url:  '../demographicSupport.do',
+        data: 'method=getCountryAndProvinceCodes',
+        dataType: 'json',
+        success: function (data) {
+        	jQuery('#mailingCountry').append(jQuery('<option>').text('').attr('value', ''));
+        	jQuery.each(data, function(i, value) {
+                 jQuery('#mailingCountry').append(jQuery('<option>').text(value.label).attr('value', value.value));
+             });
+        	
+        	var defaultProvince = '<%=OscarProperties.getInstance().getProperty("demographic.default_province","")%>';
+        	var defaultCountry = '';
+        	
+        	if(defaultProvince == '' && defaultCountry == '') {
+        		defaultProvince = 'CA-ON';
+        	}
+        	defaultCountry = defaultProvince.substring(0,defaultProvince.indexOf('-'));
+        	
+        	jQuery("#mailingCountry").val(defaultCountry);
+        	
+        	updateMailingProvinces(defaultProvince);
+        	
+        }
+	});
+    
+	
+	
+});
+
+
+function updateProvinces(province) {
+	var country = jQuery("#country").val();
+	
+	console.log('country=' + country);
+	
+	jQuery.ajax({
+        type: "POST",
+        url:  '../demographicSupport.do',
+        data: 'method=getCountryAndProvinceCodes&country=' + country,
+        dataType: 'json',
+        success: function (data) {
+        	jQuery('#province').empty();
+        	 
+        	jQuery.each(data, function(i, value) {
+                 jQuery('#province').append(jQuery('<option>').text(value.label).attr('value', value.value));
+             });
+        	
+        	
+        	if(province != null) {
+        		jQuery("#province").val(province);
+        	}
+        	
+        	
+        }
+	});
+}
+
+
+function updateMailingProvinces(province) {
+	var country = jQuery("#mailingCountry").val();
+	
+	
+	jQuery.ajax({
+        type: "POST",
+        url:  '../demographicSupport.do',
+        data: 'method=getCountryAndProvinceCodes&country=' + country,
+        dataType: 'json',
+        success: function (data) {
+        	jQuery('#mailingProvince').empty();
+        	 
+        	jQuery.each(data, function(i, value) {
+                 jQuery('#mailingProvince').append(jQuery('<option>').text(value.label).attr('value', value.value));
+             });
+        	
+        	
+        	if(province != null) {
+        		jQuery("#mailingProvince").val(province);
+        	}
+        	
+        	
+        }
+	});
+}
+<% }  %>
+
+
 </script>
 </head>
 <!-- Databases have alias for today. It is not necessary give the current date -->
@@ -693,6 +848,15 @@ function consentClearBtn(radioBtnName)
       </td>
     </tr>
     <tr>
+    	<td align="right"> <b><bean:message key="demographic.demographicaddrecordhtm.formMiddleNames"/>: </b></td>
+      <td id="lastName" align="left">
+        <input type="text" name="middleNames" id="middleNames" onBlur="upCaseCtrl(this)" size=50 value="">
+
+      </td>
+      <td align="right"></td>
+      <td id="lastName" align="left"></td>
+    </tr>
+    <tr>
 	<td id="languageLbl" align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgDemoLanguage"/><font color="red">:</font></b></td>
 	<td id="languageCell" align="left">
 	    <select id="official_lang" name="official_lang">
@@ -703,7 +867,7 @@ function consentClearBtn(radioBtnName)
 	<td id="titleLbl" align="right"><b><bean:message key="demographic.demographicaddrecordhtm.msgDemoTitle"/><font color="red">:</font></b></td>
 	<td id="titleCell" align="left">
 	    <select id="title" name="title" onchange="checkTitleSex(value);">
-                <option value=""><bean:message key="demographic.demographicaddrecordhtm.msgNotSet"/></option>
+                <option value=""><bean:message key="demographic.demographicaddrecordhtm.msgNotSet"/></option>                    
                 <option value="DR"><bean:message key="demographic.demographicaddrecordhtm.msgDr"/></option>
                 <option value="MS"><bean:message key="demographic.demographicaddrecordhtm.msgMs"/></option>
                 <option value="MISS"><bean:message key="demographic.demographicaddrecordhtm.msgMiss"/></option>
@@ -717,6 +881,21 @@ function consentClearBtn(radioBtnName)
                 <option value="SEN"><bean:message key="demographic.demographicaddrecordhtm.msgSen"/></option>
                 <option value="SGT"><bean:message key="demographic.demographicaddrecordhtm.msgSgt"/></option>
                 <option value="SR"><bean:message key="demographic.demographicaddrecordhtm.msgSr"/></option>
+                
+                 <option value="MADAM"><bean:message key="demographic.demographicaddrecordhtm.msgMadam"/></option>
+                 <option value="MME"><bean:message key="demographic.demographicaddrecordhtm.msgMme"/></option>
+                 <option value="MLLE"><bean:message key="demographic.demographicaddrecordhtm.msgMlle"/></option>
+                 <option value="MAJOR"><bean:message key="demographic.demographicaddrecordhtm.msgMajor"/></option>
+                 <option value="MAYOR"><bean:message key="demographic.demographicaddrecordhtm.msgMayor"/></option>
+                
+                 <option value="BRO"><bean:message key="demographic.demographicaddrecordhtm.msgBro"/></option>
+                 <option value="CAPT"><bean:message key="demographic.demographicaddrecordhtm.msgCapt"/></option>
+                 <option value="Chief"><bean:message key="demographic.demographicaddrecordhtm.msgChief"/></option>
+                 <option value="Cst"><bean:message key="demographic.demographicaddrecordhtm.msgCst"/></option>
+                 <option value="Corp"><bean:message key="demographic.demographicaddrecordhtm.msgCorp"/></option>
+                 <option value="FR"><bean:message key="demographic.demographicaddrecordhtm.msgFr"/></option>
+                 <option value="HON"><bean:message key="demographic.demographicaddrecordhtm.msgHon"/></option>
+                 <option value="LT"><bean:message key="demographic.demographicaddrecordhtm.msgLt"/></option>
 	    </select>
 	</td>
     </tr>
@@ -750,6 +929,14 @@ function consentClearBtn(radioBtnName)
           			out.print(oscarProps.getProperty("demographicLabelProvince"));
       	 		} %> : </b></td>
 				<td id="provCell" align="left">
+				<%
+					if("true".equals(OscarProperties.getInstance().getProperty("iso3166.2.enabled","false"))) { 	
+				%>
+					<select name="province" id="province"></select> 
+					<br/>
+					Filter by Country: <select name="country" id="country" ></select>
+							
+				<% } else  {  %>
 				<select id="province" name="province">
 					<option value="OT"
 						<%=defaultProvince.equals("")||defaultProvince.equals("OT")?" selected":""%>>Other</option>
@@ -833,6 +1020,7 @@ function consentClearBtn(radioBtnName)
 					<option value="US-WY" <%=defaultProvince.equals("US-WY")?" selected":""%>>US-WY-Wyoming</option>
 					<% } %>
 				</select>
+				<% } %>
 				</td>
 				<td id="postalLbl" align="right"><b> <% if(oscarProps.getProperty("demographicLabelPostal") == null) { %>
 				<bean:message key="demographic.demographicaddrecordhtm.formPostal" />
@@ -844,6 +1032,123 @@ function consentClearBtn(radioBtnName)
           out.print(oscarProps.getProperty("demographicLabelPostal"));
       	 } %> : </b></td>
 				<td id="postalCell" align="left"><input type="text" id="postal" name="postal"
+					onBlur="upCaseCtrl(this)"></td>
+			</tr>
+			
+			
+			<tr valign="top">
+				<td id="addrLbl" align="right"><b><bean:message
+					key="demographic.demographicaddrecordhtm.formMailingAddress" />: </b></td>
+				<td id="addressCell" align="left"><input id="mailingAddress" type="text" name="mailingAddress" size=40 />
+
+				</td>
+				<td id="cityLbl" align="right"><b><bean:message
+					key="demographic.demographicaddrecordhtm.formMailingCity" />: </b></td>
+				<td id="cityCell" align="left"><input type="text" id="mailingCity" name="mailingCity"
+					value="" /></td>
+			</tr>
+			
+			<tr valign="top">
+				<td id="provLbl" align="right"><b> 
+				<bean:message key="demographic.demographicaddrecordhtm.formMailingProvince" />  : </b></td>
+				<td id="provCell" align="left">
+				<%
+					if("true".equals(OscarProperties.getInstance().getProperty("iso3166.2.enabled","false"))) { 	
+				%>
+					<select name="mailingProvince" id="mailingProvince"></select> 
+					<br/>
+					Filter by Country: <select name="mailingCountry" id="mailingCountry" ></select>
+							
+				<% } else { %>			
+				<select id="mailingProvince" name="mailingProvince">
+					<option value="OT"
+						<%=defaultProvince.equals("")||defaultProvince.equals("OT")?" selected":""%>>Other</option>
+					<%-- <option value="">None Selected</option> --%>
+					<% if (pNames.isDefined()) {
+                   for (ListIterator li = pNames.listIterator(); li.hasNext(); ) {
+                       String province = (String) li.next(); %>
+					<option value="<%=province%>"
+						<%=province.equals(defaultProvince)?" selected":""%>><%=li.next()%></option>
+					<% } %>
+					<% } else { %>
+					<option value="AB" <%=defaultProvince.equals("AB")?" selected":""%>>AB-Alberta</option>
+					<option value="BC" <%=defaultProvince.equals("BC")?" selected":""%>>BC-British Columbia</option>
+					<option value="MB" <%=defaultProvince.equals("MB")?" selected":""%>>MB-Manitoba</option>
+					<option value="NB" <%=defaultProvince.equals("NB")?" selected":""%>>NB-New Brunswick</option>
+					<option value="NL" <%=defaultProvince.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
+					<option value="NT" <%=defaultProvince.equals("NT")?" selected":""%>>NT-Northwest Territory</option>
+					<option value="NS" <%=defaultProvince.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
+					<option value="NU" <%=defaultProvince.equals("NU")?" selected":""%>>NU-Nunavut</option>
+					<option value="ON" <%=defaultProvince.equals("ON")?" selected":""%>>ON-Ontario</option>
+					<option value="PE" <%=defaultProvince.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
+					<option value="QC" <%=defaultProvince.equals("QC")?" selected":""%>>QC-Quebec</option>
+					<option value="SK" <%=defaultProvince.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
+					<option value="YT" <%=defaultProvince.equals("YT")?" selected":""%>>YT-Yukon</option>
+					<option value="US" <%=defaultProvince.equals("US")?" selected":""%>>US resident</option>
+					<option value="US-AK" <%=defaultProvince.equals("US-AK")?" selected":""%>>US-AK-Alaska</option>
+					<option value="US-AL" <%=defaultProvince.equals("US-AL")?" selected":""%>>US-AL-Alabama</option>
+					<option value="US-AR" <%=defaultProvince.equals("US-AR")?" selected":""%>>US-AR-Arkansas</option>
+					<option value="US-AZ" <%=defaultProvince.equals("US-AZ")?" selected":""%>>US-AZ-Arizona</option>
+					<option value="US-CA" <%=defaultProvince.equals("US-CA")?" selected":""%>>US-CA-California</option>
+					<option value="US-CO" <%=defaultProvince.equals("US-CO")?" selected":""%>>US-CO-Colorado</option>
+					<option value="US-CT" <%=defaultProvince.equals("US-CT")?" selected":""%>>US-CT-Connecticut</option>
+					<option value="US-CZ" <%=defaultProvince.equals("US-CZ")?" selected":""%>>US-CZ-Canal Zone</option>
+					<option value="US-DC" <%=defaultProvince.equals("US-DC")?" selected":""%>>US-DC-District Of Columbia</option>
+					<option value="US-DE" <%=defaultProvince.equals("US-DE")?" selected":""%>>US-DE-Delaware</option>
+					<option value="US-FL" <%=defaultProvince.equals("US-FL")?" selected":""%>>US-FL-Florida</option>
+					<option value="US-GA" <%=defaultProvince.equals("US-GA")?" selected":""%>>US-GA-Georgia</option>
+					<option value="US-GU" <%=defaultProvince.equals("US-GU")?" selected":""%>>US-GU-Guam</option>
+					<option value="US-HI" <%=defaultProvince.equals("US-HI")?" selected":""%>>US-HI-Hawaii</option>
+					<option value="US-IA" <%=defaultProvince.equals("US-IA")?" selected":""%>>US-IA-Iowa</option>
+					<option value="US-ID" <%=defaultProvince.equals("US-ID")?" selected":""%>>US-ID-Idaho</option>
+					<option value="US-IL" <%=defaultProvince.equals("US-IL")?" selected":""%>>US-IL-Illinois</option>
+					<option value="US-IN" <%=defaultProvince.equals("US-IN")?" selected":""%>>US-IN-Indiana</option>
+					<option value="US-KS" <%=defaultProvince.equals("US-KS")?" selected":""%>>US-KS-Kansas</option>
+					<option value="US-KY" <%=defaultProvince.equals("US-KY")?" selected":""%>>US-KY-Kentucky</option>
+					<option value="US-LA" <%=defaultProvince.equals("US-LA")?" selected":""%>>US-LA-Louisiana</option>
+					<option value="US-MA" <%=defaultProvince.equals("US-MA")?" selected":""%>>US-MA-Massachusetts</option>
+					<option value="US-MD" <%=defaultProvince.equals("US-MD")?" selected":""%>>US-MD-Maryland</option>
+					<option value="US-ME" <%=defaultProvince.equals("US-ME")?" selected":""%>>US-ME-Maine</option>
+					<option value="US-MI" <%=defaultProvince.equals("US-MI")?" selected":""%>>US-MI-Michigan</option>
+					<option value="US-MN" <%=defaultProvince.equals("US-MN")?" selected":""%>>US-MN-Minnesota</option>
+					<option value="US-MO" <%=defaultProvince.equals("US-MO")?" selected":""%>>US-MO-Missouri</option>
+					<option value="US-MS" <%=defaultProvince.equals("US-MS")?" selected":""%>>US-MS-Mississippi</option>
+					<option value="US-MT" <%=defaultProvince.equals("US-MT")?" selected":""%>>US-MT-Montana</option>
+					<option value="US-NC" <%=defaultProvince.equals("US-NC")?" selected":""%>>US-NC-North Carolina</option>
+					<option value="US-ND" <%=defaultProvince.equals("US-ND")?" selected":""%>>US-ND-North Dakota</option>
+					<option value="US-NE" <%=defaultProvince.equals("US-NE")?" selected":""%>>US-NE-Nebraska</option>
+					<option value="US-NH" <%=defaultProvince.equals("US-NH")?" selected":""%>>US-NH-New Hampshire</option>
+					<option value="US-NJ" <%=defaultProvince.equals("US-NJ")?" selected":""%>>US-NJ-New Jersey</option>
+					<option value="US-NM" <%=defaultProvince.equals("US-NM")?" selected":""%>>US-NM-New Mexico</option>
+					<option value="US-NU" <%=defaultProvince.equals("US-NU")?" selected":""%>>US-NU-Nunavut</option>
+					<option value="US-NV" <%=defaultProvince.equals("US-NV")?" selected":""%>>US-NV-Nevada</option>
+					<option value="US-NY" <%=defaultProvince.equals("US-NY")?" selected":""%>>US-NY-New York</option>
+					<option value="US-OH" <%=defaultProvince.equals("US-OH")?" selected":""%>>US-OH-Ohio</option>
+					<option value="US-OK" <%=defaultProvince.equals("US-OK")?" selected":""%>>US-OK-Oklahoma</option>
+					<option value="US-OR" <%=defaultProvince.equals("US-OR")?" selected":""%>>US-OR-Oregon</option>
+					<option value="US-PA" <%=defaultProvince.equals("US-PA")?" selected":""%>>US-PA-Pennsylvania</option>
+					<option value="US-PR" <%=defaultProvince.equals("US-PR")?" selected":""%>>US-PR-Puerto Rico</option>
+					<option value="US-RI" <%=defaultProvince.equals("US-RI")?" selected":""%>>US-RI-Rhode Island</option>
+					<option value="US-SC" <%=defaultProvince.equals("US-SC")?" selected":""%>>US-SC-South Carolina</option>
+					<option value="US-SD" <%=defaultProvince.equals("US-SD")?" selected":""%>>US-SD-South Dakota</option>
+					<option value="US-TN" <%=defaultProvince.equals("US-TN")?" selected":""%>>US-TN-Tennessee</option>
+					<option value="US-TX" <%=defaultProvince.equals("US-TX")?" selected":""%>>US-TX-Texas</option>
+					<option value="US-UT" <%=defaultProvince.equals("US-UT")?" selected":""%>>US-UT-Utah</option>
+					<option value="US-VA" <%=defaultProvince.equals("US-VA")?" selected":""%>>US-VA-Virginia</option>
+					<option value="US-VI" <%=defaultProvince.equals("US-VI")?" selected":""%>>US-VI-Virgin Islands</option>
+					<option value="US-VT" <%=defaultProvince.equals("US-VT")?" selected":""%>>US-VT-Vermont</option>
+					<option value="US-WA" <%=defaultProvince.equals("US-WA")?" selected":""%>>US-WA-Washington</option>
+					<option value="US-WI" <%=defaultProvince.equals("US-WI")?" selected":""%>>US-WI-Wisconsin</option>
+					<option value="US-WV" <%=defaultProvince.equals("US-WV")?" selected":""%>>US-WV-West Virginia</option>
+					<option value="US-WY" <%=defaultProvince.equals("US-WY")?" selected":""%>>US-WY-Wyoming</option>
+					<% } %>
+				</select>
+				<% } %>
+				</td>
+				<td id="postalLbl" align="right"><b>
+				<bean:message key="demographic.demographicaddrecordhtm.formMailingPostal" />
+				 : </b></td>
+				<td id="postalCell" align="left"><input type="text" id="mailingPostal" name="mailingPostal"
 					onBlur="upCaseCtrl(this)"></td>
 			</tr>
 
@@ -1290,9 +1595,12 @@ document.forms[1].r_doctor_ohip.value = refNo;
 				<select id="roster_status"  name="roster_status" style="width: 160">
 					<option value=""></option>
 					<option value="RO"><bean:message key="demographic.demographicaddrecordhtm.RO-rostered" /></option>
+<!-- 
 					<option value="NR"><bean:message key="demographic.demographicaddrecordhtm.NR-notrostered" /></option>
 					<option value="TE"><bean:message key="demographic.demographicaddrecordhtm.TE-terminated" /></option>
+-->
 					<option value="FS"><bean:message key="demographic.demographicaddrecordhtm.FS-feeforservice" /></option>
+
 					<% 
 					for(String status : demographicDao.getRosterStatuses()) {%>
 					<option value="<%=status%>"><%=status%></option>
@@ -1305,6 +1613,29 @@ document.forms[1].r_doctor_ohip.value = refNo;
 					size="4" maxlength="4"> <input type="text"
 					name="roster_date_month" size="2" maxlength="2"> <input
 					type="text" name="roster_date_date" size="2" maxlength="2">
+				</td>
+			</tr>
+			<tr valign="top">
+				<td align="right" id="rosterEnrolledToLbl" nowrap><b><bean:message
+					key="demographic.demographicaddrecordhtm.formRosterEnrolledTo" />: </b></td>
+				<td id="rosterEnrolledTo" align="left"><!--input type="text" name="roster_status" onBlur="upCaseCtrl(this)"-->
+				<select id="roster_enrolled_to"  name="roster_enrolled_to" style="width: 160">
+					<option value=""></option>
+					<%
+						for (Provider p : providerDao.getActiveProvidersByRole("doctor")) {
+								String docProviderNo = p.getProviderNo();
+					%>
+					<option id="<%=docProviderNo%>" value="<%=docProviderNo%>"><%=Misc.getShortStr((p.getFormattedName()), "", 12)%></option>
+					<%
+						}
+					%>
+					<option value=""></option>
+				</td>
+				<td id="chartNoLbl" align="right"><b><bean:message
+					key="demographic.demographicaddrecordhtm.formChartNo" />:</b></td>
+				<td id="chartNo" align="left"><input type="text" id="chart_no" name="chart_no" value="<%=StringEscapeUtils.escapeHtml(chartNoVal)%>">
+				</td>
+				<td id="rosterDateCell" align="left">
 				</td>
 			</tr>
 			<tr valign="top">
@@ -1325,9 +1656,14 @@ document.forms[1].r_doctor_ohip.value = refNo;
 					key="demographic.demographicaddrecordhtm.AddNewPatient"/> ">
 				
 				</td>
-				<td id="chartNoLbl" align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formChartNo" />:</b></td>
-				<td id="chartNo" align="left"><input type="text" id="chart_no" name="chart_no" value="<%=StringEscapeUtils.escapeHtml(chartNoVal)%>">
+				<td align="right" nowrap>
+					<b>Patient Status Date:</b>
+				</td>
+				<td align="left">
+					<input type="text"
+							name="patient_status_date" id="patient_status_date"
+							value="<%=today %>" size="12"> <img
+							src="../images/cal.gif" id="patient_status_date_cal">(yyyy-mm-dd)
 				</td>
 			</tr>
 			
@@ -1714,6 +2050,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 
 <script type="text/javascript">
 Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "patient_status_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "patient_status_date_cal", singleClick : true, step : 1 });
 
 <%
 if (privateConsentEnabled) {

@@ -23,57 +23,32 @@
  */
 package org.oscarehr.ws.rest;
 
-import java.math.BigInteger;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import org.apache.log4j.Logger;
 import org.apache.tools.ant.util.DateUtils;
+import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
-import org.oscarehr.common.model.Appointment;
-import org.oscarehr.common.model.AppointmentStatus;
-import org.oscarehr.common.model.AppointmentType;
-import org.oscarehr.common.model.LookupListItem;
+import org.oscarehr.common.model.*;
 import org.oscarehr.managers.AppointmentManager;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.ScheduleManager;
-import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.web.PatientListApptBean;
 import org.oscarehr.web.PatientListApptItemBean;
-import org.oscarehr.ws.rest.conversion.AppointmentConverter;
-import org.oscarehr.ws.rest.conversion.AppointmentStatusConverter;
-import org.oscarehr.ws.rest.conversion.AppointmentTypeConverter;
-import org.oscarehr.ws.rest.conversion.LookupListItemConverter;
-import org.oscarehr.ws.rest.conversion.NewAppointmentConverter;
-import org.oscarehr.ws.rest.to.AbstractSearchResponse;
-import org.oscarehr.ws.rest.to.AppointmentExtResponse;
-import org.oscarehr.ws.rest.to.ProviderApptsCountResponse;
-import org.oscarehr.ws.rest.to.ProviderPeriodAppsResponse;
-import org.oscarehr.ws.rest.to.SchedulingResponse;
-import org.oscarehr.ws.rest.to.model.AppointmentExtTo;
-import org.oscarehr.ws.rest.to.model.AppointmentStatusTo1;
-import org.oscarehr.ws.rest.to.model.AppointmentTo1;
-import org.oscarehr.ws.rest.to.model.NewAppointmentTo1;
-import org.oscarehr.ws.rest.to.model.ProviderApptsCountTo;
-import org.oscarehr.ws.rest.to.model.ProviderPeriodAppsTo;
+import org.oscarehr.ws.rest.conversion.*;
+import org.oscarehr.ws.rest.to.*;
+import org.oscarehr.ws.rest.to.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Path("/schedule")
 @Component("scheduleService")
@@ -88,7 +63,7 @@ public class ScheduleService extends AbstractServiceImpl {
 	@Autowired
 	private DemographicManager demographicManager;
 	@Autowired
-	private SecurityInfoManager securityInfoManager;
+	private BillingONCHeader1Dao billingONCHeader1Dao;
 
 	@GET
 	@Path("/day/{date}")
@@ -228,17 +203,48 @@ public class ScheduleService extends AbstractServiceImpl {
 
 	@POST
 	@Path("/{demographicNo}/appointmentHistory")
+	@Consumes("application/json")
 	@Produces("application/json")
 	public SchedulingResponse findExistAppointments(@PathParam("demographicNo") Integer demographicNo) {
+		SchedulingResponse response = new SchedulingResponse();
+		List<AppointmentTo1> appts = getAppointmentHistoryWithoutDeleted(demographicNo);
+
+		Map<Integer, BillingDetailTo1> apptIdBillingMap = getAppointmentIdToBillingDetailMap(demographicNo);
+
+		for (AppointmentTo1 appt: appts) {
+			if (apptIdBillingMap.containsKey(appt.getId())) {
+				appt.setBillingDetail(apptIdBillingMap.get(appt.getId()));
+			}
+		}
+
+		response.setAppointments(appts);
+		return response;
+	}
+
+	private Map<Integer, BillingDetailTo1> getAppointmentIdToBillingDetailMap(Integer demographicNo) {
+		List<BillingONCHeader1> billingHeaders = billingONCHeader1Dao.findByDemoNo(demographicNo, 0, OscarAppointmentDao.MAX_LIST_RETURN_SIZE);
+		if(billingHeaders.size() == OscarAppointmentDao.MAX_LIST_RETURN_SIZE) {
+			logger.warn("Billing history over MAX_LIST_RETURN_SIZE for demographic " + demographicNo);
+		}
+
+		BillingDetailConverter converter = new BillingDetailConverter();
+		List<BillingDetailTo1> billingDetails = converter.getAllAsTransferObjects(getLoggedInInfo(), billingHeaders);
+
+		Map<Integer, BillingDetailTo1> apptIdBillingMap = new HashMap<Integer, BillingDetailTo1>();
+		for (BillingDetailTo1 billingDetail: billingDetails) {
+			apptIdBillingMap.put(billingDetail.getAppointmentNo(), billingDetail);
+		}
+		return apptIdBillingMap;
+	}
+
+	private List<AppointmentTo1> getAppointmentHistoryWithoutDeleted(Integer demographicNo) {
 		SchedulingResponse response = new SchedulingResponse();
 		List<Appointment> appts = appointmentManager.getAppointmentHistoryWithoutDeleted(getLoggedInInfo(), demographicNo, 0, OscarAppointmentDao.MAX_LIST_RETURN_SIZE);
 		if(appts.size() == OscarAppointmentDao.MAX_LIST_RETURN_SIZE) {
 			logger.warn("appointment history over MAX_LIST_RETURN_SIZE for demographic " + demographicNo);
 		}
 		AppointmentConverter converter = new AppointmentConverter();
-		response.setAppointments(converter.getAllAsTransferObjects(getLoggedInInfo(), appts));
-		
-		return response;
+		return converter.getAllAsTransferObjects(getLoggedInInfo(), appts);
 	}
 
 	@POST

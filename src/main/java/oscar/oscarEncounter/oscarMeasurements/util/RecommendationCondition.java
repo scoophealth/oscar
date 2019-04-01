@@ -98,7 +98,7 @@ public class RecommendationCondition {
 
                 int lt = Integer.parseInt(toParse);
                 list.add(new DSCondition("getLastDateRecordedInMonths", param, "<=", ""+lt));
-            }else if (!toParse.equals("")){ // less than style
+            }else if (!toParse.equals("")){ // equal style
                 int eq = Integer.parseInt(toParse.trim());
                 list.add(new DSCondition("getLastDateRecordedInMonths", param, "==", ""+eq));
             }
@@ -123,11 +123,11 @@ public class RecommendationCondition {
 
                 int lt = Integer.parseInt(toParse);
                 list.add(new DSCondition("getLastValueAsInt", param, "<=", ""+lt));
-            }else if (toParse.indexOf("!=") != -1 ){ // less than style
+            }else if (toParse.indexOf("!=") != -1 ){ // not equal style
                 toParse = toParse.replaceFirst("!=","");
                 int eq = Integer.parseInt(toParse);
                 list.add(new DSCondition("getLastValueAsInt", param, "!=", ""+eq));
-            }else if (!toParse.equals("")){ // less than style
+            }else if (!toParse.equals("")){ // equal style
                 int eq = Integer.parseInt(toParse);
                 list.add(new DSCondition("getLastValueAsInt", param, "==", ""+eq));
             }
@@ -152,12 +152,12 @@ public class RecommendationCondition {
                 int lt = Integer.parseInt(toParse);
                 list.add(new DSCondition("getAge", "", "<=", ""+lt));
                 
-            }else if (toParse.indexOf("!=") != -1 ){ // less than style
+            }else if (toParse.indexOf("!=") != -1 ){ // not equal style
                 toParse = toParse.replaceFirst("!=","");
                 int eq = Integer.parseInt(toParse);
                 list.add(new DSCondition("getAge", "", "!=", ""+eq));
                 
-            }else if (!toParse.equals("")){ // less than style
+            }else if (!toParse.equals("")){ // equal style
                 int eq = Integer.parseInt(toParse);
                 list.add(new DSCondition("getAge", "", "==", ""+eq));
             }
@@ -193,7 +193,7 @@ public class RecommendationCondition {
                 toParse = toParse.replaceFirst("<","");
                 double lt = Double.parseDouble(toParse.trim());
                 list.add(new DSCondition("getDataAsDouble", "", "<=", ""+lt));
-            }else if (!toParse.equals("")){ // less than style
+            }else if (!toParse.equals("")){
                 double eq = Double.parseDouble(toParse.trim());
                 list.add(new DSCondition("getDataAsDouble", "", "==", ""+eq));
             }
@@ -250,7 +250,7 @@ public class RecommendationCondition {
                         toParse = toParse.replaceFirst("<","");
                         int lt = Integer.parseInt(toParse);
                         list.add(new DSCondition("getNumberFromSplit(\"/\","+i+")", param, "<=", ""+lt));
-                    }else if (!toParse.equals("")){ // less than style
+                    }else if (!toParse.equals("")){
                         int eq = Integer.parseInt(toParse);
                         list.add(new DSCondition("getNumberFromSplit(\"/\","+i+")", param, "==", ""+eq));
                     }

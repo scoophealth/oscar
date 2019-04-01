@@ -46,6 +46,7 @@ public class NoteExtTo1 implements Serializable{
 	public static String LIFESTAGE	    = "Life Stage"	;
 	public static String HIDECPP	    = "Hide Cpp"	;
 	public static String PROBLEMDESC    = "Problem Description";
+	public static String PROCEDURE    = "Procedure";
         
 		
 	//Class fields
@@ -68,6 +69,7 @@ public class NoteExtTo1 implements Serializable{
 	private String lifeStage;
 	private String hideCpp;
 	private String problemDesc;
+	private String procedure;
 	
 	public Long getId() {
 	    return this.id;
@@ -188,6 +190,13 @@ public class NoteExtTo1 implements Serializable{
 	public void setProblemDesc(String problemDesc) {
 	    this.problemDesc = problemDesc;
     }
+	public String getProcedure() {
+		return procedure;
+	}
+	public void setProcedure(String procedure) {
+		this.procedure = procedure;
+	}
+	
 	
 		
 }

@@ -73,6 +73,7 @@ String ageOfOnset = new String();
 String lifeStage = new String();
 String severity = new String();
 String onsetOfReaction = new String();
+Boolean nonDrug = null;
 
 if (allergyToArchive!=null && !allergyToArchive.isEmpty()) {
 	org.oscarehr.common.model.Allergy a = patient.getAllergy(Integer.parseInt(allergyToArchive));
@@ -83,6 +84,7 @@ if (allergyToArchive!=null && !allergyToArchive.isEmpty()) {
 		lifeStage = a.getLifeStage();
 		severity = a.getSeverityOfReaction();
 		onsetOfReaction = a.getOnsetOfReaction();
+		nonDrug = a.isNonDrug();
 	}
 	if (a.getArchived() && nkdaId!=null) allergyToArchive = nkdaId;
 } else {
@@ -93,6 +95,7 @@ boolean isNKDA = "No Known Drug Allergies".equals(name);
 %>
 
 <link rel="stylesheet" type="text/css" href="styles.css">
+
 </head>
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
 
@@ -152,6 +155,17 @@ boolean isNKDA = "No Known Drug Allergies".equals(name);
 							}
 						}
 						
+						function doSubmit() {
+							
+							if(document.forms.RxAddAllergyForm.nonDrug.value == '') {
+								alert("Please choose value for non-drug");
+								return false;
+							}
+							
+							confirmRemoveNKDA();
+							
+							return true;
+						}
 						function confirmRemoveNKDA() {
 <% if (nkdaId!=null && !nkdaId.isEmpty()) { %>
 							if (<%=nkdaId%>>0) {
@@ -177,18 +191,9 @@ boolean isNKDA = "No Known Drug Allergies".equals(name);
 								<html:hidden property="allergyToArchive" value="<%=allergyToArchive%>" />
 							</td>
 						</tr>
-<% if ((type.equals("0") || type.equals("-1")) && !isNKDA) { %>
-						<tr valign="center">
-							<td> <span class="label">Custom Allergy Type:</span> 
-	                                <html:select property="type" value="<%=type%>">
-	                                	<html:option value="0">Allergy</html:option>
-	                                	<html:option value="-1">Intolerance</html:option>
-	                                </html:select>
-	                        </td>
-						</tr>
-<% } else { %>
+
 						<html:hidden property="type" value="<%=type%>" />
-<% } %>
+
 						<tr valign="center">
 							<td>
 								<link rel="stylesheet" type="text/css" media="all" href="<%= request.getContextPath() %>/share/calendar/calendar.css" title="win2k-cold-1" />
@@ -236,6 +241,7 @@ boolean isNKDA = "No Known Drug Allergies".equals(name);
 								<html:option value="1">Mild</html:option>
 								<html:option value="2">Moderate</html:option>
 								<html:option value="3">Severe</html:option>
+								<html:option value="5">No Reaction</html:option>
 							</html:select></td>
 						</tr>
 
@@ -248,12 +254,29 @@ boolean isNKDA = "No Known Drug Allergies".equals(name);
 								<html:option value="3">Slow</html:option>
 							</html:select></td>
 						</tr>
+						
+						<%if(drugrefId == null || "0".equals(drugrefId) || "null".equals(drugrefId)){ %>
+						<tr valign="center">
+							<td><span class="label">Non Drug:</span>
+							<select name="nonDrug" id="nonDrug">
+								<option value="">Select Below</option>
+								<option value="on" <%=nonDrug != null && nonDrug.booleanValue() == true?" selected=\"selected\" ":""%>>Allergy to non-drug substance</option>
+								<option value="off" <%=nonDrug != null && nonDrug.booleanValue() == false?" selected=\"selected\" ":""%>>Adverse reaction to drug</option>
+								
+							</select>
+							</td>
+						</tr>
+						
+					
+						<%} %>
+						
+						
 <% } %>
 
 						<tr>
 							<td>
 								<html:submit property="submit" value="Add Allergy" styleClass="ControlPushButton"
-									onclick="confirmRemoveNKDA()" />
+									onclick="return doSubmit()" />
 								<input type=button class="ControlPushButton" id="cancelAddReactionButton"
 									onclick="window.location='ShowAllergies2.jsp?demographicNo=<%=bean.getDemographicNo() %>'"
 									value="Cancel" />

@@ -32,14 +32,20 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.olis.dao.OLISProviderPreferencesDao;
+import org.oscarehr.olis.model.OLISProviderPreferences;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 public class OlisPreferencesAction extends DispatchAction {
 
 	private UserPropertyDAO dao = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+	private OLISProviderPreferencesDao olisProviderPreferencesDao = SpringUtils.getBean(OLISProviderPreferencesDao.class);
 	
 	@Override	   
 	public ActionForward unspecified(ActionMapping mapping, ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {		   
@@ -56,13 +62,24 @@ public class OlisPreferencesAction extends DispatchAction {
 		prop = dao.getProp(providerNo, "olis_exreportingLab");
 		if(prop != null)
 			request.setAttribute("excludeReportingLaboratory", prop.getValue());
+		
+		prop = dao.getProp(providerNo, "olis_polling_frequency");
+		if(prop != null)
+			request.setAttribute("pollingFrequency", prop.getValue());
 
+		OLISProviderPreferences olisPref = olisProviderPreferencesDao.findById(providerNo);
+		if(olisPref != null) {
+			request.setAttribute("olis_provider_start_time", olisPref.getStartTime());
+		}
+		
 		return mapping.findForward("form");	   
 	}
 	
 	public ActionForward save(ActionMapping mapping, ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {
 		String reportingLab = request.getParameter("reportingLaboratory");
 		String excludeReportingLab = request.getParameter("excludeReportingLaboratory");
+		String pollingFrequency = request.getParameter("pollingFrequency");
+		String providerStartTime = request.getParameter("providerStartTime");
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		String providerNo=loggedInInfo.getLoggedInProviderNo();
 		
@@ -87,6 +104,42 @@ public class OlisPreferencesAction extends DispatchAction {
 			prop.setValue(excludeReportingLab);
 			dao.saveProp(prop);
 		}
+		
+		if(pollingFrequency != null ) {
+			UserProperty prop = dao.getProp(providerNo, "olis_polling_frequency");
+			if(prop == null) {
+				prop = new UserProperty();
+				prop.setName("olis_polling_frequency");
+				prop.setProviderNo(providerNo);				
+			}
+			prop.setValue(pollingFrequency);
+			dao.saveProp(prop);
+		}
+		
+		if(providerStartTime != null) {
+			//validate the time
+			DateTimeFormatter input = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss Z");
+	     	DateTimeFormatter output = DateTimeFormat.forPattern("YYYYMMddHHmmssZ");
+	     	try {
+	     		DateTime date = input.parseDateTime(providerStartTime);
+	     		providerStartTime = date.toString(output);
+	     		OLISProviderPreferences pref = olisProviderPreferencesDao.findById(providerNo);
+	     		if(pref == null) {
+	     			pref = new OLISProviderPreferences();
+	     			pref.setProviderId(providerNo);
+	     			pref.setStartTime(providerStartTime);
+	     			olisProviderPreferencesDao.persist(pref);
+	     		} else {
+	     			pref.setStartTime(providerStartTime);
+	     			olisProviderPreferencesDao.merge(pref);
+	     		}
+	     		
+	     	}catch(RuntimeException e) {
+	     		
+	     	}
+	     	
+		}
+		
 		
 		return view(mapping,actionform,request,response);
 	}

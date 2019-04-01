@@ -1014,6 +1014,14 @@ public class NotesService extends AbstractServiceImpl {
 			caseManagementMgr.saveNoteExt(cme);
 		}
 		
+		if(noteExt.getProcedure()!=null){
+			cme.setNoteId(newNoteId);
+			cme.setKeyVal(NoteExtTo1.PROCEDURE);
+			cme.setDateValue((Date) null);
+			cme.setValue(noteExt.getProcedure());
+			caseManagementMgr.saveNoteExt(cme);
+		}
+		
 		/* save extra fields */				
 		noteIssue.setEncounterNote(note);	
 		noteIssue.setGroupNoteExt(noteExt);

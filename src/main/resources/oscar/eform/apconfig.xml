@@ -37,6 +37,13 @@
         <archive>demographic</archive>
     </databaseap>
     <databaseap>
+        <ap-name>patient_nameM</ap-name>
+        <ap-sql>SELECT middleNames FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${middleNames}</ap-output>
+        <ap-insql>UPDATE demographic SET middleNames='${value}' WHERE demographic_no=${demographic}</ap-insql>
+        <archive>demographic</archive>
+    </databaseap>
+    <databaseap>
         <ap-name>patient_alias</ap-name>
         <ap-sql>SELECT alias FROM demographic WHERE demographic_no=${demographic}</ap-sql>
         <ap-output>${alias}</ap-output>
@@ -59,14 +66,20 @@
         <ap-output>${last_name}, ${first_name} \n${address}, ${city}, ${province} ${postal} \nTel:${phone}(H)  ${phone2}(W) \n${date_of_birth}/${month_of_birth}/${year_of_birth}(${sex})  HIN:${hin}${ver}</ap-output>
     </databaseap>
     <databaseap>
+		<ap-name>mailing_address</ap-name>
+		<ap-sql>SELECT IF(LENGTH(mailingAddress)>1, mailingAddress, address) as adr, IF(LENGTH(mailingCity)>1,mailingCity,city) as cit, RIGHT(IF(LENGTH(mailingProvince)>1,mailingProvince,province),2) as pro, IF(LENGTH(mailingPostal)>1,mailingPostal,postal) as pos, IF(LEFT(IF(LENGTH(mailingProvince)>1,mailingProvince,province),2)="CA","Canada",LEFT(IF(LENGTH(mailingProvince)>1,mailingProvince,province),2)) as country FROM demographic WHERE demographic_no=${demographic}
+		</ap-sql>
+		<ap-output>${adr} \n${cit}, ${pro}, ${pos}\n${country}</ap-output>
+	</databaseap>
+    <databaseap>
         <ap-name>address</ap-name>
-        <ap-sql>SELECT * FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-        <ap-output>${address} \n${city}, ${province}, ${postal}</ap-output>
+	<ap-sql>SELECT address, city, RIGHT(province,2) AS pro, postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${address} \n${city}, ${pro}, ${postal}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>addressline</ap-name>
-        <ap-sql>SELECT address, city, province, postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-        <ap-output>${address}, ${city}, ${province}, ${postal}</ap-output>
+	<ap-sql>SELECT address, city, RIGHT(province,2) AS pro, postal FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${address}, ${city}, ${pro}, ${postal}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>address_street_number_and_name</ap-name>
@@ -75,8 +88,8 @@
     </databaseap>
     <databaseap>
         <ap-name>province</ap-name>
-        <ap-sql>SELECT province FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-        <ap-output>${province}</ap-output>
+	<ap-sql>SELECT RIGHT(province,2) AS pro FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+        <ap-output>${pro}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>city</ap-name>
@@ -666,6 +679,16 @@
         <ap-sql>SELECT provider.first_name, provider.last_name FROM provider WHERE provider.provider_no='${provider}' </ap-sql>
         <ap-output>${last_name}, ${first_name}</ap-output>
     </databaseap>
+     <databaseap>
+        <ap-name>current_user_fname</ap-name>
+        <ap-sql>SELECT provider.first_name FROM provider WHERE provider.provider_no='${provider}' </ap-sql>
+        <ap-output>${first_name}</ap-output>
+    </databaseap>
+     <databaseap>
+        <ap-name>current_user_lname</ap-name>
+        <ap-sql>SELECT  provider.last_name FROM provider WHERE provider.provider_no='${provider}' </ap-sql>
+        <ap-output>${last_name}</ap-output>
+    </databaseap>
     <databaseap>
         <ap-name>current_user_fname_lname</ap-name>
         <ap-sql>SELECT provider.first_name, provider.last_name FROM provider WHERE provider.provider_no='${provider}' </ap-sql>
@@ -1187,391 +1210,391 @@
 <!-- PREVENTIONS -->
     <databaseap>
         <ap-name>bcg_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'BCG' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'BCG' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>rmenb_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where (p.prevention_type = 'r' OR p.prevention_type = 'BEXSERO') and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where (p.prevention_type = 'r' OR p.prevention_type = 'BEXSERO') and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>cholera_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'CHOLERA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'CHOLERA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>chol_ecol_o_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Chol-Ecol-O ' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Chol-Ecol-O ' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>dpt_polio_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DPT POLIO' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'DPT POLIO' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>dptp_hib_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DPTP-Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'DPTP-Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>dt_ipv_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DT-IPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'DT-IPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>dtap_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DTaP' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'DTaP' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>dtap_hbv_ipv_hib_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DTaP-HBV-IPV-Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'DTaP-HBV-IPV-Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>dtap_hib_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DTaP-Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'DTaP-Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>dtap_ipv_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DTaP-IPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'DTaP-IPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>dtap_ipv_hb_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DTaP-IPV-HB' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'DTaP-IPV-HB' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap> 
     <databaseap>
         <ap-name>dtap_ipv_hib_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DTaP-IPV-Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'DTaP-IPV-Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>dtap_ipv_hib_hb_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'DTaP-IPV-Hib-HB' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'DTaP-IPV-Hib-HB' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>h1n1_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'H1N1' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'H1N1' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>hbtmf_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HBTmf' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'HBTmf' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>hpv_vaccine_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HPV Vaccine' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'HPV Vaccine' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>hpv_vaccine_9_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HPV Vaccine 9' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'HPV Vaccine 9' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>hepa_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HepA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'HepA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>hepab_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HepAB' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'HepAB' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>hepb_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HepB' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'HepB' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>hib_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>ipv_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'IPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'IPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>je_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'JE' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'JE' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>men_conj_acwy_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where (p.prevention_type = 'Men-C-ACYW-135' OR p.prevention_type = 'MEN-CONJ-ACWY') and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where (p.prevention_type = 'Men-C-ACYW-135' OR p.prevention_type = 'MEN-CONJ-ACWY') and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>mmr_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MMR' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'MMR' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>mmrv_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MMRV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'MMRV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>mr_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MR' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'MR' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>mantoux_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Mantoux' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Mantoux' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>measles_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where (p.prevention_type = 'Measles' OR  p.prevention_type = 'M') and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where (p.prevention_type = 'Measles' OR  p.prevention_type = 'M') and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>men_p_ac_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Men-P-AC' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Men-P-AC' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>men_p_acwy_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Men-P-ACWY' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Men-P-ACWY' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>menb_b_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MenB-B' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'MenB-B' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>menc_c_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MenC-C' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'MenC-C' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>mumps_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Mumps' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Mumps' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>opv_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'OPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'OPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>otherA_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'OtherA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'OtherA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>pft_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'PFT' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'PFT' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>pediacel_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Pediacel' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Pediacel' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>pneu_c_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where (p.prevention_type = 'Pneu-C' OR  p.prevention_type = 'Pneu-C' ) and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where (p.prevention_type = 'Pneu-C' OR  p.prevention_type = 'Pneu-C' ) and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
      <databaseap>
         <ap-name>pneumovax_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Pneumovax' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Pneumovax' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>prevnar_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Prevnar' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Prevnar' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>prevnar_13_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Prevnar 13' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Prevnar 13' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>prolia_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Prolia' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Prolia' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>RABIES_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'RABIES' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'RABIES' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>rsv_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'RSV (Synagis)' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'RSV (Synagis)' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>rabies_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Rabies' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Rabies' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>rot_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Rot' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Rot' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>rubella_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Rubella' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Rubella' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>shingles_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where (p.prevention_type = 'SHINGLES' OR p.prevention_type = 'HZV' OR p.prevention_type = 'RZV') and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where (p.prevention_type = 'SHINGLES' OR p.prevention_type = 'HZV' OR p.prevention_type = 'RZV') and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>t_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'T' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'T' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>tbe_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'TBE' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'TBE' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>td_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Td' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Td' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>td_ipv_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Td-IPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Td-IPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>tdp_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'TdP' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'TdP' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>tdp_ipv_hib_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'TdP-IPV-Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'TdP-IPV-Hib' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>tdap_ipv_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Tdap-IPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Tdap-IPV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>tuberculosis_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Tuberculosis' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Tuberculosis' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>typh-o_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Typh-O' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Typh-O' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>typhoid_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Typhoid' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Typhoid' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>vz_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'VZ' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'VZ' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>varicella_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Varicella' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Varicella' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>yf_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'YF' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'YF' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>dtap_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'dTap' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'dTap' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
        <databaseap>
         <ap-name>bmd_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'BMD' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'BMD' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap> 
@@ -1583,7 +1606,7 @@
     </databaseap> 
     <databaseap>
         <ap-name>colonoscopy_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'COLONOSCOPY' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'COLONOSCOPY' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>   
@@ -1595,7 +1618,7 @@
     </databaseap> 
     <databaseap>
         <ap-name>fobt_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'FOBT' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'FOBT' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap> 
@@ -1607,13 +1630,13 @@
     </databaseap>
       <databaseap>
         <ap-name>flu_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Flu' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Flu' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
   <databaseap>
         <ap-name>mam_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MAM' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'MAM' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap> 
@@ -1631,7 +1654,7 @@
     </databaseap>
     <databaseap>
         <ap-name>pap_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'PAP' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'PAP' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
@@ -1643,7 +1666,7 @@
     </databaseap>
     <databaseap>
         <ap-name>psa_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'PSA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'PSA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
@@ -1655,169 +1678,169 @@
     </databaseap> 
     <databaseap>
         <ap-name>abdo_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Abdo U/S for AAA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Abdo U/S for AAA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>bone_scan_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'BONE SCAN' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'BONE SCAN' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>cpx_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'CPX' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'CPX' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>ct_scan_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'CT Scan' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'CT Scan' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>cxr_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'CXR' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'CXR' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>chlamydia_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Chlamydia' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Chlamydia' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>ecg_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'ECG' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'ECG' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>eeg_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'EEG' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'EEG' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>ekg_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'EKG' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'EKG' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>emg_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'EMG' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'EMG' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>endoscopy_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'ENDOSCOPY' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'ENDOSCOPY' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>echo_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Echo' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Echo' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>gonorrhea_pcr_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Gonorrhea PCR' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Gonorrhea PCR' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>hiv_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HIV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'HIV' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>hepa_screen_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HepA screen' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'HepA screen' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>hepb_screen_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HepB screen' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'HepB screen' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>hepc_screen_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'HepC screen' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'HepC screen' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>mmse_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MMSE' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'MMSE' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>mri_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MRI' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'MRI' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>moca_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'MoCA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'MoCA' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>otherB_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'OtherB' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'OtherB' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>pet_scan_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'PET SCAN' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'PET SCAN' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>sleep_study_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Sleep Study' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Sleep Study' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>stress_test_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'Stress Test' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'Stress Test' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>ultrasound_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'ULTRASOUND' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'ULTRASOUND' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>vdrl_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'VDRL' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'VDRL' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>virtual_colonoscopy_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'VIRTUAL COLONOSCOPY' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'VIRTUAL COLONOSCOPY' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>
     <databaseap>
         <ap-name>xrays_immunization_date</ap-name>
-        <ap-sql>select DATE_FORMAT('prevention_date','%Y-%m-%d) AS the_date from preventions p where p.prevention_type = 'XRays' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
+        <ap-sql>select DATE_FORMAT(prevention_date,'%Y-%m-%d') AS the_date from preventions p where p.prevention_type = 'XRays' and p.deleted = '0' and p.demographic_no = ${demographic} order by p.prevention_date desc limit 1
        </ap-sql>
         <ap-output>${the_date}</ap-output>
     </databaseap>   

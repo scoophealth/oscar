@@ -26,7 +26,9 @@ package org.oscarehr.managers;
 import java.util.List;
 
 import org.oscarehr.common.dao.DemographicPharmacyDao;
+import org.oscarehr.common.dao.PharmacyInfoDao;
 import org.oscarehr.common.model.DemographicPharmacy;
+import org.oscarehr.common.model.PharmacyInfo;
 import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,8 @@ public class PharmacyManager {
 
 	@Autowired
 	private DemographicPharmacyDao demographicPharmacyDao;
+	@Autowired
+	private PharmacyInfoDao pharmacyInfoDao;
 
 	public List<DemographicPharmacy> getPharmacies(LoggedInInfo loggedInInfo, Integer demographicId) {
 		List<DemographicPharmacy> result =  demographicPharmacyDao.findAllByDemographicId(demographicId);
@@ -87,6 +91,10 @@ public class PharmacyManager {
 		
 		//--- log action ---
 		LogAction.addLogSynchronous(loggedInInfo, "PharmacyManager.removePharmacy", "demographicNo="+demographicId + ",pharmacyId="+pharmacyId);	
+	}
+	
+	public PharmacyInfo getPharmacy(LoggedInInfo loggedInInfo, Integer pharmacyId) {
+		return pharmacyInfoDao.find(pharmacyId);		
 	}
 
 }

@@ -700,6 +700,18 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
 		<%j++;%>
 		</td>
 		<td width="1"></td>
+		<td width="300"><a
+			href="PreventionReport.jsp" target="_blank"><bean:message key="report.reportindex.btnReport18n"/> 2019</a></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td width="2"><%=j%>
+		<%j++;%>
+		</td>
+		<td width="1"></td>
 		<td width="300"><a href="../oscarReport/demographicSetEdit.jsp"
 			target="_blank"><bean:message key="report.reportindex.btnDemoSetEdit"/></a></td>
 		<td></td>
