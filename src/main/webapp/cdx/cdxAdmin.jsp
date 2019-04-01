@@ -32,6 +32,10 @@
 <%@ page import="org.oscarehr.integration.cdx.model.CdxConfig" %>
 <%@ page import="org.oscarehr.util.MiscUtils" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
+<%@ page import="java.util.List" %>
+<%@ page import="org.oscarehr.integration.cdx.CDXDownloadJob" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
@@ -53,7 +57,10 @@
 <%
     CdxConfigDao cdxConfigDao = (CdxConfigDao) SpringUtils.getBean(CdxConfigDao.class);
     ClinicDAO clinicDAO = (ClinicDAO) SpringUtils.getBean(ClinicDAO.class);
+    ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
     UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
+
+    List<Provider> providers = providerDao.getActiveProviders();
 
     String defaultProvider = "";
     String cdxOid = "";
@@ -85,16 +92,35 @@
 %>
 <html>
 <head>
-    <title>CDX Preferences</title>
+    <title>CDX Configuration</title>
+    <script type="text/javascript">
+        function runFetch() {
+            window.location = "<%=request.getContextPath() %>/cdx/cdxImportNewDocs.jsp";
+        }
+    </script>
 </head>
 <body>
-<h4>CDX Preferences</h4>
-<form action="<%=request.getContextPath()%>/cdx/CDXPreferences.do" method="post">
+<h4>CDX Configuration</h4>
+<form action="<%=request.getContextPath()%>/cdx/CDXAdmin.do" method="post">
     <fieldset>
         <div class="control-group">
             <label class="control-label">Default Provider:</label>
             <div class="controls">
-                <input type="text" name="defaultProvider" value="<%=defaultProvider%>" />
+                <select name="defaultProvider">
+                    <%
+                        for (Provider provider : providers) {
+                            String selected = new String();
+                            if (!defaultProvider.equals("")
+                                    && defaultProvider.equals(provider.getProviderNo())) {
+                                selected = " selected=\"selected\" ";
+                            }
+                    %>
+                    <option value="<%=provider.getProviderNo()%>" <%=selected%>><%=provider.getFormattedName()%>
+                    </option>
+                    <%
+                        }
+                    %>
+                </select>
             </div>
         </div>
         <div class="control-group">
@@ -103,29 +129,21 @@
                 <input type="text" name="cdxOid" value="<%=cdxOid%>"/>
             </div>
         </div>
-<%--        <div class="control-group">--%>
-<%--            <label class="control-label">Private Key:</label>--%>
-<%--            <div class="controls">--%>
-<%--                <a href="../<%=privateKey%>" id="pkeyLink">View Private Key</a>--%>
-<%--&lt;%&ndash;                <input type="button" class="btn" name="privateKey" value="Upload Private Key" onClick='popupPage(600,900,&quot;<html:rewrite page="/hospitalReportManager/hrmKeyUploader.jsp"/>&quot;);return false;' />&ndash;%&gt;--%>
-<%--&lt;%&ndash;            </div>&ndash;%&gt;--%>
-<%--        </div>--%>
-<%--        <div class="control-group">--%>
-<%--            <label class="control-label">Decryption Key:</label>--%>
-<%--            <div class="controls">--%>
-<%--                <a href="../<%=decryptionKey%>" id="dkeyLink">View Decryption Key</a>--%>
-<%--&lt;%&ndash;                <input type="button" class="btn" name="decryptionKey" value="Upload Decryption Key" onClick='popupPage(600,900,&quot;<html:rewrite page="/hospitalReportManager/hrmKeyUploader.jsp"/>&quot;);return false;' />&ndash;%&gt;--%>
-<%--            </div>--%>
-<%--        </div>--%>
         <div class="control-group">
             <label class="control-label">Auto Polling Interval:</label>
             <div class="controls">
-                <input type="text" name="cdx_poll_interval" value="<%=pollInterval %>" />
+                <input type="text" name="cdx_poll_interval" value="<%=pollInterval %>"/>
             </div>
         </div>
         <div class="control-group">
-            <input type="submit" class="btn btn-primary" value="Submit" />
+            <input type="submit" class="btn btn-primary" value="Submit"/>
         </div>
+        </table>
+        <hr>
+        <table>
+            <div>
+                <input type="button" class="btn" onClick="runFetch()" value="Fetch New Data from CDX"/>
+            </div>
         </table>
 </form>
 </body>

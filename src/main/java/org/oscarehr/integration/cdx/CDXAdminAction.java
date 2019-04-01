@@ -40,7 +40,7 @@ import org.oscarehr.util.SpringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class CDXPreferencesAction extends DispatchAction {
+public class CDXAdminAction extends DispatchAction {
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
