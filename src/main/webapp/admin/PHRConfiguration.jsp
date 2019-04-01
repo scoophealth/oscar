@@ -51,7 +51,10 @@
 	<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css">
 	<script type="text/javascript" src="<%=request.getContextPath() %>/library/angular.min.js"></script>	
 	<script src="<%=request.getContextPath() %>/web/common/phrServices.js"></script>	
-	<script src="<%=request.getContextPath() %>/web/common/providerServices.js"></script>	
+	<script src="<%=request.getContextPath() %>/web/common/providerServices.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/library/showdown.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/library/markdown.js"></script>
+	<script type="text/javascript" src="<%=request.getContextPath() %>/library/angular-sanitize.min.js"></script>			
 </head>
 
 <body vlink="#0000FF" class="BodyStyle">
@@ -61,60 +64,54 @@
 		</div>
 		
 		<div class="container">
-		<div class="jumbotron" ng-if="!audit.clinicInformationSetup">
-		  <h3>PHR Clinic Configuration Wizard</h3>
-		  <div ng-repeat="recc in audit.recommendations" class="alert alert-warning" role="alert" ><strong>{{recc.heading}}</strong> <br>{{recc.description}}<button  class="btn btn-info pull-right" type="button">Configure</button></div>
-		</div>
 		
-		<div class="jumbotron" ng-if="!audit.onlineBookingConfigured">
-		  <h3>Online Booking Configuration</h3>
-		 
-		  <select ng-model="bookingProviderNo">
-		  	<option ng-repeat="pro in activeProviders" value="pro.providerNo">{{pro.lastName}}, {{pro.firstName}} ({{pro.providerNo}})</option>
-		  </select>
-		  <label><bean:message key="admin.phr.clinicPassword"/><small> (This will be supplied by the PHR)</small></label>
-		  <div class="controls">
-			<input class="form-control" name="bookingPassword" ng-model="bookingPassword" type="password" maxlength="255"/>  <br/>
-		  </div>
-		  <input type="button" class="btn btn-primary" ng-disabled="bookingProviderNo==null || bookingProviderNo=='' || bookingPassword==null || bookingPassword==''" value="<bean:message key="admin.phr.initbtn"/>"  ng-click="setOscarCreds()"/>
-		  <div class="alert alert-info" role="alert">Clinic Information</div>
-		  <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
-		</div>
-		</div>
+			<div>
+				<button style="margin-left:3px;" ng-repeat="recc in audit.launchItems" type="button" class="btn btn-primary" ng-click="openPHRWindow(recc)">{{recc.heading}}</button>
+			</div>
 		
-	 	
-	 	
-	 	<div >
-	 		<button ng-repeat="ability in abilities" class="btn btn-default" ng-click="launch(ability)">{{ability.label}}</button>
-	 	</div>
-	 	
-		<div data-ng-hide="phrActive">
-			<form action="Know2actConfiguration.jsp"  method="POST">
-				<fieldset>
-					<h3>Enter your PHR Clinic Credentials.</h3>
-					<div class="form-group col-xs-5">
-						<label><bean:message key="admin.phr.clinicUsername"/><small> (This will be supplied by the PHR)</small></label>
-						<div class="controls">
-							<input class="form-control" name="clinicUsername" ng-model="clinicUsername" type="text" maxlength="255"/>  <br/>
+			<div data-ng-hide="phrActive" class="jumbotron" >
+				<h2>PHR Clinic Configuration Wizard</h2>
+				<div class="alert alert-warning" role="alert" data-ng-show="userpassError">Invalid Username and Password.</div>
+				<form   method="POST">
+					<fieldset>
+						<h4>Enter your PHR Clinic Credentials provided by your PHR Provider</h4>
+						<div class="form-group col-xs-10">
+							<label><bean:message key="admin.phr.clinicUsername"/><small> (This will be supplied by the PHR)</small></label>
+							<div class="controls">
+								<input class="form-control" name="clinicUsername" ng-model="clinicUsername" type="text" maxlength="255"/>  <br/>
+							</div>
+							<label><bean:message key="admin.phr.clinicPassword"/><small> (This will be supplied by the PHR)</small></label>
+							<div class="controls">
+								<input class="form-control" name="clinicPassword" ng-model="clinicPassword" type="password" maxlength="255"/>  <br/>
+							</div>
+							<button type="button" class="btn btn-primary" ng-disabled="clinicUsername==null || clinicUsername=='' || clinicPassword==null || clinicPassword=='' || working"  ng-click="initPHR()"/>{{initButtonText}}</button>
+							   
 						</div>
-						<label><bean:message key="admin.phr.clinicPassword"/><small> (This will be supplied by the PHR)</small></label>
-						<div class="controls">
-							<input class="form-control" name="clinicPassword" ng-model="clinicPassword" type="password" maxlength="255"/>  <br/>
-						</div>
-						<input type="button" class="btn btn-primary" ng-disabled="clinicUsername==null || clinicUsername=='' || clinicPassword==null || clinicPassword==''" value="<bean:message key="admin.phr.initbtn"/>"  ng-click="initPHR()"/>
-					</div>
-				</fieldset>
-			</form>
+					</fieldset>
+				</form>
+				
+			</div>
+			<div class="jumbotron" ng-if="!audit.clinicInformationSetup">
+			  <h3>PHR Clinic Configuration Wizard</h3>
+			  <div ng-repeat="recc in audit.recommendations" class="alert alert-warning" role="alert" ><strong>{{recc.heading}}</strong> <br>{{recc.description}}<button ng-click="openPHRWindow(recc)"  class="btn btn-info pull-right" type="button">Configure</button></div>
+			</div>
+	
+		
+			<div btf-markdown="audit.markdownText"></div>
+		
 		</div>
-	</div>
 	
 	<script>
-		var app = angular.module("phrConfig", ['phrServices','providerServices']);
+		var app = angular.module("phrConfig", ['phrServices','providerServices','btford.markdown']);
 		
-		app.controller("phrConfig", function($scope,phrService,providerService) {
+		app.controller("phrConfig", function($scope,$window,phrService,providerService) {
 			
 			$scope.serverOffline = false;
 			$scope.activeProviders = [];
+			$scope.userpassError = false;
+			$scope.working = false;
+			
+			$scope.initButtonText = "Initialize";
 			
 			checkStatus = function(){
 			    phrService.isPHRInit().then(function(data){
@@ -149,6 +146,11 @@
 				    	}
 				});
 		    }
+		    
+		    $scope.openPHRWindow = function(recc){
+		    		console.log("opening window for ",recc);
+		    		$window.open('../ws/rs/app/openPHRWindow/'+recc.link);
+		    };
 		    
 		    getAllActiveProviders = function(){
     			providerService.getAllActiveProviders().then(function(data){
@@ -203,13 +205,23 @@
 		    
 			
 		    $scope.initPHR = function(){
+		    		$scope.userpassError = false;
+		    		$scope.working = true;
 			    	console.log($scope.clinicName);
 			    	var clinic = {};
+			    	$scope.initButtonText = "... Waiting";
 			    	clinic.username = $scope.clinicUsername;
 			    	clinic.password = $scope.clinicPassword;
 			    	phrService.initPHR(clinic).then(function(data){
-			    		checkStatus();
-			    	});
+			    		$scope.working = false;
+			    		$scope.initButtonText = "Initialize";
+			    		if(data.success){
+			    			checkStatus();
+			    		}else{
+				    		$scope.userpassError = true;
+				    	}
+			    		
+			    	},function(){$scope.working = false;$scope.initButtonText = "Initialize";});
 		    } 
 		    
 		    $scope.setOscarCreds = function(){

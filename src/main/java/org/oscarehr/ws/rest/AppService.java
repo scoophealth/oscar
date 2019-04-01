@@ -25,6 +25,7 @@ package org.oscarehr.ws.rest;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -38,6 +39,7 @@ import java.util.List;
 
 import javax.net.ssl.TrustManager;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -47,6 +49,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import net.sf.json.JSONObject;
 
@@ -142,12 +145,9 @@ public class AppService extends AbstractServiceImpl {
 		JSONProvider jsonProvider = new JSONProvider();
 		jsonProvider.setDropRootElement(true);
 	    providers.add(jsonProvider);
-//	    String requestURI = "https://localhost:8282/oscar_clinic_component/c/rs/c/init";
-	    String requestURI = "https://localhost:8282/oscar_clinic_component/ws/es/c/init";
-	    		//"https://clinics.kindredphr.com/c/init";
+	    String requestURI = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL","http://localhost:8580/connector/");	  
 		try {
-		WebClient webclient = WebClient.create(requestURI, providers);
-		////////
+		WebClient webclient = WebClient.create(requestURI+"emr/register", providers);
 		HTTPConduit conduit = WebClient.getConfig(webclient).getHttpConduit();
 
 		    TLSClientParameters params = conduit.getTlsClientParameters();
@@ -182,14 +182,16 @@ public class AppService extends AbstractServiceImpl {
 			      
 		    phrNew.setActive(true);
 		    phrNew.setAdded(new Date());
-		    phrNew.setAppType(AppDefinition.JWT);
+		    phrNew.setAppType(AppDefinition.OAUTH2_TYPE);
 		    phrNew.setName("PHR");
 		    phrNew.setConfig(response);
 		    phrNew.setAddedBy(getLoggedInInfo().getLoggedInProviderNo());
 		    appManager.saveAppDefinition(getLoggedInInfo(),  phrNew);
 		    
 		    return new GenericRESTResponse(true,"completed");
-   		}
+   		}else if(reps.getStatus() == 404){
+   			return new GenericRESTResponse(false,"Invalid Username/Password"); 
+		}
 		}catch(Exception e) {
 			logger.error("error initializing phr",e);
 		}
@@ -201,17 +203,17 @@ public class AppService extends AbstractServiceImpl {
 		    String requestURI = "https://localhost:8282/oscar_clinic_component/ws/es/c/abilities";
 
  */	
-	private Response callPHR(String requestURI,String providerNo) {
+	private Response callPHRJWT(String requestURI,String providerNo) {
 		//////////
 		List<Object> providers = new ArrayList<Object>();
 		JSONProvider jsonProvider = new JSONProvider();
 		jsonProvider.setDropRootElement(true);
 	    providers.add(jsonProvider);
-		    
+	    String requestURL = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL","http://localhost:8580/connector/");    
 	    AppDefinition phrApp = appDefinitionDao.findByName("PHR");
 		    
 		try {
-			WebClient webclient = WebClient.create(requestURI, providers);
+			WebClient webclient = WebClient.create(requestURL+requestURI, providers);
 			HTTPConduit conduit = WebClient.getConfig(webclient).getHttpConduit();
 
 		    TLSClientParameters params = conduit.getTlsClientParameters();
@@ -256,7 +258,168 @@ public class AppService extends AbstractServiceImpl {
 	   		return Response.status(401).entity("ERROR").build();
 	}
 	
+	
+	private String getAccessToken(AppDefinition phrApp,String providerNo, String type) {
+		try {
+		org.codehaus.jettison.json.JSONObject configObject = new org.codehaus.jettison.json.JSONObject(phrApp.getConfig());
+		String requestURL = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL","http://localhost:8580/connector/");   
+		String requestURI = "oauth/token";
+		
+			WebClient webclient = WebClient.create(requestURL+requestURI,configObject.getString("clientId"),configObject.getString("clientSecret"),null);//, providers);
+			HTTPConduit conduit = WebClient.getConfig(webclient).getHttpConduit();
 
+		    TLSClientParameters params = conduit.getTlsClientParameters();
+
+		    if (params == null) {
+		        params = new TLSClientParameters();
+		        conduit.setTlsClientParameters(params);
+		    }
+
+		    params.setTrustManagers(new TrustManager[] { TrustManagerUtils.getAcceptAllTrustManager() });
+			    
+		    params.setDisableCNCheck(true);
+			
+	   		javax.ws.rs.core.Response reps = webclient.accept("application/json, text/plain, */*")
+	   												 .acceptEncoding("gzip, deflate")
+	   												 .type("application/x-www-form-urlencoded")
+	   												 .post("grant_type=client_credentials");
+	   		
+	   		InputStream in = (InputStream) reps.getEntity();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+			String response = IOUtils.toString(bufferedReader);
+			bufferedReader.close();
+			logger.debug("oauth2 json :"+response);
+			org.codehaus.jettison.json.JSONObject responseObject = new org.codehaus.jettison.json.JSONObject(response);
+			String access_token = responseObject.getString("access_token");
+			return access_token;
+		}catch(Exception e) {
+			logger.error("Error with access token ",e);
+		}
+		
+		return null;
+	}
+	
+	private Response callPHR(String requestURI,String providerNo) {
+		return callPHR(requestURI, providerNo,"True");
+	}
+
+	private Response callPHR(String requestURI,String providerNo,String object) {
+		//////////
+		List<Object> providers = new ArrayList<Object>();
+		JSONProvider jsonProvider = new JSONProvider();
+		jsonProvider.setDropRootElement(true);
+	    providers.add(jsonProvider);
+	    String requestURL = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL","http://localhost:8580/connector/");    
+	    AppDefinition phrApp = appDefinitionDao.findByName("PHR");
+		    
+		try {
+			WebClient webclient = WebClient.create(requestURL+requestURI, providers);
+			HTTPConduit conduit = WebClient.getConfig(webclient).getHttpConduit();
+
+		    TLSClientParameters params = conduit.getTlsClientParameters();
+
+		    if (params == null) {
+		        params = new TLSClientParameters();
+		        conduit.setTlsClientParameters(params);
+		    }
+
+		    params.setTrustManagers(new TrustManager[] { TrustManagerUtils.getAcceptAllTrustManager() });
+			    
+		    params.setDisableCNCheck(true);
+		    String bearerToken = getAccessToken(phrApp,providerNo,"PHR");
+		    logger.error("bearerToken: "+bearerToken );
+			
+	   		javax.ws.rs.core.Response reps = webclient.accept("application/json, text/plain, */*")
+	   												 .acceptEncoding("gzip, deflate")
+	   												 .header("Authorization", "Bearer "+bearerToken)
+	   												 .type("application/json;charset=utf-8")
+	   												 .post(object);
+	   		
+	   		InputStream in = (InputStream) reps.getEntity();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+			String response = IOUtils.toString(bufferedReader);
+			bufferedReader.close();
+	   		
+			logger.info("response code "+reps.getStatus());
+	   		if(reps.getStatus() == 200) {
+	   			return Response.ok(response).build();
+	   		}
+	   		
+			}catch(Exception e) {
+				
+				Throwable rootException = ExceptionUtils.getRootCause(e);
+				logger.debug("Exception: "+e.getClass().getName()+" --- "+rootException.getClass().getName());
+						
+				if (rootException instanceof java.net.ConnectException || rootException instanceof java.net.SocketTimeoutException){
+					logger.error("ERROR CONNECTING ",rootException);
+					return Response.status(268).entity("{\"ERROR\":\"Connection Refused\"}").build();
+				}
+					
+				logger.error("ERROR getting abilities",e);
+			}
+	   		return Response.status(401).entity("ERROR").build();
+	}
+	
+	private String  callPHRWindowOpen(String requestURI,String providerNo,String windowName ,String role) {
+		//////////
+		JSONObject jojb = new JSONObject();
+		jojb.element("windowName",windowName);
+		jojb.element("providerNo", providerNo);
+		jojb.element("role",role);
+		
+		List<Object> providers = new ArrayList<Object>();
+		JSONProvider jsonProvider = new JSONProvider();
+		jsonProvider.setDropRootElement(true);
+	    providers.add(jsonProvider);
+	    String requestURL = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL","http://localhost:8580/connector/");    
+	    AppDefinition phrApp = appDefinitionDao.findByName("PHR");
+		    
+		try {
+			WebClient webclient = WebClient.create(requestURL+requestURI, providers);
+			HTTPConduit conduit = WebClient.getConfig(webclient).getHttpConduit();
+
+		    TLSClientParameters params = conduit.getTlsClientParameters();
+
+		    if (params == null) {
+		        params = new TLSClientParameters();
+		        conduit.setTlsClientParameters(params);
+		    }
+
+		    params.setTrustManagers(new TrustManager[] { TrustManagerUtils.getAcceptAllTrustManager() });
+			    
+		    params.setDisableCNCheck(true);
+		    String bearerToken = getAccessToken(phrApp,providerNo,"admin");
+		    logger.error("bearerToken: "+bearerToken );
+			logger.error("jojb:"+jojb.toString());
+	   		javax.ws.rs.core.Response reps = webclient.accept("application/json, text/plain, */*")
+	   												 .acceptEncoding("gzip, deflate")
+	   												 .header("Authorization", "Bearer "+bearerToken)
+	   												 .type("application/json;charset=utf-8")
+	   												 .post(jojb.toString());
+	   		
+	   		InputStream in = (InputStream) reps.getEntity();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+			String response = IOUtils.toString(bufferedReader);
+			bufferedReader.close();
+	   		logger.error("url launching "+response+"?access_token="+bearerToken);
+			return response+"?access_token="+bearerToken;
+	   		
+			}catch(Exception e) {
+				
+				Throwable rootException = ExceptionUtils.getRootCause(e);
+				logger.debug("Exception: "+e.getClass().getName()+" --- "+rootException.getClass().getName());
+						
+				if (rootException instanceof java.net.ConnectException || rootException instanceof java.net.SocketTimeoutException){
+					logger.error("ERROR CONNECTING ",rootException);
+					return null;
+				}
+					
+				logger.error("ERROR getting abilities",e);
+			}
+	   		return null;
+	}
+
+	
 	/////
 	@POST
 	@Path("/PHRAuditSetup/")
@@ -266,7 +429,21 @@ public class AppService extends AbstractServiceImpl {
 		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_appDefinition", "w", null)) {
 			throw new RuntimeException("Access Denied");
 		}
-		return callPHR("https://localhost:8282/oscar_clinic_component/ws/es/c/auditSetup",getLoggedInInfo().getLoggedInProviderNo());
+		return callPHR("auditSetup",getLoggedInInfo().getLoggedInProviderNo());
+	}
+	
+	@GET
+	@Path("/openPHRWindow/{windowName}")
+	public Response openPHRWindow(@Context HttpServletRequest request,@Context HttpServletResponse response,@PathParam("windowName") String windowName) throws IOException{
+		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_appDefinition", "w", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		String redirectUrl = callPHRWindowOpen("openWindow",getLoggedInInfo().getLoggedInProviderNo(), windowName ,"admin");
+		
+		logger.debug("URL for open window " +windowName+" url-- "+redirectUrl );
+		
+		response.sendRedirect(redirectUrl);
+		return Response.status(Status.ACCEPTED).build();
 	}
 	
 	/////
