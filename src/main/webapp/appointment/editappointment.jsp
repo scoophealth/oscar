@@ -555,22 +555,28 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
     }
 %>
 
-<div>
-    <table width="100%" BGCOLOR="lightblue" border=1 align='center'>
-        <tr>
-            <th>
-                <font>
-                    <%
-                    	ProviderData prov = providerDao.find(appt.getProviderNo());
-                  		String providerName = prov.getLastName() + ","+ prov.getFirstName(); 
+ <%
+    	if(appt != null && !StringUtils.isEmpty(appt.getProviderNo())) {
+     		ProviderData prov = providerDao.find(appt.getProviderNo());
+     		if(prov != null) {
+   				String providerName = prov.getLastName() + ","+ prov.getFirstName();
+   		%>
+		<div>
+		    <table width="100%" BGCOLOR="lightblue" border=1 align='center'>
+		        <tr>
+		            <th>
+		                <font>
+		   					<%=providerName %>
+		                </font>
+		            </th>
+		        </tr>
+		    </table>
+		</div>	                    	
+<%}
+	}
+%>
                     
-                    %>
-                    <%=providerName %>
-                </font>
-            </th>
-        </tr>
-    </table>
-</div>
+
 
 <div class="panel">
     <ul>
