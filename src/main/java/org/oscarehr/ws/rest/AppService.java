@@ -78,7 +78,7 @@ import org.oscarehr.ws.rest.to.model.RssItem;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import oscar.OscarProperties;
-import oscar.util.TokenUtil;
+
 
 @Path("/app")
 public class AppService extends AbstractServiceImpl {
@@ -198,66 +198,7 @@ public class AppService extends AbstractServiceImpl {
 		return new GenericRESTResponse(false,"failed"); 
 	}
 	
-/*
- /		    String requestURI = "https://localhost:8282/oscar_clinic_component/c/rs/c/init";
-		    String requestURI = "https://localhost:8282/oscar_clinic_component/ws/es/c/abilities";
 
- */	
-	private Response callPHRJWT(String requestURI,String providerNo) {
-		//////////
-		List<Object> providers = new ArrayList<Object>();
-		JSONProvider jsonProvider = new JSONProvider();
-		jsonProvider.setDropRootElement(true);
-	    providers.add(jsonProvider);
-	    String requestURL = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL","http://localhost:8580/connector/");    
-	    AppDefinition phrApp = appDefinitionDao.findByName("PHR");
-		    
-		try {
-			WebClient webclient = WebClient.create(requestURL+requestURI, providers);
-			HTTPConduit conduit = WebClient.getConfig(webclient).getHttpConduit();
-
-		    TLSClientParameters params = conduit.getTlsClientParameters();
-
-		    if (params == null) {
-		        params = new TLSClientParameters();
-		        conduit.setTlsClientParameters(params);
-		    }
-
-		    params.setTrustManagers(new TrustManager[] { TrustManagerUtils.getAcceptAllTrustManager() });
-			    
-		    params.setDisableCNCheck(true);
-			
-	   		javax.ws.rs.core.Response reps = webclient.accept("application/json, text/plain, */*")
-	   												 .acceptEncoding("gzip, deflate")
-	   												 .header("Authorization", "Bearer "+TokenUtil.createJWTString(phrApp.getConfig(),providerNo,"PHR"))
-	   												 .type("application/json;charset=utf-8")
-	   												 .post("True");
-	   		
-	   		InputStream in = (InputStream) reps.getEntity();
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-			String response = IOUtils.toString(bufferedReader);
-			bufferedReader.close();
-	   		
-			logger.info("response code "+reps.getStatus());
-	   		if(reps.getStatus() == 200) {
-	   			return Response.ok(response).build();
-	   		}
-	   		
-			}catch(Exception e) {
-				
-				Throwable rootException = ExceptionUtils.getRootCause(e);
-				logger.debug("Exception: "+e.getClass().getName()+" --- "+rootException.getClass().getName());
-						
-				if (rootException instanceof java.net.ConnectException || rootException instanceof java.net.SocketTimeoutException){
-					logger.error("ERROR CONNECTING ",rootException);
-					return Response.status(268).entity("{\"ERROR\":\"Connection Refused\"}").build();
-				}
-					
-				logger.error("ERROR getting abilities",e);
-			}
-	   		return Response.status(401).entity("ERROR").build();
-	}
-	
 	
 	private String getAccessToken(AppDefinition phrApp,String providerNo, String type) {
 		try {
@@ -327,7 +268,7 @@ public class AppService extends AbstractServiceImpl {
 			    
 		    params.setDisableCNCheck(true);
 		    String bearerToken = getAccessToken(phrApp,providerNo,"PHR");
-		    logger.error("bearerToken: "+bearerToken );
+		    logger.debug("bearerToken: "+bearerToken );
 			
 	   		javax.ws.rs.core.Response reps = webclient.accept("application/json, text/plain, */*")
 	   												 .acceptEncoding("gzip, deflate")
@@ -446,73 +387,6 @@ public class AppService extends AbstractServiceImpl {
 		return Response.status(Status.ACCEPTED).build();
 	}
 	
-	/////
-	@POST
-	@Path("/PHRAbilities/")
-	@Produces("application/json")
-	@Consumes("application/json")
-	public Response phrAbilities(@Context HttpServletRequest request){
-		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_appDefinition", "w", null)) {
-			throw new RuntimeException("Access Denied");
-		}
-		List<Object> providers = new ArrayList<Object>();
-		JSONProvider jsonProvider = new JSONProvider();
-		jsonProvider.setDropRootElement(true);
-	    providers.add(jsonProvider);
-//	    String requestURI = "https://localhost:8282/oscar_clinic_component/c/rs/c/init";
-	    String requestURI = "https://localhost:8282/oscar_clinic_component/ws/es/c/abilities";
-	    
-	    AppDefinition phrApp = appDefinitionDao.findByName("PHR");
-	    
-	    		//"https://clinics.kindredphr.com/c/init";
-		try {
-		WebClient webclient = WebClient.create(requestURI, providers);
-		////////
-		HTTPConduit conduit = WebClient.getConfig(webclient).getHttpConduit();
-
-		    TLSClientParameters params = conduit.getTlsClientParameters();
-
-		    if (params == null) {
-		        params = new TLSClientParameters();
-		        conduit.setTlsClientParameters(params);
-		    }
-
-		    params.setTrustManagers(new TrustManager[] { TrustManagerUtils.getAcceptAllTrustManager() });
-		    
-		    params.setDisableCNCheck(true);
-		////////
-		
-   		javax.ws.rs.core.Response reps = webclient.accept("application/json, text/plain, */*")
-   												 .acceptEncoding("gzip, deflate")
-   												 .header("Authorization", "Bearer "+TokenUtil.createJWTString(phrApp.getConfig(),getLoggedInInfo().getLoggedInProviderNo(),"PHR"))
-   												 .type("application/json;charset=utf-8")
-   												 .post("True");
-   		
-   		InputStream in = (InputStream) reps.getEntity();
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-		String response = IOUtils.toString(bufferedReader);
-		bufferedReader.close();
-   		
-		logger.info("response code "+reps.getStatus());
-   		if(reps.getStatus() == 200) {
-   			return Response.ok(response).build();
-   		}
-   		
-		}catch(Exception e) {
-			
-			Throwable rootException = ExceptionUtils.getRootCause(e);
-			logger.debug("Exception: "+e.getClass().getName()+" --- "+rootException.getClass().getName());
-					
-			if (rootException instanceof java.net.ConnectException || rootException instanceof java.net.SocketTimeoutException){
-				logger.error("ERROR CONNECTING ",rootException);
-				return Response.status(268).entity("{\"ERROR\":\"Connection Refused\"}").build();
-			}
-				
-			logger.error("ERROR getting abilities",e);
-		}
-   		return Response.status(401).entity("ERROR").build();
-	}
-	/////
 	
 	
 	@POST
