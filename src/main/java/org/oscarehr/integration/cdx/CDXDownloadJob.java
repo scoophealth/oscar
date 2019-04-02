@@ -40,12 +40,14 @@ import org.oscarehr.util.SpringUtils;
 
 public class CDXDownloadJob implements OscarRunnable {
 
-    private Logger logger = MiscUtils.getLogger();
+    private static Logger logger = MiscUtils.getLogger();
 
     UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
 
     private Provider provider;
     private Security security;
+
+    private static Boolean running = false;
 
     public void setLoggedInProvider(Provider provider) {
         this.provider = provider;
@@ -72,19 +74,45 @@ public class CDXDownloadJob implements OscarRunnable {
 
 
         try {
-            logger.info("Starting CDX Job");
-
-            CDXImport cdxImport = new CDXImport();
-            cdxImport.importNewDocs();
-
-            logger.info("===== CDX JOB DONE RUNNING....");
+            if (!running) {
+                logger.info("Starting CDX Job");
+                running = true;
+                CDXImport cdxImport = new CDXImport();
+                cdxImport.importNewDocs();
+                running = false;
+                logger.info("===== CDX JOB DONE RUNNING....");
+            }
         } catch (Exception e) {
             logger.error("Error", e);
         } finally {
             DbConnectionFilter.releaseAllThreadDbResources();
+            running = false;
         }
     }
 
+    public static Boolean runOnce() {
+
+//        LoggedInInfo x = new LoggedInInfo();
+//        x.setLoggedInProvider(provider);
+//        x.setLoggedInSecurity(security);
+
+        Boolean result = false;
+        try {
+            if (!running) {
+                logger.info("Starting CDX run once");
+                CDXImport cdxImport = new CDXImport();
+                cdxImport.importNewDocs();
+                logger.info("Done CDX run once");
+                result = true;
+            }
+        } catch (Exception e) {
+            logger.error("Error", e);
+        } finally {
+            DbConnectionFilter.releaseAllThreadDbResources();
+            running = false;
+        }
+        return result;
+    }
 
     public void setConfig(String config) {
     }
