@@ -24,22 +24,14 @@
 package org.oscarehr.ws.rest;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
-import net.sf.json.processors.JsDateJsonBeanProcessor;
 
 import org.apache.cxf.message.Message;
 import org.apache.cxf.phase.PhaseInterceptorChain;
@@ -47,22 +39,13 @@ import org.apache.cxf.rs.security.oauth.data.OAuthContext;
 import org.apache.cxf.security.SecurityContext;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.ConsentType;
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.Provider;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.OscarLogManager;
 import org.oscarehr.managers.PatientConsentManager;
 import org.oscarehr.managers.ProviderManager2;
-import org.oscarehr.managers.model.ProviderSettings;
-import org.oscarehr.util.MiscUtils;
-import org.oscarehr.web.PatientListApptBean;
-import org.oscarehr.web.PatientListApptItemBean;
-import org.oscarehr.ws.rest.conversion.ProviderConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
 import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.model.ConsentTypeTo1;
-import org.oscarehr.ws.rest.to.model.ProviderTo1;
-import org.oscarehr.ws.transfer_objects.ProviderTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
