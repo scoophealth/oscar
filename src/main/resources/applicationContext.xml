@@ -21,6 +21,13 @@
 		</property>
 	</bean>
 
+	<!-- setup OBIB -->
+
+	<bean id="cdxConfig" class="org.oscarehr.integration.cdx.CDXConfig"/>
+	<bean id="obibReceiveDoc" class="ca.uvic.leadlab.obibconnector.impl.receive.ReceiveDoc" autowire="constructor"/>
+
+
+
 	<!-- setup JPA -->
 	<import resource="classpath:spring_jpa.xml" />
 

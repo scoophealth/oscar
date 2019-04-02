@@ -49,6 +49,7 @@ import javax.servlet.http.HttpServletResponse;
 import ca.uvic.leadlab.obibconnector.facades.*;
 //import ca.uvic.leadlab.obibconnector.facades.datatypes.AttachmentType;
 import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
+import ca.uvic.leadlab.obibconnector.facades.send.ISubmitDoc;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.AddressType;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.NameType;
@@ -104,6 +105,7 @@ public class EctConsultationFormRequestAction extends Action {
 
 	private static final Logger logger=MiscUtils.getLogger();
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	private ISubmitDoc submitDoc = SpringUtils.getBean(SubmitDoc.class);
 	
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -566,7 +568,7 @@ public class EctConsultationFormRequestAction extends Action {
 
 		String response = null;
 		try {
-			response = new SubmitDoc(clinic.getCdxOid())
+			response = submitDoc.newDoc()
 					.patient()
 						.id(patientId)
 						.name(NameType.LEGAL, demographic.getFirstName(), demographic.getLastName())
