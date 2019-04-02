@@ -71,7 +71,7 @@ public class PATHL7Handler implements MessageHandler {
 
 	private static List<String> labDocuments = Arrays.asList("BCCACSP","BCCASMP","BLOODBANKT",
 			"CELLPATH","CELLPATHR","DIAG IMAGE","MICRO3T", 
-			"MICROGCMT","MICROGRT", "MICROBCT","TRANSCRIP", "NOTIF");
+			"MICROGCMT","MICROGRT", "MICROBCT","TRANSCRIP", "NOTIF","CYTO");
 	
 	public static final String VIHARTF = "CELLPATHR";
 	public static enum OBX_DATA_TYPES {NM,ST,CE,TX,FT} // Numeric, String, Coded Element, Text, String
@@ -760,5 +760,10 @@ public class PATHL7Handler implements MessageHandler {
 		}
 		return result;
 	}
+    
+    //for OMD validation
+    public boolean isTestResultBlocked(int i, int j) {
+    	return false;
+    }
     
 }

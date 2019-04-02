@@ -33,18 +33,19 @@ import org.springframework.stereotype.Service;
 public class CodingSystemManager {
 
 	public String getCodeDescription(String codingSystem, String code) {
-		String daoName = AbstractCodeSystemDao.getDaoName(AbstractCodeSystemDao.codingSystem.valueOf(codingSystem));
-		if (daoName != null) {
-			AbstractCodeSystemDao<AbstractCodeSystemModel<?>> csDao = (AbstractCodeSystemDao<AbstractCodeSystemModel<?>>) SpringUtils.getBean(daoName);
-			if (csDao != null) {
-				AbstractCodeSystemModel<?> codingSystemEntity = csDao.findByCode(code);
-				if(codingSystemEntity != null) {
-					return codingSystemEntity.getDescription();
+		if(codingSystem != null && ! codingSystem.isEmpty() && code != null && ! code.isEmpty()) {		
+			String daoName = AbstractCodeSystemDao.getDaoName(AbstractCodeSystemDao.codingSystem.valueOf(codingSystem));
+			if (daoName != null) {
+				AbstractCodeSystemDao<AbstractCodeSystemModel<?>> csDao = (AbstractCodeSystemDao<AbstractCodeSystemModel<?>>) SpringUtils.getBean(daoName);
+				if (csDao != null) {
+					AbstractCodeSystemModel<?> codingSystemEntity = csDao.findByCode(code);
+					if(codingSystemEntity != null) {
+						return codingSystemEntity.getDescription();
+					}
 				}
 			}
 		}
 		return null;
-
 	}
 	
 	public boolean isCodeAvailable(String codingSystem, String code) {

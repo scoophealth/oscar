@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
@@ -40,10 +41,12 @@ import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
 import org.oscarehr.PMmodule.caisi_integrator.RemotePreventionHelper;
 import org.oscarehr.caisi_integrator.ws.CachedDemographicPrevention;
 import org.oscarehr.caisi_integrator.ws.CachedFacility;
+import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
 import org.oscarehr.common.model.DHIRSubmissionLog;
 import org.oscarehr.common.model.Demographic;
+import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.managers.DHIRSubmissionManager;
@@ -61,18 +64,54 @@ public class PreventionData {
 	private static Logger log = MiscUtils.getLogger();
 	private static PreventionDao preventionDao = (PreventionDao) SpringUtils.getBean("preventionDao");
 	private static PreventionExtDao preventionExtDao = (PreventionExtDao) SpringUtils.getBean("preventionExtDao");
-
+	private static PartialDateDao partialDateDao = SpringUtils.getBean(PartialDateDao.class);
 	private PreventionData() {
 		// prevent instantiation
 	}
 
-	public static Integer insertPreventionData(String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list, String snomedId) {
+	private static Date stringToDate(String date) {
+		if(date == null)
+			return null;
+		Date ret = UtilDateUtilities.StringToDate(date, "yyyy-MM-dd HH:mm");
+		if(ret != null) {
+			return ret;
+		}
+		ret = UtilDateUtilities.StringToDate(date, "yyyy-MM-dd");
+		
+		return ret;
+		
+	}
+	
+	private static PartialDate setPreventionDate(Prevention prevention, String date) {
+		PartialDate pd = null;
+		if(date.length() == 4) {
+			pd = new PartialDate();
+			pd.setTableName(PartialDate.PREVENTION);
+			pd.setTableId(prevention.getId());
+			pd.setFieldName(PartialDate.PREVENTION_PREVENTIONDATE);
+			pd.setFormat("YYYY");
+			//partialDateDao.persist(pd);
+			date = date + "-01-01 00:00";
+		} else if(date.length() == 7) {
+			pd = new PartialDate();
+			pd.setTableName(PartialDate.PREVENTION);
+			pd.setTableId(prevention.getId());
+			pd.setFieldName(PartialDate.PREVENTION_PREVENTIONDATE);
+			pd.setFormat("YYYY-MM");
+			//partialDateDao.persist(pd);
+			date = date + "-01 00:00";
+		}
+		prevention.setPreventionDate(stringToDate(date));
+		return pd;
+	}
+	
+	public static Integer insertPreventionData(String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list, String snomedId, String din) {
 		Integer insertId = -1;
 		try {
 			Prevention prevention = new Prevention();
 			prevention.setCreatorProviderNo(creator);
 			prevention.setDemographicId(Integer.valueOf(demoNo));
-			prevention.setPreventionDate(UtilDateUtilities.StringToDate(date, "yyyy-MM-dd HH:mm"));
+			PartialDate pd = setPreventionDate(prevention,date);
 			prevention.setProviderNo(providerNo);
 			prevention.setPreventionType(preventionType);
 			prevention.setNextDate(UtilDateUtilities.StringToDate(nextDate, "yyyy-MM-dd"));
@@ -82,6 +121,10 @@ public class PreventionData {
 			else if (refused.trim().equals("3")) prevention.setCompletedExternally(true);
 			prevention.setSnomedId(snomedId);
 			preventionDao.persist(prevention);
+			if(pd != null) {
+				pd.setTableId(prevention.getId());
+				partialDateDao.persist(pd);
+			}
 			if (prevention.getId() == null) return insertId;
 
 			insertId = prevention.getId();
@@ -166,7 +209,7 @@ public class PreventionData {
 
 	public static Integer updatetPreventionData(String id, String creator, String demoNo, String date, String providerNo, String providerName, String preventionType, String refused, String nextDate, String neverWarn, ArrayList<Map<String, String>> list, String snomedId) {
 		deletePreventionData(id);
-		return insertPreventionData(creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list, snomedId);
+		return insertPreventionData(creator, demoNo, date, providerNo, providerName, preventionType, refused, nextDate, neverWarn, list, snomedId,null);
 	}
 
 	public static ArrayList<Map<String, Object>> getPreventionDataFromExt(String extKey, String extVal) {
@@ -245,6 +288,10 @@ public class PreventionData {
 		return getPreventionData(loggedInInfo, null, demoNo);
 	}
 
+	public static List<Prevention> getPrevention(LoggedInInfo loggedInInfo, String preventionType, Integer demographicId) {
+		return preventionDao.findByTypeAndDemoNo(preventionType, demographicId);
+	}
+	
 	public static ArrayList<Map<String, Object>> getPreventionData(LoggedInInfo loggedInInfo, String preventionType, Integer demographicId) {
 		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
@@ -266,13 +313,30 @@ public class PreventionData {
 				h.put("refused", prevention.isRefused() ? "1" : prevention.isIneligible() ? "2" : prevention.isCompletedExternally() ? "3" : "0");
 				h.put("type", prevention.getPreventionType());
 				h.put("provider_no", prevention.getProviderNo());
-				h.put("provider_name", ProviderData.getProviderName(prevention.getProviderNo()));
+				if(!StringUtils.isEmpty(prevention.getProviderNo())) {
+					if("-1".equals(prevention.getProviderNo())) {
+						prevention.setPreventionExtendedProperties();
+						h.put("provider_name", prevention.getPreventionExtendedProperties().get("providerName"));
+					} else {
+						h.put("provider_name", ProviderData.getProviderName(prevention.getProviderNo()));
+					}
+				}
+				
+				
 
 				Date pDate = prevention.getPreventionDate();
-				h.put("prevention_date", blankIfNull(UtilDateUtilities.DateToString(pDate, "yyyy-MM-dd HH:mm")));
-				h.put("prevention_date_asDate", pDate);
-				h.put("prevention_date_no_time", blankIfNull(UtilDateUtilities.DateToString(pDate, "yyyy-MM-dd")));
+				String d1 = UtilDateUtilities.DateToString(pDate, "yyyy-MM-dd HH:mm");
+				String d2 = UtilDateUtilities.DateToString(pDate, "yyyy-MM-dd");
 				
+				d1 = partialDateDao.getDatePartial(d1, PartialDate.PREVENTION,  prevention.getId(), PartialDate.PREVENTION_PREVENTIONDATE);
+				d2 = partialDateDao.getDatePartial(d2, PartialDate.PREVENTION,  prevention.getId(), PartialDate.PREVENTION_PREVENTIONDATE);
+			     
+				
+				h.put("prevention_date", blankIfNull(d1));
+				h.put("prevention_date_asDate", pDate);
+				h.put("prevention_date_no_time", blankIfNull(d2));
+				
+				h.put("comments", "");
 				String age = "N/A";
 				if (pDate != null) {
 					age = UtilDateUtilities.calcAgeAtDate(dob, pDate);
@@ -392,6 +456,23 @@ public class PreventionData {
 		return (prevention);
 	}
 
+	public static List<Prevention> addRemotePreventions(LoggedInInfo loggedInInfo, List<Prevention> preventions, Integer demographicId, String preventionType, Date demographicDateOfBirth) {
+		List<CachedDemographicPrevention> remotePreventions = getRemotePreventions(loggedInInfo, demographicId);
+		for (CachedDemographicPrevention cachedDemographicPrevention : remotePreventions) {
+			if (preventionType.equals(cachedDemographicPrevention.getPreventionType())) {
+				Prevention prevention = new Prevention();
+				prevention.setPreventionDate(cachedDemographicPrevention.getPreventionDate().getTime());
+				prevention.setPreventionType(preventionType);
+				prevention.setCompletedExternally(true);
+				prevention.setProviderNo("r:"+cachedDemographicPrevention.getCaisiProviderId());
+				preventions.add(prevention);
+			}
+
+			Collections.sort(preventions, new PreventionComparator());
+		}
+		return preventions; 
+	}
+	
 	public static ArrayList<Map<String, Object>> addRemotePreventions(LoggedInInfo loggedInInfo, ArrayList<Map<String, Object>> preventions, Integer demographicId, String preventionType, Date demographicDateOfBirth) {
 		List<CachedDemographicPrevention> remotePreventions = getRemotePreventions(loggedInInfo, demographicId);
 		return addRemotePreventions(loggedInInfo, remotePreventions, preventions, preventionType, demographicDateOfBirth);
@@ -450,6 +531,20 @@ public class PreventionData {
 					date2 = ((Calendar) date2).getTime();
 				}
 
+				return (date1.compareTo(date2));
+			} else {
+				return (0);
+			}
+		}
+	}
+	
+	public static class PreventionComparator implements Comparator<Prevention> {
+		public int compare(Prevention o1, Prevention o2) {
+			Date date1 =  o1.getPreventionDate();
+			Date date2 =  o2.getPreventionDate();
+
+			if (date1 != null && date2 != null) {
+				
 				return (date1.compareTo(date2));
 			} else {
 				return (0);
@@ -532,6 +627,10 @@ public class PreventionData {
 					if (ext.containsKey("manufacture") && !ext.get("manufacture").equals("")) {
 						addToHashIfNotNull(h, "manufacture", ext.get("manufacture"));
 						summary += "\nManufacturer: " + ext.get("manufacture");
+					}
+					if (ext.containsKey("din") && !ext.get("din").equals("")) {
+						addToHashIfNotNull(h, "din", ext.get("din"));
+						summary += "\nDIN: " + ext.get("din");
 					}
 				}
 				if (ext.containsKey("comments") && !ext.get("comments").equals("")) {

@@ -22,9 +22,9 @@
       String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
       boolean authed=true;
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_lab" rights="r" reverse="<%=true%>">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_hrm" rights="r" reverse="<%=true%>">
 	<%authed=false; %>
-	<%response.sendRedirect("../securityError.jsp?type=_lab");%>
+	<%response.sendRedirect("../securityError.jsp?type=_hrm");%>
 </security:oscarSec>
 <%
 if(!authed) {
@@ -36,6 +36,7 @@ if(!authed) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <%
+
 HRMDocument hrmDocument = (HRMDocument) request.getAttribute("hrmDocument");
 HRMReport hrmReport = (HRMReport) request.getAttribute("hrmReport");
 Integer hrmReportId = (Integer) request.getAttribute("hrmReportId");
@@ -119,6 +120,13 @@ if(demographicLink != null){
 }
 
 #commentBox {
+	clear: both;
+	border: 1px solid black;
+	margin: 20px;
+}
+
+
+.aBox {
 	clear: both;
 	border: 1px solid black;
 	margin: 20px;
@@ -310,6 +318,24 @@ function popupPatientTickler(height, width, url, windowName,docId,d,n) {
 	return popup2(height, width, 0, 0, urlNew, windowName);
 }
 
+function popupPage(vheight,vwidth,varpage) { //open a new popup window
+    var page = "" + varpage;
+    windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";//360,680
+    var popup=window.open(page, "groupno", windowprops);
+    if (popup != null) {
+      if (popup.opener == null) {
+        popup.opener = self;
+      }
+      popup.focus();
+    }
+}
+
+function openReport(id) {
+popupPage(700,1200,'Display.do?id='+id);
+
+}
+
+
 </script>
 </head>
 <body>
@@ -345,29 +371,7 @@ String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 	       <b>DOB:</b><%=hrmReport.getDateOfBirthAsString() %>
 	</div>
 	<br />
-	<div id="hrmNotice">
-	This report was received from the Hospital Report Manager (HRM) at <%=(String) request.getAttribute("hrmReportTime") %>.
-	<% if (request.getAttribute("hrmDuplicateNum") != null && ((Integer) request.getAttribute("hrmDuplicateNum")) > 0) { %><br /><i>OSCAR has received <%=request.getAttribute("hrmDuplicateNum") %> duplicates of this report.</i><% } %>
-	<%
-	List<HRMDocument> allDocumentsWithRelationship = (List<HRMDocument>) request.getAttribute("allDocumentsWithRelationship");
-	if (allDocumentsWithRelationship != null && allDocumentsWithRelationship.size() >= 1) {
-	%>
-		OSCAR has detected that this is similar to the following reports: 
-		<% 
-		List<Integer> seenBefore = new LinkedList<Integer>();
-		for (HRMDocument relationshipDocument : allDocumentsWithRelationship) { 
-			if (!seenBefore.contains(relationshipDocument.getId().intValue())) { %>
-			<span class="documentLink_status<%=relationshipDocument.getReportStatus() %>" title="<%=relationshipDocument.getReportDate().toString() %>">
-			<% if (relationshipDocument.getId().intValue() != hrmReportId.intValue()) { %><a href="<%=request.getContextPath() %>/hospitalReportManager/Display.do?id=<%=relationshipDocument.getId() %>"><% } %>[<%=relationshipDocument.getId() %>]<% if (relationshipDocument.getId().intValue() != hrmReportId.intValue()) { %></a><% } %>
-			</span>&nbsp;&nbsp;
-		<% 	seenBefore.add(relationshipDocument.getId().intValue());
-			}
-		} %>
-		 <div class="boxButton">
-		   <input type="button" onClick="makeIndependent('<%=hrmReportId %>')" value="Make Independent" />
-		 </div>  
-	<% } %>
-	</div>
+
 
 <%
 	if(hrmReport.isBinary()) {
@@ -413,12 +417,18 @@ String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 <div id="infoBox">
 	<table>
 		<tr>
-			<th>Report Date</th>
+			<th>Report Date:</th>
 			<td><%=(hrmReport.getFirstReportEventTime() != null ? hrmReport.getFirstReportEventTime().getTime().toString() : 
 					((hrmReport.getFirstAccompanyingSubClassDateTime() != null ? hrmReport.getFirstAccompanyingSubClassDateTime().getTime().toString() : ""))) %></td>
 		</tr>
 		<tr>
-			<th>Demographic Info</th>
+			<th>Received Date:</th>
+			<td>
+				<%=(String) request.getAttribute("hrmReportTime")%>
+			</td>
+		</tr>
+		<tr>
+			<th>Demographic Info:</th>
 			<td>
 				<%=hrmReport.getLegalName() %><br />
 				<% try { %>
@@ -430,6 +440,76 @@ String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 				<% } %>
 			</td>
 		</tr>
+
+		<tr>
+			<th>Report Class:</th>
+			<td><%=hrmReport.getFirstReportClass() %></td>
+		</tr>
+		<% if (hrmReport.getFirstReportClass().equalsIgnoreCase("Diagnostic Imaging Report") || hrmReport.getFirstReportClass().equalsIgnoreCase("Cardio Respiratory Report")) { %>
+		<tr>
+			<th>Accompanying Subclass:</th>
+			<td>
+				<%
+				List<List<Object>> subClassListFromReport = hrmReport.getAccompanyingSubclassList();
+				List<HRMDocumentSubClass> subClassListFromDb = (List<HRMDocumentSubClass>) request.getAttribute("subClassList");
+				
+				if (subClassListFromReport.size() > 0) {
+				%>
+				<i>From the Report</i><br />
+					<% for (List<Object> subClass : subClassListFromReport) { %>
+						<abbr title="Type: <%=(String) subClass.get(0) %>; Date of Observation: <%=((Date) subClass.get(3)).toString() %>">(<%=(String) subClass.get(1) %>) <%=(String) subClass.get(2) %></abbr><br />
+					<% }
+				} %><br />
+				<%
+				if (subClassListFromDb != null && subClassListFromDb.size() > 0) { %>
+				<i>Stored in Database</i><br />
+					<div id="subclassstatus<%=hrmReportId %>"></div>
+					<% for (HRMDocumentSubClass subClass : subClassListFromDb) { %>
+						<abbr title="Type: <%=subClass.getSubClass() %>; Date of Observation: <%=subClass.getSubClassDateTime().toString() %>">(<%=subClass.getSubClassMnemonic() %>) <%=subClass.getSubClassDescription() %></abbr>
+						<% if (!subClass.isActive()) { %> (<a href="#" onclick="makeActiveSubClass('<%=hrmReportId %>', '<%=subClass.getId() %>')">make active</a>)<% } %><br />
+					<% }
+				} %>
+			</td>
+		</tr>
+		<% } else { %>
+		<tr>
+			<th>Subclass:</th>
+			<td>
+				<%
+				String[] subClassFromReport = hrmReport.getFirstReportSubClass().split("\\^");
+				if (subClassFromReport.length == 2) {
+				%>
+				<abbr title="<%=subClassFromReport[0] %>"><%=subClassFromReport[1] %></abbr>
+				<% } else {%>
+				<abbr><%=subClassFromReport[0] %></abbr>
+				<% } %>
+			</td>
+		</tr>
+		<% } %>
+		
+		<tr>
+			<th>Source Facility:</th>
+			<td>
+				<%=StringUtils.trimToEmpty(hrmDocument.getSourceFacility()) %>
+			</td>
+		</tr>
+		<tr>
+			<th>Source Author(s):</th>
+			<td>
+				
+					<%
+						for(String author: hrmReport.getFirstReportAuthorPhysician()) {
+					%>
+						<%=author %>&nbsp;
+					<%} %>
+				
+			</td>
+		</tr>
+		
+		<tr>
+			<td colspan=2><hr /></td>
+		</tr>
+
 		<tr>
 			<th>Linked with Demographic</th>
 			<td>
@@ -472,60 +552,20 @@ String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 			</td>
 		</tr>
 		<tr>
-			<td colspan=2><hr /></td>
-		</tr>
-		<tr>
-			<th>Report Class</th>
-			<td><%=hrmReport.getFirstReportClass() %></td>
-		</tr>
-		<% if (hrmReport.getFirstReportClass().equalsIgnoreCase("Diagnostic Imaging Report") || hrmReport.getFirstReportClass().equalsIgnoreCase("Cardio Respiratory Report")) { %>
-		<tr>
-			<th>Accompanying Subclass</th>
+			<th>EMR Category:</th>
 			<td>
-				<%
-				List<List<Object>> subClassListFromReport = hrmReport.getAccompanyingSubclassList();
-				List<HRMDocumentSubClass> subClassListFromDb = (List<HRMDocumentSubClass>) request.getAttribute("subClassList");
-				
-				if (subClassListFromReport.size() > 0) {
-				%>
-				<i>From the Report</i><br />
-					<% for (List<Object> subClass : subClassListFromReport) { %>
-						<abbr title="Type: <%=(String) subClass.get(0) %>; Date of Observation: <%=((Date) subClass.get(3)).toString() %>">(<%=(String) subClass.get(1) %>) <%=(String) subClass.get(2) %></abbr><br />
-					<% }
-				} %><br />
-				<%
-				if (subClassListFromDb != null && subClassListFromDb.size() > 0) { %>
-				<i>Stored in Database</i><br />
-					<div id="subclassstatus<%=hrmReportId %>"></div>
-					<% for (HRMDocumentSubClass subClass : subClassListFromDb) { %>
-						<abbr title="Type: <%=subClass.getSubClass() %>; Date of Observation: <%=subClass.getSubClassDateTime().toString() %>">(<%=subClass.getSubClassMnemonic() %>) <%=subClass.getSubClassDescription() %></abbr>
-						<% if (!subClass.isActive()) { %> (<a href="#" onclick="makeActiveSubClass('<%=hrmReportId %>', '<%=subClass.getId() %>')">make active</a>)<% } %><br />
-					<% }
-				} %>
-			</td>
-		</tr>
-		<% } else { %>
-		<tr>
-			<th>Subclass</th>
-			<td>
-				<%
-				String[] subClassFromReport = hrmReport.getFirstReportSubClass().split("\\^");
-				if (subClassFromReport.length == 2) {
-				%>
-				<abbr title="Subclass: <%=subClassFromReport[0] %>"><%=subClassFromReport[1] %></abbr>
-				<% } %>
-			</td>
-		</tr>
-		<% } %>
-		<tr>
-			<th>Categorization</th>
-			<td>
+				<div id="catList<%=hrmReportId %>hrm">
 				<%
 					HRMCategory category = (HRMCategory) request.getAttribute("category");
 					if (category != null){
 				%>
 				<%=StringEscapeUtils.escapeHtml(category.getCategoryName())%>
 				<%  }%> 
+				 </div>
+				<input type="hidden" name="cati" id="catfind<%=hrmReportId%>hrm" />
+				<input type="text" id="autocompletecat<%=hrmReportId%>hrm" name="categoryKeyword"/>
+                <div id="autocomplete_choicescat<%=hrmReportId%>hrm" class="autocomplete"></div>
+               
 			</td>
 		</tr>
 		<tr>
@@ -550,9 +590,56 @@ String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 	</table>
 </div>
 
+
+<div class="aBox" id="duplicateAndSimilarBox">
+
+<% if (request.getAttribute("hrmDuplicateNum") != null && ((Integer) request.getAttribute("hrmDuplicateNum")) > 0) { %>
+	<br />Duplicates Received by HRM:  <%=request.getAttribute("hrmDuplicateNum") %>.<br/>
+<% } else { %>
+	<br />Duplicates Received by HRM: 0.<br/>
+<% } %>
+
+<br/>
+	<%
+		List<HRMDocument> children = (List<HRMDocument>)request.getAttribute("children");
+		HRMDocument parent = (HRMDocument) request.getAttribute("parent");
+		
+		if(parent != null) {
+			%>
+				NOTE: This report is <b style="color:red">not the most current report available</b> . You can view the latest <a href="javascript:void(0)" onClick="openReport('<%=parent.getId()%>')">Here</a>.
+			<%
+		}
+		
+		if(children != null && children.size()>0) {
+			%>
+				This report has replaced the following versions.<br/>
+				<table>
+					<tr>
+						<th>Id</th>
+						<th>Report Date</th>
+						<th>Received Date</th>
+					</tr>
+					<%for(HRMDocument child:children) { %>
+					<tr>
+						<td><a href="javascript:void(0)" onClick="openReport('<%=child.getId()%>')"><%=child.getId() %></a></td>
+						<td><%=child.getReportDate() %></td>
+						<td><%=child.getTimeReceived() %></td>
+					</tr>
+					<% } %>
+				</table>
+			<%			
+		}
+	%>
+
+	<%if(parent != null || (children != null && children.size()>0)) {%>
+		 <div class="boxButton">
+		   <input type="button" onClick="makeIndependent('<%=hrmReportId %>')" value="Make Independent" />
+		 </div>  
+	<% } %>
+</div>
 <div id="commentBox">
-Set description to this report:<br />
-<input type="text" id="descriptionField_<%=hrmReportId %>_hrm" size="100" value="<%=StringEscapeUtils.escapeHtml(hrmDocument.getDescription())%>"/><br />
+<br/>
+<input placeholder="Description" type="text" id="descriptionField_<%=hrmReportId %>_hrm" size="100" value="<%=StringEscapeUtils.escapeHtml(hrmDocument.getDescription())%>"/><br />
 
  <div class="boxButton">
    <input type="button" onClick="setDescription('<%=hrmReportId %>')" value="Set Description" /><span id="descriptionstatus<%=hrmReportId %>"></span><br /><br />
@@ -561,7 +648,7 @@ Set description to this report:<br />
 </div>
 
 <div id="commentBox">
-Add a comment to this report:<br />
+<br />
 <textarea rows="10" cols="50" id="commentField_<%=hrmReportId %>_hrm"></textarea><br />
 
  <div class="boxButton">
@@ -570,10 +657,10 @@ Add a comment to this report:<br />
 <%
 List<HRMDocumentComment> documentComments = (List<HRMDocumentComment>) request.getAttribute("hrmDocumentComments");
 
-if (documentComments != null) {
+if (documentComments != null && documentComments.size() > 0) {
 	%>Displaying <%=documentComments.size() %> comment<%=documentComments.size() != 1 ? "s" : "" %><br />
 	<% for (HRMDocumentComment comment : documentComments) { %>
-		<div class="documentComment"><strong><%=providerDao.getProviderName(comment.getProviderNo()) %> on <%=comment.getCommentTime().toString() %> wrote...</strong><br />
+		<div class="documentComment"><strong><%=providerDao.getProviderName(comment.getProviderNo()) %> <%=comment.getCommentTime()!=null ? ("on " +comment.getCommentTime().toString()):"" %> wrote...</strong><br />
 		<%=comment.getComment() %><br />
 		<a href="#" onClick="deleteComment('<%=comment.getId() %>', '<%=hrmReportId %>'); return false;">(Delete this comment)</a></div>
 	<% }
@@ -584,23 +671,23 @@ if (documentComments != null) {
 <div id="metadataBox">
 	<table style="border: 1px solid black;margin: 20px;">
 		<tr>
-			<th>Message Unique ID</th>
+			<th>Message Unique ID:</th>
 			<td><%=hrmReport.getMessageUniqueId() %></td>
 		</tr>
 		<tr>
-			<th>Sending Facility ID</th>
+			<th>Sending Facility ID:</th>
 			<td><%=hrmReport.getSendingFacilityId() %></td>
 		</tr>
 		<tr>
-			<th>Sending Facility Report No.</th>
+			<th>Sending Facility Report No.:</th>
 			<td><%=hrmReport.getSendingFacilityReportNo() %></td>
 		</tr>
 		<tr>
-			<th>Date and Time of Report</th>
+			<th>Date and Time of Report:</th>
 			<td><%=HRMReportParser.getAppropriateDateFromReport(hrmReport) %></td>
 		</tr>
 		<tr>
-			<th>Result Status</th>
+			<th>Result Status:</th>
 			<td><%=(hrmReport.getResultStatus() != null && hrmReport.getResultStatus().equalsIgnoreCase("C")) ? "Cancelled" : "Signed by the responsible author and Released by health records"  %></td>
 		</tr>
 	</table>
@@ -608,6 +695,26 @@ if (documentComments != null) {
 
 
 <script type="text/javascript">
+
+var resultFormatter4 = function(oResultData, sQuery, sResultMatch) {
+	return oResultData[1] + " " + oResultData[2];
+};
+
+function saveCategory(reportId, categoryId) {
+	jQuery.ajax({
+		type: "POST",
+		url: "<%=request.getContextPath() %>/hospitalReportManager/hrm.do",
+		data: "method=saveCategory&hrmDocumentId="+reportId+"&categoryId="+categoryId,
+		dataType:'json',
+		success: function(data) {
+			if (data != null && data.value != null) {
+				jQuery("#catList<%=hrmReportId %>hrm").html(data.value);
+			}
+			jQuery("#autocompletecat<%=hrmReportId%>hrm").val('');
+		}
+	});
+}
+
 YAHOO.example.BasicRemote = function() {
     if($("autocompletedemo<%=hrmReportId%>hrm") && $("autocomplete_choices<%=hrmReportId%>hrm")){
            oscarLog('in basic remote');
@@ -691,6 +798,62 @@ YAHOO.example.BasicRemote = function() {
               oAC: oAC
           };
       }();
+      
+      
+      YAHOO.example.BasicRemote = function() {
+          var url = "<%= request.getContextPath() %>/hospitalReportManager/hrm.do?method=searchCategory";
+          var oDS = new YAHOO.util.XHRDataSource(url,{connMethodPost:true,connXhrMode:'ignoreStaleResponses'});
+          oDS.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
+          oDS.responseSchema = {
+              resultsList : "results",
+              fields : ["id","mnemonic","name"]
+          };
+          // Enable caching
+          oDS.maxCacheEntries = 0;
+          // Instantiate the AutoComplete
+          var oAC = new YAHOO.widget.AutoComplete("autocompletecat<%=hrmReportId%>hrm", "autocomplete_choicescat<%=hrmReportId%>hrm", oDS);
+          oAC.queryMatchSubset = true;
+          oAC.minQueryLength = 3;
+          oAC.maxResultsDisplayed = 25;
+          oAC.formatResult = resultFormatter4;
+          oAC.queryMatchContains = true;
+          oAC.itemSelectEvent.subscribe(function(type, args) {
+        	  if(type == "itemSelect") {
+        		  var id = args[2][0];
+        		  var displayName = args[2][1] + ":" + args[2][2];
+        		  args[0].getInputEl().value = displayName;
+        		  saveCategory('<%=hrmReportId %>',id);  
+        	  }
+			
+        	  /*
+        	 var myAC = args[0];
+             var str = myAC.getInputEl().id.replace("autocompletecat","catfind");
+             var oData=args[2];
+             $(str).value = args[2][0];//li.id;
+             myAC.getInputEl().value = args[2][2] + ","+args[2][1];
+             var adoc = document.createElement('div');
+             adoc.appendChild(document.createTextNode(oData[1]));
+             var idoc = document.createElement('input');
+             idoc.setAttribute("type", "hidden");
+             idoc.setAttribute("name","flagcats");
+             idoc.setAttribute("value",oData[0]);
+             adoc.appendChild(idoc);
+
+             var providerList = $('providerList<%=hrmReportId%>hrm');
+             providerList.appendChild(adoc);
+
+             myAC.getInputEl().value = '';//;oData.fname + " " + oData.lname ;
+
+             addProvToHrm('<%=hrmReportId %>', args[2][0]);
+             */
+          });
+
+
+          return {
+              oDS: oDS,
+              oAC: oAC
+          };
+      }();
 </script>
 
 <%
@@ -732,8 +895,5 @@ if (duplicateLabIdsString!=null)
 %>
 
 <br/>
-
-Duplicates of this report have been received <%=request.getAttribute("hrmDuplicateNum")!=null?request.getAttribute("hrmDuplicateNum"):"0"%> time(s).
-
 </body>
 </html>

@@ -83,6 +83,8 @@ public class RxDrugData {
 		public RenalImpairment renalImpairment;
 		public HepaticImpairment hepaticImpairment;
 		
+		public String drugCode;
+		
 		public DrugMonograph(){
 			//default
 		}
@@ -94,6 +96,9 @@ public class RxDrugData {
 			product = (String) hash.get("product");
 			regionalIdentifier = (String) hash.get("regional_identifier");
 			drugForm = (String)hash.get("drugForm");
+			if(hash.get("drugCode") != null) {
+				drugCode = (String)hash.get("drugCode");
+			}
 			
 			Vector drugRoute=(Vector)hash.get("drugRoute");
 			if(drugRoute!=null){
@@ -827,21 +832,25 @@ public class RxDrugData {
 			Hashtable hashObject  = (Hashtable) res.get(0);
 			if (hashObject != null){
 				Vector alli = (Vector) hashObject.get("warnings");
-				for (int k = 0; k < alli.size(); k++){
-					String str = (String) alli.get(k);
-					int id = Integer.parseInt(str);
-					li.add(allerg[id]);
-					MiscUtils.getLogger().debug(str);
+				if(alli != null) {
+					for (int k = 0; k < alli.size(); k++){
+						String str = (String) alli.get(k);
+						int id = Integer.parseInt(str);
+						li.add(allerg[id]);
+						MiscUtils.getLogger().debug(str);
+					}
 				}
 				
 				Vector allmissing = (Vector) hashObject.get("missing");
-				for (int k = 0; k < allmissing.size(); k++){
-					String str = (String) allmissing.get(k);
-					int id = Integer.parseInt(str);
-					if(missing != null) {
-						missing.add(allerg[id]);
+				if(allmissing != null) {
+					for (int k = 0; k < allmissing.size(); k++){
+						String str = (String) allmissing.get(k);
+						int id = Integer.parseInt(str);
+						if(missing != null) {
+							missing.add(allerg[id]);
+						}
+						
 					}
-					
 				}
 			}
 		}

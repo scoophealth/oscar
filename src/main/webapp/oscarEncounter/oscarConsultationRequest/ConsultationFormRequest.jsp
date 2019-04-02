@@ -1303,6 +1303,66 @@ function updateFaxButton() {
 }
 </script>
 
+<script>
+
+jQuery(document).ready(function(){
+	var val = jQuery("input[name='status']:checked").val();
+	statusChanged1(parseInt(val));
+});
+
+function statusChanged1(val) {
+	if(val == 4) {
+		jQuery("#reasonForConsultation").attr('readonly','readonly');
+		jQuery("#clinicalInformation").attr('readonly','readonly');
+		jQuery("#concurrentProblems").attr('readonly','readonly');
+		jQuery("#currentMedications").attr('readonly','readonly');
+		jQuery("#allergies").attr('readonly','readonly');
+		
+		jQuery("input[name='status']:not(:checked)").each(function() {
+			jQuery(this).attr('disabled',true);
+			
+		});
+		
+		jQuery("#fax_button2").attr('disabled',true);
+		jQuery("#updateBtn").attr('disabled',true);
+		jQuery("#updateAndSendBtn").attr('disabled',true);
+		jQuery("#updateAndPrintBtn").attr('disabled',true);
+		
+		jQuery("#fax_button").attr('disabled',true);
+		jQuery("#updateBtn1").attr('disabled',true);
+		jQuery("#updateAndSendBtn1").attr('disabled',true);
+		jQuery("#updateAndPrintBtn1").attr('disabled',true);
+		jQuery("#updateAndPrintPreviewBtn1").attr('disabled',true);
+	
+		jQuery("#addProviderBtn").attr('disabled',true);
+		jQuery("#addOtherFaxBtn").attr('disabled',true);
+		
+		jQuery("#attachLinks").hide();
+		
+	}
+}
+function statusChanged(val) {
+	
+	if(val == 4) {
+		//lock fields
+	//	alert(jQuery("#reasonForConsultation").val());
+	
+		jQuery("#reasonForConsultation").attr('readonly','readonly');
+		jQuery("#clinicalInformation").attr('readonly','readonly');
+		jQuery("#concurrentProblems").attr('readonly','readonly');
+		jQuery("#currentMedications").attr('readonly','readonly');
+		jQuery("#allergies").attr('readonly','readonly');
+		
+	} else {
+		//unlock fields
+		jQuery("#reasonForConsultation").attr('readonly','');
+		jQuery("#clinicalInformation").attr('readonly','');
+		jQuery("#concurrentProblems").attr('readonly','');
+		jQuery("#currentMedications").attr('readonly','');
+		jQuery("#allergies").attr('readonly','');
+	}
+}
+</script>
 <%=WebUtilsOld.popErrorMessagesAsAlert(session)%>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF" 
@@ -1427,7 +1487,7 @@ function updateFaxButton() {
 					<td class="tite4" colspan="2">
 					<table>
 						<tr>
-							<td class="stat"><html:radio property="status" value="1" />
+							<td class="stat"><html:radio property="status" value="1" onclick="statusChanged(1)"/>
 							</td>
 							<td class="stat"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNoth" />:
 							</td>
@@ -1439,7 +1499,7 @@ function updateFaxButton() {
 					<td class="tite4" colspan="2">
 					<table>
 						<tr>
-							<td class="stat"><html:radio property="status" value="2" />
+							<td class="stat"><html:radio property="status" value="2" onclick="statusChanged(2)"/>
 							</td>
 							<td class="stat"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgSpecCall" />
 							</td>
@@ -1451,7 +1511,7 @@ function updateFaxButton() {
 					<td class="tite4" colspan="2">
 					<table>
 						<tr>
-							<td class="stat"><html:radio property="status" value="3" />
+							<td class="stat"><html:radio property="status" value="3" onclick="statusChanged(3)" />
 							</td>
 							<td class="stat"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgPatCall" />
 							</td>
@@ -1463,7 +1523,7 @@ function updateFaxButton() {
 					<td class="tite4" colspan="2">
 					<table>
 						<tr>
-							<td class="stat"><html:radio property="status" value="4" />
+							<td class="stat"><html:radio property="status" value="4" onclick="statusChanged(4)"/>
 							</td>
 							<td class="stat"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgCompleted" /></td>
 						</tr>
@@ -1477,7 +1537,7 @@ function updateFaxButton() {
 							<td class="stat">&nbsp;</td>
 						</tr>
 						<tr>
-							<td style="text-align: center" class="stat">
+							<td style="text-align: center" class="stat" id="attachLinks">
 							<%
 								if (thisForm.iseReferral())
 								{
@@ -1531,12 +1591,12 @@ function updateFaxButton() {
 					<td class="tite4" colspan=2>
 					<% boolean faxEnabled = props.getBooleanProperty("faxEnable", "yes"); %>
 					<% if (request.getAttribute("id") != null) { %>
-						<input name="update" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
-						<input name="updateAndPrint" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
-						<input name="printPreview" type="button" value="Print Preview" onclick="return checkForm('And Print Preview','EctConsultationFormRequestForm');" />
+						<input name="update" type="button" id="updateBtn1" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
+						<input name="updateAndPrint" type="button" id="updateAndPrintBtn1" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
+						<input name="printPreview" type="button" id="updateAndPrintPreviewBtn1" value="Print Preview" onclick="return checkForm('And Print Preview','EctConsultationFormRequestForm');" />
 												
 						<logic:equal value="true" name="EctConsultationFormRequestForm" property="eReferral">
-							<input name="updateAndSendElectronicallyTop" type="button" 
+							<input name="updateAndSendElectronicallyTop" type="button" id="updateAndSendBtn1"
 								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndSendElectronicReferral"/>" 
 								onclick="return checkForm('Update_esend','EctConsultationFormRequestForm');" />
 						</logic:equal>
@@ -1824,6 +1884,12 @@ function updateFaxButton() {
 							</td>
 							<td class="tite2"><%=thisForm.getPatientWPhone()%></td>
 						</tr>
+												<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgCellPhone" />:
+							</td>
+							<td class="tite2"><%=thisForm.getPatientCellPhone()%></td>
+						</tr>
                                                 <tr>
 							<td class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgEmail" />:
@@ -2024,7 +2090,7 @@ function updateFaxButton() {
 					</td>
 				</tr>
 				<tr>
-					<td colspan=2><html:textarea property="reasonForConsultation"
+					<td colspan=2><html:textarea property="reasonForConsultation" styleId="reasonForConsultation"
 						cols="90" rows="6"></html:textarea></td>
 				</tr>
 				<tr>
@@ -2243,7 +2309,7 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 								</select>
 							</td>
 							<td class="tite3">
-								<button onclick="AddOtherFaxProvider(); return false;">Add Provider</button>
+								<button onclick="AddOtherFaxProvider(); return false;" id="addProviderBtn">Add Provider</button>
 							</td>
 						</tr>
 						<tr>
@@ -2253,7 +2319,7 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 
 							<font size="1"> <bean:message key="global.phoneformat1" />  </font></td>
 							<td class="tite3">
-								<button onclick="AddOtherFax(); return false;">Add Other Fax Recipient</button>
+								<button onclick="AddOtherFax(); return false;" id="addOtherFaxBtn">Add Other Fax Recipient</button>
 							</td>
 						</tr>
 						<tr>
@@ -2286,15 +2352,15 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 						
 						<%if (request.getAttribute("id") != null) {%>
 						
-							<input name="update" type="button" 
+							<input name="update" type="button" id="updateBtn"
 								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" 
 								onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
-							<input name="updateAndPrint" type="button" 
+							<input name="updateAndPrint" type="button" id="updateAndPrintBtn"
 								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" 
 								onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
 							
 							<logic:equal value="true" name="EctConsultationFormRequestForm" property="eReferral">
-								<input name="updateAndSendElectronically" type="button" 
+								<input name="updateAndSendElectronically" type="button" id="updateAndSendBtn"
 									value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndSendElectronicReferral"/>" 
 									onclick="return checkForm('Update_esend','EctConsultationFormRequestForm');" />
 							</logic:equal>

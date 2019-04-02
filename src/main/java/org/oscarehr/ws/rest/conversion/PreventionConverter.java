@@ -37,7 +37,8 @@ public class PreventionConverter extends AbstractConverter<Prevention, Preventio
 	@Override
     public PreventionTo1 getAsTransferObject(LoggedInInfo loggedInInfo, Prevention d) throws ConversionException {
 	   PreventionTo1 t = new PreventionTo1();
-	   	   
+	   	 
+	   t.setId(d.getId());
 	   t.setDemographicId(d.getDemographicId());
 	   t.setPreventionDate(d.getPreventionDate());
 	   t.setProviderNo(d.getProviderNo());

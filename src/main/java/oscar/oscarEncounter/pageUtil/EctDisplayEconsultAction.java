@@ -25,9 +25,10 @@
 
 package oscar.oscarEncounter.pageUtil;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -51,11 +52,7 @@ import org.apache.struts.util.MessageResources;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.oscarehr.common.Gender;
-import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.common.model.Demographic;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 
@@ -64,7 +61,10 @@ import oscar.OscarProperties;
  * Retrieves the eConsults for the demographic and displays them in the eChart
  */
 public class EctDisplayEconsultAction extends EctDisplayAction {
+	
     private String cmd = "eConsult";
+	private final OscarProperties oscarProperties = OscarProperties.getInstance();
+	private final String backendEconsultUrl = oscarProperties.getProperty("backendEconsultUrl");
 
     /**
      * Generates the eConsult module in the eChart, making it so that when the user clicks on the title it takes them to the demographic's eConsults, when they click the
@@ -82,135 +82,135 @@ public class EctDisplayEconsultAction extends EctDisplayAction {
      */
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
         Logger logger = MiscUtils.getLogger();
-    	String oneIdEmail = request.getSession().getAttribute("oneIdEmail") != null ? request.getSession().getAttribute("oneIdEmail").toString() : "";
-        if(oneIdEmail == null || oneIdEmail.equals("")) {
+        
+    	// hide the econsult option if it is not available. 
+    	if(backendEconsultUrl == null || backendEconsultUrl.equals("")) {
             return true;
         } else {
-    	    try {
-                //Gets the session and the oneId token from the session
-                HttpSession session = request.getSession();
-                String delegateOneIdEmail = request.getSession().getAttribute("delegateOneIdEmail") != null ? request.getSession().getAttribute("delegateOneIdEmail").toString() : "";
-                String delegateEmailQueryString = "";
-                String providerEmail = oneIdEmail; 
-                String delegateEmail = "";
+        	
+            HttpSession session = request.getSession();
+        	String oneIdEmail = session.getAttribute("oneIdEmail") != null ? session.getAttribute("oneIdEmail").toString() : "";
+        	String demographicNo = bean.getDemographicNo();
+            String winName = "eConsult";
+            
+            //set lefthand module heading and link
+            Dao.setLeftHeading("eConsult");
+            StringBuilder eConsultDisplayUrl = new StringBuilder(String.format("..%1$s%2$s", File.separator, "econsult.do"));
+            eConsultDisplayUrl.append(String.format("?%1$s=%2$s", "demographicNo", demographicNo));
+            eConsultDisplayUrl.append(String.format("&%1$s=%2$s", "method", "frontend"));
+            StringBuilder viewConsultUrl = new StringBuilder(eConsultDisplayUrl.toString());
+            StringBuilder createNewEconsultUrl = new StringBuilder(eConsultDisplayUrl.toString());
+            eConsultDisplayUrl.append(String.format("&%1$s=%2$s", "task", "patientSummary"));
+            
+            String url = "popupPage(700,960,'" + winName + "','" + eConsultDisplayUrl + "'); return false;";
+
+            Dao.setLeftURL(url);
+
+            //set the right hand heading link
+            winName = "new eConsult" + demographicNo;
+            createNewEconsultUrl.append(String.format("&%1$s=%2$s", "task", "draft"));
+            
+            url = "popupPage(700,960,'" + winName + "','" + createNewEconsultUrl + "'); return false;";
+
+            Dao.setRightURL(url);
+            Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action
+
+            try {
+ 
+                String delegateOneIdEmail = (String) session.getAttribute("delegateOneIdEmail");
+	            StringBuilder backendEconsultRequest = new StringBuilder(backendEconsultUrl);
+	    		
+	            if(! backendEconsultUrl.endsWith(File.separator)) {
+	            	backendEconsultRequest.append(File.separator);
+	    		}
+	            
+	            backendEconsultRequest.append(String.format("?%1$s=%2$s", "oneid_email", URLEncoder.encode(oneIdEmail, StandardCharsets.UTF_8.toString())));
+   
+	        	if(delegateOneIdEmail != null && ! delegateOneIdEmail.isEmpty()) {
+	        		backendEconsultRequest.append(String.format("&%1$s=%2$s", "delegate_oneid_email", URLEncoder.encode(delegateOneIdEmail, StandardCharsets.UTF_8.toString())));
+        		}
+
+        		backendEconsultRequest.append(String.format("#!%s", File.separator));	        		
+        		backendEconsultRequest.append(String.format("consultSummary?"));
+        		backendEconsultRequest.append(String.format("%1$s=%2$s", "patient_id", demographicNo));
+        		backendEconsultRequest.append(String.format("&%1$s=%2$s", "count", 25));
+        		backendEconsultRequest.append(String.format("&%1$s=%2$s", "offset", 0));
+
+        		//Creates an HttpGet with the url to get eConsults and sets a header for the oneIdEmail
+                HttpGet httpGet = new HttpGet(backendEconsultRequest.toString());
+                String oneIdToken = (String)session.getAttribute("oneid_token");
                 
-                //If there is a delegateOneIdEmail then it is used as the normal oneId email and the current user is the delegate as they are delegating for that person
-                if (!delegateOneIdEmail.equals("")) {
-                    delegateEmailQueryString = "&delegate_oneid_email=" + oneIdEmail;
-                    
-                    providerEmail = delegateOneIdEmail;
-                }
-                //Gets the oneIdEmail and encodes it for use in URLs
-                String encodedOneIdEmail = providerEmail;
-                //Gets the starting URL for the backend and frontend eConsult URLs
-    		    OscarProperties oscarProperties = OscarProperties.getInstance();
-    		    String frontendEconsultUrl = oscarProperties.getProperty("frontendEconsultUrl");
-                String backendEconsultUrl = oscarProperties.getProperty("backendEconsultUrl");
-                //Gets the demographic whose eChart is loading
-	    	    DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
-	    	    Demographic demographic = demographicDao.getDemographic(bean.demographicNo);
+                httpGet.addHeader("x-oneid-email", URLEncoder.encode(oneIdEmail, StandardCharsets.UTF_8.toString()));
+                httpGet.addHeader("x-access-token", oneIdToken);
+                
+                //Gets an HttpClient that will ignore SSL validation
+                HttpClient httpClient = getHttpClient2();
+                //Executes the GET request and stores the response
+                HttpResponse httpResponse = httpClient.execute(httpGet);
+                //Gets the entity from the response and stores it as a JSONObject
+                String entity = EntityUtils.toString(httpResponse.getEntity());
+                
+                // Exception here if the entity string is not JSON. 
+                JSONObject jsonObject = new JSONObject(entity);
 
-                //set lefthand module heading and link
-	            Dao.setLeftHeading("eConsult");
-                String eConsultDisplayUrl = frontendEconsultUrl +  "/?patient_id=" + URLEncoder.encode(demographic.getDemographicNo().toString(), "UTF-8") + "&oneid_email=" + providerEmail + delegateEmailQueryString + "#!/sent";
-	            String url = "popupPage(700,960,'eConsult','" + eConsultDisplayUrl + "'); return false;";
-	            Dao.setLeftURL(url);
+                //Creates the onClick string for each eConsult that will be listed
+                viewConsultUrl.append(String.format("&%1$s=%2$s", "task", "econsult"));
+ 
+                //Gets the data and then entry sections of the response entity
+                JSONObject data = jsonObject.getJSONObject("data");
+                JSONArray entryArray = data.getJSONArray("entry");
+                //Creates a SimpleDateFormat for parsing the dat
+                SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+                //Gets the length of the entryArray
+                Integer entryLength = entryArray.length();
 
+                //Loops for the length of the array to output each eConsult
+                for (Integer i = 0; i < entryLength; i++) {
+                    //Gets the JSONObject from the entryArray and then the resource object from the entry
+                    JSONObject entry = (JSONObject)entryArray.get(i);
+                    JSONObject resource = entry.getJSONObject("resource");
+                    //Gets the eConsultId
+                    String eConsultId = resource.getString("id");
+                    //Gets the last update date
+                    String date = resource.getString("date");
+                    //Gets the eConsult title
+                    String title = resource.getString("description");
+                    String status = resource.getString("status");
 
-	            //set the right hand heading link
-	            String winName = "new eConsult" + bean.demographicNo;
-	            String gender = Gender.valueOf(demographic.getSex()).getText().toLowerCase();
-	            String createNewEconsultUrl = frontendEconsultUrl + "?oneid_email=" + providerEmail + delegateEmailQueryString + "#!/econsult?patient_id=" + URLEncoder.encode(demographic.getDemographicNo().toString(), "UTF-8") + "&salutation=" + URLEncoder.encode(demographic.getTitle(), "UTF-8") + "&first_name=" + URLEncoder.encode(demographic.getFirstName(), "UTF-8") + "&last_name=" + URLEncoder.encode(demographic.getLastName(), "UTF-8") + "&date_of_birth=" + URLEncoder.encode(demographic.getBirthDayAsString(), "UTF-8") + "&gender=" + URLEncoder.encode(gender, "UTF-8") + "&ohip_number=" + URLEncoder.encode(demographic.getHin(), "UTF-8") + "&ohip_code=" + URLEncoder.encode(demographic.getVer(), "UTF-8");
-	            url = "popupPage(700,960,'" + winName + "','" + createNewEconsultUrl + "'); return false;";
-
-	            Dao.setRightURL(url);
-                Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action
-
-                try {
-                    //Sets the URL to get the list of eConsults
-                    url = backendEconsultUrl + "/consult?count=" + 25 + "&offset=" + 0 + "&patient_id=" + demographic.getDemographicNo() + "&requester=" + providerEmail;
-                    //Creates an HttpGet with the url to get eConsults and sets a header for the oneIdEmail
-                    HttpGet httpGet = new HttpGet(url);
-
-                    String oneIdToken = (String)session.getAttribute("oneid_token");
-                    
-                    httpGet.addHeader("x-oneid-email", encodedOneIdEmail);
-                    httpGet.addHeader("x-access-token", oneIdToken);
-                    
-                    //Gets an HttpClient that will ignore SSL validation
-                    HttpClient httpClient = getHttpClient2();
-                    //Executes the GET request and stores the response
-                    HttpResponse httpResponse = httpClient.execute(httpGet);
-                    
-                    if(httpResponse.getStatusLine().getStatusCode() >= 200 && httpResponse.getStatusLine().getStatusCode() < 300 ) {
-	                    //Gets the entity from the response and stores it as a JSONObject
-	                    String entity = EntityUtils.toString(httpResponse.getEntity());
-	                    JSONObject object = new JSONObject(entity);
-	
-	                    //Creates the onClick string for each eConsult that will be listed
-	                    url = "popupPage(700,960, 'eConsult', '" + frontendEconsultUrl + "?oneid_email=%s%s#!/econsult/%s?actor=requester'); return false;";
-	                    //Gets the data and then entry sections of the response entity
-	                    JSONObject data = object.getJSONObject("data");
-	                    JSONArray entryArray = data.getJSONArray("entry");
-	                    //Creates a SimpleDateFormat for parsing the dat
-	                    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
-	                    //Gets the length of the entryArray
-	                    Integer entryLength = entryArray.length();
-	
-	                    //Loops for the length of the array to output each eConsult
-	                    for (Integer i = 0; i < entryLength; i++) {
-	                        //Gets the JSONObject from the entryArray and then the resource object from the entry
-	                        JSONObject entry = (JSONObject)entryArray.get(i);
-	                        JSONObject resource = entry.getJSONObject("resource");
-	                        //Gets the eConsultId
-	                        String eConsultId = resource.getString("id");
-	                        //Gets the last update date
-	                        String date = resource.getString("date");
-	                        //Gets the eConsult title
-	                        String title = resource.getString("description");
-	                        String status = resource.getString("status");
-	
-	                        //Creates a new item to populate and display the eConsult
-	                        NavBarDisplayDAO.Item item = new NavBarDisplayDAO.Item();
-	                        //Sets the item's title
-	                        item.setTitle(title + "(" + status + ")");
-	                        //Formats the url string with the oneIdEmail and eConsultId and sets the eConsult's URL
-	                        String eConsultLink = String.format(url, providerEmail, delegateEmailQueryString, eConsultId);
-	                        item.setURL(eConsultLink);
-	                        try {
-	                            //Parses and sets the eConsult's date
-	                            item.setDate(dateFormatter.parse(date));
-	                        }
-	                        catch (ParseException e) {
-	                            logger.error("Could not parse the date for eConsult " + eConsultId, e);
-	                        }
-	
-	                        //Adds the eConsult to the Dao
-	                        Dao.addItem(item);
-	                    }
-                    } else {
-                    	 NavBarDisplayDAO.Item item = new NavBarDisplayDAO.Item();
-                    	 item.setURL("javascript:void(0);return false;");
-                    	 item.setTitle("Error retrieving data");
-                    	 Dao.addItem(item);
+                    //Creates a new item to populate and display the eConsult
+                    NavBarDisplayDAO.Item item = new NavBarDisplayDAO.Item();
+                    //Sets the item's title
+                    item.setTitle(title + "(" + status + ")");
+                    //Formats the url string with the oneIdEmail and eConsultId and sets the eConsult's URL                    
+                    StringBuilder stringBuilder = new StringBuilder("popupPage(700,960, 'eConsult', '");
+                    viewConsultUrl.append(String.format("&%1$s=%2$s", "itemId", eConsultId));
+                    stringBuilder.append(viewConsultUrl.toString());
+                    stringBuilder.append("'); return false;");
+                    item.setURL(stringBuilder.toString());
+                    try {
+                        //Parses and sets the eConsult's date
+                    	item.setDate(dateFormatter.parse(date));   
                     }
+                    catch (ParseException e) {
+                        logger.error("Could not parse the date for eConsult " + eConsultId, e);
+                    }
+
+                    //Adds the eConsult to the Dao
+                    Dao.addItem(item);
                 }
-                catch (IOException e) {
-                    logger.error("Failed to retrieve eConsults for the OneID account " + providerEmail, e);
-                }
-                catch (NoSuchAlgorithmException e) {
-                    logger.error("Failed to create an HttpClient that allows all SSL", e);
-                }
-                catch (KeyManagementException e) {
-                	 logger.error("Failed to create an HttpClient that allows all SSL", e);
-                }
-                catch (JSONException e) {
-                    logger.error("Failed to convert the response entity to a JSON Object", e);
-                } 
             }
-            catch (UnsupportedEncodingException uee) {
-            	logger.error("The eConsult URL could not be encoded", uee);
+            catch (IOException e) {
+                logger.error("Failed to retrieve eConsults for the OneID account " + oneIdEmail, e);
             }
+            catch (NoSuchAlgorithmException e) {
+                logger.error("Failed to create an HttpClient that allows all SSL", e);
+            }
+            catch (KeyManagementException e) {
+            	 logger.error("Failed to create an HttpClient that allows all SSL", e);
+            }
+            catch (JSONException e) {
+                logger.error("Failed to convert the response entity to a JSON Object", e);
+            } 
 
             return true;
         }

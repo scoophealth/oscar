@@ -64,6 +64,7 @@ public class HnrDataValidationDaoTest extends DaoTestFixtures {
 		Demographic d = new Demographic();
 		d.setFirstName("a");
 		d.setLastName("b");
+		d.setMiddleNames("");
 		d.setYearOfBirth("2000");
 		d.setMonthOfBirth("1");
 		d.setDateOfBirth("1");

@@ -66,7 +66,6 @@ String annotation_display = org.oscarehr.casemgmt.model.CaseManagementNoteLink.D
 CaseManagementManager caseManagementManager = (CaseManagementManager) SpringUtils.getBean("caseManagementManager");
 
 %>
-<oscar:oscarPropertiesCheck property="SPEC3" value="yes">
     <%
     
     PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class);
@@ -83,7 +82,6 @@ if(lab.demographicNo != null && !lab.demographicNo.equals("null")){
     LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_HL7_LAB, segmentID, request.getRemoteAddr());
 }
 %>
-</oscar:oscarPropertiesCheck>
 <%
 /*
 String ackStatus = request.getParameter("status");

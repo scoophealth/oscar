@@ -23,6 +23,7 @@ import org.oscarehr.util.DbConnectionFilter;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.log.LogAction;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.upload.MessageUploader;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
@@ -61,14 +62,16 @@ public class OLISHL7Handler implements MessageHandler {
 				lastTimeStampAccessed = getLastUpdateInOLIS(msg) ;
 				
 				if(OLISUtils.isDuplicate(loggedInInfo, msg)) {
+					LogAction.addLog(loggedInInfo.getLoggedInProviderNo(), "OLIS","DUPLICATE", fileName , null);
 					continue; 
 				}
 				MessageUploader.routeReport(loggedInInfo, serviceName,"OLIS_HL7", msg.replace("\\E\\", "\\SLASHHACK\\").replace("µ", "\\MUHACK\\").replace("\\H\\", "\\.H\\").replace("\\N\\", "\\.N\\"), fileId, results);
 				if (routeToCurrentProvider) {
 					ProviderLabRouting routing = new ProviderLabRouting();
 					routing.route(results.segmentId, loggedInInfo.getLoggedInProviderNo(), DbConnectionFilter.getThreadLocalDbConnection(), "HL7");
-					this.lastSegmentId = results.segmentId;
+					
 				}
+				this.lastSegmentId = results.segmentId;
 			}
 			logger.info("Parsed OK");
 		} catch (Exception e) {

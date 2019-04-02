@@ -706,5 +706,10 @@ public class MEDVUEHandler implements MessageHandler {
 	public String getNteForPID() {
     	return "";
     }
+    
+    //for OMD validation
+    public boolean isTestResultBlocked(int i, int j) {
+    	return false;
+    }
 	
 }
