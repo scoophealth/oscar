@@ -547,7 +547,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
     //Else if we are coming back from search this has been done for us
     //Else how did we get here?
     if( bFirstDisp ) {
-        DemographicData dd = new DemographicData();
+    		oscar.oscarDemographic.data.DemographicData dd = new oscar.oscarDemographic.data.DemographicData();
         org.oscarehr.common.model.Demographic demo = dd.getDemographic(loggedInInfo, String.valueOf(appt.getDemographicNo()));
         doctorNo = demo!=null ? (demo.getProviderNo()) : "";
     } else if (!request.getParameter("doctor_no").equals("")) {
