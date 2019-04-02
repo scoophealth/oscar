@@ -282,7 +282,6 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 		getPreventionExtendedProperties().put( property.getkeyval(), property.getVal() );
 	}
 	
-	@Override
 	public String getImmunizationProperty( ImmunizationProperty immunizationProperty ) {
 		return getPreventionExtendedProperties().get( immunizationProperty.name() );
 	}
@@ -506,5 +505,10 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 		DateTime submissionDate =  new DateTime( System.currentTimeMillis() );		
 		int daysBetween = Days.daysBetween(immunizationDate, submissionDate).getDays();		
 		return ( daysBetween > days );
+	}
+
+	@Override
+	public int getImmunizationId() {
+		return getId();
 	}
 }

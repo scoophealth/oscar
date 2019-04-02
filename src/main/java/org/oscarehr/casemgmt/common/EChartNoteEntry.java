@@ -28,6 +28,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import org.oscarehr.caisi_integrator.util.MiscUtils;
+
 public class EChartNoteEntry {
 
 	private Object id;
@@ -101,6 +103,11 @@ public class EChartNoteEntry {
 		return new Comparator<EChartNoteEntry>() {
 			public int compare(EChartNoteEntry note1, EChartNoteEntry note2) {
 				if (note1 == null || note2 == null) {
+					return 0;
+				}
+				
+				if (note1.getDate() == null || note2.getDate() == null) {
+					MiscUtils.getLogger().warn("note date is null during compare" + note1.getId() + ":" + note2.getId());
 					return 0;
 				}
 

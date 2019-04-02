@@ -33,11 +33,13 @@ import org.oscarehr.common.model.Favorite;
 import org.oscarehr.common.model.Prescription;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.ws.rest.to.model.RxStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import oscar.log.LogAction;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -74,31 +76,49 @@ public class RxManager {
      */
     public List<Drug> getDrugs( LoggedInInfo info,  int demographicNo,  String status)
             throws UnsupportedOperationException {
+    	
+    	RxStatus rxStatus;
+    	List<Drug> drugs = Collections.emptyList();
+    	
+    	try 
+    	{
+    		String drugstatus = status.trim().toUpperCase();
+    		rxStatus = Enum.valueOf(RxStatus.class, drugstatus);
+    		drugs = getDrugs(info,  demographicNo,  rxStatus);
+    	}
+    	catch(Exception e) 
+    	{
+            throw new UnsupportedOperationException("Unknown drug status: " + status);
+        }
+    	
+    	return drugs;
+    }
+    
+
+    public List<Drug> getDrugs( LoggedInInfo info,  int demographicNo,  RxStatus status) {
 
         LogAction.addLogSynchronous(info, "RxManager.getDrugs", "demographicNo=" + demographicNo + " status="+status);
 
         // Access control check.
         readCheck(info, demographicNo);
 
-        // find drugs from the DAO based on status.
-
-        if (status.equals(ALL)) {
-
-            return drugDao.findByDemographicId(demographicNo);
-
-        } else if (status.equals(CURRENT)) {
-
-            return drugDao.findByDemographicId(demographicNo, false);
-
-        } else if (status.equals(ARCHIVED)) {
-
-            return drugDao.findByDemographicId(demographicNo, true);
-
-        } else {
-
-            throw new UnsupportedOperationException("Unknown drug status: " + status);
-
+        List<Drug> drugs;
+        
+        // find drugs from the DAO based on status.       
+        switch(status) {
+		case ALL:  drugs = drugDao.findByDemographicId(demographicNo);
+			break;
+		case ARCHIVED: drugs = drugDao.findByDemographicId(demographicNo, true);
+			break;
+		case CURRENT: drugs = drugDao.findByDemographicId(demographicNo, false);
+			break;
+		case LONGTERM: drugs =  drugDao.findLongTermDrugsByDemographic(demographicNo);
+			break;
+		default: drugs = Collections.emptyList();
+			break;       
         }
+
+        return drugs;
     }
 
     /**
@@ -540,6 +560,17 @@ public class RxManager {
             this.drugs = d;
         }
 
+    }
+    
+    
+    public List<Drug> getLongTermDrugs( LoggedInInfo info,  int demographicNo) {
+        LogAction.addLogSynchronous(info, "RxManager.getLongTermDrugs", "demographicNo=" + demographicNo );
+
+        // Access control check.
+        readCheck(info, demographicNo);
+        
+        return drugDao.findLongTermDrugsByDemographic(demographicNo);
+        
     }
 
 

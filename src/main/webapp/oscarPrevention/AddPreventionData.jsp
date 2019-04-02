@@ -24,6 +24,9 @@
 
 --%>
 
+<%@page import="java.text.ParseException"%>
+<%@page import="org.oscarehr.common.model.PartialDate"%>
+<%@page import="org.oscarehr.common.dao.PartialDateDao"%>
 <%@page import="oscar.OscarProperties"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="org.oscarehr.common.model.Consent"%>
@@ -68,6 +71,7 @@ if(!authed) {
   CanadianVaccineCatalogueManager cvcManager = SpringUtils.getBean(CanadianVaccineCatalogueManager.class);
   CVCMappingDao cvcMappingDao = SpringUtils.getBean(CVCMappingDao.class);
   CVCImmunizationDao cvcImmunizationDao = SpringUtils.getBean(CVCImmunizationDao.class);
+  PartialDateDao partialDateDao = SpringUtils.getBean(PartialDateDao.class);
   
    LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
   
@@ -106,6 +110,8 @@ if(!authed) {
      existingPrevention = PreventionData.getPreventionById(id);
 
      prevDate = (String) existingPrevention.get("preventionDate");
+     prevDate = partialDateDao.getDatePartial(prevDate, PartialDate.PREVENTION,  Integer.parseInt(id), PartialDate.PREVENTION_PREVENTIONDATE);
+     
      providerName = (String) existingPrevention.get("providerName");
      provider = (String) existingPrevention.get("provider_no");
      creatorProviderNo = (String) existingPrevention.get("creator");
@@ -218,8 +224,7 @@ if(!authed) {
   
   //calc age at time of prevention
   Date dob = PreventionData.getDemographicDateOfBirth(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.valueOf(demographic_no));
-  SimpleDateFormat fmt = new SimpleDateFormat(dateFmt);
-  Date dateOfPrev = fmt.parse(prevDate);
+  Date dateOfPrev = parseDate(prevDate);
   String age = UtilDateUtilities.calcAgeAtDate(dob, dateOfPrev);
   DemographicData demoData = new DemographicData();
   String[] demoInfo = demoData.getNameAgeSexArray(LoggedInInfo.getLoggedInInfoFromSession(request), Integer.valueOf(demographic_no));
@@ -646,7 +651,7 @@ function changeSite(el) {
             </td>
             <td valign="top" class="MainTableRightColumn">
 <%
-			if(session.getAttribute("oneIdEmail") == null) {
+			if(dhirEnabled && session.getAttribute("oneIdEmail") == null) {
 		%>
 		<div style="width:100%;background-color:pink;text-align:center;font-weight:bold;font-size:13pt">
 			Warning: You are not logged into OneId and will not be able to submit data to DHIR
@@ -703,7 +708,7 @@ function changeSite(el) {
                          </div>
                          <div>&nbsp;</div>
                          <div style="margin-left:30px;">
-                            <label for="prevDate" class="fields" >Date:</label>    <input readonly='readonly' type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="15" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
+                            <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="15" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>
                             <label for="provider" class="fields">Provider:</label> <input type="text" name="providerName" id="providerName" value="<%=providerName%>"/>
                                   <select onchange="javascript:hideExtraName(this);" id="providerDrop" name="provider">
                                       <%for (int i=0; i < providers.size(); i++) {
@@ -821,6 +826,10 @@ function changeSite(el) {
                          		<option value="SC" <%="SC".equals(str((extraData.get("route")),"")) ? routeSelected : "" %>>Subcutaneous: SC</option>
                          	</select>
                          	<br/>
+                         	
+                         	<label for="route">DIN:</label> 
+                         	<input type="text" name="din" id="din" value="<%=str((extraData.get("din")),"")%>"/> 
+             			 	<br/>
                          	<%
                          		String dose = str((extraData.get("dose")),"");
                          		String d1 = "";
@@ -845,6 +854,7 @@ function changeSite(el) {
                          <br>
                           <label for="doseUnit">Dose Unit:</label>
                           <select name="doseUnit">
+							<option value="" <%="".equals(d2)?"selected=\"selected\" ":"" %>></option>
 							<option value="mL" <%="mL".equals(d2)?"selected=\"selected\" ":"" %>>mL</option>
 							<option value="mg" <%="mg".equals(d2)?"selected=\"selected\" ":"" %>>mg</option>
 							<option value="g" <%="g".equals(d2)?"selected=\"selected\" ":"" %>>g</option>
@@ -1142,5 +1152,28 @@ String checked(String first,String second){
        }
     }
     return ret;
+  }
+
+  Date parseDate(String dt) {
+	SimpleDateFormat fmt = null;
+			
+	if(dt.length() == 4) {
+		fmt = new SimpleDateFormat("yyyy");
+	} else if(dt.length() == 7) {
+		fmt = new SimpleDateFormat("yyyy-MM");
+	} else if(dt.length() == 10) {
+		fmt = new SimpleDateFormat("yyyy-MM-dd");
+	} else if(dt.length() == 16) {
+		fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	}
+	
+	if(fmt != null) {
+		try {
+			return fmt.parse(dt);
+		}catch(ParseException e) {
+			return null;
+		}
+	}
+	return null;
   }
 %>

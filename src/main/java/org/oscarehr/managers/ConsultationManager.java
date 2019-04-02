@@ -44,6 +44,9 @@ import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.dao.ConsultRequestDao;
 import org.oscarehr.common.dao.ConsultResponseDao;
 import org.oscarehr.common.dao.ConsultResponseDocDao;
+import org.oscarehr.common.dao.ConsultationRequestArchiveDao;
+import org.oscarehr.common.dao.ConsultationRequestExtArchiveDao;
+import org.oscarehr.common.dao.ConsultationRequestExtDao;
 import org.oscarehr.common.dao.ConsultationServiceDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
@@ -56,6 +59,9 @@ import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.ConsultResponseDoc;
 import org.oscarehr.common.model.ConsultationRequest;
+import org.oscarehr.common.model.ConsultationRequestArchive;
+import org.oscarehr.common.model.ConsultationRequestExt;
+import org.oscarehr.common.model.ConsultationRequestExtArchive;
 import org.oscarehr.common.model.ConsultationResponse;
 import org.oscarehr.common.model.ConsultationServices;
 import org.oscarehr.common.model.Demographic;
@@ -109,13 +115,19 @@ public class ConsultationManager {
 	DemographicManager demographicManager;
 	@Autowired
 	SecurityInfoManager securityInfoManager;
-
+	@Autowired
+	ConsultationRequestExtDao consultationRequestExtDao;
+	@Autowired
+	ConsultationRequestExtArchiveDao consultationRequestExtArchiveDao;
+	@Autowired
+	ConsultationRequestArchiveDao consultationRequestArchiveDao;
+	
 	public final String CON_REQUEST_ENABLED = "consultRequestEnabled";
 	public final String CON_RESPONSE_ENABLED = "consultResponseEnabled";
 	public final String ENABLED_YES = "Y";
 	
 	public List<ConsultationRequestSearchResult> search(LoggedInInfo loggedInInfo, ConsultationRequestSearchFilter filter) {
-		checkPrivilege(loggedInInfo, securityInfoManager.READ);
+		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
 		
 		List<ConsultationRequestSearchResult> r = new  ArrayList<ConsultationRequestSearchResult>();
 		List<Object[]> result = consultationRequestDao.search(filter);
@@ -129,7 +141,7 @@ public class ConsultationManager {
 	}
 	
 	public List<ConsultationResponseSearchResult> search(LoggedInInfo loggedInInfo, ConsultationResponseSearchFilter filter) {
-		checkPrivilege(loggedInInfo, securityInfoManager.READ);
+		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
 		
 		List<ConsultationResponseSearchResult> r = new  ArrayList<ConsultationResponseSearchResult>();
 		List<Object[]> result = consultationResponseDao.search(filter);
@@ -173,7 +185,7 @@ public class ConsultationManager {
 	}
 	
 	public ConsultationRequest getRequest(LoggedInInfo loggedInInfo, Integer id) {
-		checkPrivilege(loggedInInfo, securityInfoManager.READ);
+		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
 		
 		ConsultationRequest request = consultationRequestDao.find(id);
 		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.getRequest", "id="+request.getId());
@@ -182,7 +194,7 @@ public class ConsultationManager {
 	}
 	
 	public ConsultationResponse getResponse(LoggedInInfo loggedInInfo, Integer id) {
-		checkPrivilege(loggedInInfo, securityInfoManager.READ);
+		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
 		
 		ConsultationResponse response = consultationResponseDao.find(id);
 		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.getResponse", "id="+response.getId());
@@ -212,7 +224,7 @@ public class ConsultationManager {
 	
 	public void saveConsultationRequest(LoggedInInfo loggedInInfo, ConsultationRequest request) {
 		if (request.getId()==null) { //new consultation request
-			checkPrivilege(loggedInInfo, securityInfoManager.WRITE);
+			checkPrivilege(loggedInInfo, SecurityInfoManager.WRITE);
 			
 			ProfessionalSpecialist specialist = request.getProfessionalSpecialist();
 			request.setProfessionalSpecialist(null);
@@ -221,7 +233,7 @@ public class ConsultationManager {
 			request.setProfessionalSpecialist(specialist);
 			consultationRequestDao.merge(request);
 		} else {
-			checkPrivilege(loggedInInfo, securityInfoManager.UPDATE);
+			checkPrivilege(loggedInInfo, SecurityInfoManager.UPDATE);
 			
 			consultationRequestDao.merge(request);
 		}
@@ -230,11 +242,11 @@ public class ConsultationManager {
 	
 	public void saveConsultationResponse(LoggedInInfo loggedInInfo, ConsultationResponse response) {
 		if (response.getId()==null) { //new consultation response
-			checkPrivilege(loggedInInfo, securityInfoManager.WRITE);
+			checkPrivilege(loggedInInfo, SecurityInfoManager.WRITE);
 			
 			consultationResponseDao.persist(response);
 		} else {
-			checkPrivilege(loggedInInfo, securityInfoManager.UPDATE);
+			checkPrivilege(loggedInInfo, SecurityInfoManager.UPDATE);
 			
 			consultationResponseDao.merge(response);
 		}
@@ -242,7 +254,7 @@ public class ConsultationManager {
 	}
 	
 	public List<ConsultDocs> getConsultRequestDocs(LoggedInInfo loggedInInfo, Integer requestId) {
-		checkPrivilege(loggedInInfo, securityInfoManager.READ);
+		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
 		
 		List<ConsultDocs> docs = requestDocDao.findByRequestId(requestId);
 		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.getConsultRequestDocs", "consult id="+requestId);
@@ -251,7 +263,7 @@ public class ConsultationManager {
 	}
 	
 	public List<ConsultResponseDoc> getConsultResponseDocs(LoggedInInfo loggedInInfo, Integer responseId) {
-		checkPrivilege(loggedInInfo, securityInfoManager.READ);
+		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
 		
 		List<ConsultResponseDoc> docs = responseDocDao.findByResponseId(responseId);
 		LogAction.addLogSynchronous(loggedInInfo,"ConsultationManager.getConsultResponseDocs", "consult id="+responseId);
@@ -260,7 +272,7 @@ public class ConsultationManager {
 	}
 	
 	public void saveConsultRequestDoc(LoggedInInfo loggedInInfo, ConsultDocs doc) {
-		checkPrivilege(loggedInInfo, securityInfoManager.UPDATE);
+		checkPrivilege(loggedInInfo, SecurityInfoManager.UPDATE);
 		
 		if (doc.getId()==null) { //new consultation attachment
 			requestDocDao.persist(doc);
@@ -271,7 +283,7 @@ public class ConsultationManager {
 	}
 	
 	public void saveConsultResponseDoc(LoggedInInfo loggedInInfo, ConsultResponseDoc doc) {
-		checkPrivilege(loggedInInfo, securityInfoManager.UPDATE);
+		checkPrivilege(loggedInInfo, SecurityInfoManager.UPDATE);
 		
 		if (doc.getId()==null) { //new consultation attachment
 			responseDocDao.persist(doc);
@@ -322,7 +334,7 @@ public class ConsultationManager {
 	 * 	oscar/oscarEncounter/oscarConsultationRequest/pageUtil/EctConsultationFormRequestAction.java
 	 */
 	public void doHl7Send(LoggedInInfo loggedInInfo, Integer consultationRequestId) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, IOException, HL7Exception, ServletException, DocumentException {
-		checkPrivilege(loggedInInfo, securityInfoManager.READ);
+		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
 		
 		ConsultationRequest consultationRequest=consultationRequestDao.find(consultationRequestId);
 		ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(consultationRequest.getSpecialistId());
@@ -479,4 +491,68 @@ public class ConsultationManager {
 		return results;
 	}
 	
+	public void archiveConsultationRequest(Integer requestId) {
+		ConsultationRequest c =  consultationRequestDao.find(requestId);
+		if(c != null) {
+			List<ConsultationRequestExt> exts = consultationRequestExtDao.getConsultationRequestExts(requestId);
+			
+			ConsultationRequestArchive a = new ConsultationRequestArchive();
+			a.setAllergies(c.getAllergies());
+			a.setAppointmentDate(c.getAppointmentDate());
+			a.setAppointmentInstructions(c.getAppointmentInstructions());
+			a.setAppointmentTime(c.getAppointmentTime());
+			a.setClinicalInfo(c.getClinicalInfo());
+			a.setConcurrentProblems(c.getConcurrentProblems());
+			a.setCurrentMeds(c.getCurrentMeds());
+			a.setDemographicId(c.getDemographicId());
+			a.setFdid(c.getFdid());
+			a.setFollowUpDate(c.getFollowUpDate());
+			a.setLastUpdateDate(c.getLastUpdateDate());
+			a.setLetterheadAddress(c.getLetterheadAddress());
+			a.setLetterheadFax(c.getLetterheadFax());
+			a.setLetterheadName(c.getLetterheadName());
+			a.setLetterheadPhone(c.getLetterheadPhone());
+			a.setLookupListItem(c.getLookupListItem());
+			a.setPatientWillBook(c.isPatientWillBook());
+		//	a.setProfessionalSpecialist(c.getProfessionalSpecialist());
+			a.setProviderNo(c.getProviderNo());
+			a.setReasonForReferral(c.getReasonForReferral());
+			a.setReferralDate(c.getReferralDate());
+			a.setRequestId(requestId);
+			a.setSendTo(c.getSendTo());
+			a.setServiceId(c.getServiceId());
+			a.setSignatureImg(c.getSignatureImg());
+			a.setSiteName(c.getSiteName());
+			a.setSource(c.getSource());
+			a.setStatus(c.getStatus());
+			a.setStatusText(c.getStatusText());
+			a.setUrgency(c.getUrgency());
+			
+			
+			consultationRequestArchiveDao.persist(a);
+			
+			if(c.getProfessionalSpecialist() != null) {
+				ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(c.getProfessionalSpecialist().getId());
+	            if( professionalSpecialist != null ) {
+	                 a.setProfessionalSpecialist(professionalSpecialist);
+	                 consultationRequestArchiveDao.merge(a);
+	            }
+			}
+			
+			
+			//List<ConsultationRequestExtArchive> aExts = new ArrayList<ConsultationRequestExtArchive>();
+			for(ConsultationRequestExt e:exts) {
+				ConsultationRequestExtArchive aext = new ConsultationRequestExtArchive();
+				aext.setDateCreated(e.getDateCreated());
+				aext.setKey(e.getKey());
+				aext.setOriginalId(e.getId());
+				aext.setRequestId(requestId);
+				aext.setValue(e.getValue());
+				aext.setConsultationRequestArchiveId(a.getId());
+				//aExts.add(aext);
+				
+				consultationRequestExtArchiveDao.persist(aext);
+			}
+		}
+	}
 }

@@ -81,6 +81,7 @@ public class FlowSheetCustomAction extends DispatchAction {
         if (request.getParameter("demographic")!=null){
         	demographicNo = request.getParameter("demographic");
         }
+        String scope = request.getParameter("scope");
 
         if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", demographicNo)) {
         	throw new SecurityException("missing required security object (_demographic)");
@@ -141,7 +142,7 @@ public class FlowSheetCustomAction extends DispatchAction {
                 cust.setPayload(outp.outputString(va));
                 cust.setFlowsheet(flowsheet);
                 cust.setMeasurement(prevItem);//THIS THE MEASUREMENT TO SET THIS AFTER!
-                cust.setProviderNo((String) request.getSession().getAttribute("user"));
+                cust.setProviderNo("clinic".equals(scope) ? "" : (String) request.getSession().getAttribute("user"));
                 cust.setDemographicNo(demographicNo);
                 cust.setCreateDate(new Date());
 
@@ -164,6 +165,7 @@ public class FlowSheetCustomAction extends DispatchAction {
         if (request.getParameter("demographic")!=null){
         	demographicNo = request.getParameter("demographic");
         }
+        String scope = request.getParameter("scope");
         
         if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", demographicNo)) {
         	throw new SecurityException("missing required security object (_demographic)");
@@ -314,7 +316,8 @@ public class FlowSheetCustomAction extends DispatchAction {
                cust.setDemographicNo(demographicNo);
             }
             cust.setMeasurement(item.getItemName());//THIS THE MEASUREMENT TO SET THIS AFTER!
-            cust.setProviderNo((String) request.getSession().getAttribute("user"));
+            cust.setProviderNo("clinic".equals(scope) ? "" : (String) request.getSession().getAttribute("user"));
+            
             logger.debug("UPDATE "+cust);
 
             flowSheetCustomizationDao.persist(cust);
@@ -333,6 +336,7 @@ public class FlowSheetCustomAction extends DispatchAction {
         if (request.getParameter("demographic")!=null){
         	demographicNo = request.getParameter("demographic");
         }
+        String scope = request.getParameter("scope");
         
         if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", demographicNo)) {
         	throw new SecurityException("missing required security object (_demographic)");
@@ -342,7 +346,7 @@ public class FlowSheetCustomAction extends DispatchAction {
         cust.setAction(FlowSheetCustomization.DELETE);
         cust.setFlowsheet(flowsheet);
         cust.setMeasurement(measurement);
-        cust.setProviderNo((String) request.getSession().getAttribute("user"));
+        cust.setProviderNo("clinic".equals(scope) || demographicNo != null ? "" : (String) request.getSession().getAttribute("user"));
         cust.setDemographicNo(demographicNo);
 
         flowSheetCustomizationDao.persist(cust);
@@ -353,6 +357,52 @@ public class FlowSheetCustomAction extends DispatchAction {
         return mapping.findForward("success");
     }
 
+    public ActionForward restore(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        logger.debug("IN RESTORE");
+        String flowsheet = request.getParameter("flowsheet");
+        String measurement = request.getParameter("measurement");
+        String demographicNo = "0";
+        if (request.getParameter("demographic")!=null){
+        	demographicNo = request.getParameter("demographic");
+        }
+        String scope = request.getParameter("scope");
+        
+        if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_demographic", "w", demographicNo)) {
+        	throw new SecurityException("missing required security object (_demographic)");
+        }
+
+        if("clinic".equals(scope)) {
+        	//clinic level
+        	for(FlowSheetCustomization cust : flowSheetCustomizationDao.getFlowSheetCustomizations(flowsheet)) {
+        		if("delete".equals(cust.getAction()) && cust.getMeasurement().equals(measurement)) {
+        			flowSheetCustomizationDao.remove(cust.getId());
+        		}
+        	}
+        	
+        } else {
+        	if(demographicNo == null) {
+        		//provider level
+        		for(FlowSheetCustomization cust : flowSheetCustomizationDao.getFlowSheetCustomizations(flowsheet,LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo())) {
+            		if("delete".equals(cust.getAction()) && cust.getMeasurement().equals(measurement)) {
+            			flowSheetCustomizationDao.remove(cust.getId());
+            		}
+            	}
+        	} else {
+        		//patient level
+        		for(FlowSheetCustomization cust : flowSheetCustomizationDao.getFlowSheetCustomizationsForPatient(flowsheet,demographicNo)) {
+            		if("delete".equals(cust.getAction()) && cust.getMeasurement().equals(measurement)) {
+            			flowSheetCustomizationDao.remove(cust.getId());
+            		}
+            	}
+        	}
+        }
+
+        request.setAttribute("demographic",demographicNo);
+        request.setAttribute("flowsheet", flowsheet);
+        return mapping.findForward("success");
+    }
+
+    
     public ActionForward archiveMod(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         logger.debug("IN MOD");
         String id = request.getParameter("id");

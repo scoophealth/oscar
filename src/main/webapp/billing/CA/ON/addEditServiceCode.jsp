@@ -463,7 +463,7 @@ Service Code <small>5 Characters, e.g. A001A</small><br>
 		<option value="<%=codes.get(date)%>" <%=prop.getProperty("billingservice_date", "").equalsIgnoreCase(date) ? "selected" : ""%>><%=date%>
 	<%}%>
 	</select>
-	<	
+	
 	<%}%>
 </div>
 

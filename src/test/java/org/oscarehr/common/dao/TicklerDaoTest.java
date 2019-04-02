@@ -127,6 +127,7 @@ public class TicklerDaoTest extends DaoTestFixtures {
 		Demographic d = new Demographic();
 		d.setFirstName("Test");
 		d.setLastName("Patient");
+		d.setMiddleNames("");
 		d.setPatientStatus("AC");
 		d.setYearOfBirth("1978");
 		d.setMonthOfBirth("04");

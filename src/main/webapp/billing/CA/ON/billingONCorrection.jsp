@@ -271,7 +271,7 @@ function validateAllItems(){
            return false;
        }
    }
-   
+
    var statusOpts = document.getElementById("status");
    var status = statusOpts.options[statusOpts.selectedIndex].value;
    var payPrgrmOpts = document.getElementById("payProgram");
@@ -284,18 +284,41 @@ function validateAllItems(){
 	   alert("Pay Program does not match bill status.");
 	   return false;
    }
-   
-
+   /*
    var outstandingAmt = document.getElementById("outstandingBalance").value;
 
    if ((outstandingAmt != "0.00") && (status == "S" && is3rdParty)) {
        if(!confirm('Warning: Settling this invoice will also settle the outstanding balance as paid. Continue?')){ 
           return false;
        }
+   }*/
+              
+
+   var billingDate = document.getElementById("xml_appointment_date").value;
+   var billingDt = parseDate(billingDate);
+   if(billingDt != null) {
+	   if(billingDt > new Date()) {
+		   alert('Billing date cannot be in the future');
+		   return false;
+	   }
    }
-                                     
+   
+  
    return true;
 }
+
+function parseDate(str) {
+	if(str.length != 10) {
+		return null;
+	}
+	
+    var y = str.substr(0,4);
+    var m = str.substr(5,2) - 1;
+    var d = str.substr(8,2);
+    var D = new Date(y,m,d);
+    return (D.getFullYear() == y && D.getMonth() == m && D.getDate() == d) ? D : null;
+}
+
 function popupPage(vheight,vwidth,varpage) {
   var page = "" + varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";

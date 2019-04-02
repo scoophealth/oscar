@@ -53,6 +53,10 @@ import org.oscarehr.common.model.AppointmentStatus;
 import org.oscarehr.common.model.AppointmentType;
 import org.oscarehr.common.model.LookupListItem;
 import org.oscarehr.common.model.ScheduleTemplateCode;
+
+import org.oscarehr.common.dao.BillingONCHeader1Dao;
+import org.oscarehr.common.model.*;
+
 import org.oscarehr.managers.AppointmentManager;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.ScheduleManager;
@@ -62,6 +66,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.XmlUtils;
 import org.oscarehr.web.PatientListApptBean;
 import org.oscarehr.web.PatientListApptItemBean;
+
 import org.oscarehr.ws.rest.conversion.AppointmentConverter;
 import org.oscarehr.ws.rest.conversion.AppointmentStatusConverter;
 import org.oscarehr.ws.rest.conversion.AppointmentTypeConverter;
@@ -82,9 +87,16 @@ import org.oscarehr.ws.rest.to.model.ProviderApptsCountTo;
 import org.oscarehr.ws.rest.to.model.ProviderPeriodAppsTo;
 import org.oscarehr.ws.rest.to.model.ScheduleTemplateCodeTo;
 import org.oscarehr.ws.rest.to.model.SearchConfigTo1;
+import org.oscarehr.ws.rest.conversion.*;
+import org.oscarehr.ws.rest.to.*;
+import org.oscarehr.ws.rest.to.model.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
+
+import javax.ws.rs.*;
+import java.util.*;
 
 @Path("/schedule")
 @Component("scheduleService")
@@ -102,6 +114,8 @@ public class ScheduleService extends AbstractServiceImpl {
 	private SecurityInfoManager securityInfoManager;
 	@Autowired
 	private AppointmentSearchDao appointmentSearchDao;
+	@Autowired
+	private BillingONCHeader1Dao billingONCHeader1Dao;
 
 	@GET
 	@Path("/day/{date}")
@@ -241,17 +255,48 @@ public class ScheduleService extends AbstractServiceImpl {
 
 	@POST
 	@Path("/{demographicNo}/appointmentHistory")
+	@Consumes("application/json")
 	@Produces("application/json")
 	public SchedulingResponse findExistAppointments(@PathParam("demographicNo") Integer demographicNo) {
+		SchedulingResponse response = new SchedulingResponse();
+		List<AppointmentTo1> appts = getAppointmentHistoryWithoutDeleted(demographicNo);
+
+		Map<Integer, BillingDetailTo1> apptIdBillingMap = getAppointmentIdToBillingDetailMap(demographicNo);
+
+		for (AppointmentTo1 appt: appts) {
+			if (apptIdBillingMap.containsKey(appt.getId())) {
+				appt.setBillingDetail(apptIdBillingMap.get(appt.getId()));
+			}
+		}
+
+		response.setAppointments(appts);
+		return response;
+	}
+
+	private Map<Integer, BillingDetailTo1> getAppointmentIdToBillingDetailMap(Integer demographicNo) {
+		List<BillingONCHeader1> billingHeaders = billingONCHeader1Dao.findByDemoNo(demographicNo, 0, OscarAppointmentDao.MAX_LIST_RETURN_SIZE);
+		if(billingHeaders.size() == OscarAppointmentDao.MAX_LIST_RETURN_SIZE) {
+			logger.warn("Billing history over MAX_LIST_RETURN_SIZE for demographic " + demographicNo);
+		}
+
+		BillingDetailConverter converter = new BillingDetailConverter();
+		List<BillingDetailTo1> billingDetails = converter.getAllAsTransferObjects(getLoggedInInfo(), billingHeaders);
+
+		Map<Integer, BillingDetailTo1> apptIdBillingMap = new HashMap<Integer, BillingDetailTo1>();
+		for (BillingDetailTo1 billingDetail: billingDetails) {
+			apptIdBillingMap.put(billingDetail.getAppointmentNo(), billingDetail);
+		}
+		return apptIdBillingMap;
+	}
+
+	private List<AppointmentTo1> getAppointmentHistoryWithoutDeleted(Integer demographicNo) {
 		SchedulingResponse response = new SchedulingResponse();
 		List<Appointment> appts = appointmentManager.getAppointmentHistoryWithoutDeleted(getLoggedInInfo(), demographicNo, 0, OscarAppointmentDao.MAX_LIST_RETURN_SIZE);
 		if(appts.size() == OscarAppointmentDao.MAX_LIST_RETURN_SIZE) {
 			logger.warn("appointment history over MAX_LIST_RETURN_SIZE for demographic " + demographicNo);
 		}
 		AppointmentConverter converter = new AppointmentConverter();
-		response.setAppointments(converter.getAllAsTransferObjects(getLoggedInInfo(), appts));
-		
-		return response;
+		return converter.getAllAsTransferObjects(getLoggedInInfo(), appts);
 	}
 
 	@POST

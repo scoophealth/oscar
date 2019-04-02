@@ -104,4 +104,17 @@ public class DemographicContactDao extends AbstractDao<DemographicContact>{
 		}
 		return dContacts;
 	}
+	
+	public List<DemographicContact> findSDMByDemographicNo(int demographicNo) {
+		String sql = "select x from " + this.modelClass.getName() + " x where x.demographicNo = ? and x.sdm = 'true'  and x.active=1 and deleted=false";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter(1, demographicNo);
+		
+		@SuppressWarnings("unchecked")
+		List<DemographicContact> dContacts = query.getResultList();
+		if(dContacts == null) {
+			dContacts = Collections.emptyList();
+		}
+		return dContacts;
+	}
 }

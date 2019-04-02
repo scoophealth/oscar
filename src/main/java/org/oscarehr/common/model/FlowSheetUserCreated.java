@@ -40,6 +40,11 @@ import javax.persistence.GenerationType;
 
 @Entity
 public class FlowSheetUserCreated extends AbstractModel<Integer> implements Serializable {
+	
+	public static final String SCOPE_CLINIC = "clinic";
+	public static final String SCOPE_PROVIDER = "provider";
+	public static final String SCOPE_PATIENT = "patient";
+	
 /*
 	create table FlowSheetUserCreated(
 	id int(10) auto_increment primary key,
@@ -71,6 +76,15 @@ public class FlowSheetUserCreated extends AbstractModel<Integer> implements Seri
 	Boolean archived;
 	@Temporal(TemporalType.DATE)
 	private Date createdDate;
+	
+	private String createdBy;
+	private String scope;
+	private String scopeProviderNo;
+	private Integer scopeDemographicNo;
+	private String template;
+	
+	private String xmlContent;
+	
 	public String getName() {
     	return name;
     }
@@ -122,8 +136,42 @@ public class FlowSheetUserCreated extends AbstractModel<Integer> implements Seri
 	public Integer getId() {
     	return id;
     }
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	public String getScope() {
+		return scope;
+	}
+	public void setScope(String scope) {
+		this.scope = scope;
+	}
+	public String getScopeProviderNo() {
+		return scopeProviderNo;
+	}
+	public void setScopeProviderNo(String scopeProviderNo) {
+		this.scopeProviderNo = scopeProviderNo;
+	}
+	public Integer getScopeDemographicNo() {
+		return scopeDemographicNo;
+	}
+	public void setScopeDemographicNo(Integer scopeDemographicNo) {
+		this.scopeDemographicNo = scopeDemographicNo;
+	}
+	public String getTemplate() {
+		return template;
+	}
+	public void setTemplate(String template) {
+		this.template = template;
+	}
+	public String getXmlContent() {
+		return xmlContent;
+	}
+	public void setXmlContent(String xmlContent) {
+		this.xmlContent = xmlContent;
+	}
 	
-	
-
 	
 }

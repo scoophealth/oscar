@@ -863,6 +863,15 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
        </oscar:newUnclaimedLab>
    </li>
   </security:oscarSec>
+  
+<security:oscarSec roleName="<%=roleName$%>" objectName="_hrm,_admin.hrm,_hrm.administrator" rights="r">
+   <li>
+       <a HREF="#" ONCLICK ="popupInboxManager('../hospitalReportManager/inbox.jsp', 'HRM');return false;" TITLE='View HRM Reports'>
+	  	HRM
+       </a>
+   </li>
+  </security:oscarSec>
+
 </oscar:oscarPropertiesCheck>
 
  </caisi:isModuleLoad>
@@ -883,16 +892,25 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 </li>
 </security:oscarSec>
 </caisi:isModuleLoad>
- <li id="econ">
-	<a href="#" onclick ="popupOscarRx(625, 1024, '../oscarEncounter/econsult.do')" title="eConsult">
- 	<span>eConsult</span></a>
-</li>
+
+<%-- EConsult cannot be logged into without a link, no sense in showing it --%>
+ <%
+	 boolean hide_eConsult = OscarProperties.getInstance().isPropertyActive("hide_eConsult_link");
+	 if("on".equalsIgnoreCase(prov) && !hide_eConsult){
+ %>
+	 <li id="econ">
+		<a href="#" onclick ="popupOscarRx(625, 1024, '../econsult.do?method=frontend&task=physicianSummary')" title="eConsult">
+	 	<span>eConsult</span></a>
+	</li>
+<% 	} %>
+
 <%if(!StringUtils.isEmpty(OscarProperties.getInstance().getProperty("clinicalConnect.CMS.url",""))) { %>
 <li id="clinical_connect">
 	<a href="#" onclick ="popupOscarRx(625, 1024, '../clinicalConnectEHRViewer.do?method=launchNonPatientContext')" title="clinical connect EHR viewer">
  	<span>ClinicalConnect</span></a>
 </li>
 <%}%>
+
 <security:oscarSec roleName="<%=roleName$%>" objectName="_pref" rights="r">
 <li>    <!-- remove this and let providerpreference check -->
     <caisi:isModuleLoad moduleName="ticklerplus">
@@ -1794,7 +1812,8 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 			 <%} %>
 
             <%
-                String nextStatus = as.getNextStatus();
+                String nextStatus =null;
+            try {as.getNextStatus();} catch(Exception e){}
 			    if (nextStatus != null && !nextStatus.equals("")) {
             %>
 			<!-- Short letters -->

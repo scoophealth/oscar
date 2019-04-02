@@ -119,6 +119,58 @@ public class LabResultImport {
     }
     
     public static Long saveProviderLabRouting(String provider_no, String lab_no, String status, String comment, String timestamp)  {
+    	return saveProviderLabRouting(provider_no,lab_no,status,comment,timestamp,"CML");
+    }
+    
+    public static Long updateProviderLabRouting(String provider_no, String lab_no, String status, String comment, String timestamp, String labType)  {
+		
+    	for(ProviderLabRoutingModel plr:providerLabRoutingDao.findByLabNoAndLabTypeAndProviderNo(Integer.parseInt(lab_no), labType, provider_no)) {
+			if (timestamp==null || ("").equals(timestamp)) 
+				timestamp=null;
+			
+			Date ts = null;
+			if(timestamp != null) {
+				ts = ConversionUtils.fromTimestampString(timestamp);
+			}
+			if(ts == null) {
+				ts = ConversionUtils.fromDateString(timestamp);
+			}
+			plr.setStatus(status);
+			plr.setComment(comment);
+			plr.setTimestamp(ts);
+			providerLabRoutingDao.merge(plr);
+			return plr.getId().longValue();
+    	}
+    	
+		if (timestamp==null || ("").equals(timestamp)) 
+			timestamp=null;
+		
+		Date ts = null;
+		if(timestamp != null) {
+			ts = ConversionUtils.fromTimestampString(timestamp);
+		}
+		if(ts == null) {
+			ts = ConversionUtils.fromDateString(timestamp);
+		}
+		
+		
+		ProviderLabRoutingModel plr = new ProviderLabRoutingModel();
+		plr.setProviderNo(provider_no);
+		plr.setLabNo(Integer.parseInt(lab_no));
+		plr.setStatus(status);
+		plr.setComment(comment);
+		//plr.setTimestamp(ts);
+		plr.setLabType(labType);
+		providerLabRoutingDao.persist(plr);
+		
+		plr.setTimestamp(ts);
+		providerLabRoutingDao.merge(plr);
+		
+		return plr.getId().longValue();
+    	
+    }
+    
+    public static Long saveProviderLabRouting(String provider_no, String lab_no, String status, String comment, String timestamp, String labType)  {
 		Long id = null;
 		if (timestamp==null || ("").equals(timestamp)) 
 			timestamp=null;
@@ -135,7 +187,7 @@ public class LabResultImport {
 		plr.setStatus(status);
 		plr.setComment(comment);
 		plr.setTimestamp(ts);
-		plr.setLabType("CML");
+		plr.setLabType(labType);
 		providerLabRoutingDao.persist(plr);
 		
 		return plr.getId().longValue();

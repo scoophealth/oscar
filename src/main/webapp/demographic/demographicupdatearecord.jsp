@@ -120,10 +120,15 @@
 	
 	demographic.setLastName(request.getParameter("last_name").trim());
 	demographic.setFirstName(request.getParameter("first_name").trim());
+	demographic.setMiddleNames(request.getParameter("middleNames").trim());
 	demographic.setAddress(request.getParameter("address"));
 	demographic.setCity(request.getParameter("city"));
 	demographic.setProvince(request.getParameter("province"));
 	demographic.setPostal(request.getParameter("postal"));
+	demographic.setMailingAddress(request.getParameter("mailingAddress"));
+	demographic.setMailingCity(request.getParameter("mailingCity"));
+	demographic.setMailingProvince(request.getParameter("mailingProvince"));
+	demographic.setMailingPostal(request.getParameter("mailingPostal"));
 	demographic.setPhone(request.getParameter("phone"));
 	demographic.setPhone2(request.getParameter("phone2"));
 	demographic.setEmail(request.getParameter("email"));
@@ -134,6 +139,7 @@
 	demographic.setHin(request.getParameter("hin"));
 	demographic.setVer(request.getParameter("ver"));
 	demographic.setRosterStatus(request.getParameter("roster_status"));
+	demographic.setRosterEnrolledTo(request.getParameter("roster_enrolled_to"));
 	demographic.setPatientStatus(request.getParameter("patient_status"));
 	demographic.setChartNo(request.getParameter("chart_no"));
 	demographic.setProviderNo(request.getParameter("provider_no"));

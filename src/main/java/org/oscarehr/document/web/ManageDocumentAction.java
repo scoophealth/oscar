@@ -872,22 +872,23 @@ public class ManageDocumentAction extends DispatchAction {
 			String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 
 			File documentDir = new File(docdownload);
-			log.debug("Document Dir is a dir" + documentDir.isDirectory());
-
+		
 			Document d = documentDao.getDocument(doc_no);
-			log.debug("Document Name :" + d.getDocfilename());
-
-			docxml = d.getDocxml();
-			contentType = d.getContenttype();
-
-			File file = new File(documentDir, d.getDocfilename());
-			filename = d.getDocfilename();
-                        
-            if (contentType != null) {
-                if (file.exists()) {
-                	contentBytes = FileUtils.readFileToByteArray(file);
-                } 
-            }
+			if(d != null) {
+				log.debug("Document Name :" + d.getDocfilename());
+	
+				docxml = d.getDocxml();
+				contentType = d.getContenttype();
+	
+				File file = new File(documentDir, d.getDocfilename());
+				filename = d.getDocfilename();
+	                        
+	            if (contentType != null) {
+	                if (file.exists()) {
+	                	contentBytes = FileUtils.readFileToByteArray(file);
+	                } 
+	            }
+			}
 		} else // remote document
 		{
 			FacilityIdIntegerCompositePk remotePk = new FacilityIdIntegerCompositePk();

@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
@@ -38,8 +39,10 @@ import org.oscarehr.ws.rest.to.model.PreventionTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.ws.rs.core.MediaType;
 
-@Path("/preventions")
+
+@Path("/preventions/")
 @Component("preventionService")
 public class PreventionService extends AbstractServiceImpl {
 
@@ -48,7 +51,7 @@ public class PreventionService extends AbstractServiceImpl {
 
 	@GET
 	@Path("/active")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public PreventionResponse getCurrentPreventions(@QueryParam("demographicNo") Integer demographicNo) {
 		List<Prevention> preventions = preventionManager.getPreventionsByDemographicNo(getLoggedInInfo(), demographicNo);
 		
@@ -58,6 +61,17 @@ public class PreventionService extends AbstractServiceImpl {
 		response.setPreventions(preventionsT);
 		
 		return response;
+	}
+	
+	@GET
+	@Path("/immunizations/{demographicNo}")
+	@Produces({MediaType.APPLICATION_JSON})
+	public PreventionResponse getImmunizations(@PathParam("demographicNo") Integer demographicNo) {
+		List<Prevention> immunizations = preventionManager.getImmunizationsByDemographic(getLoggedInInfo(), demographicNo);
+		List<PreventionTo1> preventionsT = new PreventionConverter().getAllAsTransferObjects(getLoggedInInfo(), immunizations);
+		PreventionResponse response = new PreventionResponse();
+		response.setPreventions(preventionsT);
+		return response;		
 	}
 
 }

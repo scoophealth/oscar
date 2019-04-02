@@ -147,6 +147,9 @@ public class Document extends AbstractModel<Integer> implements Serializable {
     private Integer appointmentNo;
 
     private Boolean restrictToProgram=false;
+    @Temporal(TemporalType.DATE)
+    private Date receivedDate;
+    private int abnormal = 0;
     
     public Document() {
     }
@@ -374,6 +377,22 @@ public class Document extends AbstractModel<Integer> implements Serializable {
 
 	public void setRestrictToProgram(Boolean restrictToProgram) {
 		this.restrictToProgram = restrictToProgram;
+	}
+
+	public Date getReceivedDate() {
+		return receivedDate;
+	}
+
+	public void setReceivedDate(Date receivedDate) {
+		this.receivedDate = receivedDate;
+	}
+
+	public int getAbnormal() {
+		return abnormal;
+	}
+
+	public void setAbnormal(int abnormal) {
+		this.abnormal = abnormal;
 	}
 	
 	

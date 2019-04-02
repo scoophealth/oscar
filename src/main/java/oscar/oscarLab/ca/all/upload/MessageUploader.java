@@ -134,7 +134,8 @@ public final class MessageUploader {
 			String sendingFacility = h.getPatientLocation();
 			ArrayList<?> docNums = h.getDocNums();
 			int finalResultCount = h.getOBXFinalResultCount();
-			String obrDate = h.getMsgDate();
+			//String obrDate = h.getMsgDate();
+			String obrDate = h.getTimeStamp(0,0);
 
 			if(h instanceof HHSEmrDownloadHandler) {
 				try{
@@ -156,21 +157,26 @@ public final class MessageUploader {
 				List<String> docNames = ((SpireHandler)h).getDocNames();
 				//logger.debug("docNames:");
 	            for (int i=0; i < docNames.size(); i++) {
-					logger.info(i + " " + docNames.get(i));
+					logger.debug(i + " " + docNames.get(i));
 				}
             	if (docNames != null) {
 					docNums = findProvidersForSpireLab(docNames);
 				}
             }
-            logger.info("docNums:");
+            logger.debug("docNums:");
             for (int i=0; i < docNums.size(); i++) {
-				logger.info(i + " " + docNums.get(i));
+				logger.debug(i + " " + docNums.get(i));
 			}
 
 			try {
-				// reformat date
-				String format = "yyyy-MM-dd HH:mm:ss".substring(0, obrDate.length() - 1);
-				obrDate = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(obrDate, format), "yyyy-MM-dd HH:mm:ss");
+				// reformat date 2012-01-20 00:00:00 EST
+				if(obrDate.length() == 23) {
+					//obrDate = obrDate.substring(0, 19);
+					obrDate = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(obrDate, "yyyy-MM-dd HH:mm:ss z"), "yyyy-MM-dd HH:mm:ss z");
+				} else {
+					String format = "yyyy-MM-dd HH:mm:ss".substring(0, obrDate.length() - 1);
+					obrDate = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(obrDate, format), "yyyy-MM-dd HH:mm:ss");
+				}
 			} catch (Exception e) {				
 				logger.error("Error parsing obr date : ", e);
 				throw e;
@@ -249,7 +255,7 @@ public final class MessageUploader {
 				hl7TextInfo.setHealthNumber(hin);
 				hl7TextInfo.setResultStatus(resultStatus);
 				hl7TextInfo.setFinalResultCount(finalResultCount);
-				hl7TextInfo.setObrDate(obrDate);
+				hl7TextInfo.setObrDate(obrDate.trim());
 				hl7TextInfo.setPriority(priority);
 				hl7TextInfo.setRequestingProvider(requestingClient);
 				hl7TextInfo.setDiscipline(discipline);
@@ -282,7 +288,7 @@ public final class MessageUploader {
 			Connection c = null;
 			try {
 				c = DbConnectionFilter.getThreadLocalDbConnection();
-				demProviderNo = patientRouteReport(loggedInInfo, insertID, lastName, firstName, sex, dob, hin, c);
+				demProviderNo = patientRouteReport(loggedInInfo, type, insertID, lastName, firstName, sex, dob, hin, c);
 			} finally {
 				try {
 					c.close();
@@ -491,11 +497,201 @@ public final class MessageUploader {
 	private static void providerRouteReport(String labId, ArrayList docNums, Connection conn, String altProviderNo, String labType) throws Exception {
 		providerRouteReport(labId, docNums, conn, altProviderNo, labType, null, null, false);
 	}
+	
+	
+	public static Integer willOLISLabReportMatch(LoggedInInfo loggedInInfo, String lastName, String firstName, String sex, String dob, String hin) {
+		Connection conn = null;
+		PatientLabRoutingResult result = null;
+		String sql = null;
+		String demo = "0";
+		String provider_no = "0";
+		String dobYear = null;
+		String dobMonth = null;
+		String dobDay = null;
+		String hinMod = null;
 
+		try {	
+			conn = DbConnectionFilter.getThreadLocalDbConnection();
+			
+			if (hin != null) {
+				hinMod = new String(hin);
+				if (hinMod.length() == 12) {
+					hinMod = hinMod.substring(0, 10);
+				}
+			}
+			if (dob != null && !dob.equals("")) {
+				String[] dobArray = dob.trim().split("-");
+				dobYear = dobArray[0];
+				dobMonth = dobArray[1];
+				dobDay = dobArray[2];
+			}
+
+			if(hinMod == null || dobYear == null || dobMonth == null || dobDay == null) {
+				return null;
+			}
+			
+			sql = "select demographic_no, provider_no from demographic where hin='" + hinMod + "' and " + " last_name = '" + lastName + "' and " + " year_of_birth = '" + dobYear + "' and " + " month_of_birth = '" + dobMonth + "' and " + " date_of_birth = '" + dobDay + "' and " + " sex = '" + sex + "' ";	
+			
+			logger.debug(sql);
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			ResultSet rs = pstmt.executeQuery();
+			int count = 0;
+			
+			while (rs.next()) {
+				result = new PatientLabRoutingResult();
+				demo = oscar.Misc.getString(rs, "demographic_no");
+				provider_no = oscar.Misc.getString(rs, "provider_no");
+				result.setDemographicNo(Integer.parseInt(demo));
+				result.setProviderNo(provider_no);
+				count++;
+			}
+			rs.close();
+			pstmt.close();
+			if(count > 1) {
+				result = null;
+			}
+			
+		} catch (SQLException sqlE) {
+			return null;
+		} finally {
+			DbConnectionFilter.releaseThreadLocalDbConnection();
+		}
+		 
+		if(result != null) {
+			DemographicMerged dm = new DemographicMerged();
+			Integer headDemo = dm.getHead(result.getDemographicNo());
+			if(headDemo != null && headDemo.intValue() != result.getDemographicNo()) {
+				Demographic demoTmp = demographicManager.getDemographic(loggedInInfo, headDemo);
+				if(demoTmp != null) {
+					result.setDemographicNo(demoTmp.getDemographicNo());
+					result.setProviderNo(demoTmp.getProviderNo());
+				} else {
+					logger.info("Unable to load the head record of this patient record. (" + result.getDemographicNo()  + ")");
+					result = null;
+				}
+			}
+		} 
+	
+		
+		return result != null ? result.getDemographicNo() : null;
+	}
+
+	
+	private static String patientRouteReportOLIS(LoggedInInfo loggedInInfo, int labId, String lastName, String sex, String dob, String hin, Connection conn) throws SQLException {
+		PatientLabRoutingResult result = null;
+		
+			String sql = null;
+			String demo = "0";
+			String provider_no = "0";
+			String dobYear = null;
+			String dobMonth = null;
+			String dobDay = null;
+			String hinMod = null;
+
+			try {	
+				if (hin != null) {
+					hinMod = new String(hin);
+					if (hinMod.length() == 12) {
+						hinMod = hinMod.substring(0, 10);
+					}
+				}
+				if (dob != null && !dob.equals("")) {
+					String[] dobArray = dob.trim().split("-");
+					dobYear = dobArray[0];
+					dobMonth = dobArray[1];
+					dobDay = dobArray[2];
+				}
+	
+				if(hinMod == null || dobYear == null || dobMonth == null || dobDay == null) {
+					return null;
+				}
+				
+				sql = "select demographic_no, provider_no from demographic where hin='" + hinMod + "' and " + " last_name = '" + lastName + "' and " + " year_of_birth = '" + dobYear + "' and " + " month_of_birth = '" + dobMonth + "' and " + " date_of_birth = '" + dobDay + "' and " + " sex = '" + sex + "' ";	
+				
+				logger.debug(sql);
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				ResultSet rs = pstmt.executeQuery();
+				int count = 0;
+				
+				while (rs.next()) {
+					result = new PatientLabRoutingResult();
+					demo = oscar.Misc.getString(rs, "demographic_no");
+					provider_no = oscar.Misc.getString(rs, "provider_no");
+					result.setDemographicNo(Integer.parseInt(demo));
+					result.setProviderNo(provider_no);
+					count++;
+				}
+				rs.close();
+				pstmt.close();
+				if(count > 1) {
+					result = null;
+				}
+				
+			} catch (SQLException sqlE) {
+				throw sqlE;
+			}
+
+		
+		try {
+			//did this link a merged patient? if so, we need to make sure we are the head record, or update
+			//result to be the head record.
+			if(result != null) {
+				DemographicMerged dm = new DemographicMerged();
+				Integer headDemo = dm.getHead(result.getDemographicNo());
+				if(headDemo != null && headDemo.intValue() != result.getDemographicNo()) {
+					Demographic demoTmp = demographicManager.getDemographic(loggedInInfo, headDemo);
+					if(demoTmp != null) {
+						result.setDemographicNo(demoTmp.getDemographicNo());
+						result.setProviderNo(demoTmp.getProviderNo());
+					} else {
+						logger.info("Unable to load the head record of this patient record. (" + result.getDemographicNo()  + ")");
+						result = null;
+					}
+				}
+			}
+			
+			
+			if (result == null) {
+				logger.info("Could not find patient for lab: " + labId);
+			} else {
+				Hl7textResultsData.populateMeasurementsTable("" + labId, result.getDemographicNo().toString());
+			}
+
+			if(result != null) {
+				sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type,dateModified,created) values ('" + ((result != null && result.getDemographicNo()!=null)?result.getDemographicNo().toString():"0") + "', '" + labId + "','HL7',now(),now())";
+				Connection c = null;
+				PreparedStatement pstmt = null;
+				try {
+					c = DbConnectionFilter.getThreadLocalDbConnection();
+					pstmt = c.prepareStatement(sql);
+					pstmt.executeUpdate();
+				
+				} finally {
+					try {
+						pstmt.close();	
+						c.close();
+					}catch(SQLException e) {
+						
+					}
+				}
+				
+			}
+		} catch (SQLException sqlE) {
+			logger.info("NO MATCHING PATIENT FOR LAB id =" + labId);
+			throw sqlE;
+		}
+
+		return (result != null)?result.getProviderNo():"0";
+	}
+	
 	/**
 	 * Attempt to match the patient from the lab to a demographic, return the patients provider which is to be used then no other provider can be found to match the patient to.
 	 */
-	private static String patientRouteReport(LoggedInInfo loggedInInfo, int labId, String lastName, String firstName, String sex, String dob, String hin, Connection conn) throws SQLException {
+	private static String patientRouteReport(LoggedInInfo loggedInInfo, String labType, int labId, String lastName, String firstName, String sex, String dob, String hin, Connection conn) throws SQLException {
+		
+		if("OLIS_HL7".equals(labType)) {
+			return patientRouteReportOLIS(loggedInInfo, labId, lastName, sex,dob,hin,conn);
+		}
 		PatientLabRoutingResult result = null;
 		
 			String sql = null;

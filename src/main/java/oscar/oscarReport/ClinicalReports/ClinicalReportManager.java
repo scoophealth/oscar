@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -106,6 +107,9 @@ public class ClinicalReportManager {
     }
 
     public Numerator getNumeratorById(String id){
+    	if(StringUtils.isEmpty(id)) {
+    		return null;
+    	}
        //return (Numerator) numeratorHash.get(id);
        Hashtable numerHash = (Hashtable) numeratorHash.get(id);
        String type = (String) numerHash.get("type");
@@ -136,6 +140,35 @@ public class ClinicalReportManager {
             MiscUtils.getLogger().debug("create new DroolsNumerator2 object");
             return droolsN;
        }
+       
+       if (type != null && type.equals("DROOLS3")){
+           DroolsNumerator3 droolsN = new DroolsNumerator3();
+           droolsN.setNumeratorName((String) numerHash.get("numeratorName"));
+           droolsN.setId((String) numerHash.get("id"));
+           droolsN.parseReplaceValues((String) numerHash.get("replaceKeys"));
+           MiscUtils.getLogger().debug("create new DroolsNumerator3 object");
+           return droolsN;
+      }
+       
+       if (type != null && type.equals("DROOLS4")){
+           DroolsNumerator4 droolsN = new DroolsNumerator4();
+           droolsN.setNumeratorName((String) numerHash.get("numeratorName"));
+           droolsN.setId((String) numerHash.get("id"));
+           droolsN.parseReplaceValues((String) numerHash.get("replaceKeys"));
+           MiscUtils.getLogger().debug("create new DroolsNumerator4 object");
+           return droolsN;
+      }
+       
+       if (type != null && type.equals("DROOLS5")){
+           DroolsNumerator5 droolsN = new DroolsNumerator5();
+           droolsN.setNumeratorName((String) numerHash.get("numeratorName"));
+           droolsN.setId((String) numerHash.get("id"));
+           droolsN.parseReplaceValues((String) numerHash.get("replaceKeys"));
+           MiscUtils.getLogger().debug("create new DroolsNumerator5 object");
+           return droolsN;
+      }
+      
+       
        return null;
     }
 
@@ -238,6 +271,57 @@ public class ClinicalReportManager {
 
                             addNumerator(droolsN);
                        }
+                       
+                       if (type != null && type.equals("DROOLS3")){
+                           DroolsNumerator3 droolsN = new DroolsNumerator3();
+                           droolsN.setNumeratorName(e.getAttributeValue("name"));
+                           droolsN.setId(e.getAttributeValue("id"));
+                           droolsN.setFile(e.getAttributeValue("file"));
+                           droolsN.parseReplaceValues(e.getAttributeValue("replaceKeys"));
+                           Hashtable<String,String> h = new Hashtable<String,String>();
+                           h.put("type",type);
+                           h.put("numeratorName",e.getAttributeValue("name"));
+                           h.put("id",e.getAttributeValue("id"));
+                           h.put("replaceKeys",e.getAttributeValue("replaceKeys"));
+                           //h.put("file",e.getAttributeValue("file"));
+                           addNumerator(h,e.getAttributeValue("id"));
+
+                           addNumerator(droolsN);
+                      }
+
+                       if (type != null && type.equals("DROOLS4")){
+                           DroolsNumerator4 droolsN = new DroolsNumerator4();
+                           droolsN.setNumeratorName(e.getAttributeValue("name"));
+                           droolsN.setId(e.getAttributeValue("id"));
+                           droolsN.setFile(e.getAttributeValue("file"));
+                           droolsN.parseReplaceValues(e.getAttributeValue("replaceKeys"));
+                           Hashtable<String,String> h = new Hashtable<String,String>();
+                           h.put("type",type);
+                           h.put("numeratorName",e.getAttributeValue("name"));
+                           h.put("id",e.getAttributeValue("id"));
+                           h.put("replaceKeys",e.getAttributeValue("replaceKeys"));
+                           //h.put("file",e.getAttributeValue("file"));
+                           addNumerator(h,e.getAttributeValue("id"));
+
+                           addNumerator(droolsN);
+                      }
+                       
+                       if (type != null && type.equals("DROOLS5")){
+                           DroolsNumerator5 droolsN = new DroolsNumerator5();
+                           droolsN.setNumeratorName(e.getAttributeValue("name"));
+                           droolsN.setId(e.getAttributeValue("id"));
+                           droolsN.setFile(e.getAttributeValue("file"));
+                           droolsN.parseReplaceValues(e.getAttributeValue("replaceKeys"));
+                           Hashtable<String,String> h = new Hashtable<String,String>();
+                           h.put("type",type);
+                           h.put("numeratorName",e.getAttributeValue("name"));
+                           h.put("id",e.getAttributeValue("id"));
+                           h.put("replaceKeys",e.getAttributeValue("replaceKeys"));
+                           //h.put("file",e.getAttributeValue("file"));
+                           addNumerator(h,e.getAttributeValue("id"));
+
+                           addNumerator(droolsN);
+                      }
 
                    }
 
