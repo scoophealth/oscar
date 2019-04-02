@@ -394,6 +394,8 @@ import oscar.util.UtilDateUtilities;
             
             String ofile = tmpDir + entryName;
             
+            new File(ofile.substring(0,ofile.lastIndexOf(File.separator))).mkdirs();
+            
             if (!matchFileExt(ofile, "xml")) {
                 OutputStream out = null;    
                 try {
