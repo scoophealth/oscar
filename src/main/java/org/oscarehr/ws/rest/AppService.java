@@ -145,7 +145,7 @@ public class AppService extends AbstractServiceImpl {
 		JSONProvider jsonProvider = new JSONProvider();
 		jsonProvider.setDropRootElement(true);
 	    providers.add(jsonProvider);
-	    String requestURI = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL","http://localhost:8580/connector/");	  
+	    String requestURI = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL");	  
 		try {
 		WebClient webclient = WebClient.create(requestURI+"emr/register", providers);
 		HTTPConduit conduit = WebClient.getConfig(webclient).getHttpConduit();
@@ -156,10 +156,10 @@ public class AppService extends AbstractServiceImpl {
 		        params = new TLSClientParameters();
 		        conduit.setTlsClientParameters(params);
 		    }
-
-		    params.setTrustManagers(new TrustManager[] { TrustManagerUtils.getAcceptAllTrustManager() });
-		    
-		    params.setDisableCNCheck(true);
+		    if(OscarProperties.getInstance().isPropertyActive("PHR_TEST_CONNECTION")){
+		    		params.setTrustManagers(new TrustManager[] { TrustManagerUtils.getAcceptAllTrustManager() });
+		    		params.setDisableCNCheck(true);
+		    }
 		////////
    		javax.ws.rs.core.Response reps = webclient.accept("application/json, text/plain, */*").acceptEncoding("gzip, deflate").type("application/json;charset=utf-8").post(clinicCreds);
 		logger.info("response code "+reps.getStatus());
@@ -203,7 +203,7 @@ public class AppService extends AbstractServiceImpl {
 	private String getAccessToken(AppDefinition phrApp,String providerNo, String type) {
 		try {
 		org.codehaus.jettison.json.JSONObject configObject = new org.codehaus.jettison.json.JSONObject(phrApp.getConfig());
-		String requestURL = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL","http://localhost:8580/connector/");   
+		String requestURL = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL");   
 		String requestURI = "oauth/token";
 		
 			WebClient webclient = WebClient.create(requestURL+requestURI,configObject.getString("clientId"),configObject.getString("clientSecret"),null);//, providers);
@@ -216,9 +216,10 @@ public class AppService extends AbstractServiceImpl {
 		        conduit.setTlsClientParameters(params);
 		    }
 
-		    params.setTrustManagers(new TrustManager[] { TrustManagerUtils.getAcceptAllTrustManager() });
-			    
-		    params.setDisableCNCheck(true);
+		    if(OscarProperties.getInstance().isPropertyActive("PHR_TEST_CONNECTION")){
+		    		params.setTrustManagers(new TrustManager[] { TrustManagerUtils.getAcceptAllTrustManager() });
+		    		params.setDisableCNCheck(true);
+		    }
 			
 	   		javax.ws.rs.core.Response reps = webclient.accept("application/json, text/plain, */*")
 	   												 .acceptEncoding("gzip, deflate")
@@ -240,41 +241,46 @@ public class AppService extends AbstractServiceImpl {
 		return null;
 	}
 	
+	private javax.ws.rs.core.Response callPHRWebClient(String url,String object,String bearerToken) {
+		List<Object> providers = new ArrayList<Object>();
+		JSONProvider jsonProvider = new JSONProvider();
+		jsonProvider.setDropRootElement(true);
+	    providers.add(jsonProvider);
+		WebClient webclient = WebClient.create(url, providers);
+		HTTPConduit conduit = WebClient.getConfig(webclient).getHttpConduit();
+
+	    TLSClientParameters params = conduit.getTlsClientParameters();
+
+	    if (params == null) {
+	        params = new TLSClientParameters();
+	        conduit.setTlsClientParameters(params);
+	    }
+	    if(OscarProperties.getInstance().isPropertyActive("PHR_TEST_CONNECTION")){
+	    		params.setTrustManagers(new TrustManager[] { TrustManagerUtils.getAcceptAllTrustManager() });
+	    		params.setDisableCNCheck(true);
+	    }
+	    javax.ws.rs.core.Response reps = webclient.accept("application/json, text/plain, */*")
+			 .acceptEncoding("gzip, deflate")
+			 .header("Authorization", "Bearer "+bearerToken)
+			 .type("application/json;charset=utf-8")
+			 .post(object);
+	   
+	    return reps;
+	}
+	
 	private Response callPHR(String requestURI,String providerNo) {
 		return callPHR(requestURI, providerNo,"True");
 	}
 
 	private Response callPHR(String requestURI,String providerNo,String object) {
 		//////////
-		List<Object> providers = new ArrayList<Object>();
-		JSONProvider jsonProvider = new JSONProvider();
-		jsonProvider.setDropRootElement(true);
-	    providers.add(jsonProvider);
-	    String requestURL = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL","http://localhost:8580/connector/");    
+	    String requestURL = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL");    
 	    AppDefinition phrApp = appDefinitionDao.findByName("PHR");
 		    
 		try {
-			WebClient webclient = WebClient.create(requestURL+requestURI, providers);
-			HTTPConduit conduit = WebClient.getConfig(webclient).getHttpConduit();
-
-		    TLSClientParameters params = conduit.getTlsClientParameters();
-
-		    if (params == null) {
-		        params = new TLSClientParameters();
-		        conduit.setTlsClientParameters(params);
-		    }
-
-		    params.setTrustManagers(new TrustManager[] { TrustManagerUtils.getAcceptAllTrustManager() });
-			    
-		    params.setDisableCNCheck(true);
-		    String bearerToken = getAccessToken(phrApp,providerNo,"PHR");
+			String bearerToken = getAccessToken(phrApp,providerNo,"PHR");
 		    logger.debug("bearerToken: "+bearerToken );
-			
-	   		javax.ws.rs.core.Response reps = webclient.accept("application/json, text/plain, */*")
-	   												 .acceptEncoding("gzip, deflate")
-	   												 .header("Authorization", "Bearer "+bearerToken)
-	   												 .type("application/json;charset=utf-8")
-	   												 .post(object);
+	   		javax.ws.rs.core.Response reps = callPHRWebClient(requestURL+requestURI,object,bearerToken);
 	   		
 	   		InputStream in = (InputStream) reps.getEntity();
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
@@ -308,35 +314,13 @@ public class AppService extends AbstractServiceImpl {
 		jojb.element("providerNo", providerNo);
 		jojb.element("role",role);
 		
-		List<Object> providers = new ArrayList<Object>();
-		JSONProvider jsonProvider = new JSONProvider();
-		jsonProvider.setDropRootElement(true);
-	    providers.add(jsonProvider);
-	    String requestURL = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL","http://localhost:8580/connector/");    
+		String requestURL = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL");    
 	    AppDefinition phrApp = appDefinitionDao.findByName("PHR");
 		    
 		try {
-			WebClient webclient = WebClient.create(requestURL+requestURI, providers);
-			HTTPConduit conduit = WebClient.getConfig(webclient).getHttpConduit();
-
-		    TLSClientParameters params = conduit.getTlsClientParameters();
-
-		    if (params == null) {
-		        params = new TLSClientParameters();
-		        conduit.setTlsClientParameters(params);
-		    }
-
-		    params.setTrustManagers(new TrustManager[] { TrustManagerUtils.getAcceptAllTrustManager() });
-			    
-		    params.setDisableCNCheck(true);
-		    String bearerToken = getAccessToken(phrApp,providerNo,"admin");
-		    logger.error("bearerToken: "+bearerToken );
-			logger.error("jojb:"+jojb.toString());
-	   		javax.ws.rs.core.Response reps = webclient.accept("application/json, text/plain, */*")
-	   												 .acceptEncoding("gzip, deflate")
-	   												 .header("Authorization", "Bearer "+bearerToken)
-	   												 .type("application/json;charset=utf-8")
-	   												 .post(jojb.toString());
+			String bearerToken = getAccessToken(phrApp,providerNo,"PHR");
+		    logger.debug("bearerToken: "+bearerToken );
+	   		javax.ws.rs.core.Response reps = callPHRWebClient(requestURL+requestURI,jojb.toString(),bearerToken);
 	   		
 	   		InputStream in = (InputStream) reps.getEntity();
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
