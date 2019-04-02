@@ -393,8 +393,8 @@ function pasteAppt(multipleSameDayGroupAppt) {
 	document.EDITAPPT.chart_no.value = "<%=apptObj.getChart_no()%>";
 	document.EDITAPPT.keyword.value = "<%=apptObj.getName()%>";
 	document.EDITAPPT.demographic_no.value = "<%=apptObj.getDemographic_no()%>";
-	document.EDITAPPT.reason.value = "<%=apptObj.getReason()%>";
-	document.EDITAPPT.notes.value = "<%=apptObj.getNotes()%>";
+	document.forms[0].reason.value = "<%= StringEscapeUtils.escapeJavaScript(apptObj.getReason()) %>"; 
+        document.forms[0].notes.value = "<%= StringEscapeUtils.escapeJavaScript(apptObj.getNotes()) %>"; 
 	document.EDITAPPT.location.value = "<%=apptObj.getLocation()%>";
 	document.EDITAPPT.resources.value = "<%=apptObj.getResources()%>";
 	document.EDITAPPT.type.value = "<%=apptObj.getType()%>";
