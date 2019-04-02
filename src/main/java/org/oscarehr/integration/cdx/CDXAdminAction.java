@@ -29,9 +29,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.ClinicDAO;
+import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.model.Clinic;
-import org.oscarehr.integration.cdx.dao.CdxConfigDao;
-import org.oscarehr.integration.cdx.model.CdxConfig;
+import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -46,25 +46,40 @@ public class CDXAdminAction extends DispatchAction {
 
         String enabled = request.getParameter("cdx_polling_enabled");
         String interval = request.getParameter("cdx_polling_interval");
+        String cdxUrl = request.getParameter("cdx_url");
         String defaultProvider = request.getParameter("defaultProvider");
         String cdxOid = request.getParameter("cdxOid");
         MiscUtils.getLogger().info("action cdx_polling_enabled: " + enabled);
         MiscUtils.getLogger().info("action cdx_polling_interval: " + interval);
+        MiscUtils.getLogger().info("action cdx_url: " + cdxUrl);
         MiscUtils.getLogger().info("action defaultProvider: " + defaultProvider);
         MiscUtils.getLogger().info("action cdxOid: " + cdxOid);
 
         try {
-
-            CdxConfigDao cdxConfigDao = SpringUtils.getBean(CdxConfigDao.class);
             ClinicDAO clinicDAO = SpringUtils.getBean(ClinicDAO.class);
-            //UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
+            UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
 
-            CdxConfig cdxConfig = cdxConfigDao.getCdxConfig(1);
-            if (cdxConfig == null) {
-                cdxConfig = new CdxConfig();
+            UserProperty prop;
+            if ((prop = userPropertyDao.getProp("cdx_url")) == null ) {
+                prop = new UserProperty();
             }
-            cdxConfig.setDefaultProvider(defaultProvider);
-            cdxConfigDao.merge(cdxConfig);
+            prop.setName("cdx_url");
+            prop.setValue(cdxUrl);
+            userPropertyDao.saveProp(prop);
+
+            if ((prop = userPropertyDao.getProp("cdx_default_provider")) == null ) {
+                prop = new UserProperty();
+            }
+            prop.setName("cdx_default_provider");
+            prop.setValue(defaultProvider);
+            userPropertyDao.saveProp(prop);
+
+//            CdxConfig cdxConfig = cdxConfigDao.getCdxConfig(1);
+//            if (cdxConfig == null) {
+//                cdxConfig = new CdxConfig();
+//            }
+//            cdxConfig.setDefaultProvider(defaultProvider);
+//            cdxConfigDao.merge(cdxConfig);
 
             Clinic clinic = clinicDAO.getClinic();
             if (clinic == null) {  // clinic table empty, shouldn't happen
@@ -72,6 +87,8 @@ public class CDXAdminAction extends DispatchAction {
             }
             clinic.setCdxOid(cdxOid);
             clinicDAO.merge(clinic);
+
+
 
             int pollInterval = 30;
             if (toInteger(interval) != null) {

@@ -25,6 +25,8 @@
 package org.oscarehr.integration.cdx;
 
 import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
+import ca.uvic.leadlab.obibconnector.facades.send.ISubmit;
+import ca.uvic.leadlab.obibconnector.facades.send.ISubmitDoc;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.*;
 import org.junit.Assert;
@@ -38,8 +40,10 @@ public class SubmitDocTest {
     @Test
     public void testSubmitDoc() {
         String response = null;
+        CDXConfiguration cdxConfig = new CDXConfiguration();
+        ISubmitDoc submitDoc = new SubmitDoc(cdxConfig);
         try {
-            response = new SubmitDoc("11111")
+            response = submitDoc
                     .patient()
                         .id("2222")
                         .name(NameType.LEGAL, "Joe", "Wine")

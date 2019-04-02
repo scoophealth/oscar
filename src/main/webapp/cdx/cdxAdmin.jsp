@@ -69,12 +69,13 @@
     String pollEnabled;
     String pollDisabled;
     String pollInterval;
+    String cdxUrl = "127.0.0.1";
     String privateKey = "";
     String decryptionKey = "";
 
 
-    CdxConfig cdxConfig = cdxConfigDao.getCdxConfig(1);
-    if (cdxConfig != null && cdxConfig.getDefaultProvider() != null) defaultProvider = cdxConfig.getDefaultProvider();
+//    CdxConfig cdxConfig = cdxConfigDao.getCdxConfig(1);
+//    if (cdxConfig != null && cdxConfig.getDefaultProvider() != null) defaultProvider = cdxConfig.getDefaultProvider();
 
     Clinic clinic = clinicDAO.getClinic();
     if (clinic != null && clinic.getCdxOid() != null) cdxOid = clinic.getCdxOid();
@@ -90,8 +91,12 @@
     pollInterval = cdxConfiguration.getPollingInterval();
 
     UserProperty up;
-//    up = userPropertyDao.getProp("cdx_poll_interval");
-//    if (up != null) pollInterval = up.getValue();
+
+    up = userPropertyDao.getProp("cdx_url");
+    if (up != null) cdxUrl = up.getValue();
+
+    up = userPropertyDao.getProp("cdx_default_provider");
+    if (up != null) defaultProvider = up.getValue();
 
     up = userPropertyDao.getProp("cdx_privateKey");
     if (up != null) privateKey = up.getValue();
@@ -115,7 +120,12 @@
 <body>
 <h4>CDX Configuration</h4>
 <form action="<%=request.getContextPath()%>/cdx/CDXAdmin.do" method="post">
-    <%--    <fieldset>--%>
+        <div class="control-group">
+            <label class="control-label">CDX URL:</label>
+            <div class="controls">
+                <input type="text" name="cdx_url" value="<%=cdxUrl%>"/>
+            </div>
+        </div>
     <div class="control-group">
         <label class="control-label">Default Provider:</label>
         <div class="controls">
@@ -144,12 +154,10 @@
     </div>
     <div class="control-group">
         <label class="control-label">Automated Polling:</label>
-        <div class="controls">
             <label class="radio-inline"><input type="radio" name="cdx_polling_enabled" value="true" <%=pollEnabled%>
                                                class="form-control">Enabled</label>
             <label class="radio-inline"><input type="radio" name="cdx_polling_enabled" <%=pollDisabled%> value="false"
                                                class="form-control">Disabled</label>
-        </div>
     </div>
     <div class="control-group">
         <label class="control-label">Polling Interval (minutes):</label>

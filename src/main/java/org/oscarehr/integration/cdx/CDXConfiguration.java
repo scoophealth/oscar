@@ -24,12 +24,17 @@
 
 package org.oscarehr.integration.cdx;
 
+import ca.uvic.leadlab.obibconnector.facades.Config;
 import org.apache.commons.lang.StringUtils;
+import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.OscarJobDao;
 import org.oscarehr.common.dao.OscarJobTypeDao;
+import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.common.jobs.OscarJobUtils;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.common.model.OscarJob;
 import org.oscarehr.common.model.OscarJobType;
+import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -37,7 +42,7 @@ import org.oscarehr.util.SpringUtils;
 import java.util.Date;
 import java.util.List;
 
-public class CDXConfiguration {
+public class CDXConfiguration implements Config {
 
     public CDXConfiguration() {
     }
@@ -126,5 +131,23 @@ public class CDXConfiguration {
         }
 
         return false;
+    }
+
+    @Override
+    public String getUrl() {
+        String url = "127.0.0.1";
+        UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
+        UserProperty up = userPropertyDao.getProp("cdx_url");
+        if (up != null) url = up.getValue();
+        return url;
+    }
+
+    @Override
+    public String getClinicId() {
+        String cdxOid = "cdxpostprod-otca";
+        ClinicDAO clinicDAO = SpringUtils.getBean(ClinicDAO.class);
+        Clinic clinic = clinicDAO.getClinic();
+        if (clinic != null && clinic.getCdxOid() != null) cdxOid = clinic.getCdxOid();
+        return cdxOid;
     }
 }
