@@ -77,6 +77,7 @@ public class SearchManagerTest extends DaoTestFixtures {
 		 demographic.setProviderNo("-1");
 		 demographic.setFirstName("Test");
 		 demographic.setLastName("Test");
+		 demographic.setMiddleNames("");
 		 demographic.setSex("M");
 		
 		 demographicDao.save(demographic);
