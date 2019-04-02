@@ -47,17 +47,13 @@ public class CDXImport {
 
     private String clinicId;
 
-    private CdxConfig cdxConfig;
+    private CDXConfiguration cdxConfig;
 
     public CDXImport() {
         ClinicDAO clinicDao = SpringUtils.getBean(ClinicDAO.class);
         clinicId = clinicDao.getClinic().getCdxOid();
 
-        CdxDocumentDao docdao = SpringUtils.getBean(CdxDocumentDao.class);
-
-        CdxConfigDao configDao = SpringUtils.getBean(CdxConfigDao.class);
-
-        cdxConfig = configDao.getCdxConfig(1);
+        cdxConfig = new CDXConfiguration();
     }
 
 

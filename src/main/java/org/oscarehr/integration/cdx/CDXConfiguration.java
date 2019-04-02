@@ -150,4 +150,10 @@ public class CDXConfiguration implements Config {
         if (clinic != null && clinic.getCdxOid() != null) cdxOid = clinic.getCdxOid();
         return cdxOid;
     }
+
+    String getDefaultProvider() {
+        return "0"; // fixme
+    }
+
+
 }
