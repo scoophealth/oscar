@@ -368,5 +368,21 @@ public class Appointment extends AbstractModel<Integer> implements Serializable,
 		   return null;
 	   }
    }
+   
+   public Date getEndTimeAsFullDate(){
+	   try{
+		   Calendar cal = Calendar.getInstance();
+		   cal.setTime(getAppointmentDate());
+		   Calendar acal = Calendar.getInstance();
+		   acal.setTime(getEndTime());
+		   cal.set(Calendar.HOUR_OF_DAY, acal.get(Calendar.HOUR_OF_DAY));
+		   cal.set(Calendar.MINUTE, acal.get(Calendar.MINUTE));
+		   cal.set(Calendar.SECOND,0);
+		   cal.set(Calendar.MILLISECOND, 0);
+		   return cal.getTime();
+	   }catch(Exception e){
+		   return null;
+	   }
+   }
     
 }

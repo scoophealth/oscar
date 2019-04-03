@@ -97,6 +97,9 @@ public class ScheduleManager {
 	
 	@Autowired
 	private PatientConsentManager patientConsentManager;
+	
+	@Autowired
+	private AppointmentManager appointmentManager;
 
 
 	/*Right now the date object passed is converted to a local time.  
@@ -334,6 +337,76 @@ public class ScheduleManager {
 		List<Object[]> providerCounts = oscarAppointmentDao.listProviderAppointmentCounts(sDate, eDate);
 
 		return providerCounts;
+	}
+	
+	public  boolean removeIfDoubleBooked(LoggedInInfo loggedInInfo,Calendar startTime, Calendar endTime, String providerNo,  Appointment appointment)  {
+		logger.debug("appt saved : " + appointment + ", " + appointment.getStartTimeAsFullDate().getTime() + ", " + appointment.getEndTimeAsFullDate().getTime());
+
+		try {
+			// so what we're going to do is check the providers
+			// schedule for conflict after we book the appointment.
+			// to check, we'll have to scan for anything starting a few hours ahead
+			// if there's a conflict, we'll have to cancel the appointment.
+
+			// the get appointments call scans at the granularity of the day, not exact time
+			// so we have to do some rounding here.
+			Calendar startDoubleBlookingVerifyDate = (Calendar) startTime.clone();
+			startDoubleBlookingVerifyDate.add(Calendar.HOUR_OF_DAY, -6);
+			startDoubleBlookingVerifyDate.getTimeInMillis();
+
+			Calendar endDoubleBlookingVerifyDate = (Calendar) endTime.clone();
+			endDoubleBlookingVerifyDate.add(Calendar.DAY_OF_YEAR, 1);
+			endDoubleBlookingVerifyDate.getTimeInMillis();
+
+			logger.debug("appt conflict scan parameters : " + providerNo + ", " + startDoubleBlookingVerifyDate.getTime() + ", " + endDoubleBlookingVerifyDate.getTime());
+			List<Appointment> existingAppointments = getAppointmentsForDateRangeAndProvider(loggedInInfo,startDoubleBlookingVerifyDate.getTime(), endDoubleBlookingVerifyDate.getTime(), providerNo);
+			long myAppointmentStartTimeMs = appointment.getStartTimeAsFullDate().getTime();
+			long myAppointmentEndTimeMs = appointment.getEndTimeAsFullDate().getTime();
+			boolean conflict = false;
+			for (Appointment tempAppointment : existingAppointments) {
+				logger.debug("collision checking existing appt: " + tempAppointment.getId() + ", " + tempAppointment.getStartTimeAsFullDate().getTime() + ", " + tempAppointment.getEndTimeAsFullDate().getTime() + ", " + appointment.getStatus());
+
+				if (tempAppointment.getId().equals(appointment.getId()) || "C".equals(appointment.getStatus()))
+					continue;
+
+				// there's 4 cases
+				// |--- My appt ---|
+				// |--- conflict ---|
+				// |--- conflict ---|
+				// |----- conflict -----|
+				// |- conflict -|
+				long tempStartTimeMs = tempAppointment.getStartTimeAsFullDate().getTime();
+				if (tempStartTimeMs >= myAppointmentStartTimeMs && tempStartTimeMs < myAppointmentEndTimeMs) {
+					logger.debug("conflict case 1");
+					conflict = true;
+					break;
+				}
+
+				long tempEndTimeMs = tempAppointment.getEndTimeAsFullDate().getTime();
+				if (tempEndTimeMs > myAppointmentStartTimeMs && tempEndTimeMs <= myAppointmentEndTimeMs) {
+					logger.debug("conflict case 2");
+					conflict = true;
+					break;
+				}
+
+				if (tempStartTimeMs <= myAppointmentStartTimeMs && tempEndTimeMs >= myAppointmentEndTimeMs) {
+					logger.debug("conflict case 3");
+					conflict = true;
+					break;
+				}
+
+				logger.debug("no conflict");
+			}
+
+			logger.debug("conflict flag : " + conflict);
+			if (conflict) {
+				appointmentManager.deleteAppointment(loggedInInfo, appointment.getId());
+				return true;
+			}
+		} catch (Exception e) {
+			logger.error("unexpected error, maybe not compatible oscar", e);
+		}
+		return false;
 	}
 
 }
