@@ -28,6 +28,9 @@ import org.oscarehr.common.dao.AbstractDao;
 import org.oscarehr.integration.cdx.model.CdxPersonId;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.Query;
+import java.util.List;
+
 
 @Repository
 public class CdxPersonIdDao extends AbstractDao<CdxPersonId> {
@@ -41,5 +44,13 @@ public class CdxPersonIdDao extends AbstractDao<CdxPersonId> {
         return find(id);
     }
 
+    public List<CdxPersonId> findIdsForPerson(int personId) {
+
+        String sql = "FROM CdxPersonId id where id.person = :pid";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("pid", personId);
+        return query.getResultList();
+
+    }
 
 }

@@ -3,24 +3,24 @@ var selectedDemos=new Array();
 
 var highlightMatch = function(full, snippet, matchindex) {
     return full.substring(0, matchindex) +
-    "<span class='match'>" +
-    full.substr(matchindex, snippet.length) +
-    "</span>" +
-    full.substring(matchindex + snippet.length);
+        "<span class='match'>" +
+        full.substr(matchindex, snippet.length) +
+        "</span>" +
+        full.substring(matchindex + snippet.length);
 };
 var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
     //console.log(oResultData);
     var query = sQuery.toLowerCase(),
-    fname = oResultData[0],
-    dob = oResultData[1],
-    status = oResultData[3],
-    fnameMatchIndex = fname.toLowerCase().indexOf(query),
-    displayfname= '';
+        fname = oResultData[0],
+        dob = oResultData[1],
+        status = oResultData[3],
+        fnameMatchIndex = fname.toLowerCase().indexOf(query),
+        displayfname= '';
     //oscarLog("in resultFormatter2");
     //oscarLog(oResultData);
     if(fnameMatchIndex > -1) {
         displayfname = highlightMatch(fname, query, fnameMatchIndex);
-    //oscarLog("displayfname in if="+displayfname);
+        //oscarLog("displayfname in if="+displayfname);
     }
     else {
         displayfname = fname;
@@ -30,14 +30,14 @@ var resultFormatter2 = function(oResultData, sQuery, sResultMatch) {
 };
 
 var resultFormatter = function(oResultData, sQuery, sResultMatch) {
-   //console.log(oResultData);
+    //console.log(oResultData);
     var query = sQuery.toLowerCase(),
-    fname = oResultData[1],
-    lname = oResultData[2],
-    fnameMatchIndex = fname.toLowerCase().indexOf(query),
-    lnameMatchIndex = lname.toLowerCase().indexOf(query),
+        fname = oResultData[1],
+        lname = oResultData[2],
+        fnameMatchIndex = fname.toLowerCase().indexOf(query),
+        lnameMatchIndex = lname.toLowerCase().indexOf(query),
 
-    displayfname, displaylname ;
+        displayfname, displaylname ;
 
     if(fnameMatchIndex > -1) {
         displayfname = highlightMatch(fname, query, fnameMatchIndex);
@@ -54,18 +54,18 @@ var resultFormatter = function(oResultData, sQuery, sResultMatch) {
     }
 
     return displayfname + " " + displaylname ;
-        
+
 
 };
 var resultFormatter3 = function(oResultData, sQuery, sResultMatch) {
     //console.log(oResultData);
     var query = sQuery.toLowerCase(),
-    fname = oResultData[1],
-    lname = oResultData[2],
-    fnameMatchIndex = fname.toLowerCase().indexOf(query),
-    lnameMatchIndex = lname.toLowerCase().indexOf(query),
+        fname = oResultData[1],
+        lname = oResultData[2],
+        fnameMatchIndex = fname.toLowerCase().indexOf(query),
+        lnameMatchIndex = lname.toLowerCase().indexOf(query),
 
-    displayfname, displaylname ;
+        displayfname, displaylname ;
 
     if(fnameMatchIndex > -1) {
         displayfname = highlightMatch(fname, query, fnameMatchIndex);
@@ -86,18 +86,23 @@ var resultFormatter3 = function(oResultData, sQuery, sResultMatch) {
 };
 
 function checkSave(elementId){
-    var curVal=$('autocompletedemo'+elementId).value;
+    var inp=$('autocompletedemo'+elementId);
+    var curVal = inp.value;
     var isCurValValid=false;
+
     for(var i=0;i<selectedDemos.length;i++){
         if(curVal==selectedDemos[i]){
             isCurValValid=true;
             break;
         }
     }
+
+    var but = document.getElementById('save'+elementId);
+
     if(isCurValValid)
-        $('save'+elementId).enable();
+        but.removeAttribute('disabled');
     else
-        $('save'+elementId).disable();
+        but.setAttribute('disabled', 'true');
 }
 function removeProv(th){
     var ele = th.up();

@@ -348,9 +348,6 @@ public class CDXImport {
 
             provEntity = matchProvider(prov);
 
-            if (provEntity == null)  // provider can't be found - use default
-                provEntity = getDefaultProvider();
-
             plr.setProviderNo(provEntity.getProviderNo());
 
             plrDao.persist(plr);
@@ -363,23 +360,14 @@ public class CDXImport {
 
         ProviderLabRoutingDao plrDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
         ProviderLabRoutingModel plr = new ProviderLabRoutingModel();
-        Provider provEntity;
 
         plr.setLabNo(docEntity.getDocumentNo());
-        plr.setStatus("N"); // Staus:New? (need to confirm semantics)
+        plr.setStatus("N"); // Status:New? (need to confirm semantics)
         plr.setLabType("DOC");
-
-        provEntity = getDefaultProvider();
-
-        plr.setProviderNo(provEntity.getProviderNo());
-
+        plr.setProviderNo("0");
         plrDao.persist(plr);
     }
 
-    private Provider getDefaultProvider() {
-        ProviderDao provdao = SpringUtils.getBean(ProviderDao.class);
-        return provdao.getProvider(cdxConfig.getDefaultProvider());
-    }
 
     private Provider matchProvider(IProvider prov) {
         ProviderDao provdao = SpringUtils.getBean(ProviderDao.class);
