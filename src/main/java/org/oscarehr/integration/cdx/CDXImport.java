@@ -43,7 +43,7 @@ import java.util.List;
 
 public class CDXImport {
 
-    private IReceiveDoc receiver = new ReceiveDocMock();
+    private IReceiveDoc receiver = SpringUtils.getBean(IReceiveDoc.class);
 
     private String clinicId;
 
