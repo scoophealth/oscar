@@ -37,6 +37,14 @@ import java.util.List;
 public class DrugSearchResponse extends AbstractSearchResponse<DrugTo1> {
 
     private static final long serialVersionUID = 1L;
+    
+    public DrugSearchResponse() {
+    	// super();
+    }
+    
+    public DrugSearchResponse(List<DrugTo1> drugTo1List) {
+    	super.setContent(drugTo1List);
+    }
 
 	@Override
 	@XmlElement(name="drug", type = DrugTo1.class)

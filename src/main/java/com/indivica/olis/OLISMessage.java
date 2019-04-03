@@ -24,19 +24,17 @@ public class OLISMessage {
 	private SPRSegment sprSegment;
 	private DSCSegment dscSegment = null;
 	
-	private Provider provider;
-
-	public OLISMessage(Provider provider) {
-		this.provider = provider;
+	public OLISMessage() {
+		
 	}
 
-	public OLISMessage(Query query) {
+	public OLISMessage(Provider provider, Query query) {
 		mshSegment = new MSHSegment(query.getQueryType());
 		zshSegment = new ZSHSegment(provider);
 		sprSegment = new SPRSegment(query.getQueryType(), query);
 	}
 	
-	public OLISMessage(Query query, String continuationPointer) {
+	public OLISMessage(Provider provider, Query query, String continuationPointer) {
 		mshSegment = new MSHSegment(query.getQueryType());
 		zshSegment = new ZSHSegment(provider);
 		sprSegment = new SPRSegment(query.getQueryType(), query);

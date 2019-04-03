@@ -35,8 +35,6 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.oscarehr.util.MiscUtils;
-
 /**
  * @deprecated 2013-04-28 use org.oscarehr.util.DateUtils instead 
  */
@@ -210,7 +208,8 @@ public class UtilDateUtilities {
          DateFormat formatter = new SimpleDateFormat(datePattern);
          date = formatter.parse(dateStr);                        
       } catch (ParseException e) {
-    	  MiscUtils.getLogger().error("Looks bad, too bad original author didn't document how bad", e);
+    	  //no point logging this..returns null
+    	  //MiscUtils.getLogger().error("Looks bad, too bad original author didn't document how bad", e);
       }
       return date   ;     
     }

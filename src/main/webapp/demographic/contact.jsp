@@ -56,6 +56,7 @@
 						<option value="Uncle">Uncle</option>
 						<option value="GrandFather">GrandFather</option>
 						<option value="GrandMother">GrandMother</option>
+						<option value="Neighbour">Neighbour</option>
 						<option value="Guardian">Guardian</option>
                                                 <option value="Foster Parent">Foster Parent</option>
                                                 <option value="Next of Kin">Next of Kin</option>
@@ -64,7 +65,8 @@
 						<option value="Power of Attorney">Power of Attorney</option>
 						<option value="Insurance">Insurance</option>
 						<option value="Guarantor">Guarantor</option>
-						<option value="Other">Other</option>		            	
+						<option value="Other">Other</option>		
+						<option value="">Unknown</option>		            	
 		            </select>
 	            	
 	            	&nbsp;
@@ -96,5 +98,5 @@
 		             &nbsp;
 		             SDM:<input type="checkbox" name="contact_<%=id%>.sdm"/>
 		             EC:<input type="checkbox" name="contact_<%=id%>.ec"/>
-		             <textarea name="contact_<%=id%>.note" rows="1" cols="15" title="Contact Note"></textarea>
+		             <textarea name="contact_<%=id%>.note" rows="3" cols="25" title="Contact Note"></textarea>
 </div>

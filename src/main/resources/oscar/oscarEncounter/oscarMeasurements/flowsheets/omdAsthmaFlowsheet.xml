@@ -12,144 +12,267 @@
   GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
-  -->
+-->
 <flowsheet name="ASTH" display_name="ASTHMA" warning_colour="#E00000" recommendation_colour="yellow" dxcode_triggers="icd9:493" ds_rules="diab.drl">
-    <indicator key="HIGH 1" colour="#E00000" />
-    <indicator key="HIGH" colour="orange" />
-    <indicator key="LOW" colour="#9999FF" />
-    <item measurement_type="ALPA" display_name="Asthma Limits Physical Activity" guideline="" graphable="yes" value_name="Asthma Limits Physical Activity" >
-        <ruleset>
-            <rule indicationColor="HIGH">
-                <condition type="isDataEqualTo" param="ALPA" value="Yes" />
-            </rule>
-        </ruleset>
-    </item>
-    <measurement type="ALPA" typeDesc="Asthma Limits Physical Activity" typeDisplayName="Asthma Limits Physical Activity" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="ANR" display_name="Need Reliever" guideline="" graphable="yes" value_name="Frequency/Week" >
-        <ruleset>
-            <rule indicationColor="HIGH">
-                <condition type="getDataAsDouble" param="ANR" value="&gt;4" />
-            </rule>
-        </ruleset>
-    </item>
-    <measurement type="ANR" typeDesc="Asthma Needs Reliever   " typeDisplayName="Asthma Needs Reliever   " measuringInstrc="frequency per week">
-        <validationRule name="Numeric Value: 0 to 2500" maxValue="2500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="ASYM" display_name="Asthma Symptoms" guideline="dyspnea, cough, wheeze, chest tightness" graphable="yes" value_name="Frequency/Week">
-        <ruleset>
-            <rule indicationColor="HIGH">
-                <condition type="getDataAsDouble" param="ASYM" value="&gt;4" />
-            </rule>
-        </ruleset>
-    </item>
-    <measurement type="ASYM" typeDesc="Asthma Symptoms" typeDisplayName="Asthma Symptoms" measuringInstrc="frequency per week">
-        <validationRule name="Numeric Value: 0 to 2500" maxValue="2500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="ASWA" display_name="Absence since  last office visit" guideline="School/Work" graphable="yes" value_name="Has Absence" >
-        <ruleset>
-            <rule indicationColor="HIGH">
-                <condition type="isDataEqualTo" param="ASWA" value="Yes" />
-            </rule>
-        </ruleset>
-    </item>
-    <measurement type="ASWA" typeDesc="Asthma Absence School Work" typeDisplayName="Asthma Absence School Work" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="ANSY" display_name="Night Time Symptoms" guideline="" graphable="yes" value_name="Frequency/Week" >
-        <ruleset>
-            <rule indicationColor="HIGH">
-                <condition type="getDataAsDouble" value="&gt;0" /> <!--  param="ANSY" -->
-            </rule>
-        </ruleset>
-    </item>
-    <measurement type="ANSY" typeDesc="Asthma Night Time Symtoms" typeDisplayName="Asthma Night Time Symtoms" measuringInstrc="frequency per week">
-        <validationRule name="Numeric Value: 0 to 2500" maxValue="2500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="FEV1" display_name="Forced Expiratory Volume in 1 second" guideline="greater than 90 percent personal or predicted or personal best" graphable="yes" value_name="90% personal or predicted best" >
-        <ruleset>
-            <rule indicationColor="HIGH">
-                <condition type="isDataEqualTo" param="ASWA" value="Yes" />
-            </rule>
-        </ruleset>
-    </item>
-    <measurement type="FEV1" typeDesc="Forced Expiratory Volume 1 Second" typeDisplayName="" measuringInstrc="Forced Expiratory Volume 1 Second">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="AELV" display_name="Exacerbations since last visit" guideline="Requiring clinical evaluations" graphable="yes" value_name="Has" >
-        <ruleset>
-            <rule indicationColor="HIGH">
-                <condition type="isDataEqualTo" param="AELV" value="Yes" />
-            </rule>
-        </ruleset>
-    </item>
-    <measurement type="AELV" typeDesc="Exacerbations since last visit requiring clincal evaluation" typeDisplayName="Exacerbations since last visit requiring clincal evaluation" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="SPIR" display_name="Spirometry" guideline="" graphable="yes" value_name="Spirometry" >
-        <rules>
-            <recommendation strength="warning" >
-                <condition type="monthrange" param="SPIR" value="&gt;6" />
-            </recommendation>
-            <recommendation strength="warning" >
-                <condition type="monthrange" param="SPIR" value="-1" />
-            </recommendation>
-        </rules>
-    </item>
-    <measurement type="SPIR" typeDesc="Spirometry" typeDisplayName="Spirometry" measuringInstrc="">
-        <validationRule name="Numeric Value: 0 to 2500" maxValue="2500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="PEFR" display_name="PEFR value" guideline="best of 3" graphable="yes" value_name="PEFR value" />
-    <measurement type="PEFR" typeDesc="PEFR value" typeDisplayName="PEFR value" measuringInstrc="">
-        <validationRule name="Numeric Value: 0 to 2500" maxValue="2500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="ARAD" display_name="Asthma Definition" guideline="" graphable="yes" value_name="Reviewed" />
-    <measurement type="ARAD" typeDesc="Review Asthma Definition" typeDisplayName="" measuringInstrc="Review Asthma Definition">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="ARMA" display_name="Medication Adherence" guideline="" graphable="yes" value_name="Reviewed" />
-    <measurement type="ARMA" typeDesc="Asthma Review Med Adherence" typeDisplayName="" measuringInstrc="Asthma Review Med Adherence">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="ARDT" display_name="Device Technique Optimal" guideline="" graphable="no" value_name="Reviewed" />
-    <measurement type="ARDT" typeDesc="Asthma  Review Device Technique optimal" typeDisplayName="Asthma  Review Device Technique optimal" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="SMCS" display_name="Smoking Cessation" guideline="" graphable="yes" value_name="Reviewed" />
-    <measurement type="SMCS" typeDesc="Smoking Cessation" typeDisplayName="Smoking Cessation" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="ASTA" display_name="Trigger Avoidance" guideline="" graphable="yes" value_name="Reviewed" />
-    <measurement type="ASTA" typeDesc="Asthma Trigger Avoidance" typeDisplayName="Asthma Trigger Avoidance" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="AENC" display_name="Environmental Control" guideline="" graphable="yes" value_name="Reviewed" />
-    <measurement type="AENC" typeDesc="Asthma Environmental Control" typeDisplayName="Asthma Environmental Control" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="ACOS" display_name="Coping Strategies" guideline="" graphable="yes" value_name="Reviewed" />
-    <measurement type="ACOS" typeDesc="Asthma Coping Strategies" typeDisplayName="Asthma Coping Strategies" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="AACP" display_name="Action Plan" guideline="" graphable="yes" value_name="Provided/Revised/Reviewed" />
-    <measurement type="AACP" typeDesc="Asthma Action Plan " typeDisplayName="Asthma Action Plan " measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="AEDR" display_name="Education Referral" guideline="" graphable="yes" value_name="Referred" />
-    <measurement type="AEDR" typeDesc="Asthma Education Referral" typeDisplayName="Asthma Education Referral" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="ASPR" display_name="Specialist Referral" guideline="" graphable="yes" value_name="Referred" />
-    <measurement type="ASPR" typeDesc="Asthma Specialist Referral" typeDisplayName="Asthma Specialist Referral" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="LHAD" display_name="Lung Related Hospital Admission" guideline="" value_name="Admission" />
-    <measurement type="LHAD" typeDesc="Lung Related Hospital Admission" typeDisplayName="Lung Related Hospital Admission" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
-    <item measurement_type="OUTR" display_name="Outside Spirometry Referral" guideline="" value_name="Referred" />
-    <measurement type="OUTR" typeDesc="Outside Spirometry Referral" typeDisplayName="Outside Spirometry Referral" measuringInstrc="">
-        <validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
-    </measurement>
+	<indicator key="HIGH 1" colour="#E00000" />
+	<indicator key="HIGH" colour="orange" />
+	<indicator key="LOW" colour="#9999FF" />
+	
+	<item measurement_type="FEV1BF" display_name="FEV1 (before puff)" guideline="" graphable="yes" value_name="FEV1 (before puff)" />
+	<item measurement_type="FVCBF" display_name="FVC (before puff)" guideline="" graphable="yes" value_name="FVC (before puff)" />
+	<item measurement_type="FEV1PCBF" display_name="FEV1% (before puff)" guideline="" graphable="yes" value_name="FEV1% (before puff)" />
+	<item measurement_type="FEV1PRE" display_name="FEV1 predicted" guideline="" graphable="yes" value_name="FEV1 predicted" />
+	<item measurement_type="FVCPRE" display_name="FVC predicted" guideline="" graphable="yes" value_name="FVC predicted" />
+	<item measurement_type="FEV1PCPRE" display_name="FEV1% predicted" guideline="" graphable="yes" value_name="FEV1% predicted" />
+	<item measurement_type="FEV1PCOFPREBF" display_name="FEV1% of predicted (before puff)" guideline="" graphable="yes" value_name="FEV1% of predicted (before puff)" />
+	<item measurement_type="FVCRTBF" display_name="FVC ratio (before puff)" guideline="" graphable="yes" value_name="FVC ratio (before puff)" />
+	<item measurement_type="FEV1FVCRTBF" display_name="FEV1 / FVC ratio (before puff)" guideline="" graphable="yes" value_name="FEV1 / FVC ratio (before puff)" />
+	<item measurement_type="PEFRBF" display_name="PEF personal (before puff)" guideline="" graphable="yes" value_name="PEF personal (before puff)" />
+	
+	<item measurement_type="FEV1AFT" display_name="FEV1 (after puff)" guideline="" graphable="yes" value_name="FEV1 (after puff)" />
+	<item measurement_type="FVCAFT" display_name="FVC (after puff)" guideline="" graphable="yes" value_name="FVC (after puff)" />
+	<item measurement_type="FEV1PCAFT" display_name="FEV1% (after puff)" guideline="" graphable="yes" value_name="FEV1% (after puff)" />
+	<item measurement_type="FEV1PCOFPREAFT" display_name="FEV1% of predicted (after puff)" guideline="" graphable="yes" value_name="FEV1% of predicted (after puff)" />
+	<item measurement_type="FVCRTAFT" display_name="FVC ratio (after puff)" guideline="" graphable="yes" value_name="FVC ratio (after puff)" />
+	<item measurement_type="FEV1FVCRTAFT" display_name="FEV1 / FVC ratio (after puff)" guideline="" graphable="yes" value_name="FEV1 / FVC ratio (after puff)" />
+	<item measurement_type="PEFRAFT" display_name="PEF personal (after puff)" guideline="" graphable="yes" value_name="PEF personal (after puff)" />
+	
+	
+	<item measurement_type="SPIRT" display_name="Spirometry Test" guideline="" graphable="no" value_name="Spirometry" />
+	<item measurement_type="ADYSY" display_name="dyspnea" guideline="Target: &lt;4 days/week" graphable="yes" value_name="dyspnea">
+		<ruleset>
+			<rule indicationColor="HIGH">
+				<condition type="getDataAsDouble" param="ADYSY" value="&gt;=4" />
+			</rule>
+		</ruleset>
+	</item>
+	<item measurement_type="ACOSY" display_name="cough" guideline="Target: &lt;4 days/week" graphable="yes" value_name="cough">
+		<ruleset>
+			<rule indicationColor="HIGH">
+				<condition type="getDataAsDouble" param="ACOSY" value="&gt;=4" />
+			</rule>
+		</ruleset>
+	</item>
+	<item measurement_type="AWHSY" display_name="wheeze" guideline="Target: &lt;4 days/week" graphable="yes" value_name="wheeze">
+		<ruleset>
+			<rule indicationColor="HIGH">
+				<condition type="getDataAsDouble" param="AWHSY" value="&gt;=4" />
+			</rule>
+		</ruleset>
+	</item>
+	<item measurement_type="ACTSY" display_name="chest tightness" guideline="Target: &lt;4 days/week" graphable="yes" value_name="chest tightness">
+		<ruleset>
+			<rule indicationColor="HIGH">
+				<condition type="getDataAsDouble" param="ACTSY" value="&gt;=4" />
+			</rule>
+		</ruleset>
+	</item>
+	<item measurement_type="ANSY" display_name="Night Time Symptoms" guideline="target: 0" graphable="yes" value_name="Frequency/Week" >
+	<ruleset>
+			<rule indicationColor="HIGH">
+				<condition type="getDataAsDouble" param="ANSY" value="&gt;0" />
+			</rule>
+		</ruleset>
+	</item>
+	<item measurement_type="ANELV" display_name="Asthma: # Of Exacerbations Requiring Clinical Evaluation since last assessment" guideline="target: 0" graphable="yes" value_name="Asthma: # Of Exacerbations Requiring Clinical Evaluation since last assessment">
+		<ruleset>
+			<rule indicationColor="HIGH">
+				<condition type="getDataAsDouble" param="ANELV" value="&gt;0" />
+			</rule>
+		</ruleset>
+	</item>	
+	<item measurement_type="ASWA" display_name="Absence since last office visit" guideline="School/Work" graphable="yes" value_name="Has Absence" >
+		<ruleset>
+			<rule indicationColor="HIGH">
+				<condition type="isDataEqualTo" param="ASWA" value="Yes" />
+			</rule>
+		</ruleset>
+	</item>	
+	<item measurement_type="ASWAN" display_name="# of Absence since last office visit" guideline="School/Work" graphable="yes" value_name="# of Absence" >
+		<ruleset>
+			<rule indicationColor="HIGH">
+				<condition type="getDataAsDouble" param="ASWAN" value="&gt;0" />
+			</rule>
+		</ruleset>
+	</item>
+	<item measurement_type="ALPA" display_name="Asthma Limits Physical Activity" guideline="" graphable="yes" value_name="Asthma Limits Physical Activity" >
+		<ruleset>
+			<rule indicationColor="HIGH">
+				<condition type="isDataEqualTo" param="ALPA" value="Yes" />
+			</rule>
+		</ruleset>
+	</item>
+	<item measurement_type="ANR" display_name="Need Reliever" guideline="&lt;4 doses/week or &lt;2 times/week" graphable="yes" value_name="Frequency/Week" >
+		<ruleset>
+			<rule indicationColor="HIGH">
+				<condition type="getDataAsDouble" param="ANR" value="&gt;4" />
+			</rule>
+		</ruleset>
+	</item>	
+	<item measurement_type="AACP" display_name="Action Plan" guideline="" graphable="yes" value_name="Provided/Revised/Reviewed" />
+	<item measurement_type="ARMA" display_name="Medication Adherence" guideline="" graphable="yes" value_name="Reviewed" />
+	<item measurement_type="SMCS" display_name="Smoking Cessation" guideline="" graphable="yes" value_name="Reviewed" />
+	<item measurement_type="ARDT" display_name="Device Technique Optimal" guideline="" graphable="no" value_name="Reviewed" />
+	<item measurement_type="AEDR" display_name="Education Referral" guideline="" graphable="yes" value_name="Referred" />
+	<item measurement_type="ASPR" display_name="Specialist Referral" guideline="" graphable="yes" value_name="Referred" />
+	<item measurement_type="AENC" display_name="Environmental Control" guideline="" graphable="yes" value_name="Reviewed" />
+	<item measurement_type="ACOS" display_name="Coping Strategies" guideline="" graphable="yes" value_name="Reviewed" />
+	<item measurement_type="ASTA" display_name="Trigger Avoidance" guideline="" graphable="yes" value_name="Reviewed" />
+	<item measurement_type="ARAD" display_name="Asthma Definition" guideline="" graphable="yes" value_name="Reviewed" />
+	
+	
+	<measurement type="SPIRT" typeDesc="Spirometry Test" typeDisplayName="Spirometry Test" measuringInstrc="">
+		<validationRule name="Yes" maxValue="" minValue="" isDate="" isNumeric="" regularExp="Yes" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="ARAD" typeDesc="Review Asthma Definition" typeDisplayName="" measuringInstrc="Review Asthma Definition">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>	
+	<measurement type="ARMA" typeDesc="Asthma Review Med Adherence" typeDisplayName="" measuringInstrc="Asthma Review Med Adherence">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="ARDT" typeDesc="Asthma  Review Device Technique optimal" typeDisplayName="Asthma  Review Device Technique optimal" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="SMCS" typeDesc="Smoking Cessation" typeDisplayName="Smoking Cessation" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>	
+	<measurement type="ASTA" typeDesc="Asthma Trigger Avoidance" typeDisplayName="Asthma Trigger Avoidance" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="AENC" typeDesc="Asthma Environmental Control" typeDisplayName="Asthma Environmental Control" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="ACOS" typeDesc="Asthma Coping Strategies" typeDisplayName="Asthma Coping Strategies" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="AACP" typeDesc="Asthma Action Plan " typeDisplayName="Asthma Action Plan " measuringInstrc="">
+		<validationRule name="Provided/Revised/Reviewed" maxValue="" minValue="" isDate="" isNumeric="" regularExp="Provided|Revised|Reviewed" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="AEDR" typeDesc="Asthma Education Referral" typeDisplayName="Asthma Education Referral" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="ASPR" typeDesc="Asthma Specialist Referral" typeDisplayName="Asthma Specialist Referral" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1BF" typeDesc="FEV1 (before puff)" typeDisplayName="FEV1 (before puff)" measuringInstrc="Forced Expiratory Volume: the volume of air that has been exhaled by the patient at the end of the first second of forced expiration">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FVCBF" typeDesc="FVC (before puff)" typeDisplayName="FVC (before puff)" measuringInstrc="Forced Vital Capacity: the volume of air that has been forcibly and maximally exhaled out by the patient until no more can be expired">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1PCBF" typeDesc="FEV1% (before puff)" typeDisplayName="FEV1% (before puff)" measuringInstrc="The ratio of FEV1 to FVC calculated for the patient">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1PRE" typeDesc="FEV1 predicted" typeDisplayName="FEV1 predicted" measuringInstrc="The FEV1 calculated in the population with similar characteristics (e.g. height, age, sex, race, weight, etc.)">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FVCPRE" typeDesc="FVC predicted" typeDisplayName="FVC predicted" measuringInstrc="Forced Vital Capacity predicted: calculated in the population with similar characteristics (height, age, sex, and sometimes race and weight)">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1PCPRE" typeDesc="FEV1% predicted" typeDisplayName="FEV1% predicted" measuringInstrc="The ratio of FEV1 predicted to FVC predicted, calculated in the population with similar characteristics (height, age, sex, and sometimes race and weight)">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1PCOFPREBF" typeDesc="FEV1% of predicted (before puff)" typeDisplayName="FEV1% of predicted (before puff)" measuringInstrc="FEV1% (before puff) of the patient divided by the average FEV1% predicted in the population with similar characteristics (e.g. height, age, sex, race, weight, etc.)">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FVCRTBF" typeDesc="FVC ratio (before puff)" typeDisplayName="FVC ratio (before puff)" measuringInstrc="FVC actual (before puff) / FVC predicted">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1FVCRTBF" typeDesc="FEV1 / FVC ratio (before puff)" typeDisplayName="FEV1 / FVC ratio (before puff)" measuringInstrc="FEV1 / FVC (before puff) actual divided by FEV1 / FVC predicted">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="PEFRBF" typeDesc="PEF personal (before puff)" typeDisplayName="PEF personal (before puff)" measuringInstrc="Peak Expiratory Flow: the maximal flow (or speed) achieved during the maximally forced expiration initiated at full inspiration">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1AFT" typeDesc="FEV1 (after puff)" typeDisplayName="FEV1 (after puff)" measuringInstrc="Forced Expiratory Volume: the volume of air that has been exhaled by the patient at the end of the first second of forced expiration">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FVCAFT" typeDesc="FVC (after puff)" typeDisplayName="FVC (after puff)" measuringInstrc="Forced Vital Capacity: the volume of air that has been forcibly and maximally exhaled out by the patient until no more can be expired">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1PCAFT" typeDesc="FEV1% (after puff)" typeDisplayName="FEV1% (after puff)" measuringInstrc="The ratio of FEV1 to FVC calculated for the patient">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1PCOFPREAFT" typeDesc="FEV1% of predicted (after puff)" typeDisplayName="FEV1% of predicted (after puff)" measuringInstrc="FEV1% (after puff) of the patient divided by the average FEV1% predicted in the population with similar characteristics (e.g. height, age, sex, race, weight, etc.)">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FVCRTAFT" typeDesc="FVC ratio (after puff)" typeDisplayName="FVC ratio (after puff)" measuringInstrc="FVC actual (after puff) / FVC predicted">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="FEV1FVCRTAFT" typeDesc="FEV1 / FVC ratio (after puff)" typeDisplayName="FEV1 / FVC ratio (after puff)" measuringInstrc="FEV1 / FVC (after puff) actual divided by FEV1 / FVC predicted">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="PEFRAFT" typeDesc="PEF personal (after puff)" typeDisplayName="PEF personal (after puff)" measuringInstrc="Peak Expiratory Flow: the maximal flow (or speed) achieved during the maximally forced expiration initiated at full inspiration">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="ANELV" typeDesc="Asthma: # Of Exacerbations Requiring Clinical Evaluation since last assessment" typeDisplayName="Asthma: # Of Exacerbations Requiring Clinical Evaluation since last assessment" measuringInstrc="The number of exacerbations since the last assessment requiring clinical evaluations reported by the patient">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="ACOSY" typeDesc="cough" typeDisplayName="cough" measuringInstrc="">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="ACTSY" typeDesc="chest tightness" typeDisplayName="chest tightness" measuringInstrc="">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="ADYSY" typeDesc="dyspnea" typeDisplayName="dyspnea" measuringInstrc="">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="AWHSY" typeDesc="wheeze" typeDisplayName="wheeze" measuringInstrc="">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="ASWAN" typeDesc="Asthma # of School Work Absence" typeDisplayName="Asthma # of School Work Absence" measuringInstrc="">
+		<validationRule name="Numeric Value greater than or equal to 0" maxValue="" minValue="" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="ANSY" typeDesc="Asthma Night Time Symtoms" typeDisplayName="Asthma Night Time Symtoms" measuringInstrc="frequency per week">
+		<validationRule name="Numeric Value: 0 to 2500" maxValue="2500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="ALPA" typeDesc="Asthma Limits Physical Activity" typeDisplayName="Asthma Limits Physical Activity" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="ANR" typeDesc="Asthma Needs Reliever" typeDisplayName="Asthma Needs Reliever   " measuringInstrc="frequency per week">
+		<validationRule name="Numeric Value: 0 to 2500" maxValue="2500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	<measurement type="ASWA" typeDesc="Asthma Absence School Work" typeDisplayName="Asthma Absence School Work" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	
+	<!--
+	<item measurement_type="LHAD" display_name="Lung Related Hospital Admission" guideline="" value_name="Admission" />
+	<measurement type="LHAD" typeDesc="Lung Related Hospital Admission" typeDisplayName="Lung Related Hospital Admission" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	
+	<item measurement_type="OUTR" display_name="Outside Spirometry Referral" guideline="" value_name="Referred" />
+	<measurement type="OUTR" typeDesc="Outside Spirometry Referral" typeDisplayName="Outside Spirometry Referral" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+
+	<item measurement_type="AELV" display_name="Exacerbations since last visit" guideline="Requiring clinical evaluations" graphable="yes" value_name="Has" >
+		<ruleset>
+			<rule indicationColor="HIGH">
+				<condition type="isDataEqualTo" param="AELV" value="Yes" />
+			</rule>
+		</ruleset>
+	</item>
+	<measurement type="AELV" typeDesc="Exacerbations since last visit requiring clincal evaluation" typeDisplayName="Exacerbations since last visit requiring clincal evaluation" measuringInstrc="">
+		<validationRule name="Yes/No" maxValue="" minValue="" isDate="" isNumeric="" regularExp="YES|yes|Yes|Y|NO|no|No|N" maxLength="" minLength="" />
+	</measurement>
+	
+	<item measurement_type="PEFR" display_name="PEFR value" guideline="best of 3" graphable="yes" value_name="PEFR value" />
+	<measurement type="PEFR" typeDesc="PEFR value" typeDisplayName="PEFR value" measuringInstrc="">
+		<validationRule name="Numeric Value: 0 to 2500" maxValue="2500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement> 
+	<item measurement_type="ASYM" display_name="Asthma Symptoms" guideline="dyspnea, cough, wheeze, chest tightness" graphable="yes" value_name="Frequency/Week">
+		<ruleset>
+			<rule indicationColor="HIGH">
+				<condition type="getDataAsDouble" param="ASYM" value="&gt;4" />
+			</rule>
+		</ruleset>
+	</item>
+	<measurement type="ASYM" typeDesc="Asthma Symptoms" typeDisplayName="Asthma Symptoms" measuringInstrc="frequency per week">
+		<validationRule name="Numeric Value: 0 to 2500" maxValue="2500" minValue="0" isDate="" isNumeric="1" regularExp="" maxLength="" minLength="" />
+	</measurement>
+	-->
+	
+	
 </flowsheet>

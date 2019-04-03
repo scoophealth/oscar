@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2007 sp2 (http://www.altova.com) by (OntarioMD) -->
-<!-- HRM-XSD Schema v1.1.2 / EMR 4.1 / Publish Date: August 14, 2013 -->
+<!-- HRM XML Schema Data Types v1.1.2 / EMR HRM 4.3 / Publish Date: August 14, 2013 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cdst="cds_dt" targetNamespace="cds_dt" elementFormDefault="qualified">
 	<xs:complexType name="address">
 		<xs:choice>
@@ -158,7 +158,7 @@
 	<xs:simpleType name="emailAddress">
 		<xs:restriction base="xs:token">
 			<xs:maxLength value="50"/>
-			<xs:pattern value="([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(([a-zA-Z0-9_-])*\.([a-zA-Z0-9_-])+)+"/>
+			<xs:pattern value="([\.a-zA-Z0-9_\-])+@([a-zA-Z0-9_\-])+(([a-zA-Z0-9_\-])*\.([a-zA-Z0-9_\-])+)+"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="enrollmentInfo">
@@ -570,7 +570,7 @@
 	<xs:simpleType name="postalCode">
 		<xs:restriction base="xs:string">
 			<xs:maxLength value="10"/>
-			<xs:pattern value="([a-zA-Z0-9-])*"/>
+			<xs:pattern value="([a-zA-Z0-9\-])*"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="postalZipCode">
@@ -786,7 +786,7 @@
 	<xs:simpleType name="zipCode">
 		<xs:restriction base="xs:token">
 			<xs:maxLength value="10"/>
-			<xs:pattern value="([0-9-])*"/>
+			<xs:pattern value="([0-9\-])*"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="smokingStatus">

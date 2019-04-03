@@ -207,7 +207,16 @@ oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
 						<td><%=drug.providerName%></td>
 						<td><%
 						if(!drug.startDate.equals("0001/01/01") ){
-							out.print(drug.startDate);
+							out.print(partialDateDao.getDatePartial(drug.startDate, PartialDate.DRUGS, drug.localDrugId, PartialDate.DRUGS_STARTDATE));
+							/*
+							String startDate = drug.startDate;
+		            		PartialDate pd = partialDateDao.getPartialDate(PartialDate.DRUGS , drug.localDrugId, PartialDate.DRUGS_STARTDATE);
+		            		if(pd != null) {
+		            			startDate = startDate.substring(0,pd.getFormat().length());
+		            		}
+		            		
+							out.print(startDate);
+							*/
 						}
 						%></td>
 						<td><%
@@ -236,7 +245,7 @@ oscar.oscarRx.pageUtil.RxSessionBean rxBean = null;
                                                      <%
                                                         if (drug.pickupDate!=null &&  !drug.pickupDate.equals("") && !drug.pickupDate.equals("0000-00-00"))
                                                         {
-                                                    %>&nbsp;<bean:message key="WriteScript.msgPickUpDate"></bean:message>&nbsp;<%=drug.pickupDate%>&nbsp;
+                                                    %><br/><bean:message key="WriteScript.msgPickUpDate"></bean:message>&nbsp;<%=drug.pickupDate%>&nbsp;
                                                             <%
                                                         if (!((drug.pickupTime).equals("")) && !((drug.pickupTime).equals("12:00 AM")))
                                                         {

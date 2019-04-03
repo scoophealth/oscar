@@ -161,7 +161,7 @@ public class EctConsultationFormRequestUtil {
 
 		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
 		for (String teamName : dao.getActiveTeams()) {
-			if (!teamName.equals("")) {
+			if (teamName != null && !teamName.equals("")) {
 				teamVec.add(teamName);
 			}
 		}
@@ -174,7 +174,7 @@ public class EctConsultationFormRequestUtil {
 
 		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
 		for (String teamName : dao.getActiveTeams()) {
-			if (!teamName.equals("")) {
+			if (teamName != null && !teamName.equals("")) {
 				teamVec.add(teamName);
 			}
 		}
@@ -186,7 +186,7 @@ public class EctConsultationFormRequestUtil {
 		teamVec = new Vector();
 		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
 		for (String teamName : dao.getActiveTeamsViaSites(providerNo)) {
-			if (!teamName.equals("")) {
+			if (teamName!= null && !teamName.equals("")) {
 				teamVec.add(teamName);
 			}
 		}
@@ -200,7 +200,7 @@ public class EctConsultationFormRequestUtil {
 
 		ProviderDao dao = SpringUtils.getBean(ProviderDao.class);
 		for (String teamName : dao.getUniqueTeams()) {
-			if (!teamName.equals("")) {
+			if (teamName != null && !teamName.equals("")) {
 				teamVec.add(teamName);
 			}
 		}

@@ -52,6 +52,8 @@ public class DemographicExportForm extends ActionForm {
     boolean exAlertsAndSpecialNeeds;
 
     
+    String providerNo;
+    
     public DemographicExportForm() {
     }
 
@@ -172,4 +174,13 @@ public class DemographicExportForm extends ActionForm {
     public void setExCareElements(boolean rhs) {
         this.exCareElements = rhs;
     }
+
+	public String getProviderNo() {
+		return providerNo;
+	}
+
+	public void setProviderNo(String providerNo) {
+		this.providerNo = providerNo;
+	}
+    
 }

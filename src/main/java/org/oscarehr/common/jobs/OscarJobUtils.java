@@ -71,6 +71,27 @@ public class OscarJobUtils {
 
 	}
 	
+	public static void resetJobExecutionFramework() throws Exception {
+		//SpringTaskScheduler
+		OscarJobDao oscarJobDao = SpringUtils.getBean(OscarJobDao.class);
+				
+		
+		
+		for(Integer jobId : OscarJobExecutingManager.getFutures().keySet()) {
+			ScheduledFuture<Object> future = OscarJobExecutingManager.getFutures().get(jobId);
+			if(future != null) {
+				future.cancel(false);
+			}
+		}
+		OscarJobExecutingManager.getFutures().clear();
+		
+		
+		for(OscarJob job:oscarJobDao.findAll(0,OscarJobDao.MAX_LIST_RETURN_SIZE)) {
+			scheduleJob(job);	
+		}
+
+	}
+	
 	
 	public static boolean scheduleJob(OscarJob job) throws Exception {
 		//SpringTaskScheduler

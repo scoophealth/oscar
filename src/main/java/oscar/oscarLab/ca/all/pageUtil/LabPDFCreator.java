@@ -79,6 +79,7 @@ import oscar.oscarLab.ca.all.Hl7textResultsData;
 import oscar.oscarLab.ca.all.parsers.CLSHandler;
 import oscar.oscarLab.ca.all.parsers.ExcellerisOntarioHandler;
 import oscar.oscarLab.ca.all.parsers.Factory;
+import oscar.oscarLab.ca.all.parsers.GDMLHandler;
 import oscar.oscarLab.ca.all.parsers.MEDITECHHandler;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.oscarLab.ca.all.parsers.PATHL7Handler;
@@ -767,7 +768,17 @@ public class LabPDFCreator extends PdfPageEventHelper{
 								
 								cell.setPhrase(new Phrase(handler.getTimeStamp(j, k), lineFont));
 								table.addCell(cell);
-								cell.setPhrase(new Phrase(handler.getOBXResultStatus(j, k), lineFont));
+								
+								String status = handler.getOBXResultStatus( j, k);
+                           		if("GDML".equals(handler.getMsgType()) && ((GDMLHandler)handler).isTestResultBlocked(j, k) ) {
+                           			if(!StringUtils.isEmpty(status)) {
+                           				status += "/";
+                           			}
+                           			status += "BLOCKED";
+                           		}
+								
+								cell.setPhrase(new Phrase(status, lineFont));
+								
 								table.addCell(cell);
 								
 								if(handler.getMsgType().equals("ExcellerisON")) { 

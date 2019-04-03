@@ -206,7 +206,6 @@
 		<form-bean name="LabUploadForm" type="oscar.oscarLab.ca.bc.PathNet.pageUtil.LabUploadForm" />
 		<form-bean name="CMLLabUploadForm" type="oscar.oscarLab.ca.on.CML.Upload.LabUploadForm" />
 		<form-bean name="DemographicExportForm" type="oscar.oscarDemographic.pageUtil.DemographicExportForm" />
-		<form-bean name="DiabetesExportForm" type="oscar.oscarDemographic.pageUtil.DiabetesExportForm" />
 		<form-bean name="DemographicSetEditForm" type="oscar.oscarReport.pageUtil.DemographicSetEditForm" />
 		<form-bean name="eFormHtmlUpload" type="oscar.eform.upload.HtmlUploadForm" />
 		<form-bean name="eFormEdit" type="oscar.eform.data.HtmlEditForm" />
@@ -1063,7 +1062,7 @@
         <action input="/olis/Search.jsp" path="/olis/Results" scope="request" type="org.oscarehr.olis.OLISResultsAction">
         	<forward name="results" path="/olis/Results.jsp" />
         </action>
-        <action input="/olis/Results.jsp" path="/olis/AddToInbox" scope="request" type="org.oscarehr.olis.OLISAddToInboxAction">
+        <action input="/olis/Results.jsp" path="/olis/AddToInbox" scope="request" parameter="method" type="org.oscarehr.olis.OLISAddToInboxAction">
         	<forward name="ajax" path="/olis/ajaxResponse.jsp" />
         </action>
         <action input="/olis/Simulate.jsp" path="/olis/UploadSimulationData" scope="request" type="org.oscarehr.olis.OLISUploadSimulationDataAction">
@@ -1224,7 +1223,8 @@
 			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormRequest.jsp" />
 		</action>
 		
-		<action input=" " path="/oscarEncounter/econsult" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EConsultAction">
+		<action path="/econsult" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EConsultAction" 
+		validate="false" parameter="method">		
 		</action>
 		
 		<action input=" " name="EctIncomingConsultationForm" path="/oscarEncounter/IncomingConsultation" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctIncomingConsultationAction">
@@ -1888,8 +1888,7 @@
 			<!-- Sharing Center forward -->
 			<forward name="sendToAffinityDomain" path="/sharingcenter/documents/shareDocumentsAction.jsp" />
 		</action>
-		<action input="/demographic/diabetesExport.jsp" name="DiabetesExportForm" path="/demographic/DiabetesExport" scope="request" type="oscar.oscarDemographic.pageUtil.DiabetesExportAction">
-		</action>
+
 		<action input="/demographic/cihiExport.jsp" name="CihiExportForm" path="/demographic/cihiExportOMD4" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
 			<forward name="display" path="/demographic/cihiExport.jsp" />
 		</action>
@@ -2692,7 +2691,8 @@
 		</action>
 		<action path="/hospitalReportManager/HRMDownloadFile" type="org.oscarehr.hospitalReportManager.HRMDownloadFileAction" />
 		
-
+		<action path="/hospitalReportManager/hrm" type="org.oscarehr.hospitalReportManager.v2018.HRMAction" parameter="method">		
+		</action>
 
 		<action path="/caseload/CaseloadContent" scope="request" type="org.oscarehr.caseload.CaseloadContentAction" parameter="method" />
 
@@ -2954,6 +2954,9 @@
 		
 		<action path="/clinicalConnectEHRViewer" type="org.oscarehr.integration.clinicalconnect.ClinicalConnectViewerAction" parameter="method">
 			<forward name="error" path="/cc/launcherError.jsp"/>
+		</action>
+		
+		<action path="/admin/Flowsheet" type="org.oscarehr.flowsheet.FlowsheetAction" parameter="method">
 		</action>
 		
 		

@@ -44,34 +44,7 @@ function newWindow(url) {
             <table width="100%" border="0" height="100%">
                 <tr>
                     <td valign="bottom" style="color:white;" >     
-			
-<% 
-if (rx_enhance!=null && rx_enhance.equals("true")) { %>
-                   --<b><bean:message key="SearchDrug.nameText" /></b> <jsp:getProperty name="patient" property="firstName" /> <jsp:getProperty name="patient" property="surname" /> &nbsp;
-		     <b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty name="patient" property="age" />
-                     <b>
-                     <oscar:phrverification styleId="verificationLink" demographicNo="<%=Integer.toString(demoNo)%>"><bean:message key="phr.verification.link"/></oscar:phrverification> &nbsp;
-                     <a style="color:white; "href="SelectPharmacy2.jsp" onclick="return newWindow('SelectPharmacy2.jsp')"><bean:message key="SearchDrug.PreferedPharmacy"/></a>:</b> 
-                     <select id="Calcs" name="pharmacyId" onchange="populatePharmacy(this.options[this.selectedIndex].value);showpic('Layer1');"> 
-                    <%
-                    	if( pharmacyList != null ) {
-                    	    ObjectMapper mapper = new ObjectMapper();
-                    	    StringWriter jsonObject;
-	        				for( PharmacyInfo pharmacyInfo : pharmacyList ) {
-	        				    jsonObject = new StringWriter();
-	        					mapper.writeValue(jsonObject, pharmacyInfo);
-	        					
-	        						
-					%>
-								<option value='<%=jsonObject.toString().replaceAll("'", "")%>'><%=pharmacyInfo.getName() + " " + pharmacyInfo.getCity()%></option>
-					<%
-	        				}
-	       		 		}
-					%>
-				
-                    </select>                     
-                    
-<%}else {%>					
+								
 					<b><bean:message key="SearchDrug.nameText" /></b> <jsp:getProperty name="patient" property="firstName" /> <jsp:getProperty name="patient" property="surname" />
 		     		<b><bean:message key="SearchDrug.ageText" /></b> <jsp:getProperty name="patient" property="age" />
                     <b><a style="color:white; "href="SelectPharmacy2.jsp">Preferred Pharmacy</a>:</b>
@@ -84,18 +57,14 @@ if (rx_enhance!=null && rx_enhance.equals("true")) { %>
 	        					
 	        				    jsonObject = new StringWriter();
 	        					mapper.writeValue(jsonObject, pharmacyInfo);
-	        					
-	        						
+
 					%>
 								<option value='<%=jsonObject.toString().replaceAll("'", "")%>'><%=pharmacyInfo.getName() + " " + pharmacyInfo.getCity()%></option>
 					<%
 	        				}
 	       		 		}
 					%>
-                    </select>
-                    
-<%} %>
-                  
+                    </select>        
                     </td>
                     <td valign="top" align="right">
                         <span class="HelpAboutLogout" style="color:white;">

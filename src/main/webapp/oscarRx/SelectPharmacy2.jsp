@@ -32,6 +32,7 @@
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%@ page import="oscar.oscarRx.data.*,java.util.*"%>
 <%@ page import="org.oscarehr.common.model.PharmacyInfo" %>
+<%@ page import="oscar.OscarProperties" %>
 
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -454,7 +455,79 @@ $(function() {
 	  	"json"
 	  	);
   }
+</script>
 
+<script>
+<%
+if("true".equals(OscarProperties.getInstance().getProperty("iso3166.2.enabled","false"))) { 	
+%>
+jQuery(document).ready(function(){
+	
+	jQuery("#country").bind('change',function(){
+		updateProvinces('');
+	});
+	
+    jQuery.ajax({
+        type: "POST",
+        url:  '../demographicSupport.do',
+        data: 'method=getCountryAndProvinceCodes',
+        dataType: 'json',
+        success: function (data) {
+        	jQuery('#country').append(jQuery('<option>').text('').attr('value', ''));
+        	jQuery.each(data, function(i, value) {
+                 jQuery('#country').append(jQuery('<option>').text(value.label).attr('value', value.value));
+             });
+        	
+        	var defaultProvince = '<%=OscarProperties.getInstance().getProperty("demographic.default_province","")%>';
+        	var defaultCountry = '';
+        	
+        	if(defaultProvince == '' && defaultCountry == '') {
+        		defaultProvince = 'CA-ON';
+        	}
+        	defaultCountry = defaultProvince.substring(0,defaultProvince.indexOf('-'));
+        	
+        	jQuery("#country").val(defaultCountry);
+        	
+        	updateProvinces(defaultProvince);
+        	
+        }
+	});
+	
+});
+
+
+function updateProvinces(province) {
+	var country = jQuery("#country").val();
+	
+	console.log('country=' + country);
+	
+	jQuery.ajax({
+        type: "POST",
+        url:  '../demographicSupport.do',
+        data: 'method=getCountryAndProvinceCodes&country=' + country,
+        dataType: 'json',
+        success: function (data) {
+        	jQuery('#pharmacyProvince').empty();
+        	 
+        	jQuery.each(data, function(i, value) {
+                 jQuery('#pharmacyProvince').append(jQuery('<option>').text(value.label).attr('value', value.value));
+             });
+        	
+        	
+        	if(province != null) {
+        		jQuery("#pharmacyProvince").val(province);
+        	}
+        	
+        	
+        }
+	});
+}
+
+
+<% }  %>
+
+
+</script>
 </script>
 </head>
 <body topmargin="0" leftmargin="0" vlink="#0000FF">
@@ -534,7 +607,18 @@ $(function() {
 						<td colspan="2">Postal Code</td>
 					</tr>
 					<tr>
-						<td><input type="text" id="pharmacyProvince" name="pharmacyProvince" size="32"/></td>
+						<td>
+						<%
+						if("true".equals(OscarProperties.getInstance().getProperty("iso3166.2.enabled","false"))) { 	
+						%>
+							<select name="pharmacyProvince" id="pharmacyProvince"></select> 
+							<br/>
+							Filter by Country: <select name="country" id="country" ></select>		
+						<% } else  {  %>
+							<input type="text" id="pharmacyProvince" name="pharmacyProvince" size="32"/>
+						<% } %>
+						</td>
+						
 						<td colspan="2"><input type="text" id="pharmacyPostalCode" name="pharmacyPostalCode" size="12"/></td>
 					</tr>
 					<tr>

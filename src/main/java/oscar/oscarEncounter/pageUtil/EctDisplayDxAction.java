@@ -34,8 +34,11 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.util.MessageResources;
+import org.oscarehr.common.dao.PartialDateDao;
+import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarResearch.oscarDxResearch.bean.dxResearchBean;
 import oscar.oscarResearch.oscarDxResearch.bean.dxResearchBeanHandler;
@@ -48,6 +51,8 @@ import oscar.util.StringUtils;
  */
 public class EctDisplayDxAction extends EctDisplayAction {    
     private String cmd = "Dx";
+    
+    PartialDateDao partialDateDao = SpringUtils.getBean(PartialDateDao.class);
     
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
     	
@@ -68,7 +73,10 @@ public class EctDisplayDxAction extends EctDisplayAction {
         
         //grab all of the diseases associated with patient and add a list item for each
         String dbFormat = "yyyy-MM-dd";
+        
         DateFormat formatter = new SimpleDateFormat(dbFormat);
+        DateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
         String serviceDateStr;
         Date date;
         dxResearchBeanHandler hd = new dxResearchBeanHandler(bean.demographicNo);
@@ -87,20 +95,25 @@ public class EctDisplayDxAction extends EctDisplayAction {
             
             String dateStr = dxBean.getEnd_date();
             String startDate = dxBean.getStart_date();
-                         
+              
             try {
                 date = formatter.parse(dateStr);
-                Date sDate = formatter.parse(startDate);
-                serviceDateStr = DateUtils.formatDate(sDate, request.getLocale());  
+                if(startDate.length() == 4 || startDate.length() == 7) {
+                	serviceDateStr = partialDateDao.getDatePartial(startDate, PartialDate.DXRESEARCH,  Integer.parseInt(dxBean.getDxResearchNo()), PartialDate.DXRESEARCH_STARTDATE);
+                } else {
+                	Date sDate = formatter.parse(startDate);
+                	serviceDateStr = DateUtils.formatDate(sDate, request.getLocale());
+                }
                 item.setDate(date);
             }
             catch(ParseException ex ) {
                 MiscUtils.getLogger().debug("EctDisplayDxAction: Error creating date " + ex.getMessage());
-                serviceDateStr = "Error";
+                serviceDateStr = startDate;
                 //date = new Date(System.currentTimeMillis());
                 date = null;
             }
-                                
+
+            
             String strTitle = StringUtils.maxLenString(dxBean.getDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
             
             item.setTitle(strTitle);
