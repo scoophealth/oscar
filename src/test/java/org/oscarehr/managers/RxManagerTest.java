@@ -753,6 +753,10 @@ public class RxManagerTest extends RxManager {
             }
         }
 
+        
+        public List<Drug> findByDemographicIdAndAtc(int demographicNo, String atc) {
+        		return new ArrayList<Drug>();
+        }
 
         public boolean addNewDrug(Drug d) {
 
