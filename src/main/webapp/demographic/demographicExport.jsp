@@ -25,6 +25,8 @@
 
 --%>
 
+<%@page import="org.oscarehr.common.model.Provider"%>
+<%@page import="org.oscarehr.PMmodule.dao.ProviderDao"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -133,6 +135,23 @@ function checkSelect(slct) {
     else return true;
 }
 
+function checkValidOptions() {
+	var pt = document.getElementById("patientSet").value;
+	var pn = document.getElementById("providerNo").value;
+	
+	if(pt != -1 && pn != -1) {
+		alert("Please choose either a Patient Set or a Provider");
+		return false;
+	}
+	
+	if(pt == -1 && pn == -1) {
+		alert("Please choose either a Patient Set or a Provider");
+		return false;
+	}
+
+	return true;
+}
+
 function checkAll(all) {
     var frm = document.DemographicExportForm;
     if (all) {
@@ -212,7 +231,6 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 
 <div class="span2">
 	<% if (demographicNo== null) { %>
-	<a href="diabetesExport.jsp"><bean:message key="demographic.demographicexport.diabetesexport" /></a><br>
 	<a href='<c:out value="${ctx}/demographic/cihiExportOMD4.do"></c:out>'><bean:message key="demographic.demographicexport.cihiexport" /></a><br>
 	<a href='<c:out value="${ctx}/demographic/eRourkeExport.do"></c:out>'><bean:message key="demographic.demographicexport.rourke2009export" /></a>
 	<%} %>
@@ -220,14 +238,14 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 
 <div class="span4">
 
-<html:form action="/demographic/DemographicExport" method="get" onsubmit="return checkSelect(patientSet.value);">
+<html:form action="/demographic/DemographicExport" method="get" onsubmit="return checkValidOptions();">
 
 	<% if (demographicNo!= null) { %>
 	<html:hidden property="demographicNo" value="<%=demographicNo%>" />
 	<bean:message key="demographic.demographicexport.exportingdemographicno" /><%=demographicNo%>
 	<%} else {%>
 	<bean:message key="demographic.demographicexport.patientset" /><br>
-	<html:select style="width: 189px" property="patientSet">
+	<html:select style="width: 189px" property="patientSet" styleId="patientSet">
 	    <html:option value="-1"><bean:message key="demographic.demographicexport.selectset" /></html:option>
 	<%
 	/*			    for (int i =0 ; i < queryArray.size(); i++){
@@ -241,13 +259,36 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 	<html:option value="<%=setName%>"><%=setName%></html:option>
 	<%}%>
 	</html:select>
+	
+	<br>	   
+
+<bean:message key="demographic.demographicexport.providers" /><br>
+	<html:select style="width: 189px" property="providerNo" styleId="providerNo">
+	    <html:option value="-1"><bean:message key="demographic.demographicexport.selectProvider" /></html:option>
+	<%
+	ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+	List<Provider> providers = providerDao.getActiveProviders();
+	/*			    for (int i =0 ; i < queryArray.size(); i++){
+	RptSearchData.SearchCriteria sc = (RptSearchData.SearchCriteria) queryArray.get(i);
+	String qId = sc.id;
+	String qName = sc.queryName;
+	*/
+	for (int i=0; i<providers.size(); i++) {
+	Provider p = providers.get(i);
+	%>
+	<html:option value="<%=p.getProviderNo()%>"><%=p.getFormattedName()%></html:option>
 	<%}%>
+	</html:select>
+	
+	<%}%>
+	
 
 	<br>	   
 
+
 	<bean:message key="demographic.demographicexport.exporttemplate" /><br>
 	<html:select style="width: 189px" property="template">
-		<html:option value="<%=(new Integer(DemographicExportAction4.CMS4)).toString() %>">CMS Spec 4.0</html:option>
+		<html:option value="<%=(new Integer(DemographicExportAction4.CMS4)).toString() %>">EMR DM 5.0</html:option>
 		<html:option value="<%=(new Integer(DemographicExportAction4.E2E)).toString() %>">E2E</html:option>
 	</html:select>
 	   
@@ -277,7 +318,7 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 <html:hidden property="pgpReady" value="<%=pgp_ready%>" />
 		
 <%  boolean pgpReady = pgp_ready.equals("Yes") ? true : false;
-    pgpReady = true; //To be removed after CMS4
+//    pgpReady = true; //To be removed after CMS4
     if (!pgpReady) { %>
                    
     <div class="alert alert-block alert-error">
@@ -287,7 +328,7 @@ if (!userRole.toLowerCase().contains("admin")) { %>
 
 <%  } %>
 
-<input class="btn btn-primary" type="submit" value="<bean:message key="export" />"<%=pgpReady?"":"disabled"%> />
+<input class="btn btn-primary" type="submit" value="<bean:message key="export" />"/>
 
 <%	if (isSharingCenterEnabled) { %>
 	<!-- Sharing Center Submission -->

@@ -24,15 +24,15 @@
 package org.oscarehr.common.web;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
+import org.apache.commons.io.IOUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -45,7 +45,11 @@ import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicExtArchive;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /*
  * This class is to support the address/phone history popup in the master demographic screen.
@@ -59,6 +63,106 @@ public class DemographicAction extends DispatchAction  {
 	private DemographicArchiveDao demographicArchiveDao = SpringUtils.getBean(DemographicArchiveDao.class);
 	private DemographicExtArchiveDao demographicExtArchiveDao = SpringUtils.getBean(DemographicExtArchiveDao.class);
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	
+	
+	public ActionForward getSubdivisionCodes(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) 
+			throws Exception{
+	
+		String selectedCountry = request.getParameter("country");
+		
+		org.codehaus.jettison.json.JSONArray results = new org.codehaus.jettison.json.JSONArray();
+		org.codehaus.jettison.json.JSONObject obj = null;
+		
+		try {
+			InputStream  in = this.getClass().getClassLoader()
+                    .getResourceAsStream("iso-3166-2.json");
+			String theString = IOUtils.toString(in, "UTF-8");
+			obj = new org.codehaus.jettison.json.JSONObject(theString);
+		}catch(Exception e) {
+			MiscUtils.getLogger().warn("Warning", e);
+		}
+		
+		if(obj != null) {	
+			if(selectedCountry == null) {
+				Iterator iter =  obj.keys();
+				while(iter.hasNext()) {
+					String countryCode = (String)iter.next();
+					String countryName = ((org.codehaus.jettison.json.JSONObject)obj.get(countryCode)).getString("name");
+					org.codehaus.jettison.json.JSONObject r = new org.codehaus.jettison.json.JSONObject();
+					r.put("value", countryCode);
+					r.put("label", countryName);
+					results.put(r);
+				}
+			} else {
+				org.codehaus.jettison.json.JSONObject country = (org.codehaus.jettison.json.JSONObject)obj.get(selectedCountry);
+				org.codehaus.jettison.json.JSONObject divisions = (org.codehaus.jettison.json.JSONObject)country.get("divisions");
+				Iterator iter =  divisions.keys();
+				while(iter.hasNext()) {
+					String divisionCode = (String)iter.next();
+					String divisionName = divisions.getString(divisionCode);
+					org.codehaus.jettison.json.JSONObject r = new org.codehaus.jettison.json.JSONObject();
+					r.put("value", divisionCode);
+					r.put("label", divisionName);
+					results.put(r);
+				}
+			}
+		}
+		
+		results.write(response.getWriter());
+		
+		return null;
+	}
+	public ActionForward getCountryAndProvinceCodes(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) 
+			throws Exception{
+	
+		String selectedCountry = request.getParameter("country");
+	//	String selectedSubDivision = request.getParameter("subdividion");
+		
+		org.codehaus.jettison.json.JSONArray results = new org.codehaus.jettison.json.JSONArray();
+		
+		org.codehaus.jettison.json.JSONObject obj = null;
+		try {
+			InputStream  in = this.getClass().getClassLoader()
+                    .getResourceAsStream("iso-3166-2.json");
+			String theString = IOUtils.toString(in, "UTF-8");
+			obj = new org.codehaus.jettison.json.JSONObject(theString);
+		}catch(Exception e) {
+			MiscUtils.getLogger().warn("Warning", e);
+		}
+		
+		if(obj != null) {
+			
+			if(selectedCountry == null) {
+				Iterator iter =  obj.keys();
+				while(iter.hasNext()) {
+					String countryCode = (String)iter.next();
+					String countryName = ((org.codehaus.jettison.json.JSONObject)obj.get(countryCode)).getString("name");
+					org.codehaus.jettison.json.JSONObject r = new org.codehaus.jettison.json.JSONObject();
+					r.put("value", countryCode);
+					r.put("label", countryName);
+					results.put(r);
+				}
+			} else if ("".equals(selectedCountry)) {
+			
+			}else {
+				org.codehaus.jettison.json.JSONObject country = (org.codehaus.jettison.json.JSONObject)obj.get(selectedCountry);
+				org.codehaus.jettison.json.JSONObject divisions = (org.codehaus.jettison.json.JSONObject)country.get("divisions");
+				Iterator iter =  divisions.keys();
+				while(iter.hasNext()) {
+					String divisionCode = (String)iter.next();
+					String divisionName = divisions.getString(divisionCode);
+					org.codehaus.jettison.json.JSONObject r = new org.codehaus.jettison.json.JSONObject();
+					r.put("value", divisionCode);
+					r.put("label", divisionName);
+					results.put(r);
+				}
+			}
+		}
+		
+		results.write(response.getWriter());
+		
+		return null;
+	}
 	
 	public ActionForward getAddressAndPhoneHistoryAsJson(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) 
 			throws Exception{
@@ -126,7 +230,7 @@ public class DemographicAction extends DispatchAction  {
 					wPhoneExt = extMap.get("wPhoneExt")!=null?extMap.get("wPhoneExt").getValue():"";
 				}
 				
-				if((extMap.get("demo_cell") != null && !extMap.get("demo_cell").getValue().equals(cell))) {
+				if((extMap.get("demo_cell") != null && extMap.get("demo_cell").getValue() != null && !extMap.get("demo_cell").getValue().equals(cell))) {
 					//new cell phone
 					items.add(new DemographicHistoryItem(extMap.get("demo_cell").getValue(),"cell",archive.getLastUpdateDate()));
 					cell = extMap.get("demo_cell").getValue();

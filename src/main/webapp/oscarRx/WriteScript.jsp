@@ -878,8 +878,7 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setLongTerm(rx.getLongTerm());
     thisForm.setPastMed(rx.getPastMed());
     thisForm.setDispenseInternal(rx.getDispenseInternal());
-    thisForm.setPatientComplianceY(rx.getPatientCompliance("Y"));
-    thisForm.setPatientComplianceN(rx.getPatientCompliance("N"));
+    thisForm.setPatientCompliance(rx.getPatientCompliance());
     thisForm.setAtcCode(rx.getAtcCode());
     thisForm.setRegionalIdentifier(rx.getRegionalIdentifier());
     thisForm.setUnit(rx.getUnit());
@@ -917,7 +916,7 @@ Nosubs:          <%= String.valueOf(thisForm.getNosubs()) %><br>
 Prn:             <%= String.valueOf(thisForm.getPrn()) %><br>
 Long Term Med:   <%= String.valueOf(thisForm.getLongTerm()) %><br>
 Past Med:	 <%= String.valueOf(thisForm.getPastMed()) %><br>
-Patient Complia: <%= String.valueOf(thisForm.getPatientComplianceY()) %><br>
+Patient Complia: <%= String.valueOf(thisForm.getPatientCompliance()) %><br>
 Dosage:          <%= thisForm.getDosage() %><br>
 Special:         <%= thisForm.getSpecial() %><br>
 ATC:             <%= thisForm.getAtcCode() %><br>

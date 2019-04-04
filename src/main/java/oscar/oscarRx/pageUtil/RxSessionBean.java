@@ -56,6 +56,7 @@ public class RxSessionBean  implements java.io.Serializable {
    // private ArrayList stash=new ArrayList();
     private int stashIndex = -1;
     private Hashtable allergyWarnings = new Hashtable();
+    private Hashtable missingAllergyWarnings = new Hashtable();
     private Hashtable workingAllergyWarnings = new Hashtable();
     private ArrayList attributeNames = new ArrayList();
     private String interactingDrugList="";//contains hash tables, each hashtable has the a
@@ -292,6 +293,9 @@ public class RxSessionBean  implements java.io.Serializable {
     public void clearAllergyWarnings(){
        allergyWarnings =null;
        allergyWarnings = new Hashtable();
+       
+       missingAllergyWarnings =null;
+       missingAllergyWarnings = new Hashtable();
     }
 
 
@@ -309,6 +313,10 @@ public class RxSessionBean  implements java.io.Serializable {
     public void addAllergyWarnings(String atc,Allergy[] allergy){
        allergyWarnings.put(atc, allergy);
     }
+
+    public void addMissingAllergyWarnings(String atc,Allergy[] allergy){
+        missingAllergyWarnings.put(atc, allergy);
+     }
 
     public void addToWorkingAllergyWarnings(String atc,RxAllergyWarningWorker worker){
        workingAllergyWarnings.put(atc,worker);
@@ -351,9 +359,11 @@ public class RxSessionBean  implements java.io.Serializable {
              try{
                 RxDrugData drugData = new RxDrugData();
                 Allergy[]  allAllergies = RxPatientData.getPatient(loggedInInfo, getDemographicNo()).getActiveAllergies();
-                allergies = drugData.getAllergyWarnings(atccode,allAllergies);
+                List<Allergy> missing = new ArrayList<Allergy>();
+                allergies = drugData.getAllergyWarnings(atccode,allAllergies,missing);
                     if (allergies != null){
                        addAllergyWarnings(atccode,allergies);
+                       addMissingAllergyWarnings(atccode, missing.toArray(new Allergy[missing.size()]));
                     }
              }catch(Exception e){
             	 logger.error("Error", e);

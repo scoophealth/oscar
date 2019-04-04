@@ -111,20 +111,7 @@
 		 		<pre>{{survey.surveyQuestion}}</pre> 
 		 		<b>Randomness:</b>1 in {{survey.randomness}}<br>
 		 		<b>Period:</b>{{survey.period}} Days <br>
-		 		<%--
-		 		<h4>Automated Transmission</h4>
-		 		<form class="form-inline">
-				  <div class="form-group">
-				    <label for="exampleInputName2">Username</label>
-				    <input type="text" class="form-control" id="exampleInputName2" placeholder="username" ng-model="jobUsername">
-				  </div>
-				  <div class="form-group">
-				    <label for="exampleInputEmail2">Password</label>
-				    <input type="password" class="form-control" id="exampleInputEmail2" placeholder="password" ng-model="jobPassword">
-				  </div>
-				  <button type="submit" class="btn btn-default" ng-click="createJob(survey,jobUsername,jobPassword)" >Create Job</button>
-				</form>
-				 --%>
+		 		 
 		 		<div class="col-xs-6">
 		 			<h4>Participating Providers</h4>
 			 		<ol style="padding:0;">
@@ -142,6 +129,33 @@
 		 		</div>	 		
 		 	</div>
 		 	<div class="col-xs-4" ng-show="currentSurveyId != null">
+		 	
+		 	<h4>Automated Transmission</h4>
+	 		<form ng-if="currentSurveyActive">
+	 		  <div class="row">	
+			  	<div class="form-group col-xs-6">
+			    		<label for="exampleInputName2">Username</label>
+					<input type="text" class="form-control" id="exampleInputName2" placeholder="username" ng-model="jobUsername">
+			  	</div>
+			  </div>
+			  <div class="row">	
+			  	<div class="form-group col-xs-6">
+			    		<label for="exampleInputEmail2">Password</label>
+			    		<input type="password" class="form-control" id="exampleInputEmail2" placeholder="password" ng-model="jobPassword">
+			  	</div>
+			  </div>
+			  <div class="row">	
+			  	<div class="form-group col-xs-6">
+			    		<label for="exampleInputName3">Export Filename Prefix</label>
+			    		<input type="text" class="form-control" id="prefixid" placeholder="013" ng-model="prefix">
+			  	</div>
+			  </div>
+			  
+			  <button type="submit" class="btn btn-default" ng-click="createJob(survey,jobUsername,jobPassword,prefix)" >Create Job</button>
+			  
+			</form>
+		 	
+		 	
 		 	<h4>Files
 		 	<a class="btn btn-default" ng-click="generateExport(survey)" role="button">Generate Export</a>
 		 	</h4>
@@ -189,6 +203,7 @@
 			$scope.updatableConfigs = {};
 			$scope.exportFiles = []
 		    firstLoad = true;
+			$scope.currentSurveyActive = false;
 			
 			
 			allLoadedSurveillanceConfigs = function(){
@@ -226,6 +241,7 @@
 	    		getAllActiveProviders = function(){
 	    			providerService.getAllActiveProviders().then(function(data){
 		    			$scope.activeProviders = data;
+		    			console.log("$scope.activeProviders",data);
 		    			angular.forEach($scope.activeProviders, function(provider) {
 		    				activeProvidersHash[provider.providerNo] = provider;
 		    			});
@@ -244,6 +260,7 @@
 	    		
 	    		$scope.openSurvey = function(resource){
 	    			$scope.currentSurveyId = resource.id;
+	    			$scope.currentSurveyActive = resource.active;
 	    			surveillanceService.getSurvey(resource.id).then(function(data){
 		    			$scope.survey = data;
 		    			if(angular.isUndefined($scope.survey.providerList) || $scope.survey.providerList ==null ){
@@ -399,10 +416,18 @@
 				return false;
 			}
 			
-			$scope.createJob = function(survey,jobUsername,jobPassword){
+			$scope.createJob = function(survey,jobUsername,jobPassword,prefix){
 				console.log("survry",survey,jobUsername,jobPassword);
-				
-			}
+				obj = {};
+				obj.username = jobUsername;
+				obj.password = jobPassword;
+				obj.prefix = prefix;
+				surveillanceService.createJob($scope.currentSurveyId,obj).then(function(data){
+    					console.log("data coming back",data);
+    					alert("Job Saved. Job can be disabled in the Job Management admin menu");
+					});
+						
+			},
 		     
 			$scope.setAsSent = function(exportFile){
 				surveillanceService.setAsSent(exportFile.id).then(function(data){

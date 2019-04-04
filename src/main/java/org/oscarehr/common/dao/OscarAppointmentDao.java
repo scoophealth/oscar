@@ -26,8 +26,10 @@ package org.oscarehr.common.dao;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -815,19 +817,29 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 	}
 	
 	public List<Object[]> listAppointmentsByPeriodProvider(Date sDate, Date eDate, List<Integer> providerNos) {
-		String sql = "SELECT a.appointment_no, a.provider_no, a.appointment_date, a.start_time, a.demographic_no, a.notes, a.location, a.resources, a.status, " + 
-				"d.last_name, d.first_name, d.phone, d.phone2, d.email, " + 
-				"e1.value as demo_cell, e2.value as reminderPreference, e3.value as hPhoneExt, e4.value as wPhoneExt " + 
-				"FROM appointment a LEFT JOIN demographic d ON a.demographic_no = d.demographic_no  LEFT JOIN demographicExt e1 ON a.demographic_no = e1.demographic_no AND e1.key_val = 'demo_cell' " + 
-				"LEFT JOIN demographicExt e2 ON a.demographic_no = e2.demographic_no AND e2.key_val = 'reminderPreference' " + 
-				"LEFT JOIN demographicExt e3 ON a.demographic_no = e3.demographic_no AND e3.key_val = 'hPhoneExt' " + 
-				"LEFT JOIN demographicExt e4 ON a.demographic_no = e4.demographic_no AND e4.key_val = 'wPhoneExt' " + 
+		String sql = "SELECT a.appointment_no, a.provider_no, a.appointment_date, a.start_time, a.demographic_no, a.notes, a.location, " +
+				"a.resources, a.status,d.last_name, d.first_name, d.phone, d.phone2,  d.email, e1.value as demo_cell, e2.value as reminderPreference, " +
+				"e3.value as hPhoneExt,  e4.value as wPhoneExt " +
+				"FROM appointment a LEFT JOIN demographic d ON a.demographic_no = d.demographic_no " +
+				getJoin4LatestDemographicExtValue("demo_cell", 1) +
+				getJoin4LatestDemographicExtValue("reminderPreference", 2) +
+				getJoin4LatestDemographicExtValue("hPhoneExt", 3) +
+				getJoin4LatestDemographicExtValue("wPhoneExt", 4) +
 				"WHERE a.provider_no IN (:providers) AND a.appointment_date >= :startDate AND a.appointment_date <= :endDate";
 		Query query = entityManager.createNativeQuery(sql);
 		query.setParameter("providers", providerNos != null && providerNos.size()>0 ? providerNos : Arrays.asList());
 		query.setParameter("startDate", sDate == null ? new Date(Long.MIN_VALUE) : sDate);
 		query.setParameter("endDate", eDate == null ? new Date(Long.MAX_VALUE) : eDate);
 		return query.getResultList();
+	}
+	
+	private String getJoin4LatestDemographicExtValue(String keyval, int seqNum) {
+		StringBuilder sb = new StringBuilder();
+		Formatter f = new Formatter(sb, Locale.US);
+		f.format("LEFT JOIN demographicExt %1$s ON a.demographic_no = %1$s.demographic_no AND %1$s.key_val = '%3$s' " +
+				"AND %1$s.date_time=(SELECT max(%2$s.date_time) from demographicExt %2$s WHERE %2$s.demographic_no=a.demographic_no "
+						+ "and key_val='%3$s') ", "e"+seqNum, "e1"+seqNum, keyval);
+		return sb.toString(); 
 	}
 	
 	/*

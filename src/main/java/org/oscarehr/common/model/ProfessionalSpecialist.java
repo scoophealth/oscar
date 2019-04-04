@@ -413,7 +413,7 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 
 	@Override
 	public ContactType getContactType() {
-		return this.getContactType();
+		return this.contactType;
 	}
 
 
@@ -486,8 +486,8 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 	@Override
 	public String getCity() {
 		String city = null;
-		if( addressArray.length > 3 ) {	
-			city = addressArray[1];
+		if( getAddressArray().length > 3 ) {	
+			city = getAddressArray()[1];
 		}
 		return city;	
 	}
@@ -508,7 +508,7 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 
 		if(getAddressArray().length > 3) {
 			province = getAddressArray()[3].trim();
-		} else {
+		} else if(getAddressArray().length > 1)  {
 			province = getAddressArray()[1].trim();
 		}
 		

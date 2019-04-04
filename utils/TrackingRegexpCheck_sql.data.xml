@@ -167,8 +167,95 @@
         <ViolationValue>/database/mysql/icd10.sql:`icd10` varchar(7) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/icd9.sql:description varchar(200) NOT NULL default '',</ViolationValue>
         <ViolationValue>/database/mysql/icd9.sql:icd9 varchar(7) NOT NULL default '',</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_REQUESTS.sql:INSERT INTO OLISRequestNomenclature values (\N,'TR10500-7','Ham''s Test','Hematology');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_REQUESTS.sql:INSERT INTO OLISRequestNomenclature values (\N,'TR11207-8','Mare''s Milk','Allergens');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_REQUESTS.sql:INSERT INTO OLISRequestNomenclature values (\N,'TR11605-3','Cow''s Milk','Allergens');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_REQUESTS.sql:INSERT INTO OLISRequestNomenclature values (\N,'TR12669-8','Early Onset Alzheimer''s Evaluation','Chemistry');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_REQUESTS.sql:INSERT INTO OLISRequestNomenclature values (\N,'TR12813-2','Pyrimidine-5''-Nucleotidase','Chemistry');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10010-7','R'' wave amplitude.lead AVF');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10011-5','R'' wave amplitude.lead AVL');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10012-3','R'' wave amplitude.lead AVR');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10013-1','R'' wave amplitude.lead I');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10014-9','R'' wave amplitude.lead II');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10015-6','R'' wave amplitude.lead III');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10016-4','R'' wave amplitude.lead V1');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10017-2','R'' wave amplitude.lead V2');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10018-0','R'' wave amplitude.lead V3');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10019-8','R'' wave amplitude.lead V4');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10020-6','R'' wave amplitude.lead V5');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10021-4','R'' wave amplitude.lead V6');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10022-2','R'' wave duration.lead AVF');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10023-0','R'' wave duration.lead AVL');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10024-8','R'' wave duration.lead AVR');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10025-5','R'' wave duration.lead I');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10026-3','R'' wave duration.lead II');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10027-1','R'' wave duration.lead III');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10028-9','R'' wave duration.lead V1');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10029-7','R'' wave duration.lead V2');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10030-5','R'' wave duration.lead V3');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10031-3','R'' wave duration.lead V4');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10032-1','R'' wave duration.lead V5');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10033-9','R'' wave duration.lead V6');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10058-6','S'' wave amplitude.lead AVF');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10059-4','S'' wave amplitude.lead AVL');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10060-2','S'' wave amplitude.lead AVR');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10061-0','S'' wave amplitude.lead I');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10062-8','S'' wave amplitude.lead II');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10063-6','S'' wave amplitude.lead III');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10064-4','S'' wave amplitude.lead V1');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10065-1','S'' wave amplitude.lead V2');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10066-9','S'' wave amplitude.lead V3');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10067-7','S'' wave amplitude.lead V4');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10068-5','S'' wave amplitude.lead V5');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10069-3','S'' wave amplitude.lead V6');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10070-1','S'' wave duration.lead AVF');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10071-9','S'' wave duration.lead AVL');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10072-7','S'' wave duration.lead AVR');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10073-5','S'' wave duration.lead I');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10074-3','S'' wave duration.lead II');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10075-0','S'' wave duration.lead III');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10076-8','S'' wave duration.lead V1');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10077-6','S'' wave duration.lead V2');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10078-4','S'' wave duration.lead V3');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10079-2','S'' wave duration.lead V4');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10080-0','S'' wave duration.lead V5');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10081-8','S'' wave duration.lead V6');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10130-3','T'' wave amplitude.lead AVF');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10131-1','T'' wave amplitude.lead AVL');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10132-9','T'' wave amplitude.lead AVR');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10133-7','T'' wave amplitude.lead I');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10134-5','T'' wave amplitude.lead II');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10135-2','T'' wave amplitude.lead III');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10136-0','T'' wave amplitude.lead V1');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10137-8','T'' wave amplitude.lead V2');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10138-6','T'' wave amplitude.lead V3');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10139-4','T'' wave amplitude.lead V4');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10140-2','T'' wave amplitude.lead V5');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10141-0','T'' wave amplitude.lead V6');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'10913-2','4,4''-methylene bis(2-chloroaniline)');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'1689-9','5''-nucleotidase');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'1690-7','5''-nucleotidase');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'2688-0','Orotidine-5''-Phosphate decarboxylase');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'2902-5','Pyrimidine-5''-Nucleotidase');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'2903-3','Pyrimidine-5''-Nucleotidase');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'3292-0','2-pyridone/N''-methylnicotinamide');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'42376-4','Neisseria meningitidis Z'' Ag');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'44055-2','Pyrimidine-5''-nucleotidase');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'9913-5','P'' wave amplitude.lead AVF');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'9914-3','P'' wave amplitude.lead AVL');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'9915-0','P'' wave amplitude.lead AVR');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'9916-8','P'' wave amplitude.lead I');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'9917-6','P'' wave amplitude.lead II');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'9918-4','P'' wave amplitude.lead III');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'9919-2','P'' wave amplitude.lead V1');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'9920-0','P'' wave amplitude.lead V2');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'9921-8','P'' wave amplitude.lead V3');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'9922-6','P'' wave amplitude.lead V4');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'9923-4','P'' wave amplitude.lead V5');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'9924-2','P'' wave amplitude.lead V6');</ViolationValue>
+        <ViolationValue>/database/mysql/olis/OLIS_TEST_RESULTS.sql:INSERT INTO OLISResultNomenclature values (\N,'XON12169-9','Schuffner''s Dots');</ViolationValue>
         <ViolationValue>/database/mysql/oscardata_on.sql:INSERT INTO `OscarJobType` VALUES (\N,'CanadianVaccineCatalogueUpdater','Updates the local copy of the data','org.oscarehr.integration.born.CanadianVaccineCatalogueJob',1,now()),(\N,'BORN FHIR','','org.oscarehr.integration.born.BORNFhirJob',1,now());</ViolationValue>
-        <ViolationValue>/database/mysql/oscardata_on.sql:INSERT INTO `OscarJob` VALUES (\N,'CanadianVaccineCatalogueUpdater','Updates the CVC data',(select id from OscarJobType where name='CanadianVaccineCatalogueUpdater'),'0 * 0 * * *','999998',1,now()),(\N,'BORN FHIR','',(select id from OscarJobType where name='BORN FHIR'),'0 * * * * *','999998',1,now());</ViolationValue>
+        <ViolationValue>/database/mysql/oscardata_on.sql:INSERT INTO `OscarJob` VALUES (\N,'CanadianVaccineCatalogueUpdater','Updates the CVC data',(select id from OscarJobType where name='CanadianVaccineCatalogueUpdater'),'0 * 0 * * *','999998',0,now(),null),(\N,'BORN FHIR','',(select id from OscarJobType where name='BORN FHIR'),'0 * * * * *','999998',0,now(),null);</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2007-01-07.sql:templatetitle varchar(80) NOT NULL DEFAULT '',</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2007-04-30.sql:ALTER TABLE reportTemplates CHANGE templateparamxml templatexml text NOT NULL DEFAULT '';</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2007-08-01.sql:ADD COLUMN `create_date` datetime NOT NULL default '0000-00-00 00:00:00' AFTER `provider_no`,</ViolationValue>
@@ -223,7 +310,9 @@
         <ViolationValue>/database/mysql/updates/update-2015-02-13.sql:update professionalSpecialists set salutation='';</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2018-01-15.sql:update provider set practitionerNoType = '';</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2018-07-23-on.sql:INSERT INTO `OscarJobType` VALUES (\N,'CanadianVaccineCatalogueUpdater','Updates the local copy of the data','org.oscarehr.integration.born.CanadianVaccineCatalogueJob',1,now()),(\N,'BORN FHIR','','org.oscarehr.integration.born.BORNFhirJob',1,now());</ViolationValue>
-        <ViolationValue>/database/mysql/updates/update-2018-07-23-on.sql:INSERT INTO `OscarJob` VALUES (\N,'CanadianVaccineCatalogueUpdater','Updates the CVC data',(select id from OscarJobType where name='CanadianVaccineCatalogueUpdater'),'0 * 0 * * *','999998',1,now()),(\N,'BORN FHIR','',(select id from OscarJobType where name='BORN FHIR'),'0 * * * * *','999998',1,now());</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2018-07-23-on.sql:INSERT INTO `OscarJob` VALUES (\N,'CanadianVaccineCatalogueUpdater','Updates the CVC data',(select id from OscarJobType where name='CanadianVaccineCatalogueUpdater'),'0 * 0 * * *','999998',0,now()),(\N,'BORN FHIR','',(select id from OscarJobType where name='BORN FHIR'),'0 * * * * *','999998',0,now());</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-01.sql:update demographic set middleNames = '' where middleNames is NULL;</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-05.sql:update measurementType set typeDescription='' where type='CODC';</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-phr-docs.sql:(select i.dateSent as datetime_queued, i.dateSent as datetime_sent, p.provider_no as sender_oscar, '1' as sender_type, p.value as sender_phr, de.demographic_no as receiver_oscar, '2' as receiver_type, de.pin as receiver_phr, '1' as action_type, 'urn:org:indivo:document:classification:medical:medication' as phr_classification, d.drugid as oscar_id, i.indivoDocIdx as phr_index, '' as doc_content, '2' as status FROM indivoDocs i, drugs d, property p, demographic de WHERE i.docType='Rx' AND i.oscarDocNo=d.drugid AND d.demographic_no=de.demographic_no AND p.name='MyOscarId' AND d.provider_no=p.provider_no AND i.update = 'I') UNION DISTINCT (select i.dateSent as datetime_queued, i.dateSent as datetime_sent, p.provider_no as sender_oscar, '1' as sender_type, p.value as sender_phr, de.demographic_no as receiver_oscar, '2' as receiver_type, de.pin as receiver_phr, '2' as action_type, 'urn:org:indivo:document:classification:medical:medication' as phr_classification, d.drugid as oscar_id, i.indivoDocIdx as phr_index, '' as doc_content, '2' as status FROM indivoDocs i, drugs d, property p, demographic de</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-phr-docs.sql:WHERE i.docType='Rx' AND i.oscarDocNo=d.drugid AND d.demographic_no=de.demographic_no AND p.name='MyOscarId' AND d.provider_no=p.provider_no AND i.update = 'U') UNION DISTINCT (select i.dateSent as datetime_queued, i.dateSent as datetime_sent, p.provider_no as sender_oscar, '1' as sender_type, p.value as sender_phr, de.demographic_no as receiver_oscar, '2' as receiver_type, de.pin as receiver_phr, '1' as action_type, 'urn:org:indivo:document:classification:medical:binaryData' as phr_classification, d.document_no as oscar_id, i.indivoDocIdx as phr_index, '' as doc_content, '2' as status FROM indivoDocs i, document d, property p, demographic de, ctl_document cd WHERE i.docType='document' AND i.oscarDocNo=d.document_no AND d.document_no=cd.document_no AND cd.module_id=de.demographic_no AND p.name='MyOscarId' AND d.doccreator=p.provider_no AND i.update = 'I') UNION DISTINCT (select i.dateSent as datetime_queued, i.dateSent as datetime_sent, p.provider_no as sender_oscar, '1' as sender_type, p.value as sender_phr, de.demographic_no as receiver_oscar, '2' as receiver_type, de.pin as receiver_phr, '2' as action_type, 'urn:org:indivo:document:classification:medical:binaryData' as phr_classification, d.document_no as oscar_id, i.indivoDocIdx as phr_index, '' as doc_content, '2' as status FROM indivoDocs i, document d, property p, demographic de, ctl_document cd WHERE i.docType='document' AND i.oscarDocNo=d.document_no AND d.document_no=cd.document_no AND cd.module_id=de.demographic_no AND p.name='MyOscarId' AND d.doccreator=p.provider_no AND i.update = 'U');</ViolationValue>
     </ViolationSet>
@@ -3620,6 +3709,27 @@
         <ViolationValue>/database/mysql/updates/update-2014-11-28.sql:us_num varchar(10) default '0',</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2016-07-11.sql:provider_no varchar(6) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-2018-04-16.sql:alter table billing modify status varchar(1) DEFAULT NULL;</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-02-25.sql:appointmentDate date default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-02-25.sql:appointmentTime time default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-02-25.sql:demographicNo int(10) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-02-25.sql:followUpDate date default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-02-25.sql:providerNo varchar(6) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-02-25.sql:referalDate date default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-02-25.sql:sendTo varchar(20) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-02-25.sql:serviceId int(10) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-02-25.sql:specId int(10) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-02-25.sql:status char(2) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-02-25.sql:urgency char(2) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-02-26.sql:alter table document add abnormal int(1) NOT NULL default '0';</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-02-26.sql:alter table document add receivedDate date default NULL;</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-04.sql:ALTER TABLE drugs modify route varchar(50) default 'PO';</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-08.sql:`active` tinyint(1) DEFAULT NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-08.sql:`archived` tinyint(1) DEFAULT NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-08.sql:`createDate` datetime DEFAULT NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-08.sql:`providerNo` varchar(6) DEFAULT NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-08.sql:`reportName` varchar(255) DEFAULT NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-08.sql:`updateDate` datetime DEFAULT NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-08.sql:`uuid` varchar(50) DEFAULT NULL,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:A1C double(2, 2) default null,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:ABPM bool NOT NULL default '0',</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-hsfo.sql:Ace_RxDecToday enum('Same', 'Increase', 'Decrease', 'Stop', 'Start', 'InClassSwitch', 'null') default null,</ViolationValue>

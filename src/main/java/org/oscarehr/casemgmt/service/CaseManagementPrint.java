@@ -233,6 +233,7 @@ public class CaseManagementPrint {
                 File file2=null;
                 FileOutputStream os2=null;
                 
+                FileOutputStream fos = null;
                 try {
                 file= new File(fileName);
 		out = new FileOutputStream(file);
@@ -291,7 +292,16 @@ public class CaseManagementPrint {
 				os2 = new FileOutputStream(file2);
 				LabPDFCreator pdfCreator = new LabPDFCreator(os2, segmentId, loggedInInfo.getLoggedInProviderNo());
 				pdfCreator.printPdf();
-				pdfDocs.add(fileName2);
+				os2.close();
+				
+				String fileName3 = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + "//" + handler.getPatientName().replaceAll("\\s", "_") + "_" + handler.getMsgDate() + "_LabReport.1.pdf";
+                File file3= new File(fileName3);
+                
+                fos = new FileOutputStream(file3);
+				pdfCreator.addEmbeddedDocuments(file2,fos);
+				
+				
+				pdfDocs.add(fileName3);
 			}
 
 		}
@@ -307,6 +317,9 @@ public class CaseManagementPrint {
                   }
                   if (os2!=null) {
                       os2.close();
+                  }
+                  if (fos!=null) {
+                      fos.close();
                   }
                   if (file!=null) {
                       file.delete();
@@ -433,7 +446,7 @@ public class CaseManagementPrint {
 			criteria.getProviders().addAll((List<String>) se.getAttribute("CaseManagementViewAction_filter_providers"));
 		}
 
-		if (se.getAttribute("CaseManagementViewAction_filter_providers") != null) {
+		if (se.getAttribute("CaseManagementViewAction_filter_issues") != null) {
 			criteria.getIssues().addAll((List<String>) se.getAttribute("CaseManagementViewAction_filter_issues"));
 		}
 

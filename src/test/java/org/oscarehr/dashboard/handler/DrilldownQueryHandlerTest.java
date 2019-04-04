@@ -34,6 +34,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.oscarehr.dashboard.query.Column;
+import org.oscarehr.dashboard.query.DrillDownAction;
 import org.oscarehr.dashboard.query.Parameter;
 import org.oscarehr.dashboard.query.RangeInterface;
 
@@ -42,6 +43,7 @@ public class DrilldownQueryHandlerTest {
 	private static List<Column> columns;
 	private static List<Parameter> parameters;
 	private static List<RangeInterface> ranges;
+	private static List<DrillDownAction> actions;
 	private static DrilldownQueryHandler drilldownQueryHandler;
 
 	private static String finalQueryString = "SELECT d.demographic_no AS 'Patient Id',d.first_name "
@@ -86,11 +88,13 @@ public class DrilldownQueryHandlerTest {
 		columns = indicatorTemplateXML.getDrilldownDisplayColumns();
 		ranges = indicatorTemplateXML.getDrilldownRanges();
 		parameters = indicatorTemplateXML.getDrilldownParameters("null");
+		actions = indicatorTemplateXML.getDrilldownActions();
 		
 		drilldownQueryHandler = new DrilldownQueryHandler();
 		drilldownQueryHandler.setColumns(columns);
 		drilldownQueryHandler.setParameters(parameters);
 		drilldownQueryHandler.setRanges(ranges);
+		drilldownQueryHandler.setActions(actions);
 		drilldownQueryHandler.setQuery( indicatorTemplateXML.getDrilldownQuery() );
 		
 	}
@@ -103,6 +107,11 @@ public class DrilldownQueryHandlerTest {
 	@Test
 	public void testGetRanges() {
 		assertEquals( ranges, drilldownQueryHandler.getRanges() );
+	}
+
+	@Test
+	public void testGetActions() {
+		assertEquals( actions, drilldownQueryHandler.getActions() );
 	}
 
 	@Test

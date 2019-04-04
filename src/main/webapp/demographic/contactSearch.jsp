@@ -161,7 +161,7 @@
 		<tr bgcolor="<%=bgColor%>"
 		onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';"
 		onMouseout="this.style.backgroundColor='<%=bgColor%>';" onClick="<%=strOnClick%>">
-			<td><c:out value="${ contact.specialty }" /></td>
+			<td></td>
 			<td><c:out value="${contact.lastName}"/></td>
 			<td><c:out value="${contact.firstName}"/></td>
 			<td><c:out value="${contact.residencePhone}"/></td>

@@ -818,4 +818,9 @@ X = deleted (available on request; not always preceded by non-X OBRs in an earli
 				|| OBX_DATA_TYPES.FT.name().equals( getOBXValueType(0, 0) )  );		
 	}
     
+    //for OMD validation
+    public boolean isTestResultBlocked(int i, int j) {
+    	return false;
+    }
+    
 }

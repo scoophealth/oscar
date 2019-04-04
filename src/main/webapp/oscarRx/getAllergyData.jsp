@@ -70,7 +70,8 @@ if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
 
 Allergy[] allergyWarnings = null;
    RxDrugData drugData = new RxDrugData();
-   allergyWarnings = drugData.getAllergyWarnings(atcCode, allergies);
+   List<Allergy> missing = new ArrayList<Allergy>();
+   allergyWarnings = drugData.getAllergyWarnings(atcCode, allergies,missing);
 
 
    // Hashtable d = new Hashtable();
@@ -84,6 +85,9 @@ Allergy[] allergyWarnings = null;
 
         temp=StringUtils.trimToEmpty(allg.getReaction());
         d2.put("reaction", temp);
+        
+        temp=StringUtils.trimToEmpty(allg.getSeverityOfReactionDesc());
+        d2.put("severity", temp);
     }
 
    try{

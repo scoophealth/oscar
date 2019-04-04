@@ -143,6 +143,19 @@
                                                          </xs:sequence>
                                                    </xs:complexType>
                                              </xs:element>
+                                             <xs:element name="drillDownActions" maxOccurs="1" minOccurs="0">
+                                                <xs:complexType>
+                                                        <xs:sequence>
+                                                                <xs:element name="action" maxOccurs="unbounded" minOccurs="0" >
+                                                                     <xs:complexType>
+                                                                           <xs:attribute name="id" type="xs:string" use="required"></xs:attribute>
+                                                                           <xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+                                                                           <xs:attribute name="value" type="xs:string"></xs:attribute>
+                                                                     </xs:complexType>
+                                                                </xs:element>
+                                                        </xs:sequence>
+                                                </xs:complexType>
+                                             </xs:element>
                                              <xs:element name="query" type="xs:string" maxOccurs="1" minOccurs="1"></xs:element>
                                        </xs:sequence>
                                  </xs:complexType>

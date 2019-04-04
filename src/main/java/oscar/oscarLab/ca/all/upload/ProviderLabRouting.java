@@ -36,6 +36,7 @@ package oscar.oscarLab.ca.all.upload;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -117,6 +118,7 @@ public class ProviderLabRouting {
 				ProviderLabRoutingModel plr = providerLabRoutingDao.findByLabNoAndLabType(labId, labType);
 				if (plr != null) {
 					plr.setStatus("N");
+					plr.setTimestamp(new Date());
 					providerLabRoutingDao.merge(plr);
 				}
 			}

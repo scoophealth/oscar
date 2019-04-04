@@ -26,17 +26,26 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
+import org.oscarehr.PMmodule.dao.SecUserRoleDao;
+import org.oscarehr.PMmodule.model.SecUserRole;
+import org.oscarehr.common.dao.HrmLogDao;
+import org.oscarehr.common.dao.HrmLogEntryDao;
+import org.oscarehr.common.dao.SecObjPrivilegeDao;
+import org.oscarehr.common.model.HrmLog;
+import org.oscarehr.common.model.HrmLogEntry;
+import org.oscarehr.common.model.OscarMsgType;
+import org.oscarehr.common.model.SecObjPrivilege;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
-import org.oscarehr.common.model.OscarMsgType;
 
 import oscar.OscarProperties;
 import oscar.oscarMessenger.data.MsgProviderData;
@@ -76,139 +85,82 @@ public class SFTPConnector {
 	//set when initialized, to change keys, manually do it in the main constructor
 	public static String decryptionKey=null;
 	
+	private HrmLogDao hrmLogDao = SpringUtils.getBean(HrmLogDao.class);
+	private HrmLogEntryDao hrmLogEntryDao = SpringUtils.getBean(HrmLogEntryDao.class);
+	
 	/**
 	 * String is the providerNo of people who don't want to see anymore messages.
 	 * This is cleared each time the run succeeds as it would be a new outtage after one success. 
 	 */
 	private static HashSet<String> doNotSentMsgForOuttage=new HashSet<String>();
 
+	private HrmLog hrmLog;
+	
 	/**
-	 * Default constructor instantiates the SFTP Connector for OMD.
-	 * 
-	 * Default use of this class is internally through Tomcat. See other constructor for running this class from the
-	 * command line.
+	 * This is called for MANUAL download
 	 * 
 	 * @throws Exception
 	 */
-	public SFTPConnector() throws Exception {
-		this(OMD_HRM_IP, OMD_HRM_PORT, OMD_HRM_USER, getOMD_keyLocation());
+	public SFTPConnector(LoggedInInfo loggedInInfo) throws Exception {
+		this(loggedInInfo, OMD_HRM_IP, OMD_HRM_PORT, OMD_HRM_USER, getOMD_keyLocation(),"Manual");
 	}
 
-	/**
-	 * Instantiate this class and start to automatically download the specified folder, then delete contents. Revise as
-	 * necessary for order of operations.
-	 * 
-	 * @param remoteDir
-	 * @throws Exception
-	 */
-	public SFTPConnector(String remoteDir) throws Exception {
-		this();
-
-		if (remoteDir == null) {
-			return;
-		}
-
-		//get a list of files of remote directory
-		String[] files = ls(remoteDir);
-
-		//if no files in directory, got nothing to do
-		if (files.length == 0) {
-			fLogger.info("Server folder '" + remoteDir + "' has no files for downloading. Terminated.");
-			throw new Exception("Server directory '" + remoteDir + "' has no files to download!");
-		}
-
-		//fetch all files from remote dir
-		String[] localFilePaths = downloadDirectoryContents(remoteDir);
-		
-		String[] paths = null;
-		if(doDecrypt()) {
-			paths = decryptFiles(localFilePaths);
-		} else {
-			paths = localFilePaths;
-		}
-
-		//delete all files from remote dir
-		deleteDirectoryContents(remoteDir, files);
-
-		//disconnect
-		close();
+	public SFTPConnector(LoggedInInfo loggedInInfo, String triggerType) throws Exception {
+		this(loggedInInfo,OMD_HRM_IP, OMD_HRM_PORT, OMD_HRM_USER, getOMD_keyLocation(),triggerType);
 	}
 
 	/**
 	 * Main constructor. To change keys, manually set the references below.
-	 * 
-	 * @param host
-	 * @param port
-	 * @param user
-	 * @param keyLocation
-	 * @throws Exception
 	 */
-	public SFTPConnector(String host, int port, String user, String keyLocation) throws Exception {
+	public SFTPConnector(LoggedInInfo loggedInInfo, String host, int port, String user, String keyLocation, String triggerType) throws Exception {
 
 		logger.debug("Host "+host+" port "+port+" user "+user+" keyLocation "+keyLocation);	
 
-		//daily log file name follows "day month year . log" (with no spaces)
+		hrmLog = new HrmLog();
+		hrmLog.setTransactionType(triggerType);
+		hrmLog.setStarted(new Date());
+		hrmLog.setInitiatingProviderNo(loggedInInfo.getLoggedInProviderNo());
+		hrmLogDao.persist(hrmLog);
+		
 		String logName = SFTPConnector.getDayMonthYearTimestamp() + ".log";
 		String fullLogPath = this.logDirectory + logName;
-
-		//prepare the logger
-		FileHandler handler = new FileHandler(fullLogPath, true); //append log to daily log files
+		FileHandler handler = new FileHandler(fullLogPath, true); 
 		fLogger = Logger.getLogger("SFTPConnector");
 		fLogger.addHandler(handler);
 
-		jsch = new JSch();
+		try {
+			jsch = new JSch();
+			jsch.addIdentity(keyLocation);
+			sess = jsch.getSession(user, host, port);
+		} catch(JSchException je) {
+			hrmLog.setError(je.getMessage());
+			hrmLogDao.merge(hrmLog);
+			throw je;
+		}
 
-		jsch.addIdentity(keyLocation);
-		sess = jsch.getSession(user, host, port);
-
-		/* - Just for Testing. If you need to setup a "fake" sftp to test this
-		UserInfo ui=new MyUserInfo();  
-		sess.setUserInfo(ui);
-		*/
 		java.util.Properties confProp = new java.util.Properties();
 		confProp.put("StrictHostKeyChecking", "no");
 		sess.setConfig(confProp);
 
-		sess.connect();
-
-		Channel channel = sess.openChannel("sftp");
-		channel.connect();
-		cmd = (ChannelSftp) channel;
-		fLogger.info("SFTP connection established with " + host + ":" + port + ". Current path on server is: "
-				+ cmd.pwd());
+		try {
+			sess.connect();
+			Channel channel = sess.openChannel("sftp");
+			channel.connect();
+			cmd = (ChannelSftp) channel;
+			fLogger.info("SFTP connection established with " + host + ":" + port + ". Current path on server is: " + cmd.pwd());
+		}catch(JSchException je) {
+			hrmLog.setError(je.getMessage());
+			hrmLogDao.merge(hrmLog);
+			throw je;
+		}
+		
+		hrmLog.setConnected(true);
+		hrmLogDao.merge(hrmLog);
 	}
 
 	public static String getOMD_keyLocation() {
 		return OMD_keyLocation;
 
-	}
-
-	public static void setOMD_keyLocation(String oMD_keyLocation) {
-		OMD_keyLocation = oMD_keyLocation;
-	}
-
-	public static String getDownloadsDirectory() {
-		String dd = downloadsDirectory;
-		if (dd == null || dd.equals("")){
-			dd = "webapps/OscarDocument/hrm/sftp_downloads/";
-			return dd;
-
-		} else {
-			return downloadsDirectory;
-		}
-
-	}
-
-	public static void setDownloadsDirectory(String downloadsDir) {
-		downloadsDirectory = downloadsDir;
-	}
-
-	public static String getDecryptionKey() {
-		return decryptionKey;
-	}
-
-	public static  void setDecryptionKey(String decryptKey) {
-		decryptionKey = decryptKey;
 	}
 
 	/**
@@ -270,6 +222,7 @@ public class SFTPConnector {
 	public String[] ls(String folder, boolean printInfo) throws SftpException {
 		List fileList = cmd.ls(folder);
 		String[] filenames = null;
+		List<String> files = new ArrayList<String>();
 
 		if (fileList != null) {
 
@@ -292,13 +245,14 @@ public class SFTPConnector {
 						String fn = lsEntry.getFilename(); //filename
 						if (fn != null && !fn.equals(".") && !fn.equals("..")) {
 							filenames[i++] = fn;
+							files.add(fn);
 						}
 					}
 				}
 			}
 		}
 
-		return filenames;
+		return files.toArray(new String[files.size()]);
 	}
 
 	/**
@@ -390,6 +344,9 @@ public class SFTPConnector {
 
 	}
 
+	public String[] decryptFiles(String[] fullPaths) throws Exception {
+		return decryptFiles(fullPaths,getDecryptionKey());
+	}
 	/**
 	 * Given a String array of absolute filenames of encrypted files, proceed to decrypt them in today's folder under
 	 * the specified folder below.
@@ -397,7 +354,7 @@ public class SFTPConnector {
 	 * @param fullPaths
 	 * @throws Exception
 	 */
-	public static String[] decryptFiles(String[] fullPaths) throws Exception {
+	public String[] decryptFiles(String[] fullPaths, String decryptionKey) throws Exception {
 		if (fullPaths.length == 0)
 			return null;
 					
@@ -422,7 +379,7 @@ public class SFTPConnector {
 				continue;
 			
 			try {
-	            decryptedContent = decryptFile(sfile);
+	            decryptedContent = decryptFile(sfile,decryptionKey);
 	            filename = sfile.substring(sfile.lastIndexOf("/"));
 	            String newFullPath = saveToDirectoryFullPath + filename;
 	            handler = new FileWriter(newFullPath);
@@ -442,6 +399,9 @@ public class SFTPConnector {
 		return decryptedFilePaths;
 	}
 
+	public String decryptFile(String fullPath) throws Exception {
+		return decryptFile(fullPath,null);
+	}
 	/**
 	 * Given the absolute path of an encrypted file, decrypt the file using the specified AES key at the top. Return the
 	 * string value of the decrypted file.
@@ -450,14 +410,17 @@ public class SFTPConnector {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String decryptFile(String fullPath) throws Exception {
-		logger.debug("About to decrypt: " + fullPath);
+	public String decryptFile(String fullPath, String decryptionKey) throws Exception {
+		
+		if(decryptionKey == null) {
+			decryptionKey = OscarProperties.getInstance().getProperty("OMD_HRM_DECRYPTION_KEY");
+		}
+		logger.info("About to decrypt: " + fullPath);
 		File encryptedFile = new File(fullPath);
 		if (!encryptedFile.exists()) {
 			throw new Exception("Could not find file '" + fullPath + "' to decrypt.");
 		}
 
-		//get the bytes of the file in an array
 		int fileLength = (int) encryptedFile.length();
 		byte[] fileInBytes = new byte[fileLength];
 		FileInputStream fin = new FileInputStream(encryptedFile);
@@ -467,17 +430,10 @@ public class SFTPConnector {
     		fin.close();
         }
 
-		//the provided key is 32 characters long string hex representation of a 128 hex key, get the 128-bit hex bytes
-		byte keyBytes[] = toHex( OscarProperties.getInstance().getProperty("OMD_HRM_DECRYPTION_KEY"));
-
+		byte keyBytes[] = toHex( decryptionKey);
 		SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
-
-		int maxKeyLen = Cipher.getMaxAllowedKeyLength("AES");
-
 		Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding", "SunJCE");
-
 		cipher.init(Cipher.DECRYPT_MODE, key);
-
 		byte[] decode = cipher.doFinal(fileInBytes);
 
 		return new String(decode);
@@ -569,63 +525,106 @@ public class SFTPConnector {
 		return SFTPConnector.isAutoFetchRunning;
 	}
 	
-	public static boolean doDecrypt() {
-		boolean decrypt = false;
-		String decryptionKey = OscarProperties.getInstance().getProperty("OMD_HRM_DECRYPTION_KEY");
-		
-		if (StringUtils.isNotEmpty(decryptionKey)) {
-			decrypt=true;
-		} 
-		return decrypt;
-	}
 
 	public synchronized void startAutoFetch(LoggedInInfo loggedInInfo) {
-
+		startAutoFetch(loggedInInfo,OscarProperties.getInstance().getProperty("OMD_HRM_REMOTE_DIR"));
+	}
+	/*
+	 * This gets called by "SchedulerJob"
+	 */
+	public synchronized boolean startAutoFetch(LoggedInInfo loggedInInfo, String remoteDir) {
+		String[] localFilePaths =null;
+		String[] paths = null;
+		
+		boolean seenError = false;
+		
 		if (!isAutoFetchRunning) {
 			SFTPConnector.isAutoFetchRunning = true;
-			logger.debug("Going into OMD to fetch auto data");
-
-			String remoteDir = OscarProperties.getInstance().getProperty("OMD_HRM_REMOTE_DIR");
+			logger.info("HRM: starting auto fetch");
 			
 			if (remoteDir == null || remoteDir.isEmpty()) {
 				remoteDir = TEST_DIRECTORY;
 			} 
 			
-			logger.info("SFTPConnector, remoteDir:"+remoteDir);
+			logger.info("HRM: remoteDir:"+remoteDir);
 			
 			try {
-				logger.debug("Instantiating a new SFTP connection.");
-				SFTPConnector sftp = new SFTPConnector();
-				logger.debug("new SFTP connection established");
 
-				String[] files = ls(remoteDir);
+				String[] files = ls(remoteDir);		
+				localFilePaths=downloadDirectoryContents(remoteDir);		
 				
-				String[] localFilePaths =null;
-				
-				try {
-			            localFilePaths=sftp.downloadDirectoryContents(remoteDir);
-				} finally {
-		    		    sftp.close();
+				hrmLog.setDownloadedFiles(true);
+				hrmLog.setNumFilesDownloaded(files.length);
+				hrmLogDao.merge(hrmLog);
+
+				if(files == null || files.length==0) {
+					return true;
 				}
-				
-				String[] paths = null;
-				if(doDecrypt()) {
-					paths = decryptFiles(localFilePaths);
-				} else {
-					paths = localFilePaths;
-				}
-		
-				//delete all files from remote dir
 				deleteDirectoryContents(remoteDir, files);
 
+				hrmLog.setDeleted(true);
+				hrmLogDao.merge(hrmLog);
 				
-				paths = copyFilesToDocumentDir(loggedInInfo, paths);
-								
-				for (String filePath : paths) {
-					HRMReport report = HRMReportParser.parseReport(loggedInInfo, filePath);
-					if (report != null) HRMReportParser.addReportToInbox(loggedInInfo, report);
+				if(localFilePaths == null || localFilePaths.length == 0) {
+					return true;
 				}
-			
+				
+				for(String encryptedFile : localFilePaths) {
+					
+					HrmLogEntry hrmLogEntry = new HrmLogEntry();
+					hrmLogEntry.setHrmLogId(hrmLog.getId());
+					hrmLogEntry.setEncryptedFileName(encryptedFile);
+					hrmLogEntryDao.persist(hrmLogEntry);
+					
+					String decryptedContent = null;
+					try {
+						decryptedContent = decryptFile(encryptedFile,decryptionKey);
+						hrmLogEntry.setDecrypted(true);
+						hrmLogEntryDao.merge(hrmLogEntry);
+						
+						String decryptedFileName = saveDecryptedData(encryptedFile, decryptedContent);
+						hrmLogEntry.setDecryptedFileName(decryptedFileName);
+						hrmLogEntryDao.merge(hrmLogEntry);
+						
+						String filename = copyFileToDocumentDir(loggedInInfo,decryptedFileName);
+						hrmLogEntry.setFilename(filename);
+						hrmLogEntryDao.merge(hrmLogEntry);
+						
+						if(filename != null) {
+						
+							List<Throwable> errors = new ArrayList<Throwable>();
+							HRMReport report = HRMReportParser.parseReport(loggedInInfo, filename,errors);
+							if (report != null) {
+								hrmLogEntry.setParsed(true);
+								hrmLogEntry.setRecipientId(report.getDeliverToUserId());
+								hrmLogEntry.setRecipientName(report.getDeliveryToUserIdFormattedName());
+								hrmLogEntryDao.merge(hrmLogEntry);
+								
+								HRMReportParser.addReportToInbox(loggedInInfo, report);
+								
+								hrmLogEntry.setDistributed(true);
+								hrmLogEntryDao.merge(hrmLogEntry);
+								
+							} else {
+								for(Throwable e:errors) {
+									hrmLogEntry.setError(e.getMessage());
+									seenError=true;
+								}
+								hrmLogEntryDao.merge(hrmLogEntry);
+								
+							}
+							
+						}
+						
+					}catch(Exception e) {
+						hrmLogEntry.setError(e.getMessage());
+						hrmLogEntryDao.merge(hrmLogEntry);
+						notifyHrmError(loggedInInfo, encryptedFile.substring(encryptedFile.lastIndexOf("/")+1) + ": " + e.getMessage());
+					//	throw e;
+					}
+					
+					
+				}
 
 				logger.debug("Closed SFTP connection");
 				logger.debug("Clearing doNotSend list");
@@ -633,12 +632,40 @@ public class SFTPConnector {
 			} catch (Exception e) {
 				logger.error("Couldn't perform SFTP fetch for HRM - notifying user of failure", e);
 				notifyHrmError(loggedInInfo, e.getMessage());
+			} finally {
+				close();
+				SFTPConnector.isAutoFetchRunning = false;
 			}
 
-			SFTPConnector.isAutoFetchRunning = false;
 		} else {
 			logger.warn("There is currently an HRM fetch running -- will not run another until it has completed or timed out.");
 		}
+		return !seenError;
+	}
+	
+	protected String saveDecryptedData(String encryptedFilePath, String decryptedFileContents) throws IOException {
+		String decryptedFolderName = "decrypted";
+		String path = encryptedFilePath.substring(0, encryptedFilePath.lastIndexOf("/") );
+		String filename = encryptedFilePath.substring(encryptedFilePath.lastIndexOf("/")+1);
+        
+		String saveToDirectoryFullPath = path + File.separator +  decryptedFolderName + File.separator + filename.replaceAll("_encrypted", "");
+		
+		FileUtils.write(new File(saveToDirectoryFullPath), decryptedFileContents);
+		
+		
+		return saveToDirectoryFullPath;
+	}
+	
+	protected String copyFileToDocumentDir(LoggedInInfo loggedInInfo, String f) throws IOException {
+		String destDir = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+		String result = null;
+		
+			if(f != null) {
+				FileUtils.copyFileToDirectory(new File(f), new File(destDir));
+				result = new File(destDir,new File(f).getName()).getAbsolutePath();
+			}
+		
+		return result;
 	}
 	
 	protected static String[] copyFilesToDocumentDir(LoggedInInfo loggedInInfo, String[] paths) {
@@ -663,23 +690,45 @@ public class SFTPConnector {
 
 	protected static void notifyHrmError(LoggedInInfo loggedInInfo, String errorMsg) {
 	    HashSet<String> sendToProviderList = new HashSet<String>();
-
-    	String providerNoTemp="999998";
-	    if (!doNotSentMsgForOuttage.contains(providerNoTemp)) sendToProviderList.add(providerNoTemp);
-	    
+    	
 	    if (loggedInInfo != null && loggedInInfo.getLoggedInProvider() != null)
 	    {
-	    	// manual prompts always send to admin
-	    	sendToProviderList.add(providerNoTemp);
-	    	
-	    	providerNoTemp=loggedInInfo.getLoggedInProviderNo();
+	    	String providerNoTemp=loggedInInfo.getLoggedInProviderNo();
 		    if (!doNotSentMsgForOuttage.contains(providerNoTemp)) sendToProviderList.add(providerNoTemp);
+	    }
+	    
+	    //load all _hrm.administrators
+	    SecObjPrivilegeDao secObjPrivilegeDao = SpringUtils.getBean(SecObjPrivilegeDao.class);
+	    SecUserRoleDao secUserRoleDao = SpringUtils.getBean(SecUserRoleDao.class);
+	    
+	    for(SecObjPrivilege sop : secObjPrivilegeDao.findByObjectName("_hrm.administrator")) {
+	    	if("x".equals(sop.getPrivilege()) || "w".equals(sop.getPrivilege()) || "r".equals(sop.getPrivilege())) {
+	    		for(SecUserRole sur : secUserRoleDao.getSecUserRolesByRoleName(sop.getId().getRoleUserGroup())) {
+	    			if(sur.getActive()) {
+	    				
+	    				if (!doNotSentMsgForOuttage.contains(sur.getProviderNo())) {
+	    					sendToProviderList.add(sur.getProviderNo());
+	    				}
+	    			}
+	    		}
+	    		
+	    	}
+	    }
+	    
+	    if (sendToProviderList.size()==0) {
+	    	String providerNoTemp="999998";
+		    if (!doNotSentMsgForOuttage.contains(providerNoTemp)) {
+		    	sendToProviderList.add(providerNoTemp);
+		    }
 	    }
 
 	    // no one wants to hear about the problem
-	    if (sendToProviderList.size()==0) return;
+	    if (sendToProviderList.size()==0) {
+	    	return;
+	    }
 	    
-	    String message = "OSCAR attempted to perform a fetch of HRM data at " + new Date() + " but there was an error during the task.\n\nSee below for the error message:\n" + errorMsg;
+	    
+	    String message = "OSCAR attempted to perform a fetch of HRM data at " + new Date() + " but there was an error during the task.\n\nSee below and HRM log for further details:\n" + errorMsg;
 
 	    oscar.oscarMessenger.data.MsgMessageData messageData = new oscar.oscarMessenger.data.MsgMessageData();
 
@@ -689,6 +738,7 @@ public class SFTPConnector {
 	    	mpd.providerNo = providerNo;
 	    	mpd.locationId = "145";
 	    	sendToProviderListData.add(mpd);
+	    	logger.info("HRM retrieval error: notifying "  + providerNo);
 	    }
 
     	String sentToString = messageData.createSentToString(sendToProviderListData);
@@ -705,6 +755,35 @@ public class SFTPConnector {
 	    	doNotSentMsgForOuttage.add(loggedInInfo.getLoggedInProviderNo());
 	    }
 	}
+	
+	public static void setOMD_keyLocation(String oMD_keyLocation) {
+		OMD_keyLocation = oMD_keyLocation;
+	}
+
+	public static String getDownloadsDirectory() {
+		String dd = downloadsDirectory;
+		if (dd == null || dd.equals("")){
+			dd = "webapps/OscarDocument/hrm/sftp_downloads/";
+			return dd;
+
+		} else {
+			return downloadsDirectory;
+		}
+
+	}
+
+	public static void setDownloadsDirectory(String downloadsDir) {
+		downloadsDirectory = downloadsDir;
+	}
+
+	public static String getDecryptionKey() {
+		return decryptionKey;
+	}
+
+	public static  void setDecryptionKey(String decryptKey) {
+		decryptionKey = decryptKey;
+	}
+	
 }
 /*
 class MyUserInfo implements UserInfo {

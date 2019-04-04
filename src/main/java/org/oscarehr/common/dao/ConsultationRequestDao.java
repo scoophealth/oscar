@@ -71,7 +71,7 @@ public class ConsultationRequestDao extends AbstractDao<ConsultationRequest> {
 
         
         public List<ConsultationRequest> getConsults(String team, boolean showCompleted, Date startDate, Date endDate, String orderby, String desc, String searchDate, Integer offset, Integer limit) {
-        	MiscUtils.getLogger().error("getConsults(bunch)-----------------------------------------------"); 
+        	MiscUtils.getLogger().debug("getConsults(bunch)-----------------------------------------------"); 
         	
         	StringBuilder sql = new StringBuilder("select cr from ConsultationRequest cr left outer join cr.professionalSpecialist specialist, ConsultationServices service, Demographic d left outer join d.provider p where d.DemographicNo = cr.demographicId and service.id = cr.serviceId ");
 

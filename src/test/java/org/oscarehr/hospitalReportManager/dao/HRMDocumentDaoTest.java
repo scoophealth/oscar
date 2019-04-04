@@ -40,7 +40,7 @@ public class HRMDocumentDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("HRMDocument");
+		SchemaUtils.restoreTable("HRMDocument","HRMDocumentSubClass","HRMDocumentToDemographic","HRMDocumentToProvider");
 	}
 
 	@Test

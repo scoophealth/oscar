@@ -55,6 +55,7 @@ import org.oscarehr.ws.rest.to.model.FavoriteTo1;
 import org.oscarehr.ws.rest.to.model.PrescriptionTo1;
 import org.oscarehr.ws.rest.to.model.PrintPointTo1;
 import org.oscarehr.ws.rest.to.model.PrintRxTo1;
+import org.oscarehr.ws.rest.to.model.RxStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -67,6 +68,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 
 import java.awt.image.BufferedImage;
@@ -114,7 +117,7 @@ public class RxWebService extends AbstractServiceImpl {
      * @throws OperationNotSupportedException if the requested status is unknown.
      */
     @GET
-    @Path("/drugs{status : (/status)?}")
+    @Path("/drugs{status}")
     @Produces("application/json")
     public DrugSearchResponse drugs(@QueryParam("demographicNo") int demographicNo, @PathParam("status") String status)
             throws OperationNotSupportedException {
@@ -147,8 +150,68 @@ public class RxWebService extends AbstractServiceImpl {
 
         return response;
     }
+    
+	@GET
+	@Path("rxStatus")
+	@Produces(MediaType.APPLICATION_JSON) 
+	public Response getDocumentCategories() {
+		return Response.status(Status.OK).entity(RxStatus.values()).build();
+	}
 
-
+    @GET
+    @Path("/drugs/{status}/{demographicNo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DrugSearchResponse drugs(@PathParam("status") String status, @PathParam("demographicNo") int demographicNo) {
+    	DrugSearchResponse drugResponse;
+    	
+    	switch (RxStatus.valueOf(status.trim().toUpperCase())) {
+		case ALL: drugResponse = getAllDrugs(demographicNo);
+			break;
+		case ARCHIVED: drugResponse = getCurrentDrugs(demographicNo);
+			break;
+		case CURRENT: drugResponse = getLongtermDrugs(demographicNo);
+			break;
+		case LONGTERM: drugResponse = getArchivedDrugs(demographicNo);
+			break;
+		default: drugResponse = null;
+			break;   	
+    	}
+    	
+    	return drugResponse;
+    }
+    
+    @GET
+    @Path("/drugs/all/{demographicNo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DrugSearchResponse getAllDrugs(@PathParam("demographicNo") int demographicNo) {
+    	List<Drug> drugList = rxManager.getDrugs(getLoggedInInfo(), demographicNo, RxStatus.ALL);
+    	return new DrugSearchResponse( this.drugConverter.getAllAsTransferObjects(getLoggedInInfo(), drugList) );
+    }
+    
+    @GET
+    @Path("/drugs/current/{demographicNo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DrugSearchResponse getCurrentDrugs(@PathParam("demographicNo") int demographicNo) {
+    	List<Drug> drugList = rxManager.getDrugs(getLoggedInInfo(), demographicNo, RxStatus.CURRENT);
+    	return new DrugSearchResponse( this.drugConverter.getAllAsTransferObjects(getLoggedInInfo(), drugList) );
+    }
+    
+    @GET
+    @Path("/drugs/longterm/{demographicNo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DrugSearchResponse getLongtermDrugs(@PathParam("demographicNo") int demographicNo) {
+    	List<Drug> drugList = rxManager.getLongTermDrugs(getLoggedInInfo(), demographicNo);
+    	return new DrugSearchResponse( this.drugConverter.getAllAsTransferObjects(getLoggedInInfo(), drugList) );
+    }
+    
+    @GET
+    @Path("/drugs/archived/{demographicNo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DrugSearchResponse getArchivedDrugs(@PathParam("demographicNo") int demographicNo) {
+    	List<Drug> drugList = rxManager.getDrugs(getLoggedInInfo(), demographicNo, RxStatus.ARCHIVED);
+    	return new DrugSearchResponse( this.drugConverter.getAllAsTransferObjects(getLoggedInInfo(), drugList) );
+    }
+    
     /**
      * Adds a new drug to the drugs table.
      *

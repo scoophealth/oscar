@@ -24,6 +24,7 @@
 package org.oscarehr.common.dao;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -54,6 +55,19 @@ public class OscarLogDao extends AbstractDao<OscarLog> {
 		return(results);
     }
     
+    public List<OscarLog> findByProviderNo(String providerNo) {
+
+    	String sqlCommand="select x from "+modelClass.getSimpleName()+" x where x.providerNo=?1 order by x.created";
+    	
+    	Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, providerNo);
+
+	    @SuppressWarnings("unchecked")
+		List<OscarLog> results=query.getResultList();
+		
+		return(results);
+    }
+    
     
     public boolean hasRead(String providerNo, String content, String contentId){
     	String sqlCommand="select x from "+modelClass.getSimpleName()+" x where x.action = 'read' and  x.providerNo=?1 and x.content = ?2 and x.contentId = ?3";
@@ -76,6 +90,27 @@ public class OscarLogDao extends AbstractDao<OscarLog> {
     	Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, action);
 		query.setParameter(2, data);
+		
+	    @SuppressWarnings("unchecked")
+		List<OscarLog> results=query.getResultList();
+	    
+	    return results;
+    }
+    
+    public List<OscarLog> findByAction(String action, int start, int length, String orderBy, String orderByDirection) {
+    	if(!"asc".equalsIgnoreCase(orderByDirection) && !"desc".equalsIgnoreCase(orderByDirection)) {
+    		return new ArrayList<OscarLog>();
+    	}	
+    	if(!"id".equals(orderBy) && !"created".equals(orderBy) && !"providerNo".equals(orderBy) && !"action".equals(orderBy) && !"content".equals(orderBy) &&
+    			!"contentId".equals(orderBy) && !"ip".equals(orderBy) && !"demographicId".equals(orderBy) && !"data".equals(orderBy) && !"securityId".equals(orderBy)) {
+    		return new ArrayList<OscarLog>();	
+    	}
+
+    	String sqlCommand="select x from "+modelClass.getSimpleName()+" x where x.action = ?1 order by x."+orderBy+" " + orderByDirection;
+    	Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, action);
+		query.setFirstResult(start);
+		query.setMaxResults(length);
 		
 	    @SuppressWarnings("unchecked")
 		List<OscarLog> results=query.getResultList();

@@ -110,7 +110,7 @@ public class Hl7textResultsData {
 				String result = h.getOBXResult(i, j);
 
 				// only add if there is a result and it is supposed to be viewed
-				if (result.equals("") || result.equals("DNR") || h.getOBXName(i, j).equals("") || h.getOBXResultStatus(i, j).equals("DNS")) continue;
+				if (result == null || result.equals("") || result.equals("DNR") || h.getOBXName(i, j).equals("") || h.getOBXResultStatus(i, j).equals("DNS")) continue;
 				logger.debug("obx(" + j + ") should be added");
 				String identifier = h.getOBXIdentifier(i, j);
 				String name = h.getOBXName(i, j);
@@ -129,6 +129,7 @@ public class Hl7textResultsData {
 					abnormal = "N";
 				}
 				String[] refRange = splitRefRange(h.getOBXReferenceRange(i, j));
+				String blocked = h.isTestResultBlocked(i, j) ? "BLOCKED" : null;
 				String comments = "";
 				for (int l = 0; l < h.getOBXCommentCount(i, j); l++) {
 					comments += comments.length() > 0 ? "\n" + h.getOBXComment(i, j, l) : h.getOBXComment(i, j, l);
@@ -260,6 +261,14 @@ public class Hl7textResultsData {
 						me.setVal(refRange[2]);
 						measurementsExtDao.persist(me);
 					}
+				}
+				
+				if (blocked!=null) {
+					me = new MeasurementsExt();
+					me.setMeasurementId(mId);
+					me.setKeyVal("blocked");
+					me.setVal(blocked);
+					measurementsExtDao.persist(me);
 				}
 				
 				me = new MeasurementsExt();

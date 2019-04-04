@@ -152,6 +152,7 @@
         <ViolationValue>/src/main/java/oscar/oscarDemographic/PrintDemoAddressLabelAction.java:HashMap parameters = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:static Hashtable hashtable = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/ImportDemographicDataAction4.java:List c = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/immunization/config/data/EctImmImmunizationSetData.java:createDateVec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/immunization/config/data/EctImmImmunizationSetData.java:setIdVec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/immunization/config/data/EctImmImmunizationSetData.java:setNameVec = new Vector();</ViolationValue>
@@ -229,6 +230,7 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/pageUtil/MeasurementGraphAction2.java:Collection&lt;EctMeasurementsDataBean&gt; dataVector = ectMeasure.getMeasurementsDataVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/prop/EctFormProp.java:measurementTypes = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/MeasurementDSHelper.java:Collection col = mdbh.getMeasurementsDataVector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/MeasurementDSHelper.java:for(Object o: mdbh.getMeasurementsDataVector()) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/RuleBaseCreator.java:ArrayList elementList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/RuleBaseCreator.java:ArrayList list = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/RuleBaseCreator.java:list = new ArrayList();</ViolationValue>
@@ -276,6 +278,8 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/ClinicalReportManager.java:List&lt;Numerator&gt; numeratorList = null ; //new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator.java://           Collection v = ect.getMeasurementsDataVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator2.java://           Collection v = ect.getMeasurementsDataVector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator4.java://           Collection v = ect.getMeasurementsDataVector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator5.java://           Collection v = ect.getMeasurementsDataVector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/PageUtil/RunClinicalReportAction.java:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/PageUtil/RunClinicalReportAction.java:arrList = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/ReportEvaluator.java:Collection&lt;EctMeasurementsDataBean&gt; v = ect.getMeasurementsDataVector();</ViolationValue>
@@ -390,10 +394,12 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSearchDrugAction.java:Vector catVec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:// private ArrayList stash=new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:allergyWarnings = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:missingAllergyWarnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private ArrayList attributeNames = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private ArrayList&lt;RxPrescriptionData.Prescription&gt; stash = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private HashMap randomIdDrugIdPair=new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private Hashtable allergyWarnings = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private Hashtable missingAllergyWarnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private Hashtable workingAllergyWarnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private List&lt;HashMap&lt;String,String&gt;&gt; listMedHistory=new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private List&lt;String&gt; reRxDrugIdList=new ArrayList();</ViolationValue>
@@ -406,8 +412,6 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxWriteScriptAction.java:List&lt;Integer&gt; allIndex = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxWriteScriptAction.java:List&lt;Integer&gt; existingIndex = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxWriteScriptAction.java:List&lt;RxPrescriptionData.Prescription&gt; listRxDrugs = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxWriteScriptAction.java:List&lt;String&gt; paramList = new ArrayList();</ViolationValue>
-        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxWriteScriptAction.java:List&lt;String&gt; randNum = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Hashtable retHash = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector params = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/util/RxDrugRef.java:Vector vec = new Vector();</ViolationValue>
@@ -658,6 +662,7 @@
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable rep = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable repNum = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Vector&lt;EctMeasurementTypesBean&gt; vec = hd.getMeasurementTypeVector();</ViolationValue>
+        <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:arrRepNum[x] = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportBCARDemo2.jsp:Vector vecARCaption = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportBCARDemo2.jsp:Vector vecDateFormat = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/reportBCARDemo2.jsp:Vector vecFieldCaption = new Vector();</ViolationValue>
@@ -1124,11 +1129,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDao.java:Hashtable&lt;String, Long&gt; retHash = new Hashtable&lt;String, Long&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDao.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/dao/UserDSMessagePrefsDao.java:public Hashtable&lt;String, Long&gt; getHashofMessages(String providerNo, String name) {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/model/Demographic.java:demographicExtendedProperties = new Hashtable&lt;String, String&gt;();</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/model/Demographic.java:import java.util.Hashtable;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/model/Demographic.java:private Hashtable&lt;String, String&gt; demographicExtendedProperties;</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/model/Demographic.java:public Hashtable&lt;String, String&gt; getDemographicExtendedProperties() {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/common/model/Demographic.java:public void setDemographicExtendedProperties( Hashtable&lt;String, String&gt; demographicExtendedProperties ) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/FlowSheetCustomAction.java:Hashtable&lt;String,String&gt; h = new Hashtable&lt;String,String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/FlowSheetCustomAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/common/web/SearchProviderAutoCompleteAction.java:Hashtable d=new Hashtable();</ViolationValue>
@@ -1161,6 +1161,8 @@
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:for (Hashtable&lt;String,Serializable&gt; fetchedGuideline: fetchedGuidelines) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/decisionSupport/service/DSServiceMyDrugref.java:import java.util.Vector;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/flowsheet/FlowsheetAction.java:Hashtable&lt;String, String&gt; systemFlowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetDisplayNames();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/flowsheet/FlowsheetAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:private Hashtable docStatus;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:private Hashtable docType;</ViolationValue>
@@ -1180,8 +1182,6 @@
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setPatientIdNames(Hashtable patientIdNames) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setPatientNumDoc(Hashtable patientNumDoc) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/inbox/InboxManagerResponse.java:public void setTypeDocLab(Hashtable&lt;String, List&lt;String&gt;&gt; typeDocLab) {</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/integration/fhir/manager/OscarFhirResourceManager.java:demographic.setDemographicExtendedProperties(new Hashtable&lt;String,String&gt;());</ViolationValue>
-        <ViolationValue>/src/main/java/org/oscarehr/integration/fhir/manager/OscarFhirResourceManager.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Hashtable drug = dr.getDrug2(id, true);</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Hashtable generic = dr.getGenericName(id);</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Vector&lt;Hashtable&lt;String, Object&gt;&gt; components = (Vector&lt;Hashtable&lt;String, Object&gt;&gt;) h.get("components");</ViolationValue>
@@ -1529,6 +1529,7 @@
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:public Hashtable getNameAgeSexHashtable(LoggedInInfo loggedInInfo, String demoNo){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarDemographic/data/DemographicNameAgeString.java:static Hashtable hashtable = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarDemographic/pageUtil/Util.java:tzd = new StringBuffer(tzd).insert(tzd.length()-2, ":").toString();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctSplitChart.java:Vector&lt;String[]&gt; vec = new Vector&lt;String[]&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctSplitChart.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/data/EctSplitChart.java:public Vector&lt;String[]&gt; getSplitCharts(String demographicNo) {</ViolationValue>
@@ -1671,17 +1672,20 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:Hashtable indicatorHash = mFlowsheet.getIndicatorHashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:Hashtable&lt;String, ArrayList&lt;String&gt;&gt; dxTrigHash = new Hashtable&lt;String, ArrayList&lt;String&gt;&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:Hashtable&lt;String, File&gt; flowsheetFiles = new Hashtable&lt;String, File&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:Hashtable&lt;String, MeasurementFlowSheet&gt; flowsheets = null;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:Hashtable&lt;String, String&gt; flowsheetDisplayNames = new Hashtable&lt;String, String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:Hashtable&lt;String, String&gt; h = new Hashtable&lt;String, String&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:dxTrigHash = new Hashtable&lt;String, ArrayList&lt;String&gt;&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:flowsheetDisplayNames = new Hashtable&lt;String, String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:flowsheetFiles = new Hashtable&lt;String,File&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:flowsheets = new Hashtable&lt;String, MeasurementFlowSheet&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:private Hashtable&lt;String,String&gt; getRecommendationHash(Element recowarn){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:protected Element getRuleBaseElement(String ruleName,String measurement,Hashtable&lt;String,String&gt; recowarn){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:public Hashtable&lt;String, ArrayList&lt;String&gt;&gt; getDxTrigHash() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:public Hashtable&lt;String, String&gt; getFlowsheetDisplayNames(){</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/MeasurementTemplateFlowSheetConfig.java:public Hashtable&lt;String,File&gt; getFileMap() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctGroupNameBeanHandler.java:Vector&lt;EctGroupNameBean&gt; groupNameVector = new Vector&lt;EctGroupNameBean&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctGroupNameBeanHandler.java:groupNameVector.add(groupName);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/bean/EctGroupNameBeanHandler.java:import java.util.Vector;</ViolationValue>
@@ -1787,6 +1791,7 @@
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/EctFindMeasurementTypeUtil.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/EctFindMeasurementTypeUtil.java:static public Vector checkMeasurmentTypes(InputStream is, String formName){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/MeasurementDSHelper.java:Collection col = mdbh.getMeasurementsDataVector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/MeasurementDSHelper.java:for(Object o: mdbh.getMeasurementsDataVector()) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/WriteNewMeasurements.java://--------All measurement values are organized in Hashtables in an arraylist</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/WriteNewMeasurements.java:Hashtable curmeasure = (Hashtable) measures.get(i);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarEncounter/oscarMeasurements/util/WriteNewMeasurements.java:Hashtable curmeasure = (Hashtable) measures.get(index);</ViolationValue>
@@ -2052,6 +2057,26 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator2.java:public Hashtable getOutputValues() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator2.java:public Hashtable getReplaceableValues() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator2.java:public void setReplaceableValues(Hashtable vals) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator3.java:Hashtable outputValues = null;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator3.java:Hashtable replaceableValues = null;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator3.java:import java.util.Hashtable;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator3.java:public Hashtable getOutputValues() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator3.java:public Hashtable getReplaceableValues() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator3.java:public void setReplaceableValues(Hashtable vals) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator4.java://           Collection v = ect.getMeasurementsDataVector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator4.java:Hashtable outputValues = null;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator4.java:Hashtable replaceableValues = null;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator4.java:import java.util.Hashtable;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator4.java:public Hashtable getOutputValues() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator4.java:public Hashtable getReplaceableValues() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator4.java:public void setReplaceableValues(Hashtable vals) {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator5.java://           Collection v = ect.getMeasurementsDataVector();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator5.java:Hashtable outputValues = null;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator5.java:Hashtable replaceableValues = null;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator5.java:import java.util.Hashtable;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator5.java:public Hashtable getOutputValues() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator5.java:public Hashtable getReplaceableValues() {</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/DroolsNumerator5.java:public void setReplaceableValues(Hashtable vals) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/Numerator.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/Numerator.java:public Hashtable getOutputValues();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/ClinicalReports/Numerator.java:public Hashtable getReplaceableValues();</ViolationValue>
@@ -2142,6 +2167,7 @@
         <ViolationValue>/src/main/java/oscar/oscarReport/data/RptTableFieldNameCaption.java:public Vector getTableNameCaption(String tableName)  {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptGroupNameBeanHandler.java:List&lt;RptGroupNameBean&gt; groupNameVector = new ArrayList&lt;RptGroupNameBean&gt;();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptGroupNameBeanHandler.java:groupNameVector.add(groupName);</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptGroupNameBeanHandler.java:if(!groupNameVector.contains(groupName)) {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptGroupNameBeanHandler.java:public Collection getGroupNameVector() {</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptGroupNameBeanHandler.java:return groupNameVector;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarReport/oscarMeasurements/pageUtil/RptMeasurementTypesBeanHandler.java:Vector&lt;RptMeasurementTypesBean&gt; measurementTypeVector = new Vector&lt;RptMeasurementTypesBean&gt;();</ViolationValue>
@@ -2238,6 +2264,7 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Hashtable&lt;String, Object&gt; returnVal = drugRef.getDrugByDIN(DIN, Boolean.TRUE);</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:MinDrug(Hashtable h){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Vector alli = (Vector) hashObject.get("warnings");</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Vector allmissing = (Vector) hashObject.get("missing");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Vector comps = (Vector) hash.get("components");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Vector drugRoute=(Vector)hash.get("drugRoute");</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/data/RxDrugData.java:Vector res = d.getAlergyWarnings(atcCode, vec);</ViolationValue>
@@ -2345,7 +2372,9 @@
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:allergyWarnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:import java.util.Vector;</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:missingAllergyWarnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private Hashtable allergyWarnings = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private Hashtable missingAllergyWarnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:private Hashtable workingAllergyWarnings = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxSessionBean.java:public Vector getAtcCodes(){</ViolationValue>
         <ViolationValue>/src/main/java/oscar/oscarRx/pageUtil/RxWriteScriptAction.java:Vector comps = dmono.components;</ViolationValue>
@@ -3087,12 +3116,14 @@
         <ViolationValue>/src/main/webapp/provider/providerupdatepassword.jsp:StringBuffer sbTemp = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/provider/providerupdatepassword.jsp:sbTemp = new StringBuffer();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:ArrayList&lt;Hashtable&gt; list = (ArrayList) request.getAttribute("list");</ViolationValue>
+        <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable arrRepNum[] = new Hashtable[11];</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable demoHash = deName.getNameAgeSexHashtable(LoggedInInfo.getLoggedInInfoFromSession(request), "" + h.get("_demographic_no"));</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable forView = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable rep = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Hashtable repNum = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:String commonRow(String heading,Hashtable demoHash,org.oscarehr.common.model.Demographic demoObj){</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:Vector&lt;EctMeasurementTypesBean&gt; vec = hd.getMeasurementTypeVector();</ViolationValue>
+        <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:arrRepNum[x] = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/report/ClinicalReports.jsp:for (Hashtable h : list) {</ViolationValue>
         <ViolationValue>/src/main/webapp/report/GenerateLetters.jsp:Hashtable h = (Hashtable) list.get(i);%&gt;</ViolationValue>
         <ViolationValue>/src/main/webapp/report/GenerateLetters.jsp:Hashtable h = deName.getNameAgeSexHashtable(LoggedInInfo.getLoggedInInfoFromSession(request), demos[i]);</ViolationValue>

@@ -58,6 +58,7 @@ import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.DemographicCust;
 import org.oscarehr.common.model.DemographicExt;
+import org.oscarehr.common.model.DemographicExt.DemographicProperty;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.WaitingList;
@@ -301,6 +302,24 @@ public class DemographicService extends AbstractServiceImpl {
 				result.getRosterStatusList().add(value);
 			}
 		}
+		return result;
+	}
+	
+	/**
+	 * Returns a shorter summary of the Demographic profile.
+	 * Reduces bandwidth and processing time.
+	 */
+	@GET
+	@Path("/summary/{demographicNo}")
+	@Produces({MediaType.APPLICATION_JSON})
+	public DemographicTo1 getDemographicSummary(@PathParam("demographicNo") Integer demographicNo) {
+		Demographic demographic = demographicManager.getDemographic(getLoggedInInfo(), demographicNo);
+		DemographicExt demographicExt = demographicManager.getDemographicExt(getLoggedInInfo(), demographicNo, DemographicProperty.demo_cell);
+		DemographicTo1 result = demoConverter.getAsTransferObject(getLoggedInInfo(), demographic);
+		if(demographicExt != null) {
+			result.setAlternativePhone(demographicExt.getValue());
+		}
+		
 		return result;
 	}
 
