@@ -428,7 +428,12 @@ String curUser_no = (String) session.getAttribute("user");
                                     <%=result.getRequestingClient()%>
                                 </td>
                                 <td nowrap>
-                                    <%=result.isDocument() ? result.description == null ? "" : result.description : result.getDisciplineDisplayString()%>
+                                    <%
+
+                                        if (result.isDocument())
+                                                if (result.description != null)
+                                                    out.print(result.description);
+                                    %>
                                 </td>
                                 <td nowrap> <!--  -->
                                     <%= ((result.isReportCancelled())? "Cancelled" :

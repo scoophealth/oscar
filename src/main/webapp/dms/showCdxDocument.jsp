@@ -99,6 +99,7 @@
     <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/prototype.js"></script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
+    <script language="javascript" type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js" ></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -121,6 +122,7 @@
 
     <script type="text/javascript">
         jQuery.noConflict();
+
     </script>
 
 </head>
@@ -133,13 +135,13 @@
             <h3><% out.print(cdxDoc.getTemplateName()
                     + "/"
                     + cdxDoc.getLoincName()); %></h3>
-            <div class="row col-md-6">
+            <div class="row col-md-12">
 
                 <form id="forms_<%=documentNo%>" onsubmit="return updateDocument('forms_<%=documentNo%>');">
                     <input type="hidden" name="documentId" value="<%=documentNo%>" />
                     <input type="hidden" id="docDesc_<%=documentNo%>"  type="text" name="documentDescription" value="<%=curdoc.getDocdesc()%>" />
                     <input type="hidden" id="observationDate<%=documentNo%>" name="observationDate" type="text" value="<%=curdoc.getObservationdate()%>"/>
-                    <input type="hidden" id="docType<%=documentNo%>" name="docType" type="text" value="<%=curdoc.getDoctype()%>"/>
+                    <input type="hidden" id="docType<%=documentNo%>" name="docType" type="text" value="DOC"/>
                     <input type="hidden" name="method" value="documentUpdateAjax" />
                     <input id="saved<%=documentNo%>" type="hidden" name="saved" value="true"/>
                     <input type="hidden" value="<%=demoNo%>" name="demog" id="demofind<%=documentNo%>"/>
@@ -161,9 +163,10 @@
                     <input type="button" id="createNewDemo" value="Create New Demographic"
                            onclick="popup(700,960,'<%= request.getContextPath() %>/demographic/demographicaddarecordhtm.jsp','demographic')"/>
 
+
                     <input id="saved_<%=documentNo%>" type="hidden" name="saved" value="false"/>
 
-                    <input type="submit" name="save" disabled id="save<%=documentNo%>" value="Save"/>
+                    <input type="submit" disabled name="save" id="save<%=documentNo%>" value="Save"/>
 
                     <a id="saveSucessMsg_<%=documentNo%>" style="display:none;color:blue;">
                         <bean:message key="inboxmanager.document.SuccessfullySavedMsg"/></a>
@@ -173,10 +176,15 @@
                         %>
 
                     <div class="alert alert-success" role="alert">
-                        <% out.print(" " + pat.getFirstName()
-                                + " " + pat.getLastName()
-                                + " " + pat.getSex()
-                                + " " + pat.getBirthDayAsString()); %> </div>
+                        <h4>
+
+                            <a href="javascript:popupStart(360, 680, '..//oscarMDS/SearchPatient.do?labType=DOC&segmentID=<%= documentNo %>&name=<%=java.net.URLEncoder.encode(pat.getLastName()+", "+pat.getFirstName())%>', 'searchPatientWindow')">
+                                <% out.print(" " + pat.getFirstName()
+                                        + " " + pat.getLastName()
+                                        + " " + pat.getSex()
+                                        + " " + pat.getBirthDayAsString()); %>
+                            </a>
+ </h4> </div>
                         <% } %>
 
                     <div>
@@ -204,6 +212,10 @@
                         <bean:message key="inboxmanager.document.FlagProviderMsg"/>
                         <input type="hidden" name="provi" id="provfind<%=documentNo%>"/>
                         <input type="text" id="autocompleteprov<%=documentNo%>" name="demographicKeyword"/>
+                        <input type="submit" name="save" id="save<%=documentNo%>" value="Save"/>
+
+                        <a id="saveSucessMsg_<%=documentNo%>" style="display:none;color:blue;">
+                            <bean:message key="inboxmanager.document.SuccessfullySavedMsg"/></a>
                         <div id="autocomplete_choicesprov<%=documentNo%>" class="autocomplete"></div>
 
                         <div id="providerList<%=documentNo%>"></div>
@@ -218,149 +230,216 @@
 
         <div class="row">
             <div class="col-md-6">
-                <table class="table table-condensed">
-                    <tbody>
-                    <tr>
-                        <td class="active col-md-1">Patient:</td>
-                        <td class="col-md-3"><%
-                            out.print(patient.getFirstName()
-                                    + " " + patient.getLastName()
-                                    + " " + patient.getGender()
-                                    + " " + patient.getBirthdate()); %>
-                            <ul>
-                                <%
-                                    for (CdxPersonId pid : cdxPersonIdDao.findIdsForPerson(patient.getId())) {
-                                %>
-                                <li>
-                                    <%
-                                        out.print(pid.getIdType() + ": " + pid.getIdCode());
-                                    %>
-                                </li>
-                                <%
-                                    }
-                                %>
-                            </ul>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Header information</h3>
+                    </div>
+                    <div class="panel-body">
 
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="active">Author, Date:</td>
-                        <td><%
-                            out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleAuthor).get(0) + ",");
-                            out.print(cdxDoc.getAuthoringTimeAsString());
-                        %></td>
-                    </tr>
-                    <tr>
-                        <td class="active">Status:</td>
-                        <td><%
-                            out.print(cdxDoc.getStatusCode());
-                        %></td>
-                    </tr>
-                    <tr>
-                        <td class="active">Custodian:</td>
-                        <td><%
-                            out.print(cdxDoc.getCustodian());
-                        %></td>
-                    </tr>
-                    <tr>
-                        <td class="active">Device, Time:</td>
-                        <td><%
-                            out.print(cdxDoc.getDevice() + ", ");
-                            out.print(cdxDoc.getEffectiveTimeAsString());
-                        %></td>
-                    </tr>
-                    <tr>
-                        <td class="active">Parent document:</td>
-                        <td><%
-                            out.print(cdxDoc.getParentDocId());
-                        %></td>
-                    </tr>
-                    <tr>
-                        <td class="active">Procedure, Date:</td>
-                        <td><%
-                            out.print(cdxDoc.getProcedureName() + ", ");
-                            out.print(cdxDoc.getObservationDateAsString());
-                        %></td>
-                    </tr>
-                    <tr>
-                        <td class="active">Procedure Performer:</td>
-                        <td><%
-                            out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleProcedurePerformer).get(0));
-                        %></td>
-                    </tr>
-                    <tr>
-                        <td class="active col-md-1">Primary Recipient:</td>
-                        <td class="col-md-3">
+                        <table class="table table-condensed">
+                            <tbody>
+                            <tr>
+                                <td class="active col-md-2">Patient (named in document):</td>
+                                <td ><%
+                                    out.print(patient.getFirstName()
+                                            + " " + patient.getLastName()
+                                            + " " + patient.getGender()
+                                            + " " + patient.getBirthdate()); %>
+                                    <ul>
+                                        <%
+                                            for (CdxPersonId pid : cdxPersonIdDao.findIdsForPerson(patient.getId())) {
+                                        %>
+                                        <li>
+                                            <%
+                                                out.print(pid.getIdType() + ": " + pid.getIdCode());
+                                            %>
+                                        </li>
+                                        <%
+                                            }
+                                        %>
+                                    </ul>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="active">Author, Date:</td>
+                                <td><%
+                                    out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleAuthor).get(0));
+                                %> <br> <%
+                                    out.print(cdxDoc.getAuthoringTimeAsString());
+                                %></td>
+                            </tr>
+                            <tr>
+                                <td class="active">Status:</td>
+                                <td><%
+                                    out.print(cdxDoc.getStatusCode());
+                                %></td>
+                            </tr>
+                            <tr>
+                                <td class="active">Custodian:</td>
+                                <td><%
+                                    out.print(cdxDoc.getCustodian());
+                                %></td>
+                            </tr>
+                            <tr>
+                                <td class="active">Device, Time:</td>
+                                <td><%
+                                    out.print(cdxDoc.getDevice());
+                                %> <br> <%
+                                    out.print(cdxDoc.getEffectiveTimeAsString());
+                                %></td>
+                            </tr>
+                            <tr>
+                                <td class="active">Parent document:</td>
+                                <td><%
+                                    out.print(cdxDoc.getParentDocId());
+                                %></td>
+                            </tr>
+                            <tr>
+                                <td class="active">Procedure:</td>
+                                <td><%
+                                    out.print(cdxDoc.getProcedureName());
+                                %> <br> <%
+                                    if (cdxDoc.getObservationDate() != null) {
+                                        out.print(cdxDoc.getObservationDateAsString());
+                                    }
+                                %></td>
+                            </tr>
+                            <tr>
+                                <td class="active">Procedure Performer:</td>
+                                <td><%
+                                    out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleProcedurePerformer).get(0));
+                                %></td>
+                            </tr>
+                            <tr>
+                                <td class="active">Recipients:</td>
+                                <td class="col-md-3">
+
+                                    <%
+                                        out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.rolePrimaryRecipient).get(0) + " (Primary)");
+                                    %>
+                                    <ul>
+                                        <%
+                                            for (CdxPerson q : cdxPersonDao.findRoleInDocument(cdxDoc.getId(), CdxPerson.roleSecondaryRecipient)) {
+                                        %> <li> <%
+                                        out.print(q.getFullProviderName());
+                                    %> </li> <%
+                                        }
+                                    %>
+
+                                    </ul>
+
+                                </td>
+                            </tr>
                             <%
-                                out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.rolePrimaryRecipient).get(0));
-                            %></td>
-                    </tr>
-                    <tr>
-                        <td class="active">Secondary Recipients:</td>
-                        <td>
+                                List<CdxPerson> ops = cdxPersonDao.findRoleInDocument(cdxDoc.getId(), CdxPerson.roleOrderingProvider);
+                                if (!ops.isEmpty()) {
+                            %>
+                            <tr>
+                                <td class="active">Ordering Provider:</td>
+
+                                <td><%
+                                    out.print(ops.get(0).getFullProviderName());
+                                %></td>
+                            </tr>
                             <%
-                                for (String q : cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleSecondaryRecipient)) {
-                                    out.println(q);
                                 }
                             %>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="active">Ordering Provider:</td>
-                        <td><%
-                            out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleOrderingProvider).get(0));
-                        %></td>
-                    </tr>
-                    <tr>
-                        <td class="active">Family Provider:</td>
-                        <td><%
-                            out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleFamilyProvider).get(0));
-                        %></td>
-                    </tr>
-                    <tr>
-                        <td class="active">Participating Providers:</td>
-                        <td><%
-                            List<String> names = cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleParticipatingProvider);
-                            for (int i = 0; i < names.size(); i++) {
-                                out.print(names.get(i));
-                                if (i < names.size())
-                                    out.print("<br>");
-                            }
-                        %></td>
-                    </tr>
-                    <tr>
-                        <td class="active">Admission, Discharge:</td>
-                        <td><%
-                            out.print(cdxDoc.getAdmissionDateAsString() + ", ");
-                            out.print(cdxDoc.getDischargeDateAsString());
-                        %></td>
-                    </tr>
-                    <tr>
-                        <td class="active">Disposition:</td>
-                        <td><%
-                            out.print(cdxDoc.getDisposition());
-                        %></td>
-                    </tr>
-                    <tr>
-                        <td class="active">Attachments:</td>
-                        <td><%
-                            for (CdxAttachment a : cdxAttachmentDao.findByDocNo(cdxDoc.getId())) {
-                                out.print(a.getReference());
-                                out.println(" (" + a.getAttachmentType() + ")");
-                            }
-                        %></td>
-                    </tr>
-                    </tbody>
-                </table>
+
+                            <%
+                                List<CdxPerson> fps = cdxPersonDao.findRoleInDocument(cdxDoc.getId(), CdxPerson.roleFamilyProvider);
+                                if (!fps.isEmpty()) {
+                            %>
+                            <tr>
+                                <td class="active">Family Provider:</td>
+                                <td><%
+                                    out.print(fps.get(0).getFullProviderName());
+                                %></td>
+                            </tr>
+                            <%
+                                }
+                            %>
+
+                            <%
+                                List<CdxPerson> pps = cdxPersonDao.findRoleInDocument(cdxDoc.getId(), CdxPerson.roleParticipatingProvider);
+                                if (!pps.isEmpty()) {
+                            %>
+                            <tr>
+                                <td class="active">Participating Providers:</td>
+                                <td><%
+                                    List<String> names = cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleParticipatingProvider);
+                                    for (int i = 0; i < names.size(); i++) {
+                                        out.print(names.get(i));
+                                        if (i < names.size())
+                                            out.print("<br>");
+                                    }
+                                %></td>
+                            </tr>
+
+                            <%
+                                }
+                            %>
+
+                            <%
+                                if (cdxDoc.getAdmissionDate()!=null || cdxDoc.getDischargeDate()!=null) {
+                            %>
+                            <tr>
+                                <td class="active">Admission, Discharge:</td>
+                                <td><%
+                                    out.print(cdxDoc.getAdmissionDateAsString() + ", ");
+                                    out.print(cdxDoc.getDischargeDateAsString());
+                                %></td>
+                            </tr>
+                            <%
+                                }
+                            %>
+
+                            <%
+                                if (!cdxDoc.getDisposition().equals("")) {
+                            %>
+                            <tr>
+                                <td class="active">Disposition:</td>
+                                <td><%
+                                    out.print(cdxDoc.getDisposition());
+                                %></td>
+                            </tr>
+                            <%
+                                }
+                            %>
+                            <%
+                                List<CdxAttachment> attachments = cdxAttachmentDao.findByDocNo(cdxDoc.getId());
+
+                                if (!attachments.isEmpty()) { %>
+                            <tr>
+                                <td class="active">Attachments:</td>
+                                <td><%
+                                    for (CdxAttachment a : attachments) {
+                                        out.print(a.getReference());
+                                        out.println(" (" + a.getAttachmentType() + ")");
+                                    } %>
+                                </td>
+                            </tr>
+                            <% } %>
+
+
+
+                            </tbody>
+                        </table>
+                    </div> </div>
             </div>
             <div class="col-md-6">
-                <div class="jumbotron">
-                    <p><%
-                        out.print(cdxDoc.getContents());
-                    %>
-                    </p>
 
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Content</h3>
+                    </div>
+                    <div class="panel-body">
+                        <%
+                            out.print(cdxDoc.getContents());
+                        %>
+                    </div>
                 </div>
+
             </div>
 
         </div>
@@ -438,7 +517,6 @@
     jQuery(document).ready(function () { //pushing the autocomplete helper out of the visible page
         jQuery(".ui-helper-hidden-accessible").css({"position": "absolute", "left": "-999em"}) //{"display","none"} will remove the element from the page
     });
-
 
 </script>
 

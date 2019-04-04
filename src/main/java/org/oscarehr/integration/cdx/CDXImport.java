@@ -238,16 +238,23 @@ public class CDXImport {
         Boolean         routed = false;
         DocumentDao     docDao = SpringUtils.getBean(DocumentDao.class);
         Document        docEntity = new Document();
+        IProvider       p;
 
         docEntity.setDoctype(doc.getTemplateName());
-        docEntity.setDocdesc("CDX");
+        docEntity.setDocdesc(doc.getTemplateName());
         docEntity.setDocfilename("N/A");
-        docEntity.setDoccreator("CDX");
-        docEntity.setResponsible("CDX");
+        docEntity.setDoccreator(doc.getCustodianName());
+
+        p = doc.getOrderingProvider();
+
+        if (p != null)
+            docEntity.setResponsible(p.getFirstName() + " " + p.getLastName());
+        else docEntity.setResponsible("");
+
         docEntity.setAbnormal(0);
 
 
-        docEntity.setDocClass(doc.getLoincCodeDisplayName());
+        docEntity.setDocClass("CDX");
         docEntity.setDocxml(doc.getContents());
         docEntity.setDocfilename(doc.getDocumentID());
         docEntity.setRestrictToProgram(false); // need to confirm semantics
@@ -273,8 +280,8 @@ public class CDXImport {
 
         routed = addProviderRouting(docEntity, doc.getPrimaryRecipient());
 
-        for (IProvider p : doc.getSecondaryRecipients()) {
-            routed = routed || addProviderRouting(docEntity, p);
+        for (IProvider q : doc.getSecondaryRecipients()) {
+            routed = routed || addProviderRouting(docEntity, q);
         }
 
         if (!routed) { // even if none of the recipients appears to work at our clinic, we will route to the default provider

@@ -201,4 +201,18 @@ public class CdxPerson extends AbstractModel<Integer> implements Serializable {
     public void setRoleInDocument(String roleInDocument) {
         this.roleInDocument = roleInDocument;
     }
+
+    public String getFullProviderName() {
+        String result = "";
+
+        if (!prefix.equals(""))
+            result = prefix + " ";
+
+        result = result + firstName + " " + lastName;
+
+        if (!clinicName.equals(""))
+            result = result + ", " + clinicName;
+
+        return result;
+    }
 }
