@@ -35,6 +35,7 @@ import org.oscarehr.util.MiscUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.rest.util.QuestimedUtil;
+import oscar.OscarProperties;
 import static oscar.oscarEncounter.pageUtil.EctDisplayAction.MAX_LEN_TITLE;
 import oscar.util.StringUtils;
 
@@ -49,7 +50,7 @@ public class EctDisplayQuestimedAction extends EctDisplayAction {
         String defaultURL = "../questimed/launch.jsp?demographic_no=" + bean.demographicNo;
         if (!securityInfoManager.hasPrivilege(loggedInInfo, "_demographic", "r", null)) {
             return true;
-        } else if (!QuestimedUtil.isServiceConnectionReady()) {
+        } else if (!(OscarProperties.getInstance().getBooleanProperty("questimed.enabled", "true") && QuestimedUtil.isServiceConnectionReady())) {
             return true;
         } else {
             try {

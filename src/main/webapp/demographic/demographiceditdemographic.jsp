@@ -1324,7 +1324,7 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 				<bean:message
 					key="demographic.demographiceditdemographic.btnAddEForm" /> </a></td>
 			</tr>
-                        <% if(QuestimedUtil.isServiceConnectionReady()) { %>
+                        <% if(OscarProperties.getInstance().getBooleanProperty("questimed.enabled","true") && QuestimedUtil.isServiceConnectionReady()) { %>
 			<tr>
 				<td><a href=# onclick="popupPage(700,960,'../questimed/launch.jsp?demographic_no=<%=demographic_no%>');return false;"					>
 				<bean:message

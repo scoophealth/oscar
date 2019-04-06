@@ -200,9 +200,11 @@ if(!authed) {
 		  
 		  userPropertyDAO.saveProp(provider.getProviderNo(), UserProperty.CLINICALCONNECT_ID, clinicalConnectId);
 		  userPropertyDAO.saveProp(provider.getProviderNo(), UserProperty.CLINICALCONNECT_TYPE, clinicalConnectType);
-
-                  String questimedUserName = request.getParameter("questimedUserName");
-		  userPropertyDAO.saveProp(provider.getProviderNo(), UserProperty.QUESTIMED_USERNAME, questimedUserName);
+                  
+                  if(OscarProperties.getInstance().getBooleanProperty("questimed.enabled", "true")) {
+                    String questimedUserName = request.getParameter("questimedUserName");
+                    userPropertyDAO.saveProp(provider.getProviderNo(), UserProperty.QUESTIMED_USERNAME, questimedUserName);
+                  }
 
 		  String officialFirstName = request.getParameter("officialFirstName");
 		  String officialSecondName = request.getParameter("officialSecondName");
