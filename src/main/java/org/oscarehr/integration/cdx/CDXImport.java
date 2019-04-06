@@ -26,7 +26,6 @@ package org.oscarehr.integration.cdx;
 
 import ca.uvic.leadlab.obibconnector.facades.receive.*;
 import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
-import ca.uvic.leadlab.obibconnector.impl.receive.mock.ReceiveDocMock;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.*;
 import org.oscarehr.common.model.*;
