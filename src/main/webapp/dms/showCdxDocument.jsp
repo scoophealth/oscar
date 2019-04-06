@@ -46,21 +46,14 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
 
-<%@ page import="org.oscarehr.integration.cdx.dao.CdxDocumentDao" %>
-
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
 <%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*,org.oscarehr.util.SpringUtils" %>
-<%@ page import="org.oscarehr.integration.cdx.model.CdxDocument" %>
-<%@ page import="org.oscarehr.integration.cdx.model.CdxPerson" %>
-<%@ page import="org.oscarehr.integration.cdx.dao.CdxPersonDao" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="org.oscarehr.integration.cdx.model.CdxAttachment" %>
-<%@ page import="org.oscarehr.integration.cdx.dao.CdxAttachmentDao" %>
-<%@ page import="java.util.Iterator" %>
-<%@ page import="java.util.Properties" %>
-<%@ page import="org.oscarehr.integration.cdx.model.CdxPersonId" %>
-<%@ page import="org.oscarehr.integration.cdx.dao.CdxPersonIdDao" %>
+<%@ page import="java.util.*" %>
+<%@ page import="oscar.oscarMDS.data.ReportStatus" %>
+<%@ page import="oscar.oscarLab.ca.all.AcknowledgementData" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="org.oscarehr.integration.cdx.model.*" %>
+<%@ page import="org.oscarehr.integration.cdx.dao.*" %>
 <%
 
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
@@ -73,9 +66,13 @@
     CdxPersonDao cdxPersonDao = SpringUtils.getBean(CdxPersonDao.class);
     CdxPersonIdDao cdxPersonIdDao = SpringUtils.getBean(CdxPersonIdDao.class);
     CdxAttachmentDao cdxAttachmentDao = SpringUtils.getBean(CdxAttachmentDao.class);
+    CdxTelcoDao cdxTelcoDao = SpringUtils.getBean(CdxTelcoDao.class);
     CtlDocumentDao ctlDocDao = SpringUtils.getBean(CtlDocumentDao.class);
     DemographicDao demoDao = SpringUtils.getBean(DemographicDao.class);
     ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");
+    UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
+
+    String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
     CdxDocument cdxDoc = cdxDocDao.getCdxDocument(documentNo);
     CtlDocument ctlDoc = ctlDocDao.getCtrlDocument(documentNoInt);
@@ -84,6 +81,29 @@
     String demoNo = demoNoInt.toString();
     CdxPerson patient = cdxPersonDao.findRoleInDocument(cdxDoc.getId(), CdxPerson.rolePatient).get(0);
     Document curdoc = docDao.findActiveByDocumentNo(documentNoInt).get(0);
+
+    String inQueue=request.getParameter("inQueue");
+
+    boolean inQueueB=false;
+    if(inQueue!=null) {
+        inQueueB=true;
+    }
+
+    String providerNo = request.getParameter("providerNo");
+    UserProperty uProp = userPropertyDAO.getProp(providerNo, UserProperty.LAB_ACK_COMMENT);
+    boolean skipComment = false;
+
+    if( uProp != null && uProp.getValue().equalsIgnoreCase("yes")) {
+        skipComment = true;
+    }
+
+    String ackFunc;
+    if( skipComment ) {
+        ackFunc = "updateStatus('acknowledgeForm_" + documentNo + "'," + inQueueB + ");";
+    }
+    else {
+        ackFunc = "getDocComment('" + documentNo + "','" + providerNo + "'," + inQueueB + ");";
+    }
 %>
 <html>
 <head>
@@ -123,7 +143,11 @@
     <script type="text/javascript">
         jQuery.noConflict();
 
+        var contextpath = "<%=request.getContextPath()%>";
+
     </script>
+
+    <script type="text/javascript" src="showDocument.js"></script>
 
 </head>
 <body>
@@ -135,315 +159,531 @@
             <h3><% out.print(cdxDoc.getTemplateName()
                     + "/"
                     + cdxDoc.getLoincName()); %></h3>
-            <div class="row col-md-12">
+            <div class="row">
+                <div class="col-md-6">
 
-                <form id="forms_<%=documentNo%>" onsubmit="return updateDocument('forms_<%=documentNo%>');">
-                    <input type="hidden" name="documentId" value="<%=documentNo%>" />
-                    <input type="hidden" id="docDesc_<%=documentNo%>"  type="text" name="documentDescription" value="<%=curdoc.getDocdesc()%>" />
-                    <input type="hidden" id="observationDate<%=documentNo%>" name="observationDate" type="text" value="<%=curdoc.getObservationdate()%>"/>
-                    <input type="hidden" id="docType<%=documentNo%>" name="docType" type="text" value="DOC"/>
-                    <input type="hidden" name="method" value="documentUpdateAjax" />
-                    <input id="saved<%=documentNo%>" type="hidden" name="saved" value="true"/>
-                    <input type="hidden" value="<%=demoNo%>" name="demog" id="demofind<%=documentNo%>"/>
-                    <input type="hidden" name="demofindName" value="<%=demoName%>"
-                           id="demofindName<%=documentNo%>"/>
+                    <form id="forms_<%=documentNo%>" onsubmit="return updateCdxDocument('forms_<%=documentNo%>');">
+                        <input type="hidden" name="documentId" value="<%=documentNo%>" />
+                        <input type="hidden" id="docDesc_<%=documentNo%>"  type="text" name="documentDescription" value="<%=curdoc.getDocdesc()%>" />
+                        <input type="hidden" id="observationDate<%=documentNo%>" name="observationDate" type="text" value="<%=curdoc.getObservationdate()%>"/>
+                        <input type="hidden" id="docType<%=documentNo%>" name="docType" type="text" value="DOC"/>
+                        <input type="hidden" name="method" value="documentUpdateAjax" />
+                        <input id="saved<%=documentNo%>" type="hidden" name="saved" value="true"/>
+                        <input type="hidden" value="<%=demoNo%>" name="demog" id="demofind<%=documentNo%>"/>
+                        <input type="hidden" name="demofindName" value="<%=demoName%>"
+                               id="demofindName<%=documentNo%>"/>
+
+                        <input id="saved_<%=documentNo%>" type="hidden" name="saved" value="false"/>
+                        <input type="hidden" name="provi" id="provfind<%=documentNo%>"/>
 
                         <%
-                        if (demoNoInt == -1) {
-                    %>
-                    <a id="warningMsg_<%=documentNo%>" style="color:red;">
-                        <strong>Warning!</strong> Name in document is <strong> not </strong> matched to a demographic. </a>
+                            if (demoNoInt == -1) {
+                        %>
 
-                    <input type="checkbox" id="activeOnly<%=documentNo%>" name="activeOnly" checked="checked"
-                           value="true" onclick="setupDemoAutoCompletion()">Active Only<br>
-                    <input type="text" style="width:400px;" id="autocompletedemo<%=documentNo%>"
-                           onchange="checkSave('<%=documentNo%>');" name="demographicKeyword"/>
-                    <div id="autocomplete_choices<%=documentNo%>" class="autocomplete"></div>
-
-                    <input type="button" id="createNewDemo" value="Create New Demographic"
-                           onclick="popup(700,960,'<%= request.getContextPath() %>/demographic/demographicaddarecordhtm.jsp','demographic')"/>
+                        <div id="warningMsg_<%=documentNo%>" class="alert alert-danger" role="alert">
+                            <div>
+                                <span >
+                                    <strong>Warning!</strong> Name in document is <strong> not </strong> matched to a demographic. </span>
+                            </div>
+                        </div>
 
 
-                    <input id="saved_<%=documentNo%>" type="hidden" name="saved" value="false"/>
 
-                    <input type="submit" disabled name="save" id="save<%=documentNo%>" value="Save"/>
+                        <div>
 
-                    <a id="saveSucessMsg_<%=documentNo%>" style="display:none;color:blue;">
-                        <bean:message key="inboxmanager.document.SuccessfullySavedMsg"/></a>
+                            <div class="input-group">
+                                <span class="input-group-addon" id="activeGroup">Active
+				 					                               <input type="checkbox" id="activeOnly<%=documentNo%>" name="activeOnly" checked="checked"
+                                                                          value="true" onclick="setupDemoAutoCompletion()">
+										            </span>
+                                <input type="text" class="form-control" id="autocompletedemo<%=documentNo%>"
+                                       onchange="checkSave('<%=documentNo%>');" name="demographicKeyword" placeholder="Demographic search..."/>
+
+                                <span class="input-group-btn" >
+                                <input type="submit" disabled name="save" class="btn btn-default" id="save<%=documentNo%>" value="Link"/>
+                                <input type="button" id="createNewDemo" value="New" class="btn btn-default"
+                                       onclick="popup(700,960,'<%= request.getContextPath() %>/demographic/demographicaddarecordhtm.jsp','demographic')"/>
+																																		</span>
+
+
+
+                                <div id="autocomplete_choices<%=documentNo%>" class="autocomplete"></div>
+                            </div>
+
+
+
+
+
+
+                        </div>
+
+
 
                         <% } else {
                             Demographic pat = demoDao.getDemographic(demoNo);
                         %>
 
-                    <div class="alert alert-success" role="alert">
-                        <h4>
+                        <div class="alert alert-success" role="alert">
+                            <h4>
 
-                            <a href="javascript:popupStart(360, 680, '..//oscarMDS/SearchPatient.do?labType=DOC&segmentID=<%= documentNo %>&name=<%=java.net.URLEncoder.encode(pat.getLastName()+", "+pat.getFirstName())%>', 'searchPatientWindow')">
-                                <% out.print(" " + pat.getFirstName()
-                                        + " " + pat.getLastName()
-                                        + " " + pat.getSex()
-                                        + " " + pat.getBirthDayAsString()); %>
-                            </a>
- </h4> </div>
+                                <a href="javascript:popupStart(360, 680, '..//oscarMDS/SearchPatient.do?labType=DOC&segmentID=<%= documentNo %>&name=<%=java.net.URLEncoder.encode(pat.getLastName()+", "+pat.getFirstName())%>', 'searchPatientWindow')">
+                                    <%
+
+                                        out.print(" " + pat.getFirstName()
+                                                + " " + pat.getLastName()
+                                                + " " + pat.getSex()
+                                                + " " + pat.getBirthDayAsString()); %>
+                                </a>
+                            </h4> </div>
                         <% } %>
 
-                    <div>
-                        <bean:message key="inboxmanager.document.LinkedProvidersMsg"/>
-                        <%
-                            Properties p = (Properties) session.getAttribute("providerBean");
-                            List<ProviderInboxItem> routeList = providerInboxRoutingDao.getProvidersWithRoutingForDocument("DOC", documentNoInt);
-                        %>
-                        <ul>
-                            <%
-                                for (ProviderInboxItem pItem : routeList) {
-                                    String s = p.getProperty(pItem.getProviderNo(), pItem.getProviderNo());
 
-                                    if (!s.equals("0") && !s.equals("null") && !pItem.getStatus().equals("X")) {
-                            %>
-                            <li><%=s%><a href="#"
-                                         onclick="removeLink('DOC', '<%=documentNo %>', '<%=pItem.getProviderNo() %>', this);return false;"><bean:message
-                                    key="inboxmanager.document.RemoveLinkedProviderMsg"/></a></li>
+                        <a id="saveSucessMsg_<%=documentNo%>" style="display:none">
+                            <bean:message key="inboxmanager.document.SuccessfullySavedMsg"/></a>
+
+                        <div class = "row">
+                            <div class = "col-md-6">
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"> <bean:message key="inboxmanager.document.LinkedProvidersMsg"/> </div>
+                                    <div class="panel-body">
+                                        <%
+                                            Properties p = (Properties) session.getAttribute("providerBean");
+                                            List<ProviderInboxItem> routeList = providerInboxRoutingDao.getProvidersWithRoutingForDocument("DOC", documentNoInt);
+                                        %>
+                                        <ul>
+                                            <%
+                                                for (ProviderInboxItem pItem : routeList) {
+                                                    String s = p.getProperty(pItem.getProviderNo(), pItem.getProviderNo());
+
+                                                    if (!s.equals("0") && !s.equals("null") && !pItem.getStatus().equals("X")) {
+                                            %>
+                                            <li><%=s%><a href="#"
+                                                         onclick="removeLink('DOC', '<%=documentNo %>', '<%=pItem.getProviderNo() %>', this);return false;"><bean:message
+                                                    key="inboxmanager.document.RemoveLinkedProviderMsg"/></a></li>
+                                            <%
+                                                    }
+                                                }
+                                            %>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="input-group">
+
+                                    <input type="text" placeholder="Flag provider..." class="form-control" id="autocompleteprov<%=documentNo%>" name="providerKeyword"/>
+                                    <span class = "input-group-btn">
+                                    <button type="submit" name="save" id="flagsave<%=documentNo%>" <% if (demoNoInt==-1) out.print("disabled");%> class="btn btn-default">
+									Save
+								</button> </span>
+                                    <div id="autocomplete_choicesprov<%=documentNo%>" class="autocomplete"></div>
+
+
+
+                                </div>
+
+                                <div class="panel-body">
+                                    <div id="providerList<%=documentNo%>"></div>
+                                    <a id="saveSucessMsg_<%=documentNo%>" style="display:none;color:blue;">
+                                        <bean:message key="inboxmanager.document.SuccessfullySavedMsg"/></a>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6">
+
+                    <div class="row">
+
+                        <div id="labdoc_<%=documentNo%>">
                             <%
+                                ArrayList ackList = AcknowledgementData.getAcknowledgements("DOC",documentNo);
+                                ReportStatus reportStatus = null;
+                                String docCommentTxt = "";
+                                String rptStatus = "";
+                                boolean ackedOrFiled = false;
+                                for( int idx = 0; idx < ackList.size(); ++idx ) {
+                                    reportStatus = (ReportStatus) ackList.get(idx);
+
+                                    if( reportStatus.getOscarProviderNo() != null && reportStatus.getOscarProviderNo().equals(providerNo) ) {
+                                        docCommentTxt = reportStatus.getComment();
+                                        if( docCommentTxt == null ) {
+                                            docCommentTxt = "";
+                                        }
+
+                                        rptStatus = reportStatus.getStatus();
+
+                                        if( rptStatus != null ) {
+                                            ackedOrFiled = rptStatus.equalsIgnoreCase("A") ? true : rptStatus.equalsIgnoreCase("F") ? true : false;
+                                        }
+                                        break;
                                     }
                                 }
                             %>
-                        </ul>
 
-                        <bean:message key="inboxmanager.document.FlagProviderMsg"/>
-                        <input type="hidden" name="provi" id="provfind<%=documentNo%>"/>
-                        <input type="text" id="autocompleteprov<%=documentNo%>" name="demographicKeyword"/>
-                        <input type="submit" name="save" id="save<%=documentNo%>" value="Save"/>
+                            <form name="myForm">
 
-                        <a id="saveSucessMsg_<%=documentNo%>" style="display:none;color:blue;">
-                            <bean:message key="inboxmanager.document.SuccessfullySavedMsg"/></a>
-                        <div id="autocomplete_choicesprov<%=documentNo%>" class="autocomplete"></div>
+                            </form>
 
-                        <div id="providerList<%=documentNo%>"></div>
+                            <form name="acknowledgeForm_<%=documentNo%>" id="acknowledgeForm_<%=documentNo%>" onsubmit="<%=ackFunc%>" method="post" action="javascript:void(0);">
+
+                                <input type="hidden" name="segmentID" value="<%= documentNo%>"/>
+                                <input type="hidden" name="multiID" value="<%= documentNo%>" />
+                                <input type="hidden" name="providerNo" value="<%= providerNo%>"/>
+                                <input type="hidden" name="status" value="A"/ id="status_<%=documentNo%>">
+                                <input type="hidden" name="labType" value="DOC"/>
+                                <input type="hidden" name="ajaxcall" value="yes"/>
+                                <input type="hidden" name="demofind" id="demofind_<%=documentNo%>" value="<%= demoNo%>"/>
+                                <input type="hidden" name="comment" id="comment_<%=documentNo%>" value="<%=docCommentTxt%>">
+                                <% if (demoNo != null && !demoNo.equals("") && !demoNo.equalsIgnoreCase("null") && !ackedOrFiled ) {%>
+                                <input type="submit" class="btn btn-success" id="ackBtn_<%=documentNo%>" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>">
+                                <input type="button" class="btn btn-default"  value="Comment" onclick="addDocComment('<%=documentNo%>','<%=providerNo%>',true)"/>
+                                <%}%>
+
+                                <input type="button" class="btn btn-danger" id="closeBtn_<%=documentNo%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
+                                <%
+                                    String btnDisabled = "disabled";
+                                    if (demoNo != null && !demoNo.equals("") && !demoNo.equalsIgnoreCase("null") && !demoNo.equals("-1") ) {
+                                        btnDisabled = "";
+                                    }
+
+                                %>
+                                <input type="button" class="btn btn-default" id="msgBtn_<%=documentNo%>" value="Msg" onclick="popupPatient(700,960,'<%= request.getContextPath() %>/oscarMessenger/SendDemoMessage.do?demographic_no=','msg', '<%=documentNo%>')" <%=btnDisabled %>/>
+
+                                <%
+                                    if(org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()) {
+                                %>
+                                <input type="button" class="btn btn-default" id="mainTickler_<%=documentNo%>" value="Tickler" onClick="popupPatientTicklerPlus(710, 1024,'<%= request.getContextPath() %>/Tickler.do?', 'Tickler','<%=documentNo%>')" <%=btnDisabled %>>
+                                <% } else { %>
+                                <input type="button" class="btn btn-default" id="mainTickler_<%=documentNo%>" value="Tickler" onClick="popupPatientTickler(710, 1024,'<%= request.getContextPath() %>/tickler/ticklerAdd.jsp?', 'Tickler','<%=documentNo%>')" <%=btnDisabled %>>
+                                <% } %>
+
+                                <input type="button" class="btn btn-default" id="mainEchart_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupPatient(710, 1024,'<%= request.getContextPath() %>/oscarEncounter/IncomingEncounter.do?reason=<bean:message key="oscarMDS.segmentDisplay.labResults"/>&curDate=<%=currentDate%>>&appointmentNo=&appointmentDate=&startTime=&status=&demographicNo=', 'encounter', '<%=documentNo%>')" <%=btnDisabled %>>
+                                <input type="button" class="btn btn-default" id="mainMaster_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnMaster"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=','master','<%=documentNo%>')" <%=btnDisabled %>>
+                                <input type="button" class="btn btn-default" id="mainApptHistory_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnApptHist"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25&demographic_no=','ApptHist','<%=documentNo%>')" <%=btnDisabled %>>
+
+
+                            </form>
+
+
+                        </div>
 
                     </div>
 
-            </div>
 
-        </div>
+                    <div class="row">
+                        <%
+                            if (ackList.size() > 0){%>
+                        <fieldset>
+                            <table width="100%" height="20" cellpadding="2" cellspacing="2">
+                                <tr>
+                                    <td align="left" bgcolor="white">
+                                        <div class="FieldData">
+                                            <!--center-->
+                                            <% for (int i=0; i < ackList.size(); i++) {
+                                                ReportStatus report = (ReportStatus) ackList.get(i); %>
+                                            <%= report.getProviderName() %> :
 
-        <hr/>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Header information</h3>
-                    </div>
-                    <div class="panel-body">
-
-                        <table class="table table-condensed">
-                            <tbody>
-                            <tr>
-                                <td class="active col-md-2">Patient (named in document):</td>
-                                <td ><%
-                                    out.print(patient.getFirstName()
-                                            + " " + patient.getLastName()
-                                            + " " + patient.getGender()
-                                            + " " + patient.getBirthdate()); %>
-                                    <ul>
-                                        <%
-                                            for (CdxPersonId pid : cdxPersonIdDao.findIdsForPerson(patient.getId())) {
-                                        %>
-                                        <li>
-                                            <%
-                                                out.print(pid.getIdType() + ": " + pid.getIdCode());
+                                            <% String ackStatus = report.getStatus();
+                                                if(ackStatus.equals("A")){
+                                                    ackStatus = "Acknowledged";
+                                                }else if(ackStatus.equals("F")){
+                                                    ackStatus = "Filed but not Acknowledged";
+                                                }else{
+                                                    ackStatus = "Not Acknowledged";
+                                                }
                                             %>
-                                        </li>
-                                        <%
+                                            <font color="red"><%= ackStatus %></font>
+                                            <span id="timestamp_<%=documentNo + "_" + report.getOscarProviderNo()%>"><%= report.getTimestamp() == null ? "&nbsp;" : report.getTimestamp() + "&nbsp;"%></span>,
+                                            comment: <span id="comment_<%=documentNo + "_" + report.getOscarProviderNo()%>"><%=report.getComment() == null || report.getComment().equals("") ? "no comment" : report.getComment()%></span>
+
+                                            <br>
+                                            <% }
+                                                if (ackList.size() == 0){
+                                            %><font color="red">N/A</font><%
                                             }
                                         %>
-                                    </ul>
+                                            <!--/center-->
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                        <%}%>
 
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="active">Author, Date:</td>
-                                <td><%
-                                    out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleAuthor).get(0));
-                                %> <br> <%
-                                    out.print(cdxDoc.getAuthoringTimeAsString());
-                                %></td>
-                            </tr>
-                            <tr>
-                                <td class="active">Status:</td>
-                                <td><%
-                                    out.print(cdxDoc.getStatusCode());
-                                %></td>
-                            </tr>
-                            <tr>
-                                <td class="active">Custodian:</td>
-                                <td><%
-                                    out.print(cdxDoc.getCustodian());
-                                %></td>
-                            </tr>
-                            <tr>
-                                <td class="active">Device, Time:</td>
-                                <td><%
-                                    out.print(cdxDoc.getDevice());
-                                %> <br> <%
-                                    out.print(cdxDoc.getEffectiveTimeAsString());
-                                %></td>
-                            </tr>
-                            <tr>
-                                <td class="active">Parent document:</td>
-                                <td><%
-                                    out.print(cdxDoc.getParentDocId());
-                                %></td>
-                            </tr>
-                            <tr>
-                                <td class="active">Procedure:</td>
-                                <td><%
-                                    out.print(cdxDoc.getProcedureName());
-                                %> <br> <%
-                                    if (cdxDoc.getObservationDate() != null) {
-                                        out.print(cdxDoc.getObservationDateAsString());
-                                    }
-                                %></td>
-                            </tr>
-                            <tr>
-                                <td class="active">Procedure Performer:</td>
-                                <td><%
-                                    out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleProcedurePerformer).get(0));
-                                %></td>
-                            </tr>
-                            <tr>
-                                <td class="active">Recipients:</td>
-                                <td class="col-md-3">
+                    </div>
 
-                                    <%
-                                        out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.rolePrimaryRecipient).get(0) + " (Primary)");
-                                    %>
-                                    <ul>
-                                        <%
-                                            for (CdxPerson q : cdxPersonDao.findRoleInDocument(cdxDoc.getId(), CdxPerson.roleSecondaryRecipient)) {
-                                        %> <li> <%
-                                        out.print(q.getFullProviderName());
-                                    %> </li> <%
-                                        }
-                                    %>
-
-                                    </ul>
-
-                                </td>
-                            </tr>
-                            <%
-                                List<CdxPerson> ops = cdxPersonDao.findRoleInDocument(cdxDoc.getId(), CdxPerson.roleOrderingProvider);
-                                if (!ops.isEmpty()) {
-                            %>
-                            <tr>
-                                <td class="active">Ordering Provider:</td>
-
-                                <td><%
-                                    out.print(ops.get(0).getFullProviderName());
-                                %></td>
-                            </tr>
-                            <%
-                                }
-                            %>
-
-                            <%
-                                List<CdxPerson> fps = cdxPersonDao.findRoleInDocument(cdxDoc.getId(), CdxPerson.roleFamilyProvider);
-                                if (!fps.isEmpty()) {
-                            %>
-                            <tr>
-                                <td class="active">Family Provider:</td>
-                                <td><%
-                                    out.print(fps.get(0).getFullProviderName());
-                                %></td>
-                            </tr>
-                            <%
-                                }
-                            %>
-
-                            <%
-                                List<CdxPerson> pps = cdxPersonDao.findRoleInDocument(cdxDoc.getId(), CdxPerson.roleParticipatingProvider);
-                                if (!pps.isEmpty()) {
-                            %>
-                            <tr>
-                                <td class="active">Participating Providers:</td>
-                                <td><%
-                                    List<String> names = cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleParticipatingProvider);
-                                    for (int i = 0; i < names.size(); i++) {
-                                        out.print(names.get(i));
-                                        if (i < names.size())
-                                            out.print("<br>");
-                                    }
-                                %></td>
-                            </tr>
-
-                            <%
-                                }
-                            %>
-
-                            <%
-                                if (cdxDoc.getAdmissionDate()!=null || cdxDoc.getDischargeDate()!=null) {
-                            %>
-                            <tr>
-                                <td class="active">Admission, Discharge:</td>
-                                <td><%
-                                    out.print(cdxDoc.getAdmissionDateAsString() + ", ");
-                                    out.print(cdxDoc.getDischargeDateAsString());
-                                %></td>
-                            </tr>
-                            <%
-                                }
-                            %>
-
-                            <%
-                                if (!cdxDoc.getDisposition().equals("")) {
-                            %>
-                            <tr>
-                                <td class="active">Disposition:</td>
-                                <td><%
-                                    out.print(cdxDoc.getDisposition());
-                                %></td>
-                            </tr>
-                            <%
-                                }
-                            %>
-                            <%
-                                List<CdxAttachment> attachments = cdxAttachmentDao.findByDocNo(cdxDoc.getId());
-
-                                if (!attachments.isEmpty()) { %>
-                            <tr>
-                                <td class="active">Attachments:</td>
-                                <td><%
-                                    for (CdxAttachment a : attachments) {
-                                        out.print(a.getReference());
-                                        out.println(" (" + a.getAttachmentType() + ")");
-                                    } %>
-                                </td>
-                            </tr>
-                            <% } %>
-
-
-
-                            </tbody>
-                        </table>
-                    </div> </div>
+                </div>
             </div>
-            <div class="col-md-6">
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Content</h3>
+
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Document header information</h3>
+                        </div>
+                        <div class="panel-body">
+
+                            <table class="table table-condensed">
+                                <tbody>
+                                <tr>
+                                    <td class="info col-md-2">Patient (named in document):</td>
+                                    <td >
+
+                                        <div class="panel-group">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <div class="panel-title">
+                                                        <a data-toggle="collapse" href="#patientinfo">
+                                                            <%
+                                                                out.print(patient.getFirstName()
+                                                                        + " " + patient.getLastName()
+                                                                        + " (" + patient.getGender()
+                                                                        + ") " + patient.getBirthdateAsString()); %>
+
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div id="patientinfo" class="panel-collapse collapse">
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item">
+                                                            <%
+                                                                for (CdxPersonId pid : cdxPersonIdDao.findIdsForPerson(patient.getId())) {
+                                                                    out.print(pid.getIdType() + ": " + pid.getIdCode());
+
+                                                                }
+                                                            %>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <%
+                                                                out.print(patient.getStreetAddress()
+                                                                        + "<br>" + patient.getCity()
+                                                                        + " " + patient.getPostalCode()
+                                                                        + "<br>" + patient.getProvince()
+                                                                        + " " + patient.getCountry());
+                                                            %>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <%
+                                                                for (CdxTelco telco : cdxTelcoDao.findPhoneForPerson(patient.getId())) {
+                                                            %>
+                                                            <span class="glyphicon glyphicon-earphone"></span>
+                                                            <%
+                                                                    out.print(" (" + telco.getType() + ") "
+                                                                            +  telco.getAddress() + "<br>");
+
+                                                                }
+                                                            %>
+
+                                                            <%
+                                                                for (CdxTelco telco : cdxTelcoDao.findEmailForPerson(patient.getId())) {
+                                                            %>
+                                                            <span class="glyphicon glyphicon-send"></span>
+                                                            <%
+                                                                    out.print(" (" + telco.getType() + ") "
+                                                                            + " " + telco.getAddress() + "<br>");
+
+                                                                }
+                                                            %>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="info">Author, Date:</td>
+                                    <td><%
+                                        out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleAuthor).get(0));
+                                    %> <br> <%
+                                        out.print(cdxDoc.getAuthoringTimeAsString());
+                                    %></td>
+                                </tr>
+                                <tr>
+                                    <td class="info">Status:</td>
+                                    <td><%
+                                        out.print(cdxDoc.getStatusCode());
+                                    %></td>
+                                </tr>
+                                <tr>
+                                    <td class="info">Custodian:</td>
+                                    <td><%
+                                        out.print(cdxDoc.getCustodian());
+                                    %></td>
+                                </tr>
+                                <tr>
+                                    <td class="info">Device, Time:</td>
+                                    <td><%
+                                        out.print(cdxDoc.getDevice());
+                                    %> <br> <%
+                                        out.print(cdxDoc.getEffectiveTimeAsString());
+                                    %></td>
+                                </tr>
+                                <tr>
+                                    <td class="info">Parent document:</td>
+                                    <td><%
+                                        out.print(cdxDoc.getParentDocId());
+                                    %></td>
+                                </tr>
+                                <tr>
+                                    <td class="info">Procedure:</td>
+                                    <td><%
+                                        out.print(cdxDoc.getProcedureName());
+                                    %> <br> <%
+                                        if (cdxDoc.getObservationDate() != null) {
+                                            out.print(cdxDoc.getObservationDateAsString());
+                                        }
+                                    %></td>
+                                </tr>
+                                <tr>
+                                    <td class="info">Procedure Performer:</td>
+                                    <td><%
+                                        out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleProcedurePerformer).get(0));
+                                    %></td>
+                                </tr>
+                                <tr>
+                                    <td class="info">Recipients:</td>
+                                    <td class="col-md-3">
+
+                                        <%
+                                            out.print(cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.rolePrimaryRecipient).get(0) + " (Primary)");
+                                        %>
+                                        <ul>
+                                            <%
+                                                for (CdxPerson q : cdxPersonDao.findRoleInDocument(cdxDoc.getId(), CdxPerson.roleSecondaryRecipient)) {
+                                            %> <li> <%
+                                            out.print(q.getFullProviderName());
+                                        %> </li> <%
+                                            }
+                                        %>
+
+                                        </ul>
+
+                                    </td>
+                                </tr>
+                                <%
+                                    List<CdxPerson> ops = cdxPersonDao.findRoleInDocument(cdxDoc.getId(), CdxPerson.roleOrderingProvider);
+                                    if (!ops.isEmpty()) {
+                                %>
+                                <tr>
+                                    <td class="info">Ordering Provider:</td>
+
+                                    <td><%
+                                        out.print(ops.get(0).getFullProviderName());
+                                    %></td>
+                                </tr>
+                                <%
+                                    }
+                                %>
+
+                                <%
+                                    List<CdxPerson> fps = cdxPersonDao.findRoleInDocument(cdxDoc.getId(), CdxPerson.roleFamilyProvider);
+                                    if (!fps.isEmpty()) {
+                                %>
+                                <tr>
+                                    <td class="info">Family Provider:</td>
+                                    <td><%
+                                        out.print(fps.get(0).getFullProviderName());
+                                    %></td>
+                                </tr>
+                                <%
+                                    }
+                                %>
+
+                                <%
+                                    List<CdxPerson> pps = cdxPersonDao.findRoleInDocument(cdxDoc.getId(), CdxPerson.roleParticipatingProvider);
+                                    if (!pps.isEmpty()) {
+                                %>
+                                <tr>
+                                    <td class="info">Participating Providers:</td>
+                                    <td><%
+                                        List<String> names = cdxPersonDao.findRoleInDocumentNamesAsString(cdxDoc.getId(), CdxPerson.roleParticipatingProvider);
+                                        for (int i = 0; i < names.size(); i++) {
+                                            out.print(names.get(i));
+                                            if (i < names.size())
+                                                out.print("<br>");
+                                        }
+                                    %></td>
+                                </tr>
+
+                                <%
+                                    }
+                                %>
+
+                                <%
+                                    if (cdxDoc.getAdmissionDate()!=null || cdxDoc.getDischargeDate()!=null) {
+                                %>
+                                <tr>
+                                    <td class="info">Admission, Discharge:</td>
+                                    <td><%
+                                        out.print(cdxDoc.getAdmissionDateAsString() + ", ");
+                                        out.print(cdxDoc.getDischargeDateAsString());
+                                    %></td>
+                                </tr>
+                                <%
+                                    }
+                                %>
+
+                                <%
+                                    if (!cdxDoc.getDisposition().equals("")) {
+                                %>
+                                <tr>
+                                    <td class="info">Disposition:</td>
+                                    <td><%
+                                        out.print(cdxDoc.getDisposition());
+                                    %></td>
+                                </tr>
+                                <%
+                                    }
+                                %>
+                                <%
+                                    List<CdxAttachment> attachments = cdxAttachmentDao.findByDocNo(cdxDoc.getId());
+
+                                    if (!attachments.isEmpty()) { %>
+                                <tr>
+                                    <td class="info">Attachments:</td>
+                                    <td><%
+                                        for (CdxAttachment a : attachments) {
+                                            out.print(a.getReference());
+                                            out.println(" (" + a.getAttachmentType() + ")");
+                                        } %>
+                                    </td>
+                                </tr>
+                                <% } %>
+
+
+
+                                </tbody>
+                            </table>
+                        </div> </div>
+                </div>
+                <div class="col-md-6">
+
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Document content</h3>
+                        </div>
+                        <div class="panel-body">
+                            <%
+                                out.print(cdxDoc.getContents());
+                            %>
+                        </div>
                     </div>
-                    <div class="panel-body">
-                        <%
-                            out.print(cdxDoc.getContents());
-                        %>
-                    </div>
+
                 </div>
 
             </div>
 
         </div>
-
     </div>
 </div>
 
@@ -517,6 +757,39 @@
     jQuery(document).ready(function () { //pushing the autocomplete helper out of the visible page
         jQuery(".ui-helper-hidden-accessible").css({"position": "absolute", "left": "-999em"}) //{"display","none"} will remove the element from the page
     });
+
+    function updateCdxDocument(eleId){
+        //save doc info
+        var url="../dms/ManageDocument.do",data=$(eleId).serialize(true);
+        new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
+                var json=transport.responseText.evalJSON();
+                var patientId;
+                //oscarLog(json);
+                if(json!=null ){
+                    patientId=json.patientId;
+
+                    var ar=eleId.split("_");
+                    var num=ar[1];
+                    num=num.replace(/\s/g,'');
+
+                    var war = $("warningMsg_"+num);
+                    if (war != null) {
+                        war.hide();
+                        $("save"+num).hide();
+                        $('autocompletedemo'+num).disable();
+                        $("createNewDemo").hide();
+                        $("activeGroup").hide();
+                        $('flagsave'+num).disabled = false;
+                        $("msgBtn_"+num).onclick = function() { popup(700,960,contextpath +'/oscarMessenger/SendDemoMessage.do?demographic_no='+patientId,'msg'); };
+                    }
+
+                    $("saveSucessMsg_"+num).show()
+                    $('saved'+num).value='true';
+                }
+            }});
+        return false;
+    }
+
 
 </script>
 

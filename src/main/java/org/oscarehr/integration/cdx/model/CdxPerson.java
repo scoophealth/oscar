@@ -25,6 +25,7 @@
 package org.oscarehr.integration.cdx.model;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.*;
@@ -116,6 +117,14 @@ public class CdxPerson extends AbstractModel<Integer> implements Serializable {
 
     public Date getBirthdate() {
         return birthdate;
+    }
+
+    public String getBirthdateAsString() {
+        String pattern = "dd MMM yyyy";
+        SimpleDateFormat simpleDateFormat =
+                new SimpleDateFormat(pattern);
+
+        return simpleDateFormat.format(birthdate);
     }
 
     public void setBirthdate(Date birthdate) {

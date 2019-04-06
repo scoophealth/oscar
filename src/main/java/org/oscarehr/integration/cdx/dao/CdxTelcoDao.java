@@ -29,6 +29,9 @@ import org.oscarehr.common.dao.AbstractDao;
 import org.oscarehr.integration.cdx.model.CdxTelco;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.Query;
+import java.util.List;
+
 
 @Repository
 public class CdxTelcoDao extends AbstractDao<CdxTelco> {
@@ -42,5 +45,22 @@ public class CdxTelcoDao extends AbstractDao<CdxTelco> {
         return find(id);
     }
 
+    public List<CdxTelco> findEmailForPerson(int personId) {
+
+        String sql = "FROM CdxTelco t where t.person = :pid and t.kind='e' ";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("pid", personId);
+        return query.getResultList();
+
+    }
+
+    public List<CdxTelco> findPhoneForPerson(int personId) {
+
+        String sql = "FROM CdxTelco t where t.person = :pid and t.kind='p' ";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("pid", personId);
+        return query.getResultList();
+
+    }
 
 }

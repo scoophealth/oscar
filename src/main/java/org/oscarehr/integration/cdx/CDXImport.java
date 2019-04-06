@@ -316,13 +316,15 @@ public class CDXImport {
 
             if (demos.size() == 1) {
                 Demographic demo = demos.get(0);
-                if (demo.getLastName().equals(patient.getLastName())) {
+                if (demo.getLastName().equals(patient.getLastName().toUpperCase())) {
 
                     try {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         Date d = sdf.parse(demo.getFormattedDob());
 
-                        if (d.equals(patient.getBirthdate())) {
+                        Date d2 = patient.getBirthdate();
+
+                        if (sameDates(d,d2)) {
                             demoId = demo.getId(); // we found the patient
                         }
                     } catch (ParseException e) {
@@ -397,5 +399,13 @@ public class CDXImport {
 
     private boolean providerBelongsToUs(IProvider prov) {
         return clinicId.equals(prov.getClinicID());
+    }
+
+    public static boolean sameDates(Date a, Date b) {
+        if (a.getDate() == b.getDate() &&
+                a.getMonth() == b.getMonth() &&
+                a.getYear() == b.getYear())
+            return true;
+        else return false;
     }
 }
