@@ -151,9 +151,9 @@ public class CDXConfiguration implements Config {
         return cdxOid;
     }
 
-    String getDefaultProvider() {
-        return "0"; // fixme
-    }
+//    String getDefaultProvider() {
+//        return "0"; // fixme
+//    }
 
 
 }

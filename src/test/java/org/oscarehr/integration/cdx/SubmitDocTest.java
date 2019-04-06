@@ -24,11 +24,11 @@
 
 package org.oscarehr.integration.cdx;
 
+import ca.uvic.leadlab.obibconnector.facades.datatypes.AddressType;
+import ca.uvic.leadlab.obibconnector.facades.datatypes.NameType;
+import ca.uvic.leadlab.obibconnector.facades.datatypes.TelcoType;
 import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
-import ca.uvic.leadlab.obibconnector.facades.send.ISubmit;
-import ca.uvic.leadlab.obibconnector.facades.send.ISubmitDoc;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.oscarehr.util.MiscUtils;
@@ -41,7 +41,7 @@ public class SubmitDocTest {
     public void testSubmitDoc() {
         String response = null;
         CDXConfiguration cdxConfig = new CDXConfiguration();
-        ISubmitDoc submitDoc = new SubmitDoc(cdxConfig);
+        SubmitDoc submitDoc = new SubmitDoc(cdxConfig);
         try {
             response = submitDoc
                     .patient()
@@ -67,7 +67,10 @@ public class SubmitDocTest {
                         .phone(TelcoType.HOME, "250-111-1234")
                     .submit();
         } catch (OBIBException e) {
-            MiscUtils.getLogger().error(e.getMessage());
+            MiscUtils.getLogger().info(e.getMessage());
+        } catch (Exception e) {
+            MiscUtils.getLogger().info("Got unexpected exception:");
+            e.printStackTrace();
         }
 
         MiscUtils.getLogger().info("obibconnector response: "+ response);

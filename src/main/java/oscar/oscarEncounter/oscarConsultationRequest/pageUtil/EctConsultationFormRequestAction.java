@@ -25,7 +25,47 @@
 
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
-import java.awt.*;
+import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.v26.message.ORU_R01;
+import ca.uhn.hl7v2.model.v26.message.REF_I12;
+import ca.uvic.leadlab.obibconnector.facades.datatypes.AddressType;
+import ca.uvic.leadlab.obibconnector.facades.datatypes.NameType;
+import ca.uvic.leadlab.obibconnector.facades.datatypes.TelcoType;
+import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
+import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
+import com.lowagie.text.DocumentException;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.log4j.Logger;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.IsPropertiesOn;
+import org.oscarehr.common.dao.*;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01.ObservationData;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.RefI12;
+import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
+import org.oscarehr.common.model.*;
+import org.oscarehr.integration.cdx.CDXConfiguration;
+import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.util.*;
+import oscar.OscarProperties;
+import oscar.dms.EDoc;
+import oscar.dms.EDocUtil;
+import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
+import oscar.oscarLab.ca.on.CommonLabResultData;
+import oscar.oscarLab.ca.on.LabResultData;
+import oscar.util.ParameterActionForward;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -38,69 +78,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-
-import ca.uvic.leadlab.obibconnector.facades.*;
 //import ca.uvic.leadlab.obibconnector.facades.datatypes.AttachmentType;
-import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
-import ca.uvic.leadlab.obibconnector.facades.send.ISubmitDoc;
-import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.AddressType;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.NameType;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.TelcoType;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.log4j.Logger;
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.oscarehr.common.IsPropertiesOn;
-import org.oscarehr.common.dao.ClinicDAO;
-import org.oscarehr.common.dao.ConsultationRequestDao;
-import org.oscarehr.common.dao.ConsultationRequestExtDao;
-import org.oscarehr.common.dao.Hl7TextInfoDao;
-import org.oscarehr.common.dao.ProfessionalSpecialistDao;
-import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01;
-import org.oscarehr.common.hl7.v2.oscar_to_oscar.OruR01.ObservationData;
-import org.oscarehr.common.hl7.v2.oscar_to_oscar.RefI12;
-import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
-import org.oscarehr.common.model.Clinic;
-import org.oscarehr.common.model.ConsultationRequest;
-import org.oscarehr.common.model.ConsultationRequestExt;
-import org.oscarehr.common.model.Demographic;
-import org.oscarehr.common.model.DigitalSignature;
-import org.oscarehr.common.model.Hl7TextInfo;
-import org.oscarehr.common.model.ProfessionalSpecialist;
-import org.oscarehr.common.model.Provider;
-import org.oscarehr.integration.cdx.CDXConfiguration;
-import org.oscarehr.managers.DemographicManager;
-import org.oscarehr.managers.SecurityInfoManager;
-import org.oscarehr.util.DigitalSignatureUtils;
-import org.oscarehr.util.LoggedInInfo;
-import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils;
-import org.oscarehr.util.WebUtils;
-
-import oscar.OscarProperties;
-import oscar.dms.EDoc;
-import oscar.dms.EDocUtil;
-import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
-import oscar.oscarLab.ca.on.CommonLabResultData;
-import oscar.oscarLab.ca.on.LabResultData;
-import oscar.util.ParameterActionForward;
-import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.v26.message.ORU_R01;
-import ca.uhn.hl7v2.model.v26.message.REF_I12;
-
-import com.lowagie.text.DocumentException;
 
 public class EctConsultationFormRequestAction extends Action {
 

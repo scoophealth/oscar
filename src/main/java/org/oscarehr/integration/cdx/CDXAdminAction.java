@@ -47,12 +47,12 @@ public class CDXAdminAction extends DispatchAction {
         String enabled = request.getParameter("cdx_polling_enabled");
         String interval = request.getParameter("cdx_polling_interval");
         String cdxUrl = request.getParameter("cdx_url");
-        String defaultProvider = request.getParameter("defaultProvider");
+//        String defaultProvider = request.getParameter("defaultProvider");
         String cdxOid = request.getParameter("cdxOid");
         MiscUtils.getLogger().info("action cdx_polling_enabled: " + enabled);
         MiscUtils.getLogger().info("action cdx_polling_interval: " + interval);
         MiscUtils.getLogger().info("action cdx_url: " + cdxUrl);
-        MiscUtils.getLogger().info("action defaultProvider: " + defaultProvider);
+//        MiscUtils.getLogger().info("action defaultProvider: " + defaultProvider);
         MiscUtils.getLogger().info("action cdxOid: " + cdxOid);
 
         try {
@@ -67,19 +67,12 @@ public class CDXAdminAction extends DispatchAction {
             prop.setValue(cdxUrl);
             userPropertyDao.saveProp(prop);
 
-            if ((prop = userPropertyDao.getProp("cdx_default_provider")) == null ) {
-                prop = new UserProperty();
-            }
-            prop.setName("cdx_default_provider");
-            prop.setValue(defaultProvider);
-            userPropertyDao.saveProp(prop);
-
-//            CdxConfig cdxConfig = cdxConfigDao.getCdxConfig(1);
-//            if (cdxConfig == null) {
-//                cdxConfig = new CdxConfig();
+//            if ((prop = userPropertyDao.getProp("cdx_default_provider")) == null ) {
+//                prop = new UserProperty();
 //            }
-//            cdxConfig.setDefaultProvider(defaultProvider);
-//            cdxConfigDao.merge(cdxConfig);
+//            prop.setName("cdx_default_provider");
+//            prop.setValue(defaultProvider);
+//            userPropertyDao.saveProp(prop);
 
             Clinic clinic = clinicDAO.getClinic();
             if (clinic == null) {  // clinic table empty, shouldn't happen

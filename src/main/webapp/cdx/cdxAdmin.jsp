@@ -24,20 +24,16 @@
 
 --%>
 
+<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%@ page import="org.oscarehr.common.dao.ClinicDAO" %>
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO" %>
 <%@ page import="org.oscarehr.common.model.Clinic" %>
+<%@ page import="org.oscarehr.common.model.Provider" %>
 <%@ page import="org.oscarehr.common.model.UserProperty" %>
-<%@ page import="org.oscarehr.integration.cdx.dao.CdxConfigDao" %>
-<%@ page import="org.oscarehr.integration.cdx.model.CdxConfig" %>
+<%@ page import="org.oscarehr.integration.cdx.CDXConfiguration" %>
 <%@ page import="org.oscarehr.util.MiscUtils" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
-<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
-<%@ page import="org.oscarehr.common.model.Provider" %>
 <%@ page import="java.util.List" %>
-<%@ page import="org.oscarehr.integration.cdx.CDXDownloadJob" %>
-<%@ page import="org.oscarehr.integration.cdx.CDXAdminAction" %>
-<%@ page import="org.oscarehr.integration.cdx.CDXConfiguration" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
@@ -57,14 +53,13 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <%
-    CdxConfigDao cdxConfigDao = SpringUtils.getBean(CdxConfigDao.class);
     ClinicDAO clinicDAO = SpringUtils.getBean(ClinicDAO.class);
     ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
     UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
 
     List<Provider> providers = providerDao.getActiveProviders();
 
-    String defaultProvider = "";
+//    String defaultProvider = "";
     String cdxOid = "";
     String pollEnabled;
     String pollDisabled;
@@ -72,10 +67,6 @@
     String cdxUrl = "127.0.0.1";
     String privateKey = "";
     String decryptionKey = "";
-
-
-//    CdxConfig cdxConfig = cdxConfigDao.getCdxConfig(1);
-//    if (cdxConfig != null && cdxConfig.getDefaultProvider() != null) defaultProvider = cdxConfig.getDefaultProvider();
 
     Clinic clinic = clinicDAO.getClinic();
     if (clinic != null && clinic.getCdxOid() != null) cdxOid = clinic.getCdxOid();
@@ -95,8 +86,8 @@
     up = userPropertyDao.getProp("cdx_url");
     if (up != null) cdxUrl = up.getValue();
 
-    up = userPropertyDao.getProp("cdx_default_provider");
-    if (up != null) defaultProvider = up.getValue();
+//    up = userPropertyDao.getProp("cdx_default_provider");
+//    if (up != null) defaultProvider = up.getValue();
 
     up = userPropertyDao.getProp("cdx_privateKey");
     if (up != null) privateKey = up.getValue();
@@ -104,7 +95,7 @@
     up = userPropertyDao.getProp("cdx_decryptionKey");
     if (up != null) decryptionKey = up.getValue();
 
-    MiscUtils.getLogger().info("defaultProvider: " + defaultProvider);
+//    MiscUtils.getLogger().info("defaultProvider: " + defaultProvider);
     MiscUtils.getLogger().info("cdxOid: " + cdxOid);
     MiscUtils.getLogger().info("pollInterval: " + pollInterval);
 %>
@@ -126,26 +117,26 @@
                 <input type="text" name="cdx_url" value="<%=cdxUrl%>"/>
             </div>
         </div>
-    <div class="control-group">
-        <label class="control-label">Default Provider:</label>
-        <div class="controls">
-            <select name="defaultProvider">
-                <%
-                    for (Provider provider : providers) {
-                        String selected = "";
-                        if (!defaultProvider.equals("")
-                                && defaultProvider.equals(provider.getProviderNo())) {
-                            selected = " selected=\"selected\" ";
-                        }
-                %>
-                <option value="<%=provider.getProviderNo()%>" <%=selected%>><%=provider.getFormattedName()%>
-                </option>
-                <%
-                    }
-                %>
-            </select>
-        </div>
-    </div>
+<%--    <div class="control-group">--%>
+<%--        <label class="control-label">Default Provider:</label>--%>
+<%--        <div class="controls">--%>
+<%--            <select name="defaultProvider">--%>
+<%--                <%--%>
+<%--                    for (Provider provider : providers) {--%>
+<%--                        String selected = "";--%>
+<%--                        if (!defaultProvider.equals("")--%>
+<%--                                && defaultProvider.equals(provider.getProviderNo())) {--%>
+<%--                            selected = " selected=\"selected\" ";--%>
+<%--                        }--%>
+<%--                %>--%>
+<%--                <option value="<%=provider.getProviderNo()%>" <%=selected%>><%=provider.getFormattedName()%>--%>
+<%--                </option>--%>
+<%--                <%--%>
+<%--                    }--%>
+<%--                %>--%>
+<%--            </select>--%>
+<%--        </div>--%>
+<%--    </div>--%>
     <div class="control-group">
         <label class="control-label">Clinic OID:</label>
         <div class="controls">
