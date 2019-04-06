@@ -43,7 +43,7 @@ public class SubmitDocTest {
         CDXConfiguration cdxConfig = new CDXConfiguration();
         SubmitDoc submitDoc = new SubmitDoc(cdxConfig);
         try {
-            response = submitDoc
+            response = submitDoc.newDoc()
                     .patient()
                         .id("2222")
                         .name(NameType.LEGAL, "Joe", "Wine")
@@ -67,15 +67,18 @@ public class SubmitDocTest {
                         .phone(TelcoType.HOME, "250-111-1234")
                     .submit();
         } catch (OBIBException e) {
+            response = e.getMessage();
             MiscUtils.getLogger().info(e.getMessage());
         } catch (Exception e) {
-            MiscUtils.getLogger().info("Got unexpected exception:");
+            response = "Got unexpected exception";
+            MiscUtils.getLogger().info(response);
             e.printStackTrace();
         }
 
         MiscUtils.getLogger().info("obibconnector response: "+ response);
 
-        Assert.assertNotNull(response);
+        Assert.assertTrue("Error submitting document.".equals(response));
+        //Assert.assertNotNull(response);
     }
 
 }
