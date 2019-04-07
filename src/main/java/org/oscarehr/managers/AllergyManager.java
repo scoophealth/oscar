@@ -40,6 +40,10 @@ import oscar.log.LogAction;
 public class AllergyManager {
 	@Autowired
 	private AllergyDao allergyDao;
+	
+	@Autowired
+	private PatientConsentManager patientConsentManager;
+
 
 	public Allergy getAllergy(LoggedInInfo loggedInInfo, Integer id) {
 		Allergy result = allergyDao.find(id);
@@ -65,7 +69,7 @@ public class AllergyManager {
 	
 	public List<Allergy> getUpdatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Allergy> results = allergyDao.findByUpdateDate(updatedAfterThisDateInclusive, itemsToReturn);
-
+		patientConsentManager.filterProviderSpecificConsent(loggedInInfo, results);
 		LogAction.addLogSynchronous(loggedInInfo, "AllergyManager.getUpdatedAfterDate", "updatedAfterThisDateInclusive=" + updatedAfterThisDateInclusive);
 
 		return (results);
