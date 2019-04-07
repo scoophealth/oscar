@@ -12148,6 +12148,8 @@ CREATE TABLE `consentType` (
   `name` varchar(50),
   `description` varchar(500),
   `active` tinyint(1),
+  `providerNo` varchar(6),
+  `remoteEnabled` tinyint(1),
   PRIMARY KEY (`id`)
 );
 

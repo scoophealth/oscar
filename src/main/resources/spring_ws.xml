@@ -198,6 +198,7 @@
 <!--			<bean class="org.oscarehr.ws.rest.SystemInfoService" autowire="byName" /> -->
 			<bean class="org.oscarehr.ws.rest.LabService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.MeasurementService" autowire="byName" />
+			<bean class="org.oscarehr.ws.rest.ConsentService" autowire="byName" />
 		</jaxrs:serviceBeans>
 
 		<jaxrs:extensionMappings>

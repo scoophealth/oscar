@@ -21,49 +21,44 @@
  * Hamilton
  * Ontario, Canada
  */
+package org.oscarehr.ws.rest.to.model;
 
-package org.oscarehr.common.model;
+import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+public class ConsentTypeTo1 implements Serializable {
 
-@Entity
-@Table(name="consentType")
-public class ConsentType extends AbstractModel<Integer> {
-	
-	public static final String PROVIDER_CONSENT_FILTER = "provider_consent_filter";
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer id;
-	
-	private String name;
-	
-	@Enumerated(EnumType.STRING)
-	private String type;
-	
-	private String description;
-	
-	private String providerNo;
-	
-	private Boolean remoteEnabled = Boolean.FALSE;
-	
-	private Boolean active;
-	
-	
+    private static final long serialVersionUID = 1L;
+    
+    private Integer id;
+    private String type;
+    private String name;
+    private String description;
+    private String providerNo;
+    private Boolean active;
+    private Boolean remoteEnabled = Boolean.FALSE;
+    
+    
+	public String getProviderNo() {
+		return providerNo;
+	}
 
-	@Override
-	public Integer getId() {
-		return this.id;
+	public void setProviderNo(String providerNo) {
+		this.providerNo = providerNo;
+	}
+
+	
+	public String getName() {
+		return name;
 	}
 	
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -74,14 +69,6 @@ public class ConsentType extends AbstractModel<Integer> {
 
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getDescription() {
@@ -100,14 +87,6 @@ public class ConsentType extends AbstractModel<Integer> {
 		this.active = active;
 	}
 
-	public String getProviderNo() {
-		return providerNo;
-	}
-
-	public void setProviderNo(String providerNo) {
-		this.providerNo = providerNo;
-	}
-
 	public Boolean isRemoteEnabled() {
 		return remoteEnabled;
 	}
@@ -116,4 +95,10 @@ public class ConsentType extends AbstractModel<Integer> {
 		this.remoteEnabled = remoteEnabled;
 	}
 
+	
+	
+	
+	
+
+	
 }
