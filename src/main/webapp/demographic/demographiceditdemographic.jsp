@@ -69,6 +69,7 @@
 <%@page import="org.oscarehr.managers.PatientConsentManager" %>
 <%@page import="org.oscarehr.common.model.Consent" %>
 <%@page import="org.oscarehr.common.model.ConsentType" %>
+<%@ page import="org.oscarehr.ws.rest.util.QuestimedUtil" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%
@@ -1356,7 +1357,13 @@ if (iviewTag!=null && !"".equalsIgnoreCase(iviewTag.trim())){
 				<bean:message
 					key="demographic.demographiceditdemographic.btnAddEForm" /> </a></td>
 			</tr>
-			
+                        <% if(OscarProperties.getInstance().getBooleanProperty("questimed.enabled","true") && QuestimedUtil.isServiceConnectionReady()) { %>
+			<tr>
+				<td><a href=# onclick="popupPage(700,960,'../questimed/launch.jsp?demographic_no=<%=demographic_no%>');return false;"					>
+				<bean:message
+					key="demographic.demographiceditdemographic.Questimed" /> </a></td>
+			</tr>
+                        <% } %>
 			<% if (isSharingCenterEnabled) { %>
 			<!-- Sharing Center Links -->
 			<tr>
