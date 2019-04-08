@@ -43,7 +43,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "appointment")
-public class Appointment extends AbstractModel<Integer> implements Serializable {
+public class Appointment extends AbstractModel<Integer> implements Serializable, DemographicData {
 
 	public enum BookingSource
 	{
