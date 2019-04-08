@@ -886,6 +886,39 @@ jQuery(document).ready(function(){
 	setMailingProvince('<%=demographic.getMailingProvince()%>');
 });
 <% } %>
+
+function validateHC() {
+	var hin = jQuery("#hinBox").val();
+	var ver = jQuery("#verBox").val();
+	var hcType = jQuery("#hcTypeBox").val();
+	
+	//if (demo.hcType!="ON" || demo.hin==null || demo.hin=="") return;
+	//if (demo.ver==null) demo.ver = "";
+		
+    jQuery.ajax({
+        type: "GET",
+        url:  '<%=request.getContextPath()%>/ws/rs/patientDetailStatusService/validateHC?hin='+hin+'&ver='+ver,
+        dataType:'json',
+        contentType:'application/json',
+        success: function (data) {
+        	var responseCode = data.responseCode;
+        	var responseDescription = data.responseDescription;
+        	var responseAction = data.responseAction;
+        	var fName = data.firstName;
+        	var lName = data.lastName;
+        	var bDate = data.birthDate;
+        	var gender  = data.gender;
+        	var expDate = data.expiryDate;
+        	var issueDate = data.issueDate;
+        	var valid = data.valid;
+        	
+        	alert(Jdata.responseDescription);
+        },
+        error: function(data) {
+        	alert('An error occured.');
+        }
+	});
+}
 </script>
 
 </head>
@@ -2901,13 +2934,17 @@ if ( Dead.equals(PatStat) ) {%>
 							<tr valign="top">
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formHin" />: </b></td>
-								<td align="left" nowrap><input type="text" name="hin" <%=getDisabled("hin")%>
+								<td align="left" nowrap><input type="text" name="hin" id="hinBox" <%=getDisabled("hin")%>
 									value="<%=StringUtils.trimToEmpty(demographic.getHin())%>" size="17">
 								<b><bean:message
 									key="demographic.demographiceditdemographic.formVer" /></b> <input
 									type="text" name="ver" <%=getDisabled("ver")%>
 									value="<%=StringUtils.trimToEmpty(demographic.getVer())%>" size="3"
-									onBlur="upCaseCtrl(this)"></td>
+									onBlur="upCaseCtrl(this)" id="verBox">
+									<%if("online".equals(oscarProps.getProperty("hcv.type", "simple"))) { %>
+										<input type="button" value="Validate" onClick="validateHC()"/>
+									<% } %>
+									</td>
 								<td align="right">
 									<b><bean:message key="demographic.demographiceditdemographic.formEFFDate" />:</b>
 								</td>
