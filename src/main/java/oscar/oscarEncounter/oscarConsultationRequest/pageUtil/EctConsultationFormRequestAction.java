@@ -398,7 +398,7 @@ public class EctConsultationFormRequestAction extends Action {
 			ConsultationRequest consultationRequest=consultationRequestDao.find(Integer.parseInt(requestId));
 			ProfessionalSpecialist professionalSpecialist=professionalSpecialistDao.find(consultationRequest.getSpecialistId());
 			if (!professionalSpecialist.getCdxCapable()) {
-				WebUtils.addLocalisedErrorMessage(request, "The selected professional specialist is not CDX enabled.");
+				WebUtils.addLocalisedErrorMessage(request, "oscarEncounter.oscarConsultationRequest.SelectProfessionalSpecialist.msgSelectionError" );
 				ParameterActionForward forward = new ParameterActionForward(mapping.findForward("failESend"));
 				forward.addParameter("de", demographicNo);
 				forward.addParameter("requestId", requestId);
@@ -406,11 +406,10 @@ public class EctConsultationFormRequestAction extends Action {
 			}
 			try {
 				doCdxSend(loggedInInfo, Integer.parseInt(requestId));
-				WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreatedUpdateESent");
+				WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCreatedUpdateESent");
 			} catch (Exception e) {
 				logger.error("Error sending CDX consultation request.", e);
-
-				WebUtils.addLocalisedErrorMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCreatedUpdateESendError");
+				WebUtils.addLocalisedErrorMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCreatedUpdateESendError");
 				ParameterActionForward forward = new ParameterActionForward(mapping.findForward("failESend"));
 				forward.addParameter("de", demographicNo);
 				forward.addParameter("requestId", requestId);
@@ -496,7 +495,7 @@ public class EctConsultationFormRequestAction extends Action {
 	    }
     }
 
-	private void doCdxSend(LoggedInInfo loggedInInfo, Integer consultationRequestId) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, IOException, HL7Exception, ServletException {
+	private void doCdxSend(LoggedInInfo loggedInInfo, Integer consultationRequestId) throws OBIBException {
 
 		ConsultationRequestDao consultationRequestDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
 		ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
@@ -525,11 +524,13 @@ public class EctConsultationFormRequestAction extends Action {
 		EctConsultationFormRequestPrintPdf pdf = new EctConsultationFormRequestPrintPdf(consultationRequestId.toString(), professionalSpecialist.getAddress(), professionalSpecialist.getPhone(), professionalSpecialist.getFax(), demographic.getDemographicNo().toString());
 		try {
 			filename = pdf.printPdf(loggedInInfo);
+			Byte[] newBytes = pdfFileToByteArray(filename);
+			MiscUtils.getLogger().info("Consultation Request PDF: " + filename);
 		} catch (DocumentException e) {
 			MiscUtils.getLogger().info(e.getMessage());
+		} catch (IOException e) {
+			MiscUtils.getLogger().info(e.getMessage());
 		}
-		MiscUtils.getLogger().info("Consultation Request PDF: " + filename);
-		Byte[] newBytes = pdfFileToByteArray(filename);
 
 		String patientId = demographic.getHin();
 		if (patientId == null || patientId.isEmpty()) {
@@ -547,36 +548,29 @@ public class EctConsultationFormRequestAction extends Action {
 		String response = null;
 		CDXConfiguration cdxConfig = new CDXConfiguration();
 		SubmitDoc submitDoc = new SubmitDoc(cdxConfig);
-		try {
-			response = submitDoc.newDoc()
-					.patient()
-						.id(patientId)
-						.name(NameType.LEGAL, demographic.getFirstName(), demographic.getLastName())
-						.address(AddressType.HOME, demographic.getAddress(), demographic.getCity(), demographic.getProvince(), demographic.getPostal(), "CA")
-						.phone(TelcoType.HOME, demographic.getPhone())
-					.and().author()
-						.id(authorId)
-						.time(new Date())
-						.name(NameType.LEGAL, sendingProvider.getFirstName(), sendingProvider.getLastName())
-						.address(AddressType.HOME, clinic.getAddress(), clinic.getCity(), clinic.getProvince(), clinic.getPostal(), "CA")
-						.phone(TelcoType.HOME, clinic.getPhone())
-					.and().recipient()
-						.id(recipientId)
-						.name(NameType.LEGAL, professionalSpecialist.getFirstName(), professionalSpecialist.getLastName())
-						.address(AddressType.HOME, professionalSpecialist.getAddress(), professionalSpecialist.getCity(), professionalSpecialist.getProvince(), professionalSpecialist.getPostal(), "CA")
-						.phone(TelcoType.HOME, professionalSpecialist.getPhoneNumber())
-	//				.and().participant()
-	//					.id("555")
-	//					.name(NameType.LEGAL, "Joseph", "Cloud")
-	//					.address(AddressType.HOME, "111 Main St", "Victoria", "BC", "V8V Z9Z", "CA")
-	//					.phone(PhoneType.HOME, "250-111-1234")
-					.and().content(message)
-					//.attach(AttachmentType.PDF, newBytes)
-					.submit();
-		} catch (OBIBException e) {
-			MiscUtils.getLogger().error(e.getMessage());
-		}
-		MiscUtils.getLogger().info("obibconnector response: "+response);
+
+		response = submitDoc.newDoc()
+				.patient()
+				.id(patientId)
+				.name(NameType.LEGAL, demographic.getFirstName(), demographic.getLastName())
+				.address(AddressType.HOME, demographic.getAddress(), demographic.getCity(), demographic.getProvince(), demographic.getPostal(), "CA")
+				.phone(TelcoType.HOME, demographic.getPhone())
+				.and().author()
+				.id(authorId)
+				.time(new Date())
+				.name(NameType.LEGAL, sendingProvider.getFirstName(), sendingProvider.getLastName())
+				.address(AddressType.HOME, clinic.getAddress(), clinic.getCity(), clinic.getProvince(), clinic.getPostal(), "CA")
+				.phone(TelcoType.HOME, clinic.getPhone())
+				.and().recipient()
+				.id(recipientId)
+				.name(NameType.LEGAL, professionalSpecialist.getFirstName(), professionalSpecialist.getLastName())
+				.address(AddressType.HOME, professionalSpecialist.getAddress(), professionalSpecialist.getCity(), professionalSpecialist.getProvince(), professionalSpecialist.getPostal(), "CA")
+				.phone(TelcoType.HOME, professionalSpecialist.getPhoneNumber())
+				.and().content(message)
+				//.attach(AttachmentType.PDF, newBytes)
+				.submit();
+
+		MiscUtils.getLogger().info("obibconnector response: " + response);
 	}
 
 	private String fillReferralNotes(ConsultationRequest consultationRequest) {

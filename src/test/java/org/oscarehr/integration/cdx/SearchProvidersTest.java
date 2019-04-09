@@ -39,6 +39,28 @@ public class SearchProvidersTest {
     private String receivedMessage = null;
 
     @Test
+    public void testFindByProviderName() {
+        ISearchProviders searchProviders = new SearchProviders(config);
+        List<IProvider> providers = null;
+        try {
+            providers = searchProviders.findByName("testing");
+        } catch (OBIBException e) {
+            receivedMessage = e.getMessage();
+            MiscUtils.getLogger().info(receivedMessage);
+        } catch (Exception e) {
+            MiscUtils.getLogger().info(e.getStackTrace());
+        }
+        if (providers != null) {
+            MiscUtils.getLogger().info("num of CDX providers search by name: " + providers.size());
+        } else {
+            MiscUtils.getLogger().info("cdx providers is null for search by name");
+        }
+        //Assert.assertNotNull(providers);
+        String expectedErrorMsg = "Error finding providers by name.";
+        Assert.assertEquals(expectedErrorMsg, receivedMessage);
+    }
+
+    @Test
     public void testFindByProviderId() {
 
         ISearchProviders searchProviders = new SearchProviders(config);

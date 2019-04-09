@@ -40,6 +40,54 @@ public class SearchClinicsTest {
     private String receivedMessage = null;
 
     @Test
+    public void testFindByName() {
+        ISearchClinic searchClinic = new SearchClinic(config);
+        List<IClinic> clinics = null;
+
+        try {
+            clinics = searchClinic.findByName("gandalf");
+        } catch (OBIBException e) {
+            receivedMessage = e.getMessage();
+            MiscUtils.getLogger().info(receivedMessage);
+        } catch (Exception e) {
+            MiscUtils.getLogger().info(e.getStackTrace());
+        }
+        if (clinics != null) {
+            MiscUtils.getLogger().info("num of CDX clinics by name : " + clinics.size());
+        } else {
+            MiscUtils.getLogger().info("cdx clinics is null by name");
+        }
+
+        String expectedErrorMsg = "Error finding clinics by name.";
+        Assert.assertEquals(expectedErrorMsg, receivedMessage);
+        //Assert.assertNotNull(clinics);
+    }
+
+    @Test
+    public void testFindByAddress() {
+        ISearchClinic searchClinic = new SearchClinic(config);
+        List<IClinic> clinics = null;
+
+        try {
+            clinics = searchClinic.findByAddress("the address");
+        } catch (OBIBException e) {
+            receivedMessage = e.getMessage();
+            MiscUtils.getLogger().info(receivedMessage);
+        } catch (Exception e) {
+            MiscUtils.getLogger().info(e.getStackTrace());
+        }
+        if (clinics != null) {
+            MiscUtils.getLogger().info("num of CDX clinics by address : " + clinics.size());
+        } else {
+            MiscUtils.getLogger().info("cdx clinics is null by address");
+        }
+
+        String expectedErrorMsg = "Error finding clinics by address.";
+        Assert.assertEquals(expectedErrorMsg, receivedMessage);
+        //Assert.assertNotNull(clinics);
+    }
+
+    @Test
     public void testFindById() {
         ISearchClinic searchClinic = new SearchClinic(config);
         List<IClinic> clinics = null;
@@ -53,9 +101,9 @@ public class SearchClinicsTest {
             MiscUtils.getLogger().info(e.getStackTrace());
         }
         if (clinics != null) {
-            MiscUtils.getLogger().info("num of CDX clinics: " + clinics.size());
+            MiscUtils.getLogger().info("num of CDX clinics by id: " + clinics.size());
         } else {
-            MiscUtils.getLogger().info("cdx clinics is null");
+            MiscUtils.getLogger().info("cdx clinics is null by id");
         }
 
         String expectedErrorMsg = "Error finding clinics by id.";
