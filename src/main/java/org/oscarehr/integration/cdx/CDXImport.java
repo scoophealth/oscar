@@ -308,6 +308,8 @@ public class CDXImport {
         CtlDocumentDao ctlDocDao = SpringUtils.getBean(CtlDocumentDao.class);
         int demoId = -1;
 
+        // implement 4 point matching as required by CDX conformance spec
+
         String hin = selectIDType(patient.getIDs(), "HIN");
 
         if (hin != null) {
@@ -323,8 +325,12 @@ public class CDXImport {
 
                         Date d2 = patient.getBirthdate();
 
-                        if (sameDates(d,d2)) {
-                            demoId = demo.getId(); // we found the patient
+                        if (sameDates(d,d2) && (patient.getGender() != null)) {
+
+                            if (patient.getGender().label.equals(demo.getSex())) {
+
+                                demoId = demo.getId(); // we found the patient
+                            }
                         }
                     } catch (ParseException e) {
                         MiscUtils.getLogger().error("Error", e);
