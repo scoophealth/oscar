@@ -2183,12 +2183,12 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Demographic> getActiveDemographicSince(Date lastDate) {
+	public List<Demographic> getActiveDemographicAfter(Date afterDatetimeExclusive) {
 		String q = "From Demographic d where d.PatientStatus='AC'";
-		if (lastDate!=null) q += " and d.lastUpdateDate >= ?";
+		if (afterDatetimeExclusive!=null) q += " and d.lastUpdateDate > ?";
 		
 		List<Demographic> rs = null;
-		rs = lastDate!=null ? getHibernateTemplate().find(q, lastDate) : getHibernateTemplate().find(q);
+		rs = afterDatetimeExclusive!=null ? getHibernateTemplate().find(q, afterDatetimeExclusive) : getHibernateTemplate().find(q);
 		
 		return rs;
 	}

@@ -163,10 +163,4 @@ public class DemographicWs extends AbstractWs {
 		}
 		return "fail";
 	}
-
-	public Integer[] getConsentedDemographicIdsAfter(@WebParam(name="lastCreateDate") Calendar lastCreateDate)
-	{
-		//Ronnie: to-do
-		return null;
-	}
 }
