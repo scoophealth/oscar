@@ -130,6 +130,7 @@
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
 
+    <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/bootstrap-confirmation.js"></script>
 
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/share/yui/css/fonts-min.css"/>
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/share/yui/css/autocomplete.css"/>
@@ -200,7 +201,12 @@
                                        onchange="checkSave('<%=documentNo%>');" name="demographicKeyword" placeholder="Demographic search..."/>
 
                                 <span class="input-group-btn" >
-                                <input type="submit" disabled name="save" class="btn btn-default" id="save<%=documentNo%>" value="Link"/>
+
+                                <button type="submit" disabled name="save" class="btn btn-default" id="save<%=documentNo%>"> Link </button>
+
+
+
+
                                 <input type="button" id="createNewDemo" value="New" class="btn btn-default"
                                        onclick="popup(700,960,'<%= request.getContextPath() %>/demographic/demographicaddarecordhtm.jsp','demographic')"/>
 																																		</span>
@@ -758,35 +764,42 @@
         jQuery(".ui-helper-hidden-accessible").css({"position": "absolute", "left": "-999em"}) //{"display","none"} will remove the element from the page
     });
 
+
+
+
     function updateCdxDocument(eleId){
-        //save doc info
-        var url="../dms/ManageDocument.do",data=$(eleId).serialize(true);
-        new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-                var json=transport.responseText.evalJSON();
-                var patientId;
-                //oscarLog(json);
-                if(json!=null ){
-                    patientId=json.patientId;
+        if (confirm("Are you sure to link to this demographic?")) {
 
-                    var ar=eleId.split("_");
-                    var num=ar[1];
-                    num=num.replace(/\s/g,'');
+            //save doc info
+            var url="../dms/ManageDocument.do",data=$(eleId).serialize(true);
+            new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
+                    var json=transport.responseText.evalJSON();
+                    var patientId;
+                    //oscarLog(json);
+                    if(json!=null ){
+                        patientId=json.patientId;
 
-                    var war = $("warningMsg_"+num);
-                    if (war != null) {
-                        war.hide();
-                        $("save"+num).hide();
-                        $('autocompletedemo'+num).disable();
-                        $("createNewDemo").hide();
-                        $("activeGroup").hide();
-                        $('flagsave'+num).disabled = false;
-                        $("msgBtn_"+num).onclick = function() { popup(700,960,contextpath +'/oscarMessenger/SendDemoMessage.do?demographic_no='+patientId,'msg'); };
+                        var ar=eleId.split("_");
+                        var num=ar[1];
+                        num=num.replace(/\s/g,'');
+
+                        var war = $("warningMsg_"+num);
+                        if (war != null) {
+                            war.hide();
+                            $("save"+num).hide();
+                            $('autocompletedemo'+num).disable();
+                            $("createNewDemo").hide();
+                            $("activeGroup").hide();
+                            $('flagsave'+num).disabled = false;
+                            $("msgBtn_"+num).onclick = function() { popup(700,960,contextpath +'/oscarMessenger/SendDemoMessage.do?demographic_no='+patientId,'msg'); };
+                        }
+
+                        $("saveSucessMsg_"+num).show()
+                        $('saved'+num).value='true';
                     }
+                }});
+        }
 
-                    $("saveSucessMsg_"+num).show()
-                    $('saved'+num).value='true';
-                }
-            }});
         return false;
     }
 
