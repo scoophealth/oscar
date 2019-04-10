@@ -44,7 +44,7 @@ import org.apache.commons.lang.StringUtils;
 
 @Entity
 @Table(name = "allergies")
-public class Allergy extends AbstractModel<Integer> {
+public class Allergy extends AbstractModel<Integer> implements DemographicData {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -140,7 +140,7 @@ public class Allergy extends AbstractModel<Integer> {
 		this.id = id;
 	}
 
-	public Integer getDemographicNo() {
+	public int getDemographicNo() {
 		return demographicNo;
 	}
 

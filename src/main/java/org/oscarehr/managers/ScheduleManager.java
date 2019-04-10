@@ -96,6 +96,9 @@ public class ScheduleManager {
 	private SecurityInfoManager securityInfoManager;
 	
 	@Autowired
+	private PatientConsentManager patientConsentManager;
+	
+	@Autowired
 	private AppointmentManager appointmentManager;
 
 
@@ -263,6 +266,7 @@ public class ScheduleManager {
 
 		LogAction.addLogSynchronous(loggedInInfo, "ScheduleManager.getAppointmentUpdatedAfterDate", "updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
 
+		patientConsentManager.filterProviderSpecificConsent(loggedInInfo, results);
 		return (results);
 	}
 

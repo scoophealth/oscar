@@ -1,3 +1,4 @@
+package org.oscarehr.common.model;
 /**
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
  * This software is published under the GPL GNU General Public License.
@@ -21,25 +22,8 @@
  * Hamilton
  * Ontario, Canada
  */
-package org.oscarehr.ws.transfer_objects;
+public interface DemographicData {
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
-import org.oscarehr.common.model.Allergy;
-
-public class AllergyTransferTest {
-
-	@Test
-	public void transferTest()
-	{
-		Allergy p=new Allergy();
-		p.setId(12345);
-		p.setDescription("testAllergy");
-		p.setDemographicNo(555);
-		
-		AllergyTransfer pt=AllergyTransfer.toTransfer(p);
-		assertEquals(12345, pt.getId().intValue());
-		assertEquals("testAllergy", pt.getDescription());
-	}
+		Integer getId();
+		int getDemographicNo();
 }

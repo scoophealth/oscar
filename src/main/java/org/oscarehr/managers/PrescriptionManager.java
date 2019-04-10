@@ -60,6 +60,10 @@ public class PrescriptionManager {
 
     @Autowired
     private SecurityInfoManager securityInfoManager;
+    
+    @Autowired
+	private PatientConsentManager patientConsentManager;
+
 
     public Prescription getPrescription(LoggedInInfo loggedInInfo, Integer prescriptionId) {
         Prescription result = prescriptionDao.find(prescriptionId);
@@ -72,7 +76,7 @@ public class PrescriptionManager {
 
     public List<Prescription> getPrescriptionUpdatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateExclusive, int itemsToReturn) {
         List<Prescription> results = prescriptionDao.findByUpdateDate(updatedAfterThisDateExclusive, itemsToReturn);
-
+        patientConsentManager.filterProviderSpecificConsent(loggedInInfo, results);
         LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getPrescriptionUpdatedAfterDate", "updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
 
         return (results);

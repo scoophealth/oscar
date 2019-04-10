@@ -474,28 +474,31 @@ font-size:20px
  	
 
 	<!-- we'll combine/minify later -->
-	<script src="../web/common/demographicServices.js"></script>
-	<script src="../web/common/programServices.js"></script>
-	<script src="../web/common/scheduleServices.js"></script>
-	<script src="../web/common/securityServices.js"></script>
-	<script src="../web/common/staticDataServices.js"></script>
-	<script src="../web/common/billingServices.js"></script>
-	<script src="../web/common/ticklerServices.js"></script>
-	<script src="../web/common/formServices.js"></script>
-	<script src="../web/common/noteServices.js"></script>
-	<script src="../web/common/providerServices.js"></script>
-	<script src="../web/common/patientDetailStatusServices.js"></script>
-	<script src="../web/common/uxServices.js"></script>
-	<script src="../web/common/messageServices.js"></script>
-	<script src="../web/common/inboxServices.js"></script>
-	<script src="../web/common/k2aServices.js"></script>
-	<script src="../web/common/personaServices.js"></script>
-	<script src="../web/common/consultServices.js"></script>
-	<script src="../web/common/appServices.js"></script>
-	<script src="../web/common/diseaseRegistryServices.js"></script>
-	<script src="../web/common/rxServices.js"></script>
-	<script src="../web/filters.js"></script>
-	
+
+	<script src="common/demographicServices.js"></script>
+	<script src="common/programServices.js"></script>
+	<script src="common/scheduleServices.js"></script>
+	<script src="common/securityServices.js"></script>
+	<script src="common/staticDataServices.js"></script>
+	<script src="common/billingServices.js"></script>
+	<script src="common/ticklerServices.js"></script>
+	<script src="common/formServices.js"></script>
+	<script src="common/noteServices.js"></script>
+	<script src="common/providerServices.js"></script>
+	<script src="common/patientDetailStatusServices.js"></script>
+	<script src="common/uxServices.js"></script>
+	<script src="common/messageServices.js"></script>
+	<script src="common/inboxServices.js"></script>
+	<script src="common/k2aServices.js"></script>
+	<script src="common/personaServices.js"></script>
+	<script src="common/consultServices.js"></script>
+	<script src="common/appServices.js"></script>
+	<script src="common/diseaseRegistryServices.js"></script>
+	<script src="common/consentServices.js"></script>
+	<script src="filters.js"></script>
+	<script src="app.js"></script>
+
+	<script src="../web/common/rxServices.js"></script>	
 	<script src="../web/record/rx/rx.component.js"></script>
 	<script src="../web/record/rx/rxModel.js"></script>
 	<script src="../web/record/rx/search/medsearch.component.js"></script>
@@ -507,7 +510,6 @@ font-size:20px
 	<script src="../web/record/rx/reprint/reprint.component.js"></script>
 	<script src="../web/record/rx/fullsearch/fullsearch.component.js"></script>
 	<script src="../web/common/components/provider/provider.component.js"></script>
-	<script src="../web/app.js"></script>
 	
 	<script src="../web/oscarController.js"></script>
 	<script src="../web/dashboard/dashboardController.js"></script>

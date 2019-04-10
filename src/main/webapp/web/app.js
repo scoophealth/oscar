@@ -3,7 +3,7 @@ var oscarApp = angular.module('oscarProviderViewModule', ['ui.router','ngResourc
 														  'ticklerServices','scheduleServices','billingServices','securityServices','staticDataServices',
 														  'patientDetailStatusServices','formServices','providerServices','noteServices','infinite-scroll',
 														  'uxServices','ngTable','oscarFilters','messageServices','inboxServices','k2aServices', 'personaServices'
-														  ,'consultServices','appServices','diseaseRegistryServices','rxServices','angular-loading-bar','ngSanitize']);
+														  ,'consultServices','appServices','diseaseRegistryServices','rxServices','angular-loading-bar','ngSanitize','consentServices']);
 
 
 oscarApp.config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {
