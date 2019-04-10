@@ -131,9 +131,9 @@ public class DemographicWs extends AbstractWs {
 		return(DemographicTransfer.toTransfers(demographics));	
 	}
 	
-	public DemographicTransfer[] getActiveDemographicsSince(@WebParam(name="lastUpdate") Calendar lastUpdate, @WebParam(name="fields") String fields) {
-		Date lastDate = lastUpdate.getTime();
-		List<Demographic> demographics = demographicManager.getActiveDemographicSince(getLoggedInInfo(), lastDate);
+	public DemographicTransfer[] getActiveDemographicsAfter(@WebParam(name="lastUpdate") Calendar lastUpdate, @WebParam(name="fields") String fields) {
+		Date afterDateExclusive = lastUpdate!=null ? lastUpdate.getTime() : null;
+		List<Demographic> demographics = demographicManager.getActiveDemographicAfter(getLoggedInInfo(), afterDateExclusive);
 		
 		List<DemographicTransfer> result = new ArrayList<DemographicTransfer>();
 		if (demographics!=null) {
@@ -162,5 +162,11 @@ public class DemographicWs extends AbstractWs {
 		    return "success";
 		}
 		return "fail";
+	}
+
+	public Integer[] getConsentedDemographicIdsAfter(@WebParam(name="lastCreateDate") Calendar lastCreateDate)
+	{
+		//Ronnie: to-do
+		return null;
 	}
 }
