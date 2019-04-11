@@ -27,8 +27,10 @@ package org.oscarehr.integration.cdx.dao;
 
         import org.oscarehr.common.dao.AbstractDao;
         import org.oscarehr.integration.cdx.model.CdxDocument;
+        import org.oscarehr.util.SpringUtils;
         import org.springframework.stereotype.Repository;
 
+        import javax.persistence.Query;
 
 
 @Repository
@@ -49,6 +51,19 @@ public class CdxDocumentDao extends AbstractDao<CdxDocument> {
             return null;
         }
         return find(id);
+    }
+
+    public void deleteDocument(int documentNo) {
+        CdxAttachmentDao cdxAttachmentDao = SpringUtils.getBean(CdxAttachmentDao.class);
+        CdxPersonDao cdxPersonDao = SpringUtils.getBean(CdxPersonDao.class);
+
+        cdxAttachmentDao.deleteAttachments(documentNo);
+        cdxPersonDao.deletePersons(documentNo);
+
+        String sql = "DELETE FROM CdxDocument d where d.documentNo = :docid";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("docid", documentNo);
+        query.executeUpdate();
     }
 
 

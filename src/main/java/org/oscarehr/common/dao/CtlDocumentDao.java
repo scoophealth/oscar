@@ -53,4 +53,11 @@ public class CtlDocumentDao extends AbstractDao<CtlDocument>{
         List<CtlDocument> cList = query.getResultList();
 		return cList;
     }
+
+    public void deleteDocument(int docNo) {
+		String sql = "DELETE FROM CtlDocument d where d.id.documentNo = :docid";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("docid", docNo);
+		query.executeUpdate();
+    }
 }

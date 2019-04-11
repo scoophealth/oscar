@@ -63,4 +63,10 @@ public class CdxTelcoDao extends AbstractDao<CdxTelco> {
 
     }
 
+    public void deleteTelco(Integer id) {
+            String sql = "DELETE FROM CdxTelco t where t.person = :id";
+            Query query = entityManager.createQuery(sql);
+            query.setParameter("id", id);
+            query.executeUpdate();
+    }
 }

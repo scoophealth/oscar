@@ -53,4 +53,10 @@ public class CdxPersonIdDao extends AbstractDao<CdxPersonId> {
 
     }
 
+    public void deleteId(Integer id) {
+        String sql = "DELETE FROM CdxPersonId i where i.person = :id";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("id", id);
+        query.executeUpdate();
+    }
 }

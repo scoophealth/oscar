@@ -75,7 +75,25 @@
     String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
     CdxDocument cdxDoc = cdxDocDao.getCdxDocument(documentNo);
-    CtlDocument ctlDoc = ctlDocDao.getCtrlDocument(documentNoInt);
+
+    if (cdxDoc == null) { %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Document no longer exists</title>
+</head>
+<body>
+<h1>This document no longer exists</h1>
+It must have been deleted. Please refresh your Inbox window.
+</body>
+</html>
+
+<%
+    } else {
+
+        CtlDocument ctlDoc = ctlDocDao.getCtrlDocument(documentNoInt);
 
     Integer demoNoInt = ctlDoc.getId().getModuleId();
     String demoNo = demoNoInt.toString();
@@ -97,13 +115,8 @@
         skipComment = true;
     }
 
-    String ackFunc;
-    if( skipComment ) {
-        ackFunc = "updateStatus('acknowledgeForm_" + documentNo + "'," + inQueueB + ");";
-    }
-    else {
-        ackFunc = "getDocComment('" + documentNo + "','" + providerNo + "'," + inQueueB + ");";
-    }
+
+
 %>
 <html>
 <head>
@@ -129,8 +142,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
-
-    <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/bootstrap-confirmation.js"></script>
 
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/share/yui/css/fonts-min.css"/>
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/share/yui/css/autocomplete.css"/>
@@ -163,7 +174,7 @@
             <div class="row">
                 <div class="col-md-6">
 
-                    <form id="forms_<%=documentNo%>" onsubmit="return updateCdxDocument('forms_<%=documentNo%>');">
+                    <form id="forms_<%=documentNo%>" onsubmit="return updateCdxDocumentAndLinkDemo('forms_<%=documentNo%>');">
                         <input type="hidden" name="documentId" value="<%=documentNo%>" />
                         <input type="hidden" id="docDesc_<%=documentNo%>"  type="text" name="documentDescription" value="<%=curdoc.getDocdesc()%>" />
                         <input type="hidden" id="observationDate<%=documentNo%>" name="observationDate" type="text" value="<%=curdoc.getObservationdate()%>"/>
@@ -178,7 +189,8 @@
                         <input type="hidden" name="provi" id="provfind<%=documentNo%>"/>
 
                         <%
-                            if (demoNoInt == -1) {
+                            boolean demoLinked = demoNo != null && !demoNo.equals("") && !demoNo.equalsIgnoreCase("null") && !demoNo.equals("-1");
+                            if (!demoLinked) {
                         %>
 
                         <div id="warningMsg_<%=documentNo%>" class="alert alert-danger" role="alert">
@@ -244,9 +256,6 @@
                         <% } %>
 
 
-                        <a id="saveSucessMsg_<%=documentNo%>" style="display:none">
-                            <bean:message key="inboxmanager.document.SuccessfullySavedMsg"/></a>
-
                         <div class = "row">
                             <div class = "col-md-6">
 
@@ -282,7 +291,7 @@
 
                                     <input type="text" placeholder="Flag provider..." class="form-control" id="autocompleteprov<%=documentNo%>" name="providerKeyword"/>
                                     <span class = "input-group-btn">
-                                    <button type="submit" name="save" id="flagsave<%=documentNo%>" <% if (demoNoInt==-1) out.print("disabled");%> class="btn btn-default">
+                                    <button type="button" name="save" id="flagsave<%=documentNo%>" <% if (demoNoInt==-1) out.print("disabled");%> class="btn btn-default" onclick="updateCdxDocument('forms_<%=documentNo%>')">
 									Save
 								</button> </span>
                                     <div id="autocomplete_choicesprov<%=documentNo%>" class="autocomplete"></div>
@@ -336,7 +345,7 @@
 
                             </form>
 
-                            <form name="acknowledgeForm_<%=documentNo%>" id="acknowledgeForm_<%=documentNo%>" onsubmit="<%=ackFunc%>" method="post" action="javascript:void(0);">
+                            <form name="acknowledgeForm_<%=documentNo%>" id="acknowledgeForm_<%=documentNo%>" onsubmit="acknowledgeCdxDocument()" method="post" action="javascript:void(0);">
 
                                 <input type="hidden" name="segmentID" value="<%= documentNo%>"/>
                                 <input type="hidden" name="multiID" value="<%= documentNo%>" />
@@ -346,32 +355,32 @@
                                 <input type="hidden" name="ajaxcall" value="yes"/>
                                 <input type="hidden" name="demofind" id="demofind_<%=documentNo%>" value="<%= demoNo%>"/>
                                 <input type="hidden" name="comment" id="comment_<%=documentNo%>" value="<%=docCommentTxt%>">
-                                <% if (demoNo != null && !demoNo.equals("") && !demoNo.equalsIgnoreCase("null") && !ackedOrFiled ) {%>
-                                <input type="submit" class="btn btn-success" id="ackBtn_<%=documentNo%>" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>">
-                                <input type="button" class="btn btn-default"  value="Comment" onclick="addDocComment('<%=documentNo%>','<%=providerNo%>',true)"/>
-                                <%}%>
 
-                                <input type="button" class="btn btn-danger" id="closeBtn_<%=documentNo%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
-                                <%
-                                    String btnDisabled = "disabled";
-                                    if (demoNo != null && !demoNo.equals("") && !demoNo.equalsIgnoreCase("null") && !demoNo.equals("-1") ) {
-                                        btnDisabled = "";
-                                    }
+                                <input type="button" class="btn btn-default" id="closeBtn_<%=documentNo%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
+                                <input type="button" class="btn btn-danger" id="deleteBtn_<%=documentNo%>" value=" Delete" onClick="deleteCdxDocument(<%=documentNo%>)" <%=(demoLinked? "style='display:none'" : "")%>>
+                                <div class="btn-group" role="group" <%=(!demoLinked? "style='display:none'" : "")%>>
 
-                                %>
-                                <input type="button" class="btn btn-default" id="msgBtn_<%=documentNo%>" value="Msg" onclick="popupPatient(700,960,'<%= request.getContextPath() %>/oscarMessenger/SendDemoMessage.do?demographic_no=','msg', '<%=documentNo%>')" <%=btnDisabled %>/>
 
-                                <%
-                                    if(org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()) {
-                                %>
-                                <input type="button" class="btn btn-default" id="mainTickler_<%=documentNo%>" value="Tickler" onClick="popupPatientTicklerPlus(710, 1024,'<%= request.getContextPath() %>/Tickler.do?', 'Tickler','<%=documentNo%>')" <%=btnDisabled %>>
-                                <% } else { %>
-                                <input type="button" class="btn btn-default" id="mainTickler_<%=documentNo%>" value="Tickler" onClick="popupPatientTickler(710, 1024,'<%= request.getContextPath() %>/tickler/ticklerAdd.jsp?', 'Tickler','<%=documentNo%>')" <%=btnDisabled %>>
-                                <% } %>
+                                    <input type="submit" class="btn btn-success" id="ackBtn_<%=documentNo%>" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" <%=(ackedOrFiled? "style='display:none'" : "")%>>
 
-                                <input type="button" class="btn btn-default" id="mainEchart_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupPatient(710, 1024,'<%= request.getContextPath() %>/oscarEncounter/IncomingEncounter.do?reason=<bean:message key="oscarMDS.segmentDisplay.labResults"/>&curDate=<%=currentDate%>>&appointmentNo=&appointmentDate=&startTime=&status=&demographicNo=', 'encounter', '<%=documentNo%>')" <%=btnDisabled %>>
-                                <input type="button" class="btn btn-default" id="mainMaster_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnMaster"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=','master','<%=documentNo%>')" <%=btnDisabled %>>
-                                <input type="button" class="btn btn-default" id="mainApptHistory_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnApptHist"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25&demographic_no=','ApptHist','<%=documentNo%>')" <%=btnDisabled %>>
+
+
+                                    <input type="button" class="btn btn-default" id="msgBtn_<%=documentNo%>" value="Msg" onclick="popupPatient(700,960,'<%= request.getContextPath() %>/oscarMessenger/SendDemoMessage.do?demographic_no=','msg', '<%=documentNo%>')" />
+
+                                    <%
+                                        if(org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()) {
+                                    %>
+                                    <input type="button" class="btn btn-default" id="mainTickler_<%=documentNo%>" value="Tickler" onClick="popupPatientTicklerPlus(710, 1024,'<%= request.getContextPath() %>/Tickler.do?', 'Tickler','<%=documentNo%>')" >
+                                    <% } else { %>
+                                    <input type="button" class="btn btn-default" id="mainTickler_<%=documentNo%>" value="Tickler" onClick="popupPatientTickler(710, 1024,'<%= request.getContextPath() %>/tickler/ticklerAdd.jsp?', 'Tickler','<%=documentNo%>')" >
+                                    <% } %>
+
+                                    <input type="button" class="btn btn-default" id="mainEchart_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupPatient(710, 1024,'<%= request.getContextPath() %>/oscarEncounter/IncomingEncounter.do?reason=<bean:message key="oscarMDS.segmentDisplay.labResults"/>&curDate=<%=currentDate%>>&appointmentNo=&appointmentDate=&startTime=&status=&demographicNo=', 'encounter', '<%=documentNo%>')" >
+                                    <input type="button" class="btn btn-default" id="mainMaster_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnMaster"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=','master','<%=documentNo%>')" >
+                                    <input type="button" class="btn btn-default" id="mainApptHistory_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnApptHist"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25&demographic_no=','ApptHist','<%=documentNo%>')" >
+
+                                </div>
+
 
 
                             </form>
@@ -768,35 +777,48 @@
 
 
     function updateCdxDocument(eleId){
-        if (confirm("Are you sure to link to this demographic?")) {
 
-            //save doc info
-            var url="../dms/ManageDocument.do",data=$(eleId).serialize(true);
+        //save doc info
+        var url="../dms/ManageDocument.do",data=$(eleId).serialize(true);
+        new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
+                var json=transport.responseText.evalJSON();
+                var patientId;
+                //oscarLog(json);
+                if(json!=null ){
+                    patientId=json.patientId;
+
+                    var ar=eleId.split("_");
+                    var num=ar[1];
+                    num=num.replace(/\s/g,'');
+                    document.location.reload();
+                }
+            }});
+
+        return false;
+    }
+
+    function updateCdxDocumentAndLinkDemo(eleId) {
+        if (confirm("Are you sure to link to this demographic?"))
+            return updateCdxDocument(eleId);
+        else return false;
+    }
+
+    function acknowledgeCdxDocument() {
+        <%  if( skipComment ) { %>
+        updateStatus('acknowledgeForm_<%=documentNo%>', false);
+        <% } else { %>
+        getDocComment(<%=documentNo%>,  <%=providerNo%> , false);
+        <% } %>
+        window.close();
+    }
+
+    function deleteCdxDocument(docNo) {
+        if (confirm("ARE YOU SURE TO DELETE THIS INCOMING CDX DOCUMENT? \n(Documents should only be deleted if they were received in error. This operation cannot be undone)")) {
+
+            var url="../dms/DeleteDocument.do";
+            var data='method=deleteDocument&documentId='+docNo;
             new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-                    var json=transport.responseText.evalJSON();
-                    var patientId;
-                    //oscarLog(json);
-                    if(json!=null ){
-                        patientId=json.patientId;
-
-                        var ar=eleId.split("_");
-                        var num=ar[1];
-                        num=num.replace(/\s/g,'');
-
-                        var war = $("warningMsg_"+num);
-                        if (war != null) {
-                            war.hide();
-                            $("save"+num).hide();
-                            $('autocompletedemo'+num).disable();
-                            $("createNewDemo").hide();
-                            $("activeGroup").hide();
-                            $('flagsave'+num).disabled = false;
-                            $("msgBtn_"+num).onclick = function() { popup(700,960,contextpath +'/oscarMessenger/SendDemoMessage.do?demographic_no='+patientId,'msg'); };
-                        }
-
-                        $("saveSucessMsg_"+num).show()
-                        $('saved'+num).value='true';
-                    }
+                    window.close();
                 }});
         }
 
@@ -808,3 +830,6 @@
 
 </body>
 </html>
+<%
+    }
+%>

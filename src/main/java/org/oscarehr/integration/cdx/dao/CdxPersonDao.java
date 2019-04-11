@@ -27,6 +27,7 @@ package org.oscarehr.integration.cdx.dao;
 
 import org.oscarehr.common.dao.AbstractDao;
 import org.oscarehr.integration.cdx.model.CdxPerson;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
@@ -56,6 +57,16 @@ public class CdxPersonDao extends AbstractDao<CdxPerson> {
 
     }
 
+
+    public List<CdxPerson> findPersons(int id) {
+
+        String sql = "FROM CdxPerson p where p.document = :docid";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("docid", id);
+        return query.getResultList();
+
+    }
+
     public List<String> findRoleInDocumentNamesAsString(int id, String role) {
 
         List<CdxPerson> persons = findRoleInDocument(id, role);
@@ -77,4 +88,19 @@ public class CdxPersonDao extends AbstractDao<CdxPerson> {
     }
 
 
+    public void deletePersons(int documentNo) {
+
+        CdxPersonIdDao cdxPersonIdDao = SpringUtils.getBean(CdxPersonIdDao.class);
+        CdxTelcoDao cdxTelcoDao = SpringUtils.getBean(CdxTelcoDao.class);
+
+        for (CdxPerson p : findPersons(documentNo)) {
+            cdxPersonIdDao.deleteId(p.getId());
+            cdxTelcoDao.deleteTelco(p.getId());
+        }
+
+        String sql = "DELETE FROM CdxPerson p where p.document = :docid";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("docid", documentNo);
+        query.executeUpdate();
+    }
 }

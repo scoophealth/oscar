@@ -2546,6 +2546,9 @@
 			<forward name="displaySingleDoc" path="/dms/MultiPageDocDisplay.jsp" />
                         <forward name="nextIncomingDoc" path="/dms/incomingDocs.jsp" />
 		</action>
+
+		<action path="/dms/DeleteDocument" name="CdxViewer" type="org.oscarehr.document.web.DeleteDocumentAction" parameter="method" scope="request">
+		</action>
 		
                 <action path="/DocumentDescriptionTemplate" name="FrmForm" type="org.oscarehr.provider.web.DocumentDescriptionTemplateAction" parameter="method" scope="request">
 		</action>

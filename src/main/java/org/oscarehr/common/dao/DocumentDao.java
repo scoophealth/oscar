@@ -48,7 +48,14 @@ import oscar.util.ConversionUtils;
 @Repository
 public class DocumentDao extends AbstractDao<Document> {
 
-	public enum Module {
+    public void deleteDocument(int docNo) {
+		String sql = "DELETE FROM Document d where d.documentNo = :docid";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("docid", docNo);
+		query.executeUpdate();
+    }
+
+    public enum Module {
 		DEMOGRAPHIC;
 		
 		public String getName() {

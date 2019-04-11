@@ -55,4 +55,11 @@ public class CdxAttachmentDao extends AbstractDao<CdxAttachment> {
     }
 
 
+    public void deleteAttachments(int documentNo) {
+        String sql = "DELETE FROM CdxAttachment a where a.document = :docid";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("docid", documentNo);
+        query.executeUpdate();
+
+    }
 }
