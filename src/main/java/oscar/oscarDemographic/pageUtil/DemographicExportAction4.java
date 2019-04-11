@@ -505,11 +505,13 @@ public class DemographicExportAction4 extends Action {
                     if (enrolment.enrolledTo != null) {
                         ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
                         Provider p = providerDao.getProvider(enrolment.enrolledTo);
-                        EnrolledToPhysician etp = ehx.addNewEnrolledToPhysician();
-                        PersonNameSimple pns = etp.addNewName();
-                        pns.setFirstName(p.getFirstName());
-                        pns.setLastName(p.getLastName());
-                        etp.setOHIPPhysicianId(p.getOhipNo());
+                        if (p != null) {  //could be null for Enrollment Status TERMINATED, patient added to roster in error
+							EnrolledToPhysician etp = ehx.addNewEnrolledToPhysician();
+							PersonNameSimple pns = etp.addNewName();
+							pns.setFirstName(p.getFirstName());
+							pns.setLastName(p.getLastName());
+							etp.setOHIPPhysicianId(p.getOhipNo());
+						}
                     }
 					ehx.setEnrollmentDate(Util.calDate(enrolment.date));
 					
