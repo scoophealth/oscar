@@ -567,7 +567,7 @@ public class DemographicExportAction4 extends Action {
 			if (StringUtils.filled(providerNo)) {
 				Demographics.PrimaryPhysician pph = demo.addNewPrimaryPhysician();
 				ProviderData prvd = new ProviderData(providerNo);
-				if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) pph.setOHIPPhysicianId(prvd.getOhip_no());
+				if (StringUtils.filled(prvd.getOhip_no()) && prvd.getOhip_no().length()<=6) pph.setOHIPPhysicianId(prvd.getOhip_no());
 				Util.writeNameSimple(pph.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
 				String cpso = prvd.getPractitionerNo();
 				if (cpso!=null && cpso.length()==5) pph.setPrimaryPhysicianCPSO(cpso);
@@ -1100,7 +1100,7 @@ public class DemographicExportAction4 extends Action {
 								ClinicalNotes.ParticipatingProviders pProvider = cNote.addNewParticipatingProviders();
 								ProviderData prvd = new ProviderData(cm_note.getProviderNo());
 								Util.writeNameSimple(pProvider.addNewName(), StringUtils.noNull(prvd.getFirst_name()), StringUtils.noNull(prvd.getLast_name()));
-								if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) pProvider.setOHIPPhysicianId(prvd.getOhip_no());
+								if (StringUtils.filled(prvd.getOhip_no()) && prvd.getOhip_no().length()<=6) pProvider.setOHIPPhysicianId(prvd.getOhip_no());
 
 								//note created datetime
 								cdsDt.DateTimeFullOrPartial noteCreatedDateTime = pProvider.addNewDateTimeNoteCreated();
@@ -1114,7 +1114,7 @@ public class DemographicExportAction4 extends Action {
 								ClinicalNotes.NoteReviewer noteReviewer = cNote.addNewNoteReviewer();
 								ProviderData prvd = new ProviderData(cm_note.getSigning_provider_no());
 								Util.writeNameSimple(noteReviewer.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
-								if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) noteReviewer.setOHIPPhysicianId(prvd.getOhip_no());
+								if (StringUtils.filled(prvd.getOhip_no()) && prvd.getOhip_no().length()<=6) noteReviewer.setOHIPPhysicianId(prvd.getOhip_no());
 
 								//note reviewed datetime
 								cdsDt.DateTimeFullOrPartial noteReviewedDateTime = noteReviewer.addNewDateTimeNoteReviewed();
@@ -1823,7 +1823,7 @@ public class DemographicExportAction4 extends Action {
 					if (StringUtils.filled(p.getFirstName()) || StringUtils.filled(p.getLastName())) {
 						Appointments.Provider prov = aptm.addNewProvider();
 
-						if (StringUtils.noNull(p.getOhipNo()).length()<=6) prov.setOHIPPhysicianId(p.getOhipNo());
+						if (StringUtils.filled(p.getOhipNo()) && p.getOhipNo().length()<=6) prov.setOHIPPhysicianId(p.getOhipNo());
 						Util.writeNameSimple(prov.addNewName(), p.getFirstName(), p.getLastName());
 					}
 					if (StringUtils.filled(ap.getNotes())) {
@@ -3170,7 +3170,7 @@ public class DemographicExportAction4 extends Action {
 				cdsDt.PersonNameSimple reviewerName = reviewer.addNewName();
 				ProviderData pvd = new ProviderData(lab_provider_no);
 				Util.writeNameSimple(reviewerName, pvd.getFirst_name(), pvd.getLast_name());
-				if (StringUtils.noNull(pvd.getOhip_no()).length()<=6) reviewer.setOHIPPhysicianId(pvd.getOhip_no());
+				if (StringUtils.filled(pvd.getOhip_no()) && pvd.getOhip_no().length()<=6) reviewer.setOHIPPhysicianId(pvd.getOhip_no());
 			}
 		}
 	}
