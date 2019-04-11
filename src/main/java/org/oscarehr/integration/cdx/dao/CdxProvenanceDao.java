@@ -26,12 +26,10 @@ package org.oscarehr.integration.cdx.dao;
 
 
 import org.oscarehr.common.dao.AbstractDao;
-import org.oscarehr.integration.cdx.model.CdxPerson;
 import org.oscarehr.integration.cdx.model.CdxProvenance;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
-import java.util.ArrayList;
 import java.util.List;
 
 

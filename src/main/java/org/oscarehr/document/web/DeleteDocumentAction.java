@@ -32,7 +32,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.*;
 import org.oscarehr.common.model.*;
-import org.oscarehr.integration.cdx.dao.CdxDocumentDao;
+import org.oscarehr.integration.cdx.dao.CdxAttachmentDao;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
@@ -49,7 +49,7 @@ public class DeleteDocumentAction extends DispatchAction {
 
 	private DocumentDao documentDao = SpringUtils.getBean(DocumentDao.class);
 	private CtlDocumentDao ctlDocumentDao = SpringUtils.getBean(CtlDocumentDao.class);
-	private CdxDocumentDao cdxDocumentDao = SpringUtils.getBean(CdxDocumentDao.class);
+	private CdxAttachmentDao cdxAttachmentDao = SpringUtils.getBean(CdxAttachmentDao.class);
 	private ProviderInboxRoutingDao providerInboxRoutingDAO = SpringUtils.getBean(ProviderInboxRoutingDao.class);
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
@@ -84,7 +84,7 @@ public class DeleteDocumentAction extends DispatchAction {
 			documentDao.deleteDocument(docNo);
 			ctlDocumentDao.deleteDocument(docNo);
 
-			cdxDocumentDao.deleteDocument(docNo);
+			cdxAttachmentDao.deleteAttachments(docNo);
 
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error", e);

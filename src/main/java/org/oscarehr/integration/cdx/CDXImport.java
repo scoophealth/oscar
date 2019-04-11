@@ -73,165 +73,27 @@ public class CDXImport {
     }
 
     private void storeDocument(IDocument doc) {
+        CdxAttachmentDao dao = SpringUtils.getBean(CdxAttachmentDao.class);
+
         Document        docEntity = createInboxData(doc);
-        CdxDocumentDao  cdxDocDao = SpringUtils.getBean(CdxDocumentDao.class);
-        CdxDocument     cdxDocEntity = new CdxDocument();
-
-        cdxDocEntity.setDocumentNo(docEntity.getDocumentNo());
-
-        cdxDocEntity.setTemplateId(doc.getTemplateID());
-        cdxDocEntity.setTemplateName(doc.getTemplateName());
-        cdxDocEntity.setDocumentOid(doc.getDocumentID());
-        cdxDocEntity.setLoincCode(doc.getLoincCode());
-        cdxDocEntity.setLoincName(doc.getLoincCodeDisplayName());
-        cdxDocEntity.setTitle(doc.getTitle());
-        cdxDocEntity.setAuthoringTime(doc.getAuthoringTime());
-        cdxDocEntity.setDevice(doc.getAuthorDevice());
-        cdxDocEntity.setEffectiveTime(doc.getAuthoringTime());
-        cdxDocEntity.setCustodian(doc.getCustodianName());
-        cdxDocEntity.setOrderId(doc.getOrderID());
-        cdxDocEntity.setStatusCode(doc.getStatusCode());
-        cdxDocEntity.setObservationDate(doc.getObservationDate());
-        cdxDocEntity.setProcedureName(doc.getProcedureName());
-        cdxDocEntity.setParentDocId(doc.getParentDocumentID());
-        cdxDocEntity.setPatientEncounterId(doc.getPatientEncounterID());
-        cdxDocEntity.setAdmissionDate(doc.getAdmissionDate());
-        cdxDocEntity.setDischargeDate(doc.getDischargeDate());
-        cdxDocEntity.setDisposition(doc.getDischargeDisposition());
-        cdxDocEntity.setContents(doc.getContents());
-
-        cdxDocDao.persist(cdxDocEntity);
-
-        createCdxPatient(cdxDocEntity, doc.getPatient());
-        createCdxProvider(cdxDocEntity, CdxPerson.roleAuthor, doc.getAuthor());
-        createCdxProvider(cdxDocEntity, CdxPerson.roleOrderingProvider, doc.getOrderingProvider());
-        createCdxProvider(cdxDocEntity, CdxPerson.roleFamilyProvider, doc.getFamilyProvider());
-        createCdxProvider(cdxDocEntity, CdxPerson.roleProcedurePerformer, doc.getProcedurePerformer());
-        createCdxProvider(cdxDocEntity, CdxPerson.rolePrimaryRecipient, doc.getPrimaryRecipient());
-
-
-        for (IProvider p : doc.getSecondaryRecipients()) {
-            createCdxProvider(cdxDocEntity, CdxPerson.roleSecondaryRecipient, p);
-        }
-
-        for (IProvider p : doc.getParticipatingProviders()) {
-            createCdxProvider(cdxDocEntity, CdxPerson.roleParticipatingProvider, p);
-        }
 
         for (IAttachment a : doc.getAttachments()) {
-            createCdxAttachment(cdxDocEntity, a);
+            CdxAttachment attachmentEntity = new CdxAttachment();
+
+            attachmentEntity.setDocument(docEntity.getDocumentNo());
+            attachmentEntity.setAttachmentType(a.getType().label);
+            attachmentEntity.setReference(a.getReference());
+            attachmentEntity.setContent(a.getContent());
+            dao.persist(attachmentEntity);
         }
 
-    }
 
-    private void createCdxAttachment(CdxDocument cdxDocEntity, IAttachment a) {
-        CdxAttachmentDao dao = SpringUtils.getBean(CdxAttachmentDao.class);
-        CdxAttachment attachmentEntity = new CdxAttachment();
 
-        attachmentEntity.setDocument(cdxDocEntity.getDocumentNo());
-        attachmentEntity.setAttachmentType(a.getType().label);
-        attachmentEntity.setReference(a.getReference());
-        attachmentEntity.setContent(a.getContent());
 
-        dao.persist(attachmentEntity);
     }
 
 
-    private void createCdxProvider(CdxDocument cdxDocEntity, String role, IProvider person) {
-        if (person != null) {
-            CdxPersonDao cdxPersonDao = SpringUtils.getBean(CdxPersonDao.class);
-            CdxPerson personEntity = new CdxPerson();
 
-            personEntity.setDocument(cdxDocEntity.getDocumentNo());
-            personEntity.setFirstName(person.getFirstName());
-            personEntity.setLastName(person.getLastName());
-            personEntity.setStreetAddress(person.getStreetAddress());
-            personEntity.setCity(person.getCity());
-            personEntity.setPostalCode(person.getPostalCode());
-            personEntity.setProvince(person.getProvince());
-            personEntity.setCountry(person.getCountry());
-            personEntity.setPrefix(person.getPrefix());
-            personEntity.setClinicId(person.getClinicID());
-            personEntity.setClinicName(person.getClinicName());
-            personEntity.setRoleInDocument(role);
-
-            cdxPersonDao.persist(personEntity);
-
-            for (ITelco p : person.getPhones()) {
-                createCdxTelco(personEntity, CdxTelco.kindPhone, p);
-            }
-
-            for (ITelco e : person.getEmails()) {
-                createCdxTelco(personEntity, CdxTelco.kindEmail, e);
-            }
-
-            for (IId id : person.getIDs()) {
-                createCdxPersonId(personEntity, id);
-            }
-
-
-        }
-    }
-
-    private void createCdxPatient(CdxDocument cdxDocEntity, IPatient person) {
-        if (person != null) {
-            CdxPersonDao cdxPersonDao = SpringUtils.getBean(CdxPersonDao.class);
-            CdxPerson personEntity = new CdxPerson();
-
-            personEntity.setDocument(cdxDocEntity.getDocumentNo());
-            personEntity.setFirstName(person.getFirstName());
-            personEntity.setLastName(person.getLastName());
-            if (person.getGender()!=null)
-                personEntity.setGender(person.getGender().label);
-            personEntity.setBirthdate(person.getBirthdate());
-            personEntity.setStreetAddress(person.getStreetAddress());
-            personEntity.setCity(person.getCity());
-            personEntity.setPostalCode(person.getPostalCode());
-            personEntity.setProvince(person.getProvince());
-            personEntity.setCountry(person.getCountry());
-            personEntity.setPrefix(person.getPrefix());
-            personEntity.setRoleInDocument(CdxPerson.rolePatient);
-
-            cdxPersonDao.persist(personEntity);
-
-            for (ITelco p : person.getPhones()) {
-                createCdxTelco(personEntity, CdxTelco.kindPhone, p);
-            }
-
-            for (ITelco e : person.getEmails()) {
-                createCdxTelco(personEntity, CdxTelco.kindEmail, e);
-            }
-
-            for (IId id : person.getIDs()) {
-                createCdxPersonId(personEntity, id);
-            }
-
-
-        }
-    }
-
-    private void createCdxPersonId(CdxPerson personEntity, IId id) {
-        CdxPersonIdDao cdxPersonIdDao = SpringUtils.getBean(CdxPersonIdDao.class);
-        CdxPersonId idEntity = new CdxPersonId();
-
-        idEntity.setPerson(personEntity.getId());
-        idEntity.setIdType(id.getIdType());
-        idEntity.setIdCode(id.getIdCode());
-
-        cdxPersonIdDao.persist(idEntity);
-    }
-
-    private void createCdxTelco(CdxPerson p, String kind, ITelco t) {
-        CdxTelcoDao cdxTelcoDao = SpringUtils.getBean(CdxTelcoDao.class);
-        CdxTelco telcoEntity = new CdxTelco();
-
-        telcoEntity.setPerson(p.getId());
-        telcoEntity.setKind(kind);
-        telcoEntity.setType(t.getTelcoType().label);
-        telcoEntity.setAddress(t.getAddress());
-
-        cdxTelcoDao.persist(telcoEntity);
-    }
 
     private Document createInboxData(IDocument doc) {
         Boolean         routed = false;
@@ -289,19 +151,10 @@ public class CDXImport {
 
         addPatient(docEntity, doc.getPatient());
 
+
         return docEntity;
     }
 
-
-    private String selectIDType(List<IId> ids, String type) {
-
-        for (IId i : ids) {
-            if (i.getIdType().equals(type))
-                return i.getIdCode();
-        }
-
-        return null;
-    }
 
     private void addPatient(Document docEntity, IPatient patient) {
         DemographicDao demoDao = SpringUtils.getBean(DemographicDao.class);
@@ -310,36 +163,35 @@ public class CDXImport {
 
         // implement 4 point matching as required by CDX conformance spec
 
-        String hin = selectIDType(patient.getIDs(), "HIN");
 
-        if (hin != null) {
-            List<Demographic> demos = demoDao.getDemographicsByHealthNum(hin);
+        List<Demographic> demos = demoDao.getDemographicsByHealthNum(patient.getID());
 
-            if (demos.size() == 1) {
-                Demographic demo = demos.get(0);
-                if (demo.getLastName().equals(patient.getLastName().toUpperCase())) {
+        if (demos.size() == 1) {
+            Demographic demo = demos.get(0);
+            if (demo.getLastName().equals(patient.getLastName().toUpperCase())) {
 
-                    try {
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                        Date d = sdf.parse(demo.getFormattedDob());
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date d = sdf.parse(demo.getFormattedDob());
 
-                        Date d2 = patient.getBirthdate();
+                    Date d2 = patient.getBirthdate();
 
-                        if (sameDates(d,d2) && (patient.getGender() != null)) {
+                    if (sameDates(d, d2) && (patient.getGender() != null)) {
 
-                            if (patient.getGender().label.equals(demo.getSex())) {
+                        if (patient.getGender().label.equals(demo.getSex())) {
 
-                                demoId = demo.getId(); // we found the patient
-                            }
+                            demoId = demo.getId(); // we found the patient
                         }
-                    } catch (ParseException e) {
-                        MiscUtils.getLogger().error("Error", e);
                     }
+                } catch (ParseException e) {
+                    MiscUtils.getLogger().error("Error", e);
                 }
             }
         }
 
+
         CtlDocument ctlDoc = new CtlDocument();
+
         ctlDoc.getId().setDocumentNo(docEntity.getDocumentNo());
         ctlDoc.getId().setModule("demographic");
         ctlDoc.getId().setModuleId(demoId);
@@ -387,9 +239,7 @@ public class CDXImport {
         ProviderDao provdao = SpringUtils.getBean(ProviderDao.class);
         Provider provEntity;
 
-        String id = selectIDType(prov.getIDs(), "MSP");
-
-        provEntity = provdao.getProviderByOhipNo(id);
+        provEntity = provdao.getProviderByOhipNo(prov.getID());
 
         if (provEntity == null) {
 
