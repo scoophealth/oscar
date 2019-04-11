@@ -483,7 +483,7 @@ public class DemographicExportAction4 extends Action {
 					en.terminationDate = demographic.getRosterTerminationDate();
 					en.terminationReason = demographic.getRosterTerminationReason();
 				} else {
-					enList.add(en);
+					if (en!=null) enList.add(en);
 					en = new Enrolment();
 					en.status = demographic.getRosterStatus();
 					en.enrolledTo = demographic.getRosterEnrolledTo();
@@ -501,16 +501,16 @@ public class DemographicExportAction4 extends Action {
 				for(int x=0;x<enList.size();x++) {
 					EnrolmentHistory ehx = demoEnrolment.addNewEnrolmentHistory();
 					Enrolment enrolment = enList.get(x);
-					
-					ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
-					Provider p = providerDao.getProvider(enrolment.enrolledTo);
-					
-					EnrolledToPhysician etp = ehx.addNewEnrolledToPhysician();
-					PersonNameSimple pns = etp.addNewName();
-					pns.setFirstName(p.getFirstName());
-					pns.setLastName(p.getLastName());
-					etp.setOHIPPhysicianId(p.getOhipNo());
-					
+
+                    if (enrolment.enrolledTo != null) {
+                        ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+                        Provider p = providerDao.getProvider(enrolment.enrolledTo);
+                        EnrolledToPhysician etp = ehx.addNewEnrolledToPhysician();
+                        PersonNameSimple pns = etp.addNewName();
+                        pns.setFirstName(p.getFirstName());
+                        pns.setLastName(p.getLastName());
+                        etp.setOHIPPhysicianId(p.getOhipNo());
+                    }
 					ehx.setEnrollmentDate(Util.calDate(enrolment.date));
 					
 					
@@ -2699,7 +2699,7 @@ public class DemographicExportAction4 extends Action {
 	//------------------------------------------------------------
 
 	private boolean sameEnrolment(Demographic demographic,Enrolment en) {
-		if(en != null) {
+		if(en != null && en.date!= null && demographic.getRosterDate() != null) {
 			//if(demographic.getRosterStatus().equals(en.status)) {
 				if(DateUtils.isSameDay(demographic.getRosterDate(),en.date)) {
 					if(demographic.getRosterEnrolledTo() != null && demographic.getRosterEnrolledTo().equals(en.enrolledTo)) {
@@ -2712,7 +2712,7 @@ public class DemographicExportAction4 extends Action {
 	}
 	
 	private boolean sameEnrolment(DemographicArchive demographic,Enrolment en) {
-		if(en != null) {
+		if(en != null && en.date != null && demographic.getRosterDate() != null) {
 			//if(demographic.getRosterStatus().equals(en.status)) {
 				if(DateUtils.isSameDay(demographic.getRosterDate(),en.date)) {
 					if(demographic.getRosterEnrolledTo() != null && demographic.getRosterEnrolledTo().equals(en.enrolledTo)) {
