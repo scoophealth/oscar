@@ -24,14 +24,15 @@
 
 --%>
 
+<%@page import="org.oscarehr.common.dao.EFormDataDao"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
       String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
       boolean authed=true;
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_con" rights="r" reverse="<%=true%>">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_eform" rights="r" reverse="<%=true%>">
 	<%authed=false; %>
-	<%response.sendRedirect("../../securityError.jsp?type=_con");%>
+	<%response.sendRedirect("../../securityError.jsp?type=_eform");%>
 </security:oscarSec>
 <%
 if(!authed) {
@@ -59,27 +60,36 @@ if(!authed) {
 	LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
   String demo = request.getParameter("demo") ;
   String requestId = request.getParameter("requestId");
+  String val = "";
+  
+  if(!StringUtils.isNullOrEmpty(requestId) && demo == null) {
+	  EFormDataDao eformDataDao = SpringUtils.getBean(EFormDataDao.class);
+	  EFormData efmData =  eformDataDao.find(Integer.parseInt(requestId));
+	  demo = String.valueOf(efmData.getDemographicId());
+  }
 %>
 <ul id="attachedList"
 	style="background-color: white; padding-left: 20px; list-style-position: outside; list-style-type: lower-roman;">
 	<%
-            ArrayList privatedocs = new ArrayList();
-            privatedocs = EDocUtil.listDocs(loggedInInfo, demo, requestId, EDocUtil.ATTACHED);
+            ArrayList<EDoc> privatedocs = new ArrayList<EDoc>();
+            privatedocs = EDocUtil.listDocsAttachedToEForm(loggedInInfo, demo, requestId, EDocUtil.ATTACHED);
             EDoc curDoc;                                        
             for(int idx = 0; idx < privatedocs.size(); ++idx)
             {                    
-                curDoc = (EDoc)privatedocs.get(idx);                                            
+                curDoc = privatedocs.get(idx);       
+                val +=  "D" + curDoc.getDocId() + "|";
         %>
 	<li class="doc"><%=StringUtils.maxLenString(curDoc.getDescription(),19,16,"...")%></li>
 	<%                                           
             }
 
                 CommonLabResultData labData = new CommonLabResultData();
-                ArrayList labs = labData.populateLabResultsData(loggedInInfo, demo, requestId, CommonLabResultData.ATTACHED);
+                ArrayList labs = labData.populateLabResultsDataEForm(loggedInInfo, demo, requestId, CommonLabResultData.ATTACHED);
                 LabResultData resData;
                 for(int idx = 0; idx < labs.size(); ++idx) 
                 {
                     resData = (LabResultData)labs.get(idx);
+                    val += "L" + resData.segmentID + "|";
         %>
 	<li class="lab"><%=resData.getDiscipline()+" "+resData.getDateTime()%></li>
 	<%
@@ -87,8 +97,8 @@ if(!authed) {
                 //Gets the DAOs for HRMDocumentToDemographic and HRMDocument
                 HRMDocumentToDemographicDao hrmDocumentToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
                 HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
-				//Gets the list of attached HRM Documents with the consultation
-                List<HRMDocumentToDemographic> hrmDocumentToDemographicList = hrmDocumentToDemographicDao.findHRMDocumentsAttachedToConsultation(requestId);
+				//Gets the list of attached HRM Documents with the eform
+                List<HRMDocumentToDemographic> hrmDocumentToDemographicList = hrmDocumentToDemographicDao.findHRMDocumentsAttachedToEForm(requestId);
 				//Declares an hrmDocument, a truncatedDisplayName, and a date for each attached HRM document
                 HRMDocument hrmDocument;
                 String truncatedDisplayName;
@@ -105,6 +115,7 @@ if(!authed) {
                 		truncatedDisplayName = StringUtils.maxLenString(hrmDocument.getReportType(),14,11,"");
                 	}
                 	
+                	val +=  "H" + hrmDocumentToDemographic.getHrmDocumentId() + "|";
                 	//Outputs the list item
                 %>	
 					<li class="hrm"><%=truncatedDisplayName%></li>
@@ -112,13 +123,17 @@ if(!authed) {
                 }
 
 				//Get attached eForms
-				List<EFormData> eForms = EFormUtil.listPatientEformsCurrentAttachedToConsult(requestId);
-				for (EFormData eForm : eForms) { %>
+				List<EFormData> eForms = EFormUtil.listPatientEformsCurrentAttachedToEForm(requestId);
+				for (EFormData eForm : eForms) {
+					val +=  "E" + eForm.getId() + "|";
+                	
+				%>
 					<li class="eForm"><%=(eForm.getFormName().length()>14)?eForm.getFormName().substring(0, 11)+"...":eForm.getFormName()%></li>
 				<%
 				}
         %>
 </ul>
+ <input type="text" name="selectDocs" value="<%=val %>" style="display:none">
 <%
            if( privatedocs.size() == 0 && labs.size() == 0 && hrmDocumentToDemographicList.size() == 0 && eForms.isEmpty()) {
         %>

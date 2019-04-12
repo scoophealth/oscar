@@ -33,6 +33,7 @@ import java.util.TreeSet;
 
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.model.EFormData;
 import org.oscarehr.util.MiscUtils;
@@ -111,6 +112,27 @@ public class EFormDataDao extends AbstractDao<EFormData> {
 	public List<EFormData> findByDemographicIdCurrent(Integer demographicId, Boolean current, int startIndex, int numToReturn) {
 		return findByDemographicIdCurrent(demographicId, current, startIndex, numToReturn, null);
 	}
+    public List<EFormData> findByDemographicIdCurrentAttachedToConsult(String consultationId) {
+        String sql = "SELECT * FROM eform_data e where e.patient_independent = false " +
+                "AND e.fdid IN (SELECT cd.document_no FROM consultdocs cd WHERE cd.requestId = " + consultationId + " AND cd.docType = 'E' AND cd.deleted IS NULL) " +
+                "ORDER BY e.form_date DESC, e.form_time DESC";
+        Query query = entityManager.createNativeQuery(sql, modelClass);
+        
+        return query.getResultList();
+    }
+    
+    public List<EFormData> findByDemographicIdCurrentAttachedToEForm(String fdid) {
+    	if(StringUtils.isEmpty(fdid)) {
+    		return new ArrayList<EFormData>();
+    	}
+    	
+        String sql = "SELECT * FROM eform_data e where e.patient_independent = false " +
+                "AND e.fdid IN (SELECT cd.document_no FROM EFormDocs cd WHERE cd.fdid = " + fdid + " AND cd.docType = 'E' AND cd.deleted IS NULL) " +
+                "ORDER BY e.form_date DESC, e.form_time DESC";
+        Query query = entityManager.createNativeQuery(sql, modelClass);
+        
+        return query.getResultList();
+    }
 
 	public List<EFormData> findByDemographicIdCurrent(Integer demographicId, Boolean current, int startIndex, int numToReturn, String sortBy) {
 		StringBuilder sb = new StringBuilder();

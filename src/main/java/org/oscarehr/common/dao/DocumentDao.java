@@ -39,6 +39,7 @@ import javax.persistence.Query;
 import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Document;
+import org.oscarehr.common.model.EFormDocs;
 import org.springframework.stereotype.Repository;
 
 import oscar.dms.EDocUtil.EDocSort;
@@ -125,6 +126,18 @@ public class DocumentDao extends AbstractDao<Document> {
 		Query query = entityManager.createQuery(sql);
 		query.setParameter("consultationId", consultationId);
 		query.setParameter("doctype", ConsultDocs.DOCTYPE_DOC);
+		return query.getResultList();
+    }
+    
+    public List<Object[]> findDocsAndEFormDocsByFdid(Integer fdid) {
+    	String sql = "FROM Document d, EFormDocs cd " +
+    			"WHERE d.documentNo = cd.documentNo " +
+    			"AND cd.fdid = :fdid " +
+    			"AND cd.docType = :doctype " +
+    			"AND cd.deleted IS NULL";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("fdid", fdid);
+		query.setParameter("doctype", EFormDocs.DOCTYPE_DOC);
 		return query.getResultList();
     }
     

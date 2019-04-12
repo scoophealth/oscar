@@ -150,10 +150,10 @@ public class HRMDocumentDao extends AbstractDao<HRMDocument> {
 	
 	public List<HRMDocument> query(String providerNo, boolean providerUnmatched, boolean noSignOff, boolean demographicUnmatched, int start, int length, String orderColumn, String orderDirection) {
 		
-		if(!orderColumn.equals("formattedName") && !orderColumn.equals("dob") ) {
+		if(orderColumn != null && !orderColumn.equals("formattedName") && !orderColumn.equals("dob") ) {
 			return new ArrayList<HRMDocument>();
 		}
-		if(!orderDirection.equalsIgnoreCase("ASC") && !orderDirection.equalsIgnoreCase("DESC")) {
+		if(orderDirection != null && !orderDirection.equalsIgnoreCase("ASC") && !orderDirection.equalsIgnoreCase("DESC")) {
 			return new ArrayList<HRMDocument>();
 		}
 		String sql = "select x from " + this.modelClass.getName() + " x   ";
@@ -180,7 +180,7 @@ public class HRMDocumentDao extends AbstractDao<HRMDocument> {
 		}
 		
 		
-		if(!StringUtils.isEmpty(orderColumn)) {
+		if(!StringUtils.isEmpty(orderColumn) && !StringUtils.isEmpty(orderDirection)) {
 			sql = sql + " ORDER BY x." + orderColumn + " " + orderDirection;
 		}
 		

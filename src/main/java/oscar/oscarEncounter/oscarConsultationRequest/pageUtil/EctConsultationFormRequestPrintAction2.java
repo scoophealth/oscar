@@ -19,6 +19,7 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,23 +29,30 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.model.EFormData;
+import org.oscarehr.hospitalReportManager.HRMPDFCreator;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.WKHtmlToPdfUtils;
+
+import com.lowagie.text.DocumentException;
+import com.sun.xml.messaging.saaj.util.ByteInputStream;
+import com.sun.xml.messaging.saaj.util.ByteOutputStream;
 
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
+import oscar.eform.EFormUtil;
+import oscar.eform.actions.PrintAction;
 import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.ConcatPDF;
 import oscar.util.UtilDateUtilities;
-
-import com.lowagie.text.DocumentException;
-import com.sun.xml.messaging.saaj.util.ByteInputStream;
-import com.sun.xml.messaging.saaj.util.ByteOutputStream;
 
 /**
  *
@@ -80,6 +88,8 @@ public class EctConsultationFormRequestPrintAction2 extends Action {
 		ArrayList<InputStream> streams = new ArrayList<InputStream>();
 
 		ArrayList<LabResultData> labs = consultLabs.populateLabResultsData(loggedInInfo, demoNo, reqId, CommonLabResultData.ATTACHED);
+		HRMDocumentToDemographicDao hrmDocumentToDemographicDao = SpringUtils.getBean(HRMDocumentToDemographicDao.class);
+		List<HRMDocumentToDemographic> attachedHRMReports = hrmDocumentToDemographicDao.findHRMDocumentsAttachedToConsultation(reqId);
 		String error = "";
 		Exception exception = null;
 		try {
@@ -137,7 +147,29 @@ public class EctConsultationFormRequestPrintAction2 extends Action {
 				alist.add(bis);
 
 			}
+
+			for (HRMDocumentToDemographic attachedHRM : attachedHRMReports) {
+				bos = new ByteOutputStream();
+				HRMPDFCreator hrmPdfCreator = new HRMPDFCreator(bos, attachedHRM.getHrmDocumentId(), loggedInInfo);
+				hrmPdfCreator.printPdf();
+
+				buffer = bos.getBytes();
+				bis = new ByteInputStream(buffer, bos.getCount());
+				bos.close();
+				streams.add(bis);
+				alist.add(bis);
+			}
 			
+            //Get attached eForms
+            List<EFormData> eForms = EFormUtil.listPatientEformsCurrentAttachedToConsult(reqId);
+            for (EFormData eForm : eForms) {
+                String localUri = PrintAction.getEformRequestUrl(request);
+                buffer = WKHtmlToPdfUtils.convertToPdf(localUri + eForm.getId());
+                bis = new ByteInputStream(buffer, buffer.length);
+                streams.add(bis);
+                alist.add(bis);
+            }
+            
 			if (alist.size() > 0) {
 				
 				bos = new ByteOutputStream();
@@ -168,8 +200,9 @@ public class EctConsultationFormRequestPrintAction2 extends Action {
 			}
 		}
 		if (!error.equals("")) {
-			logger.error(error + " occured insided ConsultationPrintAction", exception);
-			request.setAttribute("printError", new Boolean(true));
+			logger.error(error + " occurred inside ConsultationPrintAction", exception);
+			request.setAttribute("printError", exception.getMessage());
+			request.setAttribute("de", demoNo);
 			return mapping.findForward("error");
 		}
 		return null;
