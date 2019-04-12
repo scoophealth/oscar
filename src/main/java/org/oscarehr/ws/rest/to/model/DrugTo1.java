@@ -41,6 +41,8 @@ public class DrugTo1 implements Serializable {
     private String brandName;
 
     private String genericName;
+    
+    private String customName;
 
     private String atc;
 
@@ -49,7 +51,7 @@ public class DrugTo1 implements Serializable {
 
     private Integer demographicNo;
 
-    private Integer providerNo;
+    private String providerNo;
 
     private float takeMin;
 
@@ -58,6 +60,8 @@ public class DrugTo1 implements Serializable {
     private Date rxDate;
 
     private Date endDate;
+    
+    private Date writtenDate;
 
     private String frequency;
 
@@ -183,11 +187,11 @@ public class DrugTo1 implements Serializable {
         this.demographicNo = demographicNo;
     }
 
-    public Integer getProviderNo() {
+    public String getProviderNo() {
         return providerNo;
     }
 
-    public void setProviderNo(Integer providerNo) {
+    public void setProviderNo(String providerNo) {
         this.providerNo = providerNo;
     }
 
@@ -342,6 +346,22 @@ public class DrugTo1 implements Serializable {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+
+	public Date getWrittenDate() {
+		return writtenDate;
+	}
+
+	public void setWrittenDate(Date writtenDate) {
+		this.writtenDate = writtenDate;
+	}
+
+	public String getCustomName() {
+		return customName;
+	}
+
+	public void setCustomName(String customName) {
+		this.customName = customName;
+	}
 
 	public Boolean getDispenseInternal() {
 		return dispenseInternal;

@@ -60,7 +60,7 @@ a.bg-danger:hover {
 				<div class="input-group">
 					<input type="text"
 						ng-model="data.providerNo" placeholder="Provider"
-						typeahead="pt.providerNo as pt.name for pt in searchProviders($viewValue)"
+						uib-typeahead="pt.providerNo as pt.name for pt in searchProviders($viewValue)"
 						typeahead-on-select="updateProviderNo($item, $model, $label)"
 						class="form-control"/>
 						<span class="input-group-addon"><span class="glyphicon glyphicon-remove" ng-click="params.providerNo='';data.providerNo=''"></span></span>
@@ -69,11 +69,11 @@ a.bg-danger:hover {
 
 			 <div class="form-group"  ng-show="params.type == 'all' || params.type== 'all-nr' || params.type== 'new' || params.type== 'lab' || params.type== 'billing' || params.type== 'tab'">
 			    <label for="startDate">Start Date</label>
-			     <input ng-model="params.startDate" type="text" id="startDate" name="startDate" class="form-control" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="data.isOpen" ng-click="data.isOpen = true" placeholder="">
+			     <input ng-model="params.startDate" type="text" id="startDate" name="startDate" class="form-control" uib-datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="data.isOpen" ng-click="data.isOpen = true" placeholder="">
 			  </div>
 			  <div class="form-group"  ng-show="params.type == 'all' || params.type== 'all-nr'">
 			    <label for="endDate">End Date</label>
-			    <input ng-model="params.endDate" type="text" id="endDate" name="endDate" class="form-control" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="data.isOpen2" ng-click="data.isOpen2 = true" placeholder="">
+			    <input ng-model="params.endDate" type="text" id="endDate" name="endDate" class="form-control" uib-datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="data.isOpen2" ng-click="data.isOpen2 = true" placeholder="">
 			  </div>
 			  
 			  		

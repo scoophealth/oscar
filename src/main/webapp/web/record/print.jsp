@@ -64,7 +64,7 @@
   							    <div class="input-group">
 									<input type="text" class="form-control" placeholder="<bean:message key="oscarEncounter.startdate.title" />"  
 									ng-model="pageOptions.dates.start" 
-									datepicker-popup="yyyy-MM-dd" 
+									uib-datepicker-popup="yyyy-MM-dd" 
 									datepicker-append-to-body="false" 
 									is-open="startDatePrintPicker" 
 									ng-click="startDatePrintPicker = true" 
@@ -79,7 +79,7 @@
 							    <div class="input-group">
 									<input type="text" class="form-control" placeholder="<bean:message key="global.enddate" />"  
 									ng-model="pageOptions.dates.end" 
-									datepicker-popup="yyyy-MM-dd" 
+									uib-datepicker-popup="yyyy-MM-dd" 
 									datepicker-append-to-body="false" 
 									is-open="endDatePrintPicker" 
 									ng-click="endDatePrintPicker = true" 

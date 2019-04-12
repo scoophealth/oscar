@@ -134,7 +134,7 @@ public class SummaryItemTo1 {
 		this.abnormalFlag = abnormalFlag;
 	}
 		
-	public String isIndicatorClass() {
+	public String getIndicatorClass() {
 		return indicatorClass;
 	}
 

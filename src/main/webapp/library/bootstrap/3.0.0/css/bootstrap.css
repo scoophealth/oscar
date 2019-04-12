@@ -6803,3 +6803,10 @@ td.visible-print {
     display: none !important;
   }
 }
+
+/* Putting this in here instead of upgrading bootstrap right now.  This is used in angular-ui modal component*/
+@media (min-width: 992px) {
+  .modal-lg {
+    width: 900px;
+  }
+}

@@ -47,7 +47,7 @@
     <div class="input-group">
       <div class="input-group-addon"><span class="glyphicon glyphicon-remove" ng-click="cancelTaskAssignedToUpdate()"></span></div>
       <input type="text" ng-model="ticklerUpdate.taskAssignedToName" placeholder="<bean:message key="tickler.view.provider.placeholder" bundle="ui"/>" 
-				typeahead="pt.providerNo as pt.name for pt in searchProviders($viewValue)" 
+				uib-typeahead="pt.providerNo as pt.name for pt in searchProviders($viewValue)" 
 				typeahead-on-select="updateTaskAssignedTo($item, $model, $label)"
 				class="form-control input-sm">
     </div>
@@ -95,7 +95,7 @@
     <div class="input-group">
       <div class="input-group-addon"><span class="glyphicon glyphicon-remove" ng-click="cancelPriorityUpdate()"></span></div>
       
-  					 <input type="text" typeahead-on-select="updatePriority($item, $model, $label)" placeholder="<bean:message key="tickler.view.priority" bundle="ui"/>" ng-model="ticklerUpdate.priority" typeahead="p for p in priorities | filter:$viewValue" class="form-control">
+  					 <input type="text" typeahead-on-select="updatePriority($item, $model, $label)" placeholder="<bean:message key="tickler.view.priority" bundle="ui"/>" ng-model="ticklerUpdate.priority" uib-typeahead="p for p in priorities | filter:$viewValue" class="form-control">
   					  </div></div>
   				</td>
   			</tr>
@@ -107,7 +107,7 @@
     <div class="input-group">
       <div class="input-group-addon"><span class="glyphicon glyphicon-remove" ng-click="cancelStatusUpdate()"></span></div>
       
-  					 <input type="text" typeahead-on-select="updateStatus($item, $model, $label)" placeholder="Status" ng-model="ticklerUpdate.status" typeahead="s.id as s.label for s in statuses | filter:$viewValue" class="form-control">
+  					 <input type="text" typeahead-on-select="updateStatus($item, $model, $label)" placeholder="Status" ng-model="ticklerUpdate.status" uib-typeahead="s.id as s.label for s in statuses | filter:$viewValue" class="form-control">
   					  </div></div>
   				</td>
   			</tr>  			

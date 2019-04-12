@@ -69,7 +69,7 @@
 					</div>
 					<input type="text" ng-model="appointmentUpdate.providerName"
 						placeholder="Provider"
-						typeahead="pt.providerNo as pt.name for pt in searchProviders($viewValue)"
+						uib-typeahead="pt.providerNo as pt.name for pt in searchProviders($viewValue)"
 						typeahead-on-select="updateProvider($item, $model, $label)"
 						class="form-control input-sm">
 				</div>
