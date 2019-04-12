@@ -166,42 +166,42 @@ It must have been deleted. Please refresh your Inbox window.
                 <div class="col-md-6">
 
 
-                <form id="forms_<%=documentNo%>" onsubmit="return updateCdxDocumentAndLinkDemo('forms_<%=documentNo%>');">
-                    <input type="hidden" name="documentId" value="<%=documentNo%>" />
-                    <input type="hidden" id="docDesc_<%=documentNo%>"  type="text" name="documentDescription" value="<%=curdoc.getDocdesc()%>" />
-                    <input type="hidden" id="observationDate<%=documentNo%>" name="observationDate" type="text" value="<%=curdoc.getObservationdate()%>"/>
-                    <input type="hidden" id="docType<%=documentNo%>" name="docType" type="text" value="DOC"/>
-                    <input type="hidden" name="method" value="documentUpdateAjax" />
-                    <input id="saved<%=documentNo%>" type="hidden" name="saved" value="true"/>
-                    <input type="hidden" value="<%=demoNo%>" name="demog" id="demofind<%=documentNo%>"/>
-                    <input type="hidden" name="demofindName" value="<%=demoName%>"
-                           id="demofindName<%=documentNo%>"/>
+                    <form id="forms_<%=documentNo%>" onsubmit="return updateCdxDocumentAndLinkDemo('forms_<%=documentNo%>');">
+                        <input type="hidden" name="documentId" value="<%=documentNo%>" />
+                        <input type="hidden" id="docDesc_<%=documentNo%>"  type="text" name="documentDescription" value="<%=curdoc.getDocdesc()%>" />
+                        <input type="hidden" id="observationDate<%=documentNo%>" name="observationDate" type="text" value="<%=curdoc.getObservationdate()%>"/>
+                        <input type="hidden" id="docType<%=documentNo%>" name="docType" type="text" value="DOC"/>
+                        <input type="hidden" name="method" value="documentUpdateAjax" />
+                        <input id="saved<%=documentNo%>" type="hidden" name="saved" value="true"/>
+                        <input type="hidden" value="<%=demoNo%>" name="demog" id="demofind<%=documentNo%>"/>
+                        <input type="hidden" name="demofindName" value="<%=demoName%>"
+                               id="demofindName<%=documentNo%>"/>
 
-                    <input id="saved_<%=documentNo%>" type="hidden" name="saved" value="false"/>
-                    <input type="hidden" name="provi" id="provfind<%=documentNo%>"/>
+                        <input id="saved_<%=documentNo%>" type="hidden" name="saved" value="false"/>
+                        <input type="hidden" name="provi" id="provfind<%=documentNo%>"/>
 
-                    <%
-                        boolean demoLinked = demoNo != null && !demoNo.equals("") && !demoNo.equalsIgnoreCase("null") && !demoNo.equals("-1");
-                        if (!demoLinked) {
-                    %>
+                        <%
+                            boolean demoLinked = demoNo != null && !demoNo.equals("") && !demoNo.equalsIgnoreCase("null") && !demoNo.equals("-1");
+                            if (!demoLinked) {
+                        %>
 
-                    <font color="red">
-                        <strong>Warning!</strong> Name in document is <strong> not </strong> matched to a demographic. </span>
-                    </font>
+                        <font color="red">
+                            <strong>Warning!</strong> Name in document is <strong> not </strong> matched to a demographic. </span>
+                        </font>
 
 
 
-                    <div>
+                        <div>
 
-                        <div class="input-group">
+                            <div class="input-group">
                                 <span class="input-group-addon" id="activeGroup">Active
 				 					                               <input type="checkbox" id="activeOnly<%=documentNo%>" name="activeOnly" checked="checked"
                                                                           value="true" onclick="setupDemoAutoCompletion()">
 										            </span>
-                            <input type="text" class="form-control" id="autocompletedemo<%=documentNo%>"
-                                   onchange="checkSave('<%=documentNo%>');" name="demographicKeyword" placeholder="Demographic search..."/>
+                                <input type="text" class="form-control" id="autocompletedemo<%=documentNo%>"
+                                       onchange="checkSave('<%=documentNo%>');" name="demographicKeyword" placeholder="Demographic search..."/>
 
-                            <span class="input-group-btn" >
+                                <span class="input-group-btn" >
 
                                 <button type="submit" disabled name="save" class="btn btn-default" id="save<%=documentNo%>"> Link </button>
 
@@ -214,232 +214,251 @@ It must have been deleted. Please refresh your Inbox window.
 
 
 
-                            <div id="autocomplete_choices<%=documentNo%>" class="autocomplete"></div>
+                                <div id="autocomplete_choices<%=documentNo%>" class="autocomplete"></div>
+                            </div>
+
+
+
                         </div>
 
 
 
-                    </div>
+                        <% } else {
+                            Demographic pat = demoDao.getDemographic(demoNo);
+                        %>
 
+                        <div class="panel panel-default">
+                            <div class="panel-heading"> Linked Demographic </div>
+                            <div class="panel-body">
+                                <strong>
 
-
-                    <% } else {
-                        Demographic pat = demoDao.getDemographic(demoNo);
-                    %>
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading"> Linked Demographic </div>
-                        <div class="panel-body">
-<strong>
-
-                            <a href="javascript:popupStart(360, 680, '..//oscarMDS/SearchPatient.do?labType=DOC&segmentID=<%= documentNo %>&name=<%=java.net.URLEncoder.encode(pat.getLastName()+", "+pat.getFirstName())%>', 'searchPatientWindow')">
-                                <%
-
-                                    out.print(" " + pat.getFirstName()
-                                            + " " + pat.getLastName()
-                                            + " " + pat.getSex()
-                                            + " " + pat.getBirthDayAsString()); %>
-                            </a> </strong>
-                        </div>
-                    </div>
-                    <div class = "row">
-                        <div class = "col-md-6">
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading"> <bean:message key="inboxmanager.document.LinkedProvidersMsg"/> </div>
-                                <div class="panel-body">
-                                    <%
-                                        Properties p = (Properties) session.getAttribute("providerBean");
-                                        List<ProviderInboxItem> routeList = providerInboxRoutingDao.getProvidersWithRoutingForDocument("DOC", documentNoInt);
-                                    %>
-                                    <ul>
+                                    <a href="javascript:popupStart(360, 680, '../oscarMDS/SearchPatient.do?labType=DOC&segmentID=<%= documentNo %>&name=<%=java.net.URLEncoder.encode(pat.getLastName()+", "+pat.getFirstName())%>', 'searchPatientWindow')">
                                         <%
-                                            for (ProviderInboxItem pItem : routeList) {
-                                                String s = p.getProperty(pItem.getProviderNo(), pItem.getProviderNo());
 
-                                                if (!s.equals("0") && !s.equals("null") && !pItem.getStatus().equals("X")) {
-                                        %>
-                                        <li><%=s%><a href="#"
-                                                     onclick="removeLink('DOC', '<%=documentNo %>', '<%=pItem.getProviderNo() %>', this);return false;"><bean:message
-                                                key="inboxmanager.document.RemoveLinkedProviderMsg"/></a></li>
-                                        <%
-                                                }
-                                            }
-                                        %>
-                                    </ul>
-                                </div>
+                                            out.print(" " + pat.getFirstName()
+                                                    + " " + pat.getLastName()
+                                                    + " " + pat.getSex()
+                                                    + " " + pat.getBirthDayAsString()); %>
+                                    </a> </strong>
                             </div>
                         </div>
+                        <div class = "row">
+                            <div class = "col-md-6">
 
-                        <div class="col-md-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"> <bean:message key="inboxmanager.document.LinkedProvidersMsg"/> </div>
+                                    <div class="panel-body">
+                                        <%
+                                            Properties p = (Properties) session.getAttribute("providerBean");
+                                            List<ProviderInboxItem> routeList = providerInboxRoutingDao.getProvidersWithRoutingForDocument("DOC", documentNoInt);
+                                        %>
+                                        <ul>
+                                            <%
+                                                for (ProviderInboxItem pItem : routeList) {
+                                                    String s = p.getProperty(pItem.getProviderNo(), pItem.getProviderNo());
 
-                            <div class="input-group">
+                                                    if (!s.equals("0") && !s.equals("null") && !pItem.getStatus().equals("X")) {
+                                            %>
+                                            <li><%=s%><a href="#"
+                                                         onclick="removeLink('DOC', '<%=documentNo %>', '<%=pItem.getProviderNo() %>', this);return false;"><bean:message
+                                                    key="inboxmanager.document.RemoveLinkedProviderMsg"/></a></li>
+                                            <%
+                                                    }
+                                                }
+                                            %>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
 
-                                <input type="text" placeholder="Flag provider..." class="form-control" id="autocompleteprov<%=documentNo%>" name="providerKeyword"/>
-                                <span class = "input-group-btn">
+                            <div class="col-md-6">
+
+                                <div class="input-group">
+
+                                    <input type="text" placeholder="Flag provider..." class="form-control" id="autocompleteprov<%=documentNo%>" name="providerKeyword"/>
+                                    <span class = "input-group-btn">
                                     <button type="button" name="save" id="flagsave<%=documentNo%>" <% if (demoNoInt==-1) out.print("disabled");%> class="btn btn-default" onclick="updateCdxDocument('forms_<%=documentNo%>')">
 									Save
 								</button> </span>
-                                <div id="autocomplete_choicesprov<%=documentNo%>" class="autocomplete"></div>
+                                    <div id="autocomplete_choicesprov<%=documentNo%>" class="autocomplete"></div>
 
 
+
+                                </div>
+
+                                <div class="panel-body">
+                                    <div id="providerList<%=documentNo%>"></div>
+                                    <a id="saveSucessMsg_<%=documentNo%>" style="display:none;color:blue;">
+                                        <bean:message key="inboxmanager.document.SuccessfullySavedMsg"/></a>
+                                </div>
 
                             </div>
 
-                            <div class="panel-body">
-                                <div id="providerList<%=documentNo%>"></div>
-                                <a id="saveSucessMsg_<%=documentNo%>" style="display:none;color:blue;">
-                                    <bean:message key="inboxmanager.document.SuccessfullySavedMsg"/></a>
-                            </div>
+                        </div>
+                        <% } %>
+
+
+
+                    </form>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="row">
+
+                        <div id="labdoc_<%=documentNo%>">
+                            <%
+                                ArrayList ackList = AcknowledgementData.getAcknowledgements("DOC",documentNo);
+                                ReportStatus reportStatus = null;
+                                String docCommentTxt = "";
+                                String rptStatus = "";
+                                boolean ackedOrFiled = false;
+                                for( int idx = 0; idx < ackList.size(); ++idx ) {
+                                    reportStatus = (ReportStatus) ackList.get(idx);
+
+                                    if( reportStatus.getOscarProviderNo() != null && reportStatus.getOscarProviderNo().equals(providerNo) ) {
+                                        docCommentTxt = reportStatus.getComment();
+                                        if( docCommentTxt == null ) {
+                                            docCommentTxt = "";
+                                        }
+
+                                        rptStatus = reportStatus.getStatus();
+
+                                        if( rptStatus != null ) {
+                                            ackedOrFiled = rptStatus.equalsIgnoreCase("A") ? true : rptStatus.equalsIgnoreCase("F") ? true : false;
+                                        }
+                                        break;
+                                    }
+                                }
+                            %>
+
+                            <form name="myForm">
+
+                            </form>
+
+                            <form name="acknowledgeForm_<%=documentNo%>" id="acknowledgeForm_<%=documentNo%>" onsubmit="acknowledgeCdxDocument()" method="post" action="javascript:void(0);">
+
+                                <input type="hidden" name="segmentID" value="<%= documentNo%>"/>
+                                <input type="hidden" name="multiID" value="<%= documentNo%>" />
+                                <input type="hidden" name="providerNo" value="<%= providerNo%>"/>
+                                <input type="hidden" name="status" value="A"/ id="status_<%=documentNo%>">
+                                <input type="hidden" name="labType" value="DOC"/>
+                                <input type="hidden" name="ajaxcall" value="yes"/>
+                                <input type="hidden" name="demofind" id="demofind_<%=documentNo%>" value="<%= demoNo%>"/>
+                                <input type="hidden" name="comment" id="comment_<%=documentNo%>" value="<%=docCommentTxt%>">
+
+                                <input type="button" class="btn btn-default" id="closeBtn_<%=documentNo%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
+                                <input type="button" class="btn btn-danger" id="deleteBtn_<%=documentNo%>" value=" Delete" onClick="deleteCdxDocument(<%=documentNo%>)" <%=(demoLinked? "style='display:none'" : "")%>>
+                                <div class="btn-group" role="group" <%=(!demoLinked? "style='display:none'" : "")%>>
+
+
+                                    <input type="submit" class="btn btn-success" id="ackBtn_<%=documentNo%>" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" <%=(ackedOrFiled? "style='display:none'" : "")%>>
+
+
+
+                                    <input type="button" class="btn btn-default" id="msgBtn_<%=documentNo%>" value="Msg" onclick="popupPatient(700,960,'<%= request.getContextPath() %>/oscarMessenger/SendDemoMessage.do?demographic_no=','msg', '<%=documentNo%>')" />
+
+                                    <%
+                                        if(org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()) {
+                                    %>
+                                    <input type="button" class="btn btn-default" id="mainTickler_<%=documentNo%>" value="Tickler" onClick="popupPatientTicklerPlus(710, 1024,'<%= request.getContextPath() %>/Tickler.do?', 'Tickler','<%=documentNo%>')" >
+                                    <% } else { %>
+                                    <input type="button" class="btn btn-default" id="mainTickler_<%=documentNo%>" value="Tickler" onClick="popupPatientTickler(710, 1024,'<%= request.getContextPath() %>/tickler/ticklerAdd.jsp?', 'Tickler','<%=documentNo%>')" >
+                                    <% } %>
+
+                                    <input type="button" class="btn btn-default" id="mainEchart_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupPatient(710, 1024,'<%= request.getContextPath() %>/oscarEncounter/IncomingEncounter.do?reason=<bean:message key="oscarMDS.segmentDisplay.labResults"/>&curDate=<%=currentDate%>>&appointmentNo=&appointmentDate=&startTime=&status=&demographicNo=', 'encounter', '<%=documentNo%>')" >
+                                    <input type="button" class="btn btn-default" id="mainMaster_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnMaster"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=','master','<%=documentNo%>')" >
+                                    <input type="button" class="btn btn-default" id="mainApptHistory_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnApptHist"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25&demographic_no=','ApptHist','<%=documentNo%>')" >
+
+                                </div>
+
+
+
+                            </form>
+
 
                         </div>
 
                     </div>
-                    <% } %>
 
 
 
-                </form>
+                    <div class="row">
+                        <%
+                            if (ackList.size() > 0){%>
+                        <fieldset>
+                            <table width="100%" height="20" cellpadding="2" cellspacing="2">
+                                <tr>
+                                    <td align="left" bgcolor="white">
+                                        <div class="FieldData">
+                                            <!--center-->
+                                            <% for (int i=0; i < ackList.size(); i++) {
+                                                ReportStatus report = (ReportStatus) ackList.get(i); %>
+                                            <%= report.getProviderName() %> :
+
+                                            <% String ackStatus = report.getStatus();
+                                                if(ackStatus.equals("A")){
+                                                    ackStatus = "Acknowledged";
+                                                }else if(ackStatus.equals("F")){
+                                                    ackStatus = "Filed but not Acknowledged";
+                                                }else{
+                                                    ackStatus = "Not Acknowledged";
+                                                }
+                                            %>
+                                            <font color="red"><%= ackStatus %></font>
+                                            <span id="timestamp_<%=documentNo + "_" + report.getOscarProviderNo()%>"><%= report.getTimestamp() == null ? "&nbsp;" : report.getTimestamp() + "&nbsp;"%></span>,
+                                            comment: <span id="comment_<%=documentNo + "_" + report.getOscarProviderNo()%>"><%=report.getComment() == null || report.getComment().equals("") ? "no comment" : report.getComment()%></span>
+
+                                            <br>
+                                            <% }
+                                                if (ackList.size() == 0){
+                                            %><font color="red">N/A</font><%
+                                            }
+                                        %>
+                                            <!--/center-->
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                        <%}%>
+
+                    </div>
+
                 </div>
 
-            <div class="col-md-6">
-                <div class="row">
+            </div>
 
-                <div id="labdoc_<%=documentNo%>">
+
+
+            <div class="panel panel-default">
+
+                <c:import url="/share/xslt/Production_2016July07_CDA_to_HTML.xsl" var="xslt"/>
+                <x:transform xml="<%=curdoc.getDocxml()%>" xslt="${xslt}"/>
+            </div>
+
+            <%
+                List<CdxAttachment> atts = cdxAttachmentDao.findByDocNo(documentNoInt);
+                if (!atts.isEmpty()) {
+            %>
+
+            <div class="panel-footer">
+                <h3>Attachments:</h3>
+                <ul>
                     <%
-                        ArrayList ackList = AcknowledgementData.getAcknowledgements("DOC",documentNo);
-                        ReportStatus reportStatus = null;
-                        String docCommentTxt = "";
-                        String rptStatus = "";
-                        boolean ackedOrFiled = false;
-                        for( int idx = 0; idx < ackList.size(); ++idx ) {
-                            reportStatus = (ReportStatus) ackList.get(idx);
+                        for (CdxAttachment a : atts) { %>
+                    <li> <a href="#" onclick="javascript:popup(360, 680, '../dms/ManageDocument.do?method=viewCdxAttachment&attId=<%= a.getId() %>', 'Attachment: <%=a.getReference()%>')">
 
-                            if( reportStatus.getOscarProviderNo() != null && reportStatus.getOscarProviderNo().equals(providerNo) ) {
-                                docCommentTxt = reportStatus.getComment();
-                                if( docCommentTxt == null ) {
-                                    docCommentTxt = "";
-                                }
+                        <%=a.getReference()%> </a> (<%=a.getAttachmentType()%>) </li>
 
-                                rptStatus = reportStatus.getStatus();
-
-                                if( rptStatus != null ) {
-                                    ackedOrFiled = rptStatus.equalsIgnoreCase("A") ? true : rptStatus.equalsIgnoreCase("F") ? true : false;
-                                }
-                                break;
-                            }
-                        }
-                    %>
-
-                    <form name="myForm">
-
-                    </form>
-
-                    <form name="acknowledgeForm_<%=documentNo%>" id="acknowledgeForm_<%=documentNo%>" onsubmit="acknowledgeCdxDocument()" method="post" action="javascript:void(0);">
-
-                        <input type="hidden" name="segmentID" value="<%= documentNo%>"/>
-                        <input type="hidden" name="multiID" value="<%= documentNo%>" />
-                        <input type="hidden" name="providerNo" value="<%= providerNo%>"/>
-                        <input type="hidden" name="status" value="A"/ id="status_<%=documentNo%>">
-                        <input type="hidden" name="labType" value="DOC"/>
-                        <input type="hidden" name="ajaxcall" value="yes"/>
-                        <input type="hidden" name="demofind" id="demofind_<%=documentNo%>" value="<%= demoNo%>"/>
-                        <input type="hidden" name="comment" id="comment_<%=documentNo%>" value="<%=docCommentTxt%>">
-
-                        <input type="button" class="btn btn-default" id="closeBtn_<%=documentNo%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
-                        <input type="button" class="btn btn-danger" id="deleteBtn_<%=documentNo%>" value=" Delete" onClick="deleteCdxDocument(<%=documentNo%>)" <%=(demoLinked? "style='display:none'" : "")%>>
-                        <div class="btn-group" role="group" <%=(!demoLinked? "style='display:none'" : "")%>>
-
-
-                            <input type="submit" class="btn btn-success" id="ackBtn_<%=documentNo%>" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" <%=(ackedOrFiled? "style='display:none'" : "")%>>
-
-
-
-                            <input type="button" class="btn btn-default" id="msgBtn_<%=documentNo%>" value="Msg" onclick="popupPatient(700,960,'<%= request.getContextPath() %>/oscarMessenger/SendDemoMessage.do?demographic_no=','msg', '<%=documentNo%>')" />
-
-                            <%
-                                if(org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()) {
-                            %>
-                            <input type="button" class="btn btn-default" id="mainTickler_<%=documentNo%>" value="Tickler" onClick="popupPatientTicklerPlus(710, 1024,'<%= request.getContextPath() %>/Tickler.do?', 'Tickler','<%=documentNo%>')" >
-                            <% } else { %>
-                            <input type="button" class="btn btn-default" id="mainTickler_<%=documentNo%>" value="Tickler" onClick="popupPatientTickler(710, 1024,'<%= request.getContextPath() %>/tickler/ticklerAdd.jsp?', 'Tickler','<%=documentNo%>')" >
-                            <% } %>
-
-                            <input type="button" class="btn btn-default" id="mainEchart_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupPatient(710, 1024,'<%= request.getContextPath() %>/oscarEncounter/IncomingEncounter.do?reason=<bean:message key="oscarMDS.segmentDisplay.labResults"/>&curDate=<%=currentDate%>>&appointmentNo=&appointmentDate=&startTime=&status=&demographicNo=', 'encounter', '<%=documentNo%>')" >
-                            <input type="button" class="btn btn-default" id="mainMaster_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnMaster"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=','master','<%=documentNo%>')" >
-                            <input type="button" class="btn btn-default" id="mainApptHistory_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnApptHist"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25&demographic_no=','ApptHist','<%=documentNo%>')" >
-
-                        </div>
-
-
-
-                    </form>
-
-
-                </div>
-
+                    <% }%>
+                </ul>
             </div>
 
-
-
-            <div class="row">
-                <%
-                    if (ackList.size() > 0){%>
-                <fieldset>
-                    <table width="100%" height="20" cellpadding="2" cellspacing="2">
-                        <tr>
-                            <td align="left" bgcolor="white">
-                                <div class="FieldData">
-                                    <!--center-->
-                                    <% for (int i=0; i < ackList.size(); i++) {
-                                        ReportStatus report = (ReportStatus) ackList.get(i); %>
-                                    <%= report.getProviderName() %> :
-
-                                    <% String ackStatus = report.getStatus();
-                                        if(ackStatus.equals("A")){
-                                            ackStatus = "Acknowledged";
-                                        }else if(ackStatus.equals("F")){
-                                            ackStatus = "Filed but not Acknowledged";
-                                        }else{
-                                            ackStatus = "Not Acknowledged";
-                                        }
-                                    %>
-                                    <font color="red"><%= ackStatus %></font>
-                                    <span id="timestamp_<%=documentNo + "_" + report.getOscarProviderNo()%>"><%= report.getTimestamp() == null ? "&nbsp;" : report.getTimestamp() + "&nbsp;"%></span>,
-                                    comment: <span id="comment_<%=documentNo + "_" + report.getOscarProviderNo()%>"><%=report.getComment() == null || report.getComment().equals("") ? "no comment" : report.getComment()%></span>
-
-                                    <br>
-                                    <% }
-                                        if (ackList.size() == 0){
-                                    %><font color="red">N/A</font><%
-                                    }
-                                %>
-                                    <!--/center-->
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </fieldset>
-                <%}%>
-
-            </div>
-
+            <% }%>
         </div>
 
-            </div>
-
-
-
-        <div class="panel panel-default">
-
-            <c:import url="/share/xslt/Production_2016July07_CDA_to_HTML.xsl" var="xslt"/>
-            <x:transform xml="<%=curdoc.getDocxml()%>" xslt="${xslt}"/>
-        </div>
 
     </div>
-
-
-</div>
 </div>
 
 <script type="text/javascript">

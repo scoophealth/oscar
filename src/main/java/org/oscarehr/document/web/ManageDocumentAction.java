@@ -83,6 +83,8 @@ import org.oscarehr.common.model.Document;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.SecRole;
+import org.oscarehr.integration.cdx.dao.CdxAttachmentDao;
+import org.oscarehr.integration.cdx.model.CdxAttachment;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.sharingcenter.SharingCenterUtil;
@@ -1204,6 +1206,31 @@ public class ManageDocumentAction extends DispatchAction {
 
         return null;
     }
+
+
+
+	public ActionForward viewCdxAttachment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		CdxAttachmentDao dao = SpringUtils.getBean(CdxAttachmentDao.class);
+
+		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_edoc", "r", null)) {
+			throw new SecurityException("missing required security object (_edoc)");
+		}
+
+		int attId = Integer.parseInt(request.getParameter("attId"));
+
+		CdxAttachment at = dao.getCdxAttachment(attId);
+
+		response.setContentType(at.getAttachmentType());
+		OutputStream out = response.getOutputStream();
+		byte[] content = at.getContent();
+		out.write(content, 0, content.length);
+
+		return null;
+
+	}
+
+
 
     public int countNumOfPages(String fileName) { // count number of pages in a pdf file
         int numOfPage = 0;
