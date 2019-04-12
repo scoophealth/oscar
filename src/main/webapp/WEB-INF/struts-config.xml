@@ -322,6 +322,13 @@
 			<form-property name="demoNo" type="java.lang.String" />
 			<form-property name="providerNo" type="java.lang.String" />
 		</form-bean>
+		<form-bean name="attachEform" type="org.apache.struts.action.DynaActionForm">
+			<form-property name="documents" type="java.lang.String[]" />
+			<form-property name="attachedDocs" type="java.lang.String[]" />
+			<form-property name="requestId" type="java.lang.String" />
+			<form-property name="demoNo" type="java.lang.String" />
+			<form-property name="providerNo" type="java.lang.String" />
+		</form-bean>
 		<form-bean name="clientSearchForm" type="org.apache.struts.validator.LazyValidatorForm" />
 
 		<form-bean name="StreetHealthIntakeReportForm" type="org.apache.struts.validator.LazyValidatorForm" />
@@ -1232,6 +1239,9 @@
 			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/ViewConsultationRequests.jsp" />
 		</action>
 		<action input="/oscarConsultationRequest/attachConsultation.jsp" name="attachConsultation" path="/oscarConsultationRequest/attachDoc" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationAttachDocsAction">
+			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/attachSuccessfull.jsp" />
+		</action>
+		<action input="/eform/attachEform.jsp" name="attachEform" path="/eform/attachDoc" type="oscar.eform.EFormAttachDocsAction">
 			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/attachSuccessfull.jsp" />
 		</action>
 		<action input="/oscarConsultationRequest/ViewConsultationRequests.jsp" name="EctViewConsultationRequestsForm" path="/oscarEncounter/ViewConsultation" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsAction">

@@ -1,22 +1,37 @@
 <%--
 
-    Copyright (c) 2008-2012 Indivica Inc.
-    
-    This software is made available under the terms of the
-    GNU General Public License, Version 2, 1991 (GPLv2).
-    License details are available via "indivica.ca/gplv2"
-    and "gnu.org/licenses/gpl-2.0.html".
-    
---%>
+    Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+    This software is published under the GPL GNU General Public License.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
 
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+    This software was written for the
+    Department of Family Medicine
+    McMaster University
+    Hamilton
+    Ontario, Canada
+
+--%>
+<%@page import="oscar.eform.EFormAttachDocs"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
       String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
       boolean authed=true;
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_con" rights="w" reverse="<%=true%>">
+<security:oscarSec roleName="<%=roleName$%>" objectName="_eform" rights="w" reverse="<%=true%>">
 	<%authed=false; %>
-	<%response.sendRedirect("../../securityError.jsp?type=_con");%>
+	<%response.sendRedirect("../../securityError.jsp?type=_eform");%>
 </security:oscarSec>
 <%
 if(!authed) {
@@ -60,16 +75,11 @@ LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 String module = "demographic";
 String demoNo = request.getParameter("demo");
 String requestId = request.getParameter("requestId");
-String providerNo = request.getParameter("provNo");
+String providerNo = loggedInInfo.getLoggedInProviderNo();
 
-if(demoNo == null && requestId == null ) response.sendRedirect("../error.jsp");
+if(demoNo == null ) response.sendRedirect("../error.jsp");
 
-if( demoNo == null || demoNo.equals("null")  ) {
-
-	ConsultationAttachDocs docsUtil = new ConsultationAttachDocs(requestId);
-    demoNo = docsUtil.getDemoNo();
-    
-}
+EFormAttachDocs docsUtil = new EFormAttachDocs(requestId);
 
 HRMDocumentToDemographicDao hrmDocumentToDemographicDao = (HRMDocumentToDemographicDao) SpringUtils.getBean("HRMDocumentToDemographicDao");
 HRMDocumentDao hrmDocumentDao = (HRMDocumentDao) SpringUtils.getBean("HRMDocumentDao");
@@ -99,12 +109,12 @@ boolean onIPad = http_user_agent.indexOf("iPad") >= 0;
 CommonLabResultData labData = new CommonLabResultData();
 ArrayList<LabResultData> labs = labData.populateLabResultsData(loggedInInfo, demoNo, requestId, CommonLabResultData.ATTACHED);
 ArrayList<EDoc> privatedocs = new ArrayList<EDoc>();
-privatedocs = EDocUtil.listDocs(loggedInInfo, demoNo, requestId, EDocUtil.ATTACHED);
-List<HRMDocumentToDemographic> hrmDocumentsToDemographics = hrmDocumentToDemographicDao.findHRMDocumentsAttachedToConsultation(requestId);
-List<EFormData> eForms = EFormUtil.listPatientEformsCurrentAttachedToConsult(requestId);
+privatedocs = EDocUtil.listDocsAttachedToEForm(loggedInInfo, demoNo, requestId, EDocUtil.ATTACHED);
+List<HRMDocumentToDemographic> hrmDocumentsToDemographics = hrmDocumentToDemographicDao.findHRMDocumentsAttachedToEForm(requestId);
+List<EFormData> eForms = EFormUtil.listPatientEformsCurrentAttachedToEForm(requestId);
 String attachedDocs = "";
 if (requestId == null || requestId.equals("") || requestId.equals("null")) {
-	attachedDocs = "window.opener.document.EctConsultationFormRequestForm.documents.value";
+	attachedDocs = "window.opener.document.forms[0].selectDocs.value";
 }
 else {
 	for (int i = 0; i < privatedocs.size(); i++) {
@@ -154,7 +164,9 @@ function save() {
 		window.close();
 	}
     var ret;    
-    if(document.forms[0].requestId.value == "null") {                       
+    
+    
+    if(document.forms[0].requestId.value == "null" || document.forms[0].requestId.value == "") {   
        var saved = "";       
        var list = window.opener.document.getElementById("attachedList");       
        var paragraph = window.opener.document.getElementById("attachDefault");
@@ -195,9 +207,10 @@ function save() {
 			listElem.className = "eForm";
 			list.appendChild(listElem);
 		});
-                   
-       window.opener.document.EctConsultationFormRequestForm.documents.value = saved; 
-      
+
+	
+       window.opener.document.forms[0].selectDocs.value = saved; 
+
        if( list.childNodes.length == 0 )
             paragraph.innerHTML = "<bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.Empty"/>";
             
@@ -244,7 +257,7 @@ function toggleSelectAll() {
 <h3 style="text-align: left"><bean:message
 	key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.header" />
 <%=patientName%></h3>
-<html:form action="/oscarConsultationRequest/attachDoc">
+<html:form action="/eform/attachDoc">
 	<html:hidden property="requestId" value="<%=requestId%>" />
 	<html:hidden property="demoNo" value="<%=demoNo%>" />
 	<html:hidden property="providerNo" value="<%=providerNo%>" />
@@ -265,7 +278,7 @@ function toggleSelectAll() {
 			
             <%
             final String PRINTABLE_IMAGE = request.getContextPath() + "/images/printable.png";
-            final String PRINTABLE_TITLE = "This file can be automatically printed to PDF with the consultation request.";
+            final String PRINTABLE_TITLE = "This file can be automatically printed to PDF with the eform.";
             final String PRINTABLE_ALT = "Printable";
             final String UNPRINTABLE_IMAGE = request.getContextPath() + "/images/notprintable.png";
             final String UNPRINTABLE_TITLE = "This file must be manually printed.";

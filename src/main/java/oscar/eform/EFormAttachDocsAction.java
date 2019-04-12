@@ -23,7 +23,7 @@
  */
 
 
-package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
+package oscar.eform;
 
 import java.io.IOException;
 
@@ -31,6 +31,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -42,7 +43,7 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 
-public class ConsultationAttachDocsAction
+public class EFormAttachDocsAction
     extends Action {
 
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
@@ -53,8 +54,8 @@ public class ConsultationAttachDocsAction
 
       throws ServletException, IOException {    
 
-	  	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_con", "u", null)) {
-			throw new SecurityException("missing required security object (_con)");
+	  	if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_eform", "u", null)) {
+			throw new SecurityException("missing required security object (_eform)");
 		}
 	  
         DynaActionForm frm = (DynaActionForm)form;
@@ -64,19 +65,22 @@ public class ConsultationAttachDocsAction
         String demoNo = frm.getString("demoNo");
         String provNo = frm.getString("providerNo");
         
+        if(StringUtils.isEmpty( requestId)) {
+        	return mapping.findForward("success");
+        }
         if (!OscarProperties.getInstance().isPropertyActive("consultation_indivica_attachment_enabled")) {
 	        String[] arrDocs = frm.getStrings("attachedDocs");
 	                
-	        ConsultationAttachDocs Doc = new ConsultationAttachDocs(provNo,demoNo,requestId,arrDocs);
+	        EFormAttachDocs Doc = new EFormAttachDocs(provNo,demoNo,requestId,arrDocs);
 	        Doc.attach(loggedInInfo);
 	        
-	        ConsultationAttachLabs Lab = new ConsultationAttachLabs(provNo,demoNo,requestId,arrDocs);
+	        EFormAttachLabs Lab = new EFormAttachLabs(provNo,demoNo,requestId,arrDocs);
 	        Lab.attach(loggedInInfo);
 	        
-			ConsultationAttachHRMReports hrmReports = new ConsultationAttachHRMReports(provNo, demoNo, requestId, arrDocs);
+			EFormAttachHRMReports hrmReports = new EFormAttachHRMReports(provNo, demoNo, requestId, arrDocs);
 			hrmReports.attach();
 
-            ConsultationAttachEForms eForms = new ConsultationAttachEForms(provNo, demoNo, requestId, arrDocs);
+			EFormAttachEForms eForms = new EFormAttachEForms(provNo, demoNo, requestId, arrDocs);
             eForms.attach(loggedInInfo);
 	        return mapping.findForward("success");
         }
@@ -91,14 +95,14 @@ public class ConsultationAttachDocsAction
             if (hrmReportIds == null) { hrmReportIds = new String[] { }; }
             if (eFormIds == null) { eFormIds = new String[] { }; }
             
-            ConsultationAttachDocs Doc = new ConsultationAttachDocs(provNo,demoNo,requestId,docs);
+            EFormAttachDocs Doc = new EFormAttachDocs(provNo,demoNo,requestId,docs);
             Doc.attach(loggedInInfo);
             
-            ConsultationAttachLabs Lab = new ConsultationAttachLabs(provNo,demoNo,requestId,labs);
+            EFormAttachLabs Lab = new EFormAttachLabs(provNo,demoNo,requestId,labs);
             Lab.attach(loggedInInfo);
-			ConsultationAttachHRMReports hrmReports = new ConsultationAttachHRMReports(provNo, demoNo, requestId, hrmReportIds);
+            EFormAttachHRMReports hrmReports = new EFormAttachHRMReports(provNo, demoNo, requestId, hrmReportIds);
 			hrmReports.attach();
-            ConsultationAttachEForms eForms = new ConsultationAttachEForms(provNo, demoNo, requestId, eFormIds);
+			EFormAttachEForms eForms = new EFormAttachEForms(provNo, demoNo, requestId, eFormIds);
             eForms.attach(loggedInInfo);
             return mapping.findForward("success");	
         }
