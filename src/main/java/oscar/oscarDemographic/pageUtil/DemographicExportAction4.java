@@ -2731,9 +2731,9 @@ public class DemographicExportAction4 extends Action {
 
 		//PatientFN_PatientLN_PatientUniqueID_DOB
 		String[] sects = filename.split("_");
-		if (sects.length==4) return sects[2];
+		if (sects.length>=4) return sects[sects.length-2]; // PatientFN/PatientLN might contain an '_'.
 
-		return null;
+		return "";
 	}
 
 	private String cutExt(String filename) {
