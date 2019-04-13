@@ -32,6 +32,7 @@ import ca.uvic.leadlab.obibconnector.facades.datatypes.AddressType;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.NameType;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.TelcoType;
 import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
+import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
 import com.lowagie.text.DocumentException;
 import org.apache.commons.lang.StringUtils;
@@ -545,7 +546,7 @@ public class EctConsultationFormRequestAction extends Action {
 			recipientId = professionalSpecialist.getId().toString();
 		}
 
-		String response = null;
+		IDocument response = null;
 		CDXConfiguration cdxConfig = new CDXConfiguration();
 		SubmitDoc submitDoc = new SubmitDoc(cdxConfig);
 
