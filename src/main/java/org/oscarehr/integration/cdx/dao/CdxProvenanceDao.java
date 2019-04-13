@@ -25,6 +25,7 @@
 package org.oscarehr.integration.cdx.dao;
 
 
+import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import org.oscarehr.common.dao.AbstractDao;
 import org.oscarehr.integration.cdx.model.CdxProvenance;
 import org.springframework.stereotype.Repository;
@@ -45,17 +46,11 @@ public class CdxProvenanceDao extends AbstractDao<CdxProvenance> {
         return find(id);
     }
 
-    public void logSentAction(String doc) {
-        // pseudo code, please implement:
-
-        // the "doc" xml structure contains all the information about the sent document
-        // use xpath to retrieve all data for CDX Provenance entry:
-        // doc_id, version, effective_time, parent_doc, set_id, in_fullfillment, etc.
-        // note, some of them may be optional.
-        // create new Provenance instance, populate with extracted data
-        // create now entry in "log" table to log user action
-        // populate log column in Provenance model with id of newly created log entry
-        // persist both objects
+    public void logSentAction(IDocument doc) {
+        CdxProvenance prov = new CdxProvenance();
+        prov.populate(doc);
+        prov.setAction("SEND");
+        this.persist(prov);
     }
 
     public List<CdxProvenance> findByKindAndInFulFillment(String kind, String inFulfillmentId) {
