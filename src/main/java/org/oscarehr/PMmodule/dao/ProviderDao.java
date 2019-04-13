@@ -454,7 +454,7 @@ public class ProviderDao extends HibernateDaoSupport {
 			throw new IllegalArgumentException();
 		}
 
-		List<Provider> providerList = getHibernateTemplate().find("From Provider p where p.ohipNo=?",new Object[]{ohipNo});
+		List<Provider> providerList = getHibernateTemplate().find("From Provider p where p.OhipNo=?",new Object[]{ohipNo});
 
 		if(providerList.size()>1) {
 			logger.warn("Found more than 1 provider with ohipNo="+ohipNo);

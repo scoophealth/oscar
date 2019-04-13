@@ -1,6 +1,6 @@
 CREATE TABLE cdx_attachment (
 															id                   int  NOT NULL  AUTO_INCREMENT,
-															document             int  NOT NULL  ,
+															document             int ,
 															attachment_type      varchar(10)  NOT NULL  ,
 															reference 					 varchar(60) NOT NULL ,
 															content              blob  NOT NULL  ,
@@ -9,4 +9,22 @@ CREATE TABLE cdx_attachment (
 
 CREATE INDEX idx_cdx_attachment ON cdx_attachment ( document );
 
-ALTER TABLE cdx_attachment ADD CONSTRAINT fk_cdx_attachment FOREIGN KEY ( document ) REFERENCES document( document_no ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+CREATE TABLE oscar.cdx_provenance (
+																		id                   int  NOT NULL  AUTO_INCREMENT,
+																		doc_id               varchar(30)  NOT NULL  ,
+																		document_no						int,
+																		version              int   ,
+																		effective_time       datetime  NOT NULL  ,
+																		parent_doc           varchar(30)    ,
+																		set_id               varchar(30)    ,
+																		in_fulfillment_of_id varchar(30)    ,
+																		kind                 varchar(30)  NOT NULL  ,
+																		action               varchar(10)  NOT NULL  ,
+																		log                  bigint    ,
+																		payload              text    ,
+																		CONSTRAINT pk_cdx_provenance_id PRIMARY KEY ( id ),
+																		CONSTRAINT cdx_prov_unique UNIQUE ( doc_id, version )
+) ;
+ALTER TABLE cdx_attachment ADD CONSTRAINT fk_cdx_attachment_prov FOREIGN KEY ( document ) REFERENCES cdx_provenance( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE cdx_provenance ADD CONSTRAINT fk_cdx_prov_doc FOREIGN KEY ( document_no ) REFERENCES document( document_no ) ON DELETE NO ACTION ON UPDATE NO ACTION;

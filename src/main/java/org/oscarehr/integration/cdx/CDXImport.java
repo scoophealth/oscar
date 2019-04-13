@@ -33,6 +33,7 @@ import org.oscarehr.integration.cdx.dao.*;
 import org.oscarehr.integration.cdx.model.*;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,6 +44,10 @@ import java.util.List;
 public class CDXImport {
 
     private IReceiveDoc receiver = SpringUtils.getBean(IReceiveDoc.class);
+    private CdxProvenanceDao provDao = SpringUtils.getBean(CdxProvenanceDao.class);
+    private DocumentDao     docDao = SpringUtils.getBean(DocumentDao.class);
+    private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+    private ProviderLabRoutingDao plrDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
 
     private String clinicId;
 
@@ -73,34 +78,67 @@ public class CDXImport {
     }
 
     private void storeDocument(IDocument doc) {
-        CdxAttachmentDao dao = SpringUtils.getBean(CdxAttachmentDao.class);
+        CdxProvenance prov = new CdxProvenance();
+        Document    inboxDoc = null;
 
-        Document        docEntity = createInboxData(doc);
+        CdxProvenance latestVersion = provDao.findLatestVersion(doc.getDocumentID());
+
+        if (latestVersion == null) // brand new document
+            inboxDoc = createInboxData(doc);
+        else  // new version of existing document
+            inboxDoc = reviseInboxData(doc, latestVersion.getDocumentNo());
+
+        prov.populate(doc);
+        prov.setDocumentNo(inboxDoc.getDocumentNo());
+        prov.setAction("import");
+        provDao.persist(prov);
+        saveAttachments(doc, prov);
+
+    }
+
+    private Document reviseInboxData(IDocument doc, int inboxDocId) {
+
+        Document        docEntity = docDao.getDocument(Integer.toString(inboxDocId));
+
+        populateInboxDocument(doc, docEntity);
+        resetProviderLabRoutingStatuses(docEntity);
+        return docEntity;
+    }
+
+    private void resetProviderLabRoutingStatuses(Document docEntity) {
+        for (ProviderLabRoutingModel plr : plrDao.getProviderLabRoutingForLabAndType(docEntity.getDocumentNo(), "DOC")) {
+            plr.setStatus("N");
+            plrDao.persist(plr);
+        }
+    }
+
+
+    private void saveAttachments(IDocument doc, CdxProvenance prov) {
+        CdxAttachmentDao atDao = SpringUtils.getBean(CdxAttachmentDao.class);
 
         for (IAttachment a : doc.getAttachments()) {
             CdxAttachment attachmentEntity = new CdxAttachment();
 
-            attachmentEntity.setDocument(docEntity.getDocumentNo());
-            attachmentEntity.setAttachmentType(a.getType().label);
+            attachmentEntity.setDocument(prov.getId());
+            attachmentEntity.setAttachmentType(a.getType().mediaType);
             attachmentEntity.setReference(a.getReference());
             attachmentEntity.setContent(a.getContent());
-            dao.persist(attachmentEntity);
+            atDao.persist(attachmentEntity);
         }
-
-
-
-
     }
 
 
-
-
     private Document createInboxData(IDocument doc) {
-        Boolean         routed = false;
-        DocumentDao     docDao = SpringUtils.getBean(DocumentDao.class);
         Document        docEntity = new Document();
-        IProvider       p;
+        populateInboxDocument(doc, docEntity);
 
+        addPatient(docEntity, doc.getPatient());
+
+        return docEntity;
+    }
+
+    private void populateInboxDocument(IDocument doc, Document docEntity) {
+        IProvider p;
         docEntity.setDoctype(doc.getTemplateName());
         docEntity.setDocdesc(doc.getTemplateName());
         docEntity.setDocfilename("N/A");
@@ -139,20 +177,24 @@ public class CDXImport {
         docEntity.setContentdatetime(doc.getAuthoringTime());
         docDao.persist(docEntity);
 
-        routed = addProviderRouting(docEntity, doc.getPrimaryRecipient());
+        addProviderRouting(docEntity, doc.getPrimaryRecipient());
 
         for (IProvider q : doc.getSecondaryRecipients()) {
-            routed = routed || addProviderRouting(docEntity, q);
+            addProviderRouting(docEntity, q);
         }
 
-        if (!routed) { // even if none of the recipients appears to work at our clinic, we will route to the default provider
+        if (!routed(docEntity)) { // even if none of the recipients appears to work at our clinic, we will route to the default provider
             addDefaultProviderRouting(docEntity);
         }
+    }
 
-        addPatient(docEntity, doc.getPatient());
-
-
-        return docEntity;
+    private boolean routed(Document docEntity) {
+        boolean result = true;
+        List<ProviderLabRoutingModel> plrs = plrDao.getProviderLabRoutingForLabAndType(docEntity.getDocumentNo(), "DOC");
+        if (plrs.size()==1)
+            if (plrs.get(0).getProviderNo().equals("0"))
+                result = false;
+        return result;
     }
 
 
@@ -199,27 +241,18 @@ public class CDXImport {
         ctlDocDao.persist(ctlDoc);
     }
 
-    private Boolean addProviderRouting(Document docEntity, IProvider prov) {
+    private void addProviderRouting(Document docEntity, IProvider prov) {
 
-        ProviderLabRoutingDao plrDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
-        ProviderLabRoutingModel plr = new ProviderLabRoutingModel();
-        Provider provEntity;
-        Boolean routed = false;
+        Provider provEntity = providerDao.getProviderByOhipNo(prov.getID());
 
-        if (providerBelongsToUs(prov)) {
-
+        if (provEntity != null) {
+            ProviderLabRoutingModel plr = new ProviderLabRoutingModel();
             plr.setLabNo(docEntity.getDocumentNo());
-            plr.setStatus("N"); // Staus:New? (need to confirm semantics)
+            plr.setStatus("N");
             plr.setLabType("DOC");
-
-            provEntity = matchProvider(prov);
-
             plr.setProviderNo(provEntity.getProviderNo());
-
             plrDao.persist(plr);
-            routed = true;
         }
-        return routed;
     }
 
     private void addDefaultProviderRouting(Document docEntity) {
@@ -235,26 +268,7 @@ public class CDXImport {
     }
 
 
-    private Provider matchProvider(IProvider prov) {
-        ProviderDao provdao = SpringUtils.getBean(ProviderDao.class);
-        Provider provEntity;
 
-        provEntity = provdao.getProviderByOhipNo(prov.getID());
-
-        if (provEntity == null) {
-
-            List<Provider> ps = provdao.getProviderFromFirstLastName(prov.getFirstName(), prov.getLastName());
-
-            if (ps.size() == 1)
-                provEntity = ps.iterator().next();
-        }
-
-        return provEntity;
-    }
-
-    private boolean providerBelongsToUs(IProvider prov) {
-        return clinicId.equals(prov.getClinicID());
-    }
 
     public static boolean sameDates(Date a, Date b) {
         if (a.getDate() == b.getDate() &&

@@ -66,4 +66,24 @@ public class CdxProvenanceDao extends AbstractDao<CdxProvenance> {
         return query.getResultList();
     }
 
-}
+    public CdxProvenance  findLatestVersion(String documentID) {
+        String sql = "FROM CdxProvenance p where p.documentId = :docId ";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("docId", documentID);
+
+        List<CdxProvenance> versions = query.getResultList();
+
+        if (versions.isEmpty())
+            return null;
+        else {
+            CdxProvenance result = versions.get(0);
+            for (CdxProvenance v : versions) {
+                if (v.getVersion() > result.getVersion()) result = v;
+            }
+
+            return result;
+            }
+        }
+
+
+    }

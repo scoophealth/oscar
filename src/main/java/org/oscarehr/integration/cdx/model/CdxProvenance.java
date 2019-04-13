@@ -30,7 +30,9 @@
 
 package org.oscarehr.integration.cdx.model;
 
+import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import org.oscarehr.common.model.AbstractModel;
+import org.oscarehr.common.model.Document;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -49,7 +51,7 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
     @Column(name = "doc_id")
     private String documentId;
     @Column(name = "version")
-    private String version;
+    private int version;
     @Basic(optional = false)
     @Column(name = "effective_time")
     private Date effectiveTime;
@@ -69,7 +71,16 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
     private long log;
     @Column(name = "payload")
     private String payload;
+    @Column(name = "document_no")
+    private Integer documentNo;
 
+    public Integer getDocumentNo() {
+        return documentNo;
+    }
+
+    public void setDocumentNo(Integer documentNo) {
+        this.documentNo = documentNo;
+    }
 
     public CdxProvenance() {
     }
@@ -91,11 +102,11 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
         this.documentId = documentId;
     }
 
-    public String getVersion() {
+    public int getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
+    public void setVersion(int version) {
         this.version = version;
     }
 
@@ -161,6 +172,17 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
 
     public void setPayload(String payload) {
         this.payload = payload;
+    }
+
+    public void populate(IDocument doc) {
+        this.documentId = doc.getDocumentID();
+        this.version = doc.getVersion();
+        this.effectiveTime = doc.getEffectiveTime();
+        this.parentDoc = doc.getParentDocumentID();
+        this.setId = doc.getSetId();
+        this.inFulfillmentOfId = getInFulfillmentOfId();
+        this.kind = doc.getLoincCodeDisplayName();
+        this.payload = doc.getContents();
     }
 }
 
