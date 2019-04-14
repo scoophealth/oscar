@@ -24,16 +24,20 @@
 
 package org.oscarehr.integration.cdx;
 
-import ca.uvic.leadlab.obibconnector.facades.receive.*;
+import ca.uvic.leadlab.obibconnector.facades.receive.IAttachment;
+import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
+import ca.uvic.leadlab.obibconnector.facades.receive.IPatient;
+import ca.uvic.leadlab.obibconnector.facades.receive.IReceiveDoc;
 import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.*;
 import org.oscarehr.common.model.*;
-import org.oscarehr.integration.cdx.dao.*;
-import org.oscarehr.integration.cdx.model.*;
+import org.oscarehr.integration.cdx.dao.CdxAttachmentDao;
+import org.oscarehr.integration.cdx.dao.CdxProvenanceDao;
+import org.oscarehr.integration.cdx.model.CdxAttachment;
+import org.oscarehr.integration.cdx.model.CdxProvenance;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
