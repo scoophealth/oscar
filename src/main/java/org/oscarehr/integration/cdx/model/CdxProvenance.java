@@ -32,7 +32,6 @@ package org.oscarehr.integration.cdx.model;
 
 import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import org.oscarehr.common.model.AbstractModel;
-import org.oscarehr.common.model.Document;
 
 import javax.persistence.*;
 import java.io.Serializable;
