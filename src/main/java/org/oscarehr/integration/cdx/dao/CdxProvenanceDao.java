@@ -25,6 +25,7 @@
 package org.oscarehr.integration.cdx.dao;
 
 
+import ca.uvic.leadlab.obibconnector.facades.datatypes.DocumentType;
 import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import org.oscarehr.common.dao.AbstractDao;
 import org.oscarehr.integration.cdx.model.CdxProvenance;
@@ -53,7 +54,7 @@ public class CdxProvenanceDao extends AbstractDao<CdxProvenance> {
         this.persist(prov);
     }
 
-    public List<CdxProvenance> findByKindAndInFulFillment(String kind, String inFulfillmentId) {
+    public List<CdxProvenance> findByKindAndInFulFillment(DocumentType kind, String inFulfillmentId) {
         String sql = "FROM CdxProvenance p where p.kind = :kind and p.inFulfillmentOfId = :inFulfillmentId";
         Query query = entityManager.createQuery(sql);
         query.setParameter("kind", kind);
