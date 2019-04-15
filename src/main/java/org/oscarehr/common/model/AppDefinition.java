@@ -50,6 +50,8 @@ public class AppDefinition extends AbstractModel<Integer> {
 	private String addedBy;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date added;
+	private Integer consentTypeId = null;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -91,6 +93,12 @@ public class AppDefinition extends AbstractModel<Integer> {
 	}
 	public void setAdded(Date added) {
 		this.added = added;
+	}
+	public Integer getConsentTypeId() {
+		return consentTypeId;
+	}
+	public void setConsentTypeId(Integer consentTypeId) {
+		this.consentTypeId = consentTypeId;
 	}
 	
 	
