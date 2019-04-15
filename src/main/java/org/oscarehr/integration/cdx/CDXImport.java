@@ -85,12 +85,12 @@ public class CDXImport {
         CdxProvenance prov = new CdxProvenance();
         Document    inboxDoc = null;
 
-        CdxProvenance latestVersion = provDao.findLatestVersion(doc.getDocumentID());
+        List<CdxProvenance> versions = provDao.findVersionsOrderDesc(doc.getDocumentID());
 
-        if (latestVersion == null) // brand new document
+        if (versions.isEmpty()) // brand new document
             inboxDoc = createInboxData(doc);
         else  // new version of existing document
-            inboxDoc = reviseInboxData(doc, latestVersion.getDocumentNo());
+            inboxDoc = reviseInboxData(doc, versions.get(0).getDocumentNo());
 
         prov.populate(doc);
         prov.setDocumentNo(inboxDoc.getDocumentNo());
@@ -102,17 +102,23 @@ public class CDXImport {
 
     private Document reviseInboxData(IDocument doc, int inboxDocId) {
 
-        Document        docEntity = docDao.getDocument(Integer.toString(inboxDocId));
+        Document        existingDocEntity = docDao.getDocument(Integer.toString(inboxDocId));
+        Document        newDocEntity = new Document();
 
-        populateInboxDocument(doc, docEntity);
-        resetProviderLabRoutingStatuses(docEntity);
-        return docEntity;
+        populateInboxDocument(doc, newDocEntity);
+        copyPreviousRoutingAndResetStati(newDocEntity, existingDocEntity);
+        addPatient(newDocEntity, doc.getPatient());
+        return newDocEntity;
     }
 
-    private void resetProviderLabRoutingStatuses(Document docEntity) {
-        for (ProviderLabRoutingModel plr : plrDao.getProviderLabRoutingForLabAndType(docEntity.getDocumentNo(), "DOC")) {
-            plr.setStatus("N");
-            plrDao.persist(plr);
+    private void copyPreviousRoutingAndResetStati(Document newDocEntity, Document existingDocEntity) {
+        for (ProviderLabRoutingModel plr : plrDao.getProviderLabRoutingForLabAndType(existingDocEntity.getDocumentNo(), "DOC")) {
+            ProviderLabRoutingModel plrNew = new ProviderLabRoutingModel();
+            plrNew.setProviderNo(plr.getProviderNo());
+            plrNew.setStatus("N");
+            plrNew.setLabType(plr.getLabType());
+            plrNew.setLabNo(newDocEntity.getDocumentNo());
+            plrDao.persist(plrNew);
         }
     }
 
@@ -158,7 +164,7 @@ public class CDXImport {
 
 
         docEntity.setDocClass("CDX");
-        docEntity.setDocxml(doc.getContents());
+        docEntity.setDocxml("stored in CDX provenance table");
         docEntity.setDocfilename(doc.getDocumentID());
         docEntity.setRestrictToProgram(false); // need to confirm semantics
 
@@ -193,12 +199,8 @@ public class CDXImport {
     }
 
     private boolean routed(Document docEntity) {
-        boolean result = true;
         List<ProviderLabRoutingModel> plrs = plrDao.getProviderLabRoutingForLabAndType(docEntity.getDocumentNo(), "DOC");
-        if (plrs.size()==1)
-            if (plrs.get(0).getProviderNo().equals("0"))
-                result = false;
-        return result;
+        return !plrs.isEmpty();
     }
 
 

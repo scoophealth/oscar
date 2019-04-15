@@ -110,5 +110,5 @@ public class ProviderLabRoutingModel extends AbstractModel<Integer> implements S
 	protected void jpa_setTimestamp() {
 		this.timestamp = new Date();
 	}
-	
+
 }

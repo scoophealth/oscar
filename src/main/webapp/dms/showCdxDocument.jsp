@@ -67,6 +67,7 @@
     CdxAttachmentDao cdxAttachmentDao = SpringUtils.getBean(CdxAttachmentDao.class);
     CtlDocumentDao ctlDocDao = SpringUtils.getBean(CtlDocumentDao.class);
     DemographicDao demoDao = SpringUtils.getBean(DemographicDao.class);
+    CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
     ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) ctx.getBean("providerInboxRoutingDAO");
     UserPropertyDAO userPropertyDAO = (UserPropertyDAO)SpringUtils.getBean("UserPropertyDAO");
 
@@ -94,6 +95,8 @@ It must have been deleted. Please refresh your Inbox window.
     Integer demoNoInt = ctlDoc.getId().getModuleId();
     String demoNo = demoNoInt.toString();
     Document curdoc = docDao.findActiveByDocumentNo(documentNoInt).get(0);
+    CdxProvenance provenanceDoc = provenanceDao.findByDocumentNo(documentNoInt);
+    List<CdxProvenance> versions = provenanceDao.findVersionsOrderDesc(provenanceDoc.getDocumentId());
 
     String inQueue=request.getParameter("inQueue");
 
@@ -428,164 +431,192 @@ It must have been deleted. Please refresh your Inbox window.
 
             </div>
 
-
-
-            <div class="panel panel-default">
-
-                <c:import url="/share/xslt/Production_2016July07_CDA_to_HTML.xsl" var="xslt"/>
-                <x:transform xml="<%=curdoc.getDocxml()%>" xslt="${xslt}"/>
-            </div>
-
             <%
-                List<CdxAttachment> atts = cdxAttachmentDao.findByDocNo(documentNoInt);
-                if (!atts.isEmpty()) {
+                if (versions.size() > 1) {
+                    if (provenanceDoc.getId().equals(versions.get(0).getId())) {
             %>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Multiple versions of this document exist. You are looking at the <strong> latest</strong> version (<%=provenanceDoc.getVersion()%>).
+                </div>
+                <% } else { %>
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <strong> Warning! </strong> Multiple versions of this document exist. You are looking at an <strong> outdated </strong> version (<%=provenanceDoc.getVersion()%>).
+                    </div>
+                    <% } %>
+                    <div class="panel panel-body">
+                        <ul class="list-group">
+                            <%
+                                for (CdxProvenance p : versions) {
+                            %>
+                            <a href="showCdxDocument.jsp?inWindow=true&segmentID=<%=p.getDocumentNo()%>&providerNo=<%=providerNo%>" class="list-group-item <%=(p.getId().equals(provenanceDoc.getId()) ? "list-group-item-info" : "")%> ">
+                                Version <%=p.getVersion()%>, Effective time: <%=p.getEffectiveTime()%>
+                            </a>
 
-            <div class="panel-footer">
-                <h3>Attachments:</h3>
-                <ul>
-                    <%
-                        for (CdxAttachment a : atts) { %>
-                    <li> <a href="#" onclick="javascript:popup(360, 680, '../dms/ManageDocument.do?method=viewCdxAttachment&attId=<%= a.getId() %>', 'Attachment: <%=a.getReference()%>')">
+                            <% }%>
+                        </ul>
+                    </div>
+                </div>
+                <%}%>
 
-                        <%=a.getReference()%> </a> (<%=a.getAttachmentType()%>) </li>
 
-                    <% }%>
-                </ul>
+                <div class="panel panel-default">
+
+                    <c:import url="/share/xslt/Production_2016July07_CDA_to_HTML.xsl" var="xslt"/>
+                    <x:transform xml="<%=provenanceDoc.getPayload()%>" xslt="${xslt}"/>
+                </div>
+
+                <%
+                    List<CdxAttachment> atts = cdxAttachmentDao.findByDocNo(provenanceDoc.getId());
+                    if (!atts.isEmpty()) {
+                %>
+
+                <div class="panel-footer">
+                    <h3>Attachments:</h3>
+                    <ul>
+                        <%
+                            for (CdxAttachment a : atts) { %>
+                        <li> <a href="#" onclick="javascript:popup(360, 680, '../dms/ManageDocument.do?method=viewCdxAttachment&attId=<%= a.getId() %>', 'Attachment: <%=a.getReference()%>')">
+
+                            <%=a.getReference()%> </a> (<%=a.getAttachmentType()%>) </li>
+
+                        <% }%>
+                    </ul>
+                </div>
+
+                <% }%>
             </div>
 
-            <% }%>
+
         </div>
-
-
     </div>
-</div>
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    function setupDemoAutoCompletion() {
-        if (jQuery("#autocompletedemo<%=documentNo%>")) {
+        function setupDemoAutoCompletion() {
+            if (jQuery("#autocompletedemo<%=documentNo%>")) {
 
-            var url;
-            if (jQuery("#activeOnly<%=documentNo%>").is(":checked")) {
-                url = "<%= request.getContextPath() %>/demographic/SearchDemographic.do?jqueryJSON=true&activeOnly=" + jQuery("#activeOnly<%=documentNo%>").val();
-            } else {
-                url = "<%= request.getContextPath() %>/demographic/SearchDemographic.do?jqueryJSON=true";
+                var url;
+                if (jQuery("#activeOnly<%=documentNo%>").is(":checked")) {
+                    url = "<%= request.getContextPath() %>/demographic/SearchDemographic.do?jqueryJSON=true&activeOnly=" + jQuery("#activeOnly<%=documentNo%>").val();
+                } else {
+                    url = "<%= request.getContextPath() %>/demographic/SearchDemographic.do?jqueryJSON=true";
+                }
+
+                jQuery("#autocompletedemo<%=documentNo%>").autocomplete({
+                    source: url,
+                    minLength: 2,
+
+                    focus: function (event, ui) {
+                        jQuery("#autocompletedemo<%=documentNo%>").val(ui.item.label);
+                        return false;
+                    },
+                    select: function (event, ui) {
+                        jQuery("#autocompletedemo<%=documentNo%>").val(ui.item.label);
+                        jQuery("#demofind<%=documentNo%>").val(ui.item.value);
+                        jQuery("#demofindName<%=documentNo%>").val(ui.item.formattedName);
+                        selectedDemos.push(ui.item.label);
+                        console.log(ui.item.providerNo);
+
+                        if (ui.item.providerNo != undefined && ui.item.providerNo != null && ui.item.providerNo != "" && ui.item.providerNo != "null") {
+                            addDocToList(ui.item.providerNo, ui.item.provider + " (MRP)", "<%=documentNo%>");
+                        }
+                        //enable Save button whenever a selection is made
+                        jQuery('#save<%=documentNo%>').removeAttr('disabled');
+
+                        jQuery('#msgBtn_<%=documentNo%>').removeAttr('disabled');
+                        return false;
+                    }
+                });
             }
+        }
 
-            jQuery("#autocompletedemo<%=documentNo%>").autocomplete({
+
+        jQuery(setupDemoAutoCompletion());
+
+        function setupProviderAutoCompletion() {
+            var url = "<%= request.getContextPath() %>/provider/SearchProvider.do?method=labSearch";
+
+            jQuery("#autocompleteprov<%=documentNo%>").autocomplete({
                 source: url,
                 minLength: 2,
 
                 focus: function (event, ui) {
-                    jQuery("#autocompletedemo<%=documentNo%>").val(ui.item.label);
+                    jQuery("#autocompleteprov<%=documentNo%>").val(ui.item.label);
                     return false;
                 },
                 select: function (event, ui) {
-                    jQuery("#autocompletedemo<%=documentNo%>").val(ui.item.label);
-                    jQuery("#demofind<%=documentNo%>").val(ui.item.value);
-                    jQuery("#demofindName<%=documentNo%>").val(ui.item.formattedName);
-                    selectedDemos.push(ui.item.label);
-                    console.log(ui.item.providerNo);
+                    jQuery("#autocompleteprov<%=documentNo%>").val("");
+                    jQuery("#provfind<%=documentNo%>").val(ui.item.value);
+                    addDocToList(ui.item.value, ui.item.label, "<%=documentNo%>");
 
-                    if (ui.item.providerNo != undefined && ui.item.providerNo != null && ui.item.providerNo != "" && ui.item.providerNo != "null") {
-                        addDocToList(ui.item.providerNo, ui.item.provider + " (MRP)", "<%=documentNo%>");
-                    }
-                    //enable Save button whenever a selection is made
-                    jQuery('#save<%=documentNo%>').removeAttr('disabled');
-
-                    jQuery('#msgBtn_<%=documentNo%>').removeAttr('disabled');
                     return false;
                 }
             });
         }
-    }
+
+        jQuery(setupProviderAutoCompletion());
 
 
-    jQuery(setupDemoAutoCompletion());
-
-    function setupProviderAutoCompletion() {
-        var url = "<%= request.getContextPath() %>/provider/SearchProvider.do?method=labSearch";
-
-        jQuery("#autocompleteprov<%=documentNo%>").autocomplete({
-            source: url,
-            minLength: 2,
-
-            focus: function (event, ui) {
-                jQuery("#autocompleteprov<%=documentNo%>").val(ui.item.label);
-                return false;
-            },
-            select: function (event, ui) {
-                jQuery("#autocompleteprov<%=documentNo%>").val("");
-                jQuery("#provfind<%=documentNo%>").val(ui.item.value);
-                addDocToList(ui.item.value, ui.item.label, "<%=documentNo%>");
-
-                return false;
-            }
+        jQuery(document).ready(function () { //pushing the autocomplete helper out of the visible page
+            jQuery(".ui-helper-hidden-accessible").css({"position": "absolute", "left": "-999em"}) //{"display","none"} will remove the element from the page
         });
-    }
-
-    jQuery(setupProviderAutoCompletion());
-
-
-    jQuery(document).ready(function () { //pushing the autocomplete helper out of the visible page
-        jQuery(".ui-helper-hidden-accessible").css({"position": "absolute", "left": "-999em"}) //{"display","none"} will remove the element from the page
-    });
 
 
 
 
-    function updateCdxDocument(eleId){
+        function updateCdxDocument(eleId){
 
-        //save doc info
-        var url="../dms/ManageDocument.do",data=$(eleId).serialize(true);
-        new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-                var json=transport.responseText.evalJSON();
-                var patientId;
-                //oscarLog(json);
-                if(json!=null ){
-                    patientId=json.patientId;
-
-                    var ar=eleId.split("_");
-                    var num=ar[1];
-                    num=num.replace(/\s/g,'');
-                    document.location.reload();
-                }
-            }});
-
-        return false;
-    }
-
-    function updateCdxDocumentAndLinkDemo(eleId) {
-        if (confirm("Are you sure to link to this demographic?"))
-            return updateCdxDocument(eleId);
-        else return false;
-    }
-
-    function acknowledgeCdxDocument() {
-        <%  if( skipComment ) { %>
-        updateStatus('acknowledgeForm_<%=documentNo%>', false);
-        <% } else { %>
-        getDocComment(<%=documentNo%>,  <%=providerNo%> , false);
-        <% } %>
-        window.close();
-    }
-
-    function deleteCdxDocument(docNo) {
-        if (confirm("ARE YOU SURE TO DELETE THIS INCOMING CDX DOCUMENT? \n(Documents should only be deleted if they were received in error. This operation cannot be undone)")) {
-
-            var url="../dms/DeleteDocument.do";
-            var data='method=deleteDocument&documentId='+docNo;
+            //save doc info
+            var url="../dms/ManageDocument.do",data=$(eleId).serialize(true);
             new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-                    window.close();
+                    var json=transport.responseText.evalJSON();
+                    var patientId;
+                    //oscarLog(json);
+                    if(json!=null ){
+                        patientId=json.patientId;
+
+                        var ar=eleId.split("_");
+                        var num=ar[1];
+                        num=num.replace(/\s/g,'');
+                        document.location.reload();
+                    }
                 }});
+
+            return false;
         }
 
-        return false;
-    }
+        function updateCdxDocumentAndLinkDemo(eleId) {
+            if (confirm("Are you sure to link to this demographic?"))
+                return updateCdxDocument(eleId);
+            else return false;
+        }
+
+        function acknowledgeCdxDocument() {
+            <%  if( skipComment ) { %>
+            updateStatus('acknowledgeForm_<%=documentNo%>', false);
+            <% } else { %>
+            getDocComment(<%=documentNo%>,  <%=providerNo%> , false);
+            <% } %>
+            window.close();
+        }
+
+        function deleteCdxDocument(docNo) {
+            if (confirm("ARE YOU SURE TO DELETE THIS INCOMING CDX DOCUMENT? \n(Documents should only be deleted if they were received in error. This operation cannot be undone)")) {
+
+                var url="../dms/DeleteDocument.do";
+                var data='method=deleteDocument&documentId='+docNo;
+                new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
+                        window.close();
+                    }});
+            }
+
+            return false;
+        }
 
 
-</script>
+    </script>
 
 </body>
 </html>
