@@ -37,6 +37,8 @@ import javax.persistence.Table;
 @Table(name="consentType")
 public class ConsentType extends AbstractModel<Integer> {
 	
+	public static final String PROVIDER_CONSENT_FILTER = "provider_consent_filter";
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")

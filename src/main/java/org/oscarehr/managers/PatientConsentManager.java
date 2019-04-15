@@ -400,4 +400,8 @@ public class PatientConsentManager {
 		}		
 	}
 	
+	public ConsentType getProviderSpecificConsent(LoggedInInfo loggedInInfo) {
+		ConsentType conType = consentTypeDao.findConsentTypeForProvider(ConsentType.PROVIDER_CONSENT_FILTER ,loggedInInfo.getLoggedInProviderNo()); 
+		return conType;
+	}
 }

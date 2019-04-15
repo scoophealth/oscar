@@ -71,6 +71,13 @@ public class PreventionManager {
 		return (results);
 	}
 
+	public List<Prevention> getByDemographicIdUpdatedAfterDate(LoggedInInfo loggedInInfo, Integer demographicId, Date updatedAfterThisDateExclusive) {
+		List<Prevention> results = preventionDao.findByDemographicIdAfterDatetimeExclusive(demographicId, updatedAfterThisDateExclusive);
+		LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getByDemographicIdUpdatedAfterDate", "demographicId="+demographicId+" updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
+
+		return (results);
+	}
+
 	public Prevention getPrevention(LoggedInInfo loggedInInfo, Integer id) {
 		Prevention result = preventionDao.find(id);
 

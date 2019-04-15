@@ -266,6 +266,13 @@ public class ScheduleManager {
 		return (results);
 	}
 
+	public List<Appointment> getAppointmentByDemographicIdUpdatedAfterDate(LoggedInInfo loggedInInfo, Integer demographicId, Date updatedAfterThisDateExclusive) {
+		List<Appointment> results = oscarAppointmentDao.findByDemographicIdUpdateDate(demographicId, updatedAfterThisDateExclusive);
+		LogAction.addLogSynchronous(loggedInInfo, "ScheduleManager.getAppointmentByDemographicIdUpdatedAfterDate", "demographicId="+demographicId+" updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
+
+		return (results);
+	}
+
 	public List<AppointmentArchive> getAppointmentArchiveUpdatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateExclusive, int itemsToReturn) {
 		List<AppointmentArchive> results = appointmentArchiveDao.findByUpdateDate(updatedAfterThisDateExclusive, itemsToReturn);
 
