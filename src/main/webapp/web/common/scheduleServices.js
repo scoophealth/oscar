@@ -209,6 +209,24 @@ angular.module("scheduleServices", [])
                 });
            return deferred.promise;
         },
+        getSearchConfigByProvider: function (id) {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'schedule/searchConfig/byProvider/' + id ,
+                method: "GET",
+                headers: {'Content-Type': 'application/json'}
+              }).then(function (response){
+              		console.log("response from getSearchConfig",response);
+              		if(response.status == 204){   
+              			deferred.resolve(null);
+              		}else{
+            	  			deferred.resolve(response.data);
+            	  		}
+                },function (data, status, headers, config) {
+                	deferred.reject("An error occured while getting appointment history");
+                });
+           return deferred.promise;
+        },
         getSearchConfigList: function (id) {
         	var deferred = $q.defer();
         	$http({
