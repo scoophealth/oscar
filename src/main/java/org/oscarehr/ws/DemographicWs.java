@@ -150,13 +150,4 @@ public class DemographicWs extends AbstractWs {
 		
 		return demoIds.toArray(new Integer[0]);
 	}
-	
-	//Ronnie: to be removed...
-	public DemographicTransfer[] getActiveDemographicsAfter(@WebParam(name="lastUpdate") Calendar lastUpdate, @WebParam(name="fields") String fields) {
-		return null;
-	}
-	
-	public String writePHRId(@WebParam(name="demographicNo") Integer demographicNo, @WebParam(name="phrId") String phrId) {
-		return null;
-	}
 }
