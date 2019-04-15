@@ -77,7 +77,7 @@ if(!authed) {
                         <option value="1">younger than</option>
                         <option value="2">older than</option>
                         <option value="3">equal too</option>
-                        <option value="4">ages between</option>
+                        <option value="4">ages between (and including)</option>
 					</select>
 				  </div>
 			 	</div>
@@ -679,6 +679,10 @@ if(!authed) {
 				console.log("$scope.selectedReport",selectedReport);
 				console.log("$scope.selectedProvider",selectedProvider);
 				
+				if($scope.selectedReport == undefined) {
+					alert('You must choose a report');
+					return;	
+				}
 				$scope.letter1 = [];
 				$scope.letter2 = [];
 				$scope.phone1 = [];
@@ -806,7 +810,7 @@ if(!authed) {
 					}else if(report.searchConfig.ageStyle === 3){
 						reportStr = reportStr+"Equal too : "+report.searchConfig.age1;
 					}else if(report.searchConfig.ageStyle === 4){
-						reportStr = reportStr+"Ages Between: "+report.searchConfig.age1+" and "+report.searchConfig.age2;
+						reportStr = reportStr+"Ages Between: "+report.searchConfig.age1+" and "+report.searchConfig.age2 + "(inclusive) ";
 					}
 				
 				if(report.searchConfig.ageCalc == 0){
@@ -842,7 +846,7 @@ if(!authed) {
 					
 				}
 				
-				reportStr = reportStr+"Tracking Codes:";
+				reportStr = reportStr+"\nTracking Codes:";
 				exFirst = false;
 				for(prev in report.searchConfig.trackingCodes){
 					console.log("prev",prev);
@@ -854,7 +858,7 @@ if(!authed) {
 					
 				}
 				
-				reportStr=reportStr + "Billing Code Range: "+$filter('date')(report.searchConfig.billingCodeStart)+" to "+$filter('date')(report.searchConfig.billingCodeEnd)+"\n";
+				reportStr=reportStr + "\nBilling Code Range: "+$filter('date')(report.searchConfig.billingCodeStart)+" to "+$filter('date')(report.searchConfig.billingCodeEnd)+"\n";
 				
 				
 				
