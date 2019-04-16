@@ -2884,7 +2884,9 @@ if ( Dead.equals(PatStat) ) {%>
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formPHRUserName" />: </b></td>
 								<td align="left"><input type="text" name="myOscarUserName" size="30" <%=getDisabled("myOscarUserName")%>
-									value="<%=demographic.getMyOscarUserName()!=null? demographic.getMyOscarUserName() : ""%>"><br />
+									value="<%=demographic.getMyOscarUserName()!=null? demographic.getMyOscarUserName() : ""%>">
+									<input type="button" id="phrConsent" style="display:none;"  value="Confirm" />
+									<br />
 								<%if (demographic.getMyOscarUserName()==null ||demographic.getMyOscarUserName().equals("")) {%>
 
 								<%
@@ -4185,6 +4187,46 @@ jQuery(document).ready(function(){
 <%
 }
 %>
+
+jQuery(document).ready(function(){
+	//Check if PHR is active and if patient has consented	
+	/*
+	PHR inactive                    FALSE      INACTIVE
+		PHR active & Consent Needed     TRUE       NEED_CONSENT
+		PHR Active & Consent exists.    TRUE       CONSENTED
+		*/
+	    jQuery.ajax({
+	        url: "<%=request.getContextPath()%>/ws/rs/app/PHRActive/consentGiven/<%=demographic_no%>",
+	        dataType: 'json',
+	        success: function (data) {
+	       		console.log("PHR CONSENT",data);
+	       		if(data.success && data.message === "NEED_CONSENT"){
+	       			jQuery("#phrConsent").show();
+	       		}else{
+	       			jQuery("#phrConsent").hide();
+	       		}
+	    		}
+		});
+		
+	jQuery("#phrConsent").click(function() {
+  		jQuery.ajax({
+  			type: "POST",
+	        url: "<%=request.getContextPath()%>/ws/rs/app/PHRActive/consentGiven/<%=demographic_no%>",
+	        dataType: 'json',
+	        success: function (data) {
+	       		console.log("PHR CONSENT POST",data);
+	       		if(data.success && data.message === "NEED_CONSENT"){
+	       			jQuery("#phrConsent").show();
+	       		}else{
+	       			alert("Successfully confirmed");
+	       			jQuery("#phrConsent").hide();
+	       		}
+	    		}
+		});
+	});
+	
+});
+
 </script>
 </body>
 </html:html>

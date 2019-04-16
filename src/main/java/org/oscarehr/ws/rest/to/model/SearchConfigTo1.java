@@ -47,6 +47,7 @@ public class SearchConfigTo1 {
 	private String appointmentLocation = null;
 	int defaultAppointmentCount =1;
 	private String title ;
+	private Integer id;
     /**
 	 * @return the defaultAppointmentCount
 	 */
@@ -207,6 +208,14 @@ public class SearchConfigTo1 {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 }

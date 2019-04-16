@@ -57,6 +57,18 @@ angular.module("consentServices", [])
 
           return deferred.promise;
         },
+        getConsentType: function(id){
+        	var deferred = $q.defer();
+        	 $http.get(this.apiPath+'/consentType/'+id,this.configHeaders).then(function(response){
+            	console.log("me "+response.data);
+            	deferred.resolve(response.data);
+            },function(){
+            	console.log("error fetching myself");
+            	deferred.reject("An error occured while getting user data");
+            });
+     
+          return deferred.promise;
+        }
        
     };
 });

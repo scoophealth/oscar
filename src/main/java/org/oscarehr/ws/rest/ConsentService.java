@@ -30,6 +30,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 
@@ -110,6 +111,28 @@ public class ConsentService extends AbstractServiceImpl {
     		response.setContent(consentTypes);
   
     	return response;
+    }
+    
+    @GET
+    @Path("/consentType/{id}")
+    @Produces("application/json")
+    public ConsentTypeTo1 getConsentType(@PathParam("id") Integer id) {
+    	
+    		ConsentType consent =     patientConsentManager.getConsentTypeByConsentTypeId(id);
+    		
+    		
+    			ConsentTypeTo1 consentTypeTo1 = new ConsentTypeTo1();
+    			consentTypeTo1.setActive(consent.isActive());
+    			consentTypeTo1.setDescription(consent.getDescription());
+    			consentTypeTo1.setId(consent.getId());
+    			consentTypeTo1.setName(consent.getName());
+    			consentTypeTo1.setProviderNo(consent.getProviderNo());
+    			consentTypeTo1.setRemoteEnabled(consent.isRemoteEnabled());
+    			consentTypeTo1.setType(consent.getType());
+    			
+    		
+    		
+    			return consentTypeTo1;
     }
 
     

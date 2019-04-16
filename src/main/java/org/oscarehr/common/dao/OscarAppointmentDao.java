@@ -161,6 +161,21 @@ public class OscarAppointmentDao extends AbstractDao<Appointment> {
 		List<Appointment> results = query.getResultList();
 		return (results);
 	}
+	
+	/**
+	 * @return results ordered by lastUpdateDate
+	 */
+	public List<Appointment> findByDemographicIdUpdateDate(Integer demographicId, Date updatedAfterThisDateExclusive) {
+		String sqlCommand = "select x from "+modelClass.getSimpleName()+" x where x.demographicNo=?1 and x.updateDateTime>?2 order by x.updateDateTime";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
+		query.setParameter(2, updatedAfterThisDateExclusive);
+		
+		@SuppressWarnings("unchecked")
+		List<Appointment> results = query.getResultList();
+		return (results);
+	}
 
 	
 	public List<Appointment> getAllByDemographicNoSince(Integer demographicNo,Date lastUpdateDate ) {

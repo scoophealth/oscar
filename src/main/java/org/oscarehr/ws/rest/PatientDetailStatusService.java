@@ -100,14 +100,12 @@ public class PatientDetailStatusService extends AbstractServiceImpl {
 		
 		if (ProviderMyOscarIdData.idIsSet(getLoggedInInfo().getLoggedInProviderNo())) {
 		    if( demographicNo>0 ) {
-		    	Demographic demo = new DemographicData().getDemographic(getLoggedInInfo(), demographicNo.toString()); 
-		    	String myOscarUserName = demo.getMyOscarUserName();
-		    	if(myOscarUserName!=null && !myOscarUserName.equals("")) {
-		    		status.setMacPHRIdsSet(true);
-		    		
-		    		String verificationLevel = demographicManager.getPhrVerificationLevelByDemographicId(getLoggedInInfo(),demographicNo);
-		    		status.setMacPHRVerificationLevel(verificationLevel);
-		    	}
+			    	Demographic demo = new DemographicData().getDemographic(getLoggedInInfo(), demographicNo.toString()); 
+			    	String myOscarUserName = demo.getMyOscarUserName();
+			    	if(myOscarUserName!=null && !myOscarUserName.equals("")) {
+			    		status.setMacPHRIdsSet(true);
+			    		status.setMacPHRVerificationLevel(demographicManager.getPhrVerificationLevelByDemographicId(getLoggedInInfo(),demographicNo));
+			    	}
 		    }
 		}
 		
