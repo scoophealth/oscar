@@ -817,11 +817,19 @@ if(!authed) {
 					}
 				
 				if(report.searchConfig.ageCalc == 0){
-					reportStr = reportStr+" As of today "
+					reportStr = reportStr+" As of today ";
 				}else{
 					reportStr = reportStr+" As of: "+$filter('date')(report.searchConfig.ageAsOf);
 				}
 				
+				if(report.searchConfig.sex == 1) {
+					reportStr = reportStr+"\nGender: Female ";
+				}
+				else if(report.searchConfig.sex == 2) {
+					reportStr = reportStr+"\nGender: Male ";
+				} else {
+					reportStr = reportStr+"\nGender: <None Specified> ";
+				}
 				
 				
 				//	"ageStyle":2,"age1":"2","age2":null,"ageCalc":1,"ageAsOf":1554004800000,
