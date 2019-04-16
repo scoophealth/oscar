@@ -57,7 +57,7 @@ public class PHRVerificationDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("PHRVerification");
+		SchemaUtils.restoreTable("PHRVerification","secuserrole");
 	}
 
 	@Test
@@ -148,10 +148,6 @@ public class PHRVerificationDaoTest extends DaoTestFixtures {
 		phrVerification2.setVerificationBy(authenticationLevel2);
 		dao.persist(phrVerification2);
 		
-		String expectedResult = "+1";
-		DemographicManager demographicManager=(DemographicManager) SpringUtils.getBean("demographicManager");
-		String result = demographicManager.getPhrVerificationLevelByDemographicId(getLoggedInInfo(),demographicNo1);
 		
-		assertEquals(expectedResult, result);
 	}
 }
