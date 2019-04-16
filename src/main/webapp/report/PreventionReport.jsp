@@ -683,6 +683,8 @@ if(!authed) {
 					alert('You must choose a report');
 					return;	
 				}
+				
+				
 				$scope.letter1 = [];
 				$scope.letter2 = [];
 				$scope.phone1 = [];
@@ -799,8 +801,9 @@ if(!authed) {
 					return "";
 				}
 				console.log("");
-				var reportStr = "Report Name: "+report.searchConfig.reportName+"\n"
+				var reportStr = "Report Name: "+report.searchConfig.reportName+"\n";
 				
+				reportStr += "\nProvider: " + report.searchConfig.providerName + "\n";
 				//{"id":null,"reportName":"Pap 5",
 				reportStr = reportStr+"Age: ";
 					if(report.searchConfig.ageStyle === 1){
