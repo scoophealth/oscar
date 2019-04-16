@@ -35,9 +35,13 @@ import javax.jws.WebService;
 import org.apache.cxf.annotations.GZIP;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.Gender;
+import org.oscarehr.common.model.Consent;
+import org.oscarehr.common.model.ConsentType;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.PHRVerification;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.PatientConsentManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.ws.transfer_objects.DemographicTransfer;
 import org.oscarehr.ws.transfer_objects.PhrVerificationTransfer;
@@ -52,6 +56,9 @@ public class DemographicWs extends AbstractWs {
 	
 	@Autowired
 	private DemographicManager demographicManager;
+	
+	@Autowired
+	private PatientConsentManager patientConsentManager;
 	
 	public DemographicTransfer getDemographic(Integer demographicId)
 	{
@@ -129,5 +136,18 @@ public class DemographicWs extends AbstractWs {
 		
 		List<Demographic> demographics=demographicManager.getDemographics(getLoggedInInfo(),ids);
 		return(DemographicTransfer.toTransfers(demographics));	
+	}
+
+	public Integer[] getConsentedDemographicIdsAfter(@WebParam(name="lastUpdate") Calendar lastUpdate)
+	{
+		LoggedInInfo loggedInInfo = getLoggedInInfo();
+		ConsentType consentType = patientConsentManager.getProviderSpecificConsent(loggedInInfo);
+		List<Consent> consents = patientConsentManager.getConsentsByTypeAndEditDate(loggedInInfo, consentType, lastUpdate.getTime());
+		List<Integer> demoIds = new ArrayList<Integer>();
+		for (Consent c : consents) {
+			if (!demoIds.contains(c.getDemographicNo())) demoIds.add(c.getDemographicNo());
+		}
+		
+		return demoIds.toArray(new Integer[0]);
 	}
 }

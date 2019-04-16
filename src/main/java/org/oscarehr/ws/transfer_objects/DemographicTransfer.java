@@ -78,8 +78,8 @@ public final class DemographicTransfer {
 	private Integer headRecord;
 	private String anonymous;
 	private String spokenLanguage;
-	private int activeCount;
-	private int hsAlertCount;
+	private Integer activeCount;
+	private Integer hsAlertCount;
 	private String displayName;
 	private String lastUpdateUser;
 	private Date lastUpdateDate;
@@ -431,19 +431,19 @@ public final class DemographicTransfer {
     	this.spokenLanguage = spokenLanguage;
     }
 
-	public int getActiveCount() {
+	public Integer getActiveCount() {
     	return (activeCount);
     }
 
-	public void setActiveCount(int activeCount) {
+	public void setActiveCount(Integer activeCount) {
     	this.activeCount = activeCount;
     }
 
-	public int getHsAlertCount() {
+	public Integer getHsAlertCount() {
     	return (hsAlertCount);
     }
 
-	public void setHsAlertCount(int hsAlertCount) {
+	public void setHsAlertCount(Integer hsAlertCount) {
     	this.hsAlertCount = hsAlertCount;
     }
 

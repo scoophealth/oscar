@@ -28,11 +28,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
+import org.oscarehr.common.model.ConsentType;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
+import org.oscarehr.managers.PatientConsentManager;
 import org.oscarehr.managers.PreventionManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.transfer_objects.PreventionTransfer;
@@ -45,6 +48,9 @@ import org.springframework.stereotype.Component;
 public class PreventionWs extends AbstractWs {
 	@Autowired
 	private PreventionManager preventionManager;
+	
+	@Autowired
+	private PatientConsentManager patientConsentManager;
 
 	public PreventionTransfer getPrevention(Integer preventionId) {
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
@@ -69,6 +75,16 @@ public class PreventionWs extends AbstractWs {
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
 		List<Prevention> preventions=preventionManager.getPreventionsByProgramProviderDemographicDate(getLoggedInInfo(),programId,providerNo,demographicId,updatedAfterThisDateExclusive,itemsToReturn);
 		return(PreventionTransfer.getTransfers(loggedInInfo,preventions));
+	}
+
+	public PreventionTransfer[] getPreventionsByDemographicIdAfter(@WebParam(name="lastUpdate") Calendar lastUpdate, @WebParam(name="demographicId") Integer demographicId)
+	{
+		LoggedInInfo loggedInInfo = getLoggedInInfo();
+		ConsentType consentType = patientConsentManager.getProviderSpecificConsent(loggedInInfo);
+		if (!patientConsentManager.hasPatientConsented(demographicId, consentType)) return null;
+		
+		List<Prevention> preventions=preventionManager.getByDemographicIdUpdatedAfterDate(loggedInInfo, demographicId, lastUpdate.getTime());
+		return(PreventionTransfer.getTransfers(loggedInInfo, preventions));
 	}
 
 }

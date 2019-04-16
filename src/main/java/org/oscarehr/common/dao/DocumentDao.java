@@ -368,6 +368,26 @@ public class DocumentDao extends AbstractDao<Document> {
         return documents;
     }
     
+    @SuppressWarnings("unchecked")
+	public List<Document> findByDemographicUpdateAfterDate(Integer demographicId, Date updatedAfterThisDate) {
+	    	String sql = "select d from "
+	    			+ modelClass.getSimpleName()
+	    			+ " d, CtlDocument c "
+	    			+ "where c.id.documentNo=d.documentNo "
+	    			+ "and c.id.module LIKE 'demographic' "
+	    			+ "AND c.id.moduleId = ?1 "
+	    			+ "and d.updatedatetime > ?2";
+	    	
+	    	Query query = entityManager.createQuery(sql);
+	    	query.setParameter(1, demographicId);
+	    	query.setParameter(2, updatedAfterThisDate);
+        List<Document> documents = query.getResultList();
+        if(documents == null) {
+        		documents = Collections.emptyList();
+        }
+        return documents;
+    }
+    
 	/**
 	 * @return results ordered by updatedatetime
 	 */

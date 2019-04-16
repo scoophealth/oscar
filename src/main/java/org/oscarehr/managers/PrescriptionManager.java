@@ -81,6 +81,13 @@ public class PrescriptionManager {
         return (results);
     }
 
+    public List<Prescription> getPrescriptionByDemographicIdUpdatedAfterDate(LoggedInInfo loggedInInfo, Integer demographicId, Date updatedAfterThisDateExclusive) {
+        List<Prescription> results = prescriptionDao.findByDemographicIdUpdatedAfterDateExclusive(demographicId, updatedAfterThisDateExclusive);
+        LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getPrescriptionByDemographicIdUpdatedAfterDate", "demographicId="+demographicId+" updatedAfterThisDateExclusive="+updatedAfterThisDateExclusive);
+
+        return (results);
+    }
+
     public List<Drug> getDrugsByScriptNo(LoggedInInfo loggedInInfo, Integer scriptNo, Boolean archived) {
         List<Drug> results = drugDao.findByScriptNo(scriptNo, archived);
 

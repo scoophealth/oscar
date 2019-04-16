@@ -70,6 +70,17 @@ public class PreventionDao extends AbstractDao<Prevention> {
 
 		return (results);
 	}
+
+    public List<Prevention> findByDemographicIdAfterDatetimeExclusive(Integer demographicId, Date dateTime) {
+    	Query query = entityManager.createQuery("select x from Prevention x where demographicId=?1 and lastUpdateDate>?2 and deleted='0'");
+    	query.setParameter(1, demographicId);
+		query.setParameter(2, dateTime);
+
+		@SuppressWarnings("unchecked")
+        List<Prevention> results = query.getResultList();
+
+		return (results);
+	}
     
 	/*
 	 * for integrator
