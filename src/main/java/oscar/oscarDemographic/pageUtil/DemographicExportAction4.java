@@ -483,7 +483,7 @@ public class DemographicExportAction4 extends Action {
 					en.terminationDate = demographic.getRosterTerminationDate();
 					en.terminationReason = demographic.getRosterTerminationReason();
 				} else {
-					enList.add(en);
+					if (en!=null) enList.add(en);
 					en = new Enrolment();
 					en.status = demographic.getRosterStatus();
 					en.enrolledTo = demographic.getRosterEnrolledTo();
@@ -501,16 +501,18 @@ public class DemographicExportAction4 extends Action {
 				for(int x=0;x<enList.size();x++) {
 					EnrolmentHistory ehx = demoEnrolment.addNewEnrolmentHistory();
 					Enrolment enrolment = enList.get(x);
-					
-					ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
-					Provider p = providerDao.getProvider(enrolment.enrolledTo);
-					
-					EnrolledToPhysician etp = ehx.addNewEnrolledToPhysician();
-					PersonNameSimple pns = etp.addNewName();
-					pns.setFirstName(p.getFirstName());
-					pns.setLastName(p.getLastName());
-					etp.setOHIPPhysicianId(p.getOhipNo());
-					
+
+                    if (enrolment.enrolledTo != null) {
+                        ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+                        Provider p = providerDao.getProvider(enrolment.enrolledTo);
+                        if (p != null) {  //could be null for Enrollment Status TERMINATED, patient added to roster in error
+							EnrolledToPhysician etp = ehx.addNewEnrolledToPhysician();
+							PersonNameSimple pns = etp.addNewName();
+							pns.setFirstName(p.getFirstName());
+							pns.setLastName(p.getLastName());
+							etp.setOHIPPhysicianId(p.getOhipNo());
+						}
+                    }
 					ehx.setEnrollmentDate(Util.calDate(enrolment.date));
 					
 					
@@ -567,7 +569,7 @@ public class DemographicExportAction4 extends Action {
 			if (StringUtils.filled(providerNo)) {
 				Demographics.PrimaryPhysician pph = demo.addNewPrimaryPhysician();
 				ProviderData prvd = new ProviderData(providerNo);
-				if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) pph.setOHIPPhysicianId(prvd.getOhip_no());
+				if (StringUtils.filled(prvd.getOhip_no()) && prvd.getOhip_no().length()<=6) pph.setOHIPPhysicianId(prvd.getOhip_no());
 				Util.writeNameSimple(pph.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
 				String cpso = prvd.getPractitionerNo();
 				if (cpso!=null && cpso.length()==5) pph.setPrimaryPhysicianCPSO(cpso);
@@ -1100,7 +1102,7 @@ public class DemographicExportAction4 extends Action {
 								ClinicalNotes.ParticipatingProviders pProvider = cNote.addNewParticipatingProviders();
 								ProviderData prvd = new ProviderData(cm_note.getProviderNo());
 								Util.writeNameSimple(pProvider.addNewName(), StringUtils.noNull(prvd.getFirst_name()), StringUtils.noNull(prvd.getLast_name()));
-								if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) pProvider.setOHIPPhysicianId(prvd.getOhip_no());
+								if (StringUtils.filled(prvd.getOhip_no()) && prvd.getOhip_no().length()<=6) pProvider.setOHIPPhysicianId(prvd.getOhip_no());
 
 								//note created datetime
 								cdsDt.DateTimeFullOrPartial noteCreatedDateTime = pProvider.addNewDateTimeNoteCreated();
@@ -1114,7 +1116,7 @@ public class DemographicExportAction4 extends Action {
 								ClinicalNotes.NoteReviewer noteReviewer = cNote.addNewNoteReviewer();
 								ProviderData prvd = new ProviderData(cm_note.getSigning_provider_no());
 								Util.writeNameSimple(noteReviewer.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
-								if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) noteReviewer.setOHIPPhysicianId(prvd.getOhip_no());
+								if (StringUtils.filled(prvd.getOhip_no()) && prvd.getOhip_no().length()<=6) noteReviewer.setOHIPPhysicianId(prvd.getOhip_no());
 
 								//note reviewed datetime
 								cdsDt.DateTimeFullOrPartial noteReviewedDateTime = noteReviewer.addNewDateTimeNoteReviewed();
@@ -1823,7 +1825,7 @@ public class DemographicExportAction4 extends Action {
 					if (StringUtils.filled(p.getFirstName()) || StringUtils.filled(p.getLastName())) {
 						Appointments.Provider prov = aptm.addNewProvider();
 
-						if (StringUtils.noNull(p.getOhipNo()).length()<=6) prov.setOHIPPhysicianId(p.getOhipNo());
+						if (StringUtils.filled(p.getOhipNo()) && p.getOhipNo().length()<=6) prov.setOHIPPhysicianId(p.getOhipNo());
 						Util.writeNameSimple(prov.addNewName(), p.getFirstName(), p.getLastName());
 					}
 					if (StringUtils.filled(ap.getNotes())) {
@@ -2699,7 +2701,7 @@ public class DemographicExportAction4 extends Action {
 	//------------------------------------------------------------
 
 	private boolean sameEnrolment(Demographic demographic,Enrolment en) {
-		if(en != null) {
+		if(en != null && en.date!= null && demographic.getRosterDate() != null) {
 			//if(demographic.getRosterStatus().equals(en.status)) {
 				if(DateUtils.isSameDay(demographic.getRosterDate(),en.date)) {
 					if(demographic.getRosterEnrolledTo() != null && demographic.getRosterEnrolledTo().equals(en.enrolledTo)) {
@@ -2712,7 +2714,7 @@ public class DemographicExportAction4 extends Action {
 	}
 	
 	private boolean sameEnrolment(DemographicArchive demographic,Enrolment en) {
-		if(en != null) {
+		if(en != null && en.date != null && demographic.getRosterDate() != null) {
 			//if(demographic.getRosterStatus().equals(en.status)) {
 				if(DateUtils.isSameDay(demographic.getRosterDate(),en.date)) {
 					if(demographic.getRosterEnrolledTo() != null && demographic.getRosterEnrolledTo().equals(en.enrolledTo)) {
@@ -2729,9 +2731,9 @@ public class DemographicExportAction4 extends Action {
 
 		//PatientFN_PatientLN_PatientUniqueID_DOB
 		String[] sects = filename.split("_");
-		if (sects.length==4) return sects[2];
+		if (sects.length>=4) return sects[sects.length-2]; // PatientFN/PatientLN might contain an '_'.
 
-		return null;
+		return "";
 	}
 
 	private String cutExt(String filename) {
@@ -3170,7 +3172,7 @@ public class DemographicExportAction4 extends Action {
 				cdsDt.PersonNameSimple reviewerName = reviewer.addNewName();
 				ProviderData pvd = new ProviderData(lab_provider_no);
 				Util.writeNameSimple(reviewerName, pvd.getFirst_name(), pvd.getLast_name());
-				if (StringUtils.noNull(pvd.getOhip_no()).length()<=6) reviewer.setOHIPPhysicianId(pvd.getOhip_no());
+				if (StringUtils.filled(pvd.getOhip_no()) && pvd.getOhip_no().length()<=6) reviewer.setOHIPPhysicianId(pvd.getOhip_no());
 			}
 		}
 	}

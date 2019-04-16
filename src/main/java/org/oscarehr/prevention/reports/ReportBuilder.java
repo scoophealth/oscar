@@ -669,14 +669,14 @@ public class ReportBuilder {
 					MiscUtils.getLogger().debug("VERIFYING INT" + startYear);
 					//check to see if its a number
 					if (verifyInt(startYear)) {
-						stringBuffer.append(" ( ( YEAR(" + asofDate + ") -YEAR (DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(" + asofDate + ",5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'),5)) >  " + startYear + " ) ");
+						stringBuffer.append(" ( ( YEAR(" + asofDate + ") -YEAR (DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(" + asofDate + ",5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'),5)) >=  " + startYear + " ) ");
 					} else {
 						String interval = getInterval(startYear);
 						stringBuffer.append(" ( date_sub(" + asofDate + ",interval " + interval + ") >= DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d')   ) ");
 					}
 					stringBuffer.append(" and ");
 					if (verifyInt(endYear)) {
-						stringBuffer.append(" ( ( YEAR(" + asofDate + ") -YEAR (DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(" + asofDate + ",5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'),5)) <  " + endYear + "  ) ");
+						stringBuffer.append(" ( ( YEAR(" + asofDate + ") -YEAR (DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(" + asofDate + ",5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'),5)) <=  " + endYear + "  ) ");
 					} else {
 						///
 						String interval = getInterval(endYear);
@@ -720,7 +720,7 @@ public class ReportBuilder {
 			}
 		}
 */
-		logger.info("where" +theWhereFlag);
+		logger.info("where " +theWhereFlag);
 		if(sex != null) {
 			switch (sex) {
 				case 1:
@@ -769,7 +769,7 @@ public class ReportBuilder {
 					rosteredDate = new Date();
 				}
 				// need to check if they were rostered at this point to this provider  (asofRosterDate is only set if this is being called from prevention reports)
-				if (demographic != null && frm.getRosterAsOf() != null && provider != null ) {
+				if (demographic != null && frm.getRosterStat() != null &&  frm.getRosterAsOf() != null && provider != null ) {
 					//Only checking the first doc.  Only one should be included for finding the cumulative bonus
 					try {
 						if (!PreventionReportUtil.wasEnrolledToThisProvider(loggedInInfo, demographic, frm.getRosterAsOf(), provider)) {
@@ -784,6 +784,8 @@ public class ReportBuilder {
 					} catch (Exception e) {
 						logger.error("Error", e);
 					}
+				} else if(demographic != null && frm.getRosterStat() == null) {
+					list.add(demographic);
 				}
 
 				

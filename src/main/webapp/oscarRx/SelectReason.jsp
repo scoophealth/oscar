@@ -64,19 +64,9 @@
 <title>Drug Reason</title>
 <html:base />
 
-<logic:notPresent name="RxSessionBean" scope="session">
-	<logic:redirect href="error.html" />
-</logic:notPresent>
-<logic:present name="RxSessionBean" scope="session">
-	<bean:define id="bean" type="oscar.oscarRx.pageUtil.RxSessionBean"
-		name="RxSessionBean" scope="session" />
-	<logic:equal name="bean" property="valid" value="false">
-		<logic:redirect href="error.html" />
-	</logic:equal>
-</logic:present>
+
 
 <%
-oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 SecurityManager sm = new SecurityManager();
 String demoStr = request.getParameter("demographicNo");
 String drugIdStr  = request.getParameter("drugId");
@@ -114,8 +104,6 @@ Icd9Dao icd9Dao = (Icd9Dao)  SpringUtils.getBean("Icd9DAO");
 pageContext.setAttribute("showQuicklist", showQuicklist);
 
 %>
- 
-<bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient" />
 
 <style type="text/css">
 	body {

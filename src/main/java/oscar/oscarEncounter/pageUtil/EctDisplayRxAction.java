@@ -41,6 +41,7 @@ import org.oscarehr.provider.web.CppPreferencesUIBean;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.OscarProperties;
 import oscar.oscarRx.data.RxPrescriptionData.Prescription;
 import oscar.util.DateUtils;
 import oscar.util.StringUtils;
@@ -69,6 +70,11 @@ public class EctDisplayRxAction extends EctDisplayAction {
         Dao.setLeftURL(leftUrl);
 
         //set righthand link to same as left so we have visual consistency with other modules
+        
+        if(OscarProperties.getInstance().isPropertyActive("RX2")) {
+        		// This is temporary for testing the angularRx 
+        	    url = "popupPage(700,1027,'" + winName + "','" + request.getContextPath() + "/webp/#!/record/"+bean.demographicNo+"/rx')";
+        }
         url += "; return false;";
         Dao.setRightURL(url);
         Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action

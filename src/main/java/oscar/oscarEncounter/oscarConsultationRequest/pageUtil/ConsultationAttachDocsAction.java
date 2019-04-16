@@ -72,19 +72,34 @@ public class ConsultationAttachDocsAction
 	        
 	        ConsultationAttachLabs Lab = new ConsultationAttachLabs(provNo,demoNo,requestId,arrDocs);
 	        Lab.attach(loggedInInfo);
+	        
+			ConsultationAttachHRMReports hrmReports = new ConsultationAttachHRMReports(provNo, demoNo, requestId, arrDocs);
+			hrmReports.attach();
+
+            ConsultationAttachEForms eForms = new ConsultationAttachEForms(provNo, demoNo, requestId, arrDocs);
+            eForms.attach(loggedInInfo);
 	        return mapping.findForward("success");
         }
         else { 
         	String[] labs = request.getParameterValues("labNo");
             String[] docs = request.getParameterValues("docNo");
+            String[] hrmReportIds = request.getParameterValues("hrmNo");
+            String[] eFormIds = request.getParameterValues("eFormNo");
+            
             if (labs == null) { labs = new String[] { }; }
             if (docs == null) { docs = new String[] { }; }
+            if (hrmReportIds == null) { hrmReportIds = new String[] { }; }
+            if (eFormIds == null) { eFormIds = new String[] { }; }
             
             ConsultationAttachDocs Doc = new ConsultationAttachDocs(provNo,demoNo,requestId,docs);
             Doc.attach(loggedInInfo);
             
             ConsultationAttachLabs Lab = new ConsultationAttachLabs(provNo,demoNo,requestId,labs);
             Lab.attach(loggedInInfo);
+			ConsultationAttachHRMReports hrmReports = new ConsultationAttachHRMReports(provNo, demoNo, requestId, hrmReportIds);
+			hrmReports.attach();
+            ConsultationAttachEForms eForms = new ConsultationAttachEForms(provNo, demoNo, requestId, eFormIds);
+            eForms.attach(loggedInInfo);
             return mapping.findForward("success");	
         }
     }  

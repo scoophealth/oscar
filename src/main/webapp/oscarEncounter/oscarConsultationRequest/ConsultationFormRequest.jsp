@@ -242,6 +242,11 @@ input.btn{
 .lab {
     color: #CC0099;
 }
+
+.hrm {
+	color: red;
+}
+
 td.tite {
 
 background-color: #bbbbFF;
@@ -1573,7 +1578,9 @@ function statusChanged(val) {
 							<span class="doc"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendDocs" /></span><br />
 							<span class="lab"><bean:message
-								key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendLabs" /></span>
+								key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendLabs" /></span><br />
+							<span class="hrm"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendHRMs" /></span>
 							</td>
 						</tr>
 					</table>
