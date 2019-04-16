@@ -57,7 +57,7 @@ public class PHRVerificationDaoTest extends DaoTestFixtures {
 
 	@Before
 	public void before() throws Exception {
-		SchemaUtils.restoreTable("PHRVerification","secuserrole");
+		SchemaUtils.restoreTable("PHRVerification");
 	}
 
 	@Test
