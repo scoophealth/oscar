@@ -38,7 +38,7 @@ public class PatientDetailStatusTo1 implements Serializable {
 	
 	private boolean macPHRLoggedIn = false;
 	private boolean macPHRIdsSet = false;
-	private String macPHRVerificationLevel;
+	private boolean macPHRVerificationLevel;
 
 	//from oscar.properties
 	private boolean conformanceFeaturesEnabled = false;
@@ -83,10 +83,10 @@ public class PatientDetailStatusTo1 implements Serializable {
 	public void setMacPHRIdsSet(boolean macPHRIdsSet) {
 		this.macPHRIdsSet = macPHRIdsSet;
 	}
-	public String getMacPHRVerificationLevel() {
+	public boolean getMacPHRVerificationLevel() {
 		return macPHRVerificationLevel;
 	}
-	public void setMacPHRVerificationLevel(String macPHRVerificationLevel) {
+	public void setMacPHRVerificationLevel(boolean macPHRVerificationLevel) {
 		this.macPHRVerificationLevel = macPHRVerificationLevel;
 	}
 	public boolean isConformanceFeaturesEnabled() {

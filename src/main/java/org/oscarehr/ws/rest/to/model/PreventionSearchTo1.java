@@ -58,6 +58,9 @@ public class PreventionSearchTo1 {
 	private Date billingCodeStart;
 	private Date billingCodeEnd; 
 	
+	private String providerNo;
+	private String providerName;
+	
 	/*
 	FLU
 	flu prevention by Jan 31st of patients that are 65> by Dec 31st
@@ -245,4 +248,22 @@ public class PreventionSearchTo1 {
 	public void setPhone1(boolean phone1) {
 		this.phone1 = phone1;
 	}
+
+	public String getProviderNo() {
+		return providerNo;
+	}
+
+	public void setProviderNo(String providerNo) {
+		this.providerNo = providerNo;
+	}
+
+	public String getProviderName() {
+		return providerName;
+	}
+
+	public void setProviderName(String providerName) {
+		this.providerName = providerName;
+	}
+	
+	
 }

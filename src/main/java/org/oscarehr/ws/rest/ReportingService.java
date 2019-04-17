@@ -264,6 +264,9 @@ public class ReportingService extends AbstractServiceImpl {
 		//Next thing to do is to save the JSON object to the database
 		String providerNo = jSONObject.optString("providerNo");
 		
+		if(StringUtils.isEmpty(providerNo)) {
+			providerNo = getLoggedInInfo().getLoggedInProviderNo();
+		}
 		
 		PreventionReport pr = preventionReportDao.find(id);
 		ObjectMapper mapper = new ObjectMapper();

@@ -673,6 +673,36 @@ public class ScheduleService extends AbstractServiceImpl {
 	}
 	
 	@GET
+	@Path("/searchConfig/byProvider/{id}")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public SearchConfigTo1 getSearchConfigByProvider(@PathParam("id") String id) {
+		SearchConfigTo1  response = null;
+		Integer apptSearchId = null;
+		try {
+			AppointmentSearch appointmentSearch = appointmentSearchDao.findForProvider(id);
+			apptSearchId = appointmentSearch.getId();
+			
+			Document doc = XmlUtils.toDocument(appointmentSearch.getFileContents());
+
+			SearchConfig searchConfig = SearchConfig.fromDocument(doc);
+			
+			
+			response = SearchConfigTo1.fromClinic(searchConfig);  
+			response.setId(apptSearchId);
+		}catch(Exception e) {
+			logger.error("get Search Config Error ",e);
+		}
+		
+		if(response == null && apptSearchId != null) {
+			response = new SearchConfigTo1();
+			response.setId(apptSearchId);
+		}
+		
+		return response;
+	}
+	
+	@GET
 	@Path("/searchConfig/list")
 	@Produces("application/json")
 	@Consumes("application/json")

@@ -271,6 +271,25 @@ public class TicklerManager {
     	Collections.sort(results, Tickler.StatusAscComparator);
     	return results;
     }
+
+    public List<Tickler> getTicklerByLabIdAnyProvider(LoggedInInfo loggedInInfo, int labId, Integer demoNo){
+    	checkPrivilege(loggedInInfo, PRIVILEGE_READ);
+    	String providerNo = loggedInInfo.getLoggedInProviderNo();
+    	
+    	List<TicklerLink> links = ticklerLinkDao.getLinkByTableId("HL7", Long.valueOf(labId));
+    	
+    	ArrayList<Tickler> results = new ArrayList<Tickler>();
+    	
+    	for(TicklerLink link:links){
+    		List<Tickler> ticklers = ticklerDao.findByTicklerNoDemo(link.getTicklerNo(), demoNo);
+    		for(Tickler tickler:ticklers){
+    			results.add(tickler);
+    		}
+    	}
+    	
+    	Collections.sort(results, Tickler.StatusAscComparator);
+    	return results;
+    }
     
     protected List<Tickler> ticklerFacilityFiltering(LoggedInInfo loggedInInfo, List<Tickler> ticklers) {
         ArrayList<Tickler> results = new ArrayList<Tickler>();

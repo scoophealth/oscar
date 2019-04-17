@@ -75,6 +75,9 @@ public class ReportBuilder {
 		if(searchConfig.getAgeAsOf() == null) {
 			searchConfig.setAgeAsOf(new Date());
 		}
+		
+		searchConfig.setProviderNo(providerNo);
+		searchConfig.setProviderName(providerDao.getProviderName(providerNo));
 		List<Integer> demographicList = getDemographicDenominator( loggedInInfo,searchConfig, providerNo);
 		
 		logger.error("remove but "+demographicList.size());
@@ -613,7 +616,7 @@ public class ReportBuilder {
 
 		String asofDate = "CURRENT_DATE";
 		logger.error("what is date "+frm.getAgeAsOf());
-		if(yearStyle == 1) {
+		if(yearStyle != null && yearStyle == 1) {
 			Format formatter = new SimpleDateFormat("yyyy-MM-dd");     
 			asofDate = "'" + formatter.format(frm.getAgeAsOf()) + "'";
 		}
@@ -632,61 +635,63 @@ public class ReportBuilder {
 */		
 		MiscUtils.getLogger().debug("date style" + ageStyle);
 		logger.info("where before age " +theWhereFlag);
-		switch (ageStyle) {
-			case 1:
-				theWhereFlag = whereClause(stringBuffer, theWhereFlag);
-				logger.info("where 1? " +theWhereFlag);
-				if (yearStyle.equals("1")) {
-					stringBuffer.append(" ( ( YEAR(" + asofDate + ") -YEAR (DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(" + asofDate + ",5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'),5)) <  " + startYear + " ) ");
-				} else {
-					stringBuffer.append(" ( YEAR(" + asofDate + ") - d.year_of_birth < " + startYear + "  ) ");
-				}
-				theFirstFlag = false;
-				break;
-			case 2:
-				theWhereFlag = whereClause(stringBuffer, theWhereFlag);
-				//if (ageStyle.equals("1")){
-				stringBuffer.append(" ( ( YEAR(" + asofDate + ") -YEAR (DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(" + asofDate + ",5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'),5)) >  " + startYear + " ) ");
-				//}else{
-				//   stringBuffer.append(" ( YEAR("+asofDate+") - year_of_birth > "+startYear+"  ) ");
-				//}
-				theFirstFlag = false;
-				break;
-			case 3:
-				theWhereFlag = whereClause(stringBuffer, theWhereFlag);
-				if (yearStyle.equals("1")) {
-					stringBuffer.append(" ( ( YEAR(" + asofDate + ") -YEAR (DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(" + asofDate + ",5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'),5)) =  " + startYear + " ) ");
-				} else {
-					stringBuffer.append(" ( YEAR(" + asofDate + ") - d.year_of_birth = " + startYear + "  ) ");
-				}
-				theFirstFlag = false;
-				break;
-			case 4:
-				theWhereFlag = whereClause(stringBuffer, theWhereFlag);
-				MiscUtils.getLogger().debug("age style " + ageStyle);
-				if (!yearStyle.equals("2")) {
-					// stringBuffer.append(" ( ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) >  "+startYear+" and ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) <  "+endYear+"  ) ");
-					MiscUtils.getLogger().debug("VERIFYING INT" + startYear);
-					//check to see if its a number
-					if (verifyInt(startYear)) {
-						stringBuffer.append(" ( ( YEAR(" + asofDate + ") -YEAR (DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(" + asofDate + ",5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'),5)) >  " + startYear + " ) ");
+		if(ageStyle != null) {
+			switch (ageStyle) {
+				case 1:
+					theWhereFlag = whereClause(stringBuffer, theWhereFlag);
+					logger.info("where 1? " +theWhereFlag);
+					if (yearStyle != null && yearStyle.equals("1")) {
+						stringBuffer.append(" ( ( YEAR(" + asofDate + ") -YEAR (DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(" + asofDate + ",5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'),5)) <  " + startYear + " ) ");
 					} else {
-						String interval = getInterval(startYear);
-						stringBuffer.append(" ( date_sub(" + asofDate + ",interval " + interval + ") >= DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d')   ) ");
+						stringBuffer.append(" ( YEAR(" + asofDate + ") - d.year_of_birth < " + startYear + "  ) ");
 					}
-					stringBuffer.append(" and ");
-					if (verifyInt(endYear)) {
-						stringBuffer.append(" ( ( YEAR(" + asofDate + ") -YEAR (DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(" + asofDate + ",5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'),5)) <  " + endYear + "  ) ");
+					theFirstFlag = false;
+					break;
+				case 2:
+					theWhereFlag = whereClause(stringBuffer, theWhereFlag);
+					//if (ageStyle.equals("1")){
+					stringBuffer.append(" ( ( YEAR(" + asofDate + ") -YEAR (DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(" + asofDate + ",5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'),5)) >  " + startYear + " ) ");
+					//}else{
+					//   stringBuffer.append(" ( YEAR("+asofDate+") - year_of_birth > "+startYear+"  ) ");
+					//}
+					theFirstFlag = false;
+					break;
+				case 3:
+					theWhereFlag = whereClause(stringBuffer, theWhereFlag);
+					if (yearStyle != null && yearStyle.equals("1")) {
+						stringBuffer.append(" ( ( YEAR(" + asofDate + ") -YEAR (DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(" + asofDate + ",5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'),5)) =  " + startYear + " ) ");
 					} else {
-						///
-						String interval = getInterval(endYear);
-						stringBuffer.append(" ( date_sub(" + asofDate + ",interval " + interval + ") < DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d')   ) ");
+						stringBuffer.append(" ( YEAR(" + asofDate + ") - d.year_of_birth = " + startYear + "  ) ");
 					}
-				} else {
-					stringBuffer.append(" ( YEAR(" + asofDate + ") - d.year_of_birth > " + startYear + "  and YEAR(" + asofDate + ") - d.year_of_birth < " + endYear + "  ) ");
-				}
-				theFirstFlag = false;
-				break;
+					theFirstFlag = false;
+					break;
+				case 4:
+					theWhereFlag = whereClause(stringBuffer, theWhereFlag);
+					MiscUtils.getLogger().debug("age style " + ageStyle);
+					if (yearStyle != null && !yearStyle.equals("2")) {
+						// stringBuffer.append(" ( ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) >  "+startYear+" and ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) <  "+endYear+"  ) ");
+						MiscUtils.getLogger().debug("VERIFYING INT" + startYear);
+						//check to see if its a number
+						if (verifyInt(startYear)) {
+							stringBuffer.append(" ( ( YEAR(" + asofDate + ") -YEAR (DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(" + asofDate + ",5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'),5)) >=  " + startYear + " ) ");
+						} else {
+							String interval = getInterval(startYear);
+							stringBuffer.append(" ( date_sub(" + asofDate + ",interval " + interval + ") >= DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d')   ) ");
+						}
+						stringBuffer.append(" and ");
+						if (verifyInt(endYear)) {
+							stringBuffer.append(" ( ( YEAR(" + asofDate + ") -YEAR (DATE_FORMAT(CONCAT((d.year_of_birth), '-', (d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'))) - (RIGHT(" + asofDate + ",5)<RIGHT(DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d'),5)) <=  " + endYear + "  ) ");
+						} else {
+							///
+							String interval = getInterval(endYear);
+							stringBuffer.append(" ( date_sub(" + asofDate + ",interval " + interval + ") < DATE_FORMAT(CONCAT((d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d')   ) ");
+						}
+					} else {
+						stringBuffer.append(" ( YEAR(" + asofDate + ") - d.year_of_birth > " + startYear + "  and YEAR(" + asofDate + ") - d.year_of_birth < " + endYear + "  ) ");
+					}
+					theFirstFlag = false;
+					break;
+			}
 		}
 		logger.info("where after age " +theWhereFlag);
 		/*  This is done after
@@ -720,7 +725,7 @@ public class ReportBuilder {
 			}
 		}
 */
-		logger.info("where" +theWhereFlag);
+		logger.info("where " +theWhereFlag);
 		if(sex != null) {
 			switch (sex) {
 				case 1:
@@ -764,15 +769,15 @@ public class ReportBuilder {
 				
 				//String demoNo = null;
 				Integer demographic = (Integer) o[0];
-				Date rosteredDate = frm.getAgeAsOf();
+				Date rosteredDate = frm.getRosterAsOf();
 				if(rosteredDate == null) {
 					rosteredDate = new Date();
 				}
 				// need to check if they were rostered at this point to this provider  (asofRosterDate is only set if this is being called from prevention reports)
-				if (demographic != null && frm.getRosterAsOf() != null && provider != null ) {
+				if (demographic != null && frm.getRosterStat() != null  && provider != null ) {
 					//Only checking the first doc.  Only one should be included for finding the cumulative bonus
 					try {
-						if (!PreventionReportUtil.wasEnrolledToThisProvider(loggedInInfo, demographic, frm.getRosterAsOf(), provider)) {
+						if (!PreventionReportUtil.wasEnrolledToThisProvider(loggedInInfo, demographic, rosteredDate, provider)) {
 							logger.info("Demographic :" + demographic + " was not included in returned array because they were not rostered to " + provider + " on " + frm.getRosterAsOf());
 							continue;             //change this back to info
 						} else {
@@ -784,6 +789,8 @@ public class ReportBuilder {
 					} catch (Exception e) {
 						logger.error("Error", e);
 					}
+				} else if(demographic != null && frm.getRosterStat() == null) {
+					list.add(demographic);
 				}
 
 				
