@@ -41,7 +41,7 @@
 		<span class="glyphicon glyphicon-cog" ng-click="manageConfiguration()" ></span>
 		<span class="glyphicon glyphicon-calendar"></span>
 				
-		<a href="javascript:void(0)" ng-model="appointmentDate"  datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="appointmentDatePicker" datepicker-options="dateOptions" 
+		<a href="javascript:void(0)" ng-model="appointmentDate"  uib-datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="appointmentDatePicker"  
 		ng-change="changeApptDate()" ng-click="appointmentDatePicker = true" ng-required="true" bundle="ui" title="{{appointmentDate | date:'fullDate' }}">{{appointmentDate | date:'yyyy-MM-dd' }}</a>
 		&nbsp;
 		<a class="hand-hover" ng-click="addNewAppointment()">+</a>

@@ -27,6 +27,7 @@ package org.oscarehr.managers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ import java.util.List;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
 import org.oscarehr.common.dao.PropertyDao;
+import org.oscarehr.common.interfaces.Immunization.ImmunizationProperty;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.common.model.Property;
@@ -54,6 +56,10 @@ public class PreventionManager {
 	private PreventionExtDao preventionExtDao;
 	@Autowired
 	private PropertyDao propertyDao;
+	@Autowired
+	private PatientConsentManager patientConsentManager;
+	@Autowired
+	private SecurityInfoManager securityInfoManager;
 		
 	private static final String HIDE_PREVENTION_ITEM = "hide_prevention_item";
 
@@ -61,8 +67,15 @@ public class PreventionManager {
 
 	public List<Prevention> getUpdatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateExclusive, int itemsToReturn) {
 		List<Prevention> results = preventionDao.findByUpdateDate(updatedAfterThisDateExclusive, itemsToReturn);
-
+		patientConsentManager.filterProviderSpecificConsent(loggedInInfo, results);
 		LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getUpdatedAfterDate", "updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
+
+		return (results);
+	}
+
+	public List<Prevention> getByDemographicIdUpdatedAfterDate(LoggedInInfo loggedInInfo, Integer demographicId, Date updatedAfterThisDateExclusive) {
+		List<Prevention> results = preventionDao.findByDemographicIdAfterDatetimeExclusive(demographicId, updatedAfterThisDateExclusive);
+		LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getByDemographicIdUpdatedAfterDate", "demographicId="+demographicId+" updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
 
 		return (results);
 	}
@@ -182,10 +195,42 @@ public class PreventionManager {
 	}
 	
 	public List<Prevention> getPreventionsByDemographicNo(LoggedInInfo loggedInInfo, Integer demographicNo) {
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_prevention", SecurityInfoManager.READ, demographicNo)) {
+			throw new RuntimeException("missing required security object (_prevention)");
+		}
+		
 		List<Prevention> results = preventionDao.findUniqueByDemographicId(demographicNo);
 		
 		LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getPreventionsByDemographicNo", "demographicNo=" + demographicNo);
 
 		return (results);
 	}
+	
+	public List<Prevention> getImmunizationsByDemographic(LoggedInInfo loggedInInfo, Integer demographicNo) {
+
+		List<Prevention> results = getPreventionsByDemographicNo(loggedInInfo, demographicNo);
+		
+		// the ImmunizationInterface should really be located in Oscar/Common.
+		List<Prevention> immunizations = new ArrayList<Prevention>();
+		
+		if(results == null) {
+			results = Collections.emptyList();
+		}
+		
+		for(Prevention prevention : results) {
+			
+			// this sets the PreventionExt values for use in the Immunization interface.
+			prevention.setPreventionExtendedProperties();
+			
+			if(prevention.isImmunization() || prevention.getImmunizationProperty(ImmunizationProperty.dose) != null) {
+				// this splits out a new Immunizations list of preventions.
+				immunizations.add(prevention);
+			}
+		}
+		
+		LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getImmunizationsByDemographic", "demographicNo=" + demographicNo);
+
+		return immunizations;
+	}
+	
 }

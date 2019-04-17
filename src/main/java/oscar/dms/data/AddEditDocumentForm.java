@@ -55,6 +55,11 @@ public class AddEditDocumentForm extends ActionForm {
     private String appointmentNo = "0";
     
     private boolean restrictToProgram = false;
+    private String receivedDate = "";
+    private String abnormal = "";
+    
+    private String extraReviewerId = "";
+    private boolean extraReviewDoc = false;
     
     public AddEditDocumentForm() {
     }
@@ -234,6 +239,37 @@ public class AddEditDocumentForm extends ActionForm {
 	public void setRestrictToProgram(boolean restrictToProgram) {
 		this.restrictToProgram = restrictToProgram;
 	}
-    
-    
+
+	public String getReceivedDate() {
+		return receivedDate;
+	}
+
+	public void setReceivedDate(String receivedDate) {
+		this.receivedDate = receivedDate;
+	}
+
+	public String getAbnormal() {
+		return abnormal;
+	}
+
+	public void setAbnormal(String abnormal) {
+		this.abnormal = abnormal;
+	}
+
+	public String getExtraReviewerId() {
+		return extraReviewerId;
+	}
+
+	public void setExtraReviewerId(String extraReviewerId) {
+		this.extraReviewerId = extraReviewerId;
+	}
+
+	public boolean isExtraReviewDoc() {
+		return extraReviewDoc;
+	}
+
+	public void setExtraReviewDoc(boolean extraReviewDoc) {
+		this.extraReviewDoc = extraReviewDoc;
+	}
+   
 }

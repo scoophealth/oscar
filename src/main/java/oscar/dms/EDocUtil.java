@@ -41,6 +41,7 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
@@ -57,7 +58,9 @@ import org.oscarehr.common.dao.CtlDocTypeDao;
 import org.oscarehr.common.dao.CtlDocumentDao;
 import org.oscarehr.common.dao.DocumentDao;
 import org.oscarehr.common.dao.DocumentDao.Module;
+import org.oscarehr.common.dao.EFormDocsDao;
 import org.oscarehr.common.dao.IndivoDocsDao;
+import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.dao.TicklerLinkDao;
 import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.CtlDocType;
@@ -65,7 +68,9 @@ import org.oscarehr.common.model.CtlDocument;
 import org.oscarehr.common.model.CtlDocumentPK;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Document;
+import org.oscarehr.common.model.EFormDocs;
 import org.oscarehr.common.model.IndivoDocs;
+import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.TicklerLink;
@@ -92,7 +97,8 @@ public final class EDocUtil {
 	private static IndivoDocsDao indivoDocsDao = (IndivoDocsDao) SpringUtils.getBean(IndivoDocsDao.class);
 	private static Logger logger = MiscUtils.getLogger();
 	private static ProgramManager2 programManager2 = SpringUtils.getBean(ProgramManager2.class);
-	
+	private static final PartialDateDao partialDateDao = (PartialDateDao)SpringUtils.getBean("partialDateDao");
+	private static EFormDocsDao eformDocsDao = (EFormDocsDao) SpringUtils.getBean(EFormDocsDao.class);
 	
 	public static final String PUBLIC = "public";
 	public static final String PRIVATE = "private";
@@ -274,6 +280,14 @@ public final class EDocUtil {
 			consultDocsDao.merge(consultDoc);
 		}
 	}
+	
+	public static void detachDocEForm(String docNo, String consultId) {
+		List<EFormDocs> eformDocs = eformDocsDao.findByFdidIdDocNoDocType(ConversionUtils.fromIntString(consultId), ConversionUtils.fromIntString(docNo), EFormDocs.DOCTYPE_DOC);
+		for (EFormDocs eformDoc : eformDocs) {
+			eformDoc.setDeleted("Y");
+			eformDocsDao.merge(eformDoc);
+		}
+	}
 
 	public static void attachDocConsult(String providerNo, String docNo, String consultId) {
 		ConsultDocs consultDoc = new ConsultDocs();
@@ -283,6 +297,16 @@ public final class EDocUtil {
 		consultDoc.setAttachDate(new Date());
 		consultDoc.setProviderNo(providerNo);
 		consultDocsDao.persist(consultDoc);
+	}
+	
+	public static void attachDocEForm(String providerNo, String docNo, String consultId) {
+		EFormDocs eformDoc = new EFormDocs();
+		eformDoc.setFdid(ConversionUtils.fromIntString(consultId));
+		eformDoc.setDocumentNo(ConversionUtils.fromIntString(docNo));
+		eformDoc.setDocType(ConsultDocs.DOCTYPE_DOC);
+		eformDoc.setAttachDate(new Date());
+		eformDoc.setProviderNo(providerNo);
+		eformDocsDao.persist(eformDoc);
 	}
 
 	public static void editDocumentSQL(EDoc newDocument, boolean doReview) {
@@ -301,6 +325,9 @@ public final class EDocUtil {
 			if (doReview) {
 				doc.setReviewer(newDocument.getReviewerId());
 				doc.setReviewdatetime(ConversionUtils.fromDateString(newDocument.getReviewDateTime(), "yyyy/MM/dd HH:mm:ss"));
+				if(doc.getReviewdatetime() == null) {
+					doc.setReviewdatetime(ConversionUtils.fromDateString(newDocument.getReviewDateTime(), "yyyy-MM-dd HH:mm:ss"));
+				}
 			} else {
 				doc.setReviewer(null);
 				doc.setReviewdatetime(null);
@@ -312,6 +339,9 @@ public final class EDocUtil {
 				doc.setContenttype(newDocument.getContentType());
                                 doc.setContentdatetime(newDocument.getContentDateTime());
 			}
+			
+			doc.setAbnormal(ConversionUtils.fromIntString(newDocument.getAbnormal()));
+			doc.setReceivedDate(MyDateFormat.getSysDate(newDocument.getReceivedDate()));
 			documentDao.merge(doc);
 		}
 	}
@@ -336,6 +366,18 @@ public final class EDocUtil {
 	//Consultation Request fetch documents
 	public static ArrayList<EDoc> listDocs(LoggedInInfo loggedInInfo, String demoNo, String requestId, boolean attached) {
 		List<Object[]> docs = documentDao.findDocsAndConsultDocsByConsultId(ConversionUtils.fromIntString(requestId));
+		List<Object[]> ctlDocs = null;
+		if (!attached) {
+			ctlDocs = documentDao.findCtlDocsAndDocsByModuleAndModuleId(Module.DEMOGRAPHIC, ConversionUtils.fromIntString(demoNo));
+		}
+		return documentProgramFiltering(loggedInInfo,listDocs(loggedInInfo, attached, docs, ctlDocs));
+	}
+	
+	public static ArrayList<EDoc> listDocsAttachedToEForm(LoggedInInfo loggedInInfo, String demoNo, String requestId, boolean attached) {
+		if(StringUtils.isEmpty(requestId)) {
+			return new ArrayList<EDoc>();
+		}
+		List<Object[]> docs = documentDao.findDocsAndEFormDocsByFdid(ConversionUtils.fromIntString(requestId));
 		List<Object[]> ctlDocs = null;
 		if (!attached) {
 			ctlDocs = documentDao.findCtlDocsAndDocsByModuleAndModuleId(Module.DEMOGRAPHIC, ConversionUtils.fromIntString(demoNo));
@@ -745,6 +787,8 @@ public final class EDocUtil {
 			currentdoc.setNumberOfPages(d.getNumberofpages());
             currentdoc.setContentDateTime(d.getContentdatetime());
             
+            currentdoc.setAbnormal("" + d.getAbnormal());
+            currentdoc.setReceivedDate(d.getReceivedDate());
             if(d.isRestrictToProgram() != null){
             	currentdoc.setRestrictToProgram(d.isRestrictToProgram());
             }
@@ -837,14 +881,14 @@ public final class EDocUtil {
 	}
 
 	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String contentDateTime, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime) {
-		return addDocument(demoNo, docFileName, docDesc, docType, docClass, docSubClass, contentType, contentDateTime, observationDate, updateDateTime, docCreator, responsible, reviewer, reviewDateTime, null, null);
+		return addDocument(demoNo, docFileName, docDesc, docType, docClass, docSubClass, contentType, contentDateTime, observationDate, updateDateTime, docCreator, responsible, reviewer, reviewDateTime, null, null, null);
 	}
 
 	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String contentDateTime, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime, String source) {
-		return addDocument(demoNo, docFileName, docDesc, docType, docClass, docSubClass, contentType, contentDateTime, observationDate, updateDateTime, docCreator, responsible, reviewer, reviewDateTime, source, null);
+		return addDocument(demoNo, docFileName, docDesc, docType, docClass, docSubClass, contentType, contentDateTime, observationDate, updateDateTime, docCreator, responsible, reviewer, reviewDateTime, source, null,null);
 	}
 
-	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String contentDateTime, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime, String source, String sourceFacility) {
+	public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String docClass, String docSubClass, String contentType, String contentDateTime, String observationDate, String updateDateTime, String docCreator, String responsible, String reviewer, String reviewDateTime, String source, String sourceFacility, String receivedDate) {
 
 		Document doc = new Document();
 		doc.setDoctype(docType);
@@ -865,9 +909,13 @@ public final class EDocUtil {
 		doc.setSource(source);
 		doc.setSourceFacility(sourceFacility);
 		doc.setNumberofpages(1);
+		doc.setReceivedDate(partialDateDao.StringToDate(receivedDate));
+		
 		documentDao.persist(doc);
 
-		int key = 0;
+		partialDateDao.setPartialDate(PartialDate.DOC, doc.getId(), PartialDate.DOC_RECEIVEDDATE, partialDateDao.getFormat(receivedDate));
+		
+		
 		if (doc.getDocumentNo() > 0) {
 			CtlDocumentPK cdpk = new CtlDocumentPK();
 			CtlDocument cd = new CtlDocument();
@@ -877,9 +925,14 @@ public final class EDocUtil {
 			cd.getId().setModuleId(ConversionUtils.fromIntString(demoNo));
 			cd.setStatus(String.valueOf('A'));
 			ctlDocumentDao.persist(cd);
-			key = 1;
+			
 		}
-		return key;
+		
+		if (!EDocUtil.getDoctypes("demographic").contains(docType)){ 
+	 		EDocUtil.addDocTypeSQL(docType,"demographic");
+	 	} 
+		
+		return doc.getDocumentNo() != null ? doc.getDocumentNo() : 0;
 	}
 
 	// private static String getLastDocumentNo() {

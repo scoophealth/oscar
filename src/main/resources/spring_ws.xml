@@ -71,6 +71,12 @@
 			<ref bean="authenticationInWSS4JInterceptor"/>
 		</jaxws:inInterceptors>
 	</jaxws:endpoint>	
+
+	<jaxws:endpoint implementor="#bookingWs" address="/BookingService">
+		<jaxws:inInterceptors>
+			<ref bean="authenticationInWSS4JInterceptor"/>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>	
 	
 	<jaxws:endpoint implementor="#providerWs" address="/ProviderService" >
 		<jaxws:inInterceptors>
@@ -192,6 +198,7 @@
 <!--			<bean class="org.oscarehr.ws.rest.SystemInfoService" autowire="byName" /> -->
 			<bean class="org.oscarehr.ws.rest.LabService" autowire="byName" />
 			<bean class="org.oscarehr.ws.rest.MeasurementService" autowire="byName" />
+			<bean class="org.oscarehr.ws.rest.ConsentService" autowire="byName" />
 		</jaxrs:serviceBeans>
 
 		<jaxrs:extensionMappings>

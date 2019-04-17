@@ -24,8 +24,13 @@
 package org.oscarehr.integration.clinicalconnect;
 
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.security.KeyStore;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
@@ -37,6 +42,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -75,7 +81,99 @@ public class ClinicalConnectViewerAction extends DispatchAction {
 		LogAction.addLog(LoggedInInfo.getLoggedInInfoFromSession(request),"Launch CMS EHR Viewer","launch","error",demographicNo,prefix + ":" + errorMessage);
 	}
 	
-	public ActionForward launch(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward launchNonPatientContext(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		List<String> errors = new ArrayList<String>();
+		
+	
+		String oneIdToken = (String) request.getSession().getAttribute("oneid_token");	
+		if(StringUtils.isEmpty(oneIdToken)) {
+			addError(null,"Unable to retrieve OneId Token",errors,request,null);
+			return mapping.findForward("error");
+		}
+		
+		//get session expiration
+		Date tokenExpirationDate = retrieveSessionExpiration(oneIdToken);
+		if(tokenExpirationDate == null) {
+			addError(null,"Unable to retrieve token expiration information",errors,request,null);
+			return mapping.findForward("error");
+		}
+		
+		if(tokenExpirationDate.before(getFutureTime())) {
+			addError(null,"Expired Token",errors,request,null);
+			//return mapping.findForward("error");
+			String backendEconsultUrl = OscarProperties.getInstance().getProperty("backendEconsultUrl");
+			String oscarUrl = request.getRequestURL().toString();
+			String oUrl = oscarUrl.substring(0,oscarUrl.indexOf("clinicalConnectEHRViewer.do"));
+			String url = backendEconsultUrl + "/SAML2/login?oscarReturnURL=" + URLEncoder.encode(oUrl + "/econsultSSOLogin.do?operation=launch", "UTF-8") + "&loginStart=" + new Date().getTime() / 1000;
+			
+			response.sendRedirect(url);
+			return null;
+		}
+		
+		
+		//get ContextSessionID
+		String contextSessionID = retrieveContextSessionId(oneIdToken);
+		if(contextSessionID == null) {
+			addError(null,"Unable to retrieve contextSessionID",errors,request,null);
+			return mapping.findForward("error");
+		}
+		
+		//UPDATE CMS		
+		try {
+			
+			String cmsURL = OscarProperties.getInstance().getProperty("clinicalConnect.CMS.url");
+			String redirectURL = OscarProperties.getInstance().getProperty("clinicalConnect.redirectUrl");			
+			cmsURL = cmsURL + "?contextSessionID=" + contextSessionID + "&contextTopic=patientContext";
+			
+			logger.debug("CMS URL = " + cmsURL );
+			HttpDelete httpDelete = new HttpDelete(cmsURL);
+
+			httpDelete.addHeader("User-Agent", "Java/OSCAR");
+			httpDelete.addHeader("Content-Type", "application/json");
+
+			HttpClient httpClient2 = getHttpClient2();
+			HttpResponse httpResponse2 = httpClient2.execute(httpDelete);
+			
+			if( httpResponse2.getStatusLine().getStatusCode() >= 200 &&  httpResponse2.getStatusLine().getStatusCode() < 300) {
+				
+				logger.info("successfully deleted contextSessionID in CMS");
+				request.getSession().setAttribute("CC_EHR_LOADED", true);
+				LogAction.addLog(LoggedInInfo.getLoggedInInfoFromSession(request),"Launch CMS EHR Viewer","launch","success",null,null);
+		
+				response.sendRedirect(redirectURL);
+				
+				return null;
+
+				
+			} else if( httpResponse2.getStatusLine().getStatusCode()  == 404) {
+				//it was previously deleted..same as OK really
+				request.getSession().setAttribute("CC_EHR_LOADED", true);
+				LogAction.addLog(LoggedInInfo.getLoggedInInfoFromSession(request),"Launch CMS EHR Viewer","launch","success",null,null);
+		
+				response.sendRedirect(redirectURL);
+				
+				return null;
+				
+			} else {
+				addError(null,"Could not update Patient Context for EHR viewer",errors,request,contextSessionID);
+				logger.warn("Did not get a success response from CMS : " + httpResponse2.getStatusLine().getStatusCode());
+				return mapping.findForward("error");	
+			}
+			
+
+		} catch (Exception e) {
+			addError(null,"Error launching EHR viewer: " + e.getMessage(),errors,request,contextSessionID);
+			logger.error("Error", e);
+			return mapping.findForward("error");
+		}	
+	}
+	
+	public ActionForward launch(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String operation = request.getParameter("operation");
+		if(operation != null && operation.equals("npcl")) {
+			return launchNonPatientContext(mapping,form,request,response);
+		}
+		
 		String demographicNoStr = request.getParameter("demographicNo");
 		
 		List<String> errors = new ArrayList<String>();
@@ -131,6 +229,12 @@ public class ClinicalConnectViewerAction extends DispatchAction {
 			cms.put("patientContext.Identifier1.value", hcn);
 			cms.put("patientContext.Identifier1.system",
 					"http://ehealthontario.ca/fhir/NamingSystem/id-registration-and-claims-branch-def-source");
+			
+			//optional elements - must send if available
+			SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+			cms.put("patientContext.birthDate", fmt.format(demographic.getBirthDay().getTime()));
+			cms.put("patientContext.gender", convertGender(demographic.getSex())); //Male,Female,Unknown
+			
 			String theString = cms.toString();
 			HttpEntity reqEntity = new ByteArrayEntity(theString.getBytes("UTF-8"));
 			httpPut.setEntity(reqEntity);
@@ -203,6 +307,37 @@ public class ClinicalConnectViewerAction extends DispatchAction {
 		
 		return contextSessionID;
 	}
+	
+	protected Date retrieveSessionExpiration(String oneIdToken) {
+		String sessionExpiry = null;
+		
+		
+		try {
+			//get the context session id
+			String url = OscarProperties.getInstance().getProperty("backendEconsultUrl") + "/api/getTokenExpiry";
+			HttpGet httpGet = new HttpGet(url);
+			httpGet.addHeader("x-access-token", oneIdToken);
+			HttpClient httpClient = getHttpClient2();
+			HttpResponse httpResponse = httpClient.execute(httpGet);
+	
+			if (httpResponse.getStatusLine().getStatusCode() == 200) {
+				String entity = EntityUtils.toString(httpResponse.getEntity());
+				JSONObject obj = new JSONObject(entity);
+				sessionExpiry = (String) obj.get("sessionExpiration");
+				logger.debug("sessionExpiry = " + sessionExpiry);
+				
+				SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ");
+				Date d  = fmt.parse(sessionExpiry + "+0000");
+				
+				return d;
+			}
+		}catch(Exception e) {
+			logger.error("Error",e);
+		}
+		
+		return null;
+	}
+	
 	protected HttpClient getHttpClient2() throws Exception {
 
 		String cmsKeystoreFile = OscarProperties.getInstance().getProperty("clinicalConnect.CMS.keystore");
@@ -244,4 +379,23 @@ public class ClinicalConnectViewerAction extends DispatchAction {
 		return (sum % 10 == 0);
 	}
 
+	String convertGender(String sex) {
+		if(sex == null) {
+			return "Unknown";
+		}
+		if("M".equalsIgnoreCase(sex)) {
+			return "Male";
+		}
+		if("F".equalsIgnoreCase(sex)) {
+			return "Female";
+		}
+		return "Unknown";
+	}
+	
+	Date getFutureTime() {
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.MINUTE, 1);
+		//c.add(Calendar.MINUTE, 63);
+		return c.getTime();
+	}
 }

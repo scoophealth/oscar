@@ -35,6 +35,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Converts between domain Drug object and transfer Drug objects.
@@ -72,8 +74,13 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
             d.setId(t.getDrugId());
             d.setBrandName(t.getBrandName());
             d.setGenericName(t.getGenericName());
+            d.setCustomName(t.getCustomName());
             d.setDemographicId(t.getDemographicNo());
-            d.setProviderNo(t.getProviderNo().toString()); // Cast to string.
+            if(t.getProviderNo() == null) {
+            	  d.setProviderNo(loggedInInfo.getLoggedInProviderNo());
+            }else {
+               d.setProviderNo(t.getProviderNo()); // Cast to string.
+            }
             d.setAtc(t.getAtc());
             d.setRegionalIdentifier(t.getRegionalIdentifier());
             d.setDosage(t.getStrength() + t.getStrengthUnit());
@@ -81,8 +88,9 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
             d.setTakeMin(t.getTakeMin());
             d.setRxDate(t.getRxDate());
             d.setEndDate(t.getEndDate());
+            d.setWrittenDate(t.getWrittenDate());
             d.setFreqCode(t.getFrequency());
-            d.setDuration(t.getDuration().toString()); // Cast to string.
+            d.setDuration(convertToStringOrNull(t.getDuration())); // Cast to string.
             d.setDurUnit(t.getDurationUnit());
             d.setRepeat(t.getRepeats());
             d.setSpecial(t.getInstructions());
@@ -98,6 +106,11 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
             d.setPosition(1);
             d.setOutsideProviderName(t.getExternalProvider());
             d.setSpecialInstruction(t.getAdditionalInstructions());
+            	
+            d.setDispenseInternal(falseIfNull(t.getDispenseInternal())); 
+            d.setDispenseInterval(t.getDispenseIntervalNumber());
+            d.setRefillDuration(zeroIfNull(t.getRefillDuration()));
+            d.setRefillQuantity(zeroIfNull(t.getRefillQuantity()));
 
             if(t.getQuantity() != null){
                 d.setQuantity(t.getQuantity().toString());
@@ -115,6 +128,38 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
         return d;
 
     }
+
+    
+    private String convertToStringOrNull(Integer integer) {
+    		try {
+    			String ret =  integer.toString();
+    			return ret;
+    		}catch(Exception e) {logger.debug("value was not parseable "+integer);}
+    		return null;
+    }
+    
+    private Integer convertToIntegerOrNull(String integer) {
+		try {
+			Integer ret =  Integer.parseInt(integer);
+			return ret;
+		}catch(Exception e) {logger.debug("value was not parseable "+integer);}
+		return null;
+}
+
+    private boolean falseIfNull(Boolean b) {
+    		if(b == null) {
+    			return false;
+    		}
+    		return b.booleanValue();
+    }
+    
+    private int zeroIfNull(Integer i) {
+    		if (i == null) {
+    			return 0;
+    		}
+    		return i.intValue();
+    }
+
 
     /**
      * Converts from the Drug domain model object to a serializable Drug transfer object.
@@ -136,16 +181,18 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
         t.setDrugId(d.getId());
         t.setBrandName(d.getBrandName());
         t.setGenericName(d.getGenericName());
+        t.setCustomName(d.getCustomName());
         t.setAtc(d.getAtc());
         t.setRegionalIdentifier(d.getRegionalIdentifier());
         t.setDemographicNo(d.getDemographicId());
-        t.setProviderNo(Integer.parseInt(d.getProviderNo())); // Parse the providerNo string to an int.
+        t.setProviderNo(d.getProviderNo()); 
         t.setTakeMin(d.getTakeMin());
         t.setTakeMax(d.getTakeMax());
         t.setRxDate(d.getRxDate());
         t.setEndDate(d.getEndDate());
+        t.setWrittenDate(d.getWrittenDate());
         t.setFrequency(d.getFreqCode());
-        t.setDuration(Integer.parseInt(d.getDuration()));   // Parse the duration string to an int.
+        t.setDuration(convertToIntegerOrNull(d.getDuration()));   // Parse the duration string to an int.
         t.setDurationUnit(d.getDurUnit());
         t.setRoute(d.getRoute());
         t.setForm(d.getDrugForm());
@@ -166,10 +213,36 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
             t.setQuantity(Integer.parseInt(d.getQuantity()));
         }
 
-        this.populateTo1Strength(t, d);
-
+        this.populateStrengthFromDosage(d, t);
 
         return t;
+    }
+
+    protected Boolean populateStrengthFromDosage(Drug d, DrugTo1 t) {
+        if(t.getStrength() != null || (t.getStrengthUnit() != null && !t.getStrengthUnit().isEmpty())) {
+            return false;
+        }
+        Boolean result = false;
+        String dosage = d.getDosage();
+        try {
+            if (!dosage.isEmpty()) {
+                Pattern pattern = Pattern.compile("(\\d+\\.?\\d+)\\s?([^0-9]+)\\s?");
+                Matcher matcher = pattern.matcher(dosage);
+                if (matcher.find()) {  // getting first dosage component, to match populateTo1Strength behaviour
+                    String strength = matcher.group(1);
+                    String unit = matcher.group(2);
+                    if (!strength.isEmpty() && !unit.isEmpty()) {
+                        t.setStrength(Float.parseFloat(strength));
+                        t.setStrengthUnit(unit);
+                        result = true;
+                    }
+                }
+            }
+            return result;
+        } catch (Exception e) {
+            logger.error(e.getStackTrace());
+            return false;
+        }
     }
 
     /**

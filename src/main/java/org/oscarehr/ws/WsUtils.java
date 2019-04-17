@@ -29,13 +29,16 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Security;
 import org.oscarehr.util.LoggedInInfo;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 public final class WsUtils {
 	private static ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+	private static final Logger logger = MiscUtils.getLogger();
 
 	/**
 	 * This method will check to see if the person is allowed to login, i.e. it will check username/expiry/password.
@@ -46,7 +49,10 @@ public final class WsUtils {
 	 */
 	public static boolean checkAuthenticationAndSetLoggedInInfo(HttpServletRequest request, Security security, String securityToken) {
 		if (security != null) {
-			if (security.getDateExpiredate() != null && security.getDateExpiredate().before(new Date())) return (false);
+			if (security.getDateExpiredate() != null && security.getDateExpiredate().before(new Date())) {
+				logger.debug("security record expired :"+security.getId());
+				return (false);
+			}
 
 			if (checkToken(security, securityToken) || security.checkPassword(securityToken)) {
 				LoggedInInfo loggedInInfo = new LoggedInInfo();
@@ -58,8 +64,9 @@ public final class WsUtils {
 				LoggedInInfo.setLoggedInInfoIntoRequest(request, loggedInInfo);
 				return (true);
 			}
+			logger.debug("token must not have been valid");
 		}
-
+		logger.debug("security was null");
 		return (false);
 	}
 

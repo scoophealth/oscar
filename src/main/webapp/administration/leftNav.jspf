@@ -518,6 +518,7 @@ String curProvider_no = (String)session.getAttribute("user");
 					
 					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/oscarPrevention/PreventionManager.jsp" title="Customize prevention notifications."><bean:message key="admin.admin.preventionNotification.title" /></a></li>
 				</security:oscarSec>
+				<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/appointmentSearchConfig.jsp" ><bean:message key="admin.admin.appointmentSearchConfig"/></a></li>
 				</ul>
 				</div>
 				</div>
@@ -694,6 +695,7 @@ String curProvider_no = (String)session.getAttribute("user");
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/keygen/keyManager.jsp"><bean:message key="admin.admin.keyPairGen" /></a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/FacilityManager.do"><bean:message key="admin.admin.manageFacilities" /></a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/oscarEncounter/oscarMeasurements/adminFlowsheet/NewFlowsheet.jsp">Create New Flowsheet</a></li>
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/oscarEncounter/oscarMeasurements/adminFlowsheet/FlowsheetManager.jsp">Manage Custom Flowsheets</a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/manageFlowsheets.jsp"><bean:message key="admin.admin.flowsheetManager"/></a></li>
 			      	<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/lotnraddrecordhtm.jsp"><bean:message key="admin.admin.add_lot_nr.title"/></a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/lotnrsearchrecordshtm.jsp"><bean:message key="admin.lotnrsearchrecordshtm.title"/></a></li>
@@ -831,18 +833,14 @@ String curProvider_no = (String)session.getAttribute("user");
 					
 					<li><a href='javascript:void(0);' class="xlink" rel='${ctx}/setProviderStaleDate.do?method=viewIntegratorProperties'><bean:message key="provider.btnSetIntegratorPreferences" /></a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel='${ctx}/lab/CA/ALL/sendOruR01.jsp'><bean:message key="admin.admin.sendOruR01" /></a></li>
-					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/hospitalReportManager/hospitalReportManager.jsp">Hospital Report Manager (HRM) Status</a></li>
-					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/hospitalReportManager/hrmPreferences.jsp">Hospital Report Manager (HRM) Preferences</a></li>
-					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/hospitalReportManager/hrmShowMapping.jsp">Hospital Report Manager (HRM) Class Mappings</a></li>
-					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/hospitalReportManager/hrmCategories.jsp">Hospital Report Manager (HRM) Categories</a></li>
-		
+					
 					<%
 						String olisKeystore = OscarProperties.getInstance().getProperty("olis_keystore", "");
 						if(olisKeystore.length()>0) {
 					%>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/olis/Preferences.jsp">OLIS Preferences</a></li>
 					<% } %>			
-					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/MyoscarConfiguration.jsp"><bean:message key="admin.admin.phrconfig"/></a></li>
+					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/PHRConfiguration.jsp" ><bean:message key="admin.admin.phrconfig"/></a></li>
 					<%
 						if (StringUtils.trimToNull(OscarProperties.getInstance().getProperty("oscar_myoscar_sync_component_url"))!=null)
 						{
@@ -903,10 +901,13 @@ String curProvider_no = (String)session.getAttribute("user");
 					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/updateDrugref.jsp" ><bean:message key="admin.admin.UpdateDrugref"/></a></li>	
 					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/Know2actConfiguration.jsp" ><bean:message key="admin.admin.Know2ActConfig"/></a></li>
 					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/surveillanceConfiguration.jsp" ><bean:message key="admin.admin.surveillanceConfig"/></a></li>		
+					<li><a href="javascript:void(0);" class="xlink" rel="${ctx}/admin/consentConfiguration.jsp" ><bean:message key="admin.admin.consentConfig"/></a></li>		
 					<li><a  href='javascript:void(0);' class="xlink" rel="${ctx}/admin/integratorPushStatus.jsp"><bean:message key="admin.admin.integratorPush" /></a></li>
 					<li><a  href='javascript:void(0);' class="xlink" rel="${ctx}/admin/born.jsp"><bean:message key="admin.admin.born" /></a></li>
 					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/clinicalconnect.jsp"><bean:message key="admin.admin.ClinicalConnectConfig" /></a></li>
-
+                                        <% if (OscarProperties.getInstance().getBooleanProperty("questimed.enabled", "true")) { %>                                          
+                                        <li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/QuestimedConfiguration.jsp"><bean:message key="admin.admin.QuestimedConfig" /></a></li>
+                                        <%}%>
 				</ul>
 				</div>
 				</div>
@@ -950,7 +951,15 @@ String curProvider_no = (String)session.getAttribute("user");
 					<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/admin/auditLogPurge.jsp"><bean:message
 						key="admin.admin.btnAuditLogPurge" /></a></li>
+						
+					<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/migrateCustomAllergyNonDrug.jsp">
+							Bulk set Custom Allergy Non-Drug flag
+						</a></li>
+						
+					
 				</ul>
+				
 				</div>
 				</div>
 	</security:oscarSec>
@@ -1039,7 +1048,19 @@ String curProvider_no = (String)session.getAttribute("user");
 				<div class="accordion-inner">
 				<li><a href='javascript:void(0);'
 						class="xlink" rel="${ctx}/pregnancy/migrateToSplitOnArEnhancedForm.jsp"><bean:message key="admin.admin.updates.migrate_onarenhanced"/></a></li>
+				<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/migrateToNewContacts.jsp"><bean:message key="admin.admin.updates.migrate_newcontacts"/></a></li>
 						
+				<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/upgradeRosterData.jsp">
+							Upgrade Roster Data
+						</a></li>
+						
+				<li><a href='javascript:void(0);'
+						class="xlink" rel="${ctx}/admin/migrateHRMData.jsp">
+							Migrate HRM Data
+						</a></li>
+								
 				</ul>
 				</div>
 				</div>

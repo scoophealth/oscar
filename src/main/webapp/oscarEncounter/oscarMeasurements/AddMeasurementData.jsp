@@ -24,10 +24,12 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
-<%@page import="org.oscarehr.common.dao.*,org.oscarehr.common.model.FlowSheetCustomization"%>
+<%@page import="org.oscarehr.common.dao.*,org.oscarehr.common.model.FlowSheetCustomization,org.oscarehr.common.model.Validations"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
@@ -40,15 +42,13 @@
   String[] measurements = request.getParameterValues("measurement");
   String temp = request.getParameter("template");
 
-  WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-  FlowSheetCustomizationDao flowSheetCustomizationDao = (FlowSheetCustomizationDao) ctx.getBean("flowSheetCustomizationDao");
+  FlowSheetCustomizationDao flowSheetCustomizationDao = (FlowSheetCustomizationDao) SpringUtils.getBean("flowSheetCustomizationDao");
+  ValidationsDao validationsDao = (ValidationsDao) SpringUtils.getBean("validationsDao");
   MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
 
 
 
-  List<FlowSheetCustomization> custList = flowSheetCustomizationDao.getFlowSheetCustomizations( temp,(String) session.getAttribute("user"),Integer.parseInt(demographic_no));
-  MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(temp,custList);
-
+  MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(temp, LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo(),Integer.parseInt(demographic_no));
   EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
 
 
@@ -111,10 +111,25 @@
 	function doSubmit() {
 		
 		 jQuery.post(jQuery("#measurementForm").attr('action') + '?ajax=true&skipCreateNote=true',jQuery('#measurementForm').serialize(),function(data){
-				opener.opener.postMessage(data,"*");
-				opener.location.reload();
+			 
+			 if(data && data.errors && data.errors.length>0) {
+				 jQuery("#errorList").empty();
+				 for(var x=0;x<data.errors.length;x++) {
+					jQuery("#errorList").append(data.errors[x]);
+				 }
+				jQuery("#errorDiv").show();
+				 return false;
+				 
+			 }	
+			 
+			 	if(opener != null && opener.opener != null) {	
+					opener.opener.postMessage(data,"*");
+			 	}
+			 	if(opener != null) {
+					opener.location.reload();
+			 	}
 	      		window.close();
-	      	 });
+	      	 },"json");
 		 
 		 return false;
 		 
@@ -251,6 +266,9 @@ clear: left;
 
 <script type="text/javascript">
   function hideExtraName(ele){
+	  if(ele == null) {
+		  return;
+	  }
    //alert(ele);
     if (ele.options[ele.selectedIndex].value != -1){
        hideItem('providerName');
@@ -353,6 +371,8 @@ clear: left;
                     Map h2 = mFlowsheet.getMeasurementFlowSheetInfo(measurement);
 
                 EctMeasurementTypesBean mtypeBean = mType.getMeasurementType(measurement);
+                Validations validations = validationsDao.find(Integer.parseInt(mtypeBean.getValidation()));
+                
                 if(ectMeasurementsForm != null && !ectMeasurementsForm.isEmpty()){
 
                    h = new Hashtable(ectMeasurementsForm.values);
@@ -360,12 +380,6 @@ clear: left;
                    prevDate = (String) h.get("date-"+ctr);
                    val = (String) h.get("inputValue-" + ctr);
                    comment = (String) h.get("comments-" + ctr);
-
-
-
-
-
-
                 }
                 %>
 
@@ -398,26 +412,32 @@ clear: left;
 							<br />
 
   						<label for="<%="value(inputValue-"+ctr+")"%>" class="fields"><%=h2.get("value_name")%>:</label>
-                            <% if ( mtypeBean.getValidationName() != null && (mtypeBean.getValidationName().equals("Yes/No") || mtypeBean.getValidationName().equals("Yes/No/NA") || mtypeBean.getValidationName().equals("Yes/No/Maybe"))){ %>
+                            <% if ( validations!=null && validations.getRegularExp()!=null && (validations.getRegularExp().contains("|") || validations.getRegularExp().equals("Yes")) ){ %>
                             <select  id="<%= "value(inputValue-" + ctr + ")" %>" name="<%= "value(inputValue-" + ctr + ")" %>" >
-                                <%if (measurements.length > 1){ %>
-                                <option value="" >Not Answered</option>
-                                <%}%>
-                                <option value="Yes"  <%=sel("Yes", val)%>>Yes</option>
-                                <option value="No"   <%=sel("No", val)%>>No</option>
-                                
-                                <% if(mtypeBean.getValidationName().equals("Yes/No/Maybe")){ %>
-                                <option value="Maybe" <%=sel("Maybe", val)%>>Maybe</option>                                
-                                <%}else{ %>
-                                <option value="NotApplicable" <%=sel("NotApplicable", val)%>>Not Applicable</option>
-                                <%} %>
-                                
+                                <option value=""></option>
+                                <%	String[] opts = validations.getName().contains("/") ? validations.getName().split("/") : validations.getRegularExp().split("\\|");
+                                	for (String opt : opts) {%>
+                                		<option value="<%=opt%>"  <%=sel(opt, val)%>><%=opt%></option>
+                                <%	}%>
+                            </select>
+                            <%}else if (validations!=null && validations.getName().startsWith("Integer")){ %>
+                            <select  id="<%= "value(inputValue-" + ctr + ")" %>" name="<%= "value(inputValue-" + ctr + ")" %>" >
+                            	<option value=""></option>
+                            	<%for (int v=validations.getMinValue().intValue(); v<=validations.getMaxValue().intValue(); v++){ %>
+                            	<option value="<%=v%>" <%=sel(""+v, val)%>><%=v%></option>
+                            	<%} %>
                             </select>
                             <%}else{%>
                             <input type="text" id="<%= "value(inputValue-" + ctr + ")" %>" name="<%= "value(inputValue-" + ctr + ")" %>" size="5" value="<%=val%>" /> <br/>
                             <%}%>
                          </div>
                           <br/>
+                 
+                 		  <div id="errorDiv" style="display:none">
+                 		  	<ul id="errorList" style="color:red">
+                 		  	
+                 		  	</ul>
+                 		  </div>
                          <fieldset >
                           <legend >Comments</legend>
                            <textarea name="<%= "value(comments-" + ctr + ")" %>" ><%=comment%></textarea>
@@ -462,6 +482,85 @@ clear: left;
 Calendar.setup( { inputField : "prevDate<%=i%>", ifFormat : "%Y-%m-%d %H:%M", showsTime :true, button : "date<%=i%>", singleClick : true, step : 1 } );
   <%}%>
 //Calendar.setup( { inputField : "nextDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "nextDateCal", singleClick : true, step : 1 } );
+
+
+var wt_input = '';
+var ht_input = '';
+var bmi_input = '';
+
+var wt_instrc = '';
+var ht_instrc = '';
+
+var is_units_metric = true;
+
+var form = document.forms[0];
+var inputTypes = form.querySelectorAll('[name^="value(inputType-"]');
+
+for(var i = 0; i < inputTypes.length; i++){
+
+  if(inputTypes[i].value=='WT'){
+    wt_input = "input[name='value(inputValue-"+i+")']";
+    wt_instrc = jQuery("input[name='value(inputMInstrc-"+i+")']").val();
+
+    if (wt_instrc.toLowerCase().indexOf("kg") == 0){
+      is_units_metric = false;
+    }
+  }
+
+  if(inputTypes[i].value=='HT'){
+    ht_input = "input[name='value(inputValue-"+i+")']";
+    ht_instrc = jQuery("input[name='value(inputMInstrc-"+i+")']").val();
+
+    if (ht_instrc.toLowerCase().indexOf("cm") == 0){
+      is_units_metric = false;
+    }
+
+  }
+
+  if(inputTypes[i].value=='BMI'){
+    bmi_input = "input[name='value(inputValue-"+i+")']";
+  }
+}//end loop
+
+
+jQuery(document).ready(function () {
+
+if(wt_input!='' && ht_input!='' && bmi_input!='' && is_units_metric){
+
+//add auto-calc message
+custom_html = `<div style="width:100%;padding:10px 0 10px 20px; font-size:16px;">
+<img src="../../images/Information16x16.gif"> <b>BMI</b> will auto calculate after you enter the weight and height.
+</div>`;
+
+jQuery(custom_html).insertBefore( jQuery('#measurementForm') );
+
+jQuery(wt_input).bind('keyup change', function(){
+  calcBMI();
+});
+
+jQuery(ht_input).bind('keyup change', function(){
+  calcBMI();
+});
+
+}
+
+
+
+function calcBMI(w,h) {
+w = jQuery(wt_input).val();
+h = jQuery(ht_input).val();
+b = '';
+
+if ( jQuery.isNumeric(w) && jQuery.isNumeric(h) && h!=="" && w!=="" ) {
+  if (h > 0) {
+    b = (w/Math.pow(h/100,2)).toFixed(1);
+    jQuery(bmi_input).val(b);
+    console.log("bmi: " + b);
+  }
+}
+}
+
+});
 </script>
 </body>
 </html:html>

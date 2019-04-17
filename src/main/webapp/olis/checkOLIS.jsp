@@ -25,7 +25,7 @@
 --%>
 <%@page import="com.indivica.olis.parameters.*,com.indivica.olis.*,com.indivica.olis.queries.*,org.apache.commons.lang.time.DateUtils"%><%@page 
 import="oscar.OscarProperties,java.net.InetAddress,java.io.*,java.util.List,java.util.*,javax.net.ssl.*,java.security.*,java.security.cert.*"%><%@page
-import="org.oscarehr.util.DbConnectionFilter,java.sql.*,org.oscarehr.util.SpringUtils" %><%@ taglib uri="/WEB-INF/security.tld" prefix="security"%><%
+import="org.oscarehr.util.DbConnectionFilter,java.sql.*,org.oscarehr.util.SpringUtils,org.oscarehr.util.LoggedInInfo" %><%@ taglib uri="/WEB-INF/security.tld" prefix="security"%><%
 if(session.getAttribute("userrole") == null ){
 	
 	response.sendRedirect("../logout.jsp");
@@ -181,8 +181,8 @@ public String tryZ01Query(int patientNum,String cpso,String lastName,String firs
 
 		((Z01Query) query).setRequestingHic(zrp1);
 	
-				
-		com.indivica.olis.Driver.submitOLISQuery(request, query);
+		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);		
+		com.indivica.olis.Driver.submitOLISQuery(loggedInInfo, request, query);
 		String msgInXML = (String) request.getAttribute("msgInXML");
 		String signedRequest = (String) request.getAttribute("signedRequest");
 		String signedData = (String) request.getAttribute("signedData");
@@ -225,10 +225,10 @@ public String good(String s){
 
 public void checkProperties(OscarProperties p,List<String> errors){
 	checkSendingApplicationFormat("OLIS_SENDING_APPLICATION",p,errors);
-	checkOlisKeystore("olis_keystore","changeit",p,errors);
+	checkOlisKeystore("olis_keystore","olis_ssl_keystore_password",p,errors);
 	checkOlisSSLKeystore("olis_ssl_keystore","olis_ssl_keystore_password",p,errors);
 	checkIP(errors);
-	checkTrustStore("olis_truststore","olis_truststore_password",p,errors);
+	checkTrustStore("olis_truststore","olis_truststore_password",p,errors); //not sure the point of this, the truststore only holds the ehealth certs
 	checkTrustStoreAndKeyStore("olis_truststore","olis_truststore_password","olis_ssl_keystore","olis_ssl_keystore_password",p,errors);
 	checkReturnedCert("olis_returned_cert",p,errors);
 	
@@ -258,19 +258,24 @@ public boolean checkOlisKeystore(String key,String password,OscarProperties p,Li
 		String filepath = p.getProperty(key); 
 		PrivateKey priv = null;
 		KeyStore keystore = null;
+		String pwd = p.getProperty(password);
 		try {
 			keystore = KeyStore.getInstance("JKS");
 			// Load the keystore
-			keystore.load(new FileInputStream(filepath), password.toCharArray());
+			keystore.load(new FileInputStream(filepath), pwd.toCharArray());
 			if(keystore.size() == 0){
 				errors.add(prob(key+" keystore is empty"));
 				return false;
 			}
-			//Enumeration e = keystore.aliases();
-			String name = "olis";
-
+			String name="olis";
+			Enumeration e = keystore.aliases();
+			while(e.hasMoreElements()) {
+				name = (String)e.nextElement();
+				
+			}
+		
 			// Get the private key and the certificate
-			priv = (PrivateKey) keystore.getKey(name, password.toCharArray());
+			priv = (PrivateKey) keystore.getKey(name, pwd.toCharArray());
 			if(priv == null){
 				errors.add(prob(key+"private key was not loaded"));
 				return false;
@@ -403,6 +408,18 @@ public boolean checkTrustStore(String s,String password,OscarProperties p,List<S
 			return false;
 		}
 		
+		java.security.cert.Certificate root = keystore.getCertificate("ehealth ontario root ca");
+		if(root == null) {
+			errors.add(prob("Truststore does not contain ehealth ontario root ca"));
+			return false;
+		}
+		
+		java.security.cert.Certificate issuing = keystore.getCertificate("ehealth ontario issuing ca");
+		if(root == null) {
+			errors.add(prob("Truststore does not contain ehealth ontario issuing ca"));
+			return false;
+		}
+		/*
 		
 		SSLContext context = SSLContext.getInstance("TLS");
         TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
@@ -428,7 +445,7 @@ public boolean checkTrustStore(String s,String password,OscarProperties p,List<S
             	return false;
         	}
         }
-		
+		*/
 		
 	}catch(Exception e){
 		errors.add(prob("Truststore Error: File="+filepath+" Password ="+pwd+ "Error message: "+e.getMessage()));

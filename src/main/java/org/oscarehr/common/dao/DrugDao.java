@@ -69,7 +69,7 @@ public class DrugDao extends AbstractDao<Drug> {
 
 	public List<Drug> findByDemographicId(Integer demographicId, Boolean archived) {
 
-		String sqlCommand = "select x from Drug x where x.demographicId=?1 " + (archived == null ? "" : "and x.archived=?2");
+		String sqlCommand = "select x from Drug x where x.demographicId=?1 " + (archived == null ? "" : "and x.archived=?2 ") + " order by x.createDate DESC";
 
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, demographicId);
@@ -122,19 +122,36 @@ public class DrugDao extends AbstractDao<Drug> {
 	 * 
 	 * undeprecated Sorting on multiple fields in the java adds complexity unless special tools are used for sorting 
 	 */
-	public List<Drug> findByDemographicIdOrderByPosition(Integer demographicId, Boolean archived) {
+	public List<Drug> findByDemographicIdOrderByPositionForExport(Integer demographicId, Boolean archived) {
 		// build sql string
-		String sqlCommand = "select x from Drug x where x.demographicId=?1 " + (archived == null ? "" : "and x.archived=?2") + " order by x.position desc, x.rxDate desc, x.id desc";
+		String sqlCommand = "select x from Drug x where x.demographicId=?1 " + (archived == null  ? "" : "and x.archived=?2 and x.archivedReason != ?3") + " order by x.position desc, x.rxDate desc, x.id desc";
 
 		// set parameters
 		Query query = entityManager.createQuery(sqlCommand);
 		query.setParameter(1, demographicId);
 		if (archived != null) {
 			query.setParameter(2, archived);
+			query.setParameter(3, "deleted");
 		}
 		// run query
 		@SuppressWarnings("unchecked")
 		List<Drug> results = query.getResultList();
+
+		return (results);
+	}
+	
+	public List<Drug> findByDemographicIdOrderByPosition(Integer demographicId, Boolean archived) {
+ 		// build sql string
+		String sqlCommand = "select x from Drug x where x.demographicId=?1 " + (archived == null ? "" : "and x.archived=?2") + " order by x.position desc, x.rxDate desc, x.id desc";
+ 		// set parameters
+ 		Query query = entityManager.createQuery(sqlCommand);
+ 		query.setParameter(1, demographicId);
+ 		if (archived != null) {
+ 			query.setParameter(2, archived);
+ 		}
+ 		// run query
+ 		@SuppressWarnings("unchecked")
+ 		List<Drug> results = query.getResultList();
 
 		return (results);
 	}
@@ -336,7 +353,7 @@ public class DrugDao extends AbstractDao<Drug> {
 		return result;
 	}
 
-	public Drug findByEverything(String providerNo, int demographicNo, Date rxDate, Date endDate, Date writtenDate, String brandName, int gcn_SEQNO, String customName, float takeMin, float takeMax, String frequencyCode, String duration, String durationUnit, String quantity, String unitName, int repeat, Date lastRefillDate, boolean nosubs, boolean prn, String escapedSpecial, String outsideProviderName, String outsideProviderOhip, boolean customInstr, boolean longTerm, boolean customNote, boolean pastMed,
+	public Drug findByEverything(String providerNo, int demographicNo, Date rxDate, Date endDate, Date writtenDate, String brandName, int gcn_SEQNO, String customName, float takeMin, float takeMax, String frequencyCode, String duration, String durationUnit, String quantity, String unitName, int repeat, Date lastRefillDate, boolean nosubs, boolean prn, String escapedSpecial, String outsideProviderName, String outsideProviderOhip, boolean customInstr, Boolean longTerm, boolean customNote, Boolean pastMed,
 	        Boolean patientCompliance, String specialInstruction, String comment, boolean startDateUnknown) {
 
 		Query query = entityManager.createQuery("FROM " + modelClass.getSimpleName() + " d WHERE (d.archived = 0 OR d.archived IS NULL) AND " + "d.providerNo = :providerNo AND d.demographicId = :demographicNo AND d.rxDate = :rxDate AND d.endDate = :endDate AND d.writtenDate = :writtenDate AND d.brandName = :brandName AND "

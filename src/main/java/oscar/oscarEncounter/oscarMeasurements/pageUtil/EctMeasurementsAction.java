@@ -27,7 +27,9 @@ package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -42,6 +44,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.apache.struts.util.MessageResources;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.FlowSheetCustomizationDao;
@@ -58,6 +61,7 @@ import org.oscarehr.util.SpringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import oscar.oscarEncounter.data.EctProgram;
 import oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet;
@@ -120,7 +124,8 @@ public class EctMeasurementsAction extends Action {
 		Double dMin = new Double(0);
 		Integer iMax = 0;
 		Integer iMin = 0;
-
+		Boolean numeric = null;
+		
 		List<Validations> vs = null;
 		String regCharExp;
 		//goes through each type to check if the input value is valid
@@ -154,6 +159,7 @@ public class EctMeasurementsAction extends Action {
 				iMax = v.getMaxLength();
 				iMin = v.getMinLength();
 				regExp = v.getRegularExp();
+				numeric = v.isNumeric();
 			}
 
 			if (dMax == null) {
@@ -196,6 +202,11 @@ public class EctMeasurementsAction extends Action {
 			}
 			if (!ectValidation.isDate(dateObserved) && inputValue.compareTo("") != 0) {
 				errors.add(dateName, new ActionMessage("errors.invalidDate", inputTypeDisplay));
+				saveErrors(request, errors);
+				valid = false;
+			}
+			if (!ectValidation.isNumeric(numeric, inputValue)) {
+				errors.add(inputValueName, new ActionMessage("errors.numeric", inputTypeDisplay));
 				saveErrors(request, errors);
 				valid = false;
 			}
@@ -265,6 +276,22 @@ public class EctMeasurementsAction extends Action {
 			request.setAttribute("groupName", groupName);
 			request.setAttribute("css", css);
 			request.setAttribute("demographicNo", demographicNo);
+			
+			if(ajax) {
+				JSONObject obj = new JSONObject();
+				JSONArray errorObj = new JSONArray();
+				MessageResources resources = this.getResources(request);
+				Locale locale = getLocale(request);
+				for (Iterator iter = errors.get(); iter.hasNext();)  {
+				    ActionMessage msg = (ActionMessage) iter.next();
+				    String text = resources.getMessage(locale, msg.getKey(), msg.getValues());
+				    errorObj.add(text);
+				}
+				obj.put("errors", errorObj);
+				obj.write(response.getWriter());
+				return null;
+			}
+			
 			return (new ActionForward(mapping.getInput()));
 		}
 

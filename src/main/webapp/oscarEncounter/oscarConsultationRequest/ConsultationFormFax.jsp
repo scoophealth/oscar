@@ -227,6 +227,8 @@ function ValidateForm(){
 			</table>
 			<input type="hidden" name="requestId"
 				value="<%= (String) request.getAttribute("reqId")%>"\>
+			<input type="hidden" name="printType"
+				   value="<%= (String) request.getAttribute("printType")%>"\>
 		</html:form></td>
 	</tr>
 	<tr>

@@ -120,7 +120,21 @@ angular.module("providerServices", [])
                 url: this.apiPath+'/providers_json',
                 method: "GET"
              }).then(function (data, status, headers, config) {
-            	 	deferred.resolve(data.content);
+            	 	deferred.resolve(data.data.content);
+             },function (data, status, headers, config) {
+            	 	deferred.reject("An error occured while fetching provider teams");
+             });
+
+            return deferred.promise;
+        },
+        suggestProviderNo: function(){
+        		var deferred = $q.defer();
+            
+            $http({
+                url: this.apiPath+'/suggestProviderNo',
+                method: "GET"
+             }).then(function (data, status, headers, config) {
+            	 	deferred.resolve(data.data);
              },function (data, status, headers, config) {
             	 	deferred.reject("An error occured while fetching provider teams");
              });

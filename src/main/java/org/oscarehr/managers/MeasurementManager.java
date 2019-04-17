@@ -83,6 +83,14 @@ public class MeasurementManager {
 		return results;
 	}
 
+	public List<Measurement> getMeasurementByDemographicIdAfter(LoggedInInfo loggedInInfo, Integer demographicId, Date updateAfter) {
+		List<Measurement> results = measurementDao.findByDemographicLastUpdateAfterDate(demographicId, updateAfter);
+		if (results.size() > 0) {
+			LogAction.addLogSynchronous(loggedInInfo, "MeasurementManager.getMeasurementByDemographicIdAfter", "demographicId="+demographicId+" updateAfter="+updateAfter);
+		}
+		return results;
+	}
+
 	public List<MeasurementMap> getMeasurementMaps() {
 		// should be safe to get all as they're a defined set of loinic codes or human entered entries
 		List<MeasurementMap> results = measurementMapDao.getAllMaps();

@@ -127,6 +127,11 @@
 	<category name="org.oscarehr.integration.born">
 		<priority value="INFO" />
 	</category>
+<!--	
+	<category name="oscar.oscarEncounter.oscarMeasurements">
+		<priority value="DEBUG" />
+	</category>
+-->
 
 
 	<!-- HAPI is logging an info message at error level which isn't an error, this will squelch it -->	
@@ -159,6 +164,13 @@
 	
 	<category name="ca.uhn.hl7v2.parser.Parser">
 		<priority value="WARN" />
+	</category>
+	
+	<category name="oscar.oscarReport.ClinicalReports">
+		<priority value="DEBUG" />
+	</category>
+	<category name="org.oscarehr.hospitalReportManager">
+		<priority value="DEBUG" />
 	</category>
 	
 	

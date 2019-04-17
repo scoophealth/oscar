@@ -44,9 +44,11 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.LookupListDao;
 import org.oscarehr.common.dao.LookupListItemDao;
+import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.model.CVCImmunization;
 import org.oscarehr.common.model.Consent;
+import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.integration.fhir.api.DHIR;
 import org.oscarehr.integration.fhir.builder.FhirBundleBuilder;
 import org.oscarehr.managers.SecurityInfoManager;
@@ -57,7 +59,6 @@ import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarPrevention.PreventionData;
 import oscar.oscarPrevention.PreventionDisplayConfig;
-import oscar.util.UtilDateUtilities;
 /**
  *
  * @author Jay Gallagher
@@ -73,7 +74,8 @@ public class AddPreventionAction  extends Action {
     LookupListDao lookupListDao = SpringUtils.getBean(LookupListDao.class);
     LookupListItemDao lookupListItemDao = SpringUtils.getBean(LookupListItemDao.class);
     ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
-	 
+	PartialDateDao partialDateDao = SpringUtils.getBean(PartialDateDao.class);
+	
 	
    public AddPreventionAction() {
    }
@@ -114,9 +116,21 @@ public class AddPreventionAction  extends Action {
          
          //generic
          String snomedId = request.getParameter("snomedId");
-         if(prevDate != null && prevDate.length() == 10) {
+         
+         String partialDateFormat = partialDateDao.getFormat(prevDate);
+         
+         if(PartialDate.YEARONLY.equals(partialDateFormat)) {
+        	 prevDate += "-01-01 00:00";
+        	
+         }
+         if(PartialDate.YEARMONTH.equals(partialDateFormat)) {
+        	 prevDate += "-01 00:00";
+         }
+         
+         if(prevDate.length() == 10) {
         	 prevDate += " 00:00";
          }
+         
          
          MiscUtils.getLogger().debug("nextDate "+nextDate+" neverWarn "+neverWarn);
          
@@ -144,6 +158,8 @@ public class AddPreventionAction  extends Action {
                   
          addHashtoArray(extraData,request.getParameter("location"),"location");
          addHashtoArray(extraData,request.getParameter("location2"),"location2");
+        
+         addHashtoArray(extraData,request.getParameter("din"),"din");
          
          String lotItem = request.getParameter("lotItem");
          if (lotItem != null && !lotItem.equals("-1") && !lotItem.equals("0"))
@@ -205,7 +221,7 @@ public class AddPreventionAction  extends Action {
          String operation = null;
          
          if (id == null || id.equals("null")){ //New                                             
-        	 preventionId = PreventionData.insertPreventionData(sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData,snomedId);
+        	 preventionId = PreventionData.insertPreventionData(sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData,snomedId,null);
         	 operation="new_prevention";
          }else if (id != null &&  delete != null  ){  // Delete
         	 PreventionData.deletePreventionData(id);    
@@ -214,6 +230,10 @@ public class AddPreventionAction  extends Action {
             addHashtoArray(extraData,id,"previousId"); 
             preventionId = PreventionData.updatetPreventionData(id,sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData,snomedId);
             operation="update_prevention";
+         }
+         
+         if(PartialDate.YEARONLY == partialDateFormat || PartialDate.YEARMONTH == partialDateFormat) {
+        	 partialDateDao.setPartialDate(PartialDate.PREVENTION, preventionId, PartialDate.PREVENTION_PREVENTIONDATE , partialDateFormat);
          }
 
          PreventionManager prvMgr = (PreventionManager) SpringUtils.getBean("preventionMgr");
@@ -283,9 +303,9 @@ public class AddPreventionAction  extends Action {
 		  }
 	  }
 	  
-	  if(UtilDateUtilities.StringToDate(prevDate, "yyyy-MM-dd HH:mm") == null) {
-		  result.add("Prevention date not valid");
-	  }
+//	  if(UtilDateUtilities.StringToDate(prevDate, "yyyy-MM-dd HH:mm") == null) {
+//		  result.add("Prevention date not valid");
+//	  }
 	  
 	  
 	  return result;

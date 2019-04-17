@@ -61,6 +61,7 @@ CREATE TABLE allergies (
   position int(10) not null,
   lastUpdateDate datetime not null,
   providerNo varchar(6),
+  nonDrug tinyint(1),
   PRIMARY KEY  (allergyid)
 ) ;
 
@@ -513,6 +514,7 @@ CREATE TABLE demographic (
   roster_date date,
   roster_termination_date date,
   roster_termination_reason varchar(2),
+  roster_enrolled_to varchar(20),
   patient_status varchar(20),
   patient_status_date date,
   date_joined date,
@@ -538,6 +540,11 @@ CREATE TABLE demographic (
   anonymous varchar(32),
   lastUpdateUser varchar(6),
   lastUpdateDate datetime not null,
+  middleNames varchar(100),
+  mailingAddress varchar(60),
+  mailingCity varchar(50),
+  mailingProvince varchar(20),
+  mailingPostal varchar(9),
   PRIMARY KEY  (demographic_no),
   KEY hin (hin),
   KEY name (last_name,first_name),
@@ -685,6 +692,8 @@ CREATE TABLE document (
   number_of_pages int(6),
   appointment_no int(11) default NULL,
   restrictToProgram tinyint(1) NOT NULL,
+  receivedDate date default NULL,
+  abnormal int(1) NOT NULL default '0',
   PRIMARY KEY  (document_no)
 ) ;
 
@@ -738,7 +747,7 @@ CREATE TABLE drugs (
   regional_identifier varchar(100) default NULL,
   unit varchar(5) default 'tab',
   method varchar(5) default 'Take',
-  route varchar(5) default 'PO',
+  route varchar(50) default 'PO',
   drug_form varchar(50),
   create_date datetime,
   dosage text,
@@ -749,7 +758,7 @@ CREATE TABLE drugs (
   short_term boolean,
   non_authoritative boolean,
   past_med boolean,
-  patient_compliance tinyint(1),
+  patient_compliance boolean,
   outside_provider_name varchar(100),
   outside_provider_ohip varchar(20),
   archived_reason varchar(100) default '',
@@ -757,7 +766,7 @@ CREATE TABLE drugs (
   hide_from_drug_profile tinyint(1) default '0',
   eTreatmentType varchar(20),
   rxStatus varchar(20),
-  dispense_interval int(10),
+  dispense_interval varchar(100),
   refill_duration int(10),
   refill_quantity int(10),
   hide_cpp tinyint(1),
@@ -766,6 +775,9 @@ CREATE TABLE drugs (
   start_date_unknown boolean,
   lastUpdateDate datetime not null,
   dispenseInternal tinyint(1) not null,
+  protocol varchar(255),
+  priorRxProtocol varchar(255),
+  pharmacyId int(11),
   PRIMARY KEY  (drugid)
 ) ;
 
@@ -7646,7 +7658,7 @@ CREATE TABLE tickler (
 CREATE TABLE validations(
   id int UNSIGNED AUTO_INCREMENT,
   name varchar(100) NOT NULL,
-  regularExp varchar(100) ,
+  regularExp varchar(250) ,
   `maxValue1` double,
   minValue double,
   maxLength int(3),
@@ -8865,6 +8877,7 @@ CREATE TABLE demographicArchive (
   title varchar(10),
   last_name varchar(30),
   first_name varchar(30),
+  middleNames varchar(100),
   address varchar(60),
   city varchar(20),
   province varchar(20),
@@ -8882,6 +8895,7 @@ CREATE TABLE demographicArchive (
   roster_date date,
   roster_termination_date date,
   roster_termination_reason varchar(2),
+  roster_enrolled_to varchar(20),
   patient_status varchar(20),
   patient_status_date date,
   date_joined date,
@@ -8906,7 +8920,11 @@ CREATE TABLE demographicArchive (
   newsletter varchar(32),
   anonymous varchar(32),
   lastUpdateUser varchar(6),
-  lastUpdateDate date
+  lastUpdateDate date,
+  mailingAddress varchar(60),
+  mailingCity varchar(50),
+  mailingProvince varchar(20),
+  mailingPostal varchar(9)
 );
 
 CREATE TABLE providerArchive (
@@ -9273,6 +9291,16 @@ CREATE TABLE `HRMDocument` (
   `sourceFacility` varchar(120) ,
   `hrmCategoryId` int ,
   `description` varchar(255),
+  `formattedName` varchar(100),
+  `dob` varchar(10),
+  `gender` varchar(1),
+  `hcn` varchar(20),
+  `recipientId` varchar(15),
+  `recipientName` varchar(255),
+  `recipientProviderNo` varchar(25),
+  `className` varchar(255),
+  `subClassName` varchar(255),
+  `sourceFacilityReportNo` varchar(100),
   PRIMARY KEY (`id`)
 ) ;
 
@@ -9362,6 +9390,12 @@ create table FlowSheetUserCreated(
   topHTML text,
   archived tinyint(1),
   createdDate date,
+  createdBy varchar(100),
+  scope varchar(100),
+  scopeProviderNo varchar(100),
+  scopeDemographicNo int(10),
+  template varchar(100),
+  xmlContent text,
   KEY FlowSheetUserCreated_archived (archived)
 );
 
@@ -10671,7 +10705,8 @@ CREATE TABLE IF NOT EXISTS `OscarJob` (
     `cronExpression` VARCHAR(255),
     `providerNo` VARCHAR(10),
     `enabled` TINYINT(1) NOT NULL,
-    `updated` DATETIME NOT NULL
+    `updated` DATETIME NOT NULL,
+    `config` text
 );
 
 
@@ -11930,6 +11965,7 @@ CREATE TABLE `AppDefinition` (
   `active` tinyint(1),
   `addedBy` varchar(8),
   `added` datetime,
+  `consentTypeId` int(15),
   PRIMARY KEY (`id`)
 );
 
@@ -12113,6 +12149,8 @@ CREATE TABLE `consentType` (
   `name` varchar(50),
   `description` varchar(500),
   `active` tinyint(1),
+  `providerNo` varchar(6),
+  `remoteEnabled` tinyint(1),
   PRIMARY KEY (`id`)
 );
 
@@ -12281,5 +12319,151 @@ CREATE TABLE DHIRSubmissionLog (
     clientRequestId varchar(100),
     clientResponseId varchar(100),
     PRIMARY KEY(id)
+);
+
+CREATE TABLE AppointmentSearch (
+			id int(10)  NOT NULL auto_increment primary key,
+			providerNo varchar(6),
+			searchType varchar(100),
+			searchName varchar(100),
+			fileContents mediumblob,
+			updateDate datetime,
+			createDate datetime,
+			active boolean,
+			uuid char(40),
+			KEY(providerNo),
+			KEY(uuid)
+);
+CREATE TABLE OLISResults (
+    id int(11) auto_increment,
+    requestingHICProviderNo varchar(30),
+    providerNo varchar(30),
+    queryType varchar(20),
+    results text,
+    hash varchar(255),
+    status varchar(10),
+    uuid varchar(255),
+    query varchar(255),
+    demographicNo integer,
+    queryUuid varchar(255),
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE OLISQueryLog (
+    id int(11) auto_increment,
+    initiatingProviderNo varchar(30),
+    queryType varchar(20),
+    queryExecutionDate datetime,
+    uuid varchar(255),
+    requestingHIC varchar(30),
+    demographicNo integer,
+    PRIMARY KEY(id)
+);
+
+create table HrmLog (
+  id int(11) auto_increment,
+  started timestamp not null,
+  initiatingProviderNo varchar(25),
+  transactionType varchar(25),
+  externalSystem varchar(50),
+  error varchar(255),
+  connected tinyint(1), 
+  downloadedFiles tinyint(1), 
+  numFilesDownloaded int,
+  deleted tinyint(1), 
+  PRIMARY KEY(id)
+);
+
+create table HrmLogEntry (
+  id int(11) auto_increment,
+  hrmLogId int(11),
+  encryptedFileName varchar(255),
+  decrypted tinyint(1), 
+  decryptedFileName varchar(255),
+  filename varchar(255),
+  error varchar(255),
+  parsed tinyint(1),
+  recipientId varchar(100),
+  recipientName varchar(255),
+  distributed tinyint(1),
+  PRIMARY KEY(id)
+);
+
+CREATE TABLE consultationRequestsArchive (
+  Id int(10) NOT NULL auto_increment,
+  referalDate date default NULL,
+  serviceId int(10) default NULL,
+  specId int(10) default NULL,
+  appointmentDate date default NULL,
+  appointmentTime time default NULL,
+  reason text,
+  clinicalInfo text,
+  currentMeds text,
+  allergies text,
+  providerNo varchar(6) default NULL,
+  demographicNo int(10) default NULL,
+  status char(2) default NULL,
+  statusText text,
+  sendTo varchar(20) default NULL,
+  requestId int(10) NOT NULL,
+  concurrentProblems text,
+  urgency char(2) default NULL,
+  appointmentInstructions VARCHAR(256),
+  patientWillBook tinyint(1),
+  followUpDate date default NULL,
+  site_name varchar(255),
+  signature_img VARCHAR(20),
+  letterheadName VARCHAR(20),
+  letterheadAddress TEXT,
+  letterheadPhone VARCHAR(50),
+  letterheadFax VARCHAR(50),
+  `lastUpdateDate` datetime not null,
+  fdid int(10),
+  source varchar(50),
+  PRIMARY KEY  (id)
+) ;
+
+
+create table consultationRequestExtArchive(
+ id int(10) NOT NULL auto_increment,
+ originalId int(10) NOT NULL,
+ requestId int(10) NOT NULL,
+ name varchar(100) NOT NULL,
+ value text NOT NULL,
+ dateCreated date not null,
+ consultationRequestArchiveId int(10) NOT NULL,
+ primary key(id),
+ key(requestId)
+);
+
+CREATE TABLE DocumentExtraReviewer (
+  `id` int(11) NOT NULL auto_increment,
+  `documentNo` integer,
+  `reviewerProviderNo` varchar(40),
+  `reviewDateTime` timestamp,
+  PRIMARY KEY  (`id`)
+);
+
+CREATE TABLE `PreventionReport` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `providerNo` varchar(6) DEFAULT NULL,
+  `reportName` varchar(255) DEFAULT NULL,
+  `json` text,
+  `updateDate` datetime DEFAULT NULL,
+  `createDate` datetime DEFAULT NULL,
+  `active` tinyint(1) DEFAULT NULL,
+  `archived` tinyint(1) DEFAULT NULL,
+  `uuid` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `EFormDocs` (
+  `id` int(10) NOT NULL auto_increment PRIMARY KEY,
+  `fdid` int(10) NOT NULL,
+  `document_no` int(10) NOT NULL,
+  `doctype` char(1) NOT NULL,
+  `deleted` char(1) DEFAULT NULL,
+  `attach_date` date,
+  `provider_no` varchar(6) NOT NULL
 );
 

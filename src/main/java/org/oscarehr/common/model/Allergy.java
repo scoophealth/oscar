@@ -44,7 +44,7 @@ import org.apache.commons.lang.StringUtils;
 
 @Entity
 @Table(name = "allergies")
-public class Allergy extends AbstractModel<Integer> {
+public class Allergy extends AbstractModel<Integer> implements DemographicData {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,7 +64,10 @@ public class Allergy extends AbstractModel<Integer> {
 	private String reaction;
 	
 	private boolean archived=false;
-
+	
+	private Boolean nonDrug=false;
+	
+	
 	@Column(name = "HICL_SEQNO")
 	private Integer hiclSeqno;
 
@@ -137,7 +140,7 @@ public class Allergy extends AbstractModel<Integer> {
 		this.id = id;
 	}
 
-	public Integer getDemographicNo() {
+	public int getDemographicNo() {
 		return demographicNo;
 	}
 
@@ -419,6 +422,7 @@ public class Allergy extends AbstractModel<Integer> {
         if ("1".equals(severityCode)) return("Mild");
         if ("2".equals(severityCode)) return("Moderate");
         if ("3".equals(severityCode)) return("Severe");
+        if ("5".equals(severityCode)) return("No Reaction");
         else return("Unknown");
     }
 
@@ -430,4 +434,13 @@ public class Allergy extends AbstractModel<Integer> {
         return this.getDescription() + " (" + getTypeDesc(getTypeCode()) + ")";
     }
 
+	public Boolean isNonDrug() {
+		return nonDrug;
+	}
+
+	public void setNonDrug(Boolean nonDrug) {
+		this.nonDrug = nonDrug;
+	}
+
+    
 }

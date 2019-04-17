@@ -71,6 +71,7 @@ import org.oscarehr.common.model.ConsultationRequest;
 import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.EFormGroup;
 import org.oscarehr.common.model.EFormValue;
+import org.oscarehr.common.model.OscarMsgType;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.SecRole;
@@ -86,7 +87,6 @@ import com.quatro.model.security.Secobjprivilege;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.oscarehr.common.model.OscarMsgType;
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
@@ -246,8 +246,15 @@ public class EFormUtil {
 	public static List<EFormData> listPatientEformsCurrent(Integer demographicNo, Boolean current, int startIndex, int numToReturn) {
 		return eFormDataDao.findByDemographicIdCurrent(demographicNo, current, startIndex, numToReturn);
 	}
-	
-	public static ArrayList<HashMap<String, ? extends Object>> listPatientEForms(String sortBy, String deleted, String demographic_no, String userRoles, int offset, int itemsToReturn) {
+    public static List<EFormData> listPatientEformsCurrentAttachedToConsult(String consultationId) {
+        return eFormDataDao.findByDemographicIdCurrentAttachedToConsult(consultationId);
+    }
+    
+    public static List<EFormData> listPatientEformsCurrentAttachedToEForm(String fdid) {
+        return eFormDataDao.findByDemographicIdCurrentAttachedToEForm(fdid);
+    }
+
+    public static ArrayList<HashMap<String, ? extends Object>> listPatientEForms(String sortBy, String deleted, String demographic_no, String userRoles, int offset, int itemsToReturn) {
 
 		Boolean current = null;
 		if (deleted.equals("deleted")) current = false;

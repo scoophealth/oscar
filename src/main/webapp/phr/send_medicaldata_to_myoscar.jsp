@@ -46,9 +46,7 @@
 
 	try
 	{
-		String verificationLevel = demographicManager.getPhrVerificationLevelByDemographicId(loggedInInfo, Integer.parseInt(demographicNoString));
-		
-		if ("+3".equals(verificationLevel)) {
+		if(demographicManager.getPhrVerificationLevelByDemographicId(loggedInInfo, Integer.parseInt(demographicNoString))){
 			response.sendRedirect(sendDataPath);
 		}
 	}
@@ -68,7 +66,7 @@
 </head>
 <body>
 	<p>
-	<h3><%=LocaleUtils.getMessage(request, "WarningNotLevel3")%></h3>
+	<h3><%=LocaleUtils.getMessage(request, "WarningNotVerified")%></h3>
 	<h3><%=LocaleUtils.getMessage(request, "AreYouSureYouWantToSend")%>&nbsp;<%=LocaleUtils.getMessage(request, medicalDataType)%>&nbsp;<%=LocaleUtils.getMessage(request, "ToPHR")%>?</h3>
 	<p>
 	<input type="button" value="Yes" onclick="window.location.href='<%=sendDataPath%>'" />

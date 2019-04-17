@@ -25,17 +25,23 @@ package org.oscarehr.ws.rest;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
+import javax.net.ssl.TrustManager;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -44,26 +50,57 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.net.util.TrustManagerUtils;
+import org.apache.cxf.configuration.jsse.TLSClientParameters;
+import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.jaxrs.provider.json.JSONProvider;
+import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.log4j.Logger;
 import org.oscarehr.app.OAuth1Utils;
 import org.oscarehr.common.dao.AppDefinitionDao;
 import org.oscarehr.common.dao.AppUserDao;
+import org.oscarehr.common.dao.AppointmentSearchDao;
+import org.oscarehr.common.dao.ConsentDao;
+import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.model.AppDefinition;
 import org.oscarehr.common.model.AppUser;
+import org.oscarehr.common.model.AppointmentSearch;
+import org.oscarehr.common.model.Consent;
+import org.oscarehr.common.model.ConsentType;
+import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.Security;
 import org.oscarehr.managers.AppManager;
+import org.oscarehr.managers.PatientConsentManager;
 import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.phr.RegistrationHelper;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.ws.rest.to.Creds;
 import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.RSSResponse;
 import org.oscarehr.ws.rest.to.model.AppDefinitionTo1;
+import org.oscarehr.ws.rest.to.model.ProviderTo1;
 import org.oscarehr.ws.rest.to.model.RssItem;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.quatro.dao.security.SecuserroleDao;
+
+import com.quatro.model.security.Secuserrole;
+import com.quatro.web.admin.SecurityAddSecurityHelper;
+
 import oscar.OscarProperties;
+import oscar.log.LogAction;
+import oscar.log.LogConst;
+
+import org.oscarehr.PMmodule.dao.ProviderDao;
+
 
 @Path("/app")
 public class AppService extends AbstractServiceImpl {
@@ -75,6 +112,26 @@ public class AppService extends AbstractServiceImpl {
 	@Autowired
 	private SecurityInfoManager securityInfoManager;
 	
+	@Autowired
+	AppDefinitionDao appDefinitionDao;
+	
+	@Autowired
+	ConsentDao consentDao;
+	
+	@Autowired
+	ProviderDao providerDao;
+	
+	@Autowired
+	SecurityDao securityDao;
+	
+	@Autowired
+	PatientConsentManager patientConsentManager;
+	
+	@Autowired
+	SecuserroleDao secUserRoleDao;
+	
+	@Autowired
+	AppointmentSearchDao appointmentSearchDao;
 	
 	@GET
 	@Path("/getApps/")
@@ -95,6 +152,551 @@ public class AppService extends AbstractServiceImpl {
 		}
 		return response;
 	}
+
+	
+	@GET
+	@Path("/PHRActive/")
+	@Produces("application/json")
+	public GenericRESTResponse isPHRActive(@Context HttpServletRequest request){
+		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+    	if(!com.quatro.service.security.SecurityManager.hasPrivilege("_admin", roleName$)  && !com.quatro.service.security.SecurityManager.hasPrivilege("_report", roleName$)) {
+    		throw new SecurityException("Insufficient Privileges");
+    	}
+		
+		GenericRESTResponse response = null;
+		if( appManager.getAppDefinition(getLoggedInInfo(), "PHR") == null){
+			response = new GenericRESTResponse(false,"PHR not active");
+		}else{
+			response = new GenericRESTResponse(true,"PHR active");
+		}
+		return response;
+	}
+	
+	
+	@GET
+	@Path("/PHRActiveAndConsentConfigured/")
+	@Produces("application/json")
+	public GenericRESTResponse isPHRActiveAndConsentConfigured(@Context HttpServletRequest request){
+		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+	    	if(!com.quatro.service.security.SecurityManager.hasPrivilege("_admin", roleName$)  && !com.quatro.service.security.SecurityManager.hasPrivilege("_report", roleName$)) {
+	    		throw new SecurityException("Insufficient Privileges");
+	    	}
+		
+		AppDefinition appDef = appManager.getAppDefinition(getLoggedInInfo(), "PHR");
+		try {
+			int id = Integer.valueOf(appDef.getConsentTypeId());
+			return new GenericRESTResponse(true,""+id);
+		}catch(Exception e) {
+			//Nothing needed here, for any reason it fails, consent is not configured
+		}
+		return new GenericRESTResponse(false,"Consent Not Configured");
+	}
+	
+	
+	/*States returned:                  Boolean    Message 
+		PHR inactive                    FALSE      INACTIVE
+		PHR active & Consent Needed     TRUE       NEED_CONSENT
+		PHR Active & Consent exists.    TRUE       CONSENTED
+	*/
+	@GET
+	@Path("/PHRActive/consentGiven/{demographicNo}")
+	@Produces("application/json")
+	public GenericRESTResponse isPHRActiveAndConsentGiven(@Context HttpServletRequest request,@PathParam("demographicNo") Integer demographicNo){
+		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+    	
+		GenericRESTResponse response = null;
+		AppDefinition appDef = appManager.getAppDefinition(getLoggedInInfo(), "PHR");
+		if(appDef == null){
+			response = new GenericRESTResponse(false,"INACTIVE");
+		}else{
+			//look up consent identifier here and check if patient has given consent.
+			if(appDef.getConsentTypeId() == null) {
+				response = new GenericRESTResponse(false,"INACTIVE");
+			}else {
+				Consent consent = consentDao.findByDemographicAndConsentTypeId( demographicNo,  appDef.getConsentTypeId()  ) ;
+				if(consent != null && consent.getPatientConsented()) {
+					response = new GenericRESTResponse(true,"CONSENTED");
+				}else {
+					response = new GenericRESTResponse(true,"NEED_CONSENT");
+				}
+			}
+		}
+		return response;
+	}
+	
+	@POST
+	@Path("/PHRActive/consentGiven/{demographicNo}")
+	@Produces("application/json")
+	public GenericRESTResponse recordConsentGiven(@Context HttpServletRequest request,@PathParam("demographicNo") Integer demographicNo){
+		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
+    	
+		GenericRESTResponse response = null;
+		AppDefinition appDef = appManager.getAppDefinition(getLoggedInInfo(), "PHR");
+		if(appDef == null){
+			response = new GenericRESTResponse(false,"INACTIVE");
+		}else{
+			//look up consent identifier here and check if patient has given consent.
+			if(appDef.getConsentTypeId() == null) {
+				response = new GenericRESTResponse(false,"INACTIVE");
+			}else {
+				Consent consent = new Consent();
+				consent.setConsentDate(new Date());
+				consent.setConsentTypeId(appDef.getConsentTypeId());
+				consent.setDemographicNo(demographicNo);
+				consent.setExplicit(true);
+				consent.setOptout(false);
+				consent.setLastEnteredBy(getLoggedInInfo().getLoggedInProviderNo());
+				consentDao.persist(consent);
+				//Consent consent = consentDao.findByDemographicAndConsentTypeId( demographicNo,  appDef.getConsentTypeId()  ) ;
+				if(consent != null && consent.getPatientConsented()) {
+					response = new GenericRESTResponse(true,"CONSENTED");
+				}else {
+					response = new GenericRESTResponse(true,"NEED_CONSENT");
+				}
+			}
+		}
+		return response;
+	}
+	
+	
+	
+	//$scope.createPHRUser = function(){
+ 	//-Just do it and then show report of what has happened
+	@POST
+	@Path("/PHRCreateUser/")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public GenericRESTResponse createPHRUser(@Context HttpServletRequest request,ProviderTo1 provider){
+	
+		//<li>create a provider record with the name self-Book</li>
+		
+		Provider p = new Provider();
+		p.setProviderNo(provider.getProviderNo());
+		p.setLastName(provider.getLastName());
+		p.setFirstName(provider.getFirstName());
+		p.setProviderType("doctor");
+		p.setSex("F"); //has to be set to something
+		p.setSpecialty("Integration");
+		p.setStatus("1");
+		
+		if(providerDao.providerExists(p.getProviderNo())) {
+			return new GenericRESTResponse(false,"Provider # already in use");
+		} else {
+		  	providerDao.saveProvider(p);
+		}
+		
+		//<li>creating a security record with a strong random user/password</li>
+		String username = RegistrationHelper.getNewRandomPassword();
+		String password = RegistrationHelper.getNewRandomPassword();
+		
+		String encodedPassword = null;
+		try {
+			encodedPassword = SecurityAddSecurityHelper.digestPassword(password);
+		}catch(NoSuchAlgorithmException e) {
+			return new GenericRESTResponse(false,"Failed encoding password");
+		}
+		
+		Security s = new Security();
+			s.setUserName(username);
+			s.setPassword(encodedPassword);
+			s.setProviderNo(p.getProviderNo());
+			s.setPin(null);
+			s.setBExpireset(0);
+			s.setDateExpiredate(null);
+			s.setBLocallockset(0);
+			s.setBRemotelockset(0);
+	    		s.setForcePasswordReset(Boolean.FALSE);  
+	    	securityDao.persist(s);
+
+		LogAction.addLog(getLoggedInInfo().getLoggedInProviderNo(), LogConst.ADD, LogConst.CON_SECURITY, request.getParameter("user_name"), request.getRemoteAddr());
+		
+	    //<li>creating consent type to record which patients are participating with using the PHR</li>
+		ConsentType consentTypeToAdd = new ConsentType();
+		
+		consentTypeToAdd.setActive(true);
+		consentTypeToAdd.setDescription("Consent to handle PHR data");
+		consentTypeToAdd.setName("PHR");
+		consentTypeToAdd.setProviderNo(p.getProviderNo());
+		consentTypeToAdd.setRemoteEnabled(true);
+		consentTypeToAdd.setType(ConsentType.PROVIDER_CONSENT_FILTER);
+		
+		patientConsentManager.addConsentType(getLoggedInInfo(), consentTypeToAdd);
+		
+	    //<li>And communicate this user to the PHR server for integration.</li>
+		logger.error("send this to connector "+s.getId()+"  password "+password);
+		
+		AppDefinition appDef = appManager.getAppDefinition(getLoggedInInfo(), "PHR");
+		appDef.setConsentTypeId(consentTypeToAdd.getId());
+		appManager.updateAppDefinition(getLoggedInInfo(), appDef);
+		
+		Secuserrole secUserRole = new Secuserrole();
+	    secUserRole.setProviderNo(p.getProviderNo());
+	    secUserRole.setRoleName("doctor");
+	    secUserRole.setActiveyn(1);
+	    secUserRoleDao.save(secUserRole);
+	    LogAction.addLog(getLoggedInInfo().getLoggedInProviderNo(), LogConst.ADD, LogConst.CON_ROLE, p.getProviderNo() +"|doctor",request.getRemoteAddr());
+
+	    
+	    AppointmentSearch appointmentSearch = new AppointmentSearch();
+		appointmentSearch.setProviderNo(p.getProviderNo());
+		appointmentSearch.setSearchName("PHR");
+		appointmentSearch.setUuid(UUID.randomUUID().toString());
+		appointmentSearch.setSearchType(AppointmentSearch.ONLINE);
+			
+		appointmentSearchDao.persist(appointmentSearch);
+		
+		JSONObject jojb = new JSONObject();
+		jojb.element("username",""+s.getId());
+		jojb.element("password", password);
+		jojb.element("url",provider.getComments());
+		
+		try {
+			Response reps = callPHR("configurEMRConnection",getLoggedInInfo().getLoggedInProviderNo(),jojb.toString());
+			//InputStream in = (InputStream) reps.getEntity();
+			//BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+			//String response = IOUtils.toString(bufferedReader);
+			String response = (String)  reps.getEntity();
+			//bufferedReader.close();
+		}catch(Exception e) {
+			logger.error("error",e);
+			return new GenericRESTResponse(false,"ERROR connecting to PHR");
+		}
+		
+		return new GenericRESTResponse(true,"Registered Sucessfully");
+	}
+ 
+	//$scope.linkExistingUser = function(){
+	//Show drop list to select user.
+	@POST
+	@Path("/PHRLinkUser/")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public GenericRESTResponse linkPHRUser(@Context HttpServletRequest request,ProviderTo1 provider){
+		//<p>This will create the consentType to record which patients are participating with using the PHR. Communicating the user information to the PHR will need to be done manually.</p>
+		
+		List<Security> secList = securityDao.findByProviderNo(provider.getProviderNo());
+		Security s = null;
+		String password = provider.getFirstName();
+		if(secList.size() == 0) {
+			//<li>creating a security record with a strong random user/password</li>
+			String username = RegistrationHelper.getNewRandomPassword();
+			//password = RegistrationHelper.getNewRandomPassword();
+			
+			String encodedPassword = null;
+			try {
+				encodedPassword = SecurityAddSecurityHelper.digestPassword(password);
+			}catch(NoSuchAlgorithmException e) {
+				return new GenericRESTResponse(false,"Failed encoding password");
+			}
+			
+			s = new Security();
+				s.setUserName(username);
+				s.setPassword(encodedPassword);
+				s.setProviderNo(provider.getProviderNo());
+				s.setPin(null);
+				s.setBExpireset(0);
+				s.setDateExpiredate(null);
+				s.setBLocallockset(0);
+				s.setBRemotelockset(0);
+		    		s.setForcePasswordReset(Boolean.FALSE);  
+		    	securityDao.persist(s);
+
+			LogAction.addLog(getLoggedInInfo().getLoggedInProviderNo(), LogConst.ADD, LogConst.CON_SECURITY, request.getParameter("user_name"), request.getRemoteAddr());
+
+		}else{
+			s = secList.get(0);
+		}
+				
+				
+	    //<li>creating consent type to record which patients are participating with using the PHR</li>
+		ConsentType consentTypeToAdd = new ConsentType();
+		
+		consentTypeToAdd.setActive(true);
+		consentTypeToAdd.setDescription("Consent to handle PHR data");
+		consentTypeToAdd.setName("PHR");
+		consentTypeToAdd.setProviderNo(provider.getProviderNo());
+		consentTypeToAdd.setRemoteEnabled(true);
+		consentTypeToAdd.setType(ConsentType.PROVIDER_CONSENT_FILTER);
+		
+		patientConsentManager.addConsentType(getLoggedInInfo(), consentTypeToAdd);
+		
+	    //<li>And communicate this user to the PHR server for integration.</li>
+		
+		AppDefinition appDef = appManager.getAppDefinition(getLoggedInInfo(), "PHR");
+		appDef.setConsentTypeId(consentTypeToAdd.getId());
+		appManager.updateAppDefinition(getLoggedInInfo(), appDef);
+		
+		if(appointmentSearchDao.findForProvider(provider.getProviderNo()) == null) {
+		    AppointmentSearch appointmentSearch = new AppointmentSearch();
+			appointmentSearch.setProviderNo(provider.getProviderNo());
+			appointmentSearch.setSearchName("PHR");
+			appointmentSearch.setUuid(UUID.randomUUID().toString());
+			appointmentSearch.setSearchType(AppointmentSearch.ONLINE);
+			appointmentSearchDao.persist(appointmentSearch);
+		}
+		JSONObject jojb = new JSONObject();
+		jojb.element("username",""+s.getId());
+		jojb.element("password", password);
+		jojb.element("url",provider.getComments());
+		
+		try {
+			Response reps = callPHR("configurEMRConnection",getLoggedInInfo().getLoggedInProviderNo(),jojb.toString());
+			//InputStream in = (InputStream) reps.getEntity();
+			//BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+			//String response = IOUtils.toString(bufferedReader);
+			String response = (String)  reps.getEntity();
+			//bufferedReader.close();
+		}catch(Exception e) {
+			logger.error("error",e);
+			return new GenericRESTResponse(false,"ERROR connecting to PHR");
+		}
+		
+		return new GenericRESTResponse(true,"Registered Sucessfully");
+
+	}
+ 
+	
+	
+	@POST
+	@Path("/PHRInit/")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public GenericRESTResponse initPHR(@Context HttpServletRequest request,Creds clinicCreds){
+		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_appDefinition", "w", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		List<Object> providers = new ArrayList<Object>();
+		JSONProvider jsonProvider = new JSONProvider();
+		jsonProvider.setDropRootElement(true);
+	    providers.add(jsonProvider);
+	    String requestURI = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL");	  
+		try {
+		WebClient webclient = WebClient.create(requestURI+"emr/register", providers);
+		HTTPConduit conduit = WebClient.getConfig(webclient).getHttpConduit();
+
+		    TLSClientParameters params = conduit.getTlsClientParameters();
+
+		    if (params == null) {
+		        params = new TLSClientParameters();
+		        conduit.setTlsClientParameters(params);
+		    }
+		    if(OscarProperties.getInstance().isPropertyActive("PHR_TEST_CONNECTION")){
+		    		params.setTrustManagers(new TrustManager[] { TrustManagerUtils.getAcceptAllTrustManager() });
+		    		params.setDisableCNCheck(true);
+		    }
+		////////
+   		javax.ws.rs.core.Response reps = webclient.accept("application/json, text/plain, */*").acceptEncoding("gzip, deflate").type("application/json;charset=utf-8").post(clinicCreds);
+		logger.info("response code "+reps.getStatus());
+   		if(reps.getStatus() == 200) {
+   		
+	   		InputStream in = (InputStream) reps.getEntity();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+			StringBuilder sb = new StringBuilder();	
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				sb.append(line);
+			}
+		
+			bufferedReader.close();
+			
+		    String response  = sb.toString();
+			 
+		      
+		    AppDefinition phrNew = new AppDefinition();
+			      
+		    phrNew.setActive(true);
+		    phrNew.setAdded(new Date());
+		    phrNew.setAppType(AppDefinition.OAUTH2_TYPE);
+		    phrNew.setName("PHR");
+		    phrNew.setConfig(response);
+		    phrNew.setAddedBy(getLoggedInInfo().getLoggedInProviderNo());
+		    appManager.saveAppDefinition(getLoggedInInfo(),  phrNew);
+		    
+		    return new GenericRESTResponse(true,"completed");
+   		}else if(reps.getStatus() == 404){
+   			return new GenericRESTResponse(false,"Invalid Username/Password"); 
+		}
+		}catch(Exception e) {
+			logger.error("error initializing phr",e);
+		}
+		return new GenericRESTResponse(false,"failed"); 
+	}
+	
+
+	
+	private String getAccessToken(AppDefinition phrApp,String providerNo, String type) {
+		try {
+		org.codehaus.jettison.json.JSONObject configObject = new org.codehaus.jettison.json.JSONObject(phrApp.getConfig());
+		String requestURL = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL");   
+		String requestURI = "oauth/token";
+		
+			WebClient webclient = WebClient.create(requestURL+requestURI,configObject.getString("clientId"),configObject.getString("clientSecret"),null);//, providers);
+			HTTPConduit conduit = WebClient.getConfig(webclient).getHttpConduit();
+
+		    TLSClientParameters params = conduit.getTlsClientParameters();
+
+		    if (params == null) {
+		        params = new TLSClientParameters();
+		        conduit.setTlsClientParameters(params);
+		    }
+
+		    if(OscarProperties.getInstance().isPropertyActive("PHR_TEST_CONNECTION")){
+		    		params.setTrustManagers(new TrustManager[] { TrustManagerUtils.getAcceptAllTrustManager() });
+		    		params.setDisableCNCheck(true);
+		    }
+			
+	   		javax.ws.rs.core.Response reps = webclient.accept("application/json, text/plain, */*")
+	   												 .acceptEncoding("gzip, deflate")
+	   												 .type("application/x-www-form-urlencoded")
+	   												 .post("grant_type=client_credentials");
+	   		
+	   		InputStream in = (InputStream) reps.getEntity();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+			String response = IOUtils.toString(bufferedReader);
+			bufferedReader.close();
+			logger.debug("oauth2 json :"+response);
+			org.codehaus.jettison.json.JSONObject responseObject = new org.codehaus.jettison.json.JSONObject(response);
+			String access_token = responseObject.getString("access_token");
+			return access_token;
+		}catch(Exception e) {
+			logger.error("Error with access token ",e);
+		}
+		
+		return null;
+	}
+	
+	private javax.ws.rs.core.Response callPHRWebClient(String url,String object,String bearerToken) {
+		List<Object> providers = new ArrayList<Object>();
+		JSONProvider jsonProvider = new JSONProvider();
+		jsonProvider.setDropRootElement(true);
+	    providers.add(jsonProvider);
+		WebClient webclient = WebClient.create(url, providers);
+		HTTPConduit conduit = WebClient.getConfig(webclient).getHttpConduit();
+
+	    TLSClientParameters params = conduit.getTlsClientParameters();
+
+	    if (params == null) {
+	        params = new TLSClientParameters();
+	        conduit.setTlsClientParameters(params);
+	    }
+	    if(OscarProperties.getInstance().isPropertyActive("PHR_TEST_CONNECTION")){
+	    		params.setTrustManagers(new TrustManager[] { TrustManagerUtils.getAcceptAllTrustManager() });
+	    		params.setDisableCNCheck(true);
+	    }
+	    javax.ws.rs.core.Response reps = webclient.accept("application/json, text/plain, */*")
+			 .acceptEncoding("gzip, deflate")
+			 .header("Authorization", "Bearer "+bearerToken)
+			 .type("application/json;charset=utf-8")
+			 .post(object);
+	   
+	    return reps;
+	}
+	
+	private Response callPHR(String requestURI,String providerNo) {
+		return callPHR(requestURI, providerNo,"True");
+	}
+
+	private Response callPHR(String requestURI,String providerNo,String object) {
+		//////////
+	    String requestURL = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL");    
+	    AppDefinition phrApp = appDefinitionDao.findByName("PHR");
+		    
+		try {
+			String bearerToken = getAccessToken(phrApp,providerNo,"PHR");
+		    logger.debug("bearerToken: "+bearerToken );
+	   		javax.ws.rs.core.Response reps = callPHRWebClient(requestURL+requestURI,object,bearerToken);
+	   		
+	   		InputStream in = (InputStream) reps.getEntity();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+			String response = IOUtils.toString(bufferedReader);
+			bufferedReader.close();
+	   		
+			logger.info("response code "+reps.getStatus());
+	   		if(reps.getStatus() == 200) {
+	   			return Response.ok(response).build();
+	   		}
+	   		
+			}catch(Exception e) {
+				
+				Throwable rootException = ExceptionUtils.getRootCause(e);
+				logger.debug("Exception: "+e.getClass().getName()+" --- "+rootException.getClass().getName());
+						
+				if (rootException instanceof java.net.ConnectException || rootException instanceof java.net.SocketTimeoutException){
+					logger.error("ERROR CONNECTING ",rootException);
+					return Response.status(268).entity("{\"ERROR\":\"Connection Refused\"}").build();
+				}
+					
+				logger.error("ERROR getting abilities",e);
+			}
+	   		return Response.status(401).entity("ERROR").build();
+	}
+	
+	private String  callPHRWindowOpen(String requestURI,String providerNo,String windowName ,String role) {
+		//////////
+		JSONObject jojb = new JSONObject();
+		jojb.element("windowName",windowName);
+		jojb.element("providerNo", providerNo);
+		jojb.element("role",role);
+		
+		String requestURL = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL");    
+	    AppDefinition phrApp = appDefinitionDao.findByName("PHR");
+		    
+		try {
+			String bearerToken = getAccessToken(phrApp,providerNo,"PHR");
+		    logger.debug("bearerToken: "+bearerToken );
+	   		javax.ws.rs.core.Response reps = callPHRWebClient(requestURL+requestURI,jojb.toString(),bearerToken);
+	   		
+	   		InputStream in = (InputStream) reps.getEntity();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+			String response = IOUtils.toString(bufferedReader);
+			bufferedReader.close();
+	   		logger.error("url launching "+response+"?access_token="+bearerToken);
+			return response+"?access_token="+bearerToken;
+	   		
+			}catch(Exception e) {
+				
+				Throwable rootException = ExceptionUtils.getRootCause(e);
+				logger.debug("Exception: "+e.getClass().getName()+" --- "+rootException.getClass().getName());
+						
+				if (rootException instanceof java.net.ConnectException || rootException instanceof java.net.SocketTimeoutException){
+					logger.error("ERROR CONNECTING ",rootException);
+					return null;
+				}
+					
+				logger.error("ERROR getting abilities",e);
+			}
+	   		return null;
+	}
+
+	
+	/////
+	@POST
+	@Path("/PHRAuditSetup/")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public Response phrEMRAudit(@Context HttpServletRequest request){
+		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_appDefinition", "w", null)) {
+			throw new RuntimeException("Access Denied");
+		}		
+		return callPHR("auditSetup",getLoggedInInfo().getLoggedInProviderNo());
+	}
+	
+	
+	@GET
+	@Path("/openPHRWindow/{windowName}")
+	public Response openPHRWindow(@Context HttpServletRequest request,@Context HttpServletResponse response,@PathParam("windowName") String windowName) throws IOException{
+		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_appDefinition", "w", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		String redirectUrl = callPHRWindowOpen("openWindow",getLoggedInInfo().getLoggedInProviderNo(), windowName ,"admin");
+		
+		logger.debug("URL for open window " +windowName+" url-- "+redirectUrl );
+		
+		response.sendRedirect(redirectUrl);
+		return Response.status(Status.ACCEPTED).build();
+	}
+	
+	
 	
 	@POST
 	@Path("/K2AInit/")

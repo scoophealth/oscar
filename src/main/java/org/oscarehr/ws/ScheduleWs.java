@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -37,9 +38,12 @@ import org.apache.log4j.Logger;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.AppointmentArchive;
 import org.oscarehr.common.model.AppointmentType;
+import org.oscarehr.common.model.ConsentType;
 import org.oscarehr.common.model.ScheduleTemplateCode;
 import org.oscarehr.managers.DayWorkSchedule;
+import org.oscarehr.managers.PatientConsentManager;
 import org.oscarehr.managers.ScheduleManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.ws.transfer_objects.AppointmentArchiveTransfer;
 import org.oscarehr.ws.transfer_objects.AppointmentTransfer;
@@ -57,6 +61,9 @@ public class ScheduleWs extends AbstractWs {
 	
 	@Autowired
 	private ScheduleManager scheduleManager;
+	
+	@Autowired
+	private PatientConsentManager patientConsentManager;
 
 	public ScheduleTemplateCodeTransfer[] getScheduleTemplateCodes() {
 		List<ScheduleTemplateCode> scheduleTemplateCodes = scheduleManager.getScheduleTemplateCodes();
@@ -176,5 +183,15 @@ public class ScheduleWs extends AbstractWs {
 	public Integer[] getAllDemographicIdByProgramProvider(Integer programId, String providerNo) {
 		List<Integer> results=scheduleManager.getAllDemographicIdByProgramProvider(getLoggedInInfo(), programId, providerNo);
 		return(results.toArray(new Integer[0]));
+	}
+
+	public AppointmentTransfer[] getAppointmentsByDemographicIdAfter(@WebParam(name="lastUpdate") Calendar lastUpdate, @WebParam(name="demographicId") Integer demographicId, @WebParam(name="useGMTTime") boolean useGMTTime)
+	{
+		LoggedInInfo loggedInInfo = getLoggedInInfo();
+		ConsentType consentType = patientConsentManager.getProviderSpecificConsent(loggedInInfo);
+		if (!patientConsentManager.hasPatientConsented(demographicId, consentType)) return null;
+		
+		List<Appointment> appointments=scheduleManager.getAppointmentByDemographicIdUpdatedAfterDate(getLoggedInInfo(), demographicId, lastUpdate.getTime());
+		return(AppointmentTransfer.toTransfers(appointments, useGMTTime));
 	}
 }

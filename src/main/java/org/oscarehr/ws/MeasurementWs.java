@@ -28,14 +28,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
+import org.oscarehr.common.model.ConsentType;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementMap;
 import org.oscarehr.managers.MeasurementManager;
-import org.oscarehr.managers.ProgramManager2;
-import org.oscarehr.managers.ScheduleManager;
+import org.oscarehr.managers.PatientConsentManager;
+import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.transfer_objects.MeasurementMapTransfer;
 import org.oscarehr.ws.transfer_objects.MeasurementTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +49,9 @@ import org.springframework.stereotype.Component;
 public class MeasurementWs extends AbstractWs {
 	@Autowired
 	private MeasurementManager measurementManager;
-
+	
 	@Autowired
-	private ScheduleManager scheduleManager;
-
-	@Autowired
-	private ProgramManager2 programManager;
+	private PatientConsentManager patientConsentManager;
 
 	public MeasurementTransfer getMeasurement(Integer measurementId) {
 		Measurement measurement = measurementManager.getMeasurement(getLoggedInInfo(), measurementId);
@@ -81,6 +80,16 @@ public class MeasurementWs extends AbstractWs {
 
 	public MeasurementTransfer[] getMeasurementsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
 		List<Measurement> measurements = measurementManager.getMeasurementsByProgramProviderDemographicDate(getLoggedInInfo(), programId, providerNo, demographicId, updatedAfterThisDateExclusive, itemsToReturn);
+		return (MeasurementTransfer.toTransfers(measurements));
+	}
+
+	public MeasurementTransfer[] getMeasurementsByDemographicIdAfter(@WebParam(name="lastUpdate") Calendar lastUpdate, @WebParam(name="demographicId") Integer demographicId)
+	{
+		LoggedInInfo loggedInInfo = getLoggedInInfo();
+		ConsentType consentType = patientConsentManager.getProviderSpecificConsent(loggedInInfo);
+		if (!patientConsentManager.hasPatientConsented(demographicId, consentType)) return null;
+		
+		List<Measurement> measurements = measurementManager.getMeasurementByDemographicIdAfter(loggedInInfo, demographicId, lastUpdate.getTime());
 		return (MeasurementTransfer.toTransfers(measurements));
 	}
 

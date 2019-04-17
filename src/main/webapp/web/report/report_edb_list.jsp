@@ -30,11 +30,11 @@
 <form role="form">
   <div class="form-group">
     <label for="startDate">Start Date</label>
-     <input ng-model="params.startDate" type="text" id="startDate" name="startDate" class="form-control" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="data.isOpen" ng-click="data.isOpen = true" placeholder="">
+     <input ng-model="params.startDate" type="text" id="startDate" name="startDate" class="form-control" uib-datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="data.isOpen" ng-click="data.isOpen = true" placeholder="">
   </div>
   <div class="form-group">
     <label for="endDate">End Date</label>
-    <input ng-model="params.endDate" type="text" id="endDate" name="endDate" class="form-control" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="data.isOpen2" ng-click="data.isOpen2 = true" placeholder="">
+    <input ng-model="params.endDate" type="text" id="endDate" name="endDate" class="form-control" uib-datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="data.isOpen2" ng-click="data.isOpen2 = true" placeholder="">
   </div>
   <div class="form-group">
   	<label for="version">Version</label>

@@ -67,6 +67,7 @@ import org.oscarehr.common.model.DigitalSignature;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.managers.ConsultationManager;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.DigitalSignatureUtils;
@@ -92,6 +93,7 @@ public class EctConsultationFormRequestAction extends Action {
 
 	private static final Logger logger=MiscUtils.getLogger();
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	private ConsultationManager consultationManager = SpringUtils.getBean(ConsultationManager.class);
 	
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -229,6 +231,8 @@ public class EctConsultationFormRequestAction extends Action {
 									if (docs[idx].length() > 0) {
 										if (docs[idx].charAt(0) == 'D') EDocUtil.attachDocConsult(providerNo, docs[idx].substring(1), requestId);
 										else if (docs[idx].charAt(0) == 'L') ConsultationAttachLabs.attachLabConsult(providerNo, docs[idx].substring(1), requestId);
+										else if (docs[idx].charAt(0) == 'H') ConsultationAttachHRMReports.attachHRMReportConsult(providerNo, docs[idx].substring(1), requestId);
+                                        else if (docs[idx].charAt(0) == 'E') ConsultationAttachEForms.attachFormConsult(providerNo, docs[idx].substring(1), requestId);
 									}
 								}
 			}
@@ -236,15 +240,18 @@ public class EctConsultationFormRequestAction extends Action {
 	                MiscUtils.getLogger().error("Invalid Date", e);
 	        }
 
-
+	        request.setAttribute("reqId", requestId);
 			request.setAttribute("transType", "2");
 
 		} else
 
 		if (submission.startsWith("Update")) {
 
+		
 			requestId = frm.getRequestId();
 
+			consultationManager.archiveConsultationRequest(Integer.parseInt(requestId));
+			
 			try {				     
 				
 				if (newSignature) {
@@ -373,7 +380,30 @@ public class EctConsultationFormRequestAction extends Action {
 				return mapping.findForward("print");
 			}
 
-		} else if (submission.endsWith("And Fax")) {
+		} else if (submission.endsWith("Print And Fax")){
+			String printType = null;
+			request.setAttribute("reqId", requestId);
+			if (OscarProperties.getInstance().isConsultationFaxEnabled()) {
+				printType = "printIndivica";
+			}
+			else if (IsPropertiesOn.propertiesOn("CONSULT_PRINT_PDF")) {
+				printType ="printpdf";
+			} else if (IsPropertiesOn.propertiesOn("CONSULT_PRINT_ALT")) {
+				printType ="printalt";
+			} else {
+				printType = "print";
+			}
+
+			request.setAttribute("printType", printType);
+			if (OscarProperties.getInstance().isConsultationFaxEnabled()) {
+				return mapping.findForward("faxIndivica");
+			}
+			else {
+				return mapping.findForward("fax");
+			}
+
+		}
+		else if (submission.endsWith("And Fax")) {
 
 			request.setAttribute("reqId", requestId);
 			if (OscarProperties.getInstance().isConsultationFaxEnabled()) {

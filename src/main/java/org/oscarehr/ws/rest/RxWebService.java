@@ -37,9 +37,12 @@ import org.oscarehr.common.exception.AccessDeniedException;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Favorite;
+import org.oscarehr.common.model.Prescription;
 import org.oscarehr.managers.DemographicManager;
+import org.oscarehr.managers.PrescriptionManager;
 import org.oscarehr.managers.RxManager;
 import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.rx.util.RxUtil;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.ws.rest.conversion.ConversionException;
@@ -49,20 +52,27 @@ import org.oscarehr.ws.rest.conversion.PrescriptionConverter;
 import org.oscarehr.ws.rest.to.*;
 import org.oscarehr.ws.rest.to.model.DrugTo1;
 import org.oscarehr.ws.rest.to.model.FavoriteTo1;
+import org.oscarehr.ws.rest.to.model.PrescriptionTo1;
 import org.oscarehr.ws.rest.to.model.PrintPointTo1;
 import org.oscarehr.ws.rest.to.model.PrintRxTo1;
+import org.oscarehr.ws.rest.to.model.RxStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import oscar.log.LogAction;
 
+import javax.imageio.ImageIO;
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +102,8 @@ public class RxWebService extends AbstractServiceImpl {
     @Autowired
     protected DemographicManager demographicManager;
     
+    @Autowired
+    protected PrescriptionManager prescriptionManager;
 
     /**
      * Gets drugs for the demographic and filter based on their status.
@@ -105,7 +117,7 @@ public class RxWebService extends AbstractServiceImpl {
      * @throws OperationNotSupportedException if the requested status is unknown.
      */
     @GET
-    @Path("/drugs{status : (/status)?}")
+    @Path("/drugs{status}")
     @Produces("application/json")
     public DrugSearchResponse drugs(@QueryParam("demographicNo") int demographicNo, @PathParam("status") String status)
             throws OperationNotSupportedException {
@@ -138,8 +150,68 @@ public class RxWebService extends AbstractServiceImpl {
 
         return response;
     }
+    
+	@GET
+	@Path("rxStatus")
+	@Produces(MediaType.APPLICATION_JSON) 
+	public Response getDocumentCategories() {
+		return Response.status(Status.OK).entity(RxStatus.values()).build();
+	}
 
-
+    @GET
+    @Path("/drugs/{status}/{demographicNo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DrugSearchResponse drugs(@PathParam("status") String status, @PathParam("demographicNo") int demographicNo) {
+    	DrugSearchResponse drugResponse;
+    	
+    	switch (RxStatus.valueOf(status.trim().toUpperCase())) {
+		case ALL: drugResponse = getAllDrugs(demographicNo);
+			break;
+		case ARCHIVED: drugResponse = getCurrentDrugs(demographicNo);
+			break;
+		case CURRENT: drugResponse = getLongtermDrugs(demographicNo);
+			break;
+		case LONGTERM: drugResponse = getArchivedDrugs(demographicNo);
+			break;
+		default: drugResponse = null;
+			break;   	
+    	}
+    	
+    	return drugResponse;
+    }
+    
+    @GET
+    @Path("/drugs/all/{demographicNo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DrugSearchResponse getAllDrugs(@PathParam("demographicNo") int demographicNo) {
+    	List<Drug> drugList = rxManager.getDrugs(getLoggedInInfo(), demographicNo, RxStatus.ALL);
+    	return new DrugSearchResponse( this.drugConverter.getAllAsTransferObjects(getLoggedInInfo(), drugList) );
+    }
+    
+    @GET
+    @Path("/drugs/current/{demographicNo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DrugSearchResponse getCurrentDrugs(@PathParam("demographicNo") int demographicNo) {
+    	List<Drug> drugList = rxManager.getDrugs(getLoggedInInfo(), demographicNo, RxStatus.CURRENT);
+    	return new DrugSearchResponse( this.drugConverter.getAllAsTransferObjects(getLoggedInInfo(), drugList) );
+    }
+    
+    @GET
+    @Path("/drugs/longterm/{demographicNo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DrugSearchResponse getLongtermDrugs(@PathParam("demographicNo") int demographicNo) {
+    	List<Drug> drugList = rxManager.getLongTermDrugs(getLoggedInInfo(), demographicNo);
+    	return new DrugSearchResponse( this.drugConverter.getAllAsTransferObjects(getLoggedInInfo(), drugList) );
+    }
+    
+    @GET
+    @Path("/drugs/archived/{demographicNo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DrugSearchResponse getArchivedDrugs(@PathParam("demographicNo") int demographicNo) {
+    	List<Drug> drugList = rxManager.getDrugs(getLoggedInInfo(), demographicNo, RxStatus.ARCHIVED);
+    	return new DrugSearchResponse( this.drugConverter.getAllAsTransferObjects(getLoggedInInfo(), drugList) );
+    }
+    
     /**
      * Adds a new drug to the drugs table.
      *
@@ -305,6 +377,23 @@ public class RxWebService extends AbstractServiceImpl {
         return resp;
 
     }
+    
+    @Path("/drug/{drugId}")
+    @POST
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public DrugResponse represcribe(@PathParam("drugId") Integer drugId) {
+    		LoggedInInfo info = getLoggedInInfo();
+    		Drug drug = rxManager.getDrug(info, drugId);
+    		DrugResponse resp = new DrugResponse();
+    		String special = RxUtil.trimSpecial(drug);
+    		drug.setSpecial(special);
+    		resp.setSuccess(true);
+        resp.setDrug(this.drugConverter.getAsTransferObject(info, drug));
+    		
+    		return resp;
+    }
+ 
 
     /**
      * Creates a prescription for the drugs that are provided.
@@ -414,6 +503,48 @@ public class RxWebService extends AbstractServiceImpl {
 
         return resp;
     }
+    
+    
+    @Path("/prescriptions")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<PrescriptionTo1> getPrescriptions(@QueryParam("demographicNo") int demographicNo){
+
+        LoggedInInfo info = getLoggedInInfo();
+
+        // Determine if the user has privileges to view this data.
+        if (!securityInfoManager.hasPrivilege(info, "_rx", "r", demographicNo)) {
+            throw new AccessDeniedException("_rx", "r", demographicNo);
+        }
+        
+        List<Prescription> prescriptions = prescriptionManager.getPrescriptions(info, demographicNo);
+        List<PrescriptionTo1> retPrescriptions = prescriptionConverter.getAllAsTransferObjects(info, prescriptions);
+       
+		return retPrescriptions;
+    }
+    
+    @Path("/recordPrescriptionPrint/{scriptNo}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public PrescriptionTo1 recordPrescriptionPrint(@PathParam("scriptNo") int scriptNo){
+
+        LoggedInInfo info = getLoggedInInfo();
+
+        // Determine if the user has privileges to view this data.
+        //if (!securityInfoManager.hasPrivilege(info, "_rx", "r", demographicNo)) {
+        //    throw new AccessDeniedException("_rx", "r", demographicNo);
+        //}
+        
+        
+        prescriptionManager.print(info,scriptNo);
+        
+        Prescription prescription = prescriptionManager.getPrescription(info,scriptNo);
+        
+        
+        PrescriptionTo1 retPrescriptions = prescriptionConverter.getAsTransferObject(info, prescription);
+       
+		return retPrescriptions;
+    }
 
     @Path("/favorites")
     @GET
@@ -471,7 +602,37 @@ public class RxWebService extends AbstractServiceImpl {
     }
     
     
-    
+    @GET
+    @Path("/{demographicNo}/watermark/{rxNo}")
+    @Produces("image/png")
+    public StreamingOutput watermark(@PathParam("demographicNo") Integer demographicNo,@PathParam("rxNo") Integer rxNo  ,@Context HttpServletRequest request,@Context HttpServletResponse response){
+    		LoggedInInfo loggedInInfo = getLoggedInInfo();
+    		response.setContentType("image/png");
+    		List<Drug> list = prescriptionManager.getDrugsByScriptNo(loggedInInfo, rxNo,null);
+    		StringBuilder sb = new StringBuilder();
+    		for(Drug drug: list) {
+    			sb.append(drug.getSpecial());
+    			sb.append("\n\n");
+    		}
+    		
+    		final String text = sb.toString();
+    		return new StreamingOutput() {
+    			@Override
+    			public void write(java.io.OutputStream os)
+    					throws IOException, WebApplicationException {
+    				try{
+    			
+    					BufferedImage img = RxUtil.getWaterMarkImage(text);
+    		            ImageIO.write(img,"PNG", os);
+    					
+    				}catch(Exception e) {
+    					logger.error("error writing image",e);
+    				}
+    			}
+    			
+    		};
+		
+    }
     @POST
 	@Path("/{demographicNo}/print/{rxNo}")
 	@Produces("application/pdf")

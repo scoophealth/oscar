@@ -23,7 +23,9 @@
  */
 package org.oscarehr.ws.rest;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -35,24 +37,34 @@ import javax.ws.rs.Produces;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.oscarehr.common.dao.EFormReportToolDao;
+import org.oscarehr.common.model.PreventionReport;
+import org.oscarehr.common.dao.PreventionReportDao;
 import org.oscarehr.common.model.DemographicSets;
 import org.oscarehr.common.model.EFormReportTool;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.DemographicSetsManager;
 import org.oscarehr.managers.EFormReportToolManager;
+import org.oscarehr.prevention.reports.Report;
+import org.oscarehr.prevention.reports.ReportBuilder;
+import org.oscarehr.util.MiscUtils;
 import org.oscarehr.web.PatientListApptBean;
 import org.oscarehr.web.PatientListApptItemBean;
 import org.oscarehr.ws.rest.conversion.EFormReportToolConverter;
 import org.oscarehr.ws.rest.to.AbstractSearchResponse;
 import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.model.EFormReportToolTo1;
+import org.oscarehr.ws.rest.to.model.MenuItemTo1;
+import org.oscarehr.ws.rest.to.model.PreventionSearchTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Path("/reporting/")
 @Component
 public class ReportingService extends AbstractServiceImpl {
+	private static Logger logger = MiscUtils.getLogger();
 	
 	//private static final Logger logger = MiscUtils.getLogger();
 
@@ -64,6 +76,9 @@ public class ReportingService extends AbstractServiceImpl {
 	
 	@Autowired
 	EFormReportToolManager eformReportToolManager;
+	
+	@Autowired
+	PreventionReportDao preventionReportDao;
 	
 	@GET
 	@Path("/demographicSets/list")
@@ -192,6 +207,125 @@ public class ReportingService extends AbstractServiceImpl {
 		eformReportToolManager.markLatest(getLoggedInInfo(), json.getId());
 		
 		return (response);
+	}
+	
+	
+	@POST 
+	@Path("/preventionReport/saveNew")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public GenericRESTResponse saveNewPreventionReport(PreventionSearchTo1 preventionSearch) {
+		GenericRESTResponse response = new GenericRESTResponse();
+		
+		//Next thing to do is to save the JSON object to the database
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			String jsonStr = mapper.writeValueAsString(preventionSearch);
+			PreventionReport pr = new PreventionReport();
+			pr.setReportName(preventionSearch.getReportName());
+			pr.setJson(jsonStr);
+			pr.setProviderNo(getLoggedInInfo().getLoggedInProviderNo());
+			pr.setUuid(UUID.randomUUID().toString());
+			preventionReportDao.persist(pr);
+			response.setMessage(""+pr.getId());
+			response.setSuccess(true);
+		} catch (Exception e) {
+			logger.error("error converting to STring");
+			response.setSuccess(false);
+		}
+		return (response);
+	}
+	
+	@GET 
+	@Path("/preventionReport/getList")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public List<MenuItemTo1> getPreventionReports() {
+		List<MenuItemTo1> returnList = new ArrayList<MenuItemTo1>();
+		List<PreventionReport> list = preventionReportDao.getPreventionReports();
+		for(PreventionReport pr: list) {
+			MenuItemTo1 item = new MenuItemTo1();
+			item.setId(pr.getId());
+			item.setLabel("("+pr.getId()+") "+pr.getReportName());
+			returnList.add(item);
+		}
+		
+		return (returnList);
+	}
+	
+	
+	@POST 
+	@Path("/preventionReport/runReport/{id}")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public javax.ws.rs.core.Response runPreventionReport(@PathParam("id") Integer id,JSONObject jSONObject) { // will need to change provider to an ojbect
+		GenericRESTResponse response = new GenericRESTResponse();
+		Report report = null;
+		//Next thing to do is to save the JSON object to the database
+		String providerNo = jSONObject.optString("providerNo");
+		
+		if(StringUtils.isEmpty(providerNo)) {
+			providerNo = getLoggedInInfo().getLoggedInProviderNo();
+		}
+		
+		PreventionReport pr = preventionReportDao.find(id);
+		ObjectMapper mapper = new ObjectMapper();
+        try {
+            logger.info("pr: "+pr.getJson());
+        		PreventionSearchTo1 preventionSearchTo1 = mapper.readValue(pr.getJson(), PreventionSearchTo1.class);
+        		logger.info("preventionSearchTo1: "+preventionSearchTo1);
+        		ReportBuilder reportBuilder = new ReportBuilder();
+        		report = reportBuilder.runReport(getLoggedInInfo(), providerNo,preventionSearchTo1);
+        		if(!pr.isActive()) {
+        			report.setActive(false);
+        		}
+        }catch(Exception e) {
+        	 	logger.error("Error parsing ",e);
+        }
+		
+		logger.info("provider was "+providerNo);
+		if(report == null) {
+			javax.ws.rs.core.Response.status(268).entity("{\"Error\":\"Error building report\"}");
+		}
+		return javax.ws.rs.core.Response.ok(report).build();
+	}
+	
+	@POST 
+	@Path("/preventionReport/getReport/{id}")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public javax.ws.rs.core.Response getPreventionReport(@PathParam("id") Integer id,JSONObject jSONObject) { // will need to change provider to an ojbect
+		GenericRESTResponse response = new GenericRESTResponse();
+		Report report = null;
+		//Next thing to do is to save the JSON object to the database
+		String providerNo = jSONObject.optString("providerNo");
+		
+		
+		PreventionReport pr = preventionReportDao.find(id);
+		ObjectMapper mapper = new ObjectMapper();
+        try {
+            logger.info("pr: "+pr.getJson());
+        		PreventionSearchTo1 preventionSearchTo1 = mapper.readValue(pr.getJson(), PreventionSearchTo1.class);
+        		return javax.ws.rs.core.Response.ok(preventionSearchTo1).build();
+        }catch(Exception e) {
+        	 	logger.error("Error parsing ",e);
+        }
+		
+		return 	javax.ws.rs.core.Response.status(268).entity("{\"Error\":\"Error get Search Config\"}").build();
+	}
+	
+	@POST 
+	@Path("/preventionReport/dectivateReport/{id}")
+	@Produces("application/json")
+	@Consumes("application/json")
+	public javax.ws.rs.core.Response getPreventionReport(@PathParam("id") Integer id) { // will need to change provider to an ojbect
+		GenericRESTResponse response = new GenericRESTResponse();
+		
+		PreventionReport pr = preventionReportDao.find(id);
+		pr.setActive(false);
+		preventionReportDao.merge(pr);
+		
+		return 	javax.ws.rs.core.Response.ok("{\"Message\":\"report deactivated\"}").build();
 	}
 	
 	

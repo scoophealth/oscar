@@ -29,13 +29,16 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.apache.log4j.Logger;
 import org.oscarehr.common.model.UserDSMessagePrefs;
+import org.oscarehr.util.MiscUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @SuppressWarnings("unchecked")
 public class UserDSMessagePrefsDao extends AbstractDao<UserDSMessagePrefs> {
-
+	private static Logger logger = MiscUtils.getLogger();
+	
 	public UserDSMessagePrefsDao() {
 		super(UserDSMessagePrefs.class);
 	}
@@ -68,7 +71,7 @@ public class UserDSMessagePrefsDao extends AbstractDao<UserDSMessagePrefs> {
 		Hashtable<String, Long> retHash = new Hashtable<String, Long>();
 
 		List<UserDSMessagePrefs> list = query.getResultList();
-
+		logger.debug("dsmessage list size "+list.size()+" for providerNo "+providerNo+" and resource Type "+name);
 		if (list != null && list.size() > 0) {
 			for (UserDSMessagePrefs pref : list) {
 				retHash.put(pref.getResourceType() + pref.getResourceId(), pref.getResourceUpdatedDate().getTime());

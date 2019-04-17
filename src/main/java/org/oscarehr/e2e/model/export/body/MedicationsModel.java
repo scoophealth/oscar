@@ -133,7 +133,7 @@ public class MedicationsModel {
 	}
 
 	private void setStatusCode() {
-		if(!drug.isArchived() && drug.getLongTerm() || isActiveDrug(drug.getEndDate())) {
+		if(!drug.isArchived() && drug.isLongTerm() || isActiveDrug(drug.getEndDate())) {
 			this.statusCode = ActStatus.Active;
 		} else {
 			this.statusCode = ActStatus.Completed;
@@ -154,7 +154,7 @@ public class MedicationsModel {
 
 	private void setRecordType() {
 		String value;
-		if(drug.getLongTerm()) {
+		if(drug.isLongTerm()) {
 			value = Medications.LONG_TERM;
 		} else {
 			value = Medications.SHORT_TERM;

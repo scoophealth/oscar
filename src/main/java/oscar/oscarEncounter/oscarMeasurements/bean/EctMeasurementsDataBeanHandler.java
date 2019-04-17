@@ -139,6 +139,10 @@ public class EctMeasurementsDataBeanHandler {
     public Collection<EctMeasurementsDataBean> getMeasurementsDataVector(){
         return measurementsDataVector;
     }
+    
+    public Collection<EctMeasurementsDataBean> getMeasurementsDataCollection(){
+        return measurementsDataVector;
+    }
 
     public static Hashtable<String,Object> getMeasurementDataById(String id){
         MeasurementDao dao = SpringUtils.getBean(MeasurementDao.class);

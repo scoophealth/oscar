@@ -33,6 +33,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.dao.ConsultResponseDocDao;
+import org.oscarehr.common.dao.EFormDocsDao;
 import org.oscarehr.common.dao.LabPatientPhysicianInfoDao;
 import org.oscarehr.common.dao.LabTestResultsDao;
 import org.oscarehr.common.dao.MdsMSHDao;
@@ -40,6 +41,7 @@ import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.dao.ProviderLabRoutingDao;
 import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.ConsultResponseDoc;
+import org.oscarehr.common.model.EFormDocs;
 import org.oscarehr.common.model.LabPatientPhysicianInfo;
 import org.oscarehr.common.model.MdsMSH;
 import org.oscarehr.common.model.MdsZRG;
@@ -57,6 +59,7 @@ public class MDSResultsData {
 	private ConsultResponseDocDao consultResponseDocDao = SpringUtils.getBean(ConsultResponseDocDao.class);
 	private LabPatientPhysicianInfoDao labPPIDao = SpringUtils.getBean(LabPatientPhysicianInfoDao.class);
 	private PatientLabRoutingDao PLRDao = SpringUtils.getBean(PatientLabRoutingDao.class);
+	private EFormDocsDao eformDocsDao = SpringUtils.getBean(EFormDocsDao.class);
 	
 	static Logger logger = Logger.getLogger(MDSResultsData.class);
 	
@@ -81,6 +84,18 @@ public class MDSResultsData {
 		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();
 		for(Object[] co : consultDocsDao.findLabs(ConversionUtils.fromIntString(consultationId))) {
 			ConsultDocs cd = (ConsultDocs) co[0];
+			LabResultData lbData = new LabResultData(LabResultData.CML);
+			lbData.labType = LabResultData.CML;
+			lbData.labPatientId = String.valueOf(cd.getDocumentNo());
+			attachedLabs.add(lbData);
+		}
+		return populateCMLResultsData(demographicNo, attached, attachedLabs);
+	}
+	
+	public ArrayList<LabResultData> populateCMLResultsDataEForm(String demographicNo, String fdid, boolean attached) {
+		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();
+		for(Object[] co : eformDocsDao.findLabs(ConversionUtils.fromIntString(fdid))) {
+			EFormDocs cd = (EFormDocs) co[0];
 			LabResultData lbData = new LabResultData(LabResultData.CML);
 			lbData.labType = LabResultData.CML;
 			lbData.labPatientId = String.valueOf(cd.getDocumentNo());
@@ -317,6 +332,19 @@ public class MDSResultsData {
 		List<Object[]> labsMDS = PLRDao.findResultsByDemographicAndLabType(ConversionUtils.fromIntString(demographicNo), "MDS");
 		return populateMDSResultsData(attachedLabs, labsMDS, attached);
 	}
+	
+	public ArrayList<LabResultData> populateMDSResultsDataEForm(String demographicNo, String fdid, boolean attached) {
+		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();
+		for(Object[] o : eformDocsDao.findLabs(ConversionUtils.fromIntString(fdid))) {
+			EFormDocs cd = (EFormDocs) o[0];
+			LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);
+			lbData.labPatientId = "" + cd.getDocumentNo();
+			attachedLabs.add(lbData);
+		}
+		List<Object[]> labsMDS = PLRDao.findResultsByDemographicAndLabType(ConversionUtils.fromIntString(demographicNo), "MDS");
+		return populateMDSResultsData(attachedLabs, labsMDS, attached);
+	}
+	
 	
 	//Consult Response list labs
 	public ArrayList<LabResultData> populateMDSResultsDataConsultResponse(String demographicNo, String consultationId, boolean attached) {

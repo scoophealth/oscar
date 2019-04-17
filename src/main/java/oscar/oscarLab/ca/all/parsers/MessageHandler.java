@@ -124,6 +124,12 @@ public interface MessageHandler {
     public String getOBXAbnormalFlag( int i, int j);
 
     /**
+     *  Return true if a text result is BLOCKED. Return false otherwise.
+     *  for OMD validation
+     */
+    public boolean isTestResultBlocked(int i, int j);
+
+    /**
      *  Return the observation header which represents the observation stored in
      *  the jth OBX segment of the ith OBR group. May be stored in either the
      *  OBR or OBX segment. It is used to separate the observations into groups.

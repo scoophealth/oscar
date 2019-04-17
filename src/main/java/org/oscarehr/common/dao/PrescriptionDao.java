@@ -62,6 +62,18 @@ public class PrescriptionDao extends AbstractDao<Prescription> {
 		return (results);
 	}
 
+	public List<Prescription> findByDemographicIdUpdatedAfterDateExclusive(Integer demographicId, Date afterThisDate) {
+		String sqlCommand = "select x from " + modelClass.getSimpleName() + " x where x.demographicId=?1 and x.lastUpdateDate>?2";
+
+		Query query = entityManager.createQuery(sqlCommand);
+		query.setParameter(1, demographicId);
+		query.setParameter(2, afterThisDate);
+
+		@SuppressWarnings("unchecked")
+		List<Prescription> results = query.getResultList();
+		return (results);
+	}
+
 	public int updatePrescriptionsByScriptNo(Integer scriptNo, String comment) {
 		Query query = entityManager.createQuery("UPDATE Prescription p SET p.comments = :comments WHERE p.id = :id");
 		query.setParameter("comments", comment);

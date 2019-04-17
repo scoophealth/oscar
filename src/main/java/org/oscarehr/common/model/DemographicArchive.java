@@ -145,6 +145,15 @@ public class DemographicArchive extends AbstractModel<Long> implements Serializa
 	@Column(name = "lastUpdateDate")
 	@Temporal(TemporalType.DATE)
 	private Date lastUpdateDate = null;
+	
+	private String middleNames;
+	@Column(name="roster_enrolled_to")
+	private String rosterEnrolledTo;
+	
+	private String mailingAddress;
+    private String mailingCity;
+	private String mailingProvince;
+	private String mailingPostal;
 
 	public DemographicArchive() {}
 	
@@ -195,6 +204,12 @@ public class DemographicArchive extends AbstractModel<Long> implements Serializa
 		this.title = demographic.getTitle();
 		this.ver = demographic.getVer();
 		this.yearOfBirth = demographic.getYearOfBirth();
+		this.middleNames = demographic.getMiddleNames();
+		this.rosterEnrolledTo = demographic.getRosterEnrolledTo();
+		this.mailingAddress = demographic.getMailingAddress();
+		this.mailingCity = demographic.getMailingCity();
+		this.mailingProvince = demographic.getMailingProvince();
+		this.mailingPostal = demographic.getMailingPostal();
 	}
 
 	public Integer getDemographicNo() {
@@ -522,6 +537,24 @@ public class DemographicArchive extends AbstractModel<Long> implements Serializa
 		public void setLastUpdateDate(Date d) {
 		    this.lastUpdateDate = d;
 		}
+		
+		
+
+		public String getMiddleNames() {
+			return middleNames;
+		}
+
+		public void setMiddleNames(String middleNames) {
+			this.middleNames = middleNames;
+		}
+
+		public String getRosterEnrolledTo() {
+			return rosterEnrolledTo;
+		}
+
+		public void setRosterEnrolledTo(String rosterEnrolledTo) {
+			this.rosterEnrolledTo = rosterEnrolledTo;
+		}
 
 		@Override
 		public Long getId() {
@@ -530,4 +563,38 @@ public class DemographicArchive extends AbstractModel<Long> implements Serializa
 		public void setId(Long id) {
 		    this.id = id;
 		}
+
+		public String getMailingAddress() {
+			return mailingAddress;
+		}
+
+		public void setMailingAddress(String mailingAddress) {
+			this.mailingAddress = mailingAddress;
+		}
+
+		public String getMailingCity() {
+			return mailingCity;
+		}
+
+		public void setMailingCity(String mailingCity) {
+			this.mailingCity = mailingCity;
+		}
+
+		public String getMailingProvince() {
+			return mailingProvince;
+		}
+
+		public void setMailingProvince(String mailingProvince) {
+			this.mailingProvince = mailingProvince;
+		}
+
+		public String getMailingPostal() {
+			return mailingPostal;
+		}
+
+		public void setMailingPostal(String mailingPostal) {
+			this.mailingPostal = mailingPostal;
+		}
+		
+		
 }

@@ -1,4 +1,4 @@
-oscarApp.controller('TicklerViewController',function($scope, $filter, $modalInstance, tickler, ticklerService, ticklerNote, ticklerWriteAccess, providerService, $timeout, me) {
+oscarApp.controller('TicklerViewController',function($scope, $filter,$uibModalInstance, tickler, ticklerService, ticklerNote, ticklerWriteAccess, providerService, $timeout, me) {
     
 	$scope.tickler = angular.copy(tickler);
 	$scope.me = me;
@@ -21,16 +21,16 @@ oscarApp.controller('TicklerViewController',function($scope, $filter, $modalInst
     $scope.close = function () {
     	if($scope.needsUpdate) {
     		if(confirm("You have unsaved changes, are you sure?")) {
-    			$modalInstance.close(false);
+    			$uibModalInstance.close(false);
     		}
     	} else {
     		$scope.ticklerUpdate = undefined;
-    		$modalInstance.close(false);
+    		$uibModalInstance.close(false);
     	}
         
     }
     $scope.save = function () {
-    	$modalInstance.close("Someone Saved Me");
+    	$uibModalInstance.close("Someone Saved Me");
     }
    
     $scope.editTaskAssignedTo = function() {
@@ -171,10 +171,10 @@ oscarApp.controller('TicklerViewController',function($scope, $filter, $modalInst
     	if($scope.needsUpdate) {
     		$scope.tickler.message = $scope.ticklerUpdate.message;
     		ticklerService.update($scope.tickler).then(function(data){
-    			$modalInstance.close(true);
+    			$uibModalInstance.close(true);
     		});
     	} else {
-    		$modalInstance.close(false);
+    		$uibModalInstance.close(false);
     	}
     	
     }
@@ -182,7 +182,7 @@ oscarApp.controller('TicklerViewController',function($scope, $filter, $modalInst
     
     $scope.completeTickler = function() {
     	ticklerService.setCompleted([tickler.id]).then(function(data){
-    		$modalInstance.close(true);
+    		$uibModalInstance.close(true);
         },function(reason){
         	alert(reason);
         });
@@ -191,7 +191,7 @@ oscarApp.controller('TicklerViewController',function($scope, $filter, $modalInst
     
     $scope.deleteTickler = function() {
     	ticklerService.setDeleted([tickler.id]).then(function(data){
-    		$modalInstance.close(true);
+    		$uibModalInstance.close(true);
         },function(reason){
         	alert(reason);
         });

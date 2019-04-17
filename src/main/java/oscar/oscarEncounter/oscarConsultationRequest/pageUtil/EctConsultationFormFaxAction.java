@@ -30,19 +30,33 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.tika.io.IOUtils;
+import org.oscarehr.common.dao.ConsultationRequestDao;
 import org.oscarehr.common.dao.FaxConfigDao;
 import org.oscarehr.common.dao.FaxJobDao;
+import org.oscarehr.common.model.EFormData;
 import org.oscarehr.common.model.FaxConfig;
 import org.oscarehr.common.model.FaxJob;
+import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.fax.util.PdfCoverPageCreator;
+import org.oscarehr.hospitalReportManager.HRMPDFCreator;
+import org.oscarehr.hospitalReportManager.dao.HRMDocumentToDemographicDao;
+import org.oscarehr.hospitalReportManager.model.HRMDocumentToDemographic;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.oscarehr.util.WKHtmlToPdfUtils;
+
+import com.itextpdf.text.pdf.PdfReader;
+import com.lowagie.text.DocumentException;
+import com.sun.xml.messaging.saaj.util.ByteInputStream;
+import com.sun.xml.messaging.saaj.util.ByteOutputStream;
 
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
+import oscar.eform.EFormUtil;
+import oscar.eform.actions.PrintAction;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
@@ -50,15 +64,11 @@ import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.ConcatPDF;
 
-import com.itextpdf.text.pdf.PdfReader;
-import com.lowagie.text.DocumentException;
-import com.sun.xml.messaging.saaj.util.ByteInputStream;
-import com.sun.xml.messaging.saaj.util.ByteOutputStream;
-
 public class EctConsultationFormFaxAction extends Action {
 
 	private static final Logger logger = MiscUtils.getLogger();
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	private ConsultationRequestDao consultationRequestDao = SpringUtils.getBean(ConsultationRequestDao.class);
 	
 	public EctConsultationFormFaxAction() {
 	}
@@ -91,6 +101,8 @@ public class EctConsultationFormFaxAction extends Action {
 		ByteInputStream bis;
 		ByteOutputStream bos;
 		CommonLabResultData consultLabs = new CommonLabResultData();
+		HRMDocumentToDemographicDao hrmDocumentToDemographicDao = SpringUtils.getBean(HRMDocumentToDemographicDao.class);
+		List<HRMDocumentToDemographic> attachedHRMReports = hrmDocumentToDemographicDao.findHRMDocumentsAttachedToConsultation(reqId);
 		ArrayList<InputStream> streams = new ArrayList<InputStream>();
 		String provider_no = loggedInInfo.getLoggedInProviderNo();		
 
@@ -176,7 +188,42 @@ public class EctConsultationFormFaxAction extends Action {
 				alist.add(bis);
 
 			}
-			
+
+			for (HRMDocumentToDemographic attachedHRM : attachedHRMReports) {
+				bos = new ByteOutputStream();
+				HRMPDFCreator hrmPdfCreator = new HRMPDFCreator(bos, attachedHRM.getHrmDocumentId(), loggedInInfo);
+				hrmPdfCreator.printPdf();
+
+				buffer = bos.getBytes();
+				bis = new ByteInputStream(buffer, bos.getCount());
+				bos.close();
+				streams.add(bis);
+				alist.add(bis);
+			}
+
+            //Get attached eForms
+            List<EFormData> eForms = EFormUtil.listPatientEformsCurrentAttachedToConsult(reqId);
+            for (EFormData eForm : eForms) {
+                String localUri = PrintAction.getEformRequestUrl(request);
+                buffer = WKHtmlToPdfUtils.convertToPdf(localUri + eForm.getId());
+                bis = new ByteInputStream(buffer, buffer.length);
+                streams.add(bis);
+                alist.add(bis);
+            }
+
+
+			if(reqId!=null && !reqId.trim().equals("") && consultationRequestDao.getConsultation(Integer.parseInt(reqId))!=null){
+				ProfessionalSpecialist professionalSpecialist = consultationRequestDao.getConsultation(Integer.parseInt(reqId)).getProfessionalSpecialist();
+				if (professionalSpecialist!=null && professionalSpecialist.getEformId()!=null && professionalSpecialist.getEformId()!=0){
+					String localUri = PrintAction.getEformRequestUrl(request);
+					buffer = WKHtmlToPdfUtils.convertToPdf(localUri + professionalSpecialist.getEformId() + "&blankForm=true");
+					bis = new ByteInputStream(buffer, buffer.length);
+					streams.add(bis);
+					alist.add(bis);
+
+				}
+			}
+
 			if (alist.size() > 0) {
 				
 				String referralFax = request.getParameter("fax");
@@ -212,8 +259,7 @@ public class EctConsultationFormFaxAction extends Action {
 					IOUtils.closeQuietly(fos);
 				}
 				
-				String tempPath = OscarProperties.getInstance().getProperty(
-					"fax_file_location", System.getProperty("java.io.tmpdir"));
+				String tempPath = System.getProperty("java.io.tmpdir");
                 String faxClinicId = OscarProperties.getInstance().getProperty("fax_clinic_id","");
 
 				
@@ -232,7 +278,7 @@ public class EctConsultationFormFaxAction extends Action {
 				    String faxNo = recipients.get(i).replaceAll("\\D", "");
 				    if (faxNo.length() < 7) { throw new DocumentException("Document target fax number '"+faxNo+"' is invalid."); }
 				
-				    String tempName = "CRF-" + faxClinicId + reqId + "." + System.currentTimeMillis();
+				    String tempName = "CRF-" + faxClinicId + reqId + "." + String.valueOf(i) + "." + System.currentTimeMillis();
 					
 					String tempPdf = String.format("%s%s%s.pdf", tempPath, File.separator, tempName);
 					String tempTxt = String.format("%s%s%s.txt", tempPath, File.separator, tempName);
@@ -295,7 +341,14 @@ public class EctConsultationFormFaxAction extends Action {
 
 				LogAction.addLog(provider_no, LogConst.SENT, LogConst.CON_FAX, "CONSULT "+ reqId);
 				request.setAttribute("faxSuccessful", true);
-				return mapping.findForward("success");
+				String print = request.getParameter("printType");
+				if (print!=null){
+					return mapping.findForward(print);
+				}
+				else{
+					return mapping.findForward("success");
+				}
+
 
 			}
 
@@ -316,8 +369,9 @@ public class EctConsultationFormFaxAction extends Action {
 			}
 		}
 		if (!error.equals("")) {
-			logger.error(error + " occured insided ConsultationPrintAction", exception);
-			request.setAttribute("printError", new Boolean(true));
+			logger.error(error + " occurred inside ConsultationFormFaxAction", exception);
+			request.setAttribute("faxError", exception.getMessage());
+			request.setAttribute("de", demoNo);
 			return mapping.findForward("error");
 		}
 		return null;		

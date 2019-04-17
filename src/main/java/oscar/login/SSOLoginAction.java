@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -204,10 +205,21 @@ public final class SSOLoginAction extends MappingDispatchAction {
         	if (loggedInProviderNumber.equals(providerNumber)){
         		//Sets the oneIdEmail session attribute
     			session.setAttribute("oneIdEmail", oneIdEmail);
+    			session.setAttribute("oneid_token", oneIdToken );
+    			 
     			if (providerInformation[6] != null && !providerInformation[6].equals("")) {
                     session.setAttribute("delegateOneIdEmail", providerInformation[6]);
                 }
-        		actionForward = new ParameterActionForward(mapping.findForward("success"));
+    			
+    			String operation = request.getParameter("operation");
+    			if(operation != null && "launch".equals(operation)) {
+    				ActionForward af = new ActionForward();
+    				af.setPath("/clinicalConnectEHRViewer.do");
+    				actionForward = new ParameterActionForward(af);
+    				actionForward.addParameter("method", "launchNonPatientContext");
+    			} else {
+    				actionForward = new ParameterActionForward(mapping.findForward("success"));
+    			}
         	}
         	else {
         		actionForward = new ParameterActionForward(mapping.findForward("error"));
@@ -597,7 +609,8 @@ public final class SSOLoginAction extends MappingDispatchAction {
 	    try {
 	      String[] parts = data.split(":");
 
-	      IvParameterSpec iv = new IvParameterSpec(java.util.Base64.getDecoder().decode(parts[1]));
+	      IvParameterSpec iv = new IvParameterSpec( Base64.decodeBase64(parts[1]) );
+	  //    IvParameterSpec iv = new IvParameterSpec(java.util.Base64.getDecoder().decode(parts[1]));
 	      SecretKeySpec secretKey = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
 	      Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");

@@ -92,6 +92,15 @@ public class FavoriteTo1 implements Serializable {
         this.favoriteId = id;
     }
 
+    public Integer getFavoriteId() {
+        return favoriteId;
+    }
+
+    public void setFavoriteId(Integer id) {
+        this.favoriteId = id;
+    }
+
+    
     public String getBrandName() {
         return brandName;
     }

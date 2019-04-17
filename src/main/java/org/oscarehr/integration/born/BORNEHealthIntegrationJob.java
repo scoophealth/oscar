@@ -314,5 +314,9 @@ public class BORNEHealthIntegrationJob implements OscarRunnable {
 	public void setLoggedInSecurity(Security security) {
 		this.security = security;
 	}
+	
+	@Override
+	public void setConfig(String string) {
+	}
 
 }

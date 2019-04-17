@@ -86,7 +86,7 @@ public class StaticScriptBean {
         public String pickupTime=null;
         public String eTreatmentType=null;
         public String rxStatus=null;
-        public Integer dispenseInterval;
+        public String dispenseInterval;
         public Integer refillQuantity;
         public Integer refillDuration;
 	}

@@ -46,6 +46,9 @@ public class DocumentManager {
 	@Autowired
 	private CtlDocumentDao ctlDocumentDao;
 	
+	@Autowired
+	private PatientConsentManager patientConsentManager;
+	
 	public Document getDocument(LoggedInInfo loggedInInfo, Integer id)
 	{
 		Document result=documentDao.find(id);
@@ -74,6 +77,13 @@ public class DocumentManager {
 		List<Document> results = documentDao.findByUpdateDate(updatedAfterThisDateExclusive, itemsToReturn);
 
 		LogAction.addLogSynchronous(loggedInInfo, "DocumentManager.getUpdateAfterDate", "updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
+
+		return (results);
+	}
+	
+	public List<Document> getDocumentsByDemographicIdUpdateAfterDate(LoggedInInfo loggedInInfo, Integer demographicId, Date updatedAfterThisDateExclusive) {
+		List<Document> results = documentDao.findByDemographicUpdateAfterDate(demographicId, updatedAfterThisDateExclusive);
+		LogAction.addLogSynchronous(loggedInInfo, "DocumentManager.getDocumentsByDemographicIdUpdateAfterDate", "demographicId="+demographicId+" updatedAfterThisDateExclusive="+updatedAfterThisDateExclusive);
 
 		return (results);
 	}

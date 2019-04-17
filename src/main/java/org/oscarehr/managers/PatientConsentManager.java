@@ -25,11 +25,13 @@ package org.oscarehr.managers;
 
 import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.oscarehr.common.dao.ConsentDao;
 import org.oscarehr.common.dao.ConsentTypeDao;
 import org.oscarehr.common.model.Consent;
 import org.oscarehr.common.model.ConsentType;
+import org.oscarehr.common.model.DemographicData;
 import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -257,6 +259,15 @@ public class PatientConsentManager {
 		
 	}
 	
+	public ConsentType addConsentType(LoggedInInfo loggedinInfo, ConsentType consentType ) {
+		
+		LogAction.addLog(loggedinInfo.getLoggedInProviderNo(), "PatientConsentManager.addConsentType", consentType.getType(), consentType.toString());
+		
+		consentTypeDao.persist(consentType);
+		return consentType;
+	}
+	
+	
 	/**
 	 * Returns a list of all the patient consent types currently active. 
 	 */
@@ -398,6 +409,34 @@ public class PatientConsentManager {
             consent.setLastEnteredBy(loggedinInfo.getLoggedInProviderNo());
 			consentDao.merge(consent);
 		}		
+	}
+
+	public boolean hasProviderSpecificConsent(LoggedInInfo loggedInInfo) {
+			ConsentType conType = consentTypeDao.findConsentTypeForProvider(ConsentType.PROVIDER_CONSENT_FILTER ,loggedInInfo.getLoggedInProviderNo()); 
+			if(conType == null) {
+				return false;
+			}
+		return true;
+	}
+	
+	public ConsentType getProviderSpecificConsent(LoggedInInfo loggedInInfo) {
+		ConsentType conType = consentTypeDao.findConsentTypeForProvider(ConsentType.PROVIDER_CONSENT_FILTER ,loggedInInfo.getLoggedInProviderNo()); 
+		return conType;
+	}
+	
+	public List<? extends DemographicData> filterProviderSpecificConsent(LoggedInInfo loggedInInfo,List<? extends DemographicData> demographicResults){
+		ConsentType consentType = getProviderSpecificConsent(loggedInInfo); 
+		if(consentType != null) {
+			ListIterator<? extends DemographicData> iter = demographicResults.listIterator();
+			while(iter.hasNext()){
+				int demographicNo = iter.next().getDemographicNo();
+				if (!hasPatientConsented(demographicNo, consentType)){
+			        iter.remove();
+			    }
+			}
+		}
+		
+		return demographicResults;
 	}
 	
 }

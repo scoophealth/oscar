@@ -242,6 +242,11 @@ input.btn{
 .lab {
     color: #CC0099;
 }
+
+.hrm {
+	color: red;
+}
+
 td.tite {
 
 background-color: #bbbbFF;
@@ -317,6 +322,42 @@ textarea {
     width: 100%;
 }
 
+
+/* select consultant by location */
+.consultant-by-location-container{background-color:#fff; border: thin solid #eee; border-radius: 8px; margin:2px;padding:4px;}
+
+.consultant-by-location-container label{color:#333; font-size:10px;}
+
+#consultant-by-location-dropdown{
+display:none;position:absolute;width:34%;background-color:#BBBBBB; border: thin solid #eee; border-radius: 2px; margin-top:-4px;margin-left:6px;z-index:999;padding-top:4px; font-size:12px; color:#333; box-shadow: 1px 2px #ddd;
+}
+
+#consultant-by-location-dropdown a{
+position:absolute;
+top:4px;
+right:4px;
+color:#333;
+}
+
+.consultant-by-location-message{
+color:#333;
+font-size: 10px;
+padding-left:4px
+}
+
+#consultant-by-location-display div{
+cursor: pointer;
+padding:4px;
+padding-left:8px;
+margin:2px;
+}
+
+#consultant-by-location-display div:hover{
+cursor: pointer;
+background-color:#003399;color:#fff
+}
+
+/* select consultant by location */
 </style>
 </head>
 
@@ -392,6 +433,70 @@ jQuery(document).ready(function(){
 		data.demographicNo = <%= demo %>;
 		getClinicalData( data, target )
 	});
+
+
+function findConsultantByLocation(phrase){
+var item = '';
+var result = '';
+
+$H(servicesName).each(function(pair){
+if(pair.value!=-1){
+    for (var i=0; i < services[pair.value].specialists.length; i++) {
+
+	name = services[pair.value].specialists[i].specName;
+	address = services[pair.value].specialists[i].specAddress;
+	spec_num = services[pair.value].specialists[i].specNbr;
+
+        if(address.toLowerCase().indexOf(phrase.toLowerCase())>=0) {
+	    result += '<div class="populate-specialist" data-service="'+pair.value+'" data-specnum="'+spec_num+'" data-specname="'+name+'"><b>' + name + '</b> <small>' + pair.key + '</small><address>' + address + '</address></div>';
+        }
+    }
+}
+
+});
+
+return result;
+
+}//end find consultant by location
+
+jQuery("input#consultant-by-location-input").keyup(function(){
+
+if(jQuery(this).val().length>=3)
+jQuery('#consultant-by-location-dropdown').slideDown();
+jQuery("#consultant-by-location-display").html( findConsultantByLocation(jQuery(this).val()) );
+
+});
+
+
+jQuery('.populate-specialist').live('click',function(){
+
+spec_num = jQuery(this).attr('data-specnum');
+spec_name = jQuery(this).attr('data-specname');
+service = jQuery(this).attr('data-service');
+
+jQuery('#consultant-by-location-dropdown').slideUp();
+
+//make service selection
+jQuery('#service').val(service);
+document.getElementById('service').onchange();
+
+//auto select specialist
+jQuery('#specialist').val(spec_num);
+document.getElementById('specialist').onchange();
+
+//clear
+jQuery('#consultant-by-location-input').val('');
+
+});
+
+jQuery('#consultant-by-location-dropdown a').click(function(e){
+e.preventDefault();
+console.log('close me');
+jQuery('#consultant-by-location-dropdown').slideUp();
+jQuery('#consultant-by-location-input').val('');
+
+});
+
 })
 
 function getClinicalData( data, target ) {
@@ -1298,11 +1403,74 @@ function hasFaxNumber() {
 }
 function updateFaxButton() {
 	var disabled = !hasFaxNumber();
+	if(document.getElementById("fax_button")!=null)
 	document.getElementById("fax_button").disabled = disabled;
+
+	if(document.getElementById("fax_button2")!=null)
 	document.getElementById("fax_button2").disabled = disabled;
 }
 </script>
 
+<script>
+
+jQuery(document).ready(function(){
+	var val = jQuery("input[name='status']:checked").val();
+	statusChanged1(parseInt(val));
+});
+
+function statusChanged1(val) {
+	if(val == 4) {
+		jQuery("#reasonForConsultation").attr('readonly','readonly');
+		jQuery("#clinicalInformation").attr('readonly','readonly');
+		jQuery("#concurrentProblems").attr('readonly','readonly');
+		jQuery("#currentMedications").attr('readonly','readonly');
+		jQuery("#allergies").attr('readonly','readonly');
+		
+		jQuery("input[name='status']:not(:checked)").each(function() {
+			jQuery(this).attr('disabled',true);
+			
+		});
+		
+		jQuery("#fax_button2").attr('disabled',true);
+		jQuery("#updateBtn").attr('disabled',true);
+		jQuery("#updateAndSendBtn").attr('disabled',true);
+		jQuery("#updateAndPrintBtn").attr('disabled',true);
+		
+		jQuery("#fax_button").attr('disabled',true);
+		jQuery("#updateBtn1").attr('disabled',true);
+		jQuery("#updateAndSendBtn1").attr('disabled',true);
+		jQuery("#updateAndPrintBtn1").attr('disabled',true);
+		jQuery("#updateAndPrintPreviewBtn1").attr('disabled',true);
+	
+		jQuery("#addProviderBtn").attr('disabled',true);
+		jQuery("#addOtherFaxBtn").attr('disabled',true);
+		
+		jQuery("#attachLinks").hide();
+		
+	}
+}
+function statusChanged(val) {
+	
+	if(val == 4) {
+		//lock fields
+	//	alert(jQuery("#reasonForConsultation").val());
+	
+		jQuery("#reasonForConsultation").attr('readonly','readonly');
+		jQuery("#clinicalInformation").attr('readonly','readonly');
+		jQuery("#concurrentProblems").attr('readonly','readonly');
+		jQuery("#currentMedications").attr('readonly','readonly');
+		jQuery("#allergies").attr('readonly','readonly');
+		
+	} else {
+		//unlock fields
+		jQuery("#reasonForConsultation").attr('readonly','');
+		jQuery("#clinicalInformation").attr('readonly','');
+		jQuery("#concurrentProblems").attr('readonly','');
+		jQuery("#currentMedications").attr('readonly','');
+		jQuery("#allergies").attr('readonly','');
+	}
+}
+</script>
 <%=WebUtilsOld.popErrorMessagesAsAlert(session)%>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF" 
@@ -1427,7 +1595,7 @@ function updateFaxButton() {
 					<td class="tite4" colspan="2">
 					<table>
 						<tr>
-							<td class="stat"><html:radio property="status" value="1" />
+							<td class="stat"><html:radio property="status" value="1" onclick="statusChanged(1)"/>
 							</td>
 							<td class="stat"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgNoth" />:
 							</td>
@@ -1439,7 +1607,7 @@ function updateFaxButton() {
 					<td class="tite4" colspan="2">
 					<table>
 						<tr>
-							<td class="stat"><html:radio property="status" value="2" />
+							<td class="stat"><html:radio property="status" value="2" onclick="statusChanged(2)"/>
 							</td>
 							<td class="stat"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgSpecCall" />
 							</td>
@@ -1451,7 +1619,7 @@ function updateFaxButton() {
 					<td class="tite4" colspan="2">
 					<table>
 						<tr>
-							<td class="stat"><html:radio property="status" value="3" />
+							<td class="stat"><html:radio property="status" value="3" onclick="statusChanged(3)" />
 							</td>
 							<td class="stat"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgPatCall" />
 							</td>
@@ -1463,7 +1631,7 @@ function updateFaxButton() {
 					<td class="tite4" colspan="2">
 					<table>
 						<tr>
-							<td class="stat"><html:radio property="status" value="4" />
+							<td class="stat"><html:radio property="status" value="4" onclick="statusChanged(4)"/>
 							</td>
 							<td class="stat"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgCompleted" /></td>
 						</tr>
@@ -1477,7 +1645,7 @@ function updateFaxButton() {
 							<td class="stat">&nbsp;</td>
 						</tr>
 						<tr>
-							<td style="text-align: center" class="stat">
+							<td style="text-align: center" class="stat" id="attachLinks">
 							<%
 								if (thisForm.iseReferral())
 								{
@@ -1513,7 +1681,9 @@ function updateFaxButton() {
 							<span class="doc"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendDocs" /></span><br />
 							<span class="lab"><bean:message
-								key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendLabs" /></span>
+								key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendLabs" /></span><br />
+							<span class="hrm"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendHRMs" /></span>
 							</td>
 						</tr>
 					</table>
@@ -1531,12 +1701,12 @@ function updateFaxButton() {
 					<td class="tite4" colspan=2>
 					<% boolean faxEnabled = props.getBooleanProperty("faxEnable", "yes"); %>
 					<% if (request.getAttribute("id") != null) { %>
-						<input name="update" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
-						<input name="updateAndPrint" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
-						<input name="printPreview" type="button" value="Print Preview" onclick="return checkForm('And Print Preview','EctConsultationFormRequestForm');" />
+						<input name="update" type="button" id="updateBtn1" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
+						<input name="updateAndPrint" type="button" id="updateAndPrintBtn1" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
+						<input name="printPreview" type="button" id="updateAndPrintPreviewBtn1" value="Print Preview" onclick="return checkForm('And Print Preview','EctConsultationFormRequestForm');" />
 												
 						<logic:equal value="true" name="EctConsultationFormRequestForm" property="eReferral">
-							<input name="updateAndSendElectronicallyTop" type="button" 
+							<input name="updateAndSendElectronicallyTop" type="button" id="updateAndSendBtn1"
 								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndSendElectronicReferral"/>" 
 								onclick="return checkForm('Update_esend','EctConsultationFormRequestForm');" />
 						</logic:equal>
@@ -1627,8 +1797,21 @@ function updateFaxButton() {
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formService" />:
 							</td>
 							<td  class="tite1">
-								<html:select styleId="service" property="service" onchange="fillSpecialistSelect(this);">
-							</html:select></td>
+
+							<div class="consultant-by-location-container">
+							<label>Select Consultant by Location</small>
+							<input type="text" id="consultant-by-location-input" style="border:0px;">
+							</div>
+
+							<div id="consultant-by-location-dropdown">
+							 <a href="#">[X]</a>
+							 <span class="consultant-by-location-message">Enter at least 3 characters.</span>
+							 <div id="consultant-by-location-display"></div>
+							</div>
+
+							  <html:select styleId="service" property="service" onchange="fillSpecialistSelect(this);">
+							  </html:select>
+							</td>
 						</tr>
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCons" />:
@@ -1823,6 +2006,12 @@ function updateFaxButton() {
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgWPhone" />:
 							</td>
 							<td class="tite2"><%=thisForm.getPatientWPhone()%></td>
+						</tr>
+												<tr>
+							<td class="tite4"><bean:message
+								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgCellPhone" />:
+							</td>
+							<td class="tite2"><%=thisForm.getPatientCellPhone()%></td>
 						</tr>
                                                 <tr>
 							<td class="tite4"><bean:message
@@ -2024,7 +2213,7 @@ function updateFaxButton() {
 					</td>
 				</tr>
 				<tr>
-					<td colspan=2><html:textarea property="reasonForConsultation"
+					<td colspan=2><html:textarea property="reasonForConsultation" styleId="reasonForConsultation"
 						cols="90" rows="6"></html:textarea></td>
 				</tr>
 				<tr>
@@ -2243,7 +2432,7 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 								</select>
 							</td>
 							<td class="tite3">
-								<button onclick="AddOtherFaxProvider(); return false;">Add Provider</button>
+								<button onclick="AddOtherFaxProvider(); return false;" id="addProviderBtn">Add Provider</button>
 							</td>
 						</tr>
 						<tr>
@@ -2253,7 +2442,7 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 
 							<font size="1"> <bean:message key="global.phoneformat1" />  </font></td>
 							<td class="tite3">
-								<button onclick="AddOtherFax(); return false;">Add Other Fax Recipient</button>
+								<button onclick="AddOtherFax(); return false;" id="addOtherFaxBtn">Add Other Fax Recipient</button>
 							</td>
 						</tr>
 						<tr>
@@ -2286,15 +2475,15 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 						
 						<%if (request.getAttribute("id") != null) {%>
 						
-							<input name="update" type="button" 
+							<input name="update" type="button" id="updateBtn"
 								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdate"/>" 
 								onclick="return checkForm('Update Consultation Request','EctConsultationFormRequestForm');" />
-							<input name="updateAndPrint" type="button" 
+							<input name="updateAndPrint" type="button" id="updateAndPrintBtn"
 								value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndPrint"/>" 
 								onclick="return checkForm('Update Consultation Request And Print Preview','EctConsultationFormRequestForm');" />
 							
 							<logic:equal value="true" name="EctConsultationFormRequestForm" property="eReferral">
-								<input name="updateAndSendElectronically" type="button" 
+								<input name="updateAndSendElectronically" type="button" id="updateAndSendBtn"
 									value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndSendElectronicReferral"/>" 
 									onclick="return checkForm('Update_esend','EctConsultationFormRequestForm');" />
 							</logic:equal>

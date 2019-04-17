@@ -96,7 +96,8 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	private String patientAddress;
 	private String patientPhone;
 	private String patientWPhone;
-        private String patientEmail;
+	private String patientCellPhone;
+    private String patientEmail;
 	private String patientDOB;
 	private String patientSex;
 	private String patientHealthNum;
@@ -419,8 +420,16 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	public void setPatientWPhone(String patientWPhone) {
 		this.patientWPhone = patientWPhone;
 	}
+	
+    public String getPatientCellPhone() {
+		return StringUtils.trimToEmpty(patientCellPhone);
+	}
 
-        public void setPatientEmail(String patientEmail) {
+	public void setPatientCellPhone(String patientCellPhone) {
+		this.patientCellPhone = patientCellPhone;
+	}
+
+		public void setPatientEmail(String patientEmail) {
             this.patientEmail = patientEmail;
         }
         

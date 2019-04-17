@@ -30,7 +30,6 @@ import java.util.List;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.oscarehr.common.model.Allergy;
-import org.springframework.beans.BeanUtils;
 
 public final class AllergyTransfer {
 
@@ -202,7 +201,25 @@ public final class AllergyTransfer {
 
 		AllergyTransfer allergyTransfer = new AllergyTransfer();
 
-		BeanUtils.copyProperties(allergy, allergyTransfer);
+		allergyTransfer.setId(allergy.getId());
+		allergyTransfer.setDemographicNo(allergy.getDemographicNo());
+		allergyTransfer.setEntryDate(allergy.getEntryDate());
+		allergyTransfer.setDescription(allergy.getDescription());
+		allergyTransfer.setReaction(allergy.getReaction());
+		allergyTransfer.setHiclSeqno(allergy.getHiclSeqno());
+		allergyTransfer.setHicSeqno(allergy.getHicSeqno());
+		allergyTransfer.setAgcsp(allergy.getAgcsp());
+		allergyTransfer.setAgccs(allergy.getAgccs());
+		allergyTransfer.setTypeCode(allergy.getTypeCode());
+		allergyTransfer.setStartDate(allergy.getStartDate());
+		allergyTransfer.setAgeOfOnset(allergy.getAgeOfOnset());
+		allergyTransfer.setSeverityOfReaction(allergy.getSeverityOfReaction());
+		allergyTransfer.setOnsetOfReaction(allergy.getOnsetOfReaction());
+		allergyTransfer.setRegionalIdentifier(allergy.getRegionalIdentifier());
+		allergyTransfer.setLifeStage(allergy.getLifeStage());
+		allergyTransfer.setLastUpdateDate(allergy.getLastUpdateDate());
+		allergyTransfer.setProviderNo(allergy.getProviderNo());
+
 
 		return (allergyTransfer);
 	}
