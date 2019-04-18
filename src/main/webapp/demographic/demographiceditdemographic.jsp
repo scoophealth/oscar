@@ -2855,7 +2855,7 @@ if ( Dead.equals(PatStat) ) {%>
 											http.open("GET", url, true);
 											http.onreadystatechange = function() {
 												if(http.readyState == 4 && http.status == 200) {
-													var success = http.responseXML.getElementsByTagName("success")[0].childNodes[0].nodeValue=="success";
+													var success = http.responseXML.getElementsByTagName("success")[0].childNodes[0].nodeValue=="true";
 													var btn = document.getElementById("emailInvite");
 													btn.disabled = true;
 													if (success) btn.value = "<bean:message key="demographic.demographiceditdemographic.btnEmailInviteSent"/>";
