@@ -2905,10 +2905,8 @@ if ( Dead.equals(PatStat) ) {%>
 											http.send(null);
 										}
 									</script>
-								<%}%>
-								<td align="left"><input type="text" name="myOscarUserName" size="30" <%=getDisabled("myOscarUserName")%>
-									value="<%=demographic.getMyOscarUserName()!=null? demographic.getMyOscarUserName() : ""%>">
 									<input type="button" id="phrConsent" style="display:none;"  value="Confirm" />
+								<%}%>
 									<br />
 								<%if (demographic.getMyOscarUserName()==null ||demographic.getMyOscarUserName().equals("")) {%>
 
