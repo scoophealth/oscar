@@ -71,12 +71,14 @@ import org.oscarehr.common.dao.ConsentDao;
 import org.oscarehr.common.dao.SecurityDao;
 import org.oscarehr.common.model.AppDefinition;
 import org.oscarehr.common.model.AppUser;
+import org.oscarehr.common.model.Demographic;
+import org.oscarehr.managers.AppManager;
+import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.common.model.AppointmentSearch;
 import org.oscarehr.common.model.Consent;
 import org.oscarehr.common.model.ConsentType;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Security;
-import org.oscarehr.managers.AppManager;
 import org.oscarehr.managers.PatientConsentManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.phr.RegistrationHelper;
@@ -86,6 +88,7 @@ import org.oscarehr.ws.rest.to.Creds;
 import org.oscarehr.ws.rest.to.GenericRESTResponse;
 import org.oscarehr.ws.rest.to.RSSResponse;
 import org.oscarehr.ws.rest.to.model.AppDefinitionTo1;
+import org.oscarehr.ws.rest.to.model.KindredInviteTo1;
 import org.oscarehr.ws.rest.to.model.ProviderTo1;
 import org.oscarehr.ws.rest.to.model.RssItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,6 +119,8 @@ public class AppService extends AbstractServiceImpl {
 	AppDefinitionDao appDefinitionDao;
 	
 	@Autowired
+	private DemographicManager demographicManager;
+	
 	ConsentDao consentDao;
 	
 	@Autowired
@@ -522,14 +527,25 @@ public class AppService extends AbstractServiceImpl {
 		return new GenericRESTResponse(false,"failed"); 
 	}
 	
-
-	
 	private String getAccessToken(AppDefinition phrApp,String providerNo, String type) {
 		try {
-		org.codehaus.jettison.json.JSONObject configObject = new org.codehaus.jettison.json.JSONObject(phrApp.getConfig());
-		String requestURL = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL");   
-		String requestURI = "oauth/token";
-		
+			String response = getAccessTokenResponse(phrApp, providerNo, type);
+			org.codehaus.jettison.json.JSONObject responseObject = new org.codehaus.jettison.json.JSONObject(response);
+			String access_token = responseObject.getString("access_token");
+			return access_token;
+			
+		}catch(Exception e) {
+			logger.error("Error with access token ",e);
+		}
+		return null;
+	}
+	
+	private String getAccessTokenResponse(AppDefinition phrApp,String providerNo, String type) {
+		try {
+			org.codehaus.jettison.json.JSONObject configObject = new org.codehaus.jettison.json.JSONObject(phrApp.getConfig());
+			String requestURL = OscarProperties.getInstance().getProperty("PHR_CONNECTOR_URL");   
+			String requestURI = "/oauth/token";
+
 			WebClient webclient = WebClient.create(requestURL+requestURI,configObject.getString("clientId"),configObject.getString("clientSecret"),null);//, providers);
 			HTTPConduit conduit = WebClient.getConfig(webclient).getHttpConduit();
 
@@ -555,9 +571,9 @@ public class AppService extends AbstractServiceImpl {
 			String response = IOUtils.toString(bufferedReader);
 			bufferedReader.close();
 			logger.debug("oauth2 json :"+response);
-			org.codehaus.jettison.json.JSONObject responseObject = new org.codehaus.jettison.json.JSONObject(response);
-			String access_token = responseObject.getString("access_token");
-			return access_token;
+			
+			return response;
+			
 		}catch(Exception e) {
 			logger.error("Error with access token ",e);
 		}
@@ -677,10 +693,48 @@ public class AppService extends AbstractServiceImpl {
 	public Response phrEMRAudit(@Context HttpServletRequest request){
 		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_appDefinition", "w", null)) {
 			throw new RuntimeException("Access Denied");
-		}		
+		}
 		return callPHR("auditSetup",getLoggedInInfo().getLoggedInProviderNo());
 	}
 	
+	@GET
+	@Path("/PHREmailInvite/{demographicId}")
+	public GenericRESTResponse phrEmailInvite(@Context HttpServletRequest request, @PathParam("demographicId") String demographicId){
+		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_appDefinition", "w", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		
+	    AppDefinition phrApp = appDefinitionDao.findByName("PHR");
+	    String providerNo = getLoggedInInfo().getLoggedInProviderNo();
+		String accessTokenResponse = getAccessTokenResponse(phrApp, providerNo, "PHR");
+		
+		try {
+			org.codehaus.jettison.json.JSONObject responseObject = new org.codehaus.jettison.json.JSONObject(accessTokenResponse);
+			String clinicConnectionId = responseObject.getString("conId");
+			
+			Demographic demographic = demographicManager.getDemographic(getLoggedInInfo(), demographicId);
+			if (demographic!=null) {
+				KindredInviteTo1 invite = new KindredInviteTo1();
+				invite.setDemographicNo(Long.valueOf(demographic.getDemographicNo()));
+				invite.setEmail(demographic.getEmail());
+				invite.setFirstName(demographic.getFirstName());
+				invite.setLastName(demographic.getLastName());
+				invite.setLanguage(demographic.getOfficialLanguage());
+				invite.setTitle(demographic.getTitle());
+				
+				Response response = callPHR("/clinics/"+clinicConnectionId+"/kindredphr/invite", providerNo, invite.toJson().toString());
+				
+				if (response.getStatus()==Response.Status.OK.getStatusCode()) {
+					return new GenericRESTResponse(true, "Email invite sent");
+				} else {
+					return new GenericRESTResponse(false, "Email invite NOT sent");
+				}
+			}
+		} catch(Exception e) {
+			logger.error("Error getting clinicConnectionId ",e);
+		}
+		return new GenericRESTResponse(false, "Email invite NOT sent");
+	}
 	
 	@GET
 	@Path("/openPHRWindow/{windowName}")

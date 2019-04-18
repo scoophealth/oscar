@@ -27,11 +27,11 @@ package org.oscarehr.ws;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.jws.WebParam;
 import javax.jws.WebService;
-
 import org.apache.cxf.annotations.GZIP;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.Gender;
@@ -136,6 +136,39 @@ public class DemographicWs extends AbstractWs {
 		
 		List<Demographic> demographics=demographicManager.getDemographics(getLoggedInInfo(),ids);
 		return(DemographicTransfer.toTransfers(demographics));	
+	}
+	
+	public DemographicTransfer[] getActiveDemographicsAfter(@WebParam(name="lastUpdate") Calendar lastUpdate, @WebParam(name="fields") String fields) {
+		Date afterDateExclusive = lastUpdate!=null ? lastUpdate.getTime() : null;
+		List<Demographic> demographics = demographicManager.getActiveDemographicAfter(getLoggedInInfo(), afterDateExclusive);
+		
+		List<DemographicTransfer> result = new ArrayList<DemographicTransfer>();
+		if (demographics!=null) {
+			String[] fieldList = fields!=null ? fields.split(",") : null;
+			
+			for (Demographic d : demographics) {
+				DemographicTransfer dto = DemographicTransfer.toTransfer(d);
+				
+				if (fieldList!=null) {
+					result.add(dto.filter(fieldList));
+				} else {
+					result.add(dto);
+				}
+			}
+		}
+		return result.toArray(new DemographicTransfer[0]);
+	}
+	
+	public String writePHRId(@WebParam(name="demographicNo") Integer demographicNo, @WebParam(name="phrId") String phrId) {
+		
+		if (demographicNo!=null && phrId!=null) {
+			Demographic demo = demographicManager.getDemographic(getLoggedInInfo(), demographicNo);
+			demo.setMyOscarUserName(phrId);
+			demographicManager.updateDemographic(getLoggedInInfo(), demo);
+			
+		    return "success";
+		}
+		return "fail";
 	}
 
 	public Integer[] getConsentedDemographicIdsAfter(@WebParam(name="lastUpdate") Calendar lastUpdate)

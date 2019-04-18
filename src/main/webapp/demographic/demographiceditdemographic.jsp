@@ -2883,9 +2883,30 @@ if ( Dead.equals(PatStat) ) {%>
 								</td>
 								<td align="right"><b><bean:message
 									key="demographic.demographiceditdemographic.formPHRUserName" />: </b></td>
-								<td align="left"><input type="text" name="myOscarUserName" size="30" <%=getDisabled("myOscarUserName")%>
+								<td align="left">
+								<input type="text" name="myOscarUserName" size="30" <%=getDisabled("myOscarUserName")%>
 									value="<%=demographic.getMyOscarUserName()!=null? demographic.getMyOscarUserName() : ""%>">
+								<%if (demographic.getEmail()!=null && !demographic.getEmail().equals("") && (demographic.getMyOscarUserName()==null ||demographic.getMyOscarUserName().equals(""))) {%>
+									<input type="button" id="emailInvite" value="<bean:message key="demographic.demographiceditdemographic.btnEmailInvite"/>" onclick="sendEmailInvite('<%=demographic.getDemographicNo()%>')"/>
+									<script>
+										function sendEmailInvite(demoNo) {
+											var http = new XMLHttpRequest();
+											var url = "../ws/rs/app/PHREmailInvite/"+demoNo;
+											http.open("GET", url, true);
+											http.onreadystatechange = function() {
+												if(http.readyState == 4 && http.status == 200) {
+													var success = http.responseXML.getElementsByTagName("success")[0].childNodes[0].nodeValue=="true";
+													var btn = document.getElementById("emailInvite");
+													btn.disabled = true;
+													if (success) btn.value = "<bean:message key="demographic.demographiceditdemographic.btnEmailInviteSent"/>";
+													else btn.value = "<bean:message key="demographic.demographiceditdemographic.btnEmailInviteError"/>";
+												}
+											}
+											http.send(null);
+										}
+									</script>
 									<input type="button" id="phrConsent" style="display:none;"  value="Confirm" />
+								<%}%>
 									<br />
 								<%if (demographic.getMyOscarUserName()==null ||demographic.getMyOscarUserName().equals("")) {%>
 
