@@ -35,6 +35,8 @@ import javax.persistence.TemporalType;
 @Entity
 public class AppDefinition extends AbstractModel<Integer> {
 	public static final String OAUTH1_TYPE="oauth1";
+	public static final String JWT_TYPE="jwt";
+	public static final String OAUTH2_TYPE="oauth2";
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
