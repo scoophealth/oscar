@@ -1,4 +1,4 @@
-oscarApp.controller('AppointmentAddController',function($scope, $filter, $modalInstance, $timeout, demographicService,me,providerService,scheduleService,apptDate) {
+oscarApp.controller('AppointmentAddController',function($scope, $filter, $uibModalInstance, $timeout, demographicService,me,providerService,scheduleService,apptDate) {
 
 	$scope.types = [];
 	
@@ -41,10 +41,10 @@ oscarApp.controller('AppointmentAddController',function($scope, $filter, $modalI
 	$scope.close = function () {
     	if($scope.needsUpdate) {
     		if(confirm("You have unsaved changes, are you sure?")) {
-    			$modalInstance.close(false);
+    			$uibModalInstance.close(false);
     		}
     	} else {
-    		$modalInstance.close(false);
+    		$uibModalInstance.close(false);
     	}
         
     }
@@ -95,7 +95,7 @@ oscarApp.controller('AppointmentAddController',function($scope, $filter, $modalI
     	
     	console.log(JSON.stringify(x));
     	scheduleService.addAppointment(x).then(function(data){
-    		$modalInstance.close(true);
+    		$uibModalInstance.close(true);
     	},function(reason){
     		alert(reason);
     	});

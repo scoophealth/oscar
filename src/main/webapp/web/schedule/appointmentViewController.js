@@ -1,4 +1,4 @@
-oscarApp.controller('AppointmentViewController',function($scope, $filter, $modalInstance, $timeout, demographicService,me,providerService,scheduleService,appointment,statusList) {
+oscarApp.controller('AppointmentViewController',function($scope, $filter, $uibModalInstance, $timeout, demographicService,me,providerService,scheduleService,appointment,statusList) {
 
 	$scope.me = me;
 	$scope.appointment = appointment;
@@ -18,13 +18,13 @@ oscarApp.controller('AppointmentViewController',function($scope, $filter, $modal
 		return status;
 	}
 	$scope.close = function () {
-    	$modalInstance.close(false);
+		$uibModalInstance.close(false);
     }
 	
 	$scope.deleteAppointment = function() {
 		if(confirm('Are you sure you want to delete this appointment?')) {
 			scheduleService.deleteAppointment($scope.appointment.id).then(function(data){
-				$modalInstance.close(true);
+				$uibModalInstance.close(true);
 			});
 		}
 	}
@@ -78,7 +78,7 @@ oscarApp.controller('AppointmentViewController',function($scope, $filter, $modal
     
     $scope.noShowAppointment = function() {
     	scheduleService.noShowAppointment($scope.appointment.id).then(function(data){
-			$modalInstance.close(true);
+    			$uibModalInstance.close(true);
 		},function(error){
 			alert(error);
 		});
@@ -87,7 +87,7 @@ oscarApp.controller('AppointmentViewController',function($scope, $filter, $modal
     
     $scope.cancelAppointment = function() {
     	scheduleService.cancelAppointment($scope.appointment.id).then(function(data){
-			$modalInstance.close(true);
+    			$uibModalInstance.close(true);
 		},function(error){
 			alert(error);
 		});

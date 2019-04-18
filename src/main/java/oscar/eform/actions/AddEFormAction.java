@@ -54,6 +54,10 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
+import oscar.eform.EFormAttachDocs;
+import oscar.eform.EFormAttachEForms;
+import oscar.eform.EFormAttachHRMReports;
+import oscar.eform.EFormAttachLabs;
 import oscar.eform.EFormLoader;
 import oscar.eform.EFormUtil;
 import oscar.eform.data.DatabaseAP;
@@ -212,6 +216,42 @@ public class AddEFormAction extends Action {
 
 			EFormUtil.addEFormValues(paramNames, paramValues, new Integer(fdid), new Integer(fid), new Integer(demographic_no)); //adds parsed values
 
+			if(!StringUtils.isNullOrEmpty(request.getParameter("selectDocs"))) {
+				String docs = request.getParameter("selectDocs");
+				String[] parsedDocs = docs.split("\\|");
+				List<String> dList = new ArrayList<String>();
+				List<String> lList = new ArrayList<String>();
+				List<String> hList = new ArrayList<String>();
+				List<String> eList = new ArrayList<String>();
+				for(String d:parsedDocs) {
+					logger.info("need to save " + d + " to fdid " + fdid);
+					if(d.startsWith("D")) {
+						dList.add(d.substring(1));
+					}
+					if(d.startsWith("L")) {
+						lList.add(d.substring(1));
+					}
+					if(d.startsWith("H")) {
+						hList.add(d.substring(1));
+					}
+					if(d.startsWith("E")) {
+						eList.add(d.substring(1));
+					}
+				}
+				
+				EFormAttachDocs Doc = new EFormAttachDocs(providerNo,demographic_no,fdid,dList.toArray(new String[dList.size()]));
+		        Doc.attach(loggedInInfo);
+		        
+		        EFormAttachLabs Lab = new EFormAttachLabs(providerNo,demographic_no,fdid,lList.toArray(new String[lList.size()]));
+		        Lab.attach(loggedInInfo);
+		        
+				EFormAttachHRMReports hrmReports = new EFormAttachHRMReports(providerNo, demographic_no, fdid, hList.toArray(new String[hList.size()]));
+				hrmReports.attach();
+
+				EFormAttachEForms eForms = new EFormAttachEForms(providerNo, demographic_no, fdid, eList.toArray(new String[eList.size()]));
+	            eForms.attach(loggedInInfo);
+	            
+			}
 			//post fdid to {eform_link} attribute
 			if (eform_link!=null) {
 				se.setAttribute(eform_link, fdid);

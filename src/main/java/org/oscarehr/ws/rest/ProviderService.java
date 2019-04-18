@@ -262,4 +262,31 @@ public class ProviderService extends AbstractServiceImpl {
 		providerManager.updateProviderSettings(getLoggedInInfo(),providerNo,json);
 		return response;
 	}
+	
+	@GET
+	@Path("/suggestProviderNo")
+	@Produces("application/json")
+	public GenericRESTResponse suggestProviderNo() {	
+		
+		List<Provider> providers = providerManager.getProviders(getLoggedInInfo(), null);
+		List<Integer> providerList = new ArrayList<Integer>();
+		for (Provider h : providers) {
+			try{
+		      String pn = h.getProviderNo();
+		      providerList.add(Integer.valueOf(pn));
+			}catch(Exception e){/*empty*/} /*No need to do anything. Just want to avoid a NumberFormatException from provider numbers with alphanumeric Characters*/
+		}
+
+		String suggestProviderNo = "";
+		for (Integer i=1; i<1000000; i++) {
+			if (!providerList.contains(i)) {
+		          suggestProviderNo = i.toString();
+		          break;
+		    }
+		}
+		
+		
+		return new GenericRESTResponse(true,suggestProviderNo);
+	}
+	
 }

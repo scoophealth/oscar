@@ -23,7 +23,7 @@
     Ontario, Canada
 
 */
-oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$stateParams,$state,$filter,$modal,$interval,user,noteService,summaryService,securityService) {
+oscarApp.controller('SummaryCtrl', function ($rootScope,$scope,$http,$location,$stateParams,$state,$filter,$uibModal,$interval,user,noteService,summaryService,securityService) {
 	console.log("in summary Ctrl ",$stateParams);
 
 	$scope.page = {};
@@ -377,7 +377,7 @@ function fillItems(itemsToFill){
 
 editGroupedNotes = function(size,mod,action){
 
-	var modalInstance = $modal.open({
+	var modalInstance = $uibModal.open({
 		templateUrl: 'record/summary/groupNotes.jsp',
 		controller: GroupNotesCtrl,
 		size: size,
@@ -450,7 +450,7 @@ $scope.gotoState = function(item,mod,itemId){
 	 
 	 $scope.showPrintModal = function(mod,action){
 		 var size = 'lg';
-		 var modalInstance = $modal.open({
+		 var modalInstance = $uibModal.open({
 		      templateUrl: 'record/print.jsp',
 		      controller: RecordPrintCtrl,
 		      size: size,
@@ -476,7 +476,7 @@ $scope.gotoState = function(item,mod,itemId){
 });
 
 
-GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,user,$stateParams,$state,$interval,noteService,securityService,diseaseRegistryServices){
+GroupNotesCtrl = function ($scope,$uibModal,$uibModalInstance,mod,action,user,$stateParams,$state,$interval,noteService,securityService,diseaseRegistryServices){
 
 
 	$scope.page = {};
@@ -630,11 +630,10 @@ GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,user,$statePa
 		$scope.groupNotesForm.assignedIssues = [];
 		
 		noteService.saveIssueNote($stateParams.demographicNo, $scope.groupNotesForm).then(function(data){
-    		$modalInstance.dismiss('cancel');
-    		$state.transitionTo($state.current, $stateParams, { reload: true, inherit: false, notify: true });
-
-	    },function(reason){
-	    	alert(reason);
+			$uibModalInstance.dismiss('cancel');
+    			$state.transitionTo($state.current, $stateParams, { reload: true, inherit: false, notify: true });
+	    	},function(reason){
+	    		alert(reason);
 	    });
 	}
 	
@@ -696,7 +695,7 @@ GroupNotesCtrl = function ($scope,$modal,$modalInstance,mod,action,user,$statePa
 	}
 		
 	$scope.cancel = function () {
-  		$modalInstance.dismiss('cancel');
+		$uibModalInstance.dismiss('cancel');
   	};
 
 	//temp load into pop-up
@@ -752,7 +751,7 @@ var itvSet = null;
 var itvCheck = null;
 var editingNoteId = null;
 
-RecordPrintCtrl = function($scope,$modal,$modalInstance,mod,action,$stateParams,summaryService,$filter){
+RecordPrintCtrl = function($scope,$uibModal,$uibModalInstance,mod,action,$stateParams,summaryService,$filter){
 	
 	$scope.pageOptions = {};
 	$scope.pageOptions.printType = {};
@@ -788,7 +787,7 @@ RecordPrintCtrl = function($scope,$modal,$modalInstance,mod,action,$stateParams,
 	}
 	
 	$scope.cancelPrint = function(){
-		$modalInstance.dismiss('cancel');
+		$uibModalInstance.dismiss('cancel');
 	}
 	
 	$scope.clearPrint = function(){

@@ -1,4 +1,4 @@
-oscarApp.controller('TicklerAddController',function($scope, $modalInstance, demographicService, providerService, ticklerService, $filter,$stateParams) {
+oscarApp.controller('TicklerAddController',function($scope, $uibModalInstance, demographicService, providerService, ticklerService, $filter,$stateParams) {
     
 	$scope.tickler = {template:{id:1,name:''},serviceDateDate:new Date(),serviceDateTime:new Date(), suggestedTextId:0};
 	$scope.priorities = ['Low','Normal','High'];
@@ -11,7 +11,7 @@ oscarApp.controller('TicklerAddController',function($scope, $modalInstance, demo
 	});
 	
 	$scope.close = function () {
-        $modalInstance.close(false);
+		$uibModalInstance.close(false);
     }
 	
 	$scope.validate = function() {
@@ -55,7 +55,7 @@ oscarApp.controller('TicklerAddController',function($scope, $modalInstance, demo
     	t.serviceDate = givenDate;
     	
     	ticklerService.add(t).then(function(data){
-    		$modalInstance.close(true);
+    		$uibModalInstance.close(true);
     	},function(reason){
     		alert(reason);
     	});

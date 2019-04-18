@@ -37,6 +37,10 @@ public class AppDefinition extends AbstractModel<Integer> {
 	public static final String OAUTH1_TYPE="oauth1";
 	public static final String JWT_TYPE="jwt";
 	public static final String OAUTH2_TYPE="oauth2";
+<<<<<<< HEAD
+=======
+	
+>>>>>>> remotes/origin/stable
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,6 +53,8 @@ public class AppDefinition extends AbstractModel<Integer> {
 	private String addedBy;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date added;
+	private Integer consentTypeId = null;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -90,6 +96,12 @@ public class AppDefinition extends AbstractModel<Integer> {
 	}
 	public void setAdded(Date added) {
 		this.added = added;
+	}
+	public Integer getConsentTypeId() {
+		return consentTypeId;
+	}
+	public void setConsentTypeId(Integer consentTypeId) {
+		this.consentTypeId = consentTypeId;
 	}
 	
 	

@@ -53,7 +53,7 @@ import org.oscarehr.integration.fhir.interfaces.ImmunizationInterface;
 
 @Entity
 @Table(name = "preventions")
-public class Prevention extends AbstractModel<Integer> implements Serializable, ImmunizationInterface {
+public class Prevention extends AbstractModel<Integer> implements Serializable, ImmunizationInterface, DemographicData {
 
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
@@ -109,6 +109,10 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 	}
 
 	public Integer getDemographicId() {
+		return this.demographicId;
+	}
+	
+	public int getDemographicNo() {
 		return this.demographicId;
 	}
 
@@ -282,7 +286,6 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 		getPreventionExtendedProperties().put( property.getkeyval(), property.getVal() );
 	}
 	
-	@Override
 	public String getImmunizationProperty( ImmunizationProperty immunizationProperty ) {
 		return getPreventionExtendedProperties().get( immunizationProperty.name() );
 	}
@@ -506,5 +509,10 @@ public class Prevention extends AbstractModel<Integer> implements Serializable, 
 		DateTime submissionDate =  new DateTime( System.currentTimeMillis() );		
 		int daysBetween = Days.daysBetween(immunizationDate, submissionDate).getDays();		
 		return ( daysBetween > days );
+	}
+
+	@Override
+	public int getImmunizationId() {
+		return getId();
 	}
 }

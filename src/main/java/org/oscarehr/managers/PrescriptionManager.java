@@ -40,6 +40,7 @@ import oscar.log.LogAction;
 import oscar.oscarProvider.data.ProSignatureData;
 import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxProviderData;
+import oscar.util.DateUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -59,6 +60,10 @@ public class PrescriptionManager {
 
     @Autowired
     private SecurityInfoManager securityInfoManager;
+    
+    @Autowired
+	private PatientConsentManager patientConsentManager;
+
 
     public Prescription getPrescription(LoggedInInfo loggedInInfo, Integer prescriptionId) {
         Prescription result = prescriptionDao.find(prescriptionId);
@@ -71,8 +76,15 @@ public class PrescriptionManager {
 
     public List<Prescription> getPrescriptionUpdatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateExclusive, int itemsToReturn) {
         List<Prescription> results = prescriptionDao.findByUpdateDate(updatedAfterThisDateExclusive, itemsToReturn);
-
+        patientConsentManager.filterProviderSpecificConsent(loggedInInfo, results);
         LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getPrescriptionUpdatedAfterDate", "updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
+
+        return (results);
+    }
+
+    public List<Prescription> getPrescriptionByDemographicIdUpdatedAfterDate(LoggedInInfo loggedInInfo, Integer demographicId, Date updatedAfterThisDateExclusive) {
+        List<Prescription> results = prescriptionDao.findByDemographicIdUpdatedAfterDateExclusive(demographicId, updatedAfterThisDateExclusive);
+        LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getPrescriptionByDemographicIdUpdatedAfterDate", "demographicId="+demographicId+" updatedAfterThisDateExclusive="+updatedAfterThisDateExclusive);
 
         return (results);
     }
@@ -340,4 +352,36 @@ public class PrescriptionManager {
 		return drugDao.findLongTermDrugsByDemographic(demographicId);
 	}
 
+	
+	public List<Prescription> getPrescriptions(LoggedInInfo loggedInInfo, Integer demographicId ) {
+		return prescriptionDao.findByDemographicId(demographicId);
+	}
+	
+	public boolean print(LoggedInInfo loggedInInfo,int scriptNo) {
+		
+		org.oscarehr.common.model.Prescription prescription = prescriptionDao.find(scriptNo);
+		String providerNo = loggedInInfo.getLoggedInProviderNo();
+
+		if (prescription == null) return false;
+		
+		if(prescription.getDatePrinted() == null) {
+    			prescription.setDatePrinted(new Date());
+    			prescriptionDao.merge(prescription);
+	    }else{
+			String dates_reprinted = prescription.getDatesReprinted();
+			String now = DateUtils.format("yyyy-MM-dd HH:mm:ss", new Date());
+			if (dates_reprinted != null && dates_reprinted.length() > 0) {
+				dates_reprinted += "," + now + ";" + providerNo;
+			} else {
+				dates_reprinted = now + ";" + providerNo;
+			}
+			prescription.setDatesReprinted(dates_reprinted);
+			prescriptionDao.merge(prescription);
+	    }
+		
+
+		return true;
+
+	}
+	
 }

@@ -37,6 +37,7 @@ public class EFormBase {
 	protected final String jsMarker = "${oscar_javascript_path}";
 	protected final String signatureMarker = "${oscar_signature_code}";
 	protected final String sourceMarker = "${source}";
+	protected final String fdidMarker = "${fdid}";
     protected String fdid;
     protected String fid;
     protected String formName;

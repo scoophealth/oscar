@@ -94,6 +94,7 @@ public class ScheduleOfBenefitsUploadAction extends Action {
 
 			warnings = sob.processNewFeeSchedule(is,showNewCodes,showChangedCodes,forceUpdate, updateAssistantFeesValue, updateAnaesthetistFeesValue);
 
+			outcome = "success";
 		}catch(Exception e){ 
 			MiscUtils.getLogger().error("Error", e); 
 			outcome = "exception";

@@ -74,8 +74,13 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
             d.setId(t.getDrugId());
             d.setBrandName(t.getBrandName());
             d.setGenericName(t.getGenericName());
+            d.setCustomName(t.getCustomName());
             d.setDemographicId(t.getDemographicNo());
-            d.setProviderNo(t.getProviderNo().toString()); // Cast to string.
+            if(t.getProviderNo() == null) {
+            	  d.setProviderNo(loggedInInfo.getLoggedInProviderNo());
+            }else {
+               d.setProviderNo(t.getProviderNo()); // Cast to string.
+            }
             d.setAtc(t.getAtc());
             d.setRegionalIdentifier(t.getRegionalIdentifier());
             d.setDosage(t.getStrength() + t.getStrengthUnit());
@@ -83,8 +88,9 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
             d.setTakeMin(t.getTakeMin());
             d.setRxDate(t.getRxDate());
             d.setEndDate(t.getEndDate());
+            d.setWrittenDate(t.getWrittenDate());
             d.setFreqCode(t.getFrequency());
-            d.setDuration(t.getDuration().toString()); // Cast to string.
+            d.setDuration(convertToStringOrNull(t.getDuration())); // Cast to string.
             d.setDurUnit(t.getDurationUnit());
             d.setRepeat(t.getRepeats());
             d.setSpecial(t.getInstructions());
@@ -122,6 +128,24 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
         return d;
 
     }
+
+    
+    private String convertToStringOrNull(Integer integer) {
+    		try {
+    			String ret =  integer.toString();
+    			return ret;
+    		}catch(Exception e) {logger.debug("value was not parseable "+integer);}
+    		return null;
+    }
+    
+    private Integer convertToIntegerOrNull(String integer) {
+		try {
+			Integer ret =  Integer.parseInt(integer);
+			return ret;
+		}catch(Exception e) {logger.debug("value was not parseable "+integer);}
+		return null;
+}
+
     private boolean falseIfNull(Boolean b) {
     		if(b == null) {
     			return false;
@@ -135,6 +159,7 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
     		}
     		return i.intValue();
     }
+
 
     /**
      * Converts from the Drug domain model object to a serializable Drug transfer object.
@@ -156,16 +181,18 @@ public class DrugConverter extends AbstractConverter<Drug, DrugTo1> {
         t.setDrugId(d.getId());
         t.setBrandName(d.getBrandName());
         t.setGenericName(d.getGenericName());
+        t.setCustomName(d.getCustomName());
         t.setAtc(d.getAtc());
         t.setRegionalIdentifier(d.getRegionalIdentifier());
         t.setDemographicNo(d.getDemographicId());
-        t.setProviderNo(Integer.parseInt(d.getProviderNo())); // Parse the providerNo string to an int.
+        t.setProviderNo(d.getProviderNo()); 
         t.setTakeMin(d.getTakeMin());
         t.setTakeMax(d.getTakeMax());
         t.setRxDate(d.getRxDate());
         t.setEndDate(d.getEndDate());
+        t.setWrittenDate(d.getWrittenDate());
         t.setFrequency(d.getFreqCode());
-        t.setDuration(Integer.parseInt(d.getDuration()));   // Parse the duration string to an int.
+        t.setDuration(convertToIntegerOrNull(d.getDuration()));   // Parse the duration string to an int.
         t.setDurationUnit(d.getDurUnit());
         t.setRoute(d.getRoute());
         t.setForm(d.getDrugForm());

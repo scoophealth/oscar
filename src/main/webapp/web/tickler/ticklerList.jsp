@@ -44,10 +44,10 @@
     
 <div class="row">
   <div class="col-xs-2">
-    <input ng-model="search.serviceStartDate" type="text" id="serviceStartDate" name="serviceStartDate" class="form-control" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="data.isOpen" ng-click="data.isOpen = true" placeholder="<bean:message key="tickler.list.serviceStartDate" bundle="ui"/>">
+    <input ng-model="search.serviceStartDate" type="text" id="serviceStartDate" name="serviceStartDate" class="form-control" uib-datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="data.isOpen" ng-click="data.isOpen = true" placeholder="<bean:message key="tickler.list.serviceStartDate" bundle="ui"/>">
   </div>
    <div class="col-xs-2">
-    <input ng-model="search.serviceEndDate" type="text" id="serviceEndDate" name="serviceEndDate" class="form-control" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="data2.isOpen" ng-click="data2.isOpen = true" placeholder="<bean:message key="tickler.list.serviceEndDate" bundle="ui"/>">
+    <input ng-model="search.serviceEndDate" type="text" id="serviceEndDate" name="serviceEndDate" class="form-control" uib-datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="data2.isOpen" ng-click="data2.isOpen = true" placeholder="<bean:message key="tickler.list.serviceEndDate" bundle="ui"/>">
   </div>
   <div class="col-xs-2">
 	  <select ng-model="search.status" name="status" id="status" class="form-control" >

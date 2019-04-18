@@ -33,11 +33,13 @@ import org.oscarehr.common.model.Favorite;
 import org.oscarehr.common.model.Prescription;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.ws.rest.to.model.RxStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import oscar.log.LogAction;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -74,31 +76,78 @@ public class RxManager {
      */
     public List<Drug> getDrugs( LoggedInInfo info,  int demographicNo,  String status)
             throws UnsupportedOperationException {
+    	
+    	RxStatus rxStatus;
+    	List<Drug> drugs = Collections.emptyList();
+    	
+    	try 
+    	{
+    		String drugstatus = status.trim().toUpperCase();
+    		rxStatus = Enum.valueOf(RxStatus.class, drugstatus);
+    		drugs = getDrugs(info,  demographicNo,  rxStatus);
+    	}
+    	catch(Exception e) 
+    	{
+            throw new UnsupportedOperationException("Unknown drug status: " + status);
+        }
+    	
+    	return drugs;
+    }
+    
+
+    public List<Drug> getDrugs( LoggedInInfo info,  int demographicNo,  RxStatus status) {
 
         LogAction.addLogSynchronous(info, "RxManager.getDrugs", "demographicNo=" + demographicNo + " status="+status);
 
         // Access control check.
         readCheck(info, demographicNo);
 
-        // find drugs from the DAO based on status.
-
-        if (status.equals(ALL)) {
-
-            return drugDao.findByDemographicId(demographicNo);
-
-        } else if (status.equals(CURRENT)) {
-
-            return drugDao.findByDemographicId(demographicNo, false);
-
-        } else if (status.equals(ARCHIVED)) {
-
-            return drugDao.findByDemographicId(demographicNo, true);
-
-        } else {
-
-            throw new UnsupportedOperationException("Unknown drug status: " + status);
-
+        List<Drug> drugs;
+        
+        // find drugs from the DAO based on status.       
+        switch(status) {
+		case ALL:  drugs = drugDao.findByDemographicId(demographicNo);
+			break;
+		case ARCHIVED: drugs = drugDao.findByDemographicId(demographicNo, true);
+			break;
+		case CURRENT: drugs = drugDao.findByDemographicId(demographicNo, false);
+			break;
+		case LONGTERM: drugs =  drugDao.findLongTermDrugsByDemographic(demographicNo);
+			break;
+		default: drugs = Collections.emptyList();
+			break;       
         }
+
+        return drugs;
+    }
+    
+    
+    /**
+     * Get drug by id,  User is checked to make sure they have permissions to view drug by checking the patient it was prescribed too.
+     *
+     * @param info          details regarding the current user
+     * @param drugId 		id of the drug to retreive
+     *
+     * @return drug 
+     *
+     * @throws UnsupportedOperationException when a drug is not found.
+     */
+    public Drug getDrug( LoggedInInfo info,  int drugId) throws UnsupportedOperationException {
+
+    		Drug drug = drugDao.find(drugId);
+    		
+    		if(drug == null) {
+    			throw new UnsupportedOperationException("drug not found: " + drugId);
+    		}
+    		//(LoggedInInfo loggedInInfo, String action, String content, String contentId, String demographicNo, String data)
+        LogAction.addLog(info, "RxManager.getDrug", "drugs",""+drugId,""+drug.getDemographicId(),drug.toString());
+
+        // Access control check.
+        readCheck(info, drug.getDemographicId());
+        
+        
+
+        return drug;
     }
 
     /**
@@ -156,6 +205,10 @@ public class RxManager {
 
         // Will throw an exception if access is denied.
         this.writeCheck(info, d.getDemographicId());
+        
+        if(d.getId() == null) {
+        		return null;
+        }
 
         Drug old = this.drugDao.find(d.getId());
 
@@ -408,8 +461,11 @@ public class RxManager {
 
         List<Drug> historyDrugs;
 
-        if(potentialDrugs.size() == 1){
-            historyDrugs = drugDao.findByAtc(potentialDrugs.get(0).getAtc());
+        if(potentialDrugs.size() == 1 && potentialDrugs.get(0).getAtc() != null && !potentialDrugs.get(0).getAtc().trim().isEmpty()){
+            historyDrugs = drugDao.findByDemographicIdAndAtc(demographicNo,potentialDrugs.get(0).getAtc());
+            if(historyDrugs.isEmpty()) { // not all drugs have ATC codes ie custom drugs.
+            		return potentialDrugs;
+            }
         }else{
             historyDrugs = new ArrayList<Drug>();
         }
@@ -481,17 +537,35 @@ public class RxManager {
      */
     protected Boolean canPrescribe(Drug d){
 
-        if(d == null) return false;
+        if(d == null) {
+        		logger.debug("drug was null returning false");
+        		return false;
+        }
 
-        if(d.getProviderNo() == null || d.getProviderNo().equals("")) return false;
+        if(d.getProviderNo() == null || d.getProviderNo().equals("")) {
+        		logger.debug("provider was null or blank returning false");
+        		return false;
+        }
 
-        if(d.getDemographicId() == null || d.getDemographicId() < 0) return false;
+        if(d.getDemographicId() == null || d.getDemographicId() < 0) {
+        		logger.debug("demographic was null returning false");
+        		return false;
+        }
 
-        if(d.getRxDate() == null) return false;
+        if(d.getRxDate() == null) {
+        		logger.debug("rx date was null returning false");
+        		return false;
+        }
 
-        if(d.getEndDate() == null || d.getRxDate().after(d.getEndDate())) return false;
+        if(d.getEndDate() == null || d.getRxDate().after(d.getEndDate())) {
+        		logger.debug("drug endDate was null");
+        		return false;
+        }
 
-        if(d.getSpecial() == null || d.getSpecial().equals("")) return false;
+        if(d.getSpecial() == null || d.getSpecial().equals("")) {
+        		logger.debug("drug special instructions was null returning false");
+        		return false;
+        }
 
         return true;
     }
@@ -540,6 +614,17 @@ public class RxManager {
             this.drugs = d;
         }
 
+    }
+    
+    
+    public List<Drug> getLongTermDrugs( LoggedInInfo info,  int demographicNo) {
+        LogAction.addLogSynchronous(info, "RxManager.getLongTermDrugs", "demographicNo=" + demographicNo );
+
+        // Access control check.
+        readCheck(info, demographicNo);
+        
+        return drugDao.findLongTermDrugsByDemographic(demographicNo);
+        
     }
 
 

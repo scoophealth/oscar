@@ -28,11 +28,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
+import org.oscarehr.common.model.ConsentType;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Prescription;
+import org.oscarehr.managers.PatientConsentManager;
 import org.oscarehr.managers.PrescriptionManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.transfer_objects.PrescriptionTransfer;
@@ -45,6 +48,9 @@ import org.springframework.stereotype.Component;
 public class PrescriptionWs extends AbstractWs {
 	@Autowired
 	private PrescriptionManager prescriptionManager;
+	
+	@Autowired
+	private PatientConsentManager patientConsentManager;
 
 	public PrescriptionTransfer getPrescription(Integer prescriptionId) {
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
@@ -67,6 +73,16 @@ public class PrescriptionWs extends AbstractWs {
 	public PrescriptionTransfer[] getPrescriptionsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
 		List<Prescription> prescriptions=prescriptionManager.getPrescriptionsByProgramProviderDemographicDate(loggedInInfo,programId,providerNo,demographicId,updatedAfterThisDateExclusive, itemsToReturn);
+		return(PrescriptionTransfer.getTransfers(loggedInInfo, prescriptions));
+	}
+
+	public PrescriptionTransfer[] getPrescriptionsByDemographicIdAfter(@WebParam(name="lastUpdate") Calendar lastUpdate, @WebParam(name="demographicId") Integer demographicId)
+	{
+		LoggedInInfo loggedInInfo = getLoggedInInfo();
+		ConsentType consentType = patientConsentManager.getProviderSpecificConsent(loggedInInfo);
+		if (!patientConsentManager.hasPatientConsented(demographicId, consentType)) return null;
+		
+		List<Prescription> prescriptions=prescriptionManager.getPrescriptionByDemographicIdUpdatedAfterDate(loggedInInfo, demographicId, lastUpdate.getTime());
 		return(PrescriptionTransfer.getTransfers(loggedInInfo, prescriptions));
 	}
 

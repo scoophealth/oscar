@@ -144,7 +144,7 @@
 			<div class="col-md-6">
 				<div class="form-group">
 					<label class="control-label">Response Date:</label>
-					<input id="dp-responseDate" type="text" class="form-control inline" style="width:60%" ng-model="consult.responseDate" placeholder="Response Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.respDatePicker" ng-click="page.respDatePicker=true"/>
+					<input id="dp-responseDate" type="text" class="form-control inline" style="width:60%" ng-model="consult.responseDate" placeholder="Response Date" uib-datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.respDatePicker" ng-click="page.respDatePicker=true"/>
 				</div>
 			</div>
 			<div class="col-md-6">
@@ -161,7 +161,7 @@
 			<div class="col-md-6">
 				<div class="form-group">
 					<label class="control-label">Referral Date:</label>
-					<input id="dp-referralDate" type="text" class="form-control inline" style="width:60%" ng-model="consult.referralDate" placeholder="Referral Date" datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.refDatePicker" ng-click="page.refDatePicker=true"/>
+					<input id="dp-referralDate" type="text" class="form-control inline" style="width:60%" ng-model="consult.referralDate" placeholder="Referral Date" uib-datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.refDatePicker" ng-click="page.refDatePicker=true"/>
 				</div>
 				<div class="form-group">
 					<label class="control-label">Urgency:</label>
@@ -188,7 +188,7 @@
 			<div class="col-md-6">
 				<div class="form-group">
 					<label class="control-label">Appointment Date:</label>
-					<input id="dp-appointmentDate" type="text" class="form-control inline" style="width:50%" ng-model="consult.appointmentDate" placeholder="Appointment Date"  datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.aptDatePicker" ng-click="page.aptDatePicker=true"/>
+					<input id="dp-appointmentDate" type="text" class="form-control inline" style="width:50%" ng-model="consult.appointmentDate" placeholder="Appointment Date"  uib-datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.aptDatePicker" ng-click="page.aptDatePicker=true"/>
 				</div>
 				<div class="form-group">
 					<label class="control-label">Appointment Time:</label>
@@ -207,7 +207,7 @@
 				</div>
 				<div class="form-group">
 					<label class="control-label">Last Follow-up Date:</label>
-					<input id="dp-followUpDate" type="text" class="form-control inline" style="width:50%" ng-model="consult.followUpDate" placeholder="Follow Up Date"  datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.lfdDatePicker" ng-click="page.lfdDatePicker=true"/>
+					<input id="dp-followUpDate" type="text" class="form-control inline" style="width:50%" ng-model="consult.followUpDate" placeholder="Follow Up Date"  uib-datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true" is-open="page.lfdDatePicker" ng-click="page.lfdDatePicker=true"/>
 				</div>
 			</div>
 			<div class="col-md-6">

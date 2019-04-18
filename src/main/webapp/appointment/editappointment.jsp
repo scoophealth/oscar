@@ -393,8 +393,8 @@ function pasteAppt(multipleSameDayGroupAppt) {
 	document.EDITAPPT.chart_no.value = "<%=apptObj.getChart_no()%>";
 	document.EDITAPPT.keyword.value = "<%=apptObj.getName()%>";
 	document.EDITAPPT.demographic_no.value = "<%=apptObj.getDemographic_no()%>";
-	document.EDITAPPT.reason.value = "<%=apptObj.getReason()%>";
-	document.EDITAPPT.notes.value = "<%=apptObj.getNotes()%>";
+	document.forms[0].reason.value = "<%= StringEscapeUtils.escapeJavaScript(apptObj.getReason()) %>"; 
+        document.forms[0].notes.value = "<%= StringEscapeUtils.escapeJavaScript(apptObj.getNotes()) %>"; 
 	document.EDITAPPT.location.value = "<%=apptObj.getLocation()%>";
 	document.EDITAPPT.resources.value = "<%=apptObj.getResources()%>";
 	document.EDITAPPT.type.value = "<%=apptObj.getType()%>";
@@ -547,7 +547,7 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
     //Else if we are coming back from search this has been done for us
     //Else how did we get here?
     if( bFirstDisp ) {
-        DemographicData dd = new DemographicData();
+    		oscar.oscarDemographic.data.DemographicData dd = new oscar.oscarDemographic.data.DemographicData();
         org.oscarehr.common.model.Demographic demo = dd.getDemographic(loggedInInfo, String.valueOf(appt.getDemographicNo()));
         doctorNo = demo!=null ? (demo.getProviderNo()) : "";
     } else if (!request.getParameter("doctor_no").equals("")) {
@@ -555,22 +555,28 @@ function setType(typeSel,reasonSel,locSel,durSel,notesSel,resSel) {
     }
 %>
 
-<div>
-    <table width="100%" BGCOLOR="lightblue" border=1 align='center'>
-        <tr>
-            <th>
-                <font>
-                    <%
-                    	ProviderData prov = providerDao.find(appt.getProviderNo());
-                  		String providerName = prov.getLastName() + ","+ prov.getFirstName(); 
+ <%
+    	if(appt != null && !StringUtils.isEmpty(appt.getProviderNo())) {
+     		ProviderData prov = providerDao.find(appt.getProviderNo());
+     		if(prov != null) {
+   				String providerName = prov.getLastName() + ","+ prov.getFirstName();
+   		%>
+		<div>
+		    <table width="100%" BGCOLOR="lightblue" border=1 align='center'>
+		        <tr>
+		            <th>
+		                <font>
+		   					<%=providerName %>
+		                </font>
+		            </th>
+		        </tr>
+		    </table>
+		</div>	                    	
+<%}
+	}
+%>
                     
-                    %>
-                    <%=providerName %>
-                </font>
-            </th>
-        </tr>
-    </table>
-</div>
+
 
 <div class="panel">
     <ul>

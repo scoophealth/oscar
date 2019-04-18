@@ -36,6 +36,7 @@ public class AllergyTransferTest {
 		Allergy p=new Allergy();
 		p.setId(12345);
 		p.setDescription("testAllergy");
+		p.setDemographicNo(555);
 		
 		AllergyTransfer pt=AllergyTransfer.toTransfer(p);
 		assertEquals(12345, pt.getId().intValue());

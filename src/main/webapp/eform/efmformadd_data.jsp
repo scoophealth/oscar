@@ -78,6 +78,7 @@ function hideDiv() {
   thisEForm.setOscarOPEN(request.getRequestURI());
   thisEForm.setAction();
   thisEForm.setSource(source);
+  thisEForm.setFdid("");
   out.print(thisEForm.getFormHtml());
 %>
 <%

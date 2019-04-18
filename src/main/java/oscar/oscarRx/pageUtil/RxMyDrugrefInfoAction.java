@@ -540,7 +540,8 @@ public final class RxMyDrugrefInfoAction extends DispatchAction {
 		    	        			Date date = formatter.parse(eform.get(key).toString());
 		    	        			drugInfo.put(key, date);
 		    	        		} else {
-		    	        			drugInfo.put(key, eform.get(key));
+		    	        			
+		    	        			drugInfo.put(key.toLowerCase(), eform.get(key));
 		    	        		}
 		    	        	}
 		    	     
