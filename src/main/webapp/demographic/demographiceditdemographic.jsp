@@ -4213,21 +4213,32 @@ jQuery(document).ready(function(){
 	//Check if PHR is active and if patient has consented	
 	/*
 	PHR inactive                    FALSE      INACTIVE
-		PHR active & Consent Needed     TRUE       NEED_CONSENT
-		PHR Active & Consent exists.    TRUE       CONSENTED
-		*/
-	    jQuery.ajax({
-	        url: "<%=request.getContextPath()%>/ws/rs/app/PHRActive/consentGiven/<%=demographic_no%>",
-	        dataType: 'json',
-	        success: function (data) {
-	       		console.log("PHR CONSENT",data);
-	       		if(data.success && data.message === "NEED_CONSENT"){
-	       			jQuery("#phrConsent").show();
-	       		}else{
-	       			jQuery("#phrConsent").hide();
-	       		}
-	    		}
-		});
+	PHR active & Consent Needed     TRUE       NEED_CONSENT
+	PHR Active & Consent exists.    TRUE       CONSENTED
+	*/
+	jQuery.ajax({
+		url: "<%=request.getContextPath()%>/ws/rs/app/PHRActive/consentGiven/<%=demographic_no%>",
+		dataType: 'json',
+		success: function (data) {
+			console.log("PHR CONSENT",data);
+			if(data.success && data.message === "NEED_CONSENT"){
+				jQuery("#phrConsent").show();
+			}else{
+				jQuery("#phrConsent").hide();
+			}
+		}
+	});
+	
+	jQuery.ajax({
+		url: "<%=request.getContextPath()%>/ws/rs/app/PHRActive/",
+		dataType: 'json',
+		success: function (data) {
+			console.log("PHR Active",data);
+			if(!data.success){
+				jQuery("#emailInvite").hide();
+			}
+		}
+	});
 		
 	jQuery("#phrConsent").click(function() {
   		jQuery.ajax({
