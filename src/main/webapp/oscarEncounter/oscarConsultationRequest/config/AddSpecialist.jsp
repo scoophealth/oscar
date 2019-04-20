@@ -24,7 +24,7 @@
 
 --%>
 
-<%@page import="org.oscarehr.common.dao.EFormDao"%>
+<%@page import="org.oscarehr.common.dao.DepartmentDao"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
       String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -40,25 +40,23 @@ if(!authed) {
 }
 %>
 
-<%@ page import="java.util.ResourceBundle"%>
-<% java.util.Properties oscarVariables = oscar.OscarProperties.getInstance(); %>
+<% OscarProperties oscarVariables = oscar.OscarProperties.getInstance(); %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 
-<%@page import="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddSpecialistForm"%>
-<%@page import="java.util.List" %>
-<%@page import="java.util.Map" %>
-<%@page import="java.util.HashMap" %>
-<%@page import="org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.common.dao.EFormDao"%>
 <%@page import="org.oscarehr.common.dao.InstitutionDao" %>
-<%@page import="org.oscarehr.common.model.Institution" %>
 <%@page import="org.oscarehr.common.dao.InstitutitionDepartmentDao" %>
-<%@page import="org.oscarehr.common.model.InstitutionDepartment" %>
-<%@page import="org.oscarehr.common.dao.DepartmentDao" %>
 <%@page import="org.oscarehr.common.model.Department" %>
 <%@page import="org.oscarehr.common.model.EForm" %>
+<%@page import="org.oscarehr.common.model.Institution" %>
+<%@page import="org.oscarehr.common.model.InstitutionDepartment" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="oscar.OscarProperties" %>
+<%@page import="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddSpecialistForm" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ResourceBundle" %>
 
 <%
 	InstitutionDao institutionDao = SpringUtils.getBean(InstitutionDao.class);
@@ -70,7 +68,7 @@ if(!authed) {
     pageContext.setAttribute("eforms", eforms);
     
     String referralNoMsg = oscar.OscarProperties.getInstance().getProperty("referral_no.msg");
-    
+
 %>
 
 <html:html locale="true">
@@ -181,51 +179,55 @@ function BackToOscar() {
 				<td>
 
 				<html:form action="/oscarEncounter/AddSpecialist">
-						<%
-						   if (request.getAttribute("specId") != null ){
-							   EctConAddSpecialistForm thisForm;
-							   thisForm = (EctConAddSpecialistForm) request.getAttribute("EctConAddSpecialistForm");
-							   thisForm.setFirstName( (String) request.getAttribute("fName"));
-							   thisForm.setLastName( (String) request.getAttribute("lName"));
-							   thisForm.setProLetters( (String) request.getAttribute("proLetters"));
-							   thisForm.setAddress( (String) request.getAttribute("address"));
-							   thisForm.setPhone( (String) request.getAttribute("phone"));
-							   thisForm.setFax( (String) request.getAttribute("fax"));
-							   thisForm.setWebsite( (String) request.getAttribute("website"));
-							   thisForm.setEmail( (String) request.getAttribute("email"));
-							   thisForm.setSpecType( (String) request.getAttribute("specType"));
-							   thisForm.setSpecId( (String) request.getAttribute("specId"));
-							   thisForm.seteDataUrl( (String) request.getAttribute("eDataUrl"));
-							   thisForm.seteDataOscarKey( (String) request.getAttribute("eDataOscarKey"));
-							   thisForm.seteDataServiceKey( (String) request.getAttribute("eDataServiceKey"));
-							   thisForm.seteDataServiceName( (String) request.getAttribute("eDataServiceName"));
-							   thisForm.setCdxCapable( (Boolean) request.getAttribute("cdxCapable"));
-							   thisForm.setCdxId( (String) request.getAttribute("cdxId"));
-							   thisForm.setAnnotation((String)request.getAttribute("annotation"));
-							   thisForm.setReferralNo((String)request.getAttribute("referralNo"));
-							   thisForm.setInstitution((String)request.getAttribute("institution"));
-							   thisForm.setDepartment((String)request.getAttribute("department"));
-				                           thisForm.setPrivatePhoneNumber((String)request.getAttribute("privatePhoneNumber"));
-                          				   thisForm.setCellPhoneNumber((String)request.getAttribute("cellPhoneNumber"));
-				                           thisForm.setPagerNumber((String)request.getAttribute("pagerNumber"));
-				                           thisForm.setSalutation((String)request.getAttribute("salutation"));
-				                           thisForm.setHideFromView((Boolean) request.getAttribute("hideFromView"));
-				                           thisForm.setEformId((Integer)request.getAttribute("eformId"));
+                    <%
+                        if (request.getAttribute("specId") != null) {
+                            EctConAddSpecialistForm thisForm;
+                            thisForm = (EctConAddSpecialistForm) request.getAttribute("EctConAddSpecialistForm");
+                            thisForm.setFirstName((String) request.getAttribute("fName"));
+                            thisForm.setLastName((String) request.getAttribute("lName"));
+                            thisForm.setProLetters((String) request.getAttribute("proLetters"));
+                            thisForm.setAddress((String) request.getAttribute("address"));
+                            thisForm.setPhone((String) request.getAttribute("phone"));
+                            thisForm.setFax((String) request.getAttribute("fax"));
+                            thisForm.setWebsite((String) request.getAttribute("website"));
+                            thisForm.setEmail((String) request.getAttribute("email"));
+                            thisForm.setSpecType((String) request.getAttribute("specType"));
+                            thisForm.setSpecId((String) request.getAttribute("specId"));
+                            thisForm.seteDataUrl((String) request.getAttribute("eDataUrl"));
+                            thisForm.seteDataOscarKey((String) request.getAttribute("eDataOscarKey"));
+                            thisForm.seteDataServiceKey((String) request.getAttribute("eDataServiceKey"));
+                            thisForm.seteDataServiceName((String) request.getAttribute("eDataServiceName"));
+                            thisForm.setCdxCapable((Boolean) request.getAttribute("cdxCapable"));
+                            thisForm.setCdxId((String) request.getAttribute("cdxId"));
+                            thisForm.setAnnotation((String) request.getAttribute("annotation"));
+                            thisForm.setReferralNo((String) request.getAttribute("referralNo"));
+                            thisForm.setInstitution((String) request.getAttribute("institution"));
+                            thisForm.setDepartment((String) request.getAttribute("department"));
+                            thisForm.setPrivatePhoneNumber((String) request.getAttribute("privatePhoneNumber"));
+                            thisForm.setCellPhoneNumber((String) request.getAttribute("cellPhoneNumber"));
+                            thisForm.setPagerNumber((String) request.getAttribute("pagerNumber"));
+                            thisForm.setSalutation((String) request.getAttribute("salutation"));
+                            thisForm.setHideFromView((Boolean) request.getAttribute("hideFromView"));
+                            thisForm.setEformId((Integer) request.getAttribute("eformId"));
+                    %>
+                    <script>
+                        $(document).ready(function () {
+                            $('#institution').val('<%=request.getAttribute("institution")%>');
+                            changeInstitution();
+                            $('#department').val('<%=request.getAttribute("department")%>');
+                        });
+                    </script>
+                    <%
+                        }
 
-						   %>
-						   	<script>
-						   		$(document).ready(function(){
-						   		$('#institution').val('<%=request.getAttribute("institution")%>');
-						   		changeInstitution();
-						   		$('#department').val('<%=request.getAttribute("department")%>');
-						   		});
-						   	</script>
-						   <%
-						   }
-						%>				
+                        if (request.getAttribute("specId") == null) {
+                    %>
+                    <a href="../../oscarConsultationRequest/config/AddCdxSpecialist.jsp">Add CDX Enabled Specialist</a>
+                    <%
+                        }
+                    %>
 					<table>
-
-						<html:hidden name="EctConAddSpecialistForm" property="specId" />
+						<html:hidden name="EctConAddSpecialistForm" property="specId"/>
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.firstName" /></td>
 							<td><html:text name="EctConAddSpecialistForm" property="firstName" /></td>
@@ -322,7 +324,7 @@ function BackToOscar() {
 						<tr>
 							<td colspan="7"><hr /></td>
 						</tr>
-						<% if (!((OscarProperties) oscarVariables).isPropertyActive("hide_add_specialist_edata")) { %>
+						<% if (!oscarVariables.isPropertyActive("hide_add_specialist_edata")) { %>
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eDataUrl" /></td>
 							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eDataUrl" /></td>
@@ -340,7 +342,7 @@ function BackToOscar() {
 							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eDataServiceName" /></td>
 						</tr>
 						<% } %>
-						<% if ("bc".equalsIgnoreCase(oscarVariables.getProperty("billregion"))) { %>
+<%--						<% if ("bc".equalsIgnoreCase(oscarVariables.getProperty("billregion"))) { %>
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.cdxCapable" /></td>
 							<td colspan="5">
@@ -354,7 +356,7 @@ function BackToOscar() {
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.cdxId" /></td>
 							<td colspan="5"><html:text style="width:20%" name="EctConAddSpecialistForm" property="cdxId" /></td>
 						</tr>
-						<% } %>
+						<% } %>--%>
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.hideFromView" /></td>
 							<td colspan="5">

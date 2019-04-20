@@ -78,6 +78,16 @@ public class ProfessionalSpecialistDao extends AbstractDao<ProfessionalSpecialis
 		return(results);
 	}
 
+	public List<ProfessionalSpecialist> findByCdxId(String cdxId)
+	{
+		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where x.cdxId="+cdxId+" order by x.lastName,x.firstName");
+
+		@SuppressWarnings("unchecked")
+		List<ProfessionalSpecialist> results=query.getResultList();
+
+		return(results);
+	}
+
 	public List<ProfessionalSpecialist> findByFullName(String lastName, String firstName) {
 		Query query = entityManager.createQuery("select x from " + modelClass.getName() + " x WHERE x.lastName like ? and x.firstName like ? order by x.lastName");
 		query.setParameter(1, "%"+lastName+"%");
