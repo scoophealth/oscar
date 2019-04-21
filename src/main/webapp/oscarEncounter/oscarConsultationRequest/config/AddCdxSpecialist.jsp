@@ -127,6 +127,7 @@
 								 for(int i=0;i < providers.size(); i++) {
 								     String cdxSpecId = providers.get(i).getID();
 								     professionalSpecialists = professionalSpecialistDao.findByCdxId(cdxSpecId);
+								     // don't display specialists that have already been added
 								     if (professionalSpecialists == null || professionalSpecialists.isEmpty()) {
 								     String fName = providers.get(i).getFirstName();
 								     String lName = providers.get(i).getLastName();

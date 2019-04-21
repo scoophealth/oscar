@@ -342,8 +342,8 @@ function BackToOscar() {
 							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eDataServiceName" /></td>
 						</tr>
 						<% } %>
-<%--						<% if ("bc".equalsIgnoreCase(oscarVariables.getProperty("billregion"))) { %>
-						<tr>
+						<% if ("bc".equalsIgnoreCase(oscarVariables.getProperty("billregion"))) { %>
+<%--						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.cdxCapable" /></td>
 							<td colspan="5">
 								<html:select name="EctConAddSpecialistForm" property="cdxCapable">
@@ -351,12 +351,12 @@ function BackToOscar() {
 									<html:option value="true"></html:option>
 								</html:select>
 							</td>
-						</tr>
+						</tr>--%>
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.cdxId" /></td>
-							<td colspan="5"><html:text style="width:20%" name="EctConAddSpecialistForm" property="cdxId" /></td>
+							<td colspan="5"><html:text style="width:20%" name="EctConAddSpecialistForm" property="cdxId" readonly="true"/></td>
 						</tr>
-						<% } %>--%>
+						<% } %>
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.hideFromView" /></td>
 							<td colspan="5">

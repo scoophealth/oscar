@@ -166,7 +166,7 @@ public class EctConAddSpecialistAction extends Action {
 		professionalSpecialist.seteDataOscarKey(addSpecailistForm.geteDataOscarKey());
 		professionalSpecialist.seteDataServiceKey(addSpecailistForm.geteDataServiceKey());
 		professionalSpecialist.seteDataServiceName(addSpecailistForm.geteDataServiceName());
-		professionalSpecialist.setCdxCapable(addSpecailistForm.getCdxCapable());
+		//professionalSpecialist.setCdxCapable(addSpecailistForm.getCdxCapable());
 		professionalSpecialist.setCdxId(addSpecailistForm.getCdxId());
 		professionalSpecialist.setAnnotation(addSpecailistForm.getAnnotation());
 		professionalSpecialist.setReferralNo(addSpecailistForm.getReferralNo());
