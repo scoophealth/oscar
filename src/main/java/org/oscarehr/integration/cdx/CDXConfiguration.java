@@ -135,7 +135,7 @@ public class CDXConfiguration implements Config {
 
     @Override
     public String getUrl() {
-        String url = "127.0.0.1";
+        String url = "http://127.0.0.1:8081";
         UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
         UserProperty up = userPropertyDao.getProp("cdx_url");
         if (up != null) url = up.getValue();

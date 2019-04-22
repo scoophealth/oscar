@@ -54,19 +54,19 @@
 
 <%
     ClinicDAO clinicDAO = SpringUtils.getBean(ClinicDAO.class);
-    ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
+//    ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
     UserPropertyDAO userPropertyDao = (UserPropertyDAO) SpringUtils.getBean("UserPropertyDAO");
 
-    List<Provider> providers = providerDao.getActiveProviders();
+    //List<Provider> providers = providerDao.getActiveProviders();
 
 //    String defaultProvider = "";
     String cdxOid = "";
     String pollEnabled;
     String pollDisabled;
     String pollInterval;
-    String cdxUrl = "127.0.0.1";
-    String privateKey = "";
-    String decryptionKey = "";
+    String cdxUrl = "http://127.0.0.1:8081";
+    //String privateKey = "";
+    //String decryptionKey = "";
 
     Clinic clinic = clinicDAO.getClinic();
     if (clinic != null && clinic.getCdxOid() != null) cdxOid = clinic.getCdxOid();
@@ -89,11 +89,11 @@
 //    up = userPropertyDao.getProp("cdx_default_provider");
 //    if (up != null) defaultProvider = up.getValue();
 
-    up = userPropertyDao.getProp("cdx_privateKey");
-    if (up != null) privateKey = up.getValue();
-
-    up = userPropertyDao.getProp("cdx_decryptionKey");
-    if (up != null) decryptionKey = up.getValue();
+//    up = userPropertyDao.getProp("cdx_privateKey");
+//    if (up != null) privateKey = up.getValue();
+//
+//    up = userPropertyDao.getProp("cdx_decryptionKey");
+//    if (up != null) decryptionKey = up.getValue();
 
 //    MiscUtils.getLogger().info("defaultProvider: " + defaultProvider);
     MiscUtils.getLogger().info("cdxOid: " + cdxOid);
@@ -112,9 +112,11 @@
 <h4>CDX Configuration</h4>
 <form action="<%=request.getContextPath()%>/cdx/CDXAdmin.do" method="post">
         <div class="control-group">
-            <label class="control-label">CDX URL:</label>
+            <label class="control-label">CDX URL: Format is http://&lt;ip_address&gt;:&lt;port&gt;</label>
             <div class="controls">
-                <input type="text" name="cdx_url" value="<%=cdxUrl%>"/>
+                <label>
+                    <input type="text" name="cdx_url" value="<%=cdxUrl%>"/>
+                </label>
             </div>
         </div>
 <%--    <div class="control-group">--%>
@@ -140,7 +142,9 @@
     <div class="control-group">
         <label class="control-label">Clinic OID:</label>
         <div class="controls">
-            <input type="text" name="cdxOid" value="<%=cdxOid%>"/>
+            <label>
+                <input type="text" name="cdxOid" value="<%=cdxOid%>"/>
+            </label>
         </div>
     </div>
     <div class="control-group">
@@ -153,7 +157,9 @@
     <div class="control-group">
         <label class="control-label">Polling Interval (minutes):</label>
         <div class="controls">
-            <input type="text" name="cdx_polling_interval" value="<%=pollInterval %>"/>
+            <label>
+                <input type="text" name="cdx_polling_interval" value="<%=pollInterval %>"/>
+            </label>
         </div>
     </div>
     <div class="control-group">
