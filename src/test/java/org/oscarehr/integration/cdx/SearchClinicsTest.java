@@ -26,97 +26,117 @@ package org.oscarehr.integration.cdx;
 
 import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
 import ca.uvic.leadlab.obibconnector.facades.registry.IClinic;
+import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
 import ca.uvic.leadlab.obibconnector.facades.registry.ISearchClinic;
 import ca.uvic.leadlab.obibconnector.impl.registry.SearchClinic;
 import org.junit.Assert;
 import org.junit.Test;
 import org.oscarehr.util.MiscUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class SearchClinicsTest {
+public class SearchClinicsTest extends FacadesBaseTest {
     private final CDXConfiguration config = new CDXConfiguration();
     private final String clinicId = config.getClinicId();
-    private String receivedMessage = null;
+    private String result = null;
 
     @Test
     public void testFindByName() {
         ISearchClinic searchClinic = new SearchClinic(config);
         List<IClinic> clinics = null;
-
+        String expectedErrorMsg = "Error finding clinics by name.";
+        String notNullClinics = "Providers not null";
+        List<String> expectedResults = new ArrayList<String>(Arrays.asList(notNullClinics,expectedErrorMsg));
+        result = null;
         try {
-            clinics = searchClinic.findByName("gandalf");
+            clinics = searchClinic.findByName("cdxpostprod-obctc");
         } catch (OBIBException e) {
-            receivedMessage = e.getMessage();
-            MiscUtils.getLogger().info(receivedMessage);
+            result = e.getMessage();
+            MiscUtils.getLogger().info(result);
         } catch (Exception e) {
+            result = e.getMessage(); //unexpected outcome
             MiscUtils.getLogger().info(e.getStackTrace());
         }
         if (clinics != null) {
-            MiscUtils.getLogger().info("num of CDX clinics by name : " + clinics.size());
+            result = notNullClinics;
+            MiscUtils.getLogger().info("Num of CDX clinics by name : " + clinics.size());
+            for (IClinic c: clinics) {
+                MiscUtils.getLogger().info("Found: " + c.getName()+" "+c.getCity()+" "+c.getID());
+            }
         } else {
-            MiscUtils.getLogger().info("cdx clinics is null by name");
+            MiscUtils.getLogger().info("CDX clinics is null for search by name");
         }
 
-        String expectedErrorMsg = "Error finding clinics by name.";
-        Assert.assertEquals(expectedErrorMsg, receivedMessage);
-        //Assert.assertNotNull(clinics);
+        Assert.assertTrue("The list of expected outcomes does not contain the value " + result,
+                expectedResults.contains(result));
     }
 
     @Test
     public void testFindByAddress() {
         ISearchClinic searchClinic = new SearchClinic(config);
         List<IClinic> clinics = null;
-
+        String expectedErrorMsg = "Error finding clinics by address.";
+        String notNullClinics = "Clinics not null";
+        List<String> expectedResults = new ArrayList<String>(Arrays.asList(notNullClinics,expectedErrorMsg));
+        result = null;
         try {
             clinics = searchClinic.findByAddress("the address");
         } catch (OBIBException e) {
-            receivedMessage = e.getMessage();
-            MiscUtils.getLogger().info(receivedMessage);
+            result = e.getMessage();
+            MiscUtils.getLogger().info(result);
         } catch (Exception e) {
+            result = e.getMessage(); //unexpected outcome
             MiscUtils.getLogger().info(e.getStackTrace());
         }
         if (clinics != null) {
-            MiscUtils.getLogger().info("num of CDX clinics by address : " + clinics.size());
+            result = notNullClinics;
+            MiscUtils.getLogger().info("Num of CDX clinics found in search by address : " + clinics.size());
+            for (IClinic c: clinics) {
+                MiscUtils.getLogger().info("Found: " + c.getName()+" "+c.getCity()+" "+c.getID());
+            }
         } else {
-            MiscUtils.getLogger().info("cdx clinics is null by address");
+            MiscUtils.getLogger().info("CDX clinics is null in search by address");
         }
-
-        String expectedErrorMsg = "Error finding clinics by address.";
-        Assert.assertEquals(expectedErrorMsg, receivedMessage);
-        //Assert.assertNotNull(clinics);
+        Assert.assertTrue("The list of expected outcomes does not contain the value " + result, expectedResults.contains(result));
     }
 
     @Test
     public void testFindById() {
-        ISearchClinic searchClinic = new SearchClinic(config);
+        ISearchClinic searchClinic = new SearchClinic(configClinicC);
         List<IClinic> clinics = null;
-
+        String expectedErrorMsg = "Error finding clinics by id.";
+        String notNullClinics = "Clinics not null";
+        List<String> expectedResults = new ArrayList<String>(Arrays.asList(notNullClinics,expectedErrorMsg));
+        result = null;
         try {
-            clinics = searchClinic.findByID(clinicId);
+            clinics = searchClinic.findByID(clinicIdA);
         } catch (OBIBException e) {
-            receivedMessage = e.getMessage();
-            MiscUtils.getLogger().info(receivedMessage);
+            result = e.getMessage();
+            MiscUtils.getLogger().info(result);
         } catch (Exception e) {
+            result = e.getMessage(); //unexpected outcome
             MiscUtils.getLogger().info(e.getStackTrace());
         }
         if (clinics != null) {
-            MiscUtils.getLogger().info("num of CDX clinics by id: " + clinics.size());
+            result = notNullClinics;
+            MiscUtils.getLogger().info("Num of CDX clinics found in search by id: " + clinics.size());
+            for (IClinic c: clinics) {
+                MiscUtils.getLogger().info("Found: " + c.getName()+" "+c.getCity()+" "+c.getID());
+            }
         } else {
-            MiscUtils.getLogger().info("cdx clinics is null by id");
+            MiscUtils.getLogger().info("CDX clinics is null for search by id");
         }
-
-        String expectedErrorMsg = "Error finding clinics by id.";
-        Assert.assertEquals(expectedErrorMsg, receivedMessage);
-        //Assert.assertNotNull(clinics);
+        Assert.assertTrue("The list of expected outcomes does not contain the value " + result, expectedResults.contains(result));
     }
 
     @Test(expected = OBIBException.class)
     public void testFindByIdError() throws Exception {
-        ISearchClinic searchClinic = new SearchClinic(config);
+        ISearchClinic searchClinic = new SearchClinic(configClinicA);
 
         List<IClinic> clinics = searchClinic.findByID("__Wrong_ID");
 
-        Assert.assertNull(clinics);
+        Assert.assertNull("clinics expected to be null but is not null", clinics);
     }
 }

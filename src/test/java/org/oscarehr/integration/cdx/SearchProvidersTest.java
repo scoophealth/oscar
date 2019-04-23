@@ -32,61 +32,78 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.oscarehr.util.MiscUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class SearchProvidersTest {
-    private final CDXConfiguration config = new CDXConfiguration();
-    private String receivedMessage = null;
+public class SearchProvidersTest extends FacadesBaseTest {
+    private String result = null;
 
     @Test
     public void testFindByProviderName() {
-        ISearchProviders searchProviders = new SearchProviders(config);
+        ISearchProviders searchProviders = new SearchProviders(configClinicA);
         List<IProvider> providers = null;
+        String expectedErrorMsg = "Error finding providers by name.";
+        String notNullProviders = "Providers not null";
+        List<String> expectedResults = new ArrayList<String>(Arrays.asList(notNullProviders,expectedErrorMsg));
+        result = null;
         try {
-            providers = searchProviders.findByName("testing");
+            providers = searchProviders.findByName("Plisihq");
         } catch (OBIBException e) {
-            receivedMessage = e.getMessage();
-            MiscUtils.getLogger().info(receivedMessage);
+            result = e.getMessage();
+            MiscUtils.getLogger().info(result);
         } catch (Exception e) {
+            result = e.getMessage(); //unexpected outcome
             MiscUtils.getLogger().info(e.getStackTrace());
         }
         if (providers != null) {
-            MiscUtils.getLogger().info("num of CDX providers search by name: " + providers.size());
+            result = notNullProviders;
+            MiscUtils.getLogger().info("Num of CDX providers found in search by name:" + providers.size());
+            for (IProvider p: providers) {
+                MiscUtils.getLogger().info("Found: " + p.getFirstName()+" "+p.getLastName()+" "+p.getID());
+            }
         } else {
-            MiscUtils.getLogger().info("cdx providers is null for search by name");
+            MiscUtils.getLogger().info("CDX providers is null for search by name");
         }
-        //Assert.assertNotNull(providers);
-        String expectedErrorMsg = "Error finding providers by name.";
-        Assert.assertEquals(expectedErrorMsg, receivedMessage);
+
+        Assert.assertTrue("The list of expected outcomes does not contain the value " + result, expectedResults.contains(result));
     }
 
     @Test
     public void testFindByProviderId() {
 
-        ISearchProviders searchProviders = new SearchProviders(config);
+        ISearchProviders searchProviders = new SearchProviders(configClinicA);
         List<IProvider> providers = null;
+        String expectedErrorMsg = "Error finding providers by id.";
+        String notNullProviders = "Providers not null";
+        List<String> expectedResults = new ArrayList<String>(Arrays.asList(notNullProviders,expectedErrorMsg));
+        result = null;
         try {
             providers = searchProviders.findByProviderID("93188");
         } catch (OBIBException e) {
-            receivedMessage = e.getMessage();
-            MiscUtils.getLogger().info(receivedMessage);
+            result = e.getMessage();
+            MiscUtils.getLogger().info(result);
         } catch (Exception e) {
+            result = e.getMessage();  //unexpected outcome
             MiscUtils.getLogger().info(e.getStackTrace());
         }
         if (providers != null) {
-            MiscUtils.getLogger().info("num of CDX providers: " + providers.size());
+            result = notNullProviders;
+            MiscUtils.getLogger().info("Num of CDX providers found in search by id: " + providers.size());
+            for (IProvider p: providers) {
+                MiscUtils.getLogger().info("Found: " + p.getFirstName()+" "+p.getLastName()+" "+p.getID());
+            }
         } else {
-            MiscUtils.getLogger().info("cdx providers is null");
+            MiscUtils.getLogger().info("CDX providers is null for search by id");
         }
-        //Assert.assertNotNull(providers);
-        String expectedErrorMsg = "Error finding providers by id.";
-        Assert.assertEquals(expectedErrorMsg, receivedMessage);
+
+        Assert.assertTrue("The list of expected outcomes does not contain the value " + result, expectedResults.contains(result));
     }
 
     @Test(expected = OBIBException.class)
     public void testFindByProviderIdError() throws Exception {
 
-        ISearchProviders searchProviders = new SearchProviders(config);
+        ISearchProviders searchProviders = new SearchProviders(configClinicA);
         List<IProvider> providers = searchProviders.findByProviderID("__Wrong_ID");
         Assert.assertNull(providers);
     }

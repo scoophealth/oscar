@@ -31,6 +31,7 @@ import ca.uhn.hl7v2.model.v26.message.REF_I12;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.AddressType;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.NameType;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.TelcoType;
+import ca.uvic.leadlab.obibconnector.facades.datatypes.Gender;
 import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
 import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
@@ -552,23 +553,29 @@ public class EctConsultationFormRequestAction extends Action {
 
 		response = submitDoc.newDoc()
 				.patient()
-				.id(patientId)
-				.name(NameType.LEGAL, demographic.getFirstName(), demographic.getLastName())
-				.address(AddressType.HOME, demographic.getAddress(), demographic.getCity(), demographic.getProvince(), demographic.getPostal(), "CA")
-				.phone(TelcoType.HOME, demographic.getPhone())
+					.id(patientId)
+					.name(NameType.LEGAL, demographic.getFirstName(), demographic.getLastName())
+					.address(AddressType.HOME, demographic.getAddress(), demographic.getCity(), demographic.getProvince(), demographic.getPostal(), "CA")
+					.phone(TelcoType.HOME, demographic.getPhone())
+					.birthday(demographic.getYearOfBirth(),demographic.getMonthOfBirth(),demographic.getDateOfBirth())
+					.gender("M".equalsIgnoreCase(demographic.getSex()) ? Gender.MALE : Gender.FEMALE)
 				.and().author()
-				.id(authorId)
-				.time(new Date())
-				.name(NameType.LEGAL, sendingProvider.getFirstName(), sendingProvider.getLastName())
-				.address(AddressType.HOME, clinic.getAddress(), clinic.getCity(), clinic.getProvince(), clinic.getPostal(), "CA")
-				.phone(TelcoType.HOME, clinic.getPhone())
+					.id(authorId)
+					.time(new Date())
+					.name(NameType.LEGAL, sendingProvider.getFirstName(), sendingProvider.getLastName())
+					.address(AddressType.HOME, clinic.getAddress(), clinic.getCity(), clinic.getProvince(), clinic.getPostal(), "CA")
+					.phone(TelcoType.HOME, clinic.getPhone())
 				.and().recipient()
-				.id(recipientId)
-				.name(NameType.LEGAL, professionalSpecialist.getFirstName(), professionalSpecialist.getLastName())
-				.address(AddressType.HOME, professionalSpecialist.getAddress(), professionalSpecialist.getCity(), professionalSpecialist.getProvince(), professionalSpecialist.getPostal(), "CA")
-				.phone(TelcoType.HOME, professionalSpecialist.getPhoneNumber())
-				.and().content(message)
-				//.attach(AttachmentType.PDF, newBytes)
+					.primary()
+					.id(recipientId)
+					.name(NameType.LEGAL, professionalSpecialist.getFirstName(), professionalSpecialist.getLastName())
+					.address(AddressType.HOME, professionalSpecialist.getAddress(), professionalSpecialist.getCity(), professionalSpecialist.getProvince(), professionalSpecialist.getPostal(), "CA")
+					.phone(TelcoType.HOME, professionalSpecialist.getPhoneNumber())
+//				.and().inFulfillmentOf()
+//					.id()
+				.and()
+					.content(message)
+					//.attach(AttachmentType.PDF, newBytes)
 				.submit();
 
 		MiscUtils.getLogger().info("obibconnector response: " + response);
