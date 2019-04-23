@@ -31,8 +31,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 @XmlRootElement
-public class KindredInviteTo1 implements Serializable {
-
+public class PHRInviteTo1 implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long demographicNo;
@@ -41,10 +40,13 @@ public class KindredInviteTo1 implements Serializable {
 	private String lastName;
 	private String email;
 	private String language;
-	private String kindredPatientUsername;
+	private String phrPatientUsername;
 
 	private Long clinicId;
 	private String status;
+	private String token;
+	private Long phrPatientId;
+	private String newphrPatientUsername;
 
 	public Long getDemographicNo() {
 		return demographicNo;
@@ -94,12 +96,12 @@ public class KindredInviteTo1 implements Serializable {
 		this.language = language;
 	}
 
-	public String getKindredPatientUsername() {
-		return kindredPatientUsername;
+	public String getPhrPatientUsername() {
+		return phrPatientUsername;
 	}
 
-	public void setKindredPatientUsername(String kindredPatientUsername) {
-		this.kindredPatientUsername = kindredPatientUsername;
+	public void setPhrPatientUsername(String phrPatientUsername) {
+		this.phrPatientUsername = phrPatientUsername;
 	}
 
 	public Long getClinicId() {
@@ -117,19 +119,46 @@ public class KindredInviteTo1 implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public Long getPhrPatientId() {
+		return phrPatientId;
+	}
+
+	public void setPhrPatientId(Long phrPatientId) {
+		this.phrPatientId = phrPatientId;
+	}
+
+	public String getNewPhrPatientUsername() {
+		return newphrPatientUsername;
+	}
+
+	public void setNewPhrPatientUsername(String newphrPatientUsername) {
+		this.newphrPatientUsername = newphrPatientUsername;
+	}
 	
 	public JSONObject toJson() throws JSONException
 	{
 		JSONObject json = new JSONObject();
-		json.put("demographicNo", getDemographicNo());
-		json.put("title", getTitle());
-		json.put("firstName", getFirstName());
-		json.put("lastName", getLastName());
-		json.put("email", getEmail());
-		json.put("language", getLanguage());;
-		json.put("kindredPatientUsername", getKindredPatientUsername());
-		json.put("clinicId", getClinicId());
-		json.put("status", getStatus());
+		json.put("demographicNo", demographicNo);
+		json.put("title", title);
+		json.put("firstName", firstName);
+		json.put("lastName", lastName);
+		json.put("email", email);
+		json.put("language", language);;
+		json.put("phrPatientUsername", phrPatientUsername);
+		json.put("clinicId", clinicId);
+		json.put("status", status);
+		json.put("token", token);
+		json.put("phrPatientId", phrPatientId);
+		json.put("newphrPatientUsername", newphrPatientUsername);
 		return json;
 	}
 }

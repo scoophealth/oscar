@@ -36,11 +36,9 @@ import javax.xml.ws.WebServiceException;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.cxf.annotations.GZIP;
 import org.apache.log4j.Logger;
-import org.oscarehr.common.model.ConsentType;
 import org.oscarehr.common.model.CtlDocument;
 import org.oscarehr.common.model.Document;
 import org.oscarehr.managers.DocumentManager;
-import org.oscarehr.managers.PatientConsentManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.ws.transfer_objects.DocumentTransfer;
@@ -55,9 +53,6 @@ public class DocumentWs extends AbstractWs {
 
 	@Autowired
 	private DocumentManager documentManager;
-	
-	@Autowired
-	private PatientConsentManager patientConsentManager;
 
 	public DocumentTransfer getDocument(Integer documentId) {
 		try {
@@ -87,9 +82,6 @@ public class DocumentWs extends AbstractWs {
 	public DocumentTransfer[] getDocumentsByDemographicIdAfter(@WebParam(name="lastUpdate") Calendar lastUpdate, @WebParam(name="demographicId") Integer demographicId)
 	{
 		LoggedInInfo loggedInInfo = getLoggedInInfo();
-		ConsentType consentType = patientConsentManager.getProviderSpecificConsent(loggedInInfo);
-		if (!patientConsentManager.hasPatientConsented(demographicId, consentType)) return null;
-		
 		List<Document> documents = documentManager.getDocumentsByDemographicIdUpdateAfterDate(loggedInInfo, demographicId, lastUpdate.getTime());
 		return (DocumentTransfer.getTransfers(loggedInInfo, documents));
 	}

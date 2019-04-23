@@ -30,6 +30,7 @@ import org.oscarehr.caisi_integrator.ws.CachedDemographicDrug;
 import org.oscarehr.common.dao.DrugDao;
 import org.oscarehr.common.dao.PrescriptionDao;
 import org.oscarehr.common.exception.AccessDeniedException;
+import org.oscarehr.common.model.ConsentType;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.Prescription;
 import org.oscarehr.util.LoggedInInfo;
@@ -83,9 +84,12 @@ public class PrescriptionManager {
     }
 
     public List<Prescription> getPrescriptionByDemographicIdUpdatedAfterDate(LoggedInInfo loggedInInfo, Integer demographicId, Date updatedAfterThisDateExclusive) {
-        List<Prescription> results = prescriptionDao.findByDemographicIdUpdatedAfterDateExclusive(demographicId, updatedAfterThisDateExclusive);
-        LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getPrescriptionByDemographicIdUpdatedAfterDate", "demographicId="+demographicId+" updatedAfterThisDateExclusive="+updatedAfterThisDateExclusive);
-
+    	List<Prescription> results = new ArrayList<Prescription>();
+    	ConsentType consentType = patientConsentManager.getProviderSpecificConsent(loggedInInfo);
+		if (patientConsentManager.hasPatientConsented(demographicId, consentType)) {
+	        results = prescriptionDao.findByDemographicIdUpdatedAfterDateExclusive(demographicId, updatedAfterThisDateExclusive);
+	        LogAction.addLogSynchronous(loggedInInfo, "PrescriptionManager.getPrescriptionByDemographicIdUpdatedAfterDate", "demographicId="+demographicId+" updatedAfterThisDateExclusive="+updatedAfterThisDateExclusive);
+		}
         return (results);
     }
 
