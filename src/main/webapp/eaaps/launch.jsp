@@ -22,7 +22,8 @@
     Hamilton
     Ontario, Canada
 
---%><%@page import="org.oscarehr.research.eaaps.EaapsPatientData" %><%
+--%>
+<%@page import="org.oscarehr.research.eaaps.EaapsPatientData" %><%
 
 
 EaapsPatientData patientData = request.getSession().setAttribute("eaapsInfo");
