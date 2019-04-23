@@ -44,8 +44,10 @@ import org.oscarehr.billing.CA.BC.model.Hl7Orc;
 import org.oscarehr.billing.CA.BC.model.Hl7Pid;
 import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.dao.ConsultResponseDocDao;
+import org.oscarehr.common.dao.EFormDocsDao;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.model.ConsultDocs;
+import org.oscarehr.common.model.EFormDocs;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.ProviderLabRoutingModel;
 import org.oscarehr.util.SpringUtils;
@@ -67,7 +69,8 @@ public class PathnetResultsData {
 	private Hl7ObxDao hl7ObxDao = SpringUtils.getBean(Hl7ObxDao.class);
 	private Hl7OrcDao hl7OrcDao = SpringUtils.getBean(Hl7OrcDao.class);
 	private Hl7PidDao hl7PidDao = SpringUtils.getBean(Hl7PidDao.class);
-
+	private EFormDocsDao eformDocsDao = SpringUtils.getBean(EFormDocsDao.class);
+	
 	Logger logger = Logger.getLogger(PathnetResultsData.class);
 
 	/**
@@ -78,6 +81,18 @@ public class PathnetResultsData {
 		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();
 		for (Object[] o : consultDocsDao.findLabs(ConversionUtils.fromIntString(consultationId))) {
 			ConsultDocs c = (ConsultDocs) o[0];
+			LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);
+			lbData.labPatientId = "" + c.getDocumentNo();
+			attachedLabs.add(lbData);
+		}
+		List<Object[]> labsBCP = hl7MsgDao.findByDemographicAndLabType(ConversionUtils.fromIntString(demographicNo), "BCP");
+		return populatePathnetResultsData(attachedLabs, labsBCP, attached);
+	}
+	
+	public ArrayList<LabResultData> populatePathnetResultsDataEForm(String demographicNo, String fdid, boolean attached) {
+		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();
+		for (Object[] o : eformDocsDao.findLabs(ConversionUtils.fromIntString(fdid))) {
+			EFormDocs c = (EFormDocs) o[0];
 			LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);
 			lbData.labPatientId = "" + c.getDocumentNo();
 			attachedLabs.add(lbData);

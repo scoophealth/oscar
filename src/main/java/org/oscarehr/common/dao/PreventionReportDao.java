@@ -38,7 +38,7 @@ public class PreventionReportDao extends AbstractDao<PreventionReport> {
 	}
     
     public List<PreventionReport> getPreventionReports() {
-    	String sql = "select x from "+modelClass.getSimpleName()+" x where x.archived = false order by x.createDate desc";
+    	String sql = "select x from "+modelClass.getSimpleName()+" x where x.active = true order by x.createDate desc";
     	Query query = entityManager.createQuery(sql);
    
         @SuppressWarnings("unchecked")

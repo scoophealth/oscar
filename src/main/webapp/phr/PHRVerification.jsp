@@ -24,7 +24,7 @@
 
 --%>
 <%@page import="org.oscarehr.util.LoggedInInfo"%>
-<%@page import="org.oscarehr.common.dao.PHRVerificationDao,org.oscarehr.common.model.PHRVerification,org.oscarehr.util.SpringUtils,java.util.*" %>
+<%@page import="org.oscarehr.common.dao.ConsentDao,org.oscarehr.common.model.Consent,org.oscarehr.util.SpringUtils,java.util.*,org.oscarehr.managers.AppManager,org.oscarehr.common.model.AppDefinition,org.oscarehr.common.model.Provider" %>
 
 <%@ page import="oscar.oscarDemographic.data.DemographicData"%>
 <%@ page import="java.util.Enumeration"%>
@@ -61,13 +61,23 @@ if (demographicNo == null) demographicNo = request.getParameter("demographicNo")
 if (demographicNo == null) demographicNo = (String) request.getAttribute("demographicNo");
 Integer demoNo = Integer.parseInt(demographicNo);
 
-PHRVerificationDao phrVerificationDao = (PHRVerificationDao)SpringUtils.getBean("PHRVerificationDao");
 ProviderDao providerDao = (ProviderDao) SpringUtils.getBean("providerDao");
 
-List<PHRVerification> phrVerifications = phrVerificationDao.findByDemographic(demoNo, true);
+AppManager appManager = SpringUtils.getBean(AppManager.class);
+ConsentDao consentDao = SpringUtils.getBean(ConsentDao.class);
 
 org.oscarehr.common.model.Demographic demo = new DemographicData().getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demographicNo); 
 String myOscarUserName = demo.getMyOscarUserName();
+String providerName = "N/A";
+AppDefinition appDef = appManager.getAppDefinition(LoggedInInfo.getLoggedInInfoFromSession(request), "PHR");
+Consent consent = null;
+if(appDef != null && appDef.getConsentTypeId() != null) {
+	consent = consentDao.findByDemographicAndConsentTypeId( demoNo,  appDef.getConsentTypeId()  ) ;
+	if(consent != null){
+		Provider provider = providerDao.getProvider(consent.getLastEnteredBy());
+		providerName = provider.getFormattedName();
+	}
+}
 
 %>
 
@@ -193,6 +203,48 @@ br {
 					      $("#relationshipMessage").html(data);
 					    }
 					  });
+					
+					
+					
+					jQuery(document).ready(function(){
+						//Check if PHR is active and if patient has consented	
+						/*
+						PHR inactive                    FALSE      INACTIVE
+							PHR active & Consent Needed     TRUE       NEED_CONSENT
+							PHR Active & Consent exists.    TRUE       CONSENTED
+							*/
+						    jQuery.ajax({
+						        url: "<%=request.getContextPath()%>/ws/rs/app/PHRActive/consentGiven/<%=demographicNo%>",
+						        dataType: 'json',
+						        success: function (data) {
+						       		console.log("PHR CONSENT",data);
+						       		if(data.success && data.message === "NEED_CONSENT"){
+						       			jQuery("#phrConsent").show();
+						       		}else{
+						       			jQuery("#phrConsent").hide();
+						       		}
+						    		}
+							});
+							
+						jQuery("#phrConsent").click(function() {
+					  		jQuery.ajax({
+					  			type: "POST",
+						        url: "<%=request.getContextPath()%>/ws/rs/app/PHRActive/consentGiven/<%=demographicNo%>",
+						        dataType: 'json',
+						        success: function (data) {
+						       		console.log("PHR CONSENT POST",data);
+						       		if(data.success && data.message === "NEED_CONSENT"){
+						       			jQuery("#phrConsent").show();
+						       		}else{
+						       			alert("Successfully confirmed");
+						       			jQuery("#phrConsent").hide();
+						       			location.reload(); 
+						       		}
+						    		}
+							});
+						});
+						
+					});
 					<%}%>
 					</script>    
 				</td>
@@ -202,69 +254,17 @@ br {
 	</tr>
 	<tr>
 		<td class="MainTableRightColumn" valign="top">
-			<%if(request.getAttribute("forwardToOnSuccess") != null ){ %>
-			<span style="color:red">Patient Has not been verified in person.  Verify and Continue</span>
-			<%}%>	
 			<fieldset>
 		    	<legend><bean:message key="phr.verification.add.fieldset.legend"/></legend>
-		    	<html:form action="/demographic/viewPhrRecord" onsubmit="return checkLevel(verificationLevel.value);" >
-			    	<input type="hidden" name="method" value="saveNewVerification"/>
-			    	<input type="hidden" name="demographic_no" value="<%=demographicNo%>"/>
-			    	<%if(request.getAttribute("forwardToOnSuccess") != null ){ %>
-			    	<input type="hidden" name="forwardToOnSuccess" value="<%=request.getAttribute("forwardToOnSuccess")%>" />
-			    	<%}%>
-			    	<label><bean:message key="phr.verification.add.fieldset.method"/>:</label> 
-				    	<select name="verificationLevel">
-				    		<option value="">--</option>
-				    		<option value="<%=PHRVerification.VERIFICATION_METHOD_FAX%>"><bean:message key="phr.verification.add.fieldset.method.option.fax"/></option>
-				    		<option value="<%=PHRVerification.VERIFICATION_METHOD_MAIL%>"><bean:message key="phr.verification.add.fieldset.method.option.mail"/></option>
-				    		<option value="<%=PHRVerification.VERIFICATION_METHOD_EMAIL%>"><bean:message key="phr.verification.add.fieldset.method.option.email"/></option>
-				    		<option value="<%=PHRVerification.VERIFICATION_METHOD_TEL%>"><bean:message key="phr.verification.add.fieldset.method.option.tel"/></option>
-				    		<option value="<%=PHRVerification.VERIFICATION_METHOD_VIDEOPHONE%>"><bean:message key="phr.verification.add.fieldset.method.option.videophone"/></option>
-				    		<option value="<%=PHRVerification.VERIFICATION_METHOD_INPERSON%>"><bean:message key="phr.verification.add.fieldset.method.option.inperson"/></option>
-				    	</select>
+		    		<%if(consent != null && consent.getPatientConsented()){ %>
+		    			<h2>This person (PHR username: <span style="color:blue;"><%=myOscarUserName%></span>) was confirmed on <%=consent.getConsentDate()%> by <%=providerName%> </h2>
+		    		<%} else { %>
+		    			<h2>Confirm this person is using PHR username: <span style="color:blue;"><%=myOscarUserName%></span></h2>
+		    			<input type="button" id="phrConsent"  value="Confirm" />
+		    		<%} %>
 		    	
-			    	<label><bean:message key="phr.verification.add.date"/>:</label><input type="text" name="verificationDate"  value="<%=UtilDateUtilities.getToday("yyyy-MM-dd")%>" size="10"/>  
-			    	<label><bean:message key="phr.verification.add.photoId"/>:</label> <input type="checkbox" name="photoId" value="true"/> <label><bean:message key="phr.verification.add.parentGuardian"/>:</label> <input type="checkbox" name="parentGuardian" value="true"/> <br>
-					<label><bean:message key="phr.verification.add.comments"/>:</label> <br>
-					<textarea name="comments" cols="40" rows="5"></textarea>	
-					<br>
-					<input type="submit" value="<bean:message key="global.btnSave"/>"/>
-		    	</html:form>
-    		</fieldset>
+    			</fieldset>
     
-    		<h3><bean:message key="phr.verification.table.heading"/></h3><br>
-    
-		    <table width="100%" border=1>
-		      <tr>
-		      	<th width="10%"><bean:message key="phr.verification.table.username"/></th>
-		      	<th width="10%"><bean:message key="phr.verification.table.method"/></th>
-		      	<th width="10%"><bean:message key="phr.verification.table.date"/></th>
-		      	<th width="10%"><bean:message key="phr.verification.table.by"/></th>
-		      	<th width="10%"><bean:message key="phr.verification.table.photoId"/></th>
-		      	<th width="10%"><bean:message key="phr.verification.table.parentGuardian"/></th>
-		      	<th width="50%"><bean:message key="phr.verification.table.comments"/></th>
-		      </tr>
-		      <%for(PHRVerification phrVerification:phrVerifications ){%>
-		      <tr>
-		      	<td><%=phrVerification.getPhrUserName()%></td>
-		      	<td><%=phrVerification.getVerificationLevel() %></td>
-		      	<td title="<%=DateUtils.formatDate(phrVerification.getVerificationDate(), request.getLocale())%>.<%=DateUtils.formatTime(phrVerification.getVerificationDate(), request.getLocale())%>"><%=DateUtils.formatDate(phrVerification.getVerificationDate(), request.getLocale())%></td>
-		      	<td><%=providerDao.getProviderName(phrVerification.getVerificationBy()) %></td>
-		      	<td align="center">
-		      		<%if(phrVerification.getPhotoId()){ %>
-		      			<bean:message key="phr.verification.table.Yes"/>
-		      		<%}%>
-		      	</td>
-		      	<td align="center">
-		      		<%if(phrVerification.getParentGuardian()){ %>
-		      			<bean:message key="phr.verification.table.Yes"/>
-		      		<%}%>
-		      	</td>
-		      	<td><%=phrVerification.getComments() %></td>
-		      </tr>
-		      <%} %>
-		    </table>		
 		</td>
 	</tr>
 	<tr>

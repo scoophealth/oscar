@@ -492,7 +492,13 @@ for (int i=0; i<sites.size(); i++) {
 				</select>
 			</td>
 		</tr>
-		<tr>
+                <% if (OscarProperties.getInstance().getBooleanProperty("questimed.enabled", "true")) { %>                
+                <tr>
+			<td align="right"><bean:message key="admin.provider.formQuestimedUsername" />:</td>
+			<td><input type="text" name="questimedUserName" value="<%=StringUtils.trimToEmpty(userPropertyDAO.getStringValue(provider_no, UserProperty.QUESTIMED_USERNAME))%>" maxlength="255"></td>
+		</tr>
+                <%}%>        
+                <tr>
 			<td align="right"><bean:message key="admin.provider.formOfficialFirstName" />:</td>
 			<td><input type="text" name="officialFirstName" value="<%=StringUtils.trimToEmpty(userPropertyDAO.getStringValue(provider_no, UserProperty.OFFICIAL_FIRST_NAME))%>" maxlength="255"></td>
 		</tr>

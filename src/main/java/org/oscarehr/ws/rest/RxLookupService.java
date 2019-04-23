@@ -25,20 +25,28 @@
 package org.oscarehr.ws.rest;
 
 import org.apache.log4j.Logger;
+import org.oscarehr.common.dao.UserDSMessagePrefsDao;
+import org.oscarehr.common.model.UserDSMessagePrefs;
 import org.oscarehr.managers.DrugLookUp;
 import org.oscarehr.managers.SecurityInfoManager;
+import org.oscarehr.rx.util.DrugrefUtil;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.ws.rest.to.DrugDSResponse;
 import org.oscarehr.ws.rest.to.DrugLookupResponse;
 import org.oscarehr.ws.rest.to.DrugResponse;
 import org.oscarehr.ws.rest.to.model.DrugSearchTo1;
 import org.oscarehr.ws.rest.to.model.DrugTo1;
+import org.oscarehr.ws.rest.to.model.RxDsMessageTo1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import oscar.oscarRx.data.RxPrescriptionData;
 import oscar.oscarRx.util.RxUtil;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -58,6 +66,9 @@ public class RxLookupService extends AbstractServiceImpl {
 
     @Autowired
     protected DrugLookUp drugLookUpManager;
+    
+    @Autowired
+    protected UserDSMessagePrefsDao  dsmessageDao;
 
     /**
      * Performs a search in the drug product database for a drug that matches in input parameter.
@@ -77,6 +88,77 @@ public class RxLookupService extends AbstractServiceImpl {
         try {
 
             drugs = this.drugLookUpManager.search(s);
+
+            if (drugs != null) {
+
+                resp.setDrugs(drugs);
+                resp.setSuccess(true);
+
+            } else {
+
+                resp.setMessage("Failed to find drugs that match: " + s);
+                resp.setSuccess(false);
+
+            }
+
+        } catch (Exception e) {
+            logger.error(e.getStackTrace());
+            resp.setSuccess(false);
+            resp.setMessage("Failed to complete lookup!");
+        }
+
+        return resp;
+
+    }
+    
+    
+    @GET
+    @Path("/fullSearch")
+    @Produces("application/json")
+    public DrugLookupResponse fullSearch(@QueryParam("string") String s) {
+
+        DrugLookupResponse resp = new DrugLookupResponse();
+
+        List<DrugSearchTo1> drugs;
+
+        try {
+
+            drugs = this.drugLookUpManager.fullSearch(s);
+
+            if (drugs != null) {
+
+                resp.setDrugs(drugs);
+                resp.setSuccess(true);
+
+            } else {
+
+                resp.setMessage("Failed to find drugs that match: " + s);
+                resp.setSuccess(false);
+
+            }
+
+        } catch (Exception e) {
+            logger.error(e.getStackTrace());
+            resp.setSuccess(false);
+            resp.setMessage("Failed to complete lookup!");
+        }
+
+        return resp;
+
+    }
+    
+    @GET
+    @Path("/searchByElement")
+    @Produces("application/json")
+    public DrugLookupResponse searchByElement(@QueryParam("string") String s) {
+
+        DrugLookupResponse resp = new DrugLookupResponse();
+
+        List<DrugSearchTo1> drugs;
+
+        try {
+
+            drugs = this.drugLookUpManager.searchByElement(s);
 
             if (drugs != null) {
 
@@ -183,6 +265,72 @@ public class RxLookupService extends AbstractServiceImpl {
         return resp;
 
     }
+    
+    @POST
+    @Path("/dsMessage/{demographicNo}")
+    @Produces("application/json")
+    @Consumes("application/json")
+    public DrugDSResponse getDSMessages(@PathParam("demographicNo") Integer demographicNo,List<DrugTo1> drugTransferObjects) {
+    	
+    		DrugrefUtil drugrefUtil = new DrugrefUtil();
+    		RxPrescriptionData rxData = new RxPrescriptionData();
+    		List<String> atcCodes = rxData.getCurrentATCCodesByPatient(demographicNo);
+    		List regionalIdentifiers = rxData.getCurrentRegionalIdentifiersCodesByPatient(demographicNo);
+    		
+    		if(drugTransferObjects != null) {
+    			for(DrugTo1 drugTo: drugTransferObjects) {
+    				String atc = drugTo.getAtc();
+    				if(atc != null && !atc.trim().isEmpty()) {
+    					atcCodes.add(atc);
+    				}
+    				String din = drugTo.getRegionalIdentifier();
+    				if(din != null && !din.trim().isEmpty()) {
+    					regionalIdentifiers.add(din);
+    				}
+    			}
+    		}
+    		List<RxDsMessageTo1> dsMessages = null;
+    		DrugDSResponse drugDSResponse = new DrugDSResponse();
+    		
+    		try {
+    			dsMessages = drugrefUtil.getMessages(this.getLoggedInInfo(),this.getCurrentProvider().getProviderNo(),demographicNo,atcCodes, regionalIdentifiers,this.getLocale());
+    			drugDSResponse.setWarningLevel(drugrefUtil.getWarningLevel(this.getLoggedInInfo(),demographicNo));
+    			drugDSResponse.setDsMessages(dsMessages);
+    		}catch(Exception e) {
+    			logger.error("Error getting messages",e);
+    			drugDSResponse.setSuccess(false); 
+    		}
+    		return drugDSResponse;
+    }
 
+    
+    @POST
+    @Path("/hideWarning")
+    @Consumes("application/json")
+    public Response hideWarning(RxDsMessageTo1 dsMessageToHide){
+
+        String provider = getLoggedInInfo().getLoggedInProviderNo();
+        
+        String postId = dsMessageToHide.getId();
+        Date date = dsMessageToHide.getUpdated_at();
+        
+        UserDSMessagePrefs pref = new UserDSMessagePrefs();
+
+        pref.setProviderNo(provider);
+        pref.setRecordCreated(new Date());
+        pref.setResourceId(postId);
+        if(dsMessageToHide.getMessageSource() != null && dsMessageToHide.getMessageSource().equals("MediSpan")) {
+        		pref.setResourceType(UserDSMessagePrefs.MEDISPAN);
+        }else {
+        		pref.setResourceType(UserDSMessagePrefs.MYDRUGREF);
+        }
+        pref.setResourceUpdatedDate(date);
+        pref.setArchived(Boolean.TRUE); //I'm not sure why this would be true 
+        								   //but it looks like it was changed a long time ago for new items to be true. 
+       
+        dsmessageDao.saveProp(pref);
+        
+    		return Response.ok("true").build();
+    }
 
 }

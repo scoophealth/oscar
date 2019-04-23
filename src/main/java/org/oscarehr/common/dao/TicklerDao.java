@@ -82,6 +82,18 @@ public class TicklerDao extends AbstractDao<Tickler>{
 		
 		return results;
 	}
+
+	@SuppressWarnings("unchecked")
+    public List<Tickler> findByTicklerNoDemo(Integer ticklerNo, Integer demoNo) {
+		
+		Query query = entityManager.createQuery("select t from Tickler t where t.id = ?1 AND t.demographicNo = ?2 AND t.status != 'D'");
+		query.setParameter(1, ticklerNo);
+		query.setParameter(2, demoNo);
+		
+		List<Tickler> results = query.getResultList();
+		
+		return results;
+	}
 	
 	@SuppressWarnings("unchecked")
     public List<Tickler> findByTicklerNoAssignedTo(Integer ticklerNo, String assignedTo, Integer demoNo) {

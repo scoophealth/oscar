@@ -11965,6 +11965,7 @@ CREATE TABLE `AppDefinition` (
   `active` tinyint(1),
   `addedBy` varchar(8),
   `added` datetime,
+  `consentTypeId` int(15),
   PRIMARY KEY (`id`)
 );
 
@@ -12148,6 +12149,8 @@ CREATE TABLE `consentType` (
   `name` varchar(50),
   `description` varchar(500),
   `active` tinyint(1),
+  `providerNo` varchar(6),
+  `remoteEnabled` tinyint(1),
   PRIMARY KEY (`id`)
 );
 
@@ -12318,6 +12321,19 @@ CREATE TABLE DHIRSubmissionLog (
     PRIMARY KEY(id)
 );
 
+CREATE TABLE AppointmentSearch (
+			id int(10)  NOT NULL auto_increment primary key,
+			providerNo varchar(6),
+			searchType varchar(100),
+			searchName varchar(100),
+			fileContents mediumblob,
+			updateDate datetime,
+			createDate datetime,
+			active boolean,
+			uuid char(40),
+			KEY(providerNo),
+			KEY(uuid)
+);
 CREATE TABLE OLISResults (
     id int(11) auto_increment,
     requestingHICProviderNo varchar(30),
@@ -12440,3 +12456,14 @@ CREATE TABLE `PreventionReport` (
   `uuid` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
+
+CREATE TABLE `EFormDocs` (
+  `id` int(10) NOT NULL auto_increment PRIMARY KEY,
+  `fdid` int(10) NOT NULL,
+  `document_no` int(10) NOT NULL,
+  `doctype` char(1) NOT NULL,
+  `deleted` char(1) DEFAULT NULL,
+  `attach_date` date,
+  `provider_no` varchar(6) NOT NULL
+);
+

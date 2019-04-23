@@ -1,4 +1,4 @@
-oscarApp.controller('PatientSearchCtrl', function ($scope, $timeout, $resource, ngTableParams, securityService, $modal, $http, demographicService, $state, $location) {
+oscarApp.controller('PatientSearchCtrl', function ($scope, $timeout, $resource, ngTableParams, securityService, $uibModal, $http, demographicService, $state, $location) {
 
 	var quickSearchTerm = ($location.search()).term;
 	
@@ -95,7 +95,7 @@ oscarApp.controller('PatientSearchCtrl', function ($scope, $timeout, $resource, 
     $scope.showIntegratorResults = function () {
     	var result = ($scope.integratorResults != null && $scope.integratorResults.total > 0 ) ? $scope.integratorResults.content : [];
     	var total = ($scope.integratorResults != null) ? $scope.integratorResults.total : 0;
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
         	templateUrl: 'patientsearch/remotePatientResults.jsp',
             controller: 'RemotePatientResultsController',
             resolve: {
@@ -116,7 +116,7 @@ function pad0(n) {
 }
 
 
-oscarApp.controller('RemotePatientResultsController',function($scope, $modalInstance, results, total, $http) {
+oscarApp.controller('RemotePatientResultsController',function($scope, $uibModalInstance, results, total, $http) {
     $scope.results = results;
     $scope.total = total;
     
@@ -126,7 +126,7 @@ oscarApp.controller('RemotePatientResultsController',function($scope, $modalInst
     
      
     $scope.close = function () {
-        $modalInstance.close("Someone Closed Me");
+    		$uibModalInstance.close("Someone Closed Me");
     }
     
     $scope.doImport = function (d) {
@@ -135,7 +135,7 @@ oscarApp.controller('RemotePatientResultsController',function($scope, $modalInst
     }
     
     $scope.save = function () {
-        $modalInstance.close("Someone Saved Me");
+    		$uibModalInstance.close("Someone Saved Me");
     }
     
     $scope.prevPage = function () {

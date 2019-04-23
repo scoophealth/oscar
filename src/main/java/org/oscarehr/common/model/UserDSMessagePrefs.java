@@ -46,6 +46,9 @@ import javax.persistence.Transient;
 public class UserDSMessagePrefs extends AbstractModel<Integer> implements Serializable {
 	@Transient
     public final static String MYDRUGREF = "mydrugref";
+	
+	@Transient
+    public final static String MEDISPAN = "medispan";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

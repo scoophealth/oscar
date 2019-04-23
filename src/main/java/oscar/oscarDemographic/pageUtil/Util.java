@@ -252,12 +252,14 @@ public class Util {
     }
 	
     static public String setCountrySubDivCode(String countrySubDivCode) {
-		countrySubDivCode = countrySubDivCode.trim();
-		if (StringUtils.filled(countrySubDivCode)) {
-		    if (countrySubDivCode.equals("OT")) return "Other";
-		    if (countrySubDivCode.indexOf("-") == -1) return "CA-"+countrySubDivCode;
-		    return countrySubDivCode;
-		}
+        if (countrySubDivCode != null) {
+            countrySubDivCode = countrySubDivCode.trim();
+            if (StringUtils.filled(countrySubDivCode)) {
+                if (countrySubDivCode.equals("OT")) return "Other";
+                if (countrySubDivCode.indexOf("-") == -1) return "CA-" + countrySubDivCode;
+                return countrySubDivCode;
+            }
+        }
 		return "";
     }
 

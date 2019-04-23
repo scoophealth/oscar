@@ -60,21 +60,26 @@ public class SecurityAddSecurityHelper {
 		pageContext.setAttribute("message", message);
 	}
 	
+	public static String digestPassword(String rawPassword) throws NoSuchAlgorithmException {
+		StringBuilder sbTemp = new StringBuilder();
+		MessageDigest md = MessageDigest.getInstance("SHA");
+		byte[] btNewPasswd = md.digest(rawPassword.getBytes());
+		for (int i = 0; i < btNewPasswd.length; i++)
+			sbTemp = sbTemp.append(btNewPasswd[i]);
+		return sbTemp.toString();
+	}
+	
 	private String process(PageContext pageContext) {
 		ServletRequest request = pageContext.getRequest();
 		
-		StringBuilder sbTemp = new StringBuilder();
-		MessageDigest md;
+		String digestedPassword = null;
+		
         try {
-	        md = MessageDigest.getInstance("SHA");
+        	 	digestedPassword =  digestPassword(request.getParameter("password"));
         } catch (NoSuchAlgorithmException e) {
-        	MiscUtils.getLogger().error("Unable to get SHA message digest", e);
-        	return "admin.securityaddsecurity.msgAdditionFailure";
+        		MiscUtils.getLogger().error("Unable to get SHA message digest", e);
+        		return "admin.securityaddsecurity.msgAdditionFailure";
         }
-        
-		byte[] btNewPasswd = md.digest(request.getParameter("password").getBytes());
-		for (int i = 0; i < btNewPasswd.length; i++)
-			sbTemp = sbTemp.append(btNewPasswd[i]);
 
 		boolean isUserRecordAlreadyCreatedForProvider = !securityDao.findByProviderNo(request.getParameter("provider_no")).isEmpty();
 		if (isUserRecordAlreadyCreatedForProvider) return "admin.securityaddsecurity.msgLoginAlreadyExistsForProvider";
@@ -84,7 +89,7 @@ public class SecurityAddSecurityHelper {
 
 		Security s = new Security();
 		s.setUserName(request.getParameter("user_name"));
-		s.setPassword(sbTemp.toString());
+		s.setPassword(digestedPassword);
 		s.setProviderNo(request.getParameter("provider_no"));
 		s.setPin(request.getParameter("pin"));
 		s.setBExpireset(request.getParameter("b_ExpireSet") == null ? 0 : Integer.parseInt(request.getParameter("b_ExpireSet")));

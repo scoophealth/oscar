@@ -1,5 +1,5 @@
 oscarApp.controller('SettingsCtrl', function ($scope,$http,$state, providerList, user, billingServiceTypes, 
-		loadedSettings, providerService, $modal, encounterForms,eforms, $filter,teams,groupNames,loadedApps,appService) {
+		loadedSettings, providerService, $uibModal, encounterForms,eforms, $filter,teams,groupNames,loadedApps,appService) {
 
 	$scope.$emit('configureShowPatientList', false);
 	 
@@ -176,7 +176,7 @@ oscarApp.controller('SettingsCtrl', function ($scope,$http,$state, providerList,
     
     $scope.openChangePasswordModal = function () {
         /*
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
         	templateUrl: 'settings/changePassword.jsp',
             controller: 'ChangePasswordCtrl'
         });
@@ -186,7 +186,7 @@ oscarApp.controller('SettingsCtrl', function ($scope,$http,$state, providerList,
     
     
     $scope.openQuickLinkModal = function () {       
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
         	templateUrl: 'settings/quickLink.jsp',
             controller: 'QuickLinkCtrl'
         });
@@ -244,30 +244,30 @@ oscarApp.controller('SettingsCtrl', function ($scope,$http,$state, providerList,
 });
 
 
-oscarApp.controller('ChangePasswordCtrl',function($scope, $modalInstance) {
+oscarApp.controller('ChangePasswordCtrl',function($scope, $uibModalInstance) {
     
     $scope.close = function () {
-        $modalInstance.close("Someone Closed Me");
+    		$uibModalInstance.close("Someone Closed Me");
     }
    
     $scope.changePassword = function() {
     	console.log('password saved - NOT');
-    	$modalInstance.close("Someone Saved Me");
+    		$uibModalInstance.close("Someone Saved Me");
     }
 });
 
-oscarApp.controller('QuickLinkCtrl',function($scope, $modalInstance) {
+oscarApp.controller('QuickLinkCtrl',function($scope, $uibModalInstance) {
     
 	$scope.qll = {};
 	
     $scope.close = function () {
-        $modalInstance.close();
+    	$uibModalInstance.close();
     }
    
     $scope.addQuickLink = function(qlForm) {
     	if(qlForm.$valid) {
     	//	alert($scope.qll.toSource());
-        	$modalInstance.close($scope.qll);
+    		$uibModalInstance.close($scope.qll);
     	}
     }
 });

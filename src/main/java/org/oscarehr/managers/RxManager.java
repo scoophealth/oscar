@@ -120,6 +120,35 @@ public class RxManager {
 
         return drugs;
     }
+    
+    
+    /**
+     * Get drug by id,  User is checked to make sure they have permissions to view drug by checking the patient it was prescribed too.
+     *
+     * @param info          details regarding the current user
+     * @param drugId 		id of the drug to retreive
+     *
+     * @return drug 
+     *
+     * @throws UnsupportedOperationException when a drug is not found.
+     */
+    public Drug getDrug( LoggedInInfo info,  int drugId) throws UnsupportedOperationException {
+
+    		Drug drug = drugDao.find(drugId);
+    		
+    		if(drug == null) {
+    			throw new UnsupportedOperationException("drug not found: " + drugId);
+    		}
+    		//(LoggedInInfo loggedInInfo, String action, String content, String contentId, String demographicNo, String data)
+        LogAction.addLog(info, "RxManager.getDrug", "drugs",""+drugId,""+drug.getDemographicId(),drug.toString());
+
+        // Access control check.
+        readCheck(info, drug.getDemographicId());
+        
+        
+
+        return drug;
+    }
 
     /**
      * Adds a new drug to the database.
@@ -176,6 +205,10 @@ public class RxManager {
 
         // Will throw an exception if access is denied.
         this.writeCheck(info, d.getDemographicId());
+        
+        if(d.getId() == null) {
+        		return null;
+        }
 
         Drug old = this.drugDao.find(d.getId());
 
@@ -428,8 +461,11 @@ public class RxManager {
 
         List<Drug> historyDrugs;
 
-        if(potentialDrugs.size() == 1){
-            historyDrugs = drugDao.findByAtc(potentialDrugs.get(0).getAtc());
+        if(potentialDrugs.size() == 1 && potentialDrugs.get(0).getAtc() != null && !potentialDrugs.get(0).getAtc().trim().isEmpty()){
+            historyDrugs = drugDao.findByDemographicIdAndAtc(demographicNo,potentialDrugs.get(0).getAtc());
+            if(historyDrugs.isEmpty()) { // not all drugs have ATC codes ie custom drugs.
+            		return potentialDrugs;
+            }
         }else{
             historyDrugs = new ArrayList<Drug>();
         }
@@ -501,17 +537,35 @@ public class RxManager {
      */
     protected Boolean canPrescribe(Drug d){
 
-        if(d == null) return false;
+        if(d == null) {
+        		logger.debug("drug was null returning false");
+        		return false;
+        }
 
-        if(d.getProviderNo() == null || d.getProviderNo().equals("")) return false;
+        if(d.getProviderNo() == null || d.getProviderNo().equals("")) {
+        		logger.debug("provider was null or blank returning false");
+        		return false;
+        }
 
-        if(d.getDemographicId() == null || d.getDemographicId() < 0) return false;
+        if(d.getDemographicId() == null || d.getDemographicId() < 0) {
+        		logger.debug("demographic was null returning false");
+        		return false;
+        }
 
-        if(d.getRxDate() == null) return false;
+        if(d.getRxDate() == null) {
+        		logger.debug("rx date was null returning false");
+        		return false;
+        }
 
-        if(d.getEndDate() == null || d.getRxDate().after(d.getEndDate())) return false;
+        if(d.getEndDate() == null || d.getRxDate().after(d.getEndDate())) {
+        		logger.debug("drug endDate was null");
+        		return false;
+        }
 
-        if(d.getSpecial() == null || d.getSpecial().equals("")) return false;
+        if(d.getSpecial() == null || d.getSpecial().equals("")) {
+        		logger.debug("drug special instructions was null returning false");
+        		return false;
+        }
 
         return true;
     }

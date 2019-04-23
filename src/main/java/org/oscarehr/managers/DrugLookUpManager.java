@@ -79,6 +79,89 @@ public class DrugLookUpManager implements DrugLookUp {
 
     }
 
+    public List<DrugSearchTo1> fullSearch(String s) {
+
+        RxDrugRef dr = new RxDrugRef();
+
+        List<DrugSearchTo1> drugs = new ArrayList<DrugSearchTo1>();
+
+        try {
+
+            // has structure: {isInactive=BOOLEAN, name=STRING, category=INT, id=INT},
+
+
+            // This isn't the best approach to managing results from the RxDrugRef
+            // we should have a hashtable type.
+            // Would require refactor to the RxDrugRef class.
+            Vector<Hashtable> v = (Vector<Hashtable>) dr.list_drug_element(s);
+
+            DrugSearchTo1 temp;
+
+            for (Hashtable h : v) {
+
+                temp = new DrugSearchTo1();
+                temp.setName((String) h.get("name"));
+                if(h.containsKey("isInactive")) {
+                		temp.setActive(!((Boolean) h.get("isInactive")));
+                }
+                temp.setId((Integer) h.get("id"));
+                temp.setCategory((Integer) h.get("category"));
+
+                drugs.add(temp);
+
+            }
+
+        } catch (Exception e) {
+            logger.error("fullSearch Error",e);
+            return null;
+        }
+
+        return drugs;
+
+    }
+    
+    @Override
+	public List<DrugSearchTo1> searchByElement(String s) {
+    	RxDrugRef dr = new RxDrugRef();
+
+        List<DrugSearchTo1> drugs = new ArrayList<DrugSearchTo1>();
+
+        try {
+
+            // has structure: {isInactive=BOOLEAN, name=STRING, category=INT, id=INT},
+
+
+            // This isn't the best approach to managing results from the RxDrugRef
+            // we should have a hashtable type.
+            // Would require refactor to the RxDrugRef class.
+            Vector<Hashtable> v = (Vector<Hashtable>) dr.list_brands_from_element(s);
+
+            DrugSearchTo1 temp;
+
+            for (Hashtable h : v) {
+
+                temp = new DrugSearchTo1();
+                temp.setName((String) h.get("name"));
+                if(h.containsKey("isInactive")) {
+                		temp.setActive(!((Boolean) h.get("isInactive")));
+                }
+                temp.setId((Integer) h.get("id"));
+                temp.setCategory((Integer) h.get("category"));
+
+                drugs.add(temp);
+
+            }
+
+        } catch (Exception e) {
+            logger.error("fullSearch Error",e);
+            return null;
+        }
+
+        return drugs;
+
+	}
+
+    
     public DrugSearchTo1 details(String id) throws Exception{
 
         RxDrugRef dr = new RxDrugRef();
@@ -104,7 +187,7 @@ public class DrugLookUpManager implements DrugLookUp {
         t.setAtc((String) h.get("atc"));
         t.setRegionalId(Integer.parseInt((String) h.get("regional_identifier")));
         t.setForm((String) h.get("drugForm"));
-        t.setName((String) h.get("name"));
+        t.setName((String) h.get("product"));
 
         // Component: { name=STRING, strength=INT, unit=STRING }
         Vector<Hashtable<String, Object>> components = (Vector<Hashtable<String, Object>>) h.get("components");
@@ -144,4 +227,6 @@ public class DrugLookUpManager implements DrugLookUp {
         }
 
     }
+
+	
 }

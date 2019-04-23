@@ -42,6 +42,7 @@ public class PrescriptionTo1 implements Serializable {
     private Date datePrescribed;
     private Date datePrinted;
     private String textView;
+    private Integer reprintCount;
 
     public String getTextView() {
         return textView;
@@ -90,4 +91,14 @@ public class PrescriptionTo1 implements Serializable {
     public void setDatePrinted(Date datePrinted) {
         this.datePrinted = datePrinted;
     }
+
+	public Integer getReprintCount() {
+		return reprintCount;
+	}
+
+	public void setReprintCount(Integer reprintCount) {
+		this.reprintCount = reprintCount;
+	}
+
+	
 }

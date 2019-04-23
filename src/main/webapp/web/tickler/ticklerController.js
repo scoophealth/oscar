@@ -1,4 +1,4 @@
-oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngTableParams, securityService, $modal, $http, ticklerService, noteService, providers, providerService,$stateParams) {
+oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngTableParams, securityService, $uibModal, $http, ticklerService, noteService, providers, providerService,$stateParams) {
     var ticklerAPI = $resource('../ws/rs/tickler/ticklers');
          
     $scope.lastResponse = "";
@@ -115,7 +115,7 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
     	var windowProps = "height=400,width=600,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
     	//window.open('../tickler/ticklerAdd.jsp','ticklerAdd',windowProps);
     	
-      	var modalInstance = $modal.open({
+      	var modalInstance = $uibModal.open({
         	templateUrl: 'tickler/ticklerAdd.jsp',
             controller: 'TicklerAddController',
             backdrop: false,
@@ -136,7 +136,7 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
     
     $scope.editTickler = function(tickler) {
     	
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
         	templateUrl: 'tickler/ticklerView.jsp',
             controller: 'TicklerViewController',
             backdrop: false,
@@ -177,7 +177,7 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
         		$scope.ticklerNote = {"editor":"you","note":"","noteId":0,"observationDate":"now","revision":0};
 
         	}
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
             	templateUrl: 'tickler/ticklerNote.jsp',
                 controller: 'TicklerNoteController',
                 resolve: {
@@ -197,7 +197,7 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
     
     $scope.showComments = function(tickler){
     	$scope.tickler = tickler;
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
         	templateUrl: 'tickler/ticklerComments.jsp',
             controller: 'TicklerCommentController',
             resolve: {
@@ -216,31 +216,31 @@ oscarApp.controller('TicklerListCtrl', function($scope, $timeout, $resource, ngT
 });
 
 
-oscarApp.controller('TicklerNoteController',function($scope, $modalInstance, ticklerNote, tickler, $http, noteService) {
+oscarApp.controller('TicklerNoteController',function($scope, $uibModalInstance, ticklerNote, tickler, $http, noteService) {
     $scope.ticklerNote = ticklerNote;
     $scope.originalNote = ticklerNote.note;
     $scope.tickler = tickler;
     
     $scope.close = function () {
-        $modalInstance.close("Someone Closed Me");
+    		$uibModalInstance.close("Someone Closed Me");
     };
     $scope.save = function () {
     	var updatedNote = $scope.ticklerNote.note;
     	$scope.ticklerNote.tickler = $scope.tickler;
     	
     	noteService.saveTicklerNote($scope.ticklerNote).then(function(data){
-    		 $modalInstance.close("Someone Saved Me");
+    		$uibModalInstance.close("Someone Saved Me");
     	},function(reason){
     		alert(reason);
     	});
     };
 });
 
-oscarApp.controller('TicklerCommentController',function($scope, $modalInstance, tickler) {
+oscarApp.controller('TicklerCommentController',function($scope, $uibModalInstance, tickler) {
 	   $scope.tickler = tickler;
 	    
 	    $scope.close = function () {
-	        $modalInstance.close("Someone Closed Me");
+	    		$uibModalInstance.close("Someone Closed Me");
 	    };
 });
 

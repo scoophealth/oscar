@@ -197,6 +197,17 @@ li.cpp-note-list:last-child{
 color: #FF0000;
 }
 
+.mild, .mild{
+color: #FFFF33;
+}
+
+.moderate, .moderate{
+color: #FF6600;
+}
+.severe, .severe{
+color: #CC0000;
+}
+
 
 .refused, .refused:hover{
 color: #EAACAC;
@@ -208,6 +219,18 @@ color: #FFCC24;
 
 .pending, .pending:hover{
 color: #FF00FF;
+}
+
+.deletedItem {
+	text-decoration: line-through;
+}
+
+.greyedOut {
+	background-color: grey;
+}
+
+.favourite {
+	background-color: fuchsia;
 }
 
 /*think of changing this to be consistent*/
@@ -436,10 +459,12 @@ font-size:20px
 	<script src="../library/typeahead.js/typeahead.min.js"></script>
 	<script src="../library/angular.min.js"></script>
 	<!-- script src="../library/angular-route.min.js"></script  -->
+	
+	<script src="../library/angular-sanitize.min.js"></script>
 	<script src="../library/angular-ui-router.js"></script>
  	<script src="../library/angular-resource.min.js"></script>
  	
- 	<script src="../library/ui-bootstrap-tpls-0.11.0.js"></script>
+ 	<script src="../library/ui-bootstrap-tpls-2.5.0.js"></script>
  	<script src="../library/pym.js"></script>
  	
  	<script src="../library/ng-infinite-scroll.min.js"></script>
@@ -449,6 +474,7 @@ font-size:20px
  	
 
 	<!-- we'll combine/minify later -->
+
 	<script src="common/demographicServices.js"></script>
 	<script src="common/programServices.js"></script>
 	<script src="common/scheduleServices.js"></script>
@@ -468,43 +494,57 @@ font-size:20px
 	<script src="common/consultServices.js"></script>
 	<script src="common/appServices.js"></script>
 	<script src="common/diseaseRegistryServices.js"></script>
+	<script src="common/consentServices.js"></script>
 	<script src="filters.js"></script>
 	<script src="app.js"></script>
+
+	<script src="../web/common/rxServices.js"></script>	
+	<script src="../web/record/rx/rx.component.js"></script>
+	<script src="../web/record/rx/rxModel.js"></script>
+	<script src="../web/record/rx/search/medsearch.component.js"></script>
+	<script src="../web/record/rx/profile/profile.component.js"></script>
+	<script src="../web/record/rx/print/print.component.js"></script>
+	<script src="../web/record/rx/dsview/dsview.component.js"></script>
+	<script src="../web/record/rx/discontinue/discontinue.component.js"></script>
+	<script src="../web/record/rx/history/history.component.js"></script>
+	<script src="../web/record/rx/reprint/reprint.component.js"></script>
+	<script src="../web/record/rx/fullsearch/fullsearch.component.js"></script>
+	<script src="../web/common/components/provider/provider.component.js"></script>
 	
-	<script src="oscarController.js"></script>
-	<script src="dashboard/dashboardController.js"></script>
-	<script src="common/navBarController.js"></script>
-	<script src="patientlist/patientListController.js"></script>
-	<script src="record/recordController.js"></script>
-	<script src="record/summary/summaryController.js"></script>
-	<script src="record/forms/formsController.js"></script>
-	<script src="record/details/detailsController.js"></script>
-	<script src="record/phr/phrController.js"></script>
-	<script src="record/tracker/trackerController.js"></script>
+	<script src="../web/oscarController.js"></script>
+	<script src="../web/dashboard/dashboardController.js"></script>
+	<script src="../web/common/navBarController.js"></script>
+	<script src="../web/patientlist/patientListController.js"></script>
+	<script src="../web/record/recordController.js"></script>
+	<script src="../web/record/summary/summaryController.js"></script>
+	<script src="../web/record/forms/formsController.js"></script>
+	<script src="../web/record/details/detailsController.js"></script>
+	<script src="../web/record/phr/phrController.js"></script>
+	<script src="../web/record/tracker/trackerController.js"></script>
 	
-	<script src="tickler/ticklerController.js"></script>
-	<script src="tickler/ticklerViewController.js"></script>
-	<script src="tickler/ticklerAddController.js"></script>
+	<script src="../web/tickler/ticklerController.js"></script>
+	<script src="../web/tickler/ticklerViewController.js"></script>
+	<script src="../web/tickler/ticklerAddController.js"></script>
 	
-	<script src="schedule/scheduleController.js"></script>
-	<script src="admin/adminController.js"></script>
-	<script src="billing/billingController.js"></script>
-	<script src="consults/consultRequestListController.js"></script>
-	<script src="consults/consultRequestController.js"></script>	
-	<script src="consults/consultResponseListController.js"></script>
-	<script src="consults/consultResponseController.js"></script>	
-	<script src="inbox/inboxController.js"></script>
-	<script src="patientsearch/patientSearchController.js"></script>
+	<script src="../web/schedule/scheduleController.js"></script>
+	<script src="../web/admin/adminController.js"></script>
+	<script src="../web/billing/billingController.js"></script>
+	<script src="../web/consults/consultRequestListController.js"></script>
+	<script src="../web/consults/consultRequestController.js"></script>	
+	<script src="../web/consults/consultResponseListController.js"></script>
+	<script src="../web/consults/consultResponseController.js"></script>	
+	<script src="../web/inbox/inboxController.js"></script>
+	<script src="../web/patientsearch/patientSearchController.js"></script>
 	
-	<script src="report/reportsController.js"></script>
-	<script src="document/documentsController.js"></script>
-	<script src="settings/settingsController.js"></script>
-	<script src="help/supportController.js"></script>
-	<script src="help/helpController.js"></script>
-	<script src="clinicalconnect/ccController.js"></script>
+	<script src="../web/report/reportsController.js"></script>
+	<script src="../web/document/documentsController.js"></script>
+	<script src="../web/settings/settingsController.js"></script>
+	<script src="../web/help/supportController.js"></script>
+	<script src="../web/help/helpController.js"></script>
+	<script src="../web/clinicalconnect/ccController.js"></script>
 	
-	<script src="schedule/appointmentAddController.js"></script>
-	<script src="schedule/appointmentViewController.js"></script>
+	<script src="../web/schedule/appointmentAddController.js"></script>
+	<script src="../web/schedule/appointmentViewController.js"></script>
 	
 	<!-- 
 	

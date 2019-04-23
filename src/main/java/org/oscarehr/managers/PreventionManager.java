@@ -57,6 +57,8 @@ public class PreventionManager {
 	@Autowired
 	private PropertyDao propertyDao;
 	@Autowired
+	private PatientConsentManager patientConsentManager;
+	@Autowired
 	private SecurityInfoManager securityInfoManager;
 		
 	private static final String HIDE_PREVENTION_ITEM = "hide_prevention_item";
@@ -65,8 +67,15 @@ public class PreventionManager {
 
 	public List<Prevention> getUpdatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateExclusive, int itemsToReturn) {
 		List<Prevention> results = preventionDao.findByUpdateDate(updatedAfterThisDateExclusive, itemsToReturn);
-
+		patientConsentManager.filterProviderSpecificConsent(loggedInInfo, results);
 		LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getUpdatedAfterDate", "updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
+
+		return (results);
+	}
+
+	public List<Prevention> getByDemographicIdUpdatedAfterDate(LoggedInInfo loggedInInfo, Integer demographicId, Date updatedAfterThisDateExclusive) {
+		List<Prevention> results = preventionDao.findByDemographicIdAfterDatetimeExclusive(demographicId, updatedAfterThisDateExclusive);
+		LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getByDemographicIdUpdatedAfterDate", "demographicId="+demographicId+" updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
 
 		return (results);
 	}

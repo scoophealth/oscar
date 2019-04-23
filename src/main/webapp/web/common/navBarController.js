@@ -25,7 +25,7 @@
 */
 
 
-oscarApp.controller('NavBarCtrl', function ($scope, $location, $modal, $state, $rootScope, appService, securityService, personaService, billingService, inboxService) {
+oscarApp.controller('NavBarCtrl', function ($scope, $location, $uibModal, $state, $rootScope, appService, securityService, personaService, billingService, inboxService) {
 	
 	$scope.unAckLabDocTotal = 0;
 	
@@ -178,7 +178,7 @@ oscarApp.controller('NavBarCtrl', function ($scope, $location, $modal, $state, $
 	$scope.newDemographic = function(size){
 		console.log("modal?");
 		
-		var modalInstance = $modal.open({
+		var modalInstance = $uibModal.open({
 			templateUrl: 'newPatient.jsp',
 			controller: NewPatientCtrl,
 			size: size
@@ -230,7 +230,7 @@ oscarApp.controller('NavBarCtrl', function ($scope, $location, $modal, $state, $
 });
 
 
-function NewPatientCtrl($scope, $modal, $modalInstance, demographicService, securityService, programService, staticDataService){
+function NewPatientCtrl($scope, $uibModal, $uibModalInstance, demographicService, securityService, programService, staticDataService){
 	console.log("newpatient called");
 	$scope.demographic = {};
 	
@@ -276,7 +276,7 @@ function NewPatientCtrl($scope, $modal, $modalInstance, demographicService, secu
 			demographicService.saveDemographic($scope.demographic).then(function(data){
 				console.log(data);
 				$scope.demoRetVal = data;
-				$modalInstance.close(data);
+				$uibModalInstance.close(data);
 			},
 			function(errorMessage){
 				console.log("saveDemo "+errorMessage);
@@ -289,11 +289,11 @@ function NewPatientCtrl($scope, $modal, $modalInstance, demographicService, secu
 	}
 	
 	$scope.ok = function () {
-		$modalInstance.close($scope.selected.item);
+		$uibModalInstance.close($scope.selected.item);
 	};
 	
 	$scope.cancel = function () {
-		$modalInstance.dismiss('cancel');
+		$uibModalInstance.dismiss('cancel');
 	};
 	
 	$scope.capName = function () {

@@ -37,6 +37,8 @@ import javax.persistence.Table;
 @Table(name="consentType")
 public class ConsentType extends AbstractModel<Integer> {
 	
+	public static final String PROVIDER_CONSENT_FILTER = "provider_consent_filter";
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -48,7 +50,14 @@ public class ConsentType extends AbstractModel<Integer> {
 	private String type;
 	
 	private String description;
-	private boolean active;
+	
+	private String providerNo;
+	
+	private Boolean remoteEnabled = Boolean.FALSE;
+	
+	private Boolean active;
+	
+	
 
 	@Override
 	public Integer getId() {
@@ -89,6 +98,22 @@ public class ConsentType extends AbstractModel<Integer> {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+
+	public String getProviderNo() {
+		return providerNo;
+	}
+
+	public void setProviderNo(String providerNo) {
+		this.providerNo = providerNo;
+	}
+
+	public Boolean isRemoteEnabled() {
+		return remoteEnabled;
+	}
+
+	public void setRemoteEnabled(Boolean remoteEnabled) {
+		this.remoteEnabled = remoteEnabled;
 	}
 
 }

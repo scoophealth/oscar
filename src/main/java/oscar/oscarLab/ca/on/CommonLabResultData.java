@@ -33,6 +33,7 @@ import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.PMmodule.caisi_integrator.CaisiIntegratorManager;
 import org.oscarehr.PMmodule.caisi_integrator.IntegratorFallBackManager;
@@ -102,6 +103,10 @@ public class CommonLabResultData {
 		return populateLabResultsData(loggedInInfo, demographicNo, reqId, attach, false);
 	}
 	
+	public ArrayList<LabResultData> populateLabResultsDataEForm(LoggedInInfo loggedInInfo, String demographicNo, String reqId, boolean attach) {
+		return populateLabResultsDataEForm(loggedInInfo, demographicNo, reqId, attach, false);
+	}
+	
 	//Populate Lab data for consultation response
 	public ArrayList<LabResultData> populateLabResultsDataConsultResponse(LoggedInInfo loggedInInfo, String demographicNo, String respId, boolean attach) {
 		return populateLabResultsData(loggedInInfo, demographicNo, respId, attach, true);
@@ -150,6 +155,50 @@ public class CommonLabResultData {
 			ArrayList<LabResultData> hl7Labs = isConsultResponse ?
 					Hl7textResultsData.populateHL7ResultsDataConsultResponse(demographicNo, consultId, attach) :
 						Hl7textResultsData.populateHL7ResultsData(demographicNo, consultId, attach);
+			labs.addAll(hl7Labs);
+		}
+
+		return labs;
+	}
+	
+	
+	
+	private ArrayList<LabResultData> populateLabResultsDataEForm(LoggedInInfo loggedInInfo, String demographicNo, String fdid, boolean attach, boolean isConsultResponse) {
+		ArrayList<LabResultData> labs = new ArrayList<LabResultData>();
+		oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
+
+		if(StringUtils.isEmpty(fdid)) {
+			return labs;
+		}
+		
+		OscarProperties op = OscarProperties.getInstance();
+
+		String cml = op.getProperty("CML_LABS");
+		String mds = op.getProperty("MDS_LABS");
+		String pathnet = op.getProperty("PATHNET_LABS");
+		String hl7text = op.getProperty("HL7TEXT_LABS");
+		String epsilon = op.getProperty("Epsilon_LABS");
+
+		if (cml != null && cml.trim().equals("yes")) {
+			ArrayList<LabResultData> cmlLabs = 	mDSData.populateCMLResultsDataEForm(demographicNo, fdid, attach);
+			labs.addAll(cmlLabs);
+		}
+		if (epsilon != null && epsilon.trim().equals("yes")) {
+			ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsDataEForm(demographicNo, fdid, attach);
+			labs.addAll(cmlLabs);
+		}
+
+		if (mds != null && mds.trim().equals("yes")) {
+			ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsDataEForm(demographicNo, fdid, attach);
+			labs.addAll(mdsLabs);
+		}
+		if (pathnet != null && pathnet.trim().equals("yes")) {
+			PathnetResultsData pathData = new PathnetResultsData();
+			ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsDataEForm(demographicNo, fdid, attach);
+			labs.addAll(pathLabs);
+		}
+		if (hl7text != null && hl7text.trim().equals("yes")) {
+			ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHL7ResultsDataEForm(demographicNo, fdid, attach);
 			labs.addAll(hl7Labs);
 		}
 

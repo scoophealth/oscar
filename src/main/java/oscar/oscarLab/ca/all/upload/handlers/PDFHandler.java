@@ -96,14 +96,21 @@ public class PDFHandler  implements MessageHandler{
                 QueueDocumentLinkDao queueDocumentLinkDAO = (QueueDocumentLinkDao) SpringUtils.getBean("queueDocumentLinkDAO");          
                 Integer did=Integer.parseInt(doc_no.trim());
                 queueDocumentLinkDAO.addToQueueDocumentLink(1,did);  
-            }                                                
+            }else if(serviceName != null && serviceName.startsWith("providerNo")) {
+            		String providerStr = serviceName.substring("providerNo".length());
+            		String[] providers = providerStr.trim().split(" ");
+            		ProviderInboxRoutingDao providerInboxRoutingDao = (ProviderInboxRoutingDao) SpringUtils.getBean("providerInboxRoutingDAO");
+            		for(String provider: providers) {
+                     providerInboxRoutingDao.addToProviderInbox(provider, Integer.parseInt(doc_no), "DOC");   
+            		}
+            }
         }
         catch (FileNotFoundException e) {
-            logger.info("An unexpected error has occurred:" + e.toString());
+            logger.info("An unexpected error has occurred:" + e.toString(),e);
             return null;
         }
         catch (Exception e) {
-                logger.info("An unexpected error has occurred:" + e.toString());
+                logger.info("An unexpected error has occurred:" + e.toString(),e);
                 return null;
         } finally {
             try {
@@ -111,7 +118,7 @@ public class PDFHandler  implements MessageHandler{
                         fis.close();
                 }                
             } catch (IOException e1) {
-                logger.info("An unexpected error has occurred:" + e1.toString());
+                logger.info("An unexpected error has occurred:" + e1.toString(),e1);
                 return null;
             }
         }			      	              

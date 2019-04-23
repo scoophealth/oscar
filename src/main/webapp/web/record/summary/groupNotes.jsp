@@ -107,7 +107,7 @@
 					</div><!-- col-lg-6 -->
 					
 					<div class=" col-lg-6">	
-					<label><bean:message key="oscarEncounter.problemStatus.title" /> <span class="glyphicon glyphicon-info-sign" tooltip-placement="right" tooltip="Examples: <bean:message key="oscarEncounter.problemStatusExample.msg" />"></span></label>
+					<label><bean:message key="oscarEncounter.problemStatus.title" /> <span class="glyphicon glyphicon-info-sign" tooltip-placement="right" uib-tooltip="Examples: <bean:message key="oscarEncounter.problemStatusExample.msg" />"></span></label>
 					<input type="text" class="form-control" id="problemstatus" name="problemstatus" ng-model="groupNotesForm.groupNoteExt.problemStatus" placeholder="<bean:message key="oscarEncounter.problemStatus.title" /> " />
 					
 					<!-- example: <bean:message key="oscarEncounter.problemStatusExample.msg" /> -->
@@ -122,8 +122,8 @@
 					<div class="input-group">
 					<input type="text" class="form-control" placeholder="<bean:message key="oscarEncounter.startdate.title" />"  
 					ng-model="groupNotesForm.groupNoteExt.startDate" 
-					datepicker-popup="yyyy-MM-dd" 
-					datepicker-append-to-body="false" 
+					uib-datepicker-popup="yyyy-MM-dd" 
+					uib-datepicker-append-to-body="false" 
 					is-open="startDatePicker" 
 					ng-click="startDatePicker = true" 
 					placeholder="YYYY-MM-DD"
@@ -138,7 +138,7 @@
 					<div class="input-group">	
 					<input type="text" class="form-control" placeholder="<bean:message key="oscarEncounter.resolutionDate.title" />"  
 					ng-model="groupNotesForm.groupNoteExt.resolutionDate" 
-					datepicker-popup="yyyy-MM-dd" 
+					uib-datepicker-popup="yyyy-MM-dd" 
 					datepicker-append-to-body="false" 
 					is-open="resolutionDatePicker" 
 					ng-click="resolutionDatePicker = true" 
@@ -160,7 +160,7 @@
 		<div  class="input-group">   	
 		<input type="text" class="form-control" id="proceduredate" name="proceduredate" placeholder="<bean:message key="oscarEncounter.procedureDate.title" />" 
 		ng-model="groupNotesForm.groupNoteExt.procedureDate" 
-		datepicker-popup="yyyy-MM-dd" 
+		uib-datepicker-popup="yyyy-MM-dd" 
 		datepicker-append-to-body="false" 
 		is-open="procedureDatePicker" 
 		ng-click="procedureDatePicker = true" 
@@ -223,7 +223,7 @@
 				<div class="col-lg-6"><!-- TODO: most likely a typeahead and display assigned issues below using the badges or labels-->
 				<label><bean:message key="oscarEncounter.Index.assnIssue" /></label>			
 					 <input type="text" class="form-control" placeholder="<bean:message key="oscarEncounter.Index.assnIssue" />"
-					 	typeahead="i.issueId as i.code for i in searchIssues($viewValue)" 
+					 	uib-typeahead="i.issueId as i.code for i in searchIssues($viewValue)" 
 						typeahead-on-select="assignIssue($item, $model, $label);selectedIssue='';" 
 						 ng-model="selectedIssue" 
 						  typeahead-loading="loadingIssues"

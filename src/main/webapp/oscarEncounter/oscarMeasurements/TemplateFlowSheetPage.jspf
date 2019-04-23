@@ -496,6 +496,9 @@ div.recommendations li{
     <p id="add_overdue"><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(760,670,'AddMeasurementData.jsp?demographic_no=<%=demographic_no%><%=recListBuffer.toString()%>&amp;template=<%=temp%>','addMeasurementData<%=Math.abs( "ADDTHEMALL".hashCode() ) %>')" TITLE="Add all overdue measurements.">
         <bean:message key="oscarencounter.templateflowsheet.addoverdue" />
     </a></p>
+    <p id="add_custom" style="display:none"><a class="DoNotPrint" href="javascript: function myFunction() {return false; }"  onclick="javascript:fsPopup(760,670,'AddMeasurementData.jsp?demographic_no=<%=demographic_no%>&amp;measurement=WT&amp;measurement=HT&amp;measurement=BMI&amp;template=<%=temp%>','addMeasurementData<%=Math.abs( "ADDTHEMALL".hashCode() ) %>')" TITLE="Add HT & WT to calculate BMI.">
+        Add BMI
+    </a></p>
     <%}%>
     </security:oscarSec>
     <!-- only show disease registry and prescriptions for flowsheets which aren't medical in nature -->
@@ -694,7 +697,7 @@ div.recommendations li{
             //graphable="no"
             //value_name="Answer"
 %>
-<div class="preventionSection"  style="overflow: auto;<%=hidden%>" nowrap>
+<div class="preventionSection" id="<%=measure%>"  style="overflow: auto;<%=hidden%>" nowrap>
     <div class="headPrevention">
 
         <p class="noborder" <%=extraColour%> title="fade=[on] header=[<%=h2.get("display_name")%>] body=[<%=wrapWithSpanIfNotNull(mi.getWarning(measure),"red")%><%=wrapWithSpanIfNotNull(mi.getRecommendation(measure),"red")%><%=h2.get("guideline")%>]"   >
@@ -773,7 +776,7 @@ div.recommendations li{
         </p>
     </div>
     <%}%>
-</div>
+</div><!-- preventionSection -->
 <%
 	//creating add all link array
 	addAllLink[mCount]=measure;
@@ -970,6 +973,15 @@ if(temp.equals("diab2") || temp.equals("chf")) {
 </tr>
 </table>
 <script type="text/javascript" src="../../share/javascript/boxover.js"></script>
+
+<script>
+if(jQuery('#add_custom').length){
+  //if WT, HT and BMI exists then allow the link
+  if(jQuery('#WT').length && jQuery('#HT').length && jQuery('#BMI').length){
+    jQuery('#add_custom').show();
+  }
+}
+</script>
 </body>
 </html:html>
 
