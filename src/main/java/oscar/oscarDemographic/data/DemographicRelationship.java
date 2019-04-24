@@ -82,7 +82,7 @@ public class DemographicRelationship {
 		List<Relationships> relationships = dao.findByDemographicNumber(ConversionUtils.fromIntString(demographic));
 
 		if (relationships.isEmpty()) {
-			MiscUtils.getLogger().warn("Unable to find demographic relationship for demographic " + demographic);
+			MiscUtils.getLogger().debug("Unable to find demographic relationship for demographic " + demographic);
 			return list;
 		}
 
