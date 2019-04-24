@@ -1802,7 +1802,9 @@ public class DemographicExportAction4 extends Action {
 
 					long dLong = (ap.getEndTime().getTime()-ap.getStartTime().getTime())/60000+1;
 					BigInteger duration = BigInteger.valueOf(dLong); //duration in minutes
-					aptm.setDuration(duration);
+					if(duration.doubleValue() > 0) {
+						aptm.setDuration(duration);
+					}
 
 					if (StringUtils.filled(ap.getStatus())) {
 						ApptStatusData asd = new ApptStatusData();
