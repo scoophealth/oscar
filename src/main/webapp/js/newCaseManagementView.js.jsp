@@ -492,7 +492,7 @@ function navBarLoader() {
                   ctx + "/oscarEncounter/displayQuestimed.do?hC=",
               ];
 
-            var leftNavBarTitles = [ "preventions", "tickler", "Dx", "forms", "eforms", "docs","labs", "msgs", "measurements", "consultation", "HRM","PHR", "eaaps", "eConsult","ehr","Questimed"];
+            var leftNavBarTitles = [ "preventions", "tickler", "Dx", "forms", "eforms", "docs","labs", "msgs", "measurements", "consultation", "HRM","PHR", "eams", "eConsult","ehr","Questimed"];
             var rightNavBar = [
                   ctx + "/oscarEncounter/displayAllergy.do?hC=" + Colour.allergy,
                   ctx + "/oscarEncounter/displayRx.do?hC=" + Colour.rx + "&numToDisplay=12",
