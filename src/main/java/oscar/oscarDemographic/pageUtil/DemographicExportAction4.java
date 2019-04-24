@@ -663,9 +663,9 @@ public class DemographicExportAction4 extends Action {
 					cdsDt.AddressStructured address = addr.addNewStructured();
 
 					addr.setAddressType(cdsDt.AddressType.R);
-					String ad = pi.getAddress();
-					String addy = StringUtils.maxLenString(pi.getAddress(), 50, 49, "");
-					address.setLine1( StringUtils.maxLenString(pi.getAddress(), 50, 49, ""));
+					if(!StringUtils.isNullOrEmpty(pi.getAddress())) {
+						address.setLine1( StringUtils.maxLenString(pi.getAddress(), 50, 49, ""));
+					}
 					if (StringUtils.filled(pi.getCity()) || StringUtils.filled(pi.getProvince()) || StringUtils.filled(pi.getPostalCode())) {
 						if(!StringUtils.isNullOrEmpty(pi.getCity())) {
 							address.setCity(StringUtils.maxLenString(StringUtils.noNull(pi.getCity()), 80, 79, ""));
