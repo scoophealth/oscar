@@ -81,4 +81,13 @@ public class CdxProvenanceDao extends AbstractDao<CdxProvenance> {
 
         return query.getResultList();
     }
+
+    public List<CdxProvenance> findRelatedDocsBySetId(String setId, String documentId) {
+        String sql = "FROM CdxProvenance p where p.setId = :setId and not p.documentId = :docId";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("docId", documentId);
+        query.setParameter("setId", setId);
+
+        return query.getResultList();
+    }
 }

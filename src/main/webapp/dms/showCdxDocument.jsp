@@ -486,6 +486,60 @@ It must have been deleted. Please refresh your Inbox window.
                 </div>
 
                 <% }%>
+
+
+
+                <div class="panel-footer">
+                    <h3>Related documents:</h3>
+                    <ul>
+                        <%
+                            String parentDocId = provenanceDoc.getParentDoc();
+                            if(parentDocId != null) {
+                                List<CdxProvenance> parentDocs = provenanceDao.findVersionsOrderDesc(parentDocId);
+                                if (!parentDocs.isEmpty()) {
+                                    CdxProvenance parentDoc = parentDocs.get(0);
+                                    %>
+                        <li> <a href="showCdxDocumentArchive.jsp?ID=<%=parentDoc.getId()%>">
+
+                            <%=parentDoc.getDocumentId()%> (parent document) </a>  </li>
+
+                        <%
+                                }} %>
+
+                        <%
+                            String infulfillmentOfId = provenanceDoc.getInFulfillmentOfId();
+                            if(infulfillmentOfId != null) {
+                                List<CdxProvenance> iffoDocs = provenanceDao.findVersionsOrderDesc(infulfillmentOfId);
+                                if (!iffoDocs.isEmpty()) {
+                                    CdxProvenance iffoDoc = iffoDocs.get(0);
+                        %>
+                        <li> <a href="showCdxDocumentArchive.jsp?ID=<%=iffoDoc.getId()%>">
+
+                            <%=iffoDoc.getDocumentId()%> (in fulfillment of) </a>  </li>
+
+                        <%
+                                }} %>
+
+                        <%
+
+                            String setId = provenanceDoc.getSetId();
+                            if(setId != null && (!setId.equals(""))) {
+                                List<CdxProvenance> setDocs = provenanceDao.findRelatedDocsBySetId(setId, provenanceDoc.getDocumentId());
+                                for (CdxProvenance d : setDocs) {
+                                    %>
+
+                        <li> <a href="showCdxDocumentArchive.jsp?ID=<%=d.getId()%>">
+
+                            <%=d.getDocumentId()%> (same document set)</a>  </li>
+                        <%
+                                }}
+
+                        %>
+
+                    </ul>
+
+                </div>
+
             </div>
 
 

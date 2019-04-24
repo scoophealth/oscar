@@ -179,7 +179,7 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
         this.effectiveTime = doc.getEffectiveTime();
         this.parentDoc = doc.getParentDocumentID();
         this.setId = doc.getSetId();
-        this.inFulfillmentOfId = getInFulfillmentOfId();
+        this.inFulfillmentOfId = doc.getInFulFillmentOfId();
         this.kind = doc.getLoincCodeDisplayName();
         this.payload = doc.getContents();
     }
