@@ -2367,8 +2367,14 @@ public class DemographicExportAction4 extends Action {
 		}
 
 	}
+	
+	if(files.isEmpty()) {
+		logger.warn("no files to export");
+		return mapping.findForward("fail");
+	}
 		
 	//create ReadMe.txt & ExportEvent.log
+	
 		files.add(makeReadMe(files));
 		dirs.add("");
 		files.add(makeExportLog(files.get(0).getParentFile()));
