@@ -937,7 +937,10 @@ public class DemographicExportAction4 extends Action {
 					// PROBLEM LIST (Concerns)
 					if (StringUtils.filled(concerns)) {
 						ProblemList pList = patientRec.addNewProblemList();
-						pList.setProblemDiagnosisDescription(concerns);
+						if(concerns.length()>250) {
+							addResidualInformation(pList.addNewResidualInfo(),"string","ProblemDiagnosisDescription",concerns);
+						}
+						pList.setProblemDiagnosisDescription(StringUtils.maxLenString(concerns, 250, 230, "... (see residual)"));
 						summary = Util.addSummary("Problem Diagnosis", concerns);
 
 						boolean diagnosisAssigned = false;
@@ -3293,6 +3296,13 @@ public class DemographicExportAction4 extends Action {
 			return "yyyy-MM";
 		}
 		return null;
+	}
+	
+	protected void addResidualInformation(ResidualInformation ri, String dataType, String name, String value) {
+		DataElement de = ri.addNewDataElement();
+		de.setContent(value);
+		de.setDataType(dataType);
+		de.setName(name);
 	}
 }
 
