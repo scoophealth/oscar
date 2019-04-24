@@ -654,18 +654,26 @@ public class DemographicExportAction4 extends Action {
 				if(pi != null) {
 					PreferredPharmacy preferredPharmacy = demo.addNewPreferredPharmacy();
 					PhoneNumber pn =  preferredPharmacy.addNewPhoneNumber();
-					addPhone(pi.getFax(), "", cdsDt.PhoneNumberType.W,pn);
+					if(!StringUtils.isNullOrEmpty(pi.getFax())) {
+						addPhone(pi.getFax(), "", cdsDt.PhoneNumberType.W,pn);
+					}
 					
 					
 					cdsDt.Address addr = preferredPharmacy.addNewAddress();
 					cdsDt.AddressStructured address = addr.addNewStructured();
 
 					addr.setAddressType(cdsDt.AddressType.R);
-					address.setLine1(pi.getAddress());
+					if(!StringUtils.isNullOrEmpty(pi.getAddress())) {
+						address.setLine1( StringUtils.maxLenString(pi.getAddress(), 50, 49, ""));
+					}
 					if (StringUtils.filled(pi.getCity()) || StringUtils.filled(pi.getProvince()) || StringUtils.filled(pi.getPostalCode())) {
-						address.setCity(StringUtils.noNull(pi.getCity()));
+						if(!StringUtils.isNullOrEmpty(pi.getCity())) {
+							address.setCity(StringUtils.maxLenString(StringUtils.noNull(pi.getCity()), 80, 79, ""));
+						}
 						if("true".equals(OscarProperties.getInstance().getProperty("iso3166.2.enabled","false"))) { 	
-							address.setCountrySubdivisionCode(pi.getProvince());
+							if(!StringUtils.isNullOrEmpty(pi.getProvince())) {
+								address.setCountrySubdivisionCode(pi.getProvince());
+							}
 						} else {
 							//TODO: A better fix is needed here!!!  Only valid 2 character province codes should be stored
 							//      in the database.  For instance, "AB" rather than "Alberta", "Atla." or "Alb.", etc.
@@ -684,7 +692,9 @@ public class DemographicExportAction4 extends Action {
 							}
 							// END OF HACK.
 						}
-						address.addNewPostalZipCode().setPostalCode(StringUtils.noNull(pi.getPostalCode()).replace(" ",""));
+						if(!StringUtils.isNullOrEmpty(pi.getPostalCode())) {
+							address.addNewPostalZipCode().setPostalCode(StringUtils.noNull(pi.getPostalCode()).replace(" ",""));
+						}
 					}
 					
 					
@@ -3013,7 +3023,7 @@ public class DemographicExportAction4 extends Action {
 
 		cdsDtPhoneNumber.setPhoneNumber(Util.onlyNum(phoneNo));
 		cdsDtPhoneNumber.setPhoneNumberType(phoneNoType);
-		if (phoneExt!=null) {
+		if (!StringUtils.isNullOrEmpty(phoneExt)) {
 			if (phoneExt.length()>5) {
 				phoneExt = phoneExt.substring(0,5);
 				extensionTooLong = true;
