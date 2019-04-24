@@ -428,6 +428,7 @@ public class DemographicExportAction4 extends Action {
 			if (cdsDt.Gender.Enum.forString(sex)!=null) {
 				demo.setGender(cdsDt.Gender.Enum.forString(sex));
 			} else {
+				demo.setGender(cdsDt.Gender.U);
 				exportError.add("Error! No Gender for Patient "+demoNo);
 			}
 
