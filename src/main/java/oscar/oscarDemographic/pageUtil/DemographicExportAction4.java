@@ -428,6 +428,7 @@ public class DemographicExportAction4 extends Action {
 			if (cdsDt.Gender.Enum.forString(sex)!=null) {
 				demo.setGender(cdsDt.Gender.Enum.forString(sex));
 			} else {
+				demo.setGender(cdsDt.Gender.U);
 				exportError.add("Error! No Gender for Patient "+demoNo);
 			}
 
@@ -654,18 +655,26 @@ public class DemographicExportAction4 extends Action {
 				if(pi != null) {
 					PreferredPharmacy preferredPharmacy = demo.addNewPreferredPharmacy();
 					PhoneNumber pn =  preferredPharmacy.addNewPhoneNumber();
-					addPhone(pi.getFax(), "", cdsDt.PhoneNumberType.W,pn);
+					if(!StringUtils.isNullOrEmpty(pi.getFax())) {
+						addPhone(pi.getFax(), "", cdsDt.PhoneNumberType.W,pn);
+					}
 					
 					
 					cdsDt.Address addr = preferredPharmacy.addNewAddress();
 					cdsDt.AddressStructured address = addr.addNewStructured();
 
 					addr.setAddressType(cdsDt.AddressType.R);
-					address.setLine1(pi.getAddress());
+					if(!StringUtils.isNullOrEmpty(pi.getAddress())) {
+						address.setLine1( StringUtils.maxLenString(pi.getAddress(), 50, 49, ""));
+					}
 					if (StringUtils.filled(pi.getCity()) || StringUtils.filled(pi.getProvince()) || StringUtils.filled(pi.getPostalCode())) {
-						address.setCity(StringUtils.noNull(pi.getCity()));
+						if(!StringUtils.isNullOrEmpty(pi.getCity())) {
+							address.setCity(StringUtils.maxLenString(StringUtils.noNull(pi.getCity()), 80, 79, ""));
+						}
 						if("true".equals(OscarProperties.getInstance().getProperty("iso3166.2.enabled","false"))) { 	
-							address.setCountrySubdivisionCode(pi.getProvince());
+							if(!StringUtils.isNullOrEmpty(pi.getProvince())) {
+								address.setCountrySubdivisionCode(pi.getProvince());
+							}
 						} else {
 							//TODO: A better fix is needed here!!!  Only valid 2 character province codes should be stored
 							//      in the database.  For instance, "AB" rather than "Alberta", "Atla." or "Alb.", etc.
@@ -684,7 +693,9 @@ public class DemographicExportAction4 extends Action {
 							}
 							// END OF HACK.
 						}
-						address.addNewPostalZipCode().setPostalCode(StringUtils.noNull(pi.getPostalCode()).replace(" ",""));
+						if(!StringUtils.isNullOrEmpty(pi.getPostalCode())) {
+							address.addNewPostalZipCode().setPostalCode(StringUtils.noNull(pi.getPostalCode()).replace(" ",""));
+						}
 					}
 					
 					
@@ -926,7 +937,10 @@ public class DemographicExportAction4 extends Action {
 					// PROBLEM LIST (Concerns)
 					if (StringUtils.filled(concerns)) {
 						ProblemList pList = patientRec.addNewProblemList();
-						pList.setProblemDiagnosisDescription(concerns);
+						if(concerns.length()>250) {
+							addResidualInformation(pList.addNewResidualInfo(),"string","ProblemDiagnosisDescription",concerns);
+						}
+						pList.setProblemDiagnosisDescription(StringUtils.maxLenString(concerns, 250, 230, "... (see residual)"));
 						summary = Util.addSummary("Problem Diagnosis", concerns);
 
 						boolean diagnosisAssigned = false;
@@ -1802,7 +1816,9 @@ public class DemographicExportAction4 extends Action {
 
 					long dLong = (ap.getEndTime().getTime()-ap.getStartTime().getTime())/60000+1;
 					BigInteger duration = BigInteger.valueOf(dLong); //duration in minutes
-					aptm.setDuration(duration);
+					if(duration.doubleValue() > 0) {
+						aptm.setDuration(duration);
+					}
 
 					if (StringUtils.filled(ap.getStatus())) {
 						ApptStatusData asd = new ApptStatusData();
@@ -2356,8 +2372,14 @@ public class DemographicExportAction4 extends Action {
 		}
 
 	}
+	
+	if(files.isEmpty()) {
+		logger.warn("no files to export");
+		return mapping.findForward("fail");
+	}
 		
 	//create ReadMe.txt & ExportEvent.log
+	
 		files.add(makeReadMe(files));
 		dirs.add("");
 		files.add(makeExportLog(files.get(0).getParentFile()));
@@ -3013,7 +3035,7 @@ public class DemographicExportAction4 extends Action {
 
 		cdsDtPhoneNumber.setPhoneNumber(Util.onlyNum(phoneNo));
 		cdsDtPhoneNumber.setPhoneNumberType(phoneNoType);
-		if (phoneExt!=null) {
+		if (!StringUtils.isNullOrEmpty(phoneExt)) {
 			if (phoneExt.length()>5) {
 				phoneExt = phoneExt.substring(0,5);
 				extensionTooLong = true;
@@ -3276,6 +3298,13 @@ public class DemographicExportAction4 extends Action {
 			return "yyyy-MM";
 		}
 		return null;
+	}
+	
+	protected void addResidualInformation(ResidualInformation ri, String dataType, String name, String value) {
+		DataElement de = ri.addNewDataElement();
+		de.setContent(value);
+		de.setDataType(dataType);
+		de.setName(name);
 	}
 }
 

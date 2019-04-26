@@ -195,6 +195,21 @@ public class DemographicManager {
 
 		return (results);
 	}
+	
+	public List<Demographic> getActiveDemographicAfter(LoggedInInfo loggedInInfo, Date afterDateExclusive) {
+		// lastDate format: yyyy-MM-dd HH:mm:ss
+		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
+		List<Demographic> results = demographicDao.getActiveDemographicAfter(afterDateExclusive);
+		
+		//--- log action ---
+		if (results != null) {
+			for (Demographic item : results) {
+				LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getActiveDemographicAfter(date)", "id=" + item.getId());
+			}
+		}
+
+		return results;
+	}
 
 	public List<DemographicExt> getDemographicExts(LoggedInInfo loggedInInfo, Integer id) {
 		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
