@@ -35,12 +35,11 @@ import java.io.ByteArrayInputStream;
 
 
 import java.io.FileReader;
-
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Attachment;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
@@ -74,8 +73,9 @@ public class FHIRCommunicationRequestHandler  implements MessageHandler{
     		String providerNo = "-1";
     	
     		IParser parser = fhirContext.newJsonParser();
+    		BufferedReader in = null;
     		try {
-    			BufferedReader in = new BufferedReader(new FileReader(fileName));
+    			in = new BufferedReader(new FileReader(fileName));
     			
     			CommunicationRequest communicationRequest  = parser.parseResource(CommunicationRequest.class, in);
     			List<Reference> refs = communicationRequest.getRecipient();
@@ -129,7 +129,9 @@ public class FHIRCommunicationRequestHandler  implements MessageHandler{
     	         
     		}catch(Exception e) {
     			logger.error("error parsing Document Reference Document from :"+fileName,e);
-    		}
+    		}finally {
+    			IOUtils.closeQuietly(in);
+        }	
   		
         return "success";
     }
