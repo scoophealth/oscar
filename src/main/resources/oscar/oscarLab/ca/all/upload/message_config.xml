@@ -26,4 +26,5 @@
 	<handler name="Spire"	className="SpireHandler"/>
 	<handler name="TRUENORTH"	className="TRUENORTHHandler"/>
     <handler name="MEDITECH"   className="MEDITECHHandler" /> 
+    <handler name="FHIR_COMMUNICATION_REQUEST" className="FHIRCommunicationRequestHandler"/>
 </message-configuration>
