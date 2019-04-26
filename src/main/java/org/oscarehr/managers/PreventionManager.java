@@ -36,6 +36,7 @@ import org.oscarehr.common.dao.PreventionDao;
 import org.oscarehr.common.dao.PreventionExtDao;
 import org.oscarehr.common.dao.PropertyDao;
 import org.oscarehr.common.interfaces.Immunization.ImmunizationProperty;
+import org.oscarehr.common.model.ConsentType;
 import org.oscarehr.common.model.Prevention;
 import org.oscarehr.common.model.PreventionExt;
 import org.oscarehr.common.model.Property;
@@ -74,9 +75,12 @@ public class PreventionManager {
 	}
 
 	public List<Prevention> getByDemographicIdUpdatedAfterDate(LoggedInInfo loggedInInfo, Integer demographicId, Date updatedAfterThisDateExclusive) {
-		List<Prevention> results = preventionDao.findByDemographicIdAfterDatetimeExclusive(demographicId, updatedAfterThisDateExclusive);
-		LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getByDemographicIdUpdatedAfterDate", "demographicId="+demographicId+" updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
-
+		List<Prevention> results = new ArrayList<Prevention>();
+		ConsentType consentType = patientConsentManager.getProviderSpecificConsent(loggedInInfo);
+		if (patientConsentManager.hasPatientConsented(demographicId, consentType)) {
+			results = preventionDao.findByDemographicIdAfterDatetimeExclusive(demographicId, updatedAfterThisDateExclusive);
+			LogAction.addLogSynchronous(loggedInInfo, "PreventionManager.getByDemographicIdUpdatedAfterDate", "demographicId="+demographicId+" updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
+		}
 		return (results);
 	}
 

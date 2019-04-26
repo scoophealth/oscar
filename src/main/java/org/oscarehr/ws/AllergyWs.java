@@ -33,10 +33,7 @@ import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
 import org.oscarehr.common.model.Allergy;
-import org.oscarehr.common.model.ConsentType;
 import org.oscarehr.managers.AllergyManager;
-import org.oscarehr.managers.PatientConsentManager;
-import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.ws.transfer_objects.AllergyTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -47,9 +44,6 @@ import org.springframework.stereotype.Component;
 public class AllergyWs extends AbstractWs {
 	@Autowired
 	private AllergyManager allergyManager;
-	
-	@Autowired
-	private PatientConsentManager patientConsentManager;
 
 	public AllergyTransfer getAllergy(Integer allergyId) {
 		Allergy allergy = allergyManager.getAllergy(getLoggedInInfo(), allergyId);
@@ -68,11 +62,7 @@ public class AllergyWs extends AbstractWs {
 
 	public AllergyTransfer[] getAllergiesByDemographicIdAfter(@WebParam(name="lastUpdate") Calendar lastUpdate, @WebParam(name="demographicId") Integer demographicId)
 	{
-		LoggedInInfo loggedInInfo = getLoggedInInfo();
-		ConsentType consentType = patientConsentManager.getProviderSpecificConsent(loggedInInfo);
-		if (!patientConsentManager.hasPatientConsented(demographicId, consentType)) return null;
-		
-		List<Allergy> allergies = allergyManager.getByDemographicIdUpdatedAfterDate(loggedInInfo, demographicId, lastUpdate.getTime());
+		List<Allergy> allergies = allergyManager.getByDemographicIdUpdatedAfterDate(getLoggedInInfo(), demographicId, lastUpdate.getTime());
 		return (AllergyTransfer.toTransfers(allergies));
 	}
 }

@@ -24,12 +24,14 @@
 
 package org.oscarehr.managers;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.oscarehr.common.dao.AllergyDao;
 import org.oscarehr.common.model.Allergy;
+import org.oscarehr.common.model.ConsentType;
 import org.oscarehr.util.LoggedInInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,9 +78,12 @@ public class AllergyManager {
 	}
 	
 	public List<Allergy> getByDemographicIdUpdatedAfterDate(LoggedInInfo loggedInInfo, Integer demographicId, Date updatedAfterThisDate) {
-		List<Allergy> results = allergyDao.findByDemographicIdUpdatedAfterDate(demographicId, updatedAfterThisDate);
-		LogAction.addLogSynchronous(loggedInInfo, "AllergyManager.getByDemographicIdUpdatedAfterDate", "demographicId="+demographicId+" updatedAfterThisDate="+updatedAfterThisDate);
-
+		List<Allergy> results = new ArrayList<Allergy>();
+		ConsentType consentType = patientConsentManager.getProviderSpecificConsent(loggedInInfo);
+		if (patientConsentManager.hasPatientConsented(demographicId, consentType)) {
+			results = allergyDao.findByDemographicIdUpdatedAfterDate(demographicId, updatedAfterThisDate);
+			LogAction.addLogSynchronous(loggedInInfo, "AllergyManager.getByDemographicIdUpdatedAfterDate", "demographicId="+demographicId+" updatedAfterThisDate="+updatedAfterThisDate);
+		}
 		return (results);
 	}
 
