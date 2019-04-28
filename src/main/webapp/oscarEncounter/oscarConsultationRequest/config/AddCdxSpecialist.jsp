@@ -32,6 +32,7 @@
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="java.util.List" %>
 <%@ page import="org.oscarehr.util.MiscUtils" %>
+<%@ page import="oscar.OscarProperties" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
@@ -53,18 +54,26 @@
 <html:html locale="true">
 
     <%
-        CDXSpecialist cdxSpecialist = new CDXSpecialist();
-        List<IProvider> providers = cdxSpecialist.findAllNoException();
+        OscarProperties props = OscarProperties.getInstance();
+        boolean showCdx = "bc".equalsIgnoreCase(props.getProperty("billregion"));
+
+        String searchString = request.getParameter("searchstring");
+        MiscUtils.getLogger().debug("searchstring: " + searchString);
+        List<IProvider> providers = null;
         int maxCdxSpecIdLength = 30;
-        int max = 0;
-        if (providers != null) {
-            MiscUtils.getLogger().debug("Found " + providers.size() + " providers");
-            for (IProvider p : providers) {
-                if (p.getID().length()>max) max=p.getID().length();
-                MiscUtils.getLogger().debug("CdxId: " + p.getID() + " Name: " + p.getLastName() + "," + p.getFirstName());
+        if (showCdx) {
+            CDXSpecialist cdxSpecialist = new CDXSpecialist();
+            providers = cdxSpecialist.findCdxSpecialistByName(searchString);
+            int max = 0;
+            if (providers != null) {
+                MiscUtils.getLogger().debug("Found " + providers.size() + " providers");
+                for (IProvider p : providers) {
+                    if (p.getID().length() > max) max = p.getID().length();
+                    MiscUtils.getLogger().debug("CdxId: " + p.getID() + " Name: " + p.getLastName() + "," + p.getFirstName());
+                }
             }
+            MiscUtils.getLogger().debug("Maximum cdx id length: " + max);
         }
-        MiscUtils.getLogger().debug("Maximum cdx id length: " + max);
         ProfessionalSpecialistDao professionalSpecialistDao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
     %>
     <head>
@@ -137,7 +146,7 @@
 								 String phone = "";
 								 List<ProfessionalSpecialist> professionalSpecialists;
 								 int first = 0;
-								 if (providers != null) {
+								 if (showCdx && providers != null) {
                                      for (IProvider provider : providers) {
                                          String cdxSpecId = provider.getID();
                                          MiscUtils.getLogger().debug("cdxSpecId: " + cdxSpecId);

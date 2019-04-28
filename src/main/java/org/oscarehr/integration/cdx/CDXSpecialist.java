@@ -69,12 +69,28 @@ public class CDXSpecialist {
         } catch (OBIBException e) {
             MiscUtils.getLogger().error(e.getMessage());
         }
-//        if (allProviders.isEmpty()) {
-//            allProviders.add(new ProviderRaymond());
-//            allProviders.add(new ProviderAdeshina());
-//        }
         Collections.sort(allProviders, IProviderComparator);
         return allProviders;
+    }
+
+    public List<IProvider> findCdxSpecialistByName(String name) {
+
+        if (name == null || "".equals(name.trim())) {
+            return findAllNoException();
+        }
+
+        name = name.trim();
+
+        List<IProvider> providers = new ArrayList<IProvider>();
+
+        try {
+            ISearchProviders searchProviders = new SearchProviders(config);
+            providers = searchProviders.findByName(name);
+        } catch (OBIBException e) {
+            MiscUtils.getLogger().error("Searching for CDX specialist by name failed", e);
+        }
+        Collections.sort(providers, IProviderComparator);
+        return providers;
     }
 
     public List<IProvider> findCdxSpecialistByLastName(String lastName) {
@@ -134,7 +150,6 @@ public class CDXSpecialist {
         if (id == null || "".equals(id.trim())) {
             return null;
         }
-        //id = id.trim();
 
         List<IProvider> providers;
         List<IProvider> result = new ArrayList<IProvider>();
@@ -158,13 +173,6 @@ public class CDXSpecialist {
     public Boolean saveProfessionalSpecialist(String cdxSpecId) {
 
         boolean result = false;
-//        Integer id = null;
-//        try {
-//            id = Integer.parseInt(cdxSpecId);
-//        } catch (NumberFormatException e) {
-//            MiscUtils.getLogger().error(e.getMessage());
-//            return false;
-//        }
 
         // Make sure we don't add the same CDX ID; they are unique
         // Possibly some sort of data merge should be done here in future

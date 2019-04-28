@@ -222,7 +222,7 @@ function BackToOscar() {
 
                         if (request.getAttribute("specId") == null) {
                     %>
-                    <a href="../../oscarConsultationRequest/config/AddCdxSpecialist.jsp">Add CDX Enabled Specialist</a>
+                    <a href="../../oscarConsultationRequest/config/FindCdxSpecialist.jsp">Add CDX Enabled Specialist</a>
                     <%
                         }
                     %>
