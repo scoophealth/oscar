@@ -26,11 +26,12 @@
 
 <%@ page import="ca.uvic.leadlab.obibconnector.facades.receive.ITelco" %>
 <%@ page import="ca.uvic.leadlab.obibconnector.facades.registry.IProvider" %>
-<%@ page import="org.oscarehr.integration.cdx.CDXSpecialist" %>
-<%@ page import="java.util.List" %>
 <%@ page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
-<%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.ProfessionalSpecialist" %>
+<%@ page import="org.oscarehr.integration.cdx.CDXSpecialist" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="java.util.List" %>
+<%@ page import="org.oscarehr.util.MiscUtils" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
@@ -54,6 +55,16 @@
     <%
         CDXSpecialist cdxSpecialist = new CDXSpecialist();
         List<IProvider> providers = cdxSpecialist.findAllTesting();
+        int maxCdxSpecIdLength = 30;
+        int max = 0;
+        if (providers != null) {
+            MiscUtils.getLogger().info("Found " + providers.size() + " providers");
+            for (IProvider p : providers) {
+                if (p.getID().length()>max) max=p.getID().length();
+                MiscUtils.getLogger().info("CdxId: " + p.getID() + " Name: " + p.getLastName() + "," + p.getFirstName());
+            }
+        }
+        MiscUtils.getLogger().info("Maximum cdx id length: " + max);
         ProfessionalSpecialistDao professionalSpecialistDao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
     %>
     <head>
@@ -117,6 +128,8 @@
                                             <th><bean:message
                                                     key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.phone"/>
                                             </th>
+                                            <th>CDX Id
+                                            </th>
                                         </tr>
                                         <tr>
                                             <td><!--<div class="ChooseRecipientsBox1">--> <%
@@ -126,7 +139,14 @@
 								 int first = 0;
 								 for(int i=0;i < providers.size(); i++) {
 								     String cdxSpecId = providers.get(i).getID();
-								     professionalSpecialists = professionalSpecialistDao.findByCdxId(cdxSpecId);
+								     MiscUtils.getLogger().info("cdxSpecId: " + cdxSpecId);
+								     if (cdxSpecId != null && !cdxSpecId.isEmpty() && cdxSpecId.length()<=maxCdxSpecIdLength) {
+    								     professionalSpecialists = professionalSpecialistDao.findByCdxId(cdxSpecId);
+								     } else {
+								         MiscUtils.getLogger().warn("Ignoring CDX Provider: " + providers.get(i).getLastName() +
+								         ","+ providers.get(i).getFirstName() + " cdxSpecId: " + cdxSpecId);
+								         professionalSpecialists = null;
+								     }
 								     // don't display specialists that have already been added
 								     if (professionalSpecialists == null || professionalSpecialists.isEmpty()) {
 								     String fName = providers.get(i).getFirstName();
@@ -164,6 +184,8 @@
                                             <td><%=address %>
                                             </td>
                                             <td><%=phone%>
+                                            </td>
+                                            <td><%=cdxSpecId%>
                                             </td>
                                         </tr>
                                         <% }

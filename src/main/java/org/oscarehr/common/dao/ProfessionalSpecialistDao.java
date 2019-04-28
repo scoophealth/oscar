@@ -80,7 +80,7 @@ public class ProfessionalSpecialistDao extends AbstractDao<ProfessionalSpecialis
 
 	public List<ProfessionalSpecialist> findByCdxId(String cdxId)
 	{
-		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where x.cdxId="+cdxId+" order by x.lastName,x.firstName");
+		Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where x.cdxId='"+cdxId+"' order by x.lastName,x.firstName");
 
 		@SuppressWarnings("unchecked")
 		List<ProfessionalSpecialist> results=query.getResultList();

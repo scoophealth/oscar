@@ -48,7 +48,7 @@ public class SearchProvidersTest extends FacadesBaseTest {
         List<String> expectedResults = new ArrayList<String>(Arrays.asList(notNullProviders,expectedErrorMsg));
         result = null;
         try {
-            providers = searchProviders.findByName("Plisihq");
+            providers = searchProviders.findByName("a");
         } catch (OBIBException e) {
             result = e.getMessage();
             MiscUtils.getLogger().info(result);
@@ -60,7 +60,7 @@ public class SearchProvidersTest extends FacadesBaseTest {
             result = notNullProviders;
             MiscUtils.getLogger().info("Num of CDX providers found in search by name:" + providers.size());
             for (IProvider p: providers) {
-                MiscUtils.getLogger().info("Found: " + p.getFirstName()+" "+p.getLastName()+" "+p.getID());
+                MiscUtils.getLogger().info("Found: [" + p.getLastName()+","+p.getFirstName()+"],"+p.getID());
             }
         } else {
             MiscUtils.getLogger().info("CDX providers is null for search by name");
@@ -91,7 +91,7 @@ public class SearchProvidersTest extends FacadesBaseTest {
             result = notNullProviders;
             MiscUtils.getLogger().info("Num of CDX providers found in search by id: " + providers.size());
             for (IProvider p: providers) {
-                MiscUtils.getLogger().info("Found: " + p.getFirstName()+" "+p.getLastName()+" "+p.getID());
+                MiscUtils.getLogger().info("Found: [" + p.getLastName()+","+p.getFirstName()+"],"+p.getID());
             }
         } else {
             MiscUtils.getLogger().info("CDX providers is null for search by id");
@@ -99,6 +99,16 @@ public class SearchProvidersTest extends FacadesBaseTest {
 
         Assert.assertTrue("The list of expected outcomes does not contain the value " + result, expectedResults.contains(result));
     }
+
+    @Test(expected = OBIBException.class) /* CDX return: "Provider clinic ID cannot be the only parameter. Please use Clinic Search instead." */
+    public void testFindByClinicID() throws Exception {
+        ISearchProviders searchProviders = new SearchProviders(configClinicA);
+
+        List<IProvider> providers = searchProviders.findByClinicID(clinicIdA);
+
+        Assert.assertNotNull(providers);
+    }
+
 
     @Test(expected = OBIBException.class)
     public void testFindByProviderIdError() throws Exception {

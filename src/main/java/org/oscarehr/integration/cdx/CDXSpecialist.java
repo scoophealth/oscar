@@ -29,8 +29,6 @@ import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
 import ca.uvic.leadlab.obibconnector.facades.receive.ITelco;
 import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
 import ca.uvic.leadlab.obibconnector.facades.registry.ISearchProviders;
-import ca.uvic.leadlab.obibconnector.impl.receive.mock.ProviderAdeshina;
-import ca.uvic.leadlab.obibconnector.impl.receive.mock.ProviderRaymond;
 import ca.uvic.leadlab.obibconnector.impl.registry.SearchProviders;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.ProfessionalSpecialist;
@@ -54,9 +52,11 @@ public class CDXSpecialist {
             String s = ""+alphabet;
             ISearchProviders searchProviders = new SearchProviders(config);
             List<IProvider> providers = searchProviders.findByName(s);
-            for (IProvider p : providers) {
-                if (p.getLastName().startsWith(s)) {
-                    allProviders.add(p);
+            if (providers != null) {
+                for (IProvider p : providers) {
+                    if (p.getLastName().startsWith(s) && !allProviders.contains(p)) {
+                        allProviders.add(p);
+                    }
                 }
             }
         }
@@ -70,10 +70,10 @@ public class CDXSpecialist {
         } catch (OBIBException e) {
             MiscUtils.getLogger().error(e.getMessage());
         }
-        if (allProviders.isEmpty()) {
-            allProviders.add(new ProviderRaymond());
-            allProviders.add(new ProviderAdeshina());
-        }
+//        if (allProviders.isEmpty()) {
+//            allProviders.add(new ProviderRaymond());
+//            allProviders.add(new ProviderAdeshina());
+//        }
         return allProviders;
     }
 
@@ -134,7 +134,7 @@ public class CDXSpecialist {
         if (id == null || "".equals(id.trim())) {
             return null;
         }
-        id = id.trim();
+        //id = id.trim();
 
         List<IProvider> providers;
         List<IProvider> result = new ArrayList<IProvider>();
@@ -144,7 +144,7 @@ public class CDXSpecialist {
             providers = searchProviders.findByProviderID(id);
 
             for (IProvider p : providers) {
-                if (p.getFirstName().startsWith(id)) {
+                if (id.equalsIgnoreCase(p.getID())) {
                     result.add(p);
                 }
             }
@@ -152,32 +152,25 @@ public class CDXSpecialist {
         } catch (OBIBException e) {
             MiscUtils.getLogger().error("Searching for CDX specialist by ID failed");
         }
-        if (result.isEmpty()) {
-            if (id.equals("23456")) {
-                result.add(new ProviderRaymond());
-            } else {
-                result.add(new ProviderAdeshina());
-            }
-        }
         return result;
     }
 
     public Boolean saveProfessionalSpecialist(String cdxSpecId) {
 
         boolean result = false;
-        Integer id = null;
-        try {
-            id = Integer.parseInt(cdxSpecId);
-        } catch (NumberFormatException e) {
-            MiscUtils.getLogger().error(e.getMessage());
-            return false;
-        }
+//        Integer id = null;
+//        try {
+//            id = Integer.parseInt(cdxSpecId);
+//        } catch (NumberFormatException e) {
+//            MiscUtils.getLogger().error(e.getMessage());
+//            return false;
+//        }
 
         // Make sure we don't add the same CDX ID; they are unique
         // Possibly some sort of data merge should be done here in future
         ProfessionalSpecialistDao professionalSpecialistDao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
         List<ProfessionalSpecialist> professionalSpecialistList = professionalSpecialistDao.findByCdxId(cdxSpecId);
-        if (professionalSpecialistList != null || !professionalSpecialistList.isEmpty()) return false;
+        if (professionalSpecialistList != null && professionalSpecialistList.size() != 0) return false;
 
         ProfessionalSpecialist professionalSpecialist = new ProfessionalSpecialist();
         List<IProvider> providers = findCdxSpecialistById(cdxSpecId);

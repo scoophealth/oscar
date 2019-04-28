@@ -102,9 +102,11 @@ public class TestRestClient {
                     .name(NameType.LEGAL, "Joseph", "Cloud")
                     .address(AddressType.HOME, "111 Main St", "Victoria", "BC", "V8V Z9Z", "CA")
                     .phone(TelcoType.HOME, "250-111-1234")
-//                .and().inFulfillmentOf()
-//                    .id("1111")
-                .and().content("Plain text document content"))
+                .and().inFulfillmentOf()
+                    .id("1111")
+                .and()
+                    .receiverId("cdxpostprod-obctc")
+                    .content("Plain text document content"))
                 .getDocument();
         //System.out.println(mapper.writeValueAsString(document));
 

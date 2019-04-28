@@ -58,6 +58,8 @@
             if (cdxSpecialistDetails != null) {
                 cdxSpecialistDetails = cdxSpecialistDetails.replaceAll(System.lineSeparator(), "<br>");
             }
+        } else {
+            cdxSpecialistDetails = "Failed to add cdxSpecId: " + cdxSpecId;
         }
     }
 %>

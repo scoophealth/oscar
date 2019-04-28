@@ -73,10 +73,10 @@ public class SubmitDocTest extends FacadesBaseTest {
                         .name(NameType.LEGAL, "Joseph", "Cloud")
                         .address(AddressType.HOME, "111 Main St", "Victoria", "BC", "V8V Z9Z", "CA")
                         .phone(TelcoType.HOME, "250-111-1234")
-//                        .and().inFulfillmentOf()
-//                            .id("1111")
+                        .and().inFulfillmentOf()
+                            .id("1111")
                         .and()
-//                            .receiverId(clinicIdA)
+                            .receiverId(clinicIdA)
                             .content("Document plain text")
                     .submit();
         } catch (OBIBException e) {
@@ -89,8 +89,8 @@ public class SubmitDocTest extends FacadesBaseTest {
 
         //MiscUtils.getLogger().info("obibconnector response: "+ response);
 
-        Assert.assertTrue("Error submitting document.".equals(result));
-        //Assert.assertNotNull(response);
+        //Assert.assertTrue("Error submitting document.".equals(result));
+        Assert.assertNotNull(response);
     }
 
     @Test
@@ -124,7 +124,7 @@ public class SubmitDocTest extends FacadesBaseTest {
                     .address(AddressType.HOME, "111 Main St", "Victoria", "BC", "V8V Z9Z", "CA")
                     .phone(TelcoType.HOME, "250-111-1234")
                 .and()
-                    //.receiverId(clinicIdA)
+                    .receiverId(clinicIdA)
                     .attach(AttachmentType.PDF, "logo.pdf", DatatypeConverter.parseBase64Binary(base64Pdf))
                 .submit();
 

@@ -38,20 +38,18 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SearchClinicsTest extends FacadesBaseTest {
-    private final CDXConfiguration config = new CDXConfiguration();
-    private final String clinicId = config.getClinicId();
     private String result = null;
 
     @Test
     public void testFindByName() {
-        ISearchClinic searchClinic = new SearchClinic(config);
+        ISearchClinic searchClinic = new SearchClinic(configClinicC);
         List<IClinic> clinics = null;
         String expectedErrorMsg = "Error finding clinics by name.";
         String notNullClinics = "Providers not null";
         List<String> expectedResults = new ArrayList<String>(Arrays.asList(notNullClinics,expectedErrorMsg));
         result = null;
         try {
-            clinics = searchClinic.findByName("cdxpostprod-obctc");
+            clinics = searchClinic.findByName("oscar");
         } catch (OBIBException e) {
             result = e.getMessage();
             MiscUtils.getLogger().info(result);
@@ -75,14 +73,14 @@ public class SearchClinicsTest extends FacadesBaseTest {
 
     @Test
     public void testFindByAddress() {
-        ISearchClinic searchClinic = new SearchClinic(config);
+        ISearchClinic searchClinic = new SearchClinic(configClinicC);
         List<IClinic> clinics = null;
         String expectedErrorMsg = "Error finding clinics by address.";
         String notNullClinics = "Clinics not null";
         List<String> expectedResults = new ArrayList<String>(Arrays.asList(notNullClinics,expectedErrorMsg));
         result = null;
         try {
-            clinics = searchClinic.findByAddress("the address");
+            clinics = searchClinic.findByAddress("Kelowna");
         } catch (OBIBException e) {
             result = e.getMessage();
             MiscUtils.getLogger().info(result);

@@ -28,10 +28,7 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v26.message.ORU_R01;
 import ca.uhn.hl7v2.model.v26.message.REF_I12;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.AddressType;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.NameType;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.TelcoType;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.Gender;
+import ca.uvic.leadlab.obibconnector.facades.datatypes.*;
 import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
 import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
@@ -501,7 +498,7 @@ public class EctConsultationFormRequestAction extends Action {
 
 		ConsultationRequestDao consultationRequestDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
 		ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
-		Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
+//		Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
 		ClinicDAO clinicDAO = (ClinicDAO) SpringUtils.getBean("clinicDAO");
 
 		ConsultationRequest consultationRequest = consultationRequestDao.find(consultationRequestId);
@@ -524,9 +521,10 @@ public class EctConsultationFormRequestAction extends Action {
 		// Create pdf version of Consultation Request which can be attached to request.
 		String filename = null;
 		EctConsultationFormRequestPrintPdf pdf = new EctConsultationFormRequestPrintPdf(consultationRequestId.toString(), professionalSpecialist.getAddress(), professionalSpecialist.getPhone(), professionalSpecialist.getFax(), demographic.getDemographicNo().toString());
+        byte[] newBytes = null;
 		try {
 			filename = pdf.printPdf(loggedInInfo);
-			Byte[] newBytes = pdfFileToByteArray(filename);
+			newBytes = pdfFileToByteArray(filename);
 			MiscUtils.getLogger().info("Consultation Request PDF: " + filename);
 		} catch (DocumentException e) {
 			MiscUtils.getLogger().info(e.getMessage());
@@ -571,11 +569,12 @@ public class EctConsultationFormRequestAction extends Action {
 					.name(NameType.LEGAL, professionalSpecialist.getFirstName(), professionalSpecialist.getLastName())
 					.address(AddressType.HOME, professionalSpecialist.getAddress(), professionalSpecialist.getCity(), professionalSpecialist.getProvince(), professionalSpecialist.getPostal(), "CA")
 					.phone(TelcoType.HOME, professionalSpecialist.getPhoneNumber())
-//				.and().inFulfillmentOf()
-//					.id()
+				.and().inFulfillmentOf()
+					.id(Integer.toString(consultationRequestId))
 				.and()
+					.receiverId(professionalSpecialist.getOrganizationName())
 					.content(message)
-					//.attach(AttachmentType.PDF, newBytes)
+					.attach(AttachmentType.PDF, "document.pdf", newBytes)
 				.submit();
 
 		MiscUtils.getLogger().info("obibconnector response: " + response);
@@ -613,7 +612,7 @@ public class EctConsultationFormRequestAction extends Action {
 		return sb.toString();
 	}
 
-	private Byte[] pdfFileToByteArray(String filename) throws IOException {
+	private byte[] pdfFileToByteArray(String filename) throws IOException {
 		byte[] bytes = null;
 		if (filename != null && !filename.isEmpty()) {
 			File file = new File(filename);
@@ -622,11 +621,12 @@ public class EctConsultationFormRequestAction extends Action {
 			fis.read(bytes);
 			fis.close();
 		}
-		Byte[] newBytes = new Byte[bytes.length];
-		int i = 0;
-		for (byte b : bytes) {
-			newBytes[i++] = b;
-		}
-		return newBytes;
+//		Byte[] newBytes = new Byte[bytes.length];
+//		int i = 0;
+//		for (byte b : bytes) {
+//			newBytes[i++] = b;
+//		}
+//		return newBytes;
+        return bytes;
 	}
 }
