@@ -31,6 +31,7 @@ import ca.uhn.hl7v2.model.v26.message.REF_I12;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.*;
 import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
 import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
+import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
 import com.lowagie.text.DocumentException;
 import org.apache.commons.lang.StringUtils;
@@ -48,6 +49,7 @@ import org.oscarehr.common.hl7.v2.oscar_to_oscar.RefI12;
 import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
 import org.oscarehr.common.model.*;
 import org.oscarehr.integration.cdx.CDXConfiguration;
+import org.oscarehr.integration.cdx.CDXSpecialist;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.*;
@@ -76,6 +78,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 
 //import ca.uvic.leadlab.obibconnector.facades.datatypes.AttachmentType;
 
@@ -541,8 +544,15 @@ public class EctConsultationFormRequestAction extends Action {
 			authorId = sendingProvider.getProviderNo();
 		}
 		String recipientId = professionalSpecialist.getCdxId();
-		if (recipientId == null || recipientId.isEmpty()) {
-			recipientId = professionalSpecialist.getId().toString();
+		CDXSpecialist cdxSpecialist = new CDXSpecialist();
+		List<IProvider> providers = cdxSpecialist.findCdxSpecialistById(recipientId);
+		String clinicID = null;
+		if (providers != null && !providers.isEmpty()) {
+			IProvider cdxProvider = providers.get(0);
+			clinicID = cdxProvider.getClinicID();
+		} else {
+			MiscUtils.getLogger().error("Sending providers CDX ID not found");
+			throw new OBIBException("Sending providers CDX ID not found");
 		}
 
 		IDocument response = null;
@@ -572,7 +582,7 @@ public class EctConsultationFormRequestAction extends Action {
 				.and().inFulfillmentOf()
 					.id(Integer.toString(consultationRequestId))
 				.and()
-					.receiverId(professionalSpecialist.getOrganizationName())
+					.receiverId(clinicID)
 					.content(message)
 					.attach(AttachmentType.PDF, "document.pdf", newBytes)
 				.submit();
