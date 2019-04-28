@@ -51,19 +51,19 @@ public class SearchProvidersTest extends FacadesBaseTest {
             providers = searchProviders.findByName("a");
         } catch (OBIBException e) {
             result = e.getMessage();
-            MiscUtils.getLogger().info(result);
+            MiscUtils.getLogger().warn(result);
         } catch (Exception e) {
             result = e.getMessage(); //unexpected outcome
-            MiscUtils.getLogger().info(e.getStackTrace());
+            MiscUtils.getLogger().error(e.getStackTrace());
         }
         if (providers != null) {
             result = notNullProviders;
-            MiscUtils.getLogger().info("Num of CDX providers found in search by name:" + providers.size());
+            MiscUtils.getLogger().debug("Num of CDX providers found in search by name:" + providers.size());
             for (IProvider p: providers) {
-                MiscUtils.getLogger().info("Found: [" + p.getLastName()+","+p.getFirstName()+"],"+p.getID());
+                MiscUtils.getLogger().debug("Found: [" + p.getLastName()+","+p.getFirstName()+"],"+p.getID());
             }
         } else {
-            MiscUtils.getLogger().info("CDX providers is null for search by name");
+            MiscUtils.getLogger().debug("CDX providers is null for search by name");
         }
 
         Assert.assertTrue("The list of expected outcomes does not contain the value " + result, expectedResults.contains(result));
@@ -82,19 +82,19 @@ public class SearchProvidersTest extends FacadesBaseTest {
             providers = searchProviders.findByProviderID("93188");
         } catch (OBIBException e) {
             result = e.getMessage();
-            MiscUtils.getLogger().info(result);
+            MiscUtils.getLogger().warn(result);
         } catch (Exception e) {
             result = e.getMessage();  //unexpected outcome
-            MiscUtils.getLogger().info(e.getStackTrace());
+            MiscUtils.getLogger().error(e.getStackTrace());
         }
         if (providers != null) {
             result = notNullProviders;
-            MiscUtils.getLogger().info("Num of CDX providers found in search by id: " + providers.size());
+            MiscUtils.getLogger().debug("Num of CDX providers found in search by id: " + providers.size());
             for (IProvider p: providers) {
-                MiscUtils.getLogger().info("Found: [" + p.getLastName()+","+p.getFirstName()+"],"+p.getID());
+                MiscUtils.getLogger().debug("Found: [" + p.getLastName()+","+p.getFirstName()+"],"+p.getID());
             }
         } else {
-            MiscUtils.getLogger().info("CDX providers is null for search by id");
+            MiscUtils.getLogger().debug("CDX providers is null for search by id");
         }
 
         Assert.assertTrue("The list of expected outcomes does not contain the value " + result, expectedResults.contains(result));

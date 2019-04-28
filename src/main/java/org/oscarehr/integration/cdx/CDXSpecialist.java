@@ -35,8 +35,7 @@ import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class CDXSpecialist {
     private final CDXConfiguration config;
@@ -63,7 +62,7 @@ public class CDXSpecialist {
         return allProviders;
     }
 
-    public List<IProvider> findAllTesting() {
+    public List<IProvider> findAllNoException() {
         List<IProvider> allProviders = new ArrayList<IProvider>();
         try {
             allProviders = findAll();
@@ -74,6 +73,7 @@ public class CDXSpecialist {
 //            allProviders.add(new ProviderRaymond());
 //            allProviders.add(new ProviderAdeshina());
 //        }
+        Collections.sort(allProviders, IProviderComparator);
         return allProviders;
     }
 
@@ -295,4 +295,24 @@ public class CDXSpecialist {
                 "Clinic ID: " + provider.getClinicID() + nl +
                 "Clinic Name: " + provider.getClinicName() + nl;
     }
+
+    private final Comparator<IProvider> IProviderComparator = new Comparator<IProvider>() {
+
+        public int compare(IProvider p1, IProvider p2) {
+            String lName1 = p1.getLastName().toUpperCase();
+            String fName1 = p1.getFirstName().toUpperCase();
+            String cdxId1 = p1.getID();
+            String lName2 = p2.getLastName().toUpperCase();
+            String fName2 = p2.getFirstName().toUpperCase();
+            String cdxId2 = p2.getID();
+            if (lName1.equals(lName2) && fName1.equals(fName2)) {
+                return cdxId1.compareTo(cdxId2);
+            } else if (lName1.equalsIgnoreCase(lName2)) {
+                return fName1.compareTo(fName2);
+            } else {
+                return lName1.compareTo(lName2);
+            }
+        }
+
+    };
 }
