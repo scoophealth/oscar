@@ -1435,7 +1435,7 @@ public class DemographicExportAction4 extends Action {
 					}
 					String drugName = arr[p].getBrandName();
 					if (StringUtils.filled(drugName)) {
-						if(drugName.length()>250) {
+						if(drugName.length()>120) {
 							addResidualInformation(medi.addNewResidualInfo(),"string","DrugName",drugName);
 						}
 						medi.setDrugName(StringUtils.maxLenString(drugName, 120, 100, "... (see residual)"));
