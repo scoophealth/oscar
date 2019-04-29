@@ -237,6 +237,21 @@ public class LabUploadWs extends AbstractWs {
     	
     		return retVal;
     }
+    
+    public String uploadDocumentReference(@WebParam(name="file_name") String fileName,
+			   @WebParam(name="contents") byte[] contents,
+			   @WebParam(name="oscar_provider_no") String oscarProviderNo ){
+
+    				ByteArrayInputStream is = new ByteArrayInputStream(contents);
+    				String filePath = Utilities.saveFile(is,fileName);
+    				HttpServletRequest request = getHttpServletRequest();
+    				LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromRequest(request);
+
+    				MessageHandler msgHandler = HandlerClassFactory.getHandler("FHIR_COMMUNICATION_REQUEST");
+    				String retVal = msgHandler.parse(loggedInInfo,oscarProviderNo, filePath,0,request.getRemoteAddr()); 
+
+    				return retVal;
+    }
 
     private String importLab(String fileName, String labContent, String labType, String oscarProviderNo) 
 		throws ParseException, SQLException, Exception
