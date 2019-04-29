@@ -119,6 +119,11 @@ if(!authed) {
 					//that;s weird
 				}
 			}
+		
+			if("TE".equals(da.getRosterStatus()) && StringUtils.isEmpty(da.getRosterTerminationReason())) {
+				da.setRosterTerminationReason("33");
+				demographicDao.save(d);
+			}
 		}
 		
 		if("RO".equals(d.getRosterStatus()) || "TE".equals(d.getRosterStatus())) {
@@ -128,6 +133,11 @@ if(!authed) {
 			} else {
 				//that;s weird
 			}
+		}
+		
+		if("TE".equals(d.getRosterStatus()) && StringUtils.isEmpty(d.getRosterTerminationReason())) {
+			d.setRosterTerminationReason("33");
+			demographicDao.save(d);
 		}
 		
 	}
