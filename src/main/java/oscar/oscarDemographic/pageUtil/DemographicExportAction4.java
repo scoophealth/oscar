@@ -792,6 +792,12 @@ public class DemographicExportAction4 extends Action {
 					// FAMILY HISTORY (FamHistory)
 					if (StringUtils.filled(famHist)) {
 						FamilyHistory fHist = patientRec.addNewFamilyHistory();
+						if(famHist.length()>250) {
+							addResidualInformation(fHist.addNewResidualInfo(),"string","ProblemDiagnosisProcedureDescription",famHist);
+						}
+						fHist.setProblemDiagnosisProcedureDescription(StringUtils.maxLenString(famHist, 250, 23, "... (see residual)"));
+						
+						
 						fHist.setProblemDiagnosisProcedureDescription(famHist);
 						summary = Util.addSummary("Problem Description", famHist);
 
