@@ -930,7 +930,11 @@ public class DemographicExportAction4 extends Action {
 								bPROBLEMSTATUS = true;
 							}
 						}
-						pHealth.setPastHealthProblemDescriptionOrProcedures(medHist);
+						if(medHist.length()>250) {
+							addResidualInformation(pHealth.addNewResidualInfo(),"string","PastHealthProblemDescriptionOrProcedures",medHist);
+						}
+						pHealth.setPastHealthProblemDescriptionOrProcedures(StringUtils.maxLenString(medHist, 250, 230, "... (see residual)"));
+						
 						if (StringUtils.filled(annotation)) {
 							pHealth.setNotes(annotation);
 							summary = Util.addSummary(summary, "Notes", annotation);
