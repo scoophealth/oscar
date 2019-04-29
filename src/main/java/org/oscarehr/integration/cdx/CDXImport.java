@@ -29,6 +29,7 @@ import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import ca.uvic.leadlab.obibconnector.facades.receive.IPatient;
 import ca.uvic.leadlab.obibconnector.facades.receive.IReceiveDoc;
 import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
+import ca.uvic.leadlab.obibconnector.impl.receive.ReceiveDoc;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.*;
 import org.oscarehr.common.model.*;
@@ -47,7 +48,7 @@ import java.util.List;
 
 public class CDXImport {
 
-    private IReceiveDoc receiver = SpringUtils.getBean(IReceiveDoc.class);
+    private IReceiveDoc receiver = null;
     private CdxProvenanceDao provDao = SpringUtils.getBean(CdxProvenanceDao.class);
     private DocumentDao     docDao = SpringUtils.getBean(DocumentDao.class);
     private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
@@ -62,6 +63,8 @@ public class CDXImport {
         clinicId = clinicDao.getClinic().getCdxOid();
 
         cdxConfig = new CDXConfiguration();
+
+        receiver = new ReceiveDoc(cdxConfig);
     }
 
 
@@ -178,8 +181,14 @@ public class CDXImport {
 
         if (doc.getObservationDate() != null) {
             docEntity.setObservationdate(doc.getObservationDate());
-        } else
+        } else if (doc.getAuthoringTime() != null) {
             docEntity.setObservationdate(doc.getAuthoringTime());
+        } else if (doc.getEffectiveTime() != null) {
+            docEntity.setObservationdate(doc.getEffectiveTime());
+        } else {
+            docEntity.setObservationdate(new Date());
+        
+        }
 
         if (doc.getCustodianName() != null)
         docEntity.setSourceFacility(doc.getCustodianName());

@@ -24,7 +24,6 @@
 	<!-- setup OBIB -->
 
 	<bean id="cdxConfiguration" class="org.oscarehr.integration.cdx.CDXConfiguration"/>
-	<bean id="obibReceiveDoc" class="ca.uvic.leadlab.obibconnector.impl.receive.mock.ReceiveDocMock" autowire="constructor"/>
 
 
 
