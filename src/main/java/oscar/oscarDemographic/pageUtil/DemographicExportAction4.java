@@ -1223,7 +1223,7 @@ public class DemographicExportAction4 extends Action {
 					String allergyReaction = allergy.getReaction();
 					if (StringUtils.filled(allergyReaction)) {
 						if(allergyReaction.length()>250) {
-							addResidualInformation(alr.addNewResidualInfo(),"string","DrugName",allergyReaction);
+							addResidualInformation(alr.addNewResidualInfo(),"string","Reaction",allergyReaction);
 						}
 						alr.setReaction(StringUtils.maxLenString(allergyReaction, 120, 100, "... (see residual)"));
 						aSummary = Util.addSummary(aSummary, "Reaction", allergyReaction);
