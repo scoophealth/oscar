@@ -1432,7 +1432,10 @@ public class DemographicExportAction4 extends Action {
 					}
 					String drugName = arr[p].getBrandName();
 					if (StringUtils.filled(drugName)) {
-						medi.setDrugName(drugName);
+						if(drugName.length()>250) {
+							addResidualInformation(medi.addNewResidualInfo(),"string","DrugName",drugName);
+						}
+						medi.setDrugName(StringUtils.maxLenString(drugName, 120, 100, "... (see residual)"));
 						mSummary = Util.addSummary(mSummary, "Drug Name", drugName);
 					} else {
 						drugName = arr[p].getCustomName();
