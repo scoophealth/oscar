@@ -1228,7 +1228,10 @@ public class DemographicExportAction4 extends Action {
 					}
 					String allergyReaction = allergy.getReaction();
 					if (StringUtils.filled(allergyReaction)) {
-						alr.setReaction(allergyReaction);
+						if(allergyReaction.length()>120) {
+							addResidualInformation(alr.addNewResidualInfo(),"string","Reaction",allergyReaction);
+						}
+						alr.setReaction(StringUtils.maxLenString(allergyReaction, 120, 100, "... (see residual)"));
 						aSummary = Util.addSummary(aSummary, "Reaction", allergyReaction);
 					}
 					String severity = allergy.getSeverityOfReaction();
@@ -1438,7 +1441,7 @@ public class DemographicExportAction4 extends Action {
 					}
 					String drugName = arr[p].getBrandName();
 					if (StringUtils.filled(drugName)) {
-						if(drugName.length()>250) {
+						if(drugName.length()>120) {
 							addResidualInformation(medi.addNewResidualInfo(),"string","DrugName",drugName);
 						}
 						medi.setDrugName(StringUtils.maxLenString(drugName, 120, 100, "... (see residual)"));
