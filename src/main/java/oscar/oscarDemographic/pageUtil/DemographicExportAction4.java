@@ -2347,13 +2347,17 @@ public class DemographicExportAction4 extends Action {
 						dsco.setDocumentedGoals(meas.getDataField());
 						addOneEntry(CAREELEMENTS);
 					} else if (meas.getType().equals("HYPE")) { //Hypoglycemic Episodes
-						cdsDt.HypoglycemicEpisodes he = careElm.addNewHypoglycemicEpisodes();
-						he.setDate(Util.calDate(meas.getDateObserved()));
-						if (meas.getDateObserved()==null) {
-							exportError.add("Error! No Date for Hypoglycemic Episodes (id="+meas.getId()+") for Patient "+demoNo);
+						if(StringUtils.isInteger(meas.getDataField().trim())) {
+							cdsDt.HypoglycemicEpisodes he = careElm.addNewHypoglycemicEpisodes();
+							he.setDate(Util.calDate(meas.getDateObserved()));
+							if (meas.getDateObserved()==null) {
+								exportError.add("Error! No Date for Hypoglycemic Episodes (id="+meas.getId()+") for Patient "+demoNo);
+							}
+							he.setNumOfReportedEpisodes(new BigInteger(meas.getDataField().trim()));
+							addOneEntry(CAREELEMENTS);
+						} else {
+							exportError.add("Failed to export an entry for Hypoglycemic Episodes: " + meas.getDataField());
 						}
-						he.setNumOfReportedEpisodes(new BigInteger(meas.getDataField().trim()));
-						addOneEntry(CAREELEMENTS);
 					}
 				}
 			}
