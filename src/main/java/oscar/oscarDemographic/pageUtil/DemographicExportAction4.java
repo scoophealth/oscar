@@ -1145,7 +1145,11 @@ public class DemographicExportAction4 extends Action {
 					// ALERTS AND SPECIAL NEEDS (Reminders)
 					if (StringUtils.filled(reminders)) {
 						AlertsAndSpecialNeeds alerts = patientRec.addNewAlertsAndSpecialNeeds();
-						alerts.setAlertDescription(reminders);
+						if(reminders.length()>250) {
+							addResidualInformation(alerts.addNewResidualInfo(),"string","AlertDescription",reminders);
+						}
+						alerts.setAlertDescription(StringUtils.maxLenString(reminders, 1000, 980, "... (see residual)"));
+						
 						addOneEntry(ALERT);
 
 						summary = Util.addSummary("Alert Description", reminders);
@@ -1168,7 +1172,10 @@ public class DemographicExportAction4 extends Action {
 							}
 						}
 						if (StringUtils.filled(annotation)) {
-							alerts.setNotes(annotation);
+							if(annotation.length()>250) {
+								addResidualInformation(alerts.addNewResidualInfo(),"string","Notes",annotation);
+							}
+							alerts.setNotes(StringUtils.maxLenString(annotation, 1000, 980, "... (see residual)"));
 							summary = Util.addSummary(summary, "Notes", annotation);
 						}
 						//alerts.setCategorySummaryLine(summary);
@@ -1578,7 +1585,7 @@ public class DemographicExportAction4 extends Action {
 						medi.setDispenseInterval(String.valueOf(arr[p].getDispenseInterval()));
 						mSummary = Util.addLine(mSummary, "Dispense Interval", arr[p].getDispenseInterval().toString());
 					}
-					if (arr[p].getRefillDuration()!=null) {
+					if (arr[p].getRefillDuration()!=null) {						
 						medi.setRefillDuration(String.valueOf(arr[p].getRefillDuration()));
 						mSummary = Util.addSummary(mSummary, "Refill Duration", arr[p].getRefillDuration().toString());
 					}
