@@ -38,35 +38,33 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SearchClinicsTest extends FacadesBaseTest {
-    private final CDXConfiguration config = new CDXConfiguration();
-    private final String clinicId = config.getClinicId();
     private String result = null;
 
     @Test
     public void testFindByName() {
-        ISearchClinic searchClinic = new SearchClinic(config);
+        ISearchClinic searchClinic = new SearchClinic(configClinicC);
         List<IClinic> clinics = null;
         String expectedErrorMsg = "Error finding clinics by name.";
         String notNullClinics = "Providers not null";
         List<String> expectedResults = new ArrayList<String>(Arrays.asList(notNullClinics,expectedErrorMsg));
         result = null;
         try {
-            clinics = searchClinic.findByName("cdxpostprod-obctc");
+            clinics = searchClinic.findByName("oscar");
         } catch (OBIBException e) {
             result = e.getMessage();
-            MiscUtils.getLogger().info(result);
+            MiscUtils.getLogger().warn(result);
         } catch (Exception e) {
             result = e.getMessage(); //unexpected outcome
-            MiscUtils.getLogger().info(e.getStackTrace());
+            MiscUtils.getLogger().error(e.getStackTrace());
         }
         if (clinics != null) {
             result = notNullClinics;
-            MiscUtils.getLogger().info("Num of CDX clinics by name : " + clinics.size());
+            MiscUtils.getLogger().debug("Num of CDX clinics by name : " + clinics.size());
             for (IClinic c: clinics) {
-                MiscUtils.getLogger().info("Found: " + c.getName()+" "+c.getCity()+" "+c.getID());
+                MiscUtils.getLogger().debug("Found: " + c.getName()+" "+c.getCity()+" "+c.getID());
             }
         } else {
-            MiscUtils.getLogger().info("CDX clinics is null for search by name");
+            MiscUtils.getLogger().debug("CDX clinics is null for search by name");
         }
 
         Assert.assertTrue("The list of expected outcomes does not contain the value " + result,
@@ -75,29 +73,29 @@ public class SearchClinicsTest extends FacadesBaseTest {
 
     @Test
     public void testFindByAddress() {
-        ISearchClinic searchClinic = new SearchClinic(config);
+        ISearchClinic searchClinic = new SearchClinic(configClinicC);
         List<IClinic> clinics = null;
         String expectedErrorMsg = "Error finding clinics by address.";
         String notNullClinics = "Clinics not null";
         List<String> expectedResults = new ArrayList<String>(Arrays.asList(notNullClinics,expectedErrorMsg));
         result = null;
         try {
-            clinics = searchClinic.findByAddress("the address");
+            clinics = searchClinic.findByAddress("Kelowna");
         } catch (OBIBException e) {
             result = e.getMessage();
-            MiscUtils.getLogger().info(result);
+            MiscUtils.getLogger().warn(result);
         } catch (Exception e) {
             result = e.getMessage(); //unexpected outcome
-            MiscUtils.getLogger().info(e.getStackTrace());
+            MiscUtils.getLogger().error(e.getStackTrace());
         }
         if (clinics != null) {
             result = notNullClinics;
-            MiscUtils.getLogger().info("Num of CDX clinics found in search by address : " + clinics.size());
+            MiscUtils.getLogger().debug("Num of CDX clinics found in search by address : " + clinics.size());
             for (IClinic c: clinics) {
-                MiscUtils.getLogger().info("Found: " + c.getName()+" "+c.getCity()+" "+c.getID());
+                MiscUtils.getLogger().debug("Found: " + c.getName()+" "+c.getCity()+" "+c.getID());
             }
         } else {
-            MiscUtils.getLogger().info("CDX clinics is null in search by address");
+            MiscUtils.getLogger().debug("CDX clinics is null in search by address");
         }
         Assert.assertTrue("The list of expected outcomes does not contain the value " + result, expectedResults.contains(result));
     }
@@ -114,19 +112,19 @@ public class SearchClinicsTest extends FacadesBaseTest {
             clinics = searchClinic.findByID(clinicIdA);
         } catch (OBIBException e) {
             result = e.getMessage();
-            MiscUtils.getLogger().info(result);
+            MiscUtils.getLogger().warn(result);
         } catch (Exception e) {
             result = e.getMessage(); //unexpected outcome
-            MiscUtils.getLogger().info(e.getStackTrace());
+            MiscUtils.getLogger().error(e.getStackTrace());
         }
         if (clinics != null) {
             result = notNullClinics;
-            MiscUtils.getLogger().info("Num of CDX clinics found in search by id: " + clinics.size());
+            MiscUtils.getLogger().debug("Num of CDX clinics found in search by id: " + clinics.size());
             for (IClinic c: clinics) {
-                MiscUtils.getLogger().info("Found: " + c.getName()+" "+c.getCity()+" "+c.getID());
+                MiscUtils.getLogger().debug("Found: " + c.getName()+" "+c.getCity()+" "+c.getID());
             }
         } else {
-            MiscUtils.getLogger().info("CDX clinics is null for search by id");
+            MiscUtils.getLogger().debug("CDX clinics is null for search by id");
         }
         Assert.assertTrue("The list of expected outcomes does not contain the value " + result, expectedResults.contains(result));
     }

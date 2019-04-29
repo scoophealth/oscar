@@ -54,8 +54,10 @@
 <%@ page import="oscar.oscarMDS.data.ReportStatus" %>
 <%@ page import="oscar.oscarLab.ca.all.AcknowledgementData" %>
 <%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="org.oscarehr.integration.cdx.model.*" %>
 <%@ page import="org.oscarehr.integration.cdx.dao.*" %>
+<%@ page import="static org.caisi.comp.web.WebComponentUtil.getServletContext" %>
+<%@ page import="org.oscarehr.integration.cdx.model.CdxProvenance" %>
+<%@ page import="org.oscarehr.integration.cdx.model.CdxAttachment" %>
 <%
 
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
@@ -150,6 +152,3 @@
 
 </body>
 </html>
-<%
-    }
-%>

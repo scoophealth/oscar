@@ -26,11 +26,13 @@
 
 <%@ page import="ca.uvic.leadlab.obibconnector.facades.receive.ITelco" %>
 <%@ page import="ca.uvic.leadlab.obibconnector.facades.registry.IProvider" %>
-<%@ page import="org.oscarehr.integration.cdx.CDXSpecialist" %>
-<%@ page import="java.util.List" %>
 <%@ page import="org.oscarehr.common.dao.ProfessionalSpecialistDao" %>
-<%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="org.oscarehr.common.model.ProfessionalSpecialist" %>
+<%@ page import="org.oscarehr.integration.cdx.CDXSpecialist" %>
+<%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="java.util.List" %>
+<%@ page import="org.oscarehr.util.MiscUtils" %>
+<%@ page import="oscar.OscarProperties" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
@@ -52,8 +54,26 @@
 <html:html locale="true">
 
     <%
-        CDXSpecialist cdxSpecialist = new CDXSpecialist();
-        List<IProvider> providers = cdxSpecialist.findAllTesting();
+        OscarProperties props = OscarProperties.getInstance();
+        boolean showCdx = "bc".equalsIgnoreCase(props.getProperty("billregion"));
+
+        String searchString = request.getParameter("searchstring");
+        MiscUtils.getLogger().debug("searchstring: " + searchString);
+        List<IProvider> providers = null;
+        int maxCdxSpecIdLength = 30;
+        if (showCdx) {
+            CDXSpecialist cdxSpecialist = new CDXSpecialist();
+            providers = cdxSpecialist.findCdxSpecialistByName(searchString);
+            int max = 0;
+            if (providers != null) {
+                MiscUtils.getLogger().debug("Found " + providers.size() + " providers");
+                for (IProvider p : providers) {
+                    if (p.getID().length() > max) max = p.getID().length();
+                    MiscUtils.getLogger().debug("CdxId: " + p.getID() + " Name: " + p.getLastName() + "," + p.getFirstName());
+                }
+            }
+            MiscUtils.getLogger().debug("Maximum cdx id length: " + max);
+        }
         ProfessionalSpecialistDao professionalSpecialistDao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
     %>
     <head>
@@ -117,6 +137,8 @@
                                             <th><bean:message
                                                     key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.phone"/>
                                             </th>
+                                            <th>CDX Id
+                                            </th>
                                         </tr>
                                         <tr>
                                             <td><!--<div class="ChooseRecipientsBox1">--> <%
@@ -124,50 +146,75 @@
 								 String phone = "";
 								 List<ProfessionalSpecialist> professionalSpecialists;
 								 int first = 0;
-								 for(int i=0;i < providers.size(); i++) {
-								     String cdxSpecId = providers.get(i).getID();
-								     professionalSpecialists = professionalSpecialistDao.findByCdxId(cdxSpecId);
-								     // don't display specialists that have already been added
-								     if (professionalSpecialists == null || professionalSpecialists.isEmpty()) {
-								     String fName = providers.get(i).getFirstName();
-								     String lName = providers.get(i).getLastName();
-								     String address = "";
-								     if (providers.get(i).getClinicName() != null) {
-								         address = providers.get(i).getClinicName();
-								     } else if (providers.get(i).getStreetAddress() != null) {
-								         address += providers.get(i).getStreetAddress();
-								     } else if (providers.get(i).getCity() != null) {
-								         address += providers.get(i).getCity();
-								     } else if (providers.get(i).getProvince() != null) {
-								         address += providers.get(i).getProvince();
-								     } else if (providers.get(i).getPostalCode() != null) {
-								         address += providers.get(i).getPostalCode();
-								     }
-								     List<ITelco> phones = providers.get(0).getPhones();
-								     if(phones!=null && phones.size()>0) {
-								         phone = phones.get(0).getAddress();
-								     }
+								 if (showCdx && providers != null) {
+                                     for (IProvider provider : providers) {
+                                         String cdxSpecId = provider.getID();
+                                         MiscUtils.getLogger().debug("cdxSpecId: " + cdxSpecId);
+                                         if (cdxSpecId != null && !cdxSpecId.isEmpty() && cdxSpecId.length() <= maxCdxSpecIdLength) {
+                                             professionalSpecialists = professionalSpecialistDao.findByCdxId(cdxSpecId);
+
+                                             // don't display specialists that have already been added
+                                             if (professionalSpecialists == null || professionalSpecialists.isEmpty()) {
+                                                 String fName = provider.getFirstName();
+                                                 String lName = provider.getLastName();
+                                                 String address = "";
+                                                 if (provider.getClinicName() != null) {
+                                                     address = provider.getClinicName();
+                                                 } else if (provider.getStreetAddress() != null) {
+                                                     address += provider.getStreetAddress();
+                                                 } else if (provider.getCity() != null) {
+                                                     address += provider.getCity();
+                                                 } else if (provider.getProvince() != null) {
+                                                     address += provider.getProvince();
+                                                 } else if (provider.getPostalCode() != null) {
+                                                     address += provider.getPostalCode();
+                                                 }
+                                                 List<ITelco> phones = providers.get(0).getPhones();
+                                                 if (phones != null && phones.size() > 0) {
+                                                     phone = phones.get(0).getAddress();
+                                                 }
                               %>
 
                                         <tr>
                                             <td><label>
                                                 <input type="radio" name="cdxSpecId"
-                                                       value="<%=cdxSpecId%>" <% if (first == 0) {%> checked
-                                            </label><% first++;
-                                            } %>
+                                                       value="<%=cdxSpecId%>" <%if (first == 0) { %>checked >
+                                            </label><%
+                                                    first++;
+                                                }
+                                            %>
                                             </td>
                                             <td>
                                                 <%
                                                     out.print(lName + " " + fName);
                                                 %>
                                             </td>
-                                            <td><%=address %>
+                                            <td><%=address%>
+                                            </td >
+                                            <td>
+                                                    <%=phone%>
                                             </td>
-                                            <td><%=phone%>
+                                            <td>
+                                                    <%=cdxSpecId%>
                                             </td>
-                                        </tr>
-                                        <% }
-                                        } %>
+                                        </tr >
+
+
+                                                    <%
+                                             }
+                                         } else {
+                                             String reason;
+                                             if (cdxSpecId == null) {
+                                                 reason = "cdxSpecId is null";
+                                             } else if (cdxSpecId.isEmpty()) {
+                                                 reason = "cdxSpecId is empty";
+                                             } else {
+                                                 reason = "cdxSpecId length exceeds " + maxCdxSpecIdLength;
+                                             }
+                                             MiscUtils.getLogger().warn("Ignoring CDX Provider: " + provider.getLastName() +
+                                                     "," + provider.getFirstName() + " cdxSpecId: " + cdxSpecId + "because " + reason);
+                                         }
+                                     } }%>
                                     </table>
                                 </div>
                                 <input type="submit" value="Add">

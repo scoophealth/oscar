@@ -29,16 +29,13 @@ import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
 import ca.uvic.leadlab.obibconnector.facades.receive.ITelco;
 import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
 import ca.uvic.leadlab.obibconnector.facades.registry.ISearchProviders;
-import ca.uvic.leadlab.obibconnector.impl.receive.mock.ProviderAdeshina;
-import ca.uvic.leadlab.obibconnector.impl.receive.mock.ProviderRaymond;
 import ca.uvic.leadlab.obibconnector.impl.registry.SearchProviders;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.ProfessionalSpecialist;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class CDXSpecialist {
     private final CDXConfiguration config;
@@ -54,27 +51,46 @@ public class CDXSpecialist {
             String s = ""+alphabet;
             ISearchProviders searchProviders = new SearchProviders(config);
             List<IProvider> providers = searchProviders.findByName(s);
-            for (IProvider p : providers) {
-                if (p.getLastName().startsWith(s)) {
-                    allProviders.add(p);
+            if (providers != null) {
+                for (IProvider p : providers) {
+                    if (p.getLastName().startsWith(s) && !allProviders.contains(p)) {
+                        allProviders.add(p);
+                    }
                 }
             }
         }
         return allProviders;
     }
 
-    public List<IProvider> findAllTesting() {
+    public List<IProvider> findAllNoException() {
         List<IProvider> allProviders = new ArrayList<IProvider>();
         try {
             allProviders = findAll();
         } catch (OBIBException e) {
             MiscUtils.getLogger().error(e.getMessage());
         }
-        if (allProviders.isEmpty()) {
-            allProviders.add(new ProviderRaymond());
-            allProviders.add(new ProviderAdeshina());
-        }
+        Collections.sort(allProviders, IProviderComparator);
         return allProviders;
+    }
+
+    public List<IProvider> findCdxSpecialistByName(String name) {
+
+        if (name == null || "".equals(name.trim())) {
+            return findAllNoException();
+        }
+
+        name = name.trim();
+
+        List<IProvider> providers = new ArrayList<IProvider>();
+
+        try {
+            ISearchProviders searchProviders = new SearchProviders(config);
+            providers = searchProviders.findByName(name);
+        } catch (OBIBException e) {
+            MiscUtils.getLogger().error("Searching for CDX specialist by name failed", e);
+        }
+        Collections.sort(providers, IProviderComparator);
+        return providers;
     }
 
     public List<IProvider> findCdxSpecialistByLastName(String lastName) {
@@ -134,7 +150,6 @@ public class CDXSpecialist {
         if (id == null || "".equals(id.trim())) {
             return null;
         }
-        id = id.trim();
 
         List<IProvider> providers;
         List<IProvider> result = new ArrayList<IProvider>();
@@ -144,7 +159,7 @@ public class CDXSpecialist {
             providers = searchProviders.findByProviderID(id);
 
             for (IProvider p : providers) {
-                if (p.getFirstName().startsWith(id)) {
+                if (id.equalsIgnoreCase(p.getID())) {
                     result.add(p);
                 }
             }
@@ -152,32 +167,18 @@ public class CDXSpecialist {
         } catch (OBIBException e) {
             MiscUtils.getLogger().error("Searching for CDX specialist by ID failed");
         }
-        if (result.isEmpty()) {
-            if (id.equals("23456")) {
-                result.add(new ProviderRaymond());
-            } else {
-                result.add(new ProviderAdeshina());
-            }
-        }
         return result;
     }
 
     public Boolean saveProfessionalSpecialist(String cdxSpecId) {
 
         boolean result = false;
-        Integer id = null;
-        try {
-            id = Integer.parseInt(cdxSpecId);
-        } catch (NumberFormatException e) {
-            MiscUtils.getLogger().error(e.getMessage());
-            return false;
-        }
 
         // Make sure we don't add the same CDX ID; they are unique
         // Possibly some sort of data merge should be done here in future
         ProfessionalSpecialistDao professionalSpecialistDao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
         List<ProfessionalSpecialist> professionalSpecialistList = professionalSpecialistDao.findByCdxId(cdxSpecId);
-        if (professionalSpecialistList != null || !professionalSpecialistList.isEmpty()) return false;
+        if (professionalSpecialistList != null && professionalSpecialistList.size() != 0) return false;
 
         ProfessionalSpecialist professionalSpecialist = new ProfessionalSpecialist();
         List<IProvider> providers = findCdxSpecialistById(cdxSpecId);
@@ -302,4 +303,24 @@ public class CDXSpecialist {
                 "Clinic ID: " + provider.getClinicID() + nl +
                 "Clinic Name: " + provider.getClinicName() + nl;
     }
+
+    private final Comparator<IProvider> IProviderComparator = new Comparator<IProvider>() {
+
+        public int compare(IProvider p1, IProvider p2) {
+            String lName1 = p1.getLastName().toUpperCase();
+            String fName1 = p1.getFirstName().toUpperCase();
+            String cdxId1 = p1.getID();
+            String lName2 = p2.getLastName().toUpperCase();
+            String fName2 = p2.getFirstName().toUpperCase();
+            String cdxId2 = p2.getID();
+            if (lName1.equals(lName2) && fName1.equals(fName2)) {
+                return cdxId1.compareTo(cdxId2);
+            } else if (lName1.equalsIgnoreCase(lName2)) {
+                return fName1.compareTo(fName2);
+            } else {
+                return lName1.compareTo(lName2);
+            }
+        }
+
+    };
 }

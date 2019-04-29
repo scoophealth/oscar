@@ -7152,7 +7152,7 @@ CREATE TABLE professionalSpecialists (
   salutation varchar(10),
   hideFromView tinyint(1),
   eformId int(10),
-  cdxId varchar(10),
+  cdxId varchar(30),
   cdxCapable bit(1) not null default 0
 );
 
