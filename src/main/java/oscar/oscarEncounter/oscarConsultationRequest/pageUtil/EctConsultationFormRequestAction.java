@@ -50,6 +50,7 @@ import org.oscarehr.common.hl7.v2.oscar_to_oscar.SendingUtils;
 import org.oscarehr.common.model.*;
 import org.oscarehr.integration.cdx.CDXConfiguration;
 import org.oscarehr.integration.cdx.CDXSpecialist;
+import org.oscarehr.integration.cdx.dao.CdxProvenanceDao;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.*;
@@ -80,7 +81,6 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 
-//import ca.uvic.leadlab.obibconnector.facades.datatypes.AttachmentType;
 
 public class EctConsultationFormRequestAction extends Action {
 
@@ -522,7 +522,7 @@ public class EctConsultationFormRequestAction extends Action {
 		Demographic demographic = demographicManager.getDemographic(loggedInInfo, consultationRequest.getDemographicId());
 
 		// Create pdf version of Consultation Request which can be attached to request.
-		String filename = null;
+/*		String filename = null;
 		EctConsultationFormRequestPrintPdf pdf = new EctConsultationFormRequestPrintPdf(consultationRequestId.toString(), professionalSpecialist.getAddress(), professionalSpecialist.getPhone(), professionalSpecialist.getFax(), demographic.getDemographicNo().toString());
         byte[] newBytes = null;
 		try {
@@ -533,7 +533,7 @@ public class EctConsultationFormRequestAction extends Action {
 			MiscUtils.getLogger().info(e.getMessage());
 		} catch (IOException e) {
 			MiscUtils.getLogger().info(e.getMessage());
-		}
+		}*/
 
 		String patientId = demographic.getHin();
 		if (patientId == null || patientId.isEmpty()) {
@@ -584,11 +584,32 @@ public class EctConsultationFormRequestAction extends Action {
 				.and()
 					.receiverId(clinicID)
 					.content(message)
-					.attach(AttachmentType.PDF, "document.pdf", newBytes)
+//					.attach(AttachmentType.PDF, "document.pdf", newBytes)
 				.submit();
 
-		MiscUtils.getLogger().info("obibconnector response: " + response);
+		MiscUtils.getLogger().debug("obibconnector response: " + response);
+		CdxProvenanceDao cdxProvenanceDao = new CdxProvenanceDao();
+////		try {
+			cdxProvenanceDao.logSentAction(response);
+//		} catch (Exception e) {
+//			MiscUtils.getLogger().error(e.getMessage());
+//		}
 	}
+
+//	private boolean saveDoc(IDocument doc) {
+//		boolean result = false;
+//		ObjectMapper mapper = new ObjectMapper();
+//		try {
+//			String docStr = mapper.writeValueAsString(doc);
+//			CdxProvenanceDao cdxProvenanceDao = new CdxProvenanceDao();
+//			cdxProvenanceDao.logSentAction(docStr);
+//			result = true;
+//		} catch (JsonProcessingException e) {
+//			MiscUtils.getLogger().error(e.getMessage());
+//		}
+//
+//
+//	}
 
 	private String fillReferralNotes(ConsultationRequest consultationRequest) {
 
