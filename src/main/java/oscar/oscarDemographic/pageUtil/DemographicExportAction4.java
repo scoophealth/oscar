@@ -845,8 +845,12 @@ public class DemographicExportAction4 extends Action {
 							} else if (cme.getKeyVal().equals(CaseManagementNoteExt.AGEATONSET)) {
 								if (bAGEATONSET) continue;
 								if (StringUtils.filled(cme.getValue())) {
-									fHist.setAgeAtOnset(BigInteger.valueOf(Long.valueOf(cme.getValue())));
-									summary = Util.addSummary(summary, CaseManagementNoteExt.AGEATONSET, cme.getValue());
+									if(StringUtils.isNumeric(cme.getValue())) {
+										fHist.setAgeAtOnset(BigInteger.valueOf(Long.valueOf(cme.getValue())));
+										summary = Util.addSummary(summary, CaseManagementNoteExt.AGEATONSET, cme.getValue());
+									} else {
+										exportError.add("Family History: Age of Onset: Not numeric: " + cme.getValue());
+									}
 								}
 								bAGEATONSET = true;
 							} else if (cme.getKeyVal().equals(CaseManagementNoteExt.RELATIONSHIP)) {
