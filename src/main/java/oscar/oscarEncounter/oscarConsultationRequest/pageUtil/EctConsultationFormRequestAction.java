@@ -28,11 +28,16 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v26.message.ORU_R01;
 import ca.uhn.hl7v2.model.v26.message.REF_I12;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.*;
+import ca.uvic.leadlab.obibconnector.facades.datatypes.AddressType;
+import ca.uvic.leadlab.obibconnector.facades.datatypes.Gender;
+import ca.uvic.leadlab.obibconnector.facades.datatypes.NameType;
+import ca.uvic.leadlab.obibconnector.facades.datatypes.TelcoType;
 import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
 import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lowagie.text.DocumentException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -587,29 +592,24 @@ public class EctConsultationFormRequestAction extends Action {
 //					.attach(AttachmentType.PDF, "document.pdf", newBytes)
 				.submit();
 
-		MiscUtils.getLogger().debug("obibconnector response: " + response);
+		logResponse(response);
+		MiscUtils.getLogger().info("Attempting to save document using logSentAction");
 		CdxProvenanceDao cdxProvenanceDao = new CdxProvenanceDao();
-////		try {
-			cdxProvenanceDao.logSentAction(response);
-//		} catch (Exception e) {
-//			MiscUtils.getLogger().error(e.getMessage());
-//		}
+		cdxProvenanceDao.logSentAction(response);
 	}
 
-//	private boolean saveDoc(IDocument doc) {
-//		boolean result = false;
-//		ObjectMapper mapper = new ObjectMapper();
-//		try {
-//			String docStr = mapper.writeValueAsString(doc);
-//			CdxProvenanceDao cdxProvenanceDao = new CdxProvenanceDao();
-//			cdxProvenanceDao.logSentAction(docStr);
-//			result = true;
-//		} catch (JsonProcessingException e) {
-//			MiscUtils.getLogger().error(e.getMessage());
-//		}
-//
-//
-//	}
+	private boolean logResponse(IDocument doc) {
+		boolean result = false;
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			String docStr = mapper.writeValueAsString(doc);
+			MiscUtils.getLogger().info(docStr);
+			result = true;
+		} catch (JsonProcessingException e) {
+			MiscUtils.getLogger().error(e.getMessage());
+		}
+		return result;
+	}
 
 	private String fillReferralNotes(ConsultationRequest consultationRequest) {
 
