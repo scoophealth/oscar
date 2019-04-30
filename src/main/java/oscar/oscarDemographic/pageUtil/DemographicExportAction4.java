@@ -56,6 +56,7 @@ import javax.xml.validation.Validator;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
@@ -287,7 +288,8 @@ public class DemographicExportAction4 extends Action {
 	}
 
 	String ffwd = "fail";
-	String tmpDir = oscarProperties.getProperty("TMP_DIR");
+	String tmpDir = oscarProperties.getProperty("TMP_DIR") + File.separator +  RandomStringUtils.random(8, true, false);
+	
 	
 	// Sharing Center - holds the ID that will 'potentially' be exported.
 	int documentExportId = 0;
@@ -302,8 +304,8 @@ public class DemographicExportAction4 extends Action {
 	
 	switch(template) {
 		case CMS4:
-	if (!Util.checkDir(tmpDir)) {
-		logger.debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
+	if (!new File(tmpDir).mkdir() || !Util.checkDir(tmpDir)) {
+		logger.debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions. (" + tmpDir + ")");
 	} else {
 		XmlOptions options = new XmlOptions();
 		options.put( XmlOptions.SAVE_PRETTY_PRINT );
@@ -2375,6 +2377,7 @@ public class DemographicExportAction4 extends Action {
 			try{
 				File directory = new File(tmpDir);
 				if(!directory.exists()){
+					//this would never happen
 					throw new Exception("Temporary Export Directory does not exist!");
 				}
 
@@ -2413,11 +2416,10 @@ public class DemographicExportAction4 extends Action {
 	}
 		
 	//create ReadMe.txt & ExportEvent.log
-	
-		files.add(makeReadMe(files));
-		dirs.add("");
-		files.add(makeExportLog(files.get(0).getParentFile()));
-		dirs.add("");
+	files.add(makeReadMe(files));
+	dirs.add("");
+	files.add(makeExportLog(files.get(0).getParentFile()));
+	dirs.add("");
 
 	//zip all export files
 	String zipName = files.get(0).getName().replace(".xml", ".zip");
@@ -2494,6 +2496,7 @@ public class DemographicExportAction4 extends Action {
 		//Remove zip & export files from temp dir
 		Util.cleanFile(zipName, tmpDir);
 		Util.cleanFiles(files);
+		Util.cleanFile(tmpDir);
 	}
 			break;
 		case E2E:
@@ -2615,45 +2618,45 @@ public class DemographicExportAction4 extends Action {
 }
 
 	File makeReadMe(ArrayList<File> fs) throws IOException {
-	File readMe = new File(fs.get(0).getParentFile(), "ReadMe.txt");
-	BufferedWriter out = new BufferedWriter(new FileWriter(readMe));
-	out.write("Physician Group					: ");
-	out.write(new ClinicData().getClinicName());
-	out.newLine();
-	out.write("CMS Vendor, Product & Version	  : ");
-	String vendor = oscarProperties.getProperty("Vendor_Product");
-	if (StringUtils.empty(vendor)) {
-		exportError.add("Error! Vendor_Product not defined in oscar.properties");
-	} else {
-		out.write(vendor);
-	}
-	out.newLine();
-	out.write("Application Support Contact		: ");
-	String support = oscarProperties.getProperty("Support_Contact");
-	if (StringUtils.empty(support)) {
-		exportError.add("Error! Support_Contact not defined in oscar.properties");
-	} else {
-		out.write(support);
-	}
-	out.newLine();
-	out.write("Date and Time stamp				: ");
-	out.write(UtilDateUtilities.getToday("yyyy-MM-dd hh:mm:ss aa"));
-	out.newLine();
-	out.write("Total patients files extracted	 : ");
-	out.write(String.valueOf(fs.size()));
-	out.newLine();
-	out.write("Number of errors				   : ");
-	out.write(String.valueOf(exportError.size()));
-	if (exportError.size()>0) out.write(" (See ExportEvent.log for detail)");
-	out.newLine();
-	out.write("Patient ID range				   : ");
-	out.write(getIDInExportFilename(fs.get(0).getName()));
-	out.write("-");
-	out.write(getIDInExportFilename(fs.get(fs.size()-1).getName()));
-	out.newLine();
-	out.close();
-
-	return readMe;
+		File readMe = new File(fs.get(0).getParentFile(), "ReadMe.txt");
+		BufferedWriter out = new BufferedWriter(new FileWriter(readMe));
+		out.write("Physician Group					: ");
+		out.write(new ClinicData().getClinicName());
+		out.newLine();
+		out.write("CMS Vendor, Product & Version	  : ");
+		String vendor = oscarProperties.getProperty("Vendor_Product");
+		if (StringUtils.empty(vendor)) {
+			exportError.add("Error! Vendor_Product not defined in oscar.properties");
+		} else {
+			out.write(vendor);
+		}
+		out.newLine();
+		out.write("Application Support Contact		: ");
+		String support = oscarProperties.getProperty("Support_Contact");
+		if (StringUtils.empty(support)) {
+			exportError.add("Error! Support_Contact not defined in oscar.properties");
+		} else {
+			out.write(support);
+		}
+		out.newLine();
+		out.write("Date and Time stamp				: ");
+		out.write(UtilDateUtilities.getToday("yyyy-MM-dd hh:mm:ss aa"));
+		out.newLine();
+		out.write("Total patients files extracted	 : ");
+		out.write(String.valueOf(fs.size()));
+		out.newLine();
+		out.write("Number of errors				   : ");
+		out.write(String.valueOf(exportError.size()));
+		if (exportError.size()>0) out.write(" (See ExportEvent.log for detail)");
+		out.newLine();
+		out.write("Patient ID range				   : ");
+		out.write(getIDInExportFilename(fs.get(0).getName()));
+		out.write("-");
+		out.write(getIDInExportFilename(fs.get(fs.size()-1).getName()));
+		out.newLine();
+		out.close();
+	
+		return readMe;
 	}
 
 	File makeExportLog(File dir) throws IOException {
