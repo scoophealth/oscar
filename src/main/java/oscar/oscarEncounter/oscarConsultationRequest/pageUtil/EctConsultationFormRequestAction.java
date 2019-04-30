@@ -588,8 +588,8 @@ public class EctConsultationFormRequestAction extends Action {
 				.submit();
 
 		MiscUtils.getLogger().debug("obibconnector response: " + response);
-		CdxProvenanceDao cdxProvenanceDao = new CdxProvenanceDao();
-////		try {
+		CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
+		//try {
 			cdxProvenanceDao.logSentAction(response);
 //		} catch (Exception e) {
 //			MiscUtils.getLogger().error(e.getMessage());
