@@ -84,6 +84,7 @@ import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.dao.PharmacyInfoDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.exception.PatientDirectiveException;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Contact;
@@ -329,7 +330,13 @@ public class DemographicExportAction4 extends Action {
 			// DEMOGRAPHICS
 			DemographicData d = new DemographicData();
 
-			org.oscarehr.common.model.Demographic demographic = d.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demoNo);
+			org.oscarehr.common.model.Demographic demographic = null;
+			try {
+				demographic = d.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demoNo);
+			}catch(PatientDirectiveException e) {
+				exportError.add("Unable to export patient " + demoNo + " due to Patient Directive");
+				continue;
+			}
 
 			if (demographic.getPatientStatus()!=null && demographic.getPatientStatus().equals("Contact-only")) continue;
 
