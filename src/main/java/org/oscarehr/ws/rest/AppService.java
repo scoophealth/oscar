@@ -552,7 +552,7 @@ public class AppService extends AbstractServiceImpl {
 	   		javax.ws.rs.core.Response reps = webclient.accept("application/json, text/plain, */*")
 	   												 .acceptEncoding("gzip, deflate")
 	   												 .type("application/x-www-form-urlencoded")
-	   												 .post("grant_type=client_credentials");
+	   												 .post("grant_type=client_credentials&userId="+providerNo);
 	   		
 	   		InputStream in = (InputStream) reps.getEntity();
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
