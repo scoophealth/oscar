@@ -75,6 +75,11 @@ if(!authed) {
 <%@ page import="org.oscarehr.common.dao.FaxConfigDao, org.oscarehr.common.model.FaxConfig" %>
 <%@page import="org.oscarehr.common.dao.ConsultationServiceDao" %>
 <%@page import="org.oscarehr.common.model.ConsultationServices" %>
+<%@ page import="org.oscarehr.integration.cdx.dao.CdxProvenanceDao" %>
+<%@ page import="ca.uvic.leadlab.obibconnector.facades.datatypes.DocumentType" %>
+<%@ page import="org.oscarehr.integration.cdx.model.CdxProvenance" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="displayServiceUtil" scope="request" class="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConDisplayServiceUtil" />
 
 <html:html locale="true">
@@ -171,6 +176,24 @@ if(!authed) {
 		if (demo != null) consultUtil.estPatient(loggedInInfo, demo);
 		consultUtil.estActiveTeams();
 
+		if (show_CDX) {
+			CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
+			if (requestId != null && !requestId.isEmpty()) {
+//				List<CdxProvenance> cdxProvenanceList = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
+				List<CdxProvenance> cdxProvenanceList = cdxProvenanceDao.findByKindAndInFulFillment("Referral note", requestId);
+				if (cdxProvenanceList !=null && !cdxProvenanceList.isEmpty()) {
+					for (CdxProvenance cdxProvenance : cdxProvenanceList) {
+						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+						MiscUtils.getLogger().info("Timestamp: " + dateFormat.format(cdxProvenance.getEffectiveTime()));
+					}
+				} else {
+						MiscUtils.getLogger().warn("lookup by kind and request id failed to retrieve any documents");
+				}
+			} else {
+				MiscUtils.getLogger().warn(("requestId is null or empty"));
+			}
+		}
+
 		if (request.getParameter("error") != null)
 		{
 %>
@@ -191,7 +214,7 @@ if(!authed) {
 		
 		// Look up list
 		org.oscarehr.managers.LookupListManager lookupListManager = SpringUtils.getBean(org.oscarehr.managers.LookupListManager.class);
-		pageContext.setAttribute("appointmentInstructionList", lookupListManager.findLookupListByName( loggedInInfo, "consultApptInst") ); 
+		pageContext.setAttribute("appointmentInstructionList", lookupListManager.findLookupListByName( loggedInInfo, "consultApptInst") );
 %><head>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <script>
@@ -1429,6 +1452,26 @@ function updateFaxButton() {
 					</table>
 					</td>
 				</tr>
+
+				<% if (show_CDX) { %>
+				<tr>
+					<td class="tite4" colspan="2">E-Referral<br>History
+					</td>
+				</tr>
+				<tr>
+					<td class="tite4" colspan="2">
+						<table>
+							<tr>
+								<td class="stat">Request ID: <%=requestId%>
+								</td>
+								<td class="stat">Status:
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<% } %>
+
 				<tr>
 					<td class="tite4" colspan="2"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgStatus" />
 					</td>
