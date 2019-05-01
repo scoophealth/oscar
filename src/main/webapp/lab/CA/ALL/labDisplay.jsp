@@ -1636,7 +1636,6 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 										    	String disclaimer = "<br>IMPORTANT DISCLAIMER: You are viewing a PREVIEW of the original report. The rich text formatting contained in the original report may convey critical information that must be considered for clinical decision making. Please refer to the ORIGINAL report, by clicking 'Print', prior to making any decision on diagnosis or treatment.";%>
 										    	<td align="left"><%= rtfText + disclaimer %></td>
 										    <%}else{%>
-										    <% System.out.println(handler.getOBXResult( j, k)); %>
                                            		<td align="left">
 	                                           		<span><%= handler.getOBXResult( j, k) %><%= handler.isTestResultBlocked(j, k) ? "<a href='#' title='Do Not Disclose Without Explicit Patient Consent'>(BLOCKED)</a>" : ""%></span>
                                            		</td>
