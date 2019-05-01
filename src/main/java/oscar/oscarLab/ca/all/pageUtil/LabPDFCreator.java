@@ -590,6 +590,7 @@ public class LabPDFCreator extends PdfPageEventHelper{
 										table.addCell(cell);
 										cell.setHorizontalAlignment(ha);
 									} else {
+										cell.setNoWrap(false);
 										cell.setPhrase( new Phrase(data.replaceAll("<br\\s*/*>", "\n"), lineFont ) );
 										table.addCell(cell);
 									}
