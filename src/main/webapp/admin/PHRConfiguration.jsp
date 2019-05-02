@@ -101,7 +101,7 @@
 						
 					</div>
 		
-					<div data-ng-hide="phrConsentConfigured" class="jumbotron" ng-cloak>
+					<div data-ng-hide="phrConsentConfigured || !phrActive" class="jumbotron" ng-cloak>
 						<h2>PHR Clinic Configuration Wizard</h2>
 						<div class="alert alert-warning" role="alert" data-ng-show="userpassError">Invalid Username and Password.</div>
 						<form   method="POST">
@@ -422,7 +422,10 @@
 		    		//-Just do it and then show report of what has happened
 		    		console.log("$scope.newProvider",$scope.newProvider);
 		    		phrService.createPHRuser($scope.newProvider).then(function(resp){
-				    	console.log("createPHRuser coming back",resp);    
+				    	console.log("createPHRuser coming back",resp);  
+				    	alert(resp.message);
+				    	$scope.showPHRUserCreate = false;
+				    	checkStatus();
 				});
 		    	
 		    }
@@ -441,7 +444,10 @@
 		    		//Show drop list to select user.
 		    		console.log("$scope.newProvider",$scope.newProvider);
 				phrService.createPHRuser($scope.newProvider).then(function(resp){
-			    		console.log("createPHRuser coming back",resp);    
+			    		console.log("createPHRuser coming back",resp);   
+			    		alert(resp.message);
+			    		$scope.showPHRUserCreate = false;
+				    	checkStatus();  
 				});
 		    }
 		    
