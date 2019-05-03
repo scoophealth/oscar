@@ -53,7 +53,8 @@ if(!authed) {
 <head>
 <title>Manage Fax</title>
 
-<meta name="viewport" content="width=device-width,initial-scale=1.0">                                
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+                              
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap.css" type="text/css">
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css" type="text/css">
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" type="text/css">
@@ -88,6 +89,7 @@ if(!authed) {
 			if( verify() ) {
 				var url = "<%=request.getContextPath() %>/admin/ManageFax.do";
 				var data = $("#configFrm").serialize();
+				
 				$.ajax({
 					url: url,
 					method: 'POST',
@@ -285,7 +287,14 @@ if(!authed) {
 		$(div).find("#id").val("-1");
 		$(div).find("select").val("-1");
 		
-		$(div).appendTo("#content");
+		var theSpan = document.createElement("span");
+		//<div class="span12">
+		theSpan.setAttribute("class","span12");
+		$(div).appendTo(theSpan);
+		
+		$("#content").append(theSpan);
+		
+		//$(div).appendTo("#content");
 		$("#faxUser"+userCount).focus();	
 		$("#submit").prop("disabled", false);
 	}
@@ -351,50 +360,58 @@ if(!authed) {
 		<form id="configFrm" method="post" onSubmit="return verify()"> 
 		<input type="hidden" name="method" value="configure"/> 
 		<div id="bodyrow" class="row">
-			<div class="span3">  
-				Fax Server URL
+			<div class="span12">
+				<legend>Fax Server Credentials</legend>
 			</div>
-			<div class="span9">
-				<input class="span6" id="faxUrl" type="text" name="faxUrl" value="<%=faxConfigList.isEmpty() || faxConfigList.get(0).getUrl() == null ? "ip addr of fax service" : faxConfigList.get(0).getUrl()%>"/>
-			</div>			
+	
+	
+				<div class="span12">
+					<label for="faxUrl" > Fax Server URL</label>
+					<input class="span12" id="faxUrl" type="text" name="faxUrl" placeholder="fax web service URL" value="<%=faxConfigList.isEmpty() ?  "" : faxConfigList.get(0).getUrl()%>" />				
+				</div>			
 			
-			<div class="span3">
-				Fax Service User
-			</div>
-			<div class="span3">
-				<input class="span3" id="faxServiceUser" type="text" name="siteUser" value="<%=faxConfigList.isEmpty() || faxConfigList.get(0).getSiteUser() == null ? "Fax Service login" : faxConfigList.get(0).getSiteUser() %>" />
-			</div>			
-			<div class="span3">
-				Fax Service Password
-			</div>
-			<div class="span3">
-				<%
-					String faxServicePassword = "";
-					
-					if(faxConfigList != null && !faxConfigList.isEmpty() && faxConfigList.get(count) != null && faxConfigList.get(count).getPasswd() != null
-							&& faxConfigList.get(count).getPasswd().length() > 0) {
-						faxServicePassword="**********";
-					}
-					
-				%>
+				<div class="span6">
+					<label for="faxServiceUser">Fax Server Username</label>
+					<input class="span6" id="faxServiceUser" type="text" name="siteUser" value="<%=faxConfigList.isEmpty() || faxConfigList.get(0).getSiteUser() == null ? "Fax Service login" : faxConfigList.get(0).getSiteUser() %>" />				
+				</div>			
+	
+				<div class="span6">
+					<%
+						String faxServicePassword = "";
 						
-				<input class="span3" id="faxServicePasswd" type="password" name="sitePasswd" value="<%=faxServicePassword%>" />
-			</div>
+						if(faxConfigList != null && !faxConfigList.isEmpty() && faxConfigList.get(count) != null && faxConfigList.get(count).getPasswd() != null
+								&& faxConfigList.get(count).getPasswd().length() > 0) {
+							faxServicePassword="**********";
+						}
+						
+					%>
+					<label for="faxServicePasswd">Fax Server Password</label>
+					<input class="span6" id="faxServicePasswd" type="password" name="sitePasswd" value="<%=faxServicePassword%>" />
+				</div>
 		</div>
-			<div id="content">
+
+		<div id="content" class="row">
+			
+			<div class="span12">
+				<legend>Fax Gateway Accounts <a class="pull-right" style="margin-right:40px;" href="" onclick="addUser();return false;">+Add</a></legend>
+			</div>
+			
+			<div class="span12">
+		
 				<% do { %>
 				<div class="row" id="user<%=count == 0 ? "" : count%>">
-					<div class="span1">
-						User
-					</div> 
-					<div class="span2">
-						<input class="span2" type="text" id="faxUser<%=count == 0 ? "" : count%>" name="faxUser" value="<%=faxConfigList.isEmpty() ? "user login" : faxConfigList.get(count).getFaxUser()%>"/>
-						<input type="hidden" id="id<%=count == 0 ? "" : count%>" name="id" value="<%=faxConfigList.isEmpty() ? "-1" : faxConfigList.get(count).getId()%>"/>
+				<div class="span12">
+				
+				<div class="row">
+					<div class="span6">
+						<label for="faxUser<%=count == 0 ? "" : count%>">User</label>
+							<input class="span6" type="text" id="faxUser<%=count == 0 ? "" : count%>" name="faxUser" value="<%=faxConfigList.isEmpty() ? "user login" : faxConfigList.get(count).getFaxUser()%>"/>
+							<input type="hidden" id="id<%=count == 0 ? "" : count%>" name="id" value="<%=faxConfigList.isEmpty() ? "-1" : faxConfigList.get(count).getId()%>"/>
+						
 					</div>
-					<div class="span2">  
-						Password
-					</div>
-					<div class="span2">
+
+					<div class="span6">
+						<label for="faxPasswd<%=count == 0 ? "" : count%>" >Password</label>
 						<%
 						String faxPassword = "";
 						
@@ -404,54 +421,87 @@ if(!authed) {
 						}
 						
 						%>
-						<input class="span2" type="password" id="faxPasswd<%=count == 0 ? "" : count%>" name="faxPassword" value="<%=faxPassword%>"/>
+						<input class="span6" type="password" id="faxPasswd<%=count == 0 ? "" : count%>" name="faxPassword" value="<%=faxPassword%>"/>
+						
 					</div>
-					<div class="span5">
-						<select class="span3" id="inBoxQueue<%=count == 0 ? "" : count%>" name="inboxQueue">
-							<option value="-1">Select Inbox Queue</option>						
-							<%
-								for( Integer queueId : queueMap.keySet() ) {
-						 	
-						 			out.print("<option value='" + queueId+"'");
-						 			
-						 			if( !faxConfigList.isEmpty() ) {
-																	    							
-										if( faxConfigList.get(count).getQueue().compareTo(queueId) == 0 ) {						
-											out.print(" selected");											
-										}
-								    }
-								    
-								    out.print(">" + queueMap.get(queueId) + "</option>");
-								}
-							%>
-						</select>
-						&nbsp;&nbsp;On<input type="radio" id="on<%=count == 0 ? "" : count %>" name="active<%=count == 0 ? "" : count%>" value="true" <%=faxConfigList.isEmpty() ? "" : faxConfigList.get(count).isActive() ? "checked" : ""%> "/>&nbsp;
-						Off<input type="radio" id="of<%=count == 0 ? "" : count %>" name="active<%=count == 0 ? "" : count%>" value="false" <%=faxConfigList.isEmpty() ? "" : faxConfigList.get(count).isActive()  ? "" : "checked"%> />
-						<input type="hidden" id="activeState<%=count == 0 ? "" : count%>" name="activeState" value="<%=faxConfigList.isEmpty() ? "" : faxConfigList.get(count).isActive()%>">
+				</div>
+				<div class="row">
+					<div class="span6">
+						<label for="faxNumber<%=count == 0 ? "" : count%>" >Fax Number (##########)</label>
+						<input class="span6" type="text" id="faxNumber<%=count == 0 ? "" : count%>" name="faxNumber" value="<%=faxConfigList.isEmpty() ? "Clinic Fax Number" : faxConfigList.get(count).getFaxNumber()%>"/>
+					</div>	
+					
+					<div class="span6">
+					<label for="senderEmail<%=count == 0 ? "" : count%>">Email</label>
+					<input class="span6" type="email" id="senderEmail<%=count == 0 ? "" : count%>" name="senderEmail" placeholder="Account email" value="<%=faxConfigList.isEmpty() ? "Sender Email" :  faxConfigList.get(count).getSenderEmail()%>" />
+				</div>
+				</div>
+				<div class="row">
+					<div class="span6">
+						<label for="inBoxQueue<%=count == 0 ? "" : count%>">Inbox Queue</label>
+							<select class="span6" id="inBoxQueue<%=count == 0 ? "" : count%>" name="inboxQueue">
+								<option value="-1">-</option>						
+								<%
+									for( Integer queueId : queueMap.keySet() ) {
+							 	
+							 			out.print("<option value='" + queueId+"'");
+							 			
+							 			if( !faxConfigList.isEmpty() ) {
+																		    							
+											if( faxConfigList.get(count).getQueue().compareTo(queueId) == 0 ) {						
+												out.print(" selected");											
+											}
+									    }
+									    
+									    out.print(">" + queueMap.get(queueId) + "</option>");
+									}
+								%>
+							</select>
+						
 					</div>
-					<div class="row text-center">
-						Fax Number &nbsp;&nbsp;<input class="span3" type="text" id="faxNumber<%=count == 0 ? "" : count%>" name="faxNumber" value="<%=faxConfigList.isEmpty() ? "Clinic Fax Number" : faxConfigList.get(count).getFaxNumber()%>"/>
-					</div>	 
+					<div class="span6">
+						<label>Enable/Disable Gateway</label>
+						
+							<label class="radio inline control-label">
+							<input type="radio" id="on<%=count == 0 ? "" : count %>" name="active<%=count == 0 ? "" : count%>" value="true" <%=faxConfigList.isEmpty() ? "" : faxConfigList.get(count).isActive() ? "checked" : ""%>  />
+							On</label>
+							<label class="radio inline control-label">
+							<input type="radio" id="of<%=count == 0 ? "" : count %>" name="active<%=count == 0 ? "" : count%>" value="false" <%=faxConfigList.isEmpty() ? "" : faxConfigList.get(count).isActive()  ? "" : "checked"%> />
+							Off</label>
+							
+							<input type="hidden" id="activeState<%=count == 0 ? "" : count%>" name="activeState" value="<%=faxConfigList.isEmpty() ? "" : faxConfigList.get(count).isActive()%>" />			
+					</div>
+				</div>
+
 						<% if( count <= faxConfigList.size() ) { %>
+						<div class="row">
 							<div class="span12">
-								<a class="offset10" href="" onclick="addUser();return false;">+Add</a>&nbsp;&nbsp;<a id="remove" href="" onclick="removeUser(<%=count%>);return false;">-Delete</a>
+								<a class="pull-right" style="color:red;" id="remove" href="" onclick="removeUser(<%=count%>);return false;">-Delete</a>
 							</div>
+						</div>
 					    <%} %>					
-				</div>			
+				</div> <!--  end master column -->
+				</div>	<!-- end account row -->		
 					<%
 						++count;
 					} while(count < faxConfigList.size());
 					%>
-			</div>
-				<div class="row text-center">
-					<input id="submit" type="submit" disabled value="Save"/>
-				</div>
-			</form>								
-		</div>		
-		
 				
-		<div id="msg" class="alert">
-   		</div>
+			</div> <!-- end master column -->
+		</div> <!-- end content -->
+				
+				<div class="row">
+					<div class="span12">
+						<input class="btn btn-default" id="submit" type="submit" disabled value="Save" />
+					</div>
+				</div>
+			</form>
+			
+		<div id="msg" class="row alert">
+   		</div>								
+</div>	<!-- end container -->	
+		
+
 	
 </body>
 </html>
