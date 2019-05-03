@@ -128,6 +128,32 @@ public class AppManager {
 		}
 		return appDef;
 	}
+	
+	public boolean hasAppDefinition(LoggedInInfo loggedInInfo,  String appName){
+		AppDefinition appDef = appDefinitionDao.findByName(appName);
+		
+		//--- log action ---
+		if (appDef!=null) {
+			LogAction.addLogSynchronous(loggedInInfo, "AppManager.hasAppDefinition", "id=" + appDef.getId());
+			return true;
+		}
+		
+		LogAction.addLogSynchronous(loggedInInfo, "AppManager.hasAppDefinition", "Not found:" + appName);
+		return false;
+	}
+	
+	public Integer getAppDefinitionConsentId(LoggedInInfo loggedInInfo,  String appName){
+		AppDefinition appDef = appDefinitionDao.findByName(appName);
+		Integer retval = null;
+		//--- log action ---
+		if (appDef!=null) {
+			retval = appDef.getConsentTypeId();
+			LogAction.addLogSynchronous(loggedInInfo, "AppManager.getAppDefinitionConsentId", "id=" + retval);
+		}
+		return retval;
+	}
+	
+	
 
 	
 	public boolean isK2AUser(LoggedInInfo loggedInInfo){
