@@ -23,7 +23,9 @@
  */
 package org.oscarehr.fax.core;
 
+
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +34,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpDelete;
@@ -77,29 +80,40 @@ public class FaxImporter {
 		
 		for( FaxConfig faxConfig : faxConfigList ) {
 			if( faxConfig.isActive() ) {
-								
-				client.getCredentialsProvider().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(faxConfig.getSiteUser(), faxConfig.getPasswd()));
-	
-				HttpGet mGet = new HttpGet(faxConfig.getUrl() + PATH + "/" + faxConfig.getFaxUser());
-				mGet.setHeader("accept", "application/json");
-				mGet.setHeader("user", faxConfig.getFaxUser());
-				mGet.setHeader("passwd", faxConfig.getFaxPasswd());
+
+				Credentials credentials = new UsernamePasswordCredentials( faxConfig.getSiteUser(), faxConfig.getPasswd() );
+				client.getCredentialsProvider().setCredentials( new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT), credentials );
+
+				HttpGet mGet = null;
+				HttpResponse response = null;
+				int status = HttpStatus.SC_OK;
 				
 				try {
-	                HttpResponse response = client.execute(mGet);
-	                log.info("RESPONSE: " + response.getStatusLine().getStatusCode());
-	                
-	                if( response.getStatusLine().getStatusCode() == HttpStatus.SC_OK ) {
-	                	
-	                	HttpEntity httpEntity = response.getEntity();
+
+					log.debug( "Auth: " + faxConfig.getSiteUser() + ":" + faxConfig.getPasswd() );					
+					log.debug( "Service Path: " + faxConfig.getUrl() + PATH + "/" + URLEncoder.encode( faxConfig.getFaxUser(), "UTF-8" ) );
+					
+					mGet = new HttpGet( faxConfig.getUrl() + PATH + "/" + URLEncoder.encode( faxConfig.getFaxUser(), "UTF-8" ) );
+					mGet.setHeader("accept", "application/json");
+					mGet.setHeader("user", faxConfig.getFaxUser());
+					mGet.setHeader("passwd", faxConfig.getFaxPasswd());
+
+					response = client.execute(mGet);
+			
+					if( response != null ) {
+						status = response.getStatusLine().getStatusCode();
+					}				
+			
+					if( status == HttpStatus.SC_OK ) {
+		
+						HttpEntity httpEntity = response.getEntity();
 	                	String content = EntityUtils.toString(httpEntity);
-	                
+	
+	                	log.debug("CONTENT: " + content);
 	                	
-	                	log.info("CONTENT: " + content);
 	                	ObjectMapper mapper = new ObjectMapper();
 	                	
 	                	List<FaxJob> faxList =  mapper.readValue(content, new TypeReference<List<FaxJob>>(){});
-
 
 	                	for( FaxJob receivedFax : faxList ) {	
 	                		
@@ -144,39 +158,38 @@ public class FaxImporter {
                 			saveFaxJob( new FaxJob( receivedFax ) );
 	                	}
 	                	
-	                }
-	                
-	                mGet.releaseConnection();
-	            } catch (ClientProtocolException e) {
-	            	log.error("HTTP WS CLIENT ERROR", e);
-	            
-	            } catch (IOException e) {
-	            	log.error("IO ERROR", e);
-	            	
-	            } catch( Exception e ) {
-	            	log.error("UNKNOWN ERROR ",e);
-	            }				
-				finally {
-					mGet.releaseConnection();
+					} else {
+						log.error( "HTTP Status error with HTTP code: " + status );					
+					}
+					
+				} catch (IOException e) {
+					log.error("HTTP WS CLIENT ERROR", e);
+
+				} finally {
+					if(mGet != null) {
+						mGet.reset();
+					}
 				}
-				
-			
 			}
-		}
+		} 
 		
 	}
 		
 	private FaxJob downloadFax( DefaultHttpClient client, FaxConfig faxConfig, FaxJob fax ) {
-		
-		HttpGet mGet = new HttpGet(faxConfig.getUrl() + PATH + "/" + faxConfig.getFaxUser() + "/" + fax.getFile_name());
-		mGet.setHeader("accept", "application/json");
-		mGet.setHeader("user", faxConfig.getFaxUser());
-		mGet.setHeader("passwd", faxConfig.getFaxPasswd());
+
+		FaxJob downloadedFax = null;
+		HttpGet mGet = null;
 		
 		try {
+			mGet = new HttpGet(faxConfig.getUrl() + PATH + "/" 
+					+ URLEncoder.encode(faxConfig.getFaxUser(),"UTF-8") + "/" 
+					+ URLEncoder.encode(fax.getFile_name(),"UTF-8") );
+			mGet.setHeader("accept", "application/json");
+			mGet.setHeader("user", faxConfig.getFaxUser());
+			mGet.setHeader("passwd", faxConfig.getFaxPasswd());
 		
 			HttpResponse response = client.execute(mGet);
-        
+
 			if( response.getStatusLine().getStatusCode() == HttpStatus.SC_OK ) {
         	
 				HttpEntity httpEntity = response.getEntity();
@@ -184,38 +197,52 @@ public class FaxImporter {
 				
 				ObjectMapper mapper = new ObjectMapper();
 				
-				FaxJob downloadedFax = mapper.readValue(content, FaxJob.class); 
-        		
-				return downloadedFax;
+				downloadedFax = mapper.readValue( content, FaxJob.class );   
+				
+				fax.setStatus( downloadedFax.getStatus() );
+				fax.setStatusString( downloadedFax.getStatusString() );
+				
+				// the fileName will be null if there is an error
+				// will need to modify the receivedFax header appropriately. 
+    			if( FaxJob.STATUS.ERROR.equals( downloadedFax.getStatus() ) ) {   				
+    				downloadedFax = null;   				    				
+    			}
 			}
 			
 	      } catch (ClientProtocolException e) {
-          	log.error("HTTP WS CLIENT ERROR", e);
-          
+          	log.error("HTTP WS CLIENT ERROR", e);         
           } catch (IOException e) {
           	log.error("IO ERROR", e);
+          } finally {
+			if(mGet != null) {
+				mGet.reset();
+			}
           }
-		  finally {
-			  mGet.releaseConnection();
-		  }
-		
 
-		  return null;
+		return downloadedFax;
 	}
 	
-	private void deleteFax( DefaultHttpClient client, FaxConfig faxConfig, FaxJob fax ) throws ClientProtocolException, IOException {
-		HttpDelete mDelete = new HttpDelete(faxConfig.getUrl() + PATH + "/" + faxConfig.getFaxUser() + "/" + fax.getFile_name());
+	private void deleteFax( DefaultHttpClient client, FaxConfig faxConfig, FaxJob fax ) 
+			throws ClientProtocolException, IOException {
+		HttpDelete mDelete = new HttpDelete(faxConfig.getUrl() + PATH + "/" 
+				+ URLEncoder.encode(faxConfig.getFaxUser(),"UTF-8") + "/" 
+				+ URLEncoder.encode(fax.getFile_name(),"UTF-8") );
+		
 		mDelete.setHeader("accept", "application/json");
 		mDelete.setHeader("user", faxConfig.getFaxUser());
 		mDelete.setHeader("passwd", faxConfig.getFaxPasswd());
 		
+		log.info("Deleting Fax file " + fax.getFile_name() + " from the host server.");
+		
 		HttpResponse response = client.execute(mDelete);
-		mDelete.releaseConnection();
+		mDelete.reset();
 	       
 		if( !(response.getStatusLine().getStatusCode() == HttpStatus.SC_NO_CONTENT) ) {
+			log.debug("Failed to delete Fax file " + fax.getFile_name() + " from the host server.");
 			throw new ClientProtocolException("CANNOT DELETE " + fax.getFile_name());
+		} else {
+			log.info("Fax file " + fax.getFile_name() + " has been deleted from the host server.");
 		}
-
 	}
 	
 	private EDoc saveAndInsertIntoQueue( FaxConfig faxConfig, FaxJob receivedFax, FaxJob faxFile ) {		 		
@@ -246,7 +273,7 @@ public class FaxImporter {
 		filename = newDoc.getFileName();
 
 		if( Base64.decodeToFile( faxFile.getDocument(), DOCUMENT_DIR + "/" + filename) ) {
-
+		
 			newDoc.setContentType( "application/pdf" );
 			newDoc.setNumberOfPages( receivedFax.getNumPages() );
 			String doc_no = EDocUtil.addDocumentSQL( newDoc );
@@ -261,7 +288,6 @@ public class FaxImporter {
 			newDoc.setDocId( doc_no );
 			
 			return newDoc;
-
 		}
 		
 		log.debug( "Failed to save file " + filename + " to filesystem at " + DOCUMENT_DIR );

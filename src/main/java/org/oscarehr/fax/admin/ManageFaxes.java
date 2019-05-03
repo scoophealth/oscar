@@ -27,6 +27,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Calendar;
@@ -56,6 +57,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.jpedal.PdfDecoder;
+import org.jpedal.exception.PdfException;
 import org.jpedal.fonts.FontMappings;
 import org.oscarehr.common.dao.FaxConfigDao;
 import org.oscarehr.common.dao.FaxJobDao;
@@ -93,7 +95,7 @@ public class ManageFaxes extends DispatchAction {
 	}
 	
 	private File getDocumentCacheDir(String docdownload) {
-		// File cacheDir = new File(docdownload+"_cache");
+	
 		File docDir = new File(docdownload);
 		String documentDirName = docDir.getName();
 		File parentDir = docDir.getParentFile();
@@ -107,53 +109,56 @@ public class ManageFaxes extends DispatchAction {
 	}
 	
 	private File createCacheVersion2(FaxJob faxJob, Integer pageNum) {
+		
 		String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 		File documentDir = new File(docdownload);
 		File documentCacheDir = getDocumentCacheDir(docdownload);
+		
 		log.debug("Document Dir is a dir" + documentDir.isDirectory());
 		
 		int index;
 		String filename;
+		
 		if( (index = faxJob.getFile_name().lastIndexOf("/")) > -1 ) {
 			filename = faxJob.getFile_name().substring(index+1);
-		}
-		else {
+		}else {
 			filename = faxJob.getFile_name();
 		}
 		
 		File file = new File(documentDir, filename);
 		PdfDecoder decode_pdf  = new PdfDecoder(true);
-		File ofile = null;
+		File ofile = null;		
+		FontMappings.setFontReplacements();
+		decode_pdf.useHiResScreenDisplay(true);
+		decode_pdf.setExtractionMode(0, 96, 96/72f);
+		FileInputStream is = null;
+		
 		try {
-
-			FontMappings.setFontReplacements();
-
-			decode_pdf.useHiResScreenDisplay(true);
-
-			decode_pdf.setExtractionMode(0, 96, 96/72f);
-
-			FileInputStream is = new FileInputStream(file);
-
+			is = new FileInputStream(file);
 			decode_pdf.openPdfFileFromInputStream(is, false);
-
 			BufferedImage image_to_save = decode_pdf.getPageAsImage(pageNum);
-
-
-
 			decode_pdf.getObjectStore().saveStoredImage( documentCacheDir.getCanonicalPath() + "/" + filename + "_" + pageNum + ".png", image_to_save, true, false, "png");
-
-			decode_pdf.flushObjectValues(true);
-
-			decode_pdf.closePdfFile();
-
 			ofile = new File(documentCacheDir, filename + "_" + pageNum + ".png");
-
-
-
-		}catch(Exception e) {
-			log.error("Error decoding pdf file " + filename);
+		} catch (FileNotFoundException e) {
+			log.error("PDF file not found " + filename, e);
+		} catch (PdfException e) {
+			log.error("PDF error during file decode of " + filename, e);
+		} catch (IOException e) {
+			log.error("IO error during file decode of " + filename, e);
+		} finally {
+			
+			if( is != null ) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					log.error("Error closing InputStream ", e);
+				}
+			}
+			
+			decode_pdf.flushObjectValues(true);
 			decode_pdf.closePdfFile();
-		}
+
+		}			
 
 		return ofile;
 	}
@@ -165,7 +170,6 @@ public class ManageFaxes extends DispatchAction {
 		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_admin", "w", null)) {
         	throw new SecurityException("missing required security object (_admin)");
         }
-
 		
 		FaxJobDao faxJobDao = SpringUtils.getBean(FaxJobDao.class);
 		FaxConfigDao faxConfigDao = SpringUtils.getBean(FaxConfigDao.class);

@@ -42,7 +42,7 @@ if(!authed) {
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="java.util.List" %>
 
-<ul style="list-style:none;">
+<ul style="list-style:none;list-style-type:none;padding:0px;">
 
 <%
 	FaxJobDao faxJobDao = SpringUtils.getBean(FaxJobDao.class);

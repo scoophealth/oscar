@@ -44,27 +44,25 @@
 %>
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
+
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <title>Manage Faxes</title>
 <meta name="viewport" content="width=device-width,initial-scale=1.0">                                
-<link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap.css" type="text/css">
-<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css" type="text/css">
-<link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" type="text/css">
-<link rel="stylesheet" href="<%=request.getContextPath() %>/js/jquery_css/smoothness/jquery-ui-1.10.2.custom.min.css" type="text/css">
-
-<style>  
-	label {    
-		display: inline-block;    
-		width: 5em;  
-		}  
-</style>
-
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/font-awesome.min.css" type="text/css" />
+<link href="<%=request.getContextPath() %>/css/datepicker.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="<%=request.getContextPath() %>/css/bootstrap-responsive.css" type="text/css" />
+<link rel="stylesheet" href="<%=request.getContextPath() %>/js/jquery_css/smoothness/jquery-ui-1.10.2.custom.min.css" />
 
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.9.1.js"></script>
+
 <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap.min.js" ></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/bootstrap-datepicker.js"></script>
+
 
 <script type="text/javascript">
 	
@@ -88,16 +86,7 @@
 				return false;
 			}
 		});
-		
-		
-		$("#dateBegin").datepicker();
-		$("#dateBegin").datepicker("option","showAnim","blind");
-		$("#dateBegin").datepicker("option","dateFormat","yy-mm-dd");
-		
-		$("#dateEnd").datepicker();
-		$("#dateEnd").datepicker("option","showAnim","blind");
-		$("#dateEnd").datepicker("option","dateFormat","yy-mm-dd");
-		
+
 		$( "#reportForm" ).submit(function( event ) {
 			// Stop form from submitting normally
 			event.preventDefault();
@@ -132,15 +121,17 @@
 	function _zoom(d) {
 		var img = $(d).attr('src');
 		var modal = $('img[src$="' + img + '"]').clone();
-		
+		modal.attr("ondblclick", "");
+		modal.wrap( "<div title='Zoom Image' ></div>" );
+
 		var t = new Image();
 		t.src = img;
 		
 		var height = t.height;
 		var width = t.width;
-		
+
 		modal.dialog({
-			height: $(window).height() - 40,
+			height: height,
 			modal: true,
 			draggable: false,
 			resizable: false,
@@ -247,82 +238,137 @@
 	}
 	
 </script>
+<style type="text/css">
+	form {
+		border:none;
+		margin:0px;
+		padding:0px;
+	}
+</style>
 
 </head>
 <body>
-<div class="page-header text-center">
-<h3>Manage Faxes</h3>
-</div>
-<form id="reportForm" action="<%=request.getContextPath()%>/admin/ManageFaxes.do">
-<input type="hidden" name="method" value="fetchFaxStatus"/>
-<div class="row-center">
-	
-		<span class="span6"> From:&nbsp;<input class="span5" type="text"  id="dateBegin" name="dateBegin" value=""/></span>
-	
-		<span class="span6"> To:&nbsp;<input class="span5" type="text" id="dateEnd" name="dateEnd" value=""/></span><p>
-	
-	
-</div>
-<div class="row-center">
-	<span class="span6">Demographic&nbsp;<input type="text" class="span4" id="autocompletedemo"></span>
-	<input type="hidden" id="demographic_no" name="demographic_no" value="">
 
-	<div class="span4">
-	<select class="span2" name="oscarUser">
-		<option value="-1">Provider</option>
+<div id="bodyrow" class="container-fluid">
+	<div id="bodycolumn" class="span12">
+	
+		<form id="reportForm" action="<%=request.getContextPath()%>/admin/ManageFaxes.do">
+
+		<input type="hidden" name="method" value="fetchFaxStatus" />
+	
+		<div class="row">
+			<legend>Search Faxes</legend>
+			 <div class="input-append span3" >
+
+                	<input class="span2" type="text" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" placeholder="From" id="dateBegin" name="dateBegin" />
+                	<span class="add-on">
+                		<i class="icon-calendar"></i>
+                	</span> 
+              </div>  
+                
+              <div class="input-append span3" >  
+                            
+                	<input class="span2" type="text" pattern="^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$" placeholder="To" id="dateEnd" name="dateEnd" />
+                	<span class="add-on">
+                		<i class="icon-calendar"></i>
+                	</span>
+			 </div>
+			 <div class="span6">
+				<input class="span6" type="text" placeholder="Pt. Name (last, first)" id="autocompletedemo" />
+				<input type="hidden" id="demographic_no" name="demographic_no" value="">
+	         </div> 
+      
+	    </div>         
 		
-<%
-	ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
-	List<ProviderData> providerDataList = providerDataDao.findAll(false);
-	Collections.sort(providerDataList, ProviderData.LastNameComparator);
+		<div class="row">
+			<div class="span5">
+			<select class="span5" name="oscarUser">
+				<option value="-1">Provider</option>
+				
+		<%
+			ProviderDataDao providerDataDao = SpringUtils.getBean(ProviderDataDao.class);
+			List<ProviderData> providerDataList = providerDataDao.findAll(false);
+			Collections.sort(providerDataList, ProviderData.LastNameComparator);
+			
+			for( ProviderData providerData : providerDataList ) {
+		%>
+				<option value="<%=providerData.getId()%>"><%=providerData.getLastName() + ", " + providerData.getFirstName()%></option>
+			
+		<%
+			}
+		%>
+			</select>
+			</div>
+			<div class="span5">
+			<select class="span5" name="team">
+				<option value="-1">Team</option>
+		<%
+			FaxConfigDao faxConfigDao = SpringUtils.getBean(FaxConfigDao.class);
+			List<FaxConfig> faxConfigList = faxConfigDao.findAll(null, null);
+			
+			for( FaxConfig faxConfig : faxConfigList ) {
+		%>
+				<option value="<%=faxConfig.getFaxUser()%>"><%=faxConfig.getFaxUser() %></option>
+		<%
+			}
+		%>
+			</select>
+			</div>
+			<div class="span2">
+			<select class="span2" name="status">
+				<option value="-1">Status</option>
+			
+		<%
+			for( FaxJob.STATUS status : FaxJob.STATUS.values() ) {
+		%>
+				<option value="<%=status%>"><%=status%></option>
+		<%	    
+			}
+		%>
+			</select>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="span12">
+			<input class="btn btn-default" type="submit" value="Fetch Faxes"/>
+			<input class="btn btn-default" type="button" value="Reset" onclick="return resetForm();"/>
+			</div>
+		</div>
+		
+		</form>
+		
+		<div class="row">
+			<div class="span8">
+				<div class="row">
+					<legend>Results</legend>
+					<div id="results">
+					<!-- container -->
+					</div>
+				</div>
+			</div>
+			<div class="span4" >
+				<div class="row">
+					<legend>Preview</legend>
+					<div id="preview">
+					<!-- container -->
+					</div>
+				</div>
+			</div>
+		</div>	
+
+</div>	<!-- body column -->
+</div> <!-- body row -->
+
+<script language="javascript">
+	var startDate = $("#dateBegin").datepicker({
+		format : "yyyy-mm-dd"
+	});
 	
-	for( ProviderData providerData : providerDataList ) {
-%>
-		<option value="<%=providerData.getId()%>"><%=providerData.getLastName() + ", " + providerData.getFirstName()%></option>
-	
-<%
-	}
-%>
-	</select>
-	&nbsp;&nbsp;
-	<select class="span2" name="team">
-		<option value="-1">Team</option>
-<%
-	FaxConfigDao faxConfigDao = SpringUtils.getBean(FaxConfigDao.class);
-	List<FaxConfig> faxConfigList = faxConfigDao.findAll(null, null);
-	
-	for( FaxConfig faxConfig : faxConfigList ) {
-%>
-		<option value="<%=faxConfig.getFaxUser()%>"><%=faxConfig.getFaxUser() %></option>
-<%
-	}
-%>
-	</select>
-	</div>
-	&nbsp;&nbsp;
-	<div class="span2">
-	<select class="span2" name="status">
-		<option value="-1">Status</option>
-	
-<%
-	for( FaxJob.STATUS status : FaxJob.STATUS.values() ) {
-%>
-		<option value="<%=status%>"><%=status%></option>
-<%	    
-	}
-%>
-	</select>
-	</div>
-	
-</div>
-<div class="text-center span12">
-	<input type="submit" value="Fetch Faxes"/>&nbsp;&nbsp;<input type="button" value="Reset" onclick="return resetForm();"/>
-</div>
-</form>
-<hr>
-<div class="span8" id="results">
-</div>
-<div class="span4" id="preview">
-</div>
+	var endDate = $("#dateEnd").datepicker({
+		format : "yyyy-mm-dd"
+	});
+</script>
+
 </body>
 </html>

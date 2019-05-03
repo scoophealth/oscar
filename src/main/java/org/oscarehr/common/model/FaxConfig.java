@@ -45,6 +45,7 @@ public class FaxConfig extends AbstractModel<Integer> {
 	private String faxUser;
 	private String faxPasswd;
 	private String faxNumber;
+	private String senderEmail;
 	private Boolean active;
 	private Integer queue;
 	
@@ -168,6 +169,20 @@ public class FaxConfig extends AbstractModel<Integer> {
 	
 	public Boolean isActive() {
 		return active;
+	}
+	
+	/**
+	 * Sender email as required by fax gateway integration
+	 */
+	public String getSenderEmail() {
+		return senderEmail;
+	}
+
+	/**
+	 * Sender email as required by fax gateway integration
+	 */
+	public void setSenderEmail(String senderEmail) {
+		this.senderEmail = senderEmail;
 	}
 
 

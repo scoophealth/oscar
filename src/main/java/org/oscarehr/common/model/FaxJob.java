@@ -45,12 +45,12 @@ public class FaxJob extends AbstractModel<Integer> implements Comparable<FaxJob>
 	
 	public enum STATUS {
 		
-		RECEIVED,SENT,COMPLETE,ERROR,WAITING,CANCELLED,RESOLVED;				
+		RECEIVED,SENT,COMPLETE,ERROR,WAITING,CANCELLED,RESOLVED				
 				
-	};
+	}
+	public static enum Direction {IN, OUT}
 	
-	public FaxJob() {
-		
+	public FaxJob() {		
 		this.id = null;
 		this.user = null;
 		this.password = null;
@@ -58,14 +58,17 @@ public class FaxJob extends AbstractModel<Integer> implements Comparable<FaxJob>
 		this.fax_line = null;
 		this.destination = null;
 		this.status = null;
+		this.statusString = null;
 		this.numPages = null;
 		this.stamp = null;
 		this.document = null;
-		
+		this.jobId = null;
+		this.senderEmail = null;
+		this.direction = null;
+
 	}
 	
-	public FaxJob( FaxJob faxJob ) {
-		
+	public FaxJob( FaxJob faxJob ) {		
 		this.id = null;
 		this.user = faxJob.getUser();
 		this.password = faxJob.getPassword();
@@ -73,10 +76,14 @@ public class FaxJob extends AbstractModel<Integer> implements Comparable<FaxJob>
 		this.fax_line = faxJob.getFax_line();
 		this.destination = faxJob.getDestination();
 		this.status = faxJob.getStatus();
+		this.statusString = faxJob.getStatusString();
 		this.numPages = faxJob.getNumPages();
 		this.stamp = faxJob.getStamp();
 		this.document = faxJob.getDocument();
-		
+		this.jobId = faxJob.getJobId();
+		this.senderEmail = faxJob.getSenderEmail();
+		this.direction = faxJob.getDirection();
+
 	}
 
     
@@ -108,7 +115,8 @@ public class FaxJob extends AbstractModel<Integer> implements Comparable<FaxJob>
     private Date stamp;
     
     private String document;
-    
+
+    @Column(name="jobId")
     private Long jobId;
     
     private String oscarUser;
@@ -116,6 +124,12 @@ public class FaxJob extends AbstractModel<Integer> implements Comparable<FaxJob>
     private String statusString;
     
     private Integer demographicNo;
+    
+    @Transient
+    private String senderEmail;
+    
+    @Transient
+    private Direction direction;
     
     /**
      * @return the id
@@ -304,7 +318,21 @@ public class FaxJob extends AbstractModel<Integer> implements Comparable<FaxJob>
 	public void setDemographicNo(Integer demographic_no) {
 		this.demographicNo = demographic_no;
 	}
-    
-    
+
+	public String getSenderEmail() {
+		return senderEmail;
+	}
+
+	public void setSenderEmail(String senderEmail) {
+		this.senderEmail = senderEmail;
+	}
+
+	public Direction getDirection() {
+		return direction;
+	}
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
 
 }
