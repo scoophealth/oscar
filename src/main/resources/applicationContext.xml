@@ -21,11 +21,6 @@
 		</property>
 	</bean>
 
-	<!-- setup OBIB -->
-
-	<bean id="cdxConfiguration" class="org.oscarehr.integration.cdx.CDXConfiguration"/>
-
-
 
 	<!-- setup JPA -->
 	<import resource="classpath:spring_jpa.xml" />
@@ -289,6 +284,7 @@
 		<task:executor id="taskExecutor" />
 		-->
 		<task:scheduler id="taskScheduler" />
+
 		
 		
 </beans>

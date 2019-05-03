@@ -24,16 +24,18 @@
 
 --%>
 
-<%@ page import="org.oscarehr.PMmodule.dao.ProviderDao" %>
 <%@ page import="org.oscarehr.common.dao.ClinicDAO" %>
 <%@ page import="org.oscarehr.common.dao.UserPropertyDAO" %>
 <%@ page import="org.oscarehr.common.model.Clinic" %>
-<%@ page import="org.oscarehr.common.model.Provider" %>
 <%@ page import="org.oscarehr.common.model.UserProperty" %>
 <%@ page import="org.oscarehr.integration.cdx.CDXConfiguration" %>
 <%@ page import="org.oscarehr.util.MiscUtils" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="java.util.List" %>
+<%@ page import="ca.uvic.leadlab.obibconnector.impl.receive.SearchDoc" %>
+<%@ page import="ca.uvic.leadlab.obibconnector.impl.receive.ReceiveDoc" %>
+<%@ page import="ca.uvic.leadlab.obibconnector.facades.receive.IDocument" %>
+<%@ page import="org.oscarehr.integration.cdx.model.CdxPendingDoc" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
@@ -51,6 +53,7 @@
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 
 <%
     ClinicDAO clinicDAO = SpringUtils.getBean(ClinicDAO.class);
@@ -98,6 +101,10 @@
 //    MiscUtils.getLogger().info("defaultProvider: " + defaultProvider);
     MiscUtils.getLogger().info("cdxOid: " + cdxOid);
     MiscUtils.getLogger().info("pollInterval: " + pollInterval);
+
+    SearchDoc docSearcher = new SearchDoc(cdxConfiguration);
+    ReceiveDoc receiveDoc = new ReceiveDoc(cdxConfiguration);
+
 %>
 <html>
 <head>
@@ -106,7 +113,11 @@
         function runFetch() {
             window.location = "<%=request.getContextPath() %>/cdx/cdxImportNewDocs.jsp";
         }
+        function runFetchOld() {
+            window.location = "<%=request.getContextPath() %>/cdx/cdxImportOldDocs.jsp";
+        }
     </script>
+
 </head>
 <body>
 <h4>CDX Configuration</h4>
@@ -139,6 +150,7 @@
 <%--            </select>--%>
 <%--        </div>--%>
 <%--    </div>--%>
+
     <div class="control-group">
         <label class="control-label">Clinic OID:</label>
         <div class="controls">
@@ -168,7 +180,47 @@
 
     <hr>
     <div>
-        <input type="button" class="btn" onClick="runFetch()" value="Fetch New Data from CDX"/>
+        <h4>CDX Status</h4>
+        <%
+            List<String> newDocs = null;
+
+            try {
+                newDocs=receiveDoc.pollNewDocIDs();
+            } catch (Exception e) {
+                MiscUtils.getLogger().info("OBIB pollNewDocIDs failed", e);
+            }
+
+            if (newDocs == null) {
+                %>
+        <p style="color:#FF0000";>The OBIB is <strong>not</strong> connected</p>
+           <% } else { %>
+
+        <p style="color:#229B36";>The OBIB is connected</p>
+
+        <p>There are <%=newDocs.size()%> new documents waiting to be imported
+            <input type="button" class="btn" onClick="runFetch()" value="Import New Documents"
+                    <%=(newDocs.size()==0 ? "disabled" : "")%>/></p>
+
+        <%
+            List<IDocument> availableDocs = null;
+            try {
+                availableDocs=docSearcher.searchDocumentsByClinic(cdxConfiguration.getClinicId());
+            } catch (Exception e) {
+                MiscUtils.getLogger().info("OBIB searchDocumentsByClinic failed", e);
+            }
+
+            if (availableDocs == null) {
+        %>
+        <p style="color:#FF0000";>Search Documents by Clinic ID failed </p>
+        <% } else { %>
+
+        <p>There are <%=availableDocs.size()%> documents for this clinic in the message exchange
+            <input type="button" class="btn" onClick="runFetchOld()" value="Import Old Documents"
+                    <%=(availableDocs.size()==0 ? "disabled" : "")%>/></p>
+
+        <%}%>
+
+        <%}%>
     </div>
 </form>
 </body>
