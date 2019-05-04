@@ -56,6 +56,8 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="org.oscarehr.integration.cdx.model.*" %>
 <%@ page import="org.oscarehr.integration.cdx.dao.*" %>
+<%@ page import="oscar.log.LogAction" %>
+<%@ page import="oscar.log.LogConst" %>
 <%
 
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
@@ -98,12 +100,6 @@ It must have been deleted. Please refresh your Inbox window.
     CdxProvenance provenanceDoc = provenanceDao.findByDocumentNo(documentNoInt);
     List<CdxProvenance> versions = provenanceDao.findVersionsOrderDesc(provenanceDoc.getDocumentId());
 
-    String inQueue=request.getParameter("inQueue");
-
-    boolean inQueueB=false;
-    if(inQueue!=null) {
-        inQueueB=true;
-    }
 
     String providerNo = request.getParameter("providerNo");
     UserProperty uProp = userPropertyDAO.getProp(providerNo, UserProperty.LAB_ACK_COMMENT);
@@ -111,6 +107,15 @@ It must have been deleted. Please refresh your Inbox window.
 
     if( uProp != null && uProp.getValue().equalsIgnoreCase("yes")) {
         skipComment = true;
+    }
+
+
+    // mark document as read
+    if (!demoNo.equals("-1")) {
+        DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+        Demographic demographic = demographicDao.getDemographic(demoNo);
+        demoName = demographic.getLastName() + "," + demographic.getFirstName();
+        LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_DOCUMENT, documentNo, request.getRemoteAddr(), demoNo);
     }
 
 

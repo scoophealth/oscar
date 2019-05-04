@@ -24,47 +24,58 @@
 
 package org.oscarehr.integration.cdx;
 
-import ca.uvic.leadlab.obibconnector.facades.receive.IAttachment;
-import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
-import ca.uvic.leadlab.obibconnector.facades.receive.IPatient;
-import ca.uvic.leadlab.obibconnector.facades.receive.IReceiveDoc;
+import ca.uvic.leadlab.obibconnector.Support;
+import ca.uvic.leadlab.obibconnector.facades.receive.*;
 import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
 import ca.uvic.leadlab.obibconnector.impl.receive.ReceiveDoc;
+import ca.uvic.leadlab.obibconnector.impl.receive.SearchDoc;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.*;
 import org.oscarehr.common.model.*;
 import org.oscarehr.integration.cdx.dao.CdxAttachmentDao;
+import org.oscarehr.integration.cdx.dao.CdxPendingDocsDao;
 import org.oscarehr.integration.cdx.dao.CdxProvenanceDao;
 import org.oscarehr.integration.cdx.model.CdxAttachment;
+import org.oscarehr.integration.cdx.model.CdxPendingDoc;
 import org.oscarehr.integration.cdx.model.CdxProvenance;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static org.oscarehr.util.SpringUtils.*;
 
 
 public class CDXImport {
 
-    private IReceiveDoc receiver = null;
-    private CdxProvenanceDao provDao = SpringUtils.getBean(CdxProvenanceDao.class);
-    private DocumentDao     docDao = SpringUtils.getBean(DocumentDao.class);
-    private ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
-    private ProviderLabRoutingDao plrDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
-
-    private String clinicId;
-
+    private IReceiveDoc receiver;
+    private ISearchDoc docSearcher;
     private CDXConfiguration cdxConfig;
+    private Support support;
+    private CdxPendingDocsDao pendDocDao;
+    private DocumentDao     docDao;
+    private ProviderDao providerDao;
+    private CdxProvenanceDao provDao;
+    private ProviderLabRoutingDao plrDao;
 
     public CDXImport() {
-        ClinicDAO clinicDao = SpringUtils.getBean(ClinicDAO.class);
-        clinicId = clinicDao.getClinic().getCdxOid();
 
         cdxConfig = new CDXConfiguration();
 
         receiver = new ReceiveDoc(cdxConfig);
+        docSearcher = new SearchDoc(cdxConfig);
+
+        support = new Support(cdxConfig);
+        pendDocDao = getBean(CdxPendingDocsDao.class);
+        docDao = getBean(DocumentDao.class);
+        providerDao = getBean(ProviderDao.class);
+        provDao = getBean(CdxProvenanceDao.class);
+        plrDao = getBean(ProviderLabRoutingDao.class);
     }
 
 
@@ -74,17 +85,72 @@ public class CDXImport {
 
         docIds = receiver.pollNewDocIDs();
 
-        for (String id : docIds) {
+        MiscUtils.getLogger().info("CDX Import: " + docIds.size() + " new documents to import" );
 
-            IDocument doc = receiver.retrieveDocument(id);
-
-            storeDocument(doc);
-
-        }
+        importDocuments(docIds);
 
     }
 
-    private void storeDocument(IDocument doc) {
+    public void importAllDocs() throws Exception {
+
+        List<String> docIds = new ArrayList<>();
+        List<IDocument> docs;
+
+        docs = docSearcher.searchDocumentsByClinic(cdxConfig.getClinicId());
+
+        for (IDocument doc : docs) {
+            docIds.add(doc.getDocumentID());
+        }
+
+
+        MiscUtils.getLogger().info("CDX Import: " + docIds.size() + " OLD documents to import" );
+
+        importDocuments(docIds);
+
+    }
+
+
+    public void importPendingDocs() throws Exception {
+
+        List<String> docIds;
+
+        docIds = pendDocDao.getPendingErrorDocs();
+
+        MiscUtils.getLogger().info("CDX Import: " + docIds.size() + " old pending documents to import" );
+
+        importDocuments(docIds);
+
+    }
+
+    private void importDocuments(List<String> docIds) {
+        for (String id : docIds)
+            try {
+
+                MiscUtils.getLogger().info("CDX Import: importing document " + id );
+
+                IDocument doc = receiver.retrieveDocument(id);
+
+                storeDocument(doc);
+
+            } catch (Exception e) {
+                CdxPendingDoc pd = new CdxPendingDoc();
+                pd.setDocId(id);
+                pd.setReasonCode(CdxPendingDoc.error);
+                pd.setExplanation(e.toString());
+                pendDocDao.persist(pd);
+
+                MiscUtils.getLogger().error("Error importing CDX Document " + id, e);
+
+                try {
+                    support.notifyError("Error importing CDX document", e.toString());
+                } catch (Exception e2) {
+                    MiscUtils.getLogger().error("Could not communicate CDX Error to OBIB support channel", e2);
+                }
+            }
+    }
+
+    @Transactional
+    public void storeDocument(IDocument doc) {
         CdxProvenance prov = new CdxProvenance();
         Document    inboxDoc = null;
 
@@ -127,7 +193,7 @@ public class CDXImport {
 
 
     private void saveAttachments(IDocument doc, CdxProvenance prov) {
-        CdxAttachmentDao atDao = SpringUtils.getBean(CdxAttachmentDao.class);
+        CdxAttachmentDao atDao = getBean(CdxAttachmentDao.class);
 
         for (IAttachment a : doc.getAttachments()) {
             CdxAttachment attachmentEntity = new CdxAttachment();
@@ -152,8 +218,8 @@ public class CDXImport {
 
     private void populateInboxDocument(IDocument doc, Document docEntity) {
         IProvider p;
-        docEntity.setDoctype(doc.getTemplateName());
-        docEntity.setDocdesc(doc.getTemplateName());
+        docEntity.setDoctype(doc.getLoincCodeDisplayName());
+        docEntity.setDocdesc(doc.getLoincCodeDisplayName());
         docEntity.setDocfilename("N/A");
         docEntity.setDoccreator(doc.getCustodianName());
 
@@ -187,11 +253,11 @@ public class CDXImport {
             docEntity.setObservationdate(doc.getEffectiveTime());
         } else {
             docEntity.setObservationdate(new Date());
-        
+
         }
 
         if (doc.getCustodianName() != null)
-        docEntity.setSourceFacility(doc.getCustodianName());
+            docEntity.setSourceFacility(doc.getCustodianName());
 
         docEntity.setContentdatetime(doc.getAuthoringTime());
         docDao.persist(docEntity);
@@ -214,8 +280,8 @@ public class CDXImport {
 
 
     private void addPatient(Document docEntity, IPatient patient) {
-        DemographicDao demoDao = SpringUtils.getBean(DemographicDao.class);
-        CtlDocumentDao ctlDocDao = SpringUtils.getBean(CtlDocumentDao.class);
+        DemographicDao demoDao = getBean(DemographicDao.class);
+        CtlDocumentDao ctlDocDao = getBean(CtlDocumentDao.class);
         int demoId = -1;
 
         // implement 4 point matching as required by CDX conformance spec
@@ -258,7 +324,13 @@ public class CDXImport {
 
     private void addProviderRouting(Document docEntity, IProvider prov) {
 
-        Provider provEntity = providerDao.getProviderByOhipNo(prov.getID());
+        Provider provEntity = null;
+
+        try {
+            providerDao.getProviderByOhipNo(prov.getID());
+        } catch (Exception e) {
+            MiscUtils.getLogger().info("Provider in CDX document does not have valid ID");
+        }
 
         if (provEntity != null) {
             ProviderLabRoutingModel plr = new ProviderLabRoutingModel();
@@ -272,7 +344,7 @@ public class CDXImport {
 
     private void addDefaultProviderRouting(Document docEntity) {
 
-        ProviderLabRoutingDao plrDao = SpringUtils.getBean(ProviderLabRoutingDao.class);
+        ProviderLabRoutingDao plrDao = getBean(ProviderLabRoutingDao.class);
         ProviderLabRoutingModel plr = new ProviderLabRoutingModel();
 
         plr.setLabNo(docEntity.getDocumentNo());

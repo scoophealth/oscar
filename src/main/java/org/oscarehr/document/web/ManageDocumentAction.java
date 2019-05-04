@@ -176,7 +176,7 @@ public class ManageDocumentAction extends DispatchAction {
 		
 		Document d = documentDao.getDocument(documentId);
 
-		if(d != null) {
+		if(d != null && (!d.getDocClass().equals("CDX"))) {
 			d.setDocdesc(documentDescription);
 			d.setDoctype(docType);
 			Date obDate = UtilDateUtilities.StringToDate(observationDate);
