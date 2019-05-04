@@ -3746,5 +3746,6 @@
         <ViolationValue>/database/mysql/updates/update-phr-docs.sql:`status` int(1) default NULL,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-phr-docs.sql:`status` tinyint(1) default 0,</ViolationValue>
         <ViolationValue>/database/mysql/updates/update-phr-docs.sql:`value` varchar(255) default NULL,</ViolationValue>
+        <ViolationValue>/database/mysql/updates/update-2019-03-26.sql:timestamp            datetime  NOT NULL DEFAULT CURRENT_TIMESTAMP ,</ViolationValue>
     </ViolationSet>
 </TrackingRegexpCheck>

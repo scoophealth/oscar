@@ -49,7 +49,7 @@ public class CdxPendingDocsDao extends AbstractDao<CdxPendingDoc> {
 
 
     public List<String> getPendingErrorDocs() {
-        List<String> result = new ArrayList<>();
+        List<String> result = new ArrayList<String>();
         String sql = "FROM CdxPendingDocs pd where pd.reasonCode = :rc";
         Query query = entityManager.createQuery(sql);
         query.setParameter("rc", CdxPendingDoc.error);
