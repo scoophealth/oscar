@@ -176,23 +176,25 @@ if(!authed) {
 		if (demo != null) consultUtil.estPatient(loggedInInfo, demo);
 		consultUtil.estActiveTeams();
 
-		if (show_CDX) {
-			CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
-			if (requestId != null && !requestId.isEmpty()) {
-//				List<CdxProvenance> cdxProvenanceList = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
-				List<CdxProvenance> cdxProvenanceList = cdxProvenanceDao.findByKindAndInFulFillment("Referral note", requestId);
-				if (cdxProvenanceList !=null && !cdxProvenanceList.isEmpty()) {
-					for (CdxProvenance cdxProvenance : cdxProvenanceList) {
-						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-						MiscUtils.getLogger().info("Timestamp: " + dateFormat.format(cdxProvenance.getEffectiveTime()));
-					}
-				} else {
-						MiscUtils.getLogger().warn("lookup by kind and request id failed to retrieve any documents");
-				}
-			} else {
-				MiscUtils.getLogger().warn(("requestId is null or empty"));
-			}
-		}
+//		int numCdxReferralNotes = 0;
+//		if (show_CDX) {
+//			CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
+//			if (requestId != null && !requestId.isEmpty()) {
+////				List<CdxProvenance> cdxProvenanceList = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
+//				List<CdxProvenance> cdxProvenanceList = cdxProvenanceDao.findByKindAndInFulFillment("Referral note", requestId);
+//				if (cdxProvenanceList !=null && !cdxProvenanceList.isEmpty()) {
+//					numCdxReferralNotes = cdxProvenanceList.size();
+//					for (CdxProvenance cdxProvenance : cdxProvenanceList) {
+//						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//						MiscUtils.getLogger().debug("CDX Referral Note Timestamp: " + dateFormat.format(cdxProvenance.getEffectiveTime()));
+//					}
+//				} else {
+//						MiscUtils.getLogger().warn("CDX Referral Note lookup by kind and request id failed to retrieve any documents");
+//				}
+//			} else {
+//				MiscUtils.getLogger().warn(("CDX Referral requestId is null or empty"));
+//			}
+//		}
 
 		if (request.getParameter("error") != null)
 		{
@@ -1453,18 +1455,57 @@ function updateFaxButton() {
 					</td>
 				</tr>
 
-				<% if (show_CDX) { %>
+				<% if (show_CDX) {
+					String status = "<b>Not Sent</b>";
+					List<CdxProvenance> cdxProvenanceList = null;
+					CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
+					if (requestId != null && !requestId.isEmpty()) {
+//						List<CdxProvenance> cdxProvenanceList = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
+						cdxProvenanceList = cdxProvenanceDao.findByKindAndInFulFillment("Referral note", requestId);
+						if (cdxProvenanceList != null && !cdxProvenanceList.isEmpty()) {
+							status = "<b>Sent</b>";
+						}
+					}
+
+				%>
 				<tr>
 					<td class="tite4" colspan="2">E-Referral<br>History
+					</td>
+				</tr>
+<%--				<tr>--%>
+<%--					<td class="tite4" colspan="2">--%>
+<%--						<table>--%>
+<%--							<tr>--%>
+<%--								<td class="stat">Request ID: <%=requestId%>--%>
+<%--								</td>--%>
+<%--							</tr>--%>
+<%--						</table>--%>
+<%--					</td>--%>
+<%--				</tr>--%>
+				<tr>
+					<td class="tite4" colspan="2">
+						<table>
+							<tr>
+								<td class="stat"><center><%=status%></center>
+								</td>
+							</tr>
+						</table>
 					</td>
 				</tr>
 				<tr>
 					<td class="tite4" colspan="2">
 						<table>
 							<tr>
-								<td class="stat">Request ID: <%=requestId%>
-								</td>
-								<td class="stat">Status:
+								<td>
+							<%
+									if (cdxProvenanceList != null && !cdxProvenanceList.isEmpty()) {
+										for (CdxProvenance cdxProvenance : cdxProvenanceList) {
+											DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+											out.println("<small><small>"+dateFormat.format(cdxProvenance.getEffectiveTime())+"</small></small>");
+											MiscUtils.getLogger().info("cdxProvenance info:" + cdxProvenance.getId());
+										}
+									}
+							%>
 								</td>
 							</tr>
 						</table>
