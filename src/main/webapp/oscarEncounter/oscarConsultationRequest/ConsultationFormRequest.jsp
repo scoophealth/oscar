@@ -78,6 +78,7 @@ if(!authed) {
 <%@ page import="org.oscarehr.integration.cdx.dao.CdxProvenanceDao" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.text.DateFormat" %>
+<%@ page import="ca.uvic.leadlab.obibconnector.facades.datatypes.DocumentType" %>
 <jsp:useBean id="displayServiceUtil" scope="request" class="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConDisplayServiceUtil" />
 
 <html:html locale="true">
@@ -1438,8 +1439,11 @@ function updateFaxButton() {
 					List<CdxProvenance> cdxProvenanceList = null;
 					CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
 					if (requestId != null && !requestId.isEmpty()) {
-//						List<CdxProvenance> cdxProvenanceList = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
-						cdxProvenanceList = cdxProvenanceDao.findByKindAndInFulFillment("Referral note", requestId);
+						cdxProvenanceList = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
+						if (cdxProvenanceList == null || cdxProvenanceList.isEmpty()) {
+							MiscUtils.getLogger().warn("Find by DocumentType.REFERRAL_NOTE failed.");
+							cdxProvenanceList = cdxProvenanceDao.findByKindAndInFulFillment("Referral note", requestId);
+						}
 						if (cdxProvenanceList != null && !cdxProvenanceList.isEmpty()) {
 							status = "<b>Sent</b>";
 						}
