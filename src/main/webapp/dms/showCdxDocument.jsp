@@ -662,7 +662,7 @@ It must have been deleted. Please refresh your Inbox window.
         }
 
         function deleteCdxDocument(docNo) {
-            if (confirm("ARE YOU SURE TO DELETE THIS INCOMING CDX DOCUMENT? \n(Documents should only be deleted if they were received in error. This operation cannot be undone)")) {
+            if (confirm("ARE YOU SURE TO DELETE THIS INCOMING CDX DOCUMENT? \n(Documents should only be deleted if they were received in error.)")) {
 
                 var url="../dms/DeleteDocument.do";
                 var data='method=deleteDocument&documentId='+docNo;

@@ -58,6 +58,14 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <%
     ClinicDAO clinicDAO = SpringUtils.getBean(ClinicDAO.class);
@@ -181,68 +189,81 @@
 
 </head>
 <body>
-<h4>CDX Configuration</h4>
-<form action="<%=request.getContextPath()%>/cdx/CDXAdmin.do" method="post">
-    <div class="control-group">
-        <label class="control-label">CDX URL: Format is http://&lt;ip_address&gt;:&lt;port&gt;</label>
-        <div class="controls">
-            <label>
-                <input type="text" name="cdx_url" value="<%=cdxUrl%>"/>
-            </label>
-        </div>
-    </div>
-    <%--    <div class="control-group">--%>
-    <%--        <label class="control-label">Default Provider:</label>--%>
-    <%--        <div class="controls">--%>
-    <%--            <select name="defaultProvider">--%>
-    <%--                <%--%>
-    <%--                    for (Provider provider : providers) {--%>
-    <%--                        String selected = "";--%>
-    <%--                        if (!defaultProvider.equals("")--%>
-    <%--                                && defaultProvider.equals(provider.getProviderNo())) {--%>
-    <%--                            selected = " selected=\"selected\" ";--%>
-    <%--                        }--%>
-    <%--                %>--%>
-    <%--                <option value="<%=provider.getProviderNo()%>" <%=selected%>><%=provider.getFormattedName()%>--%>
-    <%--                </option>--%>
-    <%--                <%--%>
-    <%--                    }--%>
-    <%--                %>--%>
-    <%--            </select>--%>
-    <%--        </div>--%>
-    <%--    </div>--%>
 
-    <div class="control-group">
-        <label class="control-label">Clinic OID:</label>
-        <div class="controls">
-            <label>
-                <input type="text" name="cdxOid" value="<%=cdxOid%>"/>
-            </label>
-        </div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">CDX Configuration</h3>
     </div>
-    <div class="control-group">
-        <label class="control-label">Automated Polling:</label>
-        <label class="radio-inline"><input type="radio" name="cdx_polling_enabled" value="true" <%=pollEnabled%>
-                                           class="form-control">Enabled</label>
-        <label class="radio-inline"><input type="radio" name="cdx_polling_enabled" <%=pollDisabled%> value="false"
-                                           class="form-control">Disabled</label>
-    </div>
-    <div class="control-group">
-        <label class="control-label">Polling Interval (minutes):</label>
-        <div class="controls">
-            <label>
-                <input type="text" name="cdx_polling_interval" value="<%=pollInterval %>"/>
-            </label>
-        </div>
-    </div>
-    <div class="control-group">
-        <input type="submit" class="btn btn-primary" value="Submit"/>
-    </div>
-</form>
+    <div class="panel-body">
+        <form action="<%=request.getContextPath()%>/cdx/CDXAdmin.do" method="post">
 
-<hr>
-<div>
-    <h4>CDX Status</h4>
+            <div class="form-group row">
+
+                <div class="col-md-6">
+
+                    <label for="cdx_url">OBIB URL</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon3">http://&lt;ip_address&gt;:&lt;port&gt;</span>
+                        <input type="text" class="form-control" id="cdx_url" name="cdx_url" value="<%=cdxUrl%>" aria-describedby="basic-addon3">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+
+                    <label for="cdxOid">Clinic OID</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="cdxOid" name="cdxOid" value="<%=cdxOid%>">
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="form-group row">
+                <div class="col-md-3">
+
+                    <div class="control-group">
+                        <label class="control-label">Automatic Import:</label>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" class="custom-control-input" id="cdx_polling_enabled" name="cdx_polling_enabled" value="true" <%=pollEnabled%>>
+                            <label class="custom-control-label" for="cdx_polling_enabled">Enabled</label>
+                        </div>
+
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" class="custom-control-input" id="cdx_polling_disabled" name="cdx_polling_enabled" <%=pollDisabled%> value="false">
+                            <label class="custom-control-label" for="cdx_polling_disabled">Disabled</label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <label for="cdx_polling_interval">Polling Interval</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon3">minutes</span>
+                        <input type="text" class="form-control" id="cdx_polling_interval" name="cdx_polling_interval" value="<%=pollInterval%>" aria-describedby="basic-addon3">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="control-group">
+                <input type="submit" class="btn btn-primary" value="Save"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">CDX Status</h3>
+    </div>
+    <div class="panel-body">
+
     <%
         CdxPendingDocsDao cdxPendingDocsDao = SpringUtils.getBean(CdxPendingDocsDao.class);
         SimpleDateFormat format=new SimpleDateFormat ("yyyy-MM-dd HH:mm");
@@ -257,20 +278,33 @@
 
         if (newDocs == null) {
     %>
-    <p style="color:#FF0000";>The OBIB is <strong>not</strong> connected</p>
+        <div class="alert alert-danger" role="alert">The OBIB is connected</div>
     <% } else { %>
 
-    <p style="color:#229B36";>The OBIB is connected</p>
+        <div class="alert alert-success" role="alert">The OBIB not connected</div>
 
-    <p>There are <%=newDocs.size()%> new documents waiting.
-        <input id="newButton" type="button" class="btn" value="Import New Documents"
-                <%=(newDocs.size()==0 ? "disabled" : "")%>/></p>
+    There are <%=newDocs.size()%> new documents waiting.
+        <% if (newDocs.size()>0) { %>
+                <button id="newButton"  class="btn btn-default btn-xs">Import </button>
+        <%}%>
 
-    <p>There are <%=cdxPendingDocsDao.getPendingErrorDocs().size()%> messages that could not be imported due to an internal error.</p>
+        <%
+            int noOfErrDocs = cdxPendingDocsDao.getPendingErrorDocs().size();
+            if (noOfErrDocs > 0) {
+        %>
 
-    <p>There are <%=cdxPendingDocsDao.getDeletedDocs().size()%> documents that were deleted by a user. (They can be re-imported.) </p>
+        <div class="alert alert-danger" role="alert">There are <%=noOfErrDocs%> messages that could not be imported due to an internal error.</div>
+<%
+    }
+    int noOfDelDocs = cdxPendingDocsDao.getDeletedDocs().size();
+    if (noOfDelDocs > 0) {
+%>
+
+        <div class="alert alert-warning" role="alert">There are <%=noOfDelDocs%> documents that were deleted by a user (after import)</div>
+
 
     <%
+        }
 
 
         List<IDocument> availableDocs = null;
@@ -295,13 +329,19 @@
 
     %>
 
-    <p>There is a total of <%=notImportedDocs.size()%> documents retrievable from the CDX system for this clinic, which are not imported in the EMR (or were deleted after import).</p>
+    <p>There is a total of <%=notImportedDocs.size()%> documents retrievable from the CDX system for this clinic, which are not in the EMR database.</p>
 
     <%
         if (!notImportedDocs.isEmpty()){
     %>
 
-    <p> Select all documents you want to (re)import below <button id="downButton" type="button" hidden="hidden" >Import selected documents </button> </p>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">Select all documents you want to (re)import below</h4>
+            </div>
+            <div class="panel-body">
+
+
     <table id="doctable" class="display" style="width:100%">
         <thead>
         <tr>
@@ -339,7 +379,7 @@
 
                         out.print(msg + "\n at " + pd.getTimestamp());
                     }
-                    else out.print("never imported");
+                    else out.print("not in EMR");
                 %>
             </td>
 
@@ -349,12 +389,18 @@
             %>
         </tfoot>
     </table>
+            </div>
+        <div class="panel-footer">
+            <button id="downButton" class="btn btn-primary btn-xs" type="button" style="display:none" >Import selected documents </button>
+        </div>
+        </div>
 
     <%}%>
 
     <%}%>
 
     <%}%>
+</div>
 </div>
 </body>
 </html>
