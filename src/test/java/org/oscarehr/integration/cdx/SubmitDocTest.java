@@ -60,6 +60,7 @@ public class SubmitDocTest extends FacadesBaseTest {
         String result = null;
         try {
             response = submitDoc.newDoc()
+                    .documentType(DocumentType.REFERRAL_NOTE)
                     .patient()
                         .id("2222")
                         .name(NameType.LEGAL, "Joe", "Wine")
@@ -114,6 +115,7 @@ public class SubmitDocTest extends FacadesBaseTest {
         ISubmitDoc submitDoc = new SubmitDoc(configClinicC);
 
         IDocument response = submitDoc.newDoc()
+                .documentType(DocumentType.REFERRAL_NOTE)
                 .patient()
                     .id("2222")
                     .name(NameType.LEGAL, "Joe", "Wine")
@@ -155,6 +157,7 @@ public class SubmitDocTest extends FacadesBaseTest {
         String result = null;
         try {
             response = submitDoc.newDoc()
+                    .documentType(DocumentType.REFERRAL_NOTE)
                     .patient()
                     .id("2222")
                     .name(NameType.LEGAL, "Joe", "Wine")
@@ -212,6 +215,7 @@ public class SubmitDocTest extends FacadesBaseTest {
         String result = null;
 
         IDocument response = submitDoc.newDoc()
+                .documentType(DocumentType.REFERRAL_NOTE)
                 .patient()
                 .id("2222")
                 .name(NameType.LEGAL, "Joe", "Wine")

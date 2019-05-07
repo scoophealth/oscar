@@ -30,7 +30,10 @@ import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
 import ca.uvic.leadlab.obibconnector.impl.receive.ReceiveDoc;
 import ca.uvic.leadlab.obibconnector.impl.receive.SearchDoc;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.common.dao.*;
+import org.oscarehr.common.dao.CtlDocumentDao;
+import org.oscarehr.common.dao.DemographicDao;
+import org.oscarehr.common.dao.DocumentDao;
+import org.oscarehr.common.dao.ProviderLabRoutingDao;
 import org.oscarehr.common.model.*;
 import org.oscarehr.integration.cdx.dao.CdxAttachmentDao;
 import org.oscarehr.integration.cdx.dao.CdxPendingDocsDao;
@@ -43,7 +46,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import static org.oscarehr.util.SpringUtils.*;
+import static org.oscarehr.util.SpringUtils.getBean;
 
 public class CDXImport {
 

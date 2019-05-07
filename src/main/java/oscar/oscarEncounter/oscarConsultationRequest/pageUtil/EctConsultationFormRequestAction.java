@@ -28,10 +28,7 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v26.message.ORU_R01;
 import ca.uhn.hl7v2.model.v26.message.REF_I12;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.AddressType;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.Gender;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.NameType;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.TelcoType;
+import ca.uvic.leadlab.obibconnector.facades.datatypes.*;
 import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
 import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
@@ -565,6 +562,7 @@ public class EctConsultationFormRequestAction extends Action {
 		SubmitDoc submitDoc = new SubmitDoc(cdxConfig);
 
 		response = submitDoc.newDoc()
+                .documentType(DocumentType.REFERRAL_NOTE)
 				.patient()
 					.id(patientId)
 					.name(NameType.LEGAL, demographic.getFirstName(), demographic.getLastName())

@@ -51,7 +51,6 @@ if(!authed) {
 <!-- end -->
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
 
-
 <%@page import="java.util.ArrayList, java.util.Collections, java.util.List, java.util.*, oscar.util.StringUtils, oscar.dms.*, oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*, oscar.OscarProperties, oscar.oscarLab.ca.on.*"%>
 <%@page import="org.oscarehr.casemgmt.service.CaseManagementManager,org.oscarehr.casemgmt.model.CaseManagementNote,org.oscarehr.casemgmt.model.Issue,org.oscarehr.common.model.UserProperty,org.oscarehr.common.dao.UserPropertyDAO,org.springframework.web.context.support.*,org.springframework.web.context.*"%>
 
@@ -75,6 +74,11 @@ if(!authed) {
 <%@ page import="org.oscarehr.common.dao.FaxConfigDao, org.oscarehr.common.model.FaxConfig" %>
 <%@page import="org.oscarehr.common.dao.ConsultationServiceDao" %>
 <%@page import="org.oscarehr.common.model.ConsultationServices" %>
+<%@ page import="org.oscarehr.integration.cdx.model.CdxProvenance" %>
+<%@ page import="org.oscarehr.integration.cdx.dao.CdxProvenanceDao" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.text.DateFormat" %>
+<%@ page import="ca.uvic.leadlab.obibconnector.facades.datatypes.DocumentType" %>
 <jsp:useBean id="displayServiceUtil" scope="request" class="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConDisplayServiceUtil" />
 
 <html:html locale="true">
@@ -191,7 +195,7 @@ if(!authed) {
 		
 		// Look up list
 		org.oscarehr.managers.LookupListManager lookupListManager = SpringUtils.getBean(org.oscarehr.managers.LookupListManager.class);
-		pageContext.setAttribute("appointmentInstructionList", lookupListManager.findLookupListByName( loggedInInfo, "consultApptInst") ); 
+		pageContext.setAttribute("appointmentInstructionList", lookupListManager.findLookupListByName( loggedInInfo, "consultApptInst") );
 %><head>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <script>
@@ -1429,6 +1433,59 @@ function updateFaxButton() {
 					</table>
 					</td>
 				</tr>
+
+				<% if (show_CDX) {
+					String status = "<b>Not Sent</b>";
+					List<CdxProvenance> cdxProvenanceList = null;
+					CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
+					if (requestId != null && !requestId.isEmpty()) {
+						cdxProvenanceList = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
+						if (cdxProvenanceList == null || cdxProvenanceList.isEmpty()) {
+							MiscUtils.getLogger().warn("Find by DocumentType.REFERRAL_NOTE failed.");
+							cdxProvenanceList = cdxProvenanceDao.findByKindAndInFulFillment("Referral note", requestId);
+						}
+						if (cdxProvenanceList != null && !cdxProvenanceList.isEmpty()) {
+							status = "<b>Sent</b>";
+						}
+					}
+
+				%>
+				<tr>
+					<td class="tite4" colspan="2">E-Referral<br>History
+					</td>
+				</tr>
+				<tr>
+					<td class="tite4" colspan="2">
+						<table>
+							<tr>
+								<td class="stat"><%=status%>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="tite4" colspan="2">
+						<table>
+							<tr>
+								<td>
+							<%
+									if (cdxProvenanceList != null && !cdxProvenanceList.isEmpty()) {
+										for (CdxProvenance cdxProvenance : cdxProvenanceList) {
+											DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+											out.print("<a target=\"_blank\" href=\"DisplayCdxConsultationRequest.jsp?provenanceId="+cdxProvenance.getId()+"\"/>");
+											out.print("<small><small>"+dateFormat.format(cdxProvenance.getEffectiveTime())+"</small></small>");
+											out.println("</a>");
+										}
+									}
+							%>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<% } %>
+
 				<tr>
 					<td class="tite4" colspan="2"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgStatus" />
 					</td>
