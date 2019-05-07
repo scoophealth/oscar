@@ -12,6 +12,7 @@ CREATE INDEX idx_cdx_attachment ON cdx_attachment ( document );
 CREATE TABLE oscar.cdx_provenance (
 																		id                   int  NOT NULL  AUTO_INCREMENT,
 																		doc_id               varchar(60)  NOT NULL  ,
+																		msg_id							 varchar(60),
 																		document_no						int,
 																		version              int   ,
 																		effective_time       datetime  NOT NULL  ,
