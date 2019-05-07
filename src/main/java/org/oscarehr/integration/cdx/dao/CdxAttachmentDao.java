@@ -25,8 +25,11 @@
 package org.oscarehr.integration.cdx.dao;
 
 
+import ca.uvic.leadlab.obibconnector.facades.receive.IAttachment;
+import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import org.oscarehr.common.dao.AbstractDao;
 import org.oscarehr.integration.cdx.model.CdxAttachment;
+import org.oscarehr.integration.cdx.model.CdxProvenance;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
@@ -61,5 +64,18 @@ public class CdxAttachmentDao extends AbstractDao<CdxAttachment> {
         query.setParameter("docid", documentNo);
         query.executeUpdate();
 
+    }
+
+    public void saveAttachments(IDocument doc, CdxProvenance prov) {
+
+        for (IAttachment a : doc.getAttachments()) {
+            CdxAttachment attachmentEntity = new CdxAttachment();
+
+            attachmentEntity.setDocument(prov.getId());
+            attachmentEntity.setAttachmentType(a.getType().mediaType);
+            attachmentEntity.setReference(a.getReference());
+            attachmentEntity.setContent(a.getContent());
+            persist(attachmentEntity);
+        }
     }
 }

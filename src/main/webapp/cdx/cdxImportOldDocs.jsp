@@ -1,4 +1,6 @@
-<%@ page import="org.oscarehr.integration.cdx.CDXImport" %><%--
+<%@ page import="org.oscarehr.integration.cdx.CDXImport" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Arrays" %><%--
 
     Copyright (c) 2013-2015. Department of Computer Science, University of Victoria. All Rights Reserved.
     This software is published under the GPL GNU General Public License.
@@ -30,10 +32,11 @@
 </head>
 <body>
 <%
+    String[] docIds = request.getParameterValues("docid");
     CDXImport cdxImport = new CDXImport();
-    cdxImport.importAllDocs();
+    cdxImport.importDocuments(Arrays.asList(docIds));
 %>
 
-<h4> Ran import on all old docs</h4>
+<h4> Ran import on selected documents</h4>
 </body>
 </html>

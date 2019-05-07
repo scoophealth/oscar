@@ -49,6 +49,8 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
     @Basic(optional = false)
     @Column(name = "doc_id")
     private String documentId;
+    @Column(name = "msg_id")
+    private String msgId;
     @Column(name = "version")
     private int version;
     @Basic(optional = false)
@@ -87,6 +89,14 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
     @Override
     public Integer getId() {
         return id;
+    }
+
+    public String getMsgId() {
+        return msgId;
+    }
+
+    public void setMsgId(String msgId) {
+        this.msgId = msgId;
     }
 
     public void setId(Integer id) {

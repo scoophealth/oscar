@@ -31,7 +31,7 @@ import org.oscarehr.common.model.AbstractModel;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Table(name = "cdx_pending_docs")

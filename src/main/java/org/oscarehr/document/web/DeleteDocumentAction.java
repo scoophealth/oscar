@@ -33,7 +33,9 @@ import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.common.dao.*;
 import org.oscarehr.common.model.*;
 import org.oscarehr.integration.cdx.dao.CdxAttachmentDao;
+import org.oscarehr.integration.cdx.dao.CdxPendingDocsDao;
 import org.oscarehr.integration.cdx.dao.CdxProvenanceDao;
+import org.oscarehr.integration.cdx.model.CdxPendingDoc;
 import org.oscarehr.integration.cdx.model.CdxProvenance;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
@@ -43,6 +45,7 @@ import oscar.log.LogAction;
 import oscar.log.LogConst;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 
 
 public class DeleteDocumentAction extends DispatchAction {
@@ -53,6 +56,7 @@ public class DeleteDocumentAction extends DispatchAction {
 	private CtlDocumentDao ctlDocumentDao = SpringUtils.getBean(CtlDocumentDao.class);
 	private CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
 	private CdxAttachmentDao cdxAttachmentDao = SpringUtils.getBean(CdxAttachmentDao.class);
+	private CdxPendingDocsDao cdxPendingDocsDao = SpringUtils.getBean(CdxPendingDocsDao.class);
 	private ProviderInboxRoutingDao providerInboxRoutingDAO = SpringUtils.getBean(ProviderInboxRoutingDao.class);
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
 
@@ -84,13 +88,24 @@ public class DeleteDocumentAction extends DispatchAction {
 				providerInboxRoutingDAO.removeLinkFromDocument("DOC", docNo, prov.getProviderNo());
 			}
 
+
+
 			documentDao.deleteDocument(docNo);
 			ctlDocumentDao.deleteDocument(docNo);
 
 			CdxProvenance provenanceDoc = cdxProvenanceDao.findByDocumentNo(docNo);
 
+			CdxPendingDoc pendDoc = new CdxPendingDoc();
+
+			pendDoc.setTimestamp(new Date());
+			pendDoc.setDocId(provenanceDoc.getMsgId());
+			pendDoc.setReasonCode(CdxPendingDoc.deleted);
+			pendDoc.setExplanation("Deleted by user");
+			cdxPendingDocsDao.persist(pendDoc);
+
 			cdxAttachmentDao.deleteAttachments(provenanceDoc.getId());
 			cdxProvenanceDao.remove(provenanceDoc);
+
 
 		} catch (Exception e) {
 			MiscUtils.getLogger().error("Error", e);

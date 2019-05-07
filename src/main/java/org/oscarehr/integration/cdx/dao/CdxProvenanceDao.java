@@ -28,11 +28,15 @@ package org.oscarehr.integration.cdx.dao;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.DocumentType;
 import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import org.oscarehr.common.dao.AbstractDao;
+import org.oscarehr.integration.cdx.model.CdxAttachment;
 import org.oscarehr.integration.cdx.model.CdxProvenance;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
+import java.util.Date;
 import java.util.List;
+
+import static org.oscarehr.util.SpringUtils.getBean;
 
 
 @Repository
@@ -52,6 +56,10 @@ public class CdxProvenanceDao extends AbstractDao<CdxProvenance> {
         prov.populate(doc);
         prov.setAction("SEND");
         this.persist(prov);
+
+        CdxAttachmentDao atDao = getBean(CdxAttachmentDao.class);
+
+        atDao.saveAttachments(doc,prov);
     }
 
     public List<CdxProvenance> findByKindAndInFulFillment(DocumentType kind, String inFulfillmentId) {
@@ -82,6 +90,15 @@ public class CdxProvenanceDao extends AbstractDao<CdxProvenance> {
         return query.getResultList();
     }
 
+    public List<CdxProvenance> findByMsgId(String msgId) {
+        String sql = "FROM CdxProvenance p where p.msgId = :msgId";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("msgId", msgId);
+
+        return query.getResultList();
+    }
+
+
     public List<CdxProvenance> findRelatedDocsBySetId(String setId, String documentId) {
         String sql = "FROM CdxProvenance p where p.setId = :setId and not p.documentId = :docId";
         Query query = entityManager.createQuery(sql);
@@ -89,5 +106,13 @@ public class CdxProvenanceDao extends AbstractDao<CdxProvenance> {
         query.setParameter("setId", setId);
 
         return query.getResultList();
+    }
+
+    public void removeProv(String msgId) {
+        String sql = "DELETE FROM CdxProvenance p where p.msgId = :msgId";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("msgId", msgId);
+
+        query.executeUpdate();
     }
 }

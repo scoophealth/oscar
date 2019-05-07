@@ -48,17 +48,33 @@ public class CdxPendingDocsDao extends AbstractDao<CdxPendingDoc> {
     }
 
 
-    public List<String> getPendingErrorDocs() {
-        List<String> result = new ArrayList<>();
-        String sql = "FROM CdxPendingDocs pd where pd.reasonCode = :rc";
+    public List<CdxPendingDoc> getPendingErrorDocs() {
+        String sql = "FROM CdxPendingDoc pd where pd.reasonCode = :rc";
         Query query = entityManager.createQuery(sql);
         query.setParameter("rc", CdxPendingDoc.error);
+        return query.getResultList();
+    }
 
-        List<CdxPendingDoc> pds = query.getResultList();
+    public List<CdxPendingDoc> getDeletedDocs() {
+        String sql = "FROM CdxPendingDoc pd where pd.reasonCode = :rc";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("rc", CdxPendingDoc.deleted);
+        return query.getResultList();
+    }
 
-        for (CdxPendingDoc pd : pds ) {
-            result.add(pd.getDocId());
-        }
-        return result;
+    public List<CdxPendingDoc> findPendingDocs(String documentId) {
+        String sql = "FROM CdxPendingDoc p where p.docId = :docId";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("docId", documentId);
+
+        return query.getResultList();
+    }
+
+    public void removePendDoc(String msgId) {
+        String sql = "DELETE FROM CdxPendingDoc p where p.docId = :msgId";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("msgId", msgId);
+
+        query.executeUpdate();
     }
 }

@@ -35,21 +35,15 @@ import org.oscarehr.common.model.*;
 import org.oscarehr.integration.cdx.dao.CdxAttachmentDao;
 import org.oscarehr.integration.cdx.dao.CdxPendingDocsDao;
 import org.oscarehr.integration.cdx.dao.CdxProvenanceDao;
-import org.oscarehr.integration.cdx.model.CdxAttachment;
 import org.oscarehr.integration.cdx.model.CdxPendingDoc;
 import org.oscarehr.integration.cdx.model.CdxProvenance;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static org.oscarehr.util.SpringUtils.*;
-
 
 public class CDXImport {
 
@@ -62,6 +56,9 @@ public class CDXImport {
     private ProviderDao providerDao;
     private CdxProvenanceDao provDao;
     private ProviderLabRoutingDao plrDao;
+    private CdxAttachmentDao atDao;
+    private DemographicDao demoDao;
+    private CtlDocumentDao ctlDocDao;
 
     public CDXImport() {
 
@@ -76,6 +73,11 @@ public class CDXImport {
         providerDao = getBean(ProviderDao.class);
         provDao = getBean(CdxProvenanceDao.class);
         plrDao = getBean(ProviderLabRoutingDao.class);
+        atDao = getBean(CdxAttachmentDao.class);
+        demoDao = getBean(DemographicDao.class);
+        ctlDocDao = getBean(CtlDocumentDao.class);
+
+
     }
 
 
@@ -91,55 +93,44 @@ public class CDXImport {
 
     }
 
-    public void importAllDocs() throws Exception {
 
-        List<String> docIds = new ArrayList<>();
-        List<IDocument> docs;
+    public void importDocuments(List<String> msgIds) {
 
-        docs = docSearcher.searchDocumentsByClinic(cdxConfig.getClinicId());
-
-        for (IDocument doc : docs) {
-            docIds.add(doc.getDocumentID());
-        }
-
-
-        MiscUtils.getLogger().info("CDX Import: " + docIds.size() + " OLD documents to import" );
-
-        importDocuments(docIds);
-
-    }
-
-
-    public void importPendingDocs() throws Exception {
-
-        List<String> docIds;
-
-        docIds = pendDocDao.getPendingErrorDocs();
-
-        MiscUtils.getLogger().info("CDX Import: " + docIds.size() + " old pending documents to import" );
-
-        importDocuments(docIds);
-
-    }
-
-    private void importDocuments(List<String> docIds) {
-        for (String id : docIds)
+        for (String id : msgIds)
             try {
 
                 MiscUtils.getLogger().info("CDX Import: importing document " + id );
 
                 IDocument doc = receiver.retrieveDocument(id);
 
-                storeDocument(doc);
+                storeDocument(doc,id);
 
             } catch (Exception e) {
-                CdxPendingDoc pd = new CdxPendingDoc();
-                pd.setDocId(id);
-                pd.setReasonCode(CdxPendingDoc.error);
-                pd.setExplanation(e.toString());
-                pendDocDao.persist(pd);
-
                 MiscUtils.getLogger().error("Error importing CDX Document " + id, e);
+
+                //undo import
+
+                List<CdxProvenance> provs = provDao.findByMsgId(id);
+
+                if (!provs.isEmpty()) {
+                    CdxProvenance prov = provs.get(0);
+                    int docNo = prov.getDocumentNo();
+
+                    docDao.deleteDocument(docNo);
+                    ctlDocDao.deleteDocument(docNo);
+                    atDao.deleteAttachments(prov.getId());
+                    provDao.merge(prov);
+                    provDao.removeProv(id);
+                }
+
+                if (pendDocDao.findPendingDocs(id).isEmpty()) {
+                    CdxPendingDoc pd = new CdxPendingDoc();
+                    pd.setDocId(id);
+                    pd.setReasonCode(CdxPendingDoc.error);
+                    pd.setExplanation(e.toString());
+                    pd.setTimestamp(new Date());
+                    pendDocDao.persist(pd);
+                }
 
                 try {
                     support.notifyError("Error importing CDX document", e.toString());
@@ -149,8 +140,7 @@ public class CDXImport {
             }
     }
 
-    @Transactional
-    public void storeDocument(IDocument doc) {
+    public void storeDocument(IDocument doc, String msgId) {
         CdxProvenance prov = new CdxProvenance();
         Document    inboxDoc = null;
 
@@ -164,8 +154,15 @@ public class CDXImport {
         prov.populate(doc);
         prov.setDocumentNo(inboxDoc.getDocumentNo());
         prov.setAction("import");
+        prov.setMsgId(msgId);
         provDao.persist(prov);
-        saveAttachments(doc, prov);
+        atDao.saveAttachments(doc, prov);
+
+        List<CdxPendingDoc> pendingDocs = pendDocDao.findPendingDocs(msgId);
+
+        if (!pendingDocs.isEmpty()) {
+            pendDocDao.removePendDoc(pendingDocs.get(0).getDocId());
+        }
 
     }
 
@@ -192,19 +189,7 @@ public class CDXImport {
     }
 
 
-    private void saveAttachments(IDocument doc, CdxProvenance prov) {
-        CdxAttachmentDao atDao = getBean(CdxAttachmentDao.class);
 
-        for (IAttachment a : doc.getAttachments()) {
-            CdxAttachment attachmentEntity = new CdxAttachment();
-
-            attachmentEntity.setDocument(prov.getId());
-            attachmentEntity.setAttachmentType(a.getType().mediaType);
-            attachmentEntity.setReference(a.getReference());
-            attachmentEntity.setContent(a.getContent());
-            atDao.persist(attachmentEntity);
-        }
-    }
 
 
     private Document createInboxData(IDocument doc) {
@@ -280,8 +265,7 @@ public class CDXImport {
 
 
     private void addPatient(Document docEntity, IPatient patient) {
-        DemographicDao demoDao = getBean(DemographicDao.class);
-        CtlDocumentDao ctlDocDao = getBean(CtlDocumentDao.class);
+
         int demoId = -1;
 
         // implement 4 point matching as required by CDX conformance spec
