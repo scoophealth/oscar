@@ -161,15 +161,15 @@
                                                  if (provider.getClinicName() != null) {
                                                      address = provider.getClinicName();
                                                  } else if (provider.getStreetAddress() != null) {
-                                                     address += provider.getStreetAddress();
+                                                     address += " " + provider.getStreetAddress();
                                                  } else if (provider.getCity() != null) {
-                                                     address += provider.getCity();
+                                                     address += " " + provider.getCity();
                                                  } else if (provider.getProvince() != null) {
-                                                     address += provider.getProvince();
+                                                     address += " " + provider.getProvince();
                                                  } else if (provider.getPostalCode() != null) {
-                                                     address += provider.getPostalCode();
+                                                     address += " " + provider.getPostalCode();
                                                  } else if (provider.getClinicID() != null) {
-                                                     address += provider.getClinicID();
+                                                     address += " " + provider.getClinicID();
                                                  }
                                                  List<ITelco> phones = providers.get(0).getPhones();
                                                  if (phones != null && phones.size() > 0) {
