@@ -26,10 +26,7 @@
 package org.oscarehr.integration.cdx;
 
 import ca.uvic.leadlab.obibconnector.facades.Config;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.AddressType;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.Gender;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.NameType;
-import ca.uvic.leadlab.obibconnector.facades.datatypes.TelcoType;
+import ca.uvic.leadlab.obibconnector.facades.datatypes.*;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
 import ca.uvic.leadlab.obibconnector.models.document.ClinicalDocument;
 import ca.uvic.leadlab.obibconnector.models.queries.SearchClinicCriteria;
@@ -71,8 +68,8 @@ public class TestRestClient {
     public void testSubmitDocument() throws Exception {
         IOscarInformation restClient = new RestClient(obibUrl, clinicId);
 
-        ClinicalDocument document = ((SubmitDoc) new SubmitDoc(config)
-                .newDoc()
+        ClinicalDocument document = ((SubmitDoc) new SubmitDoc(config).newDoc()
+                .documentType(DocumentType.REFERRAL_NOTE)
                 .patient()
                     .id("2222")
                     .name(NameType.LEGAL, "Joe", "Wine")

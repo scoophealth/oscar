@@ -28,6 +28,9 @@
 <%@ page import="org.oscarehr.integration.cdx.model.CdxProvenance" %>
 <%@ page import="org.oscarehr.util.MiscUtils" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="org.oscarehr.integration.cdx.model.CdxAttachment" %>
+<%@ page import="java.util.List" %>
+<%@ page import="org.oscarehr.integration.cdx.dao.CdxAttachmentDao" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -52,6 +55,25 @@
     CdxProvenance cdxProvenance = cdxProvenanceDao.getCdxProvenance(Integer.parseInt(provenanceId));
 %>
 
-<c:import url="/share/xslt/Production_2016July07_CDA_to_HTML.xsl" var="xslt"/>
+<c:import url="/share/xslt/CDA_to_HTML.xsl" var="xslt"/>
 <x:transform xml="<%=cdxProvenance.getPayload()%>" xslt="${xslt}"/>
 
+<%
+    CdxAttachmentDao cdxAttachmentDao = SpringUtils.getBean(CdxAttachmentDao.class);
+    List<CdxAttachment> atts = cdxAttachmentDao.findByDocNo(cdxProvenance.getId());
+    if (!atts.isEmpty()) {
+%>
+
+<div class="panel-footer">
+    <h3>Attachments:</h3>
+    <ul>
+        <%
+            for (CdxAttachment a : atts) { %>
+        <li> <a href="#" onclick="javascript:popup(360, 680, '../dms/ManageDocument.do?method=viewCdxAttachment&attId=<%= a.getId() %>', 'Attachment: <%=a.getReference()%>')">
+
+            <%=a.getReference()%> </a> (<%=a.getAttachmentType()%>) </li>
+
+        <% }%>
+    </ul>
+</div>
+<% } %>

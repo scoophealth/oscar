@@ -524,7 +524,7 @@ public class EctConsultationFormRequestAction extends Action {
 		Demographic demographic = demographicManager.getDemographic(loggedInInfo, consultationRequest.getDemographicId());
 
 		// Create pdf version of Consultation Request which can be attached to request.
-/*		String filename = null;
+		String filename = null;
 		EctConsultationFormRequestPrintPdf pdf = new EctConsultationFormRequestPrintPdf(consultationRequestId.toString(), professionalSpecialist.getAddress(), professionalSpecialist.getPhone(), professionalSpecialist.getFax(), demographic.getDemographicNo().toString());
         byte[] newBytes = null;
 		try {
@@ -535,7 +535,7 @@ public class EctConsultationFormRequestAction extends Action {
 			MiscUtils.getLogger().info(e.getMessage());
 		} catch (IOException e) {
 			MiscUtils.getLogger().info(e.getMessage());
-		}*/
+		}
 
 		String patientId = demographic.getHin();
 		if (patientId == null || patientId.isEmpty()) {
@@ -560,6 +560,22 @@ public class EctConsultationFormRequestAction extends Action {
 		IDocument response = null;
 		CDXConfiguration cdxConfig = new CDXConfiguration();
 		SubmitDoc submitDoc = new SubmitDoc(cdxConfig);
+
+
+		ArrayList<EDoc> privatedocs = new ArrayList<EDoc>();
+		privatedocs = EDocUtil.listDocs(loggedInInfo, ""+demographic.getDemographicNo(), ""+consultationRequestId, EDocUtil.ATTACHED);
+		EDoc curDoc;
+		for (int idx = 0; idx < privatedocs.size(); ++idx) {
+			curDoc = (EDoc) privatedocs.get(idx);
+			MiscUtils.getLogger().info("curDoc.getDocId(): " + curDoc.getDocId() + " curDoc.getDescription: " + curDoc.getDescription());
+		}
+		CommonLabResultData labData = new CommonLabResultData();
+		ArrayList labs = labData.populateLabResultsData(loggedInInfo, ""+demographic.getDemographicNo(), ""+consultationRequestId, CommonLabResultData.ATTACHED);
+		LabResultData resData;
+		for (int idx = 0; idx < labs.size(); ++idx) {
+			resData = (LabResultData) labs.get(idx);
+			MiscUtils.getLogger().info("lab discipline: " + resData.getDiscipline() + " datetime: " + resData.getDateTime());
+		}
 
 		response = submitDoc.newDoc()
                 .documentType(DocumentType.REFERRAL_NOTE)
@@ -587,7 +603,7 @@ public class EctConsultationFormRequestAction extends Action {
 				.and()
 					.receiverId(clinicID)
 					.content(message)
-//					.attach(AttachmentType.PDF, "document.pdf", newBytes)
+					.attach(AttachmentType.PDF, "document.pdf", newBytes)
 				.submit();
 
 		logResponse(response);

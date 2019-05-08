@@ -28,12 +28,10 @@ package org.oscarehr.integration.cdx.dao;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.DocumentType;
 import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import org.oscarehr.common.dao.AbstractDao;
-import org.oscarehr.integration.cdx.model.CdxAttachment;
 import org.oscarehr.integration.cdx.model.CdxProvenance;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;
-import java.util.Date;
 import java.util.List;
 
 import static org.oscarehr.util.SpringUtils.getBean;
