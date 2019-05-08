@@ -170,7 +170,7 @@
 		<priority value="DEBUG" />
 	</category>
 	<category name="org.oscarehr.hospitalReportManager">
-		<priority value="DEBUG" />
+		<priority value="INFO" />
 	</category>
 	
 	

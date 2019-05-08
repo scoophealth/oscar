@@ -880,7 +880,13 @@ AdmissionManager admissionManager = SpringUtils.getBean(AdmissionManager.class);
 
 
 <%
-if("true".equals(OscarProperties.getInstance().getProperty("iso3166.2.enabled","false"))) { 	
+if("true".equals(OscarProperties.getInstance().getProperty("iso3166.2.enabled","false"))) {
+	if(Arrays.asList("BC","AB","SK","MB","ON","QC","NB","NS","NL","NS","PE","YT","NT").contains(demographic.getProvince())) {
+		demographic.setProvince("CA-" + demographic.getProvince());	
+	}
+	if(Arrays.asList("BC","AB","SK","MB","ON","QC","NB","NS","NL","NS","PE","YT","NT").contains(demographic.getMailingProvince())) {
+		demographic.setMailingProvince("CA-" + demographic.getMailingProvince());	
+	}
 %>
 jQuery(document).ready(function(){
 	setProvince('<%=StringUtils.trimToEmpty(demographic.getProvince())%>');

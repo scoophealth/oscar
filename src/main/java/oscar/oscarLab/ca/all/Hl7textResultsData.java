@@ -161,7 +161,7 @@ public class Hl7textResultsData {
 				m.setProviderNo("0");
 				m.setDataField(result);
 				m.setMeasuringInstruction(measInst);
-				logger.info("DATETIME FOR MEASUREMENT " + datetime);
+				logger.debug("DATETIME FOR MEASUREMENT " + datetime);
 				if(datetime != null && datetime.length()>0) {
 					m.setDateObserved(UtilDateUtilities.StringToDate(datetime, "yyyy-MM-dd hh:mm:ss"));
 				} 
