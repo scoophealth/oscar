@@ -168,6 +168,8 @@
                                                      address += provider.getProvince();
                                                  } else if (provider.getPostalCode() != null) {
                                                      address += provider.getPostalCode();
+                                                 } else if (provider.getClinicID() != null) {
+                                                     address += provider.getClinicID();
                                                  }
                                                  List<ITelco> phones = providers.get(0).getPhones();
                                                  if (phones != null && phones.size() > 0) {
