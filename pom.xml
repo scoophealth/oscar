@@ -1292,6 +1292,7 @@
                         <validHeader>utils/headers/ubc.txt</validHeader>
                         <validHeader>utils/headers/uvic.txt</validHeader>
                         <validHeader>utils/headers/kai.txt</validHeader>
+                        <validHeader>utils/headers/ubcfps.txt</validHeader>
                 </validHeaders>
                 <includes>
                     <include>src/main/java/**/*.java</include>
