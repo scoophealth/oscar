@@ -41,7 +41,9 @@ import ca.uvic.leadlab.obibconnector.rest.OBIBRequestException;
 import ca.uvic.leadlab.obibconnector.rest.RestClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.oscarehr.common.dao.utils.SchemaUtils;
 import org.oscarehr.util.MiscUtils;
 
 import java.util.Date;
@@ -63,6 +65,11 @@ public class TestRestClient {
             return clinicId;
         }
     };
+
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        SchemaUtils.restoreTable("cdx_provenance", "cdx_attachment");
+    }
 
     @Test
     public void testSubmitDocument() throws Exception {

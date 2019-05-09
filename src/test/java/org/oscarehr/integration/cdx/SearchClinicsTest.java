@@ -223,7 +223,7 @@ public class SearchClinicsTest extends FacadesBaseTest {
             clinics = searchClinic.findByID(clinicIdC);
             if (clinics != null && !clinics.isEmpty()) {
                 for (IClinic clinic: clinics) {
-                    if (clinic.getProvider() != null) {I
+                    if (clinic.getProvider() != null) {
                         MiscUtils.getLogger().info("4: " + clinic.getProvider().getFirstName() + " " + clinic.getProvider().getLastName() + " " + clinic.getProvider().getID());
                     }
                 }

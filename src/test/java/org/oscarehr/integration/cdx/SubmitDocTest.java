@@ -49,7 +49,7 @@ public class SubmitDocTest extends FacadesBaseTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        SchemaUtils.restoreTable("cdx_provenance");
+        SchemaUtils.restoreTable("cdx_provenance", "cdx_attachment");
     }
 
     @Test
