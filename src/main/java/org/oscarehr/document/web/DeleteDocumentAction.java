@@ -104,7 +104,7 @@ public class DeleteDocumentAction extends DispatchAction {
 			cdxPendingDocsDao.persist(pendDoc);
 
 			cdxAttachmentDao.deleteAttachments(provenanceDoc.getId());
-			cdxProvenanceDao.remove(provenanceDoc);
+			cdxProvenanceDao.removeProv(provenanceDoc.getMsgId());
 
 
 		} catch (Exception e) {
