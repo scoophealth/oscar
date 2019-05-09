@@ -98,7 +98,7 @@ It must have been deleted. Please refresh your Inbox window.
     String demoNo = demoNoInt.toString();
     Document curdoc = docDao.findActiveByDocumentNo(documentNoInt).get(0);
     CdxProvenance provenanceDoc = provenanceDao.findByDocumentNo(documentNoInt);
-    List<CdxProvenance> versions = provenanceDao.findVersionsOrderDesc(provenanceDoc.getDocumentId());
+    List<CdxProvenance> versions = provenanceDao.findReceivedVersionsOrderDesc(provenanceDoc.getDocumentId());
 
 
     String providerNo = request.getParameter("providerNo");
@@ -500,7 +500,7 @@ It must have been deleted. Please refresh your Inbox window.
                         <%
                             String parentDocId = provenanceDoc.getParentDoc();
                             if(parentDocId != null) {
-                                List<CdxProvenance> parentDocs = provenanceDao.findVersionsOrderDesc(parentDocId);
+                                List<CdxProvenance> parentDocs = provenanceDao.findReceivedVersionsOrderDesc(parentDocId);
                                 if (!parentDocs.isEmpty()) {
                                     CdxProvenance parentDoc = parentDocs.get(0);
                                     %>

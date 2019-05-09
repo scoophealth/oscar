@@ -90,7 +90,7 @@ public class CDXImport {
 
         docIds = receiver.pollNewDocIDs();
 
-        MiscUtils.getLogger().info("CDX Import: " + docIds.size() + " new documents to import" );
+        MiscUtils.getLogger().info("CDX Import: " + docIds.size() + " new messages to import" );
 
         importDocuments(docIds);
 
@@ -102,14 +102,16 @@ public class CDXImport {
         for (String id : msgIds)
             try {
 
-                MiscUtils.getLogger().info("CDX Import: importing document " + id );
+                MiscUtils.getLogger().info("CDX Import: importing message " + id );
 
                 IDocument doc = receiver.retrieveDocument(id);
+
+                MiscUtils.getLogger().info("     with " + doc.getAttachments().size() + " attachments");
 
                 storeDocument(doc,id);
 
             } catch (Exception e) {
-                MiscUtils.getLogger().error("Error importing CDX Document " + id, e);
+                MiscUtils.getLogger().error("Error importing CDX message " + id, e);
 
                 //undo import
 
@@ -147,7 +149,7 @@ public class CDXImport {
         CdxProvenance prov = new CdxProvenance();
         Document    inboxDoc = null;
 
-        List<CdxProvenance> versions = provDao.findVersionsOrderDesc(doc.getDocumentID());
+        List<CdxProvenance> versions = provDao.findReceivedVersionsOrderDesc(doc.getDocumentID());
 
         if (versions.isEmpty()) // brand new document
             inboxDoc = createInboxData(doc);

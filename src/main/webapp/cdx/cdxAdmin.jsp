@@ -114,29 +114,28 @@
 <head>
 
 
-
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
-
-
 
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
-
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js">   </script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js">   </script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
     <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
 
 
     <script>
@@ -144,15 +143,16 @@
         function runFetch() {
             window.location = "<%=request.getContextPath() %>/cdx/cdxImportNewDocs.jsp";
         }
+
         function runFetchOld(rows) {
 
-            var paramStr="";
+            var paramStr = "";
 
             var i;
 
-            for (i = 0; i<rows.length; i++) {
+            for (i = 0; i < rows.length; i++) {
                 paramStr = paramStr + "docid=" + rows[i][2];
-                if (i < rows.length +1)
+                if (i < rows.length + 1)
                     paramStr = paramStr + "&";
             }
 
@@ -162,35 +162,34 @@
         }
 
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             var table = $('#doctable').DataTable(
                 {
-                    "order": [[ 0, "desc" ]]
+                    "order": [[0, "desc"]]
                 }
-
             );
 
-            $('#doctable tbody').on( 'click', 'tr', function () {
+            $('#doctable tbody').on('click', 'tr', function () {
                 $(this).toggleClass('selected');
-                if (table.rows('.selected').data().length >0 )
+                if (table.rows('.selected').data().length > 0)
                     $('#downButton').show();
                 else $('#downButton').hide();
-            } );
+            });
 
-            $('#downButton').click( function() {
+            $('#downButton').click(function () {
                 runFetchOld(table.rows('.selected').data());
             });
-            $('#newButton').click( function() {
+            $('#newButton').click(function () {
                 runFetch();
             });
-            $('#saveBtn').on('click', function() {
+            $('#saveBtn').on('click', function () {
                 var $this = $(this);
                 $this.button('loading');
-                setTimeout(function() {
+                setTimeout(function () {
                     $this.button('reset');
                 }, 8000);
             });
-        } );
+        });
 
 
     </script>
@@ -215,7 +214,8 @@
                     <label for="cdx_url">OBIB URL</label>
                     <div class="input-group">
                         <span class="input-group-addon" id="basic-addon3">http://&lt;ip_address&gt;:&lt;port&gt;</span>
-                        <input type="text" class="form-control" id="cdx_url" name="cdx_url" value="<%=cdxUrl%>" aria-describedby="basic-addon3">
+                        <input type="text" class="form-control" id="cdx_url" name="cdx_url" value="<%=cdxUrl%>"
+                               aria-describedby="basic-addon3">
                     </div>
                 </div>
 
@@ -236,12 +236,14 @@
                     <div class="control-group">
                         <label class="control-label">Automatic Import:</label>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="cdx_polling_enabled" name="cdx_polling_enabled" value="true" <%=pollEnabled%>>
+                            <input type="radio" class="custom-control-input" id="cdx_polling_enabled"
+                                   name="cdx_polling_enabled" value="true" <%=pollEnabled%>>
                             <label class="custom-control-label" for="cdx_polling_enabled">Enabled</label>
                         </div>
 
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="cdx_polling_disabled" name="cdx_polling_enabled" <%=pollDisabled%> value="false">
+                            <input type="radio" class="custom-control-input" id="cdx_polling_disabled"
+                                   name="cdx_polling_enabled" <%=pollDisabled%> value="false">
                             <label class="custom-control-label" for="cdx_polling_disabled">Disabled</label>
                         </div>
                     </div>
@@ -253,20 +255,21 @@
                     <label for="cdx_polling_interval">Polling Interval</label>
                     <div class="input-group">
                         <span class="input-group-addon" id="basic-addon3">minutes</span>
-                        <input type="text" class="form-control" id="cdx_polling_interval" name="cdx_polling_interval" value="<%=pollInterval%>" aria-describedby="basic-addon3">
+                        <input type="text" class="form-control" id="cdx_polling_interval" name="cdx_polling_interval"
+                               value="<%=pollInterval%>" aria-describedby="basic-addon3">
                     </div>
                 </div>
 
             </div>
 
             <div class="control-group">
-                <button type="submit" id="saveBtn" class="btn btn-primary" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving"> Save </button>
+                <button type="submit" id="saveBtn" class="btn btn-primary"
+                        data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving"> Save
+                </button>
             </div>
         </form>
     </div>
 </div>
-
-
 
 
 <div class="panel panel-default">
@@ -277,12 +280,12 @@
 
         <%
             CdxPendingDocsDao cdxPendingDocsDao = SpringUtils.getBean(CdxPendingDocsDao.class);
-            SimpleDateFormat format=new SimpleDateFormat ("yyyy-MM-dd HH:mm");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
             List<String> newDocs = null;
 
             try {
-                newDocs=receiveDoc.pollNewDocIDs();
+                newDocs = receiveDoc.pollNewDocIDs();
             } catch (Exception e) {
                 MiscUtils.getLogger().info("OBIB pollNewDocIDs failed", e);
             }
@@ -295,8 +298,8 @@
         <div class="alert alert-success" role="alert">The OBIB is connected</div>
 
         There are <%=newDocs.size()%> new documents waiting.
-        <% if (newDocs.size()>0) { %>
-        <button id="newButton"  class="btn btn-default btn-xs">Import </button>
+        <% if (newDocs.size() > 0) { %>
+        <button id="newButton" class="btn btn-default btn-xs">Import</button>
         <%}%>
 
         <%
@@ -304,14 +307,18 @@
             if (noOfErrDocs > 0) {
         %>
 
-        <div class="alert alert-danger" role="alert">There are <%=noOfErrDocs%> messages that could not be imported due to an internal error.</div>
+        <div class="alert alert-danger" role="alert">There are <%=noOfErrDocs%> messages that could not be imported due
+            to an internal error.
+        </div>
         <%
             }
             int noOfDelDocs = cdxPendingDocsDao.getDeletedDocs().size();
             if (noOfDelDocs > 0) {
         %>
 
-        <div class="alert alert-warning" role="alert">There are <%=noOfDelDocs%> documents that were deleted by a user (after import)</div>
+        <div class="alert alert-warning" role="alert">There are <%=noOfDelDocs%> documents that were deleted by a user
+            (after import)
+        </div>
 
 
         <%
@@ -320,35 +327,44 @@
 
             List<IDocument> availableDocs = null;
             try {
-                availableDocs=docSearcher.searchDocumentsByClinic(cdxConfiguration.getClinicId());
+                availableDocs = docSearcher.searchDocumentsByClinic(cdxConfiguration.getClinicId());
             } catch (Exception e) {
                 MiscUtils.getLogger().info("OBIB searchDocumentsByClinic failed", e);
             }
 
             if (availableDocs == null) {
         %>
-        <p style="color:#FF0000";>Search Documents by Clinic ID failed </p>
+        <p style="color:#FF0000" ;>Search Documents by Clinic ID failed </p>
         <% } else {
 
             CdxProvenanceDao provDao = SpringUtils.getBean(CdxProvenanceDao.class);
             List<IDocument> notImportedDocs = new ArrayList<IDocument>();
 
             for (IDocument d : availableDocs) {
-                if (provDao.findByMsgId(d.getDocumentID()).isEmpty())
-                    notImportedDocs.add(d);
+                if (provDao.findByMsgId(d.getDocumentID()).isEmpty()) notImportedDocs.add(d);
             }
 
         %>
 
-        <p>There is a total of <%=notImportedDocs.size()%> documents retrievable from the CDX system for this clinic, which are not in the EMR database.</p>
+        <p>There is a total of <%=notImportedDocs.size()%> documents retrievable from the CDX system for this clinic,
+            which are not in the EMR database.</p>
 
         <%
-            if (!notImportedDocs.isEmpty()){
+            if (!notImportedDocs.isEmpty()) {
         %>
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h5 class="panel-title">Select all documents you want to (re)import below</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="panel-title">Select all documents you want to (re)import below</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <button id="downButton" class="btn btn-primary btn-xs" type="button" style="display:none">Import
+                            selected documents
+                        </button>
+                    </div>
+                </div>
             </div>
             <div class="panel-body">
 
@@ -384,16 +400,12 @@
                                     CdxPendingDoc pd = pendingDocs.get(0);
                                     String msg = "";
 
-                                    if (pd.getReasonCode().equals(CdxPendingDoc.error))
-                                        msg = "unsuccessful import";
+                                    if (pd.getReasonCode().equals(CdxPendingDoc.error)) msg = "unsuccessful import";
                                     else msg = "deleted after import";
 
                                     out.print(msg + "\n at " + pd.getTimestamp());
-                                }
-                                else if (newDocs.contains(d.getDocumentID()))
-                                    out.print("new document");
-                                else
-                                    out.print("not in EMR");
+                                } else if (newDocs.contains(d.getDocumentID())) out.print("new document");
+                                else out.print("not in EMR");
                             %>
                         </td>
 
@@ -404,9 +416,7 @@
                     </tfoot>
                 </table>
             </div>
-            <div class="panel-footer">
-                <button id="downButton" class="btn btn-primary btn-xs" type="button" style="display:none" >Import selected documents </button>
-            </div>
+
         </div>
 
         <%}%>
