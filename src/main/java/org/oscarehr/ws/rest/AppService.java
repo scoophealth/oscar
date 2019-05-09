@@ -122,6 +122,7 @@ public class AppService extends AbstractServiceImpl {
 	@Autowired
 	private DemographicManager demographicManager;
 	
+	@Autowired
 	ConsentDao consentDao;
 	
 	@Autowired
@@ -164,16 +165,11 @@ public class AppService extends AbstractServiceImpl {
 	@Path("/PHRActive/")
 	@Produces("application/json")
 	public GenericRESTResponse isPHRActive(@Context HttpServletRequest request){
-		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
-    	if(!com.quatro.service.security.SecurityManager.hasPrivilege("_admin", roleName$)  && !com.quatro.service.security.SecurityManager.hasPrivilege("_report", roleName$)) {
-    		throw new SecurityException("Insufficient Privileges");
-    	}
-		
 		GenericRESTResponse response = null;
-		if( appManager.getAppDefinition(getLoggedInInfo(), "PHR") == null){
-			response = new GenericRESTResponse(false,"PHR not active");
+		if( appManager.hasAppDefinition(getLoggedInInfo(), "PHR")){
+			response = new GenericRESTResponse(true,"PHR active");			
 		}else{
-			response = new GenericRESTResponse(true,"PHR active");
+			response = new GenericRESTResponse(false,"PHR not active");
 		}
 		return response;
 	}
@@ -183,17 +179,9 @@ public class AppService extends AbstractServiceImpl {
 	@Path("/PHRActiveAndConsentConfigured/")
 	@Produces("application/json")
 	public GenericRESTResponse isPHRActiveAndConsentConfigured(@Context HttpServletRequest request){
-		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
-	    	if(!com.quatro.service.security.SecurityManager.hasPrivilege("_admin", roleName$)  && !com.quatro.service.security.SecurityManager.hasPrivilege("_report", roleName$)) {
-	    		throw new SecurityException("Insufficient Privileges");
-	    	}
-		
-		AppDefinition appDef = appManager.getAppDefinition(getLoggedInInfo(), "PHR");
-		try {
-			int id = Integer.valueOf(appDef.getConsentTypeId());
+		Integer id = appManager.getAppDefinitionConsentId(getLoggedInInfo(), "PHR");
+		if (id != null) {
 			return new GenericRESTResponse(true,""+id);
-		}catch(Exception e) {
-			//Nothing needed here, for any reason it fails, consent is not configured
 		}
 		return new GenericRESTResponse(false,"Consent Not Configured");
 	}
@@ -211,21 +199,18 @@ public class AppService extends AbstractServiceImpl {
 		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
     	
 		GenericRESTResponse response = null;
-		AppDefinition appDef = appManager.getAppDefinition(getLoggedInInfo(), "PHR");
-		if(appDef == null){
+		Integer id = appManager.getAppDefinitionConsentId(getLoggedInInfo(), "PHR");
+		if(id == null){
 			response = new GenericRESTResponse(false,"INACTIVE");
 		}else{
 			//look up consent identifier here and check if patient has given consent.
-			if(appDef.getConsentTypeId() == null) {
-				response = new GenericRESTResponse(false,"INACTIVE");
+			Consent consent = consentDao.findByDemographicAndConsentTypeId( demographicNo,id) ;
+			if(consent != null && consent.getPatientConsented()) {
+				response = new GenericRESTResponse(true,"CONSENTED");
 			}else {
-				Consent consent = consentDao.findByDemographicAndConsentTypeId( demographicNo,  appDef.getConsentTypeId()  ) ;
-				if(consent != null && consent.getPatientConsented()) {
-					response = new GenericRESTResponse(true,"CONSENTED");
-				}else {
-					response = new GenericRESTResponse(true,"NEED_CONSENT");
-				}
+				response = new GenericRESTResponse(true,"NEED_CONSENT");
 			}
+		
 		}
 		return response;
 	}
@@ -234,20 +219,16 @@ public class AppService extends AbstractServiceImpl {
 	@Path("/PHRActive/consentGiven/{demographicNo}")
 	@Produces("application/json")
 	public GenericRESTResponse recordConsentGiven(@Context HttpServletRequest request,@PathParam("demographicNo") Integer demographicNo){
-		String roleName$ = (String)request.getSession().getAttribute("userrole") + "," + (String) request.getSession().getAttribute("user");
-    	
+		
 		GenericRESTResponse response = null;
-		AppDefinition appDef = appManager.getAppDefinition(getLoggedInInfo(), "PHR");
-		if(appDef == null){
+		Integer id = appManager.getAppDefinitionConsentId(getLoggedInInfo(), "PHR");
+		if(id == null){
 			response = new GenericRESTResponse(false,"INACTIVE");
 		}else{
 			//look up consent identifier here and check if patient has given consent.
-			if(appDef.getConsentTypeId() == null) {
-				response = new GenericRESTResponse(false,"INACTIVE");
-			}else {
 				Consent consent = new Consent();
 				consent.setConsentDate(new Date());
-				consent.setConsentTypeId(appDef.getConsentTypeId());
+				consent.setConsentTypeId(id);
 				consent.setDemographicNo(demographicNo);
 				consent.setExplicit(true);
 				consent.setOptout(false);
@@ -259,7 +240,6 @@ public class AppService extends AbstractServiceImpl {
 				}else {
 					response = new GenericRESTResponse(true,"NEED_CONSENT");
 				}
-			}
 		}
 		return response;
 	}

@@ -2911,9 +2911,9 @@ if ( Dead.equals(PatStat) ) {%>
 											http.send(null);
 										}
 									</script>
-									<input type="button" id="phrConsent" style="display:none;"  value="Confirm" />
+									
 								<%}%>
-									<br />
+									
 								<%if (demographic.getMyOscarUserName()==null ||demographic.getMyOscarUserName().equals("")) {%>
 
 								<%
@@ -2921,9 +2921,13 @@ if ( Dead.equals(PatStat) ) {%>
 									MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
 									if (myOscarLoggedInInfo==null || !myOscarLoggedInInfo.isLoggedIn()) onclickString="alert('Please login to MyOscar first.')";
 								%>
+								<br />
 								<a href="javascript:"
 									onclick="<%=onclickString%>"><sub
-									style="white-space: nowrap;"><bean:message key="demographic.demographiceditdemographic.msgRegisterPHR"/></sub></a> <%}%>
+									style="white-space: nowrap;"><bean:message key="demographic.demographiceditdemographic.msgRegisterPHR"/></sub></a> 
+								<%}else{%>
+									<input type="button" id="phrConsent" style="display:none;"  value="Confirm" />
+								<%}%>
 								</td>
 							</tr>
 							<tr valign="top">

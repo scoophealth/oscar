@@ -46,7 +46,6 @@ import org.oscarehr.common.dao.DemographicMergedDao;
 import org.oscarehr.common.dao.PHRVerificationDao;
 import org.oscarehr.common.exception.PatientDirectiveException;
 import org.oscarehr.common.model.Admission;
-import org.oscarehr.common.model.AppDefinition;
 import org.oscarehr.common.model.Consent;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Demographic.PatientStatus;
@@ -565,9 +564,9 @@ public class DemographicManager {
 	}
 
 	public boolean getPhrVerificationLevelByDemographicId(LoggedInInfo loggedInInfo, Integer demographicId) {
-		AppDefinition appDef = appManager.getAppDefinition(loggedInInfo, "PHR");
-		if(appDef != null && appDef.getConsentTypeId() != null) {
-			Consent consent = consentDao.findByDemographicAndConsentTypeId( demographicId,  appDef.getConsentTypeId()  ) ;
+		Integer consentId = appManager.getAppDefinitionConsentId(loggedInInfo, "PHR");
+		if(consentId != null) {
+			Consent consent = consentDao.findByDemographicAndConsentTypeId( demographicId,  consentId  ) ;
 			if(consent != null && consent.getPatientConsented()) {
 				return true;
 			}
