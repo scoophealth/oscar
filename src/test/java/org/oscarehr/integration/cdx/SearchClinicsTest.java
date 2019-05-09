@@ -31,6 +31,7 @@ import ca.uvic.leadlab.obibconnector.facades.registry.ISearchClinic;
 import ca.uvic.leadlab.obibconnector.impl.registry.SearchClinic;
 import org.junit.Assert;
 import org.junit.Test;
+import org.oscarehr.common.model.Clinic;
 import org.oscarehr.util.MiscUtils;
 
 import java.util.ArrayList;
@@ -110,6 +111,123 @@ public class SearchClinicsTest extends FacadesBaseTest {
         result = null;
         try {
             clinics = searchClinic.findByID(clinicIdA);
+            if (clinics != null && !clinics.isEmpty()) {
+                for (IClinic clinic: clinics) {
+                    if (clinic.getProvider() != null) {
+                        MiscUtils.getLogger().info("1: " + clinic.getProvider().getFirstName() + " " + clinic.getProvider().getLastName() + " " + clinic.getProvider().getID());
+                    }
+                }
+            }
+        } catch (OBIBException e) {
+            result = e.getMessage();
+            MiscUtils.getLogger().warn(result);
+        } catch (Exception e) {
+            result = e.getMessage(); //unexpected outcome
+            MiscUtils.getLogger().error(e.getStackTrace());
+        }
+        if (clinics != null) {
+            result = notNullClinics;
+            MiscUtils.getLogger().debug("Num of CDX clinics found in search by id: " + clinics.size());
+            for (IClinic c: clinics) {
+                MiscUtils.getLogger().debug("Found: " + c.getName()+" "+c.getCity()+" "+c.getID());
+            }
+        } else {
+            MiscUtils.getLogger().debug("CDX clinics is null for search by id");
+        }
+        Assert.assertTrue("The list of expected outcomes does not contain the value " + result, expectedResults.contains(result));
+    }
+
+    @Test
+    public void testFindById2() {
+        ISearchClinic searchClinic = new SearchClinic(configClinicA);
+        List<IClinic> clinics = null;
+        String expectedErrorMsg = "Error finding clinics by id.";
+        String notNullClinics = "Clinics not null";
+        List<String> expectedResults = new ArrayList<String>(Arrays.asList(notNullClinics,expectedErrorMsg));
+        result = null;
+        try {
+            clinics = searchClinic.findByID(clinicIdC);
+            if (clinics != null && !clinics.isEmpty()) {
+                for (IClinic clinic: clinics) {
+                    if (clinic.getProvider() != null) {
+                        MiscUtils.getLogger().info("2: " + clinic.getProvider().getFirstName() + " " + clinic.getProvider().getLastName() + " " + clinic.getProvider().getID());
+                    }
+                }
+            }
+        } catch (OBIBException e) {
+            result = e.getMessage();
+            MiscUtils.getLogger().warn(result);
+        } catch (Exception e) {
+            result = e.getMessage(); //unexpected outcome
+            MiscUtils.getLogger().error(e.getStackTrace());
+        }
+        if (clinics != null) {
+            result = notNullClinics;
+            MiscUtils.getLogger().debug("Num of CDX clinics found in search by id: " + clinics.size());
+            for (IClinic c: clinics) {
+                MiscUtils.getLogger().debug("Found: " + c.getName()+" "+c.getCity()+" "+c.getID());
+            }
+        } else {
+            MiscUtils.getLogger().debug("CDX clinics is null for search by id");
+        }
+        Assert.assertTrue("The list of expected outcomes does not contain the value " + result, expectedResults.contains(result));
+    }
+
+
+    @Test
+    public void testFindById3() {
+        ISearchClinic searchClinic = new SearchClinic(configClinicA);
+        List<IClinic> clinics = null;
+        String expectedErrorMsg = "Error finding clinics by id.";
+        String notNullClinics = "Clinics not null";
+        List<String> expectedResults = new ArrayList<String>(Arrays.asList(notNullClinics,expectedErrorMsg));
+        result = null;
+        try {
+            clinics = searchClinic.findByID(clinicIdA);
+            if (clinics != null && !clinics.isEmpty()) {
+                for (IClinic clinic: clinics) {
+                    if (clinic.getProvider() != null) {
+                        MiscUtils.getLogger().info("3: " + clinic.getProvider().getFirstName() + " " + clinic.getProvider().getLastName() + " " + clinic.getProvider().getID());
+                    }
+                }
+            }
+        } catch (OBIBException e) {
+            result = e.getMessage();
+            MiscUtils.getLogger().warn(result);
+        } catch (Exception e) {
+            result = e.getMessage(); //unexpected outcome
+            MiscUtils.getLogger().error(e.getStackTrace());
+        }
+        if (clinics != null) {
+            result = notNullClinics;
+            MiscUtils.getLogger().debug("Num of CDX clinics found in search by id: " + clinics.size());
+            for (IClinic c: clinics) {
+                MiscUtils.getLogger().debug("Found: " + c.getName()+" "+c.getCity()+" "+c.getID());
+            }
+        } else {
+            MiscUtils.getLogger().debug("CDX clinics is null for search by id");
+        }
+        Assert.assertTrue("The list of expected outcomes does not contain the value " + result, expectedResults.contains(result));
+    }
+
+
+    @Test
+    public void testFindById4() {
+        ISearchClinic searchClinic = new SearchClinic(configClinicC);
+        List<IClinic> clinics = null;
+        String expectedErrorMsg = "Error finding clinics by id.";
+        String notNullClinics = "Clinics not null";
+        List<String> expectedResults = new ArrayList<String>(Arrays.asList(notNullClinics,expectedErrorMsg));
+        result = null;
+        try {
+            clinics = searchClinic.findByID(clinicIdC);
+            if (clinics != null && !clinics.isEmpty()) {
+                for (IClinic clinic: clinics) {
+                    if (clinic.getProvider() != null) {
+                        MiscUtils.getLogger().info("4: " + clinic.getProvider().getFirstName() + " " + clinic.getProvider().getLastName() + " " + clinic.getProvider().getID());
+                    }
+                }
+            }
         } catch (OBIBException e) {
             result = e.getMessage();
             MiscUtils.getLogger().warn(result);

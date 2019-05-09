@@ -48,7 +48,13 @@ public class SearchProvidersTest extends FacadesBaseTest {
         List<String> expectedResults = new ArrayList<String>(Arrays.asList(notNullProviders,expectedErrorMsg));
         result = null;
         try {
-            providers = searchProviders.findByName("a");
+            providers = searchProviders.findByName("pli");
+            if (providers != null && !providers.isEmpty()) {
+                for (IProvider p: providers) {
+                    MiscUtils.getLogger().info("CDX provider: " + p.getLastName() + "," +p.getFirstName() + "," +
+                            p.getClinicName() +"," + p.getClinicID() + "," + p.getCity());
+                }
+            }
         } catch (OBIBException e) {
             result = e.getMessage();
             MiscUtils.getLogger().warn(result);
