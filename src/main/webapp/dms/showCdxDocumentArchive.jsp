@@ -69,7 +69,7 @@
 
 
     CdxProvenance provenanceDoc = provenanceDao.getCdxProvenance(docIdNo);
-    List<CdxProvenance> versions = provenanceDao.findVersionsOrderDesc(provenanceDoc.getDocumentId());
+    List<CdxProvenance> versions = provenanceDao.findReceivedVersionsOrderDesc(provenanceDoc.getDocumentId());
 
 
 

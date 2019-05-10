@@ -178,7 +178,6 @@ public class CDXImport {
 
         populateInboxDocument(doc, newDocEntity);
         copyPreviousRoutingAndResetStati(newDocEntity, existingDocEntity);
-        addPatient(newDocEntity, doc.getPatient());
         return newDocEntity;
     }
 
@@ -201,8 +200,6 @@ public class CDXImport {
         Document        docEntity = new Document();
         populateInboxDocument(doc, docEntity);
 
-        addPatient(docEntity, doc.getPatient());
-
         return docEntity;
     }
 
@@ -212,6 +209,7 @@ public class CDXImport {
         docEntity.setDocdesc(doc.getLoincCodeDisplayName());
         docEntity.setDocfilename("N/A");
         docEntity.setDoccreator(doc.getCustodianName());
+
 
         p = doc.getOrderingProvider();
 
@@ -252,6 +250,8 @@ public class CDXImport {
         docEntity.setContentdatetime(doc.getAuthoringTime());
         docDao.persist(docEntity);
 
+        addPatient(docEntity, doc.getPatient());
+
         addProviderRouting(docEntity, doc.getPrimaryRecipient());
 
         for (IProvider q : doc.getSecondaryRecipients()) {
@@ -271,7 +271,8 @@ public class CDXImport {
 
     private void addPatient(Document docEntity, IPatient patient) {
 
-        int demoId = -1;
+        Demographic matchedDemo=null;
+
 
         // implement 4 point matching as required by CDX conformance spec
 
@@ -292,7 +293,7 @@ public class CDXImport {
 
                         if (patient.getGender().label.equals(demo.getSex())) {
 
-                            demoId = demo.getId(); // we found the patient
+                            matchedDemo = demo; // we found the patient
                         }
                     }
                 } catch (ParseException e) {
@@ -306,9 +307,18 @@ public class CDXImport {
 
         ctlDoc.getId().setDocumentNo(docEntity.getDocumentNo());
         ctlDoc.getId().setModule("demographic");
-        ctlDoc.getId().setModuleId(demoId);
+        ctlDoc.getId().setModuleId((matchedDemo==null ? -1 : matchedDemo.getId()));
         ctlDoc.setStatus("A");
         ctlDocDao.persist(ctlDoc);
+
+        if (matchedDemo != null && matchedDemo.getProvider() !=null) {
+            ProviderLabRoutingModel plr = new ProviderLabRoutingModel();
+            plr.setLabNo(docEntity.getDocumentNo());
+            plr.setStatus("N");
+            plr.setLabType("DOC");
+            plr.setProviderNo(matchedDemo.getProvider().getProviderNo());
+            plrDao.persist(plr);
+        }
     }
 
     private void addProviderRouting(Document docEntity, IProvider prov) {
