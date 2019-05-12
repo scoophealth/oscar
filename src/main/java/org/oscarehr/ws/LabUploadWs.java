@@ -24,6 +24,7 @@
 
 package org.oscarehr.ws;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -47,7 +48,7 @@ import oscar.OscarProperties;
 import oscar.oscarLab.FileUploadCheck;
 import oscar.oscarLab.ca.all.upload.HandlerClassFactory;
 import oscar.oscarLab.ca.all.upload.handlers.MessageHandler;
-
+import oscar.oscarLab.ca.all.util.Utilities;
 import oscar.log.LogAction;
 
 
@@ -219,6 +220,37 @@ public class LabUploadWs extends AbstractWs {
 
         returnMessage = "{\"success\":1,\"message\":\"\", \"audit\":\""+audit+"\"}";
         return returnMessage;
+    }
+    
+    public String uploadPDF(@WebParam(name="file_name") String fileName,
+    						   @WebParam(name="contents") byte[] contents,
+    						   @WebParam(name="oscar_provider_no") String oscarProviderNo ){
+    		logger.error("uploadPDF called file name "+fileName+" provider "+oscarProviderNo+" contnets "+contents);
+    	
+    		ByteArrayInputStream is = new ByteArrayInputStream(contents);
+    		String filePath = Utilities.savePdfFile(is,fileName);
+    		HttpServletRequest request = getHttpServletRequest();
+    		LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromRequest(request);
+    		
+    		MessageHandler msgHandler = HandlerClassFactory.getHandler("PDFDOC");
+    		String retVal = msgHandler.parse(loggedInInfo,oscarProviderNo, filePath,0,request.getRemoteAddr()); 
+    	
+    		return retVal;
+    }
+    
+    public String uploadDocumentReference(@WebParam(name="file_name") String fileName,
+			   @WebParam(name="contents") byte[] contents,
+			   @WebParam(name="oscar_provider_no") String oscarProviderNo ){
+
+    				ByteArrayInputStream is = new ByteArrayInputStream(contents);
+    				String filePath = Utilities.saveFile(is,fileName);
+    				HttpServletRequest request = getHttpServletRequest();
+    				LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromRequest(request);
+
+    				MessageHandler msgHandler = HandlerClassFactory.getHandler("FHIR_COMMUNICATION_REQUEST");
+    				String retVal = msgHandler.parse(loggedInInfo,oscarProviderNo, filePath,0,request.getRemoteAddr()); 
+
+    				return retVal;
     }
 
     private String importLab(String fileName, String labContent, String labType, String oscarProviderNo) 

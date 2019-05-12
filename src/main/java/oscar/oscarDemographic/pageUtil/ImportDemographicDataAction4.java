@@ -325,6 +325,8 @@ import oscar.util.UtilDateUtilities;
 
                     String ofile = tmpDir + entryName;
                     if (matchFileExt(ofile, "xml")) {
+                    	new File(ofile).getParentFile().mkdirs();
+                    	
                         noXML = false;
                         OutputStream out = null;    
                         try {
@@ -1694,6 +1696,7 @@ import oscar.util.UtilDateUtilities;
 
                     Date entryDateDate=toDateFromString(entryDate);
                     Date startDateDate=toDateFromString(startDate);
+                    
                     Integer allergyId = saveRxAllergy(Integer.valueOf(demographicNo), entryDateDate, description, "".equals(typeCode)?0:Integer.parseInt(typeCode), reaction, startDateDate, severity, regionalId, lifeStage, intolerant, nonDrug);
                     addOneEntry(ALLERGY);
 
@@ -2315,7 +2318,8 @@ import oscar.util.UtilDateUtilities;
                                 String docClass=null, docSubClass=null, contentType="", contentDateTime=null, observationDate=null, updateDateTime=null, docCreator=admProviderNo;
                                 String reviewer=null, reviewDateTime=null, source=null, sourceFacility=null, reportExtra=null;
                                 Integer docNum=null;
-                                String docType = repR[i].getMedia().toString();
+                                String docType = "";
+                                if(repR[i].getMedia() != null) docType = repR[i].getMedia().toString();
 
                                 if (StringUtils.filled(repR[i].getFileExtensionAndVersion())) {
                                     contentType = repR[i].getFileExtensionAndVersion();
@@ -3416,7 +3420,7 @@ import oscar.util.UtilDateUtilities;
 		//Write as a new provider
 		if (StringUtils.empty(firstName) && StringUtils.empty(lastName) && StringUtils.empty(ohipNo)) return ""; //no information at all!
 		pd = new ProviderData();
-		MiscUtils.getLogger().info("ADD EXTERNAL");
+		MiscUtils.getLogger().debug("ADD EXTERNAL");
 		pd.addExternalProvider(firstName, lastName, ohipNo, cpsoNo);
 		return pd.getProviderNo();
 	}
@@ -3619,6 +3623,10 @@ import oscar.util.UtilDateUtilities;
 	 */
 	private static Date toDateFromString(String s)
 	{
+		if(s == null) {
+			return null;
+		}
+		
         try
         {
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -3912,7 +3920,7 @@ import oscar.util.UtilDateUtilities;
 		                }
 		               if((msgHandler.parse(loggedInInfo, getClass().getSimpleName(), filePath,checkFileUploadedSuccessfully, "")) != null) {
 		            	   labNo = ((GDMLHandler)msgHandler).getLastLabNo();
-		                    logger.info("successfully added lab");        
+		                    logger.debug("successfully added lab");        
 		               }
 		            }else{
 		            	 logger.info("uploaded previously");

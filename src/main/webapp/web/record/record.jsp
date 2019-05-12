@@ -90,7 +90,7 @@
 			
 			    
 			    <input type="text" ng-model="options.magicVal" placeholder="Template" 
-				typeahead="t.encounterTemplateName as t.encounterTemplateName for t in searchTemplates($viewValue)" 
+				uib-typeahead="t.encounterTemplateName as t.encounterTemplateName for t in searchTemplates($viewValue)" 
 				typeahead-on-select="insertTemplate($item, $model, $label)"
 				class="form-control">
 				
@@ -122,7 +122,7 @@
 			
 			<div class="pull-left">
 				<input type="text" class="form-control" placeholder="Assign Issue"  
-					typeahead="i.issueId as i.code for i in searchIssues($viewValue)" 
+					uib-typeahead="i.issueId as i.code for i in searchIssues($viewValue)" 
 					typeahead-on-select="assignIssue($item, $model, $label);selectedIssue='';" 
 					ng-model="selectedIssue" 
 					typeahead-loading="loadingIssues"

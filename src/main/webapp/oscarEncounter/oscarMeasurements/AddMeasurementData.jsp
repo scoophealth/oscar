@@ -482,6 +482,85 @@ clear: left;
 Calendar.setup( { inputField : "prevDate<%=i%>", ifFormat : "%Y-%m-%d %H:%M", showsTime :true, button : "date<%=i%>", singleClick : true, step : 1 } );
   <%}%>
 //Calendar.setup( { inputField : "nextDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "nextDateCal", singleClick : true, step : 1 } );
+
+
+var wt_input = '';
+var ht_input = '';
+var bmi_input = '';
+
+var wt_instrc = '';
+var ht_instrc = '';
+
+var is_units_metric = true;
+
+var form = document.forms[0];
+var inputTypes = form.querySelectorAll('[name^="value(inputType-"]');
+
+for(var i = 0; i < inputTypes.length; i++){
+
+  if(inputTypes[i].value=='WT'){
+    wt_input = "input[name='value(inputValue-"+i+")']";
+    wt_instrc = jQuery("input[name='value(inputMInstrc-"+i+")']").val();
+
+    if (wt_instrc.toLowerCase().indexOf("kg") == 0){
+      is_units_metric = false;
+    }
+  }
+
+  if(inputTypes[i].value=='HT'){
+    ht_input = "input[name='value(inputValue-"+i+")']";
+    ht_instrc = jQuery("input[name='value(inputMInstrc-"+i+")']").val();
+
+    if (ht_instrc.toLowerCase().indexOf("cm") == 0){
+      is_units_metric = false;
+    }
+
+  }
+
+  if(inputTypes[i].value=='BMI'){
+    bmi_input = "input[name='value(inputValue-"+i+")']";
+  }
+}//end loop
+
+
+jQuery(document).ready(function () {
+
+if(wt_input!='' && ht_input!='' && bmi_input!='' && is_units_metric){
+
+//add auto-calc message
+custom_html = `<div style="width:100%;padding:10px 0 10px 20px; font-size:16px;">
+<img src="../../images/Information16x16.gif"> <b>BMI</b> will auto calculate after you enter the weight and height.
+</div>`;
+
+jQuery(custom_html).insertBefore( jQuery('#measurementForm') );
+
+jQuery(wt_input).bind('keyup change', function(){
+  calcBMI();
+});
+
+jQuery(ht_input).bind('keyup change', function(){
+  calcBMI();
+});
+
+}
+
+
+
+function calcBMI(w,h) {
+w = jQuery(wt_input).val();
+h = jQuery(ht_input).val();
+b = '';
+
+if ( jQuery.isNumeric(w) && jQuery.isNumeric(h) && h!=="" && w!=="" ) {
+  if (h > 0) {
+    b = (w/Math.pow(h/100,2)).toFixed(1);
+    jQuery(bmi_input).val(b);
+    console.log("bmi: " + b);
+  }
+}
+}
+
+});
 </script>
 </body>
 </html:html>

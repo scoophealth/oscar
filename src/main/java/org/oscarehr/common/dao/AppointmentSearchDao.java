@@ -70,7 +70,7 @@ public class AppointmentSearchDao extends AbstractDao<AppointmentSearch> {
 	    		return null;
 	    	}
 	    	
-	    	Query q = entityManager.createQuery("select a from AppointmentSearch a where a.providerNo = ? and a.active = true order by a.updateDate");
+	    	Query q = entityManager.createQuery("select a from AppointmentSearch a where a.providerNo = ? and a.active = true order by a.updateDate desc");
 	    	q.setParameter(1, providerNo);
     	
 	    	@SuppressWarnings("unchecked")

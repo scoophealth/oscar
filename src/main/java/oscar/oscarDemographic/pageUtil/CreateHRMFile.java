@@ -119,7 +119,7 @@ public class CreateHRMFile {
             Logger.getLogger(CreateHRMFile.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        MiscUtils.getLogger().info("saved HRM file: " + filepath);
+        MiscUtils.getLogger().debug("saved HRM file: " + filepath);
     }
 
     static private void writeDemographics(DemographicsDocument.Demographics demo, Demographics HRMdemo) {

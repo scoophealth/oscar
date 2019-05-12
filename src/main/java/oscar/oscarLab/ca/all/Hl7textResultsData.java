@@ -33,6 +33,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.dao.ConsultResponseDocDao;
+import org.oscarehr.common.dao.EFormDocsDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.MeasurementMapDao;
@@ -41,6 +42,7 @@ import org.oscarehr.common.dao.MeasurementsExtDao;
 import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.ConsultResponseDoc;
+import org.oscarehr.common.model.EFormDocs;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementMap;
@@ -68,7 +70,8 @@ public class Hl7textResultsData {
 	private static ConsultResponseDocDao consultResponseDocDao = SpringUtils.getBean(ConsultResponseDocDao.class);
 	private static Hl7TextInfoDao hl7TxtInfoDao = SpringUtils.getBean(Hl7TextInfoDao.class);
 	private static PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
-
+	private static EFormDocsDao eformDocsDao = SpringUtils.getBean(EFormDocsDao.class);
+	
 	private Hl7textResultsData() {
 		// no one should instantiate this
 	}
@@ -158,7 +161,7 @@ public class Hl7textResultsData {
 				m.setProviderNo("0");
 				m.setDataField(result);
 				m.setMeasuringInstruction(measInst);
-				logger.info("DATETIME FOR MEASUREMENT " + datetime);
+				logger.debug("DATETIME FOR MEASUREMENT " + datetime);
 				if(datetime != null && datetime.length()>0) {
 					m.setDateObserved(UtilDateUtilities.StringToDate(datetime, "yyyy-MM-dd hh:mm:ss"));
 				} 
@@ -327,6 +330,18 @@ public class Hl7textResultsData {
 		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();
 		for (Object[] o : consultDocsDao.findLabs(ConversionUtils.fromIntString(consultationId))) {
 			ConsultDocs c = (ConsultDocs) o[0];
+			LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
+			lbData.labPatientId = ConversionUtils.toIntString(c.getDocumentNo());
+			attachedLabs.add(lbData);
+		}
+		List<Object[]> labsHl7 = hl7TxtInfoDao.findByDemographicId(ConversionUtils.fromIntString(demographicNo));
+		return populateHL7ResultsData(attachedLabs, labsHl7, attached);
+	}
+	
+	public static ArrayList<LabResultData> populateHL7ResultsDataEForm(String demographicNo, String fdid, boolean attached) {
+		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();
+		for (Object[] o : eformDocsDao.findLabs(ConversionUtils.fromIntString(fdid))) {
+			EFormDocs c = (EFormDocs) o[0];
 			LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
 			lbData.labPatientId = ConversionUtils.toIntString(c.getDocumentNo());
 			attachedLabs.add(lbData);

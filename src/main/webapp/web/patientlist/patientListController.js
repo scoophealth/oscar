@@ -24,7 +24,7 @@
 
 */
 
-oscarApp.controller('PatientListCtrl', function ($scope,$http,$state,Navigation,personaService,$modal) {
+oscarApp.controller('PatientListCtrl', function ($scope,$http,$state,Navigation,personaService,$uibModal) {
 	
 	$scope.sidebar = Navigation;
 	
@@ -216,7 +216,7 @@ $scope.changeTab = function(temp,filter){
 
 
 	$scope.manageConfiguration = function() {
-		var modalInstance = $modal.open({
+		var modalInstance = $uibModal.open({
         	templateUrl: 'patientlist/patientListConfiguration.jsp',
             controller: 'PatientListConfigController',
             backdrop: false,
@@ -254,7 +254,7 @@ oscarApp.controller('PatientListDemographicSetCtrl', function($scope, Navigation
 
 });
 
-oscarApp.controller('PatientListAppointmentListCtrl', function($scope, Navigation,$http, scheduleService,$q,$filter,$modal,providerService) {	
+oscarApp.controller('PatientListAppointmentListCtrl', function($scope, Navigation,$http, scheduleService,$q,$filter,$uibModal,providerService) {	
 	 
 	scheduleService.getStatuses().then(function(data){
 		$scope.statuses = data.content;
@@ -341,7 +341,7 @@ oscarApp.controller('PatientListAppointmentListCtrl', function($scope, Navigatio
 	}
 	
 	$scope.addNewAppointment = function() {
-	       var modalInstance = $modal.open({
+	       var modalInstance = $uibModal.open({
 	        	templateUrl: 'schedule/appointmentAdd.jsp',
 	            controller: 'AppointmentAddController',
 	            backdrop: false,
@@ -360,7 +360,7 @@ oscarApp.controller('PatientListAppointmentListCtrl', function($scope, Navigatio
 	}
 
 	$scope.viewAppointment = function(apptNo) {
-		var modalInstance = $modal.open({
+		var modalInstance = $uibModal.open({
         	templateUrl: 'schedule/appointmentView.jsp',
             controller: 'AppointmentViewController',
             backdrop: false,
@@ -415,16 +415,16 @@ oscarApp.controller('PatientListProgramCtrl', function($scope,$http) {
 	 
 });
 
-oscarApp.controller('PatientListConfigController',function($scope, $modalInstance, config) {
+oscarApp.controller('PatientListConfigController',function($scope, $uibModalInstance, config) {
 	
 	$scope.patientListConfig= config; 
 	
 	$scope.cancel = function(){
-		$modalInstance.dismiss();
+		$uibModalInstance.dismiss();
 	};
 	
 	$scope.saveConfiguration =function(){
-    	$modalInstance.close($scope.patientListConfig);
+		$uibModalInstance.close($scope.patientListConfig);
     };
 
 });

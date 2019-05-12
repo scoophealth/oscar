@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -176,5 +177,11 @@ public class ScheduleWs extends AbstractWs {
 	public Integer[] getAllDemographicIdByProgramProvider(Integer programId, String providerNo) {
 		List<Integer> results=scheduleManager.getAllDemographicIdByProgramProvider(getLoggedInInfo(), programId, providerNo);
 		return(results.toArray(new Integer[0]));
+	}
+
+	public AppointmentTransfer[] getAppointmentsByDemographicIdAfter(@WebParam(name="lastUpdate") Calendar lastUpdate, @WebParam(name="demographicId") Integer demographicId, @WebParam(name="useGMTTime") boolean useGMTTime)
+	{
+		List<Appointment> appointments=scheduleManager.getAppointmentByDemographicIdUpdatedAfterDate(getLoggedInInfo(), demographicId, lastUpdate.getTime());
+		return(AppointmentTransfer.toTransfers(appointments, useGMTTime));
 	}
 }

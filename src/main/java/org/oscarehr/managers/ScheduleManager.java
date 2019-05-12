@@ -50,6 +50,7 @@ import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.AppointmentArchive;
 import org.oscarehr.common.model.AppointmentStatus;
 import org.oscarehr.common.model.AppointmentType;
+import org.oscarehr.common.model.ConsentType;
 import org.oscarehr.common.model.ScheduleDate;
 import org.oscarehr.common.model.ScheduleHoliday;
 import org.oscarehr.common.model.ScheduleTemplate;
@@ -267,6 +268,16 @@ public class ScheduleManager {
 		LogAction.addLogSynchronous(loggedInInfo, "ScheduleManager.getAppointmentUpdatedAfterDate", "updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
 
 		patientConsentManager.filterProviderSpecificConsent(loggedInInfo, results);
+		return (results);
+	}
+
+	public List<Appointment> getAppointmentByDemographicIdUpdatedAfterDate(LoggedInInfo loggedInInfo, Integer demographicId, Date updatedAfterThisDateExclusive) {
+		List<Appointment> results = new ArrayList<Appointment>();
+		ConsentType consentType = patientConsentManager.getProviderSpecificConsent(loggedInInfo);
+		if (patientConsentManager.hasPatientConsented(demographicId, consentType)) {
+			results = oscarAppointmentDao.findByDemographicIdUpdateDate(demographicId, updatedAfterThisDateExclusive);
+			LogAction.addLogSynchronous(loggedInInfo, "ScheduleManager.getAppointmentByDemographicIdUpdatedAfterDate", "demographicId="+demographicId+" updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
+		}
 		return (results);
 	}
 

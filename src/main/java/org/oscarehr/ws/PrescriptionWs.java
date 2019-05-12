@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
@@ -67,6 +68,13 @@ public class PrescriptionWs extends AbstractWs {
 	public PrescriptionTransfer[] getPrescriptionsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
 		List<Prescription> prescriptions=prescriptionManager.getPrescriptionsByProgramProviderDemographicDate(loggedInInfo,programId,providerNo,demographicId,updatedAfterThisDateExclusive, itemsToReturn);
+		return(PrescriptionTransfer.getTransfers(loggedInInfo, prescriptions));
+	}
+
+	public PrescriptionTransfer[] getPrescriptionsByDemographicIdAfter(@WebParam(name="lastUpdate") Calendar lastUpdate, @WebParam(name="demographicId") Integer demographicId)
+	{
+		LoggedInInfo loggedInInfo = getLoggedInInfo();
+		List<Prescription> prescriptions=prescriptionManager.getPrescriptionByDemographicIdUpdatedAfterDate(loggedInInfo, demographicId, lastUpdate.getTime());
 		return(PrescriptionTransfer.getTransfers(loggedInInfo, prescriptions));
 	}
 

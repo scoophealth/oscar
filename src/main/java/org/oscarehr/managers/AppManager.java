@@ -101,6 +101,21 @@ public class AppManager {
 		return appDef;
 	}
 	
+	public AppDefinition updateAppDefinition(LoggedInInfo loggedInInfo,  AppDefinition appDef){
+		//Can user create new AppDefinitions?
+		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_appDefinition", "w", null)) {
+			throw new RuntimeException("Access Denied");
+		}
+		
+		appDefinitionDao.merge(appDef);
+		
+		//--- log action ---
+		if (appDef!=null) {
+			LogAction.addLogSynchronous(loggedInInfo, "AppManager.updateAppDefinition", "id=" + appDef.getId());
+		}
+		return appDef;
+	}
+	
 	public AppDefinition getAppDefinition(LoggedInInfo loggedInInfo,  String appName){
 		if (!securityInfoManager.hasPrivilege(loggedInInfo, "_appDefinition", "r", null)) {
 			throw new RuntimeException("Access Denied");
@@ -113,6 +128,32 @@ public class AppManager {
 		}
 		return appDef;
 	}
+	
+	public boolean hasAppDefinition(LoggedInInfo loggedInInfo,  String appName){
+		AppDefinition appDef = appDefinitionDao.findByName(appName);
+		
+		//--- log action ---
+		if (appDef!=null) {
+			LogAction.addLogSynchronous(loggedInInfo, "AppManager.hasAppDefinition", "id=" + appDef.getId());
+			return true;
+		}
+		
+		LogAction.addLogSynchronous(loggedInInfo, "AppManager.hasAppDefinition", "Not found:" + appName);
+		return false;
+	}
+	
+	public Integer getAppDefinitionConsentId(LoggedInInfo loggedInInfo,  String appName){
+		AppDefinition appDef = appDefinitionDao.findByName(appName);
+		Integer retval = null;
+		//--- log action ---
+		if (appDef!=null) {
+			retval = appDef.getConsentTypeId();
+			LogAction.addLogSynchronous(loggedInInfo, "AppManager.getAppDefinitionConsentId", "id=" + retval);
+		}
+		return retval;
+	}
+	
+	
 
 	
 	public boolean isK2AUser(LoggedInInfo loggedInInfo){

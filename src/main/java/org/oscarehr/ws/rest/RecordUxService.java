@@ -162,6 +162,8 @@ public class RecordUxService extends AbstractServiceImpl {
 			
 		}
 		
+		menulist.add(MenuItemTo1.generateStateMenuItem(idCounter++, "Rx", "record.rx"));
+		
 		if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.consultations", "r", null)) {
 			
 			//add notification if patient has outstanding consultation requests (incomplete requests > 1 month)
@@ -323,6 +325,19 @@ public class RecordUxService extends AbstractServiceImpl {
 				summaryList.add(new SummaryTo1("Assessments",count++,SummaryTo1.ASSESSMENTS_CODE));
 			}
 			//summaryList[9] = new SummaryTo1("Outgoing",7,"outgoing");
+		}else if("rxLeft".equals(summaryName )){
+			summaryList = new ArrayList<SummaryTo1>();
+			
+			if(preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.ALLERGIES_POS)){
+				summaryList.add(new SummaryTo1("Allergies",count++,SummaryTo1.ALLERGIES));  
+			}
+
+		}else if("rxRight".equals(summaryName )){
+			summaryList = new ArrayList<SummaryTo1>();
+			
+			if(securityInfoManager.hasPrivilege(loggedInInfo, "_newCasemgmt.decisionSupportAlerts", "r", null) && preferenceManager.displaySummaryItem(loggedInInfo, PreferenceManager.DS_SUPPORT_POS)) {
+				summaryList.add(new SummaryTo1("Decision Support",count++,SummaryTo1.DECISIONSUPPORT_CODE)); 
+			}
 		}
 		return summaryList;
 	}

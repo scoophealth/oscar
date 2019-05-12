@@ -24,12 +24,14 @@
 
 package org.oscarehr.managers;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.oscarehr.common.dao.CtlDocumentDao;
 import org.oscarehr.common.dao.DocumentDao;
+import org.oscarehr.common.model.ConsentType;
 import org.oscarehr.common.model.CtlDocument;
 import org.oscarehr.common.model.Document;
 import org.oscarehr.util.LoggedInInfo;
@@ -45,6 +47,9 @@ public class DocumentManager {
 
 	@Autowired
 	private CtlDocumentDao ctlDocumentDao;
+	
+	@Autowired
+	private PatientConsentManager patientConsentManager;
 	
 	public Document getDocument(LoggedInInfo loggedInInfo, Integer id)
 	{
@@ -75,6 +80,16 @@ public class DocumentManager {
 
 		LogAction.addLogSynchronous(loggedInInfo, "DocumentManager.getUpdateAfterDate", "updatedAfterThisDateExclusive=" + updatedAfterThisDateExclusive);
 
+		return (results);
+	}
+	
+	public List<Document> getDocumentsByDemographicIdUpdateAfterDate(LoggedInInfo loggedInInfo, Integer demographicId, Date updatedAfterThisDateExclusive) {
+		List<Document> results = new ArrayList<Document>();
+		ConsentType consentType = patientConsentManager.getProviderSpecificConsent(loggedInInfo);
+		if (patientConsentManager.hasPatientConsented(demographicId, consentType)) {
+			results = documentDao.findByDemographicUpdateAfterDate(demographicId, updatedAfterThisDateExclusive);
+			LogAction.addLogSynchronous(loggedInInfo, "DocumentManager.getDocumentsByDemographicIdUpdateAfterDate", "demographicId="+demographicId+" updatedAfterThisDateExclusive="+updatedAfterThisDateExclusive);
+		}
 		return (results);
 	}
 

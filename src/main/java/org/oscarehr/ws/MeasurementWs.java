@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
@@ -73,6 +74,12 @@ public class MeasurementWs extends AbstractWs {
 
 	public MeasurementTransfer[] getMeasurementsByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateExclusive, int itemsToReturn) {
 		List<Measurement> measurements = measurementManager.getMeasurementsByProgramProviderDemographicDate(getLoggedInInfo(), programId, providerNo, demographicId, updatedAfterThisDateExclusive, itemsToReturn);
+		return (MeasurementTransfer.toTransfers(measurements));
+	}
+
+	public MeasurementTransfer[] getMeasurementsByDemographicIdAfter(@WebParam(name="lastUpdate") Calendar lastUpdate, @WebParam(name="demographicId") Integer demographicId)
+	{
+		List<Measurement> measurements = measurementManager.getMeasurementByDemographicIdAfter(getLoggedInInfo(), demographicId, lastUpdate.getTime());
 		return (MeasurementTransfer.toTransfers(measurements));
 	}
 

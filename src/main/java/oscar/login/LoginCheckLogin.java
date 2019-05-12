@@ -30,6 +30,7 @@ import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.Vector;
 
+import org.apache.commons.lang3.StringUtils;
 import org.oscarehr.common.model.Security;
 import org.oscarehr.util.MiscUtils;
 
@@ -48,12 +49,25 @@ public final class LoginCheckLogin {
 	public LoginCheckLogin() {
 	}
 
+	static boolean ipFound(String IPToCheck) {
+		String prop = OscarProperties.getInstance().getProperty("login_local_ip");
+		if(!StringUtils.isEmpty(prop)) {
+			String[] props = prop.split(",");
+			for(String p:props) {
+				if(IPToCheck.startsWith(p)) {
+					return true;
+				}
+			}
+		} 
+		return false;
+	}
 	public boolean isBlock(String ip) {
 		boolean bBlock = false;
 
 		// judge the local network
-		Properties p = OscarProperties.getInstance();
-		if (ip.startsWith(p.getProperty("login_local_ip"))) bWAN = false;
+	//	Properties p = OscarProperties.getInstance();
+		if(ipFound(ip)) bWAN = false;
+		//if (ip.startsWith(p.getProperty("login_local_ip"))) bWAN = false;
 
 		GregorianCalendar now = new GregorianCalendar();
 		while (llist == null) {
@@ -87,8 +101,9 @@ public final class LoginCheckLogin {
 		// the following meets the requirment of epp
 		boolean bBlock = false;
 		// judge the local network
-		if (ip.startsWith(p.getProperty("login_local_ip"))) bWAN = false;
-
+	//	if (ip.startsWith(p.getProperty("login_local_ip"))) bWAN = false;
+		if(ipFound(ip)) bWAN = false;
+		
 		while (llist == null) {
 			llist = LoginList.getLoginListInstance();
 		}

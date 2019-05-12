@@ -78,8 +78,8 @@ public final class DemographicTransfer {
 	private Integer headRecord;
 	private String anonymous;
 	private String spokenLanguage;
-	private int activeCount;
-	private int hsAlertCount;
+	private Integer activeCount;
+	private Integer hsAlertCount;
 	private String displayName;
 	private String lastUpdateUser;
 	private Date lastUpdateDate;
@@ -431,19 +431,19 @@ public final class DemographicTransfer {
     	this.spokenLanguage = spokenLanguage;
     }
 
-	public int getActiveCount() {
+	public Integer getActiveCount() {
     	return (activeCount);
     }
 
-	public void setActiveCount(int activeCount) {
+	public void setActiveCount(Integer activeCount) {
     	this.activeCount = activeCount;
     }
 
-	public int getHsAlertCount() {
+	public Integer getHsAlertCount() {
     	return (hsAlertCount);
     }
 
-	public void setHsAlertCount(int hsAlertCount) {
+	public void setHsAlertCount(Integer hsAlertCount) {
     	this.hsAlertCount = hsAlertCount;
     }
 
@@ -510,5 +510,62 @@ public final class DemographicTransfer {
 	@Override
 	public String toString() {
 		return (ReflectionToStringBuilder.toString(this));
+	}
+	
+	public DemographicTransfer filter(String[] fields) {
+		DemographicTransfer dto = new DemographicTransfer();
+		for (String field : fields) {
+			if ("demographicNo".equals(field)) dto.setDemographicNo(this.getDemographicNo());
+			else if ("address".equals(field)) dto.setAddress(this.getAddress());
+			else if ("city".equals(field)) dto.setCity(this.getCity());
+			else if ("province".equals(field)) dto.setProvince(this.getProvince());
+			else if ("postal".equals(field)) dto.setPostal(this.getPostal());
+			else if ("activeCount".equals(field)) dto.setActiveCount(this.getActiveCount());
+			else if ("alias".equals(field)) dto.setAlias(this.getAlias());
+			else if ("anonymous".equals(field)) dto.setAnonymous(this.getAnonymous());
+			else if ("chartNo".equals(field)) dto.setChartNo(this.getChartNo());
+			else if ("children".equals(field)) dto.setChildren(this.getChildren());
+			else if ("citizenship".equals(field)) dto.setCitizenship(this.getCitizenship());
+			else if ("dateJoined".equals(field)) dto.setDateJoined(this.getDateJoined());
+			else if ("dateOfBirth".equals(field)) dto.setDateOfBirth(this.getDateOfBirth());
+			else if ("monthOfBirth".equals(field)) dto.setMonthOfBirth(this.getMonthOfBirth());
+			else if ("yearOfBirth".equals(field)) dto.setYearOfBirth(this.getYearOfBirth());
+			else if ("displayName".equals(field)) dto.setDisplayName(this.getDisplayName());
+			else if ("effDate".equals(field)) dto.setEffDate(this.getEffDate());
+			else if ("endDate".equals(field)) dto.setEndDate(this.getEndDate());
+			else if ("email".equals(field)) dto.setEmail(this.getEmail());
+			else if ("familyDoctor".equals(field)) dto.setFamilyDoctor(this.getFamilyDoctor());
+			else if ("firstName".equals(field)) dto.setFirstName(this.getFirstName());
+			else if ("lastName".equals(field)) dto.setLastName(this.getLastName());
+			else if ("hcRenewDate".equals(field)) dto.setHcRenewDate(this.getHcRenewDate());
+			else if ("hcType".equals(field)) dto.setHcType(this.getHcType());
+			else if ("headRecord".equals(field)) dto.setHeadRecord(this.getHeadRecord());
+			else if ("hin".equals(field)) dto.setHin(this.getHin());
+			else if ("hsAlertCount".equals(field)) dto.setHsAlertCount(this.getHsAlertCount());
+			else if ("lastUpdateDate".equals(field)) dto.setLastUpdateDate(this.getLastUpdateDate());
+			else if ("lastUpdateUser".equals(field)) dto.setLastUpdateUser(this.getLastUpdateUser());
+			else if ("links".equals(field)) dto.setLinks(this.getLinks());
+			else if ("myOscarUserName".equals(field)) dto.setMyOscarUserName(this.getMyOscarUserName());
+			else if ("officialLanguage".equals(field)) dto.setOfficialLanguage(this.getOfficialLanguage());
+			else if ("patientStatus".equals(field)) dto.setPatientStatus(this.getPatientStatus());
+			else if ("patientStatusDate".equals(field)) dto.setPatientStatusDate(this.getPatientStatusDate());
+			else if ("pcnIndicator".equals(field)) dto.setPcnIndicator(this.getPcnIndicator());
+			else if ("phone".equals(field)) dto.setPhone(this.getPhone());
+			else if ("phone2".equals(field)) dto.setPhone(this.getPhone2());
+			else if ("previousAddress".equals(field)) dto.setPreviousAddress(this.getPreviousAddress());
+			else if ("providerNo".equals(field)) dto.setProviderNo(this.getProviderNo());
+			else if ("rosterDate".equals(field)) dto.setRosterDate(this.getRosterDate());
+			else if ("rosterStatus".equals(field)) dto.setRosterStatus(this.getRosterStatus());
+			else if ("rosterTerminationDate".equals(field)) dto.setRosterTerminationDate(this.getRosterTerminationDate());
+			else if ("rosterTerminationReason".equals(field)) dto.setRosterTerminationReason(this.getRosterTerminationReason());
+			else if ("sex".equals(field)) dto.setSex(this.getSex());
+			else if ("sexDesc".equals(field)) dto.setSexDesc(this.getSexDesc());
+			else if ("sin".equals(field)) dto.setSin(this.getSin());
+			else if ("sourceOfIncome".equals(field)) dto.setSourceOfIncome(this.getSourceOfIncome());
+			else if ("spokenLanguage".equals(field)) dto.setSpokenLanguage(this.getSpokenLanguage());
+			else if ("title".equals(field)) dto.setTitle(this.getTitle());
+			else if ("ver".equals(field)) dto.setVer(this.getVer());
+		}
+		return dto;
 	}
 }

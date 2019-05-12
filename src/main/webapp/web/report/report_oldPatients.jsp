@@ -34,7 +34,7 @@
 				<div class="input-group">
 					<input type="text"
 						ng-model="data.providerNo" placeholder="Provider"
-						typeahead="pt.providerNo as pt.name for pt in searchProviders($viewValue)"
+						uib-typeahead="pt.providerNo as pt.name for pt in searchProviders($viewValue)"
 						typeahead-on-select="updateProviderNo($item, $model, $label)"
 						class="form-control"/>
 						<span class="input-group-addon"><span class="glyphicon glyphicon-remove" ng-click="params.providerNo='';data.providerNo=''"></span></span>

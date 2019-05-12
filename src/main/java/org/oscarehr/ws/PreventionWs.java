@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
@@ -69,6 +70,13 @@ public class PreventionWs extends AbstractWs {
 		LoggedInInfo loggedInInfo=getLoggedInInfo();
 		List<Prevention> preventions=preventionManager.getPreventionsByProgramProviderDemographicDate(getLoggedInInfo(),programId,providerNo,demographicId,updatedAfterThisDateExclusive,itemsToReturn);
 		return(PreventionTransfer.getTransfers(loggedInInfo,preventions));
+	}
+
+	public PreventionTransfer[] getPreventionsByDemographicIdAfter(@WebParam(name="lastUpdate") Calendar lastUpdate, @WebParam(name="demographicId") Integer demographicId)
+	{
+		LoggedInInfo loggedInInfo = getLoggedInInfo();
+		List<Prevention> preventions=preventionManager.getByDemographicIdUpdatedAfterDate(loggedInInfo, demographicId, lastUpdate.getTime());
+		return(PreventionTransfer.getTransfers(loggedInInfo, preventions));
 	}
 
 }

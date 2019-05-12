@@ -56,6 +56,7 @@ import javax.xml.validation.Validator;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
@@ -84,6 +85,7 @@ import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.dao.PharmacyInfoDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
+import org.oscarehr.common.exception.PatientDirectiveException;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Contact;
@@ -286,7 +288,8 @@ public class DemographicExportAction4 extends Action {
 	}
 
 	String ffwd = "fail";
-	String tmpDir = oscarProperties.getProperty("TMP_DIR");
+	String tmpDir = oscarProperties.getProperty("TMP_DIR") + File.separator +  RandomStringUtils.random(8, true, false);
+	
 	
 	// Sharing Center - holds the ID that will 'potentially' be exported.
 	int documentExportId = 0;
@@ -301,8 +304,8 @@ public class DemographicExportAction4 extends Action {
 	
 	switch(template) {
 		case CMS4:
-	if (!Util.checkDir(tmpDir)) {
-		logger.debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions.");
+	if (!new File(tmpDir).mkdir() || !Util.checkDir(tmpDir)) {
+		logger.debug("Error! Cannot write to TMP_DIR - Check oscar.properties or dir permissions. (" + tmpDir + ")");
 	} else {
 		XmlOptions options = new XmlOptions();
 		options.put( XmlOptions.SAVE_PRETTY_PRINT );
@@ -329,7 +332,13 @@ public class DemographicExportAction4 extends Action {
 			// DEMOGRAPHICS
 			DemographicData d = new DemographicData();
 
-			org.oscarehr.common.model.Demographic demographic = d.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demoNo);
+			org.oscarehr.common.model.Demographic demographic = null;
+			try {
+				demographic = d.getDemographic(LoggedInInfo.getLoggedInInfoFromSession(request), demoNo);
+			}catch(PatientDirectiveException e) {
+				exportError.add("Unable to export patient " + demoNo + " due to Patient Directive");
+				continue;
+			}
 
 			if (demographic.getPatientStatus()!=null && demographic.getPatientStatus().equals("Contact-only")) continue;
 
@@ -428,6 +437,7 @@ public class DemographicExportAction4 extends Action {
 			if (cdsDt.Gender.Enum.forString(sex)!=null) {
 				demo.setGender(cdsDt.Gender.Enum.forString(sex));
 			} else {
+				demo.setGender(cdsDt.Gender.U);
 				exportError.add("Error! No Gender for Patient "+demoNo);
 			}
 
@@ -483,7 +493,7 @@ public class DemographicExportAction4 extends Action {
 					en.terminationDate = demographic.getRosterTerminationDate();
 					en.terminationReason = demographic.getRosterTerminationReason();
 				} else {
-					enList.add(en);
+					if (en!=null) enList.add(en);
 					en = new Enrolment();
 					en.status = demographic.getRosterStatus();
 					en.enrolledTo = demographic.getRosterEnrolledTo();
@@ -501,16 +511,18 @@ public class DemographicExportAction4 extends Action {
 				for(int x=0;x<enList.size();x++) {
 					EnrolmentHistory ehx = demoEnrolment.addNewEnrolmentHistory();
 					Enrolment enrolment = enList.get(x);
-					
-					ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
-					Provider p = providerDao.getProvider(enrolment.enrolledTo);
-					
-					EnrolledToPhysician etp = ehx.addNewEnrolledToPhysician();
-					PersonNameSimple pns = etp.addNewName();
-					pns.setFirstName(p.getFirstName());
-					pns.setLastName(p.getLastName());
-					etp.setOHIPPhysicianId(p.getOhipNo());
-					
+
+                    if (enrolment.enrolledTo != null) {
+                        ProviderDao providerDao = SpringUtils.getBean(ProviderDao.class);
+                        Provider p = providerDao.getProvider(enrolment.enrolledTo);
+                        if (p != null) {  //could be null for Enrollment Status TERMINATED, patient added to roster in error
+							EnrolledToPhysician etp = ehx.addNewEnrolledToPhysician();
+							PersonNameSimple pns = etp.addNewName();
+							pns.setFirstName(p.getFirstName());
+							pns.setLastName(p.getLastName());
+							etp.setOHIPPhysicianId(p.getOhipNo());
+						}
+                    }
 					ehx.setEnrollmentDate(Util.calDate(enrolment.date));
 					
 					
@@ -567,7 +579,7 @@ public class DemographicExportAction4 extends Action {
 			if (StringUtils.filled(providerNo)) {
 				Demographics.PrimaryPhysician pph = demo.addNewPrimaryPhysician();
 				ProviderData prvd = new ProviderData(providerNo);
-				if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) pph.setOHIPPhysicianId(prvd.getOhip_no());
+				if (StringUtils.filled(prvd.getOhip_no()) && prvd.getOhip_no().length()<=6) pph.setOHIPPhysicianId(prvd.getOhip_no());
 				Util.writeNameSimple(pph.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
 				String cpso = prvd.getPractitionerNo();
 				if (cpso!=null && cpso.length()==5) pph.setPrimaryPhysicianCPSO(cpso);
@@ -652,18 +664,26 @@ public class DemographicExportAction4 extends Action {
 				if(pi != null) {
 					PreferredPharmacy preferredPharmacy = demo.addNewPreferredPharmacy();
 					PhoneNumber pn =  preferredPharmacy.addNewPhoneNumber();
-					addPhone(pi.getFax(), "", cdsDt.PhoneNumberType.W,pn);
+					if(!StringUtils.isNullOrEmpty(pi.getFax())) {
+						addPhone(pi.getFax(), "", cdsDt.PhoneNumberType.W,pn);
+					}
 					
 					
 					cdsDt.Address addr = preferredPharmacy.addNewAddress();
 					cdsDt.AddressStructured address = addr.addNewStructured();
 
 					addr.setAddressType(cdsDt.AddressType.R);
-					address.setLine1(pi.getAddress());
+					if(!StringUtils.isNullOrEmpty(pi.getAddress())) {
+						address.setLine1( StringUtils.maxLenString(pi.getAddress(), 50, 49, ""));
+					}
 					if (StringUtils.filled(pi.getCity()) || StringUtils.filled(pi.getProvince()) || StringUtils.filled(pi.getPostalCode())) {
-						address.setCity(StringUtils.noNull(pi.getCity()));
+						if(!StringUtils.isNullOrEmpty(pi.getCity())) {
+							address.setCity(StringUtils.maxLenString(StringUtils.noNull(pi.getCity()), 80, 79, ""));
+						}
 						if("true".equals(OscarProperties.getInstance().getProperty("iso3166.2.enabled","false"))) { 	
-							address.setCountrySubdivisionCode(pi.getProvince());
+							if(!StringUtils.isNullOrEmpty(pi.getProvince())) {
+								address.setCountrySubdivisionCode(pi.getProvince());
+							}
 						} else {
 							//TODO: A better fix is needed here!!!  Only valid 2 character province codes should be stored
 							//      in the database.  For instance, "AB" rather than "Alberta", "Atla." or "Alb.", etc.
@@ -682,7 +702,9 @@ public class DemographicExportAction4 extends Action {
 							}
 							// END OF HACK.
 						}
-						address.addNewPostalZipCode().setPostalCode(StringUtils.noNull(pi.getPostalCode()).replace(" ",""));
+						if(!StringUtils.isNullOrEmpty(pi.getPostalCode())) {
+							address.addNewPostalZipCode().setPostalCode(StringUtils.noNull(pi.getPostalCode()).replace(" ",""));
+						}
 					}
 					
 					
@@ -779,6 +801,12 @@ public class DemographicExportAction4 extends Action {
 					// FAMILY HISTORY (FamHistory)
 					if (StringUtils.filled(famHist)) {
 						FamilyHistory fHist = patientRec.addNewFamilyHistory();
+						if(famHist.length()>250) {
+							addResidualInformation(fHist.addNewResidualInfo(),"string","ProblemDiagnosisProcedureDescription",famHist);
+						}
+						fHist.setProblemDiagnosisProcedureDescription(StringUtils.maxLenString(famHist, 250, 23, "... (see residual)"));
+						
+						
 						fHist.setProblemDiagnosisProcedureDescription(famHist);
 						summary = Util.addSummary("Problem Description", famHist);
 
@@ -819,8 +847,12 @@ public class DemographicExportAction4 extends Action {
 							} else if (cme.getKeyVal().equals(CaseManagementNoteExt.AGEATONSET)) {
 								if (bAGEATONSET) continue;
 								if (StringUtils.filled(cme.getValue())) {
-									fHist.setAgeAtOnset(BigInteger.valueOf(Long.valueOf(cme.getValue())));
-									summary = Util.addSummary(summary, CaseManagementNoteExt.AGEATONSET, cme.getValue());
+									if(StringUtils.isNumeric(cme.getValue())) {
+										fHist.setAgeAtOnset(BigInteger.valueOf(Long.valueOf(cme.getValue())));
+										summary = Util.addSummary(summary, CaseManagementNoteExt.AGEATONSET, cme.getValue());
+									} else {
+										exportError.add("Family History: Age of Onset: Not numeric: " + cme.getValue());
+									}
 								}
 								bAGEATONSET = true;
 							} else if (cme.getKeyVal().equals(CaseManagementNoteExt.RELATIONSHIP)) {
@@ -911,7 +943,11 @@ public class DemographicExportAction4 extends Action {
 								bPROBLEMSTATUS = true;
 							}
 						}
-						pHealth.setPastHealthProblemDescriptionOrProcedures(medHist);
+						if(medHist.length()>250) {
+							addResidualInformation(pHealth.addNewResidualInfo(),"string","PastHealthProblemDescriptionOrProcedures",medHist);
+						}
+						pHealth.setPastHealthProblemDescriptionOrProcedures(StringUtils.maxLenString(medHist, 250, 230, "... (see residual)"));
+						
 						if (StringUtils.filled(annotation)) {
 							pHealth.setNotes(annotation);
 							summary = Util.addSummary(summary, "Notes", annotation);
@@ -924,7 +960,10 @@ public class DemographicExportAction4 extends Action {
 					// PROBLEM LIST (Concerns)
 					if (StringUtils.filled(concerns)) {
 						ProblemList pList = patientRec.addNewProblemList();
-						pList.setProblemDiagnosisDescription(concerns);
+						if(concerns.length()>250) {
+							addResidualInformation(pList.addNewResidualInfo(),"string","ProblemDiagnosisDescription",concerns);
+						}
+						pList.setProblemDiagnosisDescription(StringUtils.maxLenString(concerns, 250, 230, "... (see residual)"));
 						summary = Util.addSummary("Problem Diagnosis", concerns);
 
 						boolean diagnosisAssigned = false;
@@ -1100,7 +1139,7 @@ public class DemographicExportAction4 extends Action {
 								ClinicalNotes.ParticipatingProviders pProvider = cNote.addNewParticipatingProviders();
 								ProviderData prvd = new ProviderData(cm_note.getProviderNo());
 								Util.writeNameSimple(pProvider.addNewName(), StringUtils.noNull(prvd.getFirst_name()), StringUtils.noNull(prvd.getLast_name()));
-								if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) pProvider.setOHIPPhysicianId(prvd.getOhip_no());
+								if (StringUtils.filled(prvd.getOhip_no()) && prvd.getOhip_no().length()<=6) pProvider.setOHIPPhysicianId(prvd.getOhip_no());
 
 								//note created datetime
 								cdsDt.DateTimeFullOrPartial noteCreatedDateTime = pProvider.addNewDateTimeNoteCreated();
@@ -1114,7 +1153,7 @@ public class DemographicExportAction4 extends Action {
 								ClinicalNotes.NoteReviewer noteReviewer = cNote.addNewNoteReviewer();
 								ProviderData prvd = new ProviderData(cm_note.getSigning_provider_no());
 								Util.writeNameSimple(noteReviewer.addNewName(), prvd.getFirst_name(), prvd.getLast_name());
-								if (StringUtils.noNull(prvd.getOhip_no()).length()<=6) noteReviewer.setOHIPPhysicianId(prvd.getOhip_no());
+								if (StringUtils.filled(prvd.getOhip_no()) && prvd.getOhip_no().length()<=6) noteReviewer.setOHIPPhysicianId(prvd.getOhip_no());
 
 								//note reviewed datetime
 								cdsDt.DateTimeFullOrPartial noteReviewedDateTime = noteReviewer.addNewDateTimeNoteReviewed();
@@ -1129,7 +1168,11 @@ public class DemographicExportAction4 extends Action {
 					// ALERTS AND SPECIAL NEEDS (Reminders)
 					if (StringUtils.filled(reminders)) {
 						AlertsAndSpecialNeeds alerts = patientRec.addNewAlertsAndSpecialNeeds();
-						alerts.setAlertDescription(reminders);
+						if(reminders.length()>250) {
+							addResidualInformation(alerts.addNewResidualInfo(),"string","AlertDescription",reminders);
+						}
+						alerts.setAlertDescription(StringUtils.maxLenString(reminders, 1000, 980, "... (see residual)"));
+						
 						addOneEntry(ALERT);
 
 						summary = Util.addSummary("Alert Description", reminders);
@@ -1152,7 +1195,10 @@ public class DemographicExportAction4 extends Action {
 							}
 						}
 						if (StringUtils.filled(annotation)) {
-							alerts.setNotes(annotation);
+							if(annotation.length()>250) {
+								addResidualInformation(alerts.addNewResidualInfo(),"string","Notes",annotation);
+							}
+							alerts.setNotes(StringUtils.maxLenString(annotation, 1000, 980, "... (see residual)"));
 							summary = Util.addSummary(summary, "Notes", annotation);
 						}
 						//alerts.setCategorySummaryLine(summary);
@@ -1199,7 +1245,10 @@ public class DemographicExportAction4 extends Action {
 					}
 					String allergyReaction = allergy.getReaction();
 					if (StringUtils.filled(allergyReaction)) {
-						alr.setReaction(allergyReaction);
+						if(allergyReaction.length()>120) {
+							addResidualInformation(alr.addNewResidualInfo(),"string","Reaction",allergyReaction);
+						}
+						alr.setReaction(StringUtils.maxLenString(allergyReaction, 120, 100, "... (see residual)"));
 						aSummary = Util.addSummary(aSummary, "Reaction", allergyReaction);
 					}
 					String severity = allergy.getSeverityOfReaction();
@@ -1409,7 +1458,10 @@ public class DemographicExportAction4 extends Action {
 					}
 					String drugName = arr[p].getBrandName();
 					if (StringUtils.filled(drugName)) {
-						medi.setDrugName(drugName);
+						if(drugName.length()>120) {
+							addResidualInformation(medi.addNewResidualInfo(),"string","DrugName",drugName);
+						}
+						medi.setDrugName(StringUtils.maxLenString(drugName, 120, 100, "... (see residual)"));
 						mSummary = Util.addSummary(mSummary, "Drug Name", drugName);
 					} else {
 						drugName = arr[p].getCustomName();
@@ -1562,7 +1614,7 @@ public class DemographicExportAction4 extends Action {
 						medi.setDispenseInterval(String.valueOf(arr[p].getDispenseInterval()));
 						mSummary = Util.addLine(mSummary, "Dispense Interval", arr[p].getDispenseInterval().toString());
 					}
-					if (arr[p].getRefillDuration()!=null) {
+					if (arr[p].getRefillDuration()!=null) {						
 						medi.setRefillDuration(String.valueOf(arr[p].getRefillDuration()));
 						mSummary = Util.addSummary(mSummary, "Refill Duration", arr[p].getRefillDuration().toString());
 					}
@@ -1800,7 +1852,9 @@ public class DemographicExportAction4 extends Action {
 
 					long dLong = (ap.getEndTime().getTime()-ap.getStartTime().getTime())/60000+1;
 					BigInteger duration = BigInteger.valueOf(dLong); //duration in minutes
-					aptm.setDuration(duration);
+					if(duration.doubleValue() > 0) {
+						aptm.setDuration(duration);
+					}
 
 					if (StringUtils.filled(ap.getStatus())) {
 						ApptStatusData asd = new ApptStatusData();
@@ -1823,7 +1877,7 @@ public class DemographicExportAction4 extends Action {
 					if (StringUtils.filled(p.getFirstName()) || StringUtils.filled(p.getLastName())) {
 						Appointments.Provider prov = aptm.addNewProvider();
 
-						if (StringUtils.noNull(p.getOhipNo()).length()<=6) prov.setOHIPPhysicianId(p.getOhipNo());
+						if (StringUtils.filled(p.getOhipNo()) && p.getOhipNo().length()<=6) prov.setOHIPPhysicianId(p.getOhipNo());
 						Util.writeNameSimple(prov.addNewName(), p.getFirstName(), p.getLastName());
 					}
 					if (StringUtils.filled(ap.getNotes())) {
@@ -2306,13 +2360,17 @@ public class DemographicExportAction4 extends Action {
 						dsco.setDocumentedGoals(meas.getDataField());
 						addOneEntry(CAREELEMENTS);
 					} else if (meas.getType().equals("HYPE")) { //Hypoglycemic Episodes
-						cdsDt.HypoglycemicEpisodes he = careElm.addNewHypoglycemicEpisodes();
-						he.setDate(Util.calDate(meas.getDateObserved()));
-						if (meas.getDateObserved()==null) {
-							exportError.add("Error! No Date for Hypoglycemic Episodes (id="+meas.getId()+") for Patient "+demoNo);
+						if(StringUtils.isInteger(meas.getDataField().trim())) {
+							cdsDt.HypoglycemicEpisodes he = careElm.addNewHypoglycemicEpisodes();
+							he.setDate(Util.calDate(meas.getDateObserved()));
+							if (meas.getDateObserved()==null) {
+								exportError.add("Error! No Date for Hypoglycemic Episodes (id="+meas.getId()+") for Patient "+demoNo);
+							}
+							he.setNumOfReportedEpisodes(new BigInteger(meas.getDataField().trim()));
+							addOneEntry(CAREELEMENTS);
+						} else {
+							exportError.add("Failed to export an entry for Hypoglycemic Episodes: " + meas.getDataField());
 						}
-						he.setNumOfReportedEpisodes(new BigInteger(meas.getDataField().trim()));
-						addOneEntry(CAREELEMENTS);
 					}
 				}
 			}
@@ -2323,6 +2381,7 @@ public class DemographicExportAction4 extends Action {
 			try{
 				File directory = new File(tmpDir);
 				if(!directory.exists()){
+					//this would never happen
 					throw new Exception("Temporary Export Directory does not exist!");
 				}
 
@@ -2354,12 +2413,17 @@ public class DemographicExportAction4 extends Action {
 		}
 
 	}
+	
+	if(files.isEmpty()) {
+		logger.warn("no files to export");
+		return mapping.findForward("fail");
+	}
 		
 	//create ReadMe.txt & ExportEvent.log
-		files.add(makeReadMe(files));
-		dirs.add("");
-		files.add(makeExportLog(files.get(0).getParentFile()));
-		dirs.add("");
+	files.add(makeReadMe(files));
+	dirs.add("");
+	files.add(makeExportLog(files.get(0).getParentFile()));
+	dirs.add("");
 
 	//zip all export files
 	String zipName = files.get(0).getName().replace(".xml", ".zip");
@@ -2436,6 +2500,7 @@ public class DemographicExportAction4 extends Action {
 		//Remove zip & export files from temp dir
 		Util.cleanFile(zipName, tmpDir);
 		Util.cleanFiles(files);
+		Util.cleanFile(tmpDir);
 	}
 			break;
 		case E2E:
@@ -2557,45 +2622,45 @@ public class DemographicExportAction4 extends Action {
 }
 
 	File makeReadMe(ArrayList<File> fs) throws IOException {
-	File readMe = new File(fs.get(0).getParentFile(), "ReadMe.txt");
-	BufferedWriter out = new BufferedWriter(new FileWriter(readMe));
-	out.write("Physician Group					: ");
-	out.write(new ClinicData().getClinicName());
-	out.newLine();
-	out.write("CMS Vendor, Product & Version	  : ");
-	String vendor = oscarProperties.getProperty("Vendor_Product");
-	if (StringUtils.empty(vendor)) {
-		exportError.add("Error! Vendor_Product not defined in oscar.properties");
-	} else {
-		out.write(vendor);
-	}
-	out.newLine();
-	out.write("Application Support Contact		: ");
-	String support = oscarProperties.getProperty("Support_Contact");
-	if (StringUtils.empty(support)) {
-		exportError.add("Error! Support_Contact not defined in oscar.properties");
-	} else {
-		out.write(support);
-	}
-	out.newLine();
-	out.write("Date and Time stamp				: ");
-	out.write(UtilDateUtilities.getToday("yyyy-MM-dd hh:mm:ss aa"));
-	out.newLine();
-	out.write("Total patients files extracted	 : ");
-	out.write(String.valueOf(fs.size()));
-	out.newLine();
-	out.write("Number of errors				   : ");
-	out.write(String.valueOf(exportError.size()));
-	if (exportError.size()>0) out.write(" (See ExportEvent.log for detail)");
-	out.newLine();
-	out.write("Patient ID range				   : ");
-	out.write(getIDInExportFilename(fs.get(0).getName()));
-	out.write("-");
-	out.write(getIDInExportFilename(fs.get(fs.size()-1).getName()));
-	out.newLine();
-	out.close();
-
-	return readMe;
+		File readMe = new File(fs.get(0).getParentFile(), "ReadMe.txt");
+		BufferedWriter out = new BufferedWriter(new FileWriter(readMe));
+		out.write("Physician Group					: ");
+		out.write(new ClinicData().getClinicName());
+		out.newLine();
+		out.write("CMS Vendor, Product & Version	  : ");
+		String vendor = oscarProperties.getProperty("Vendor_Product");
+		if (StringUtils.empty(vendor)) {
+			exportError.add("Error! Vendor_Product not defined in oscar.properties");
+		} else {
+			out.write(vendor);
+		}
+		out.newLine();
+		out.write("Application Support Contact		: ");
+		String support = oscarProperties.getProperty("Support_Contact");
+		if (StringUtils.empty(support)) {
+			exportError.add("Error! Support_Contact not defined in oscar.properties");
+		} else {
+			out.write(support);
+		}
+		out.newLine();
+		out.write("Date and Time stamp				: ");
+		out.write(UtilDateUtilities.getToday("yyyy-MM-dd hh:mm:ss aa"));
+		out.newLine();
+		out.write("Total patients files extracted	 : ");
+		out.write(String.valueOf(fs.size()));
+		out.newLine();
+		out.write("Number of errors				   : ");
+		out.write(String.valueOf(exportError.size()));
+		if (exportError.size()>0) out.write(" (See ExportEvent.log for detail)");
+		out.newLine();
+		out.write("Patient ID range				   : ");
+		out.write(getIDInExportFilename(fs.get(0).getName()));
+		out.write("-");
+		out.write(getIDInExportFilename(fs.get(fs.size()-1).getName()));
+		out.newLine();
+		out.close();
+	
+		return readMe;
 	}
 
 	File makeExportLog(File dir) throws IOException {
@@ -2699,7 +2764,7 @@ public class DemographicExportAction4 extends Action {
 	//------------------------------------------------------------
 
 	private boolean sameEnrolment(Demographic demographic,Enrolment en) {
-		if(en != null) {
+		if(en != null && en.date!= null && demographic.getRosterDate() != null) {
 			//if(demographic.getRosterStatus().equals(en.status)) {
 				if(DateUtils.isSameDay(demographic.getRosterDate(),en.date)) {
 					if(demographic.getRosterEnrolledTo() != null && demographic.getRosterEnrolledTo().equals(en.enrolledTo)) {
@@ -2712,7 +2777,7 @@ public class DemographicExportAction4 extends Action {
 	}
 	
 	private boolean sameEnrolment(DemographicArchive demographic,Enrolment en) {
-		if(en != null) {
+		if(en != null && en.date != null && demographic.getRosterDate() != null) {
 			//if(demographic.getRosterStatus().equals(en.status)) {
 				if(DateUtils.isSameDay(demographic.getRosterDate(),en.date)) {
 					if(demographic.getRosterEnrolledTo() != null && demographic.getRosterEnrolledTo().equals(en.enrolledTo)) {
@@ -2729,9 +2794,9 @@ public class DemographicExportAction4 extends Action {
 
 		//PatientFN_PatientLN_PatientUniqueID_DOB
 		String[] sects = filename.split("_");
-		if (sects.length==4) return sects[2];
+		if (sects.length>=4) return sects[sects.length-2]; // PatientFN/PatientLN might contain an '_'.
 
-		return null;
+		return "";
 	}
 
 	private String cutExt(String filename) {
@@ -3011,7 +3076,7 @@ public class DemographicExportAction4 extends Action {
 
 		cdsDtPhoneNumber.setPhoneNumber(Util.onlyNum(phoneNo));
 		cdsDtPhoneNumber.setPhoneNumberType(phoneNoType);
-		if (phoneExt!=null) {
+		if (!StringUtils.isNullOrEmpty(phoneExt)) {
 			if (phoneExt.length()>5) {
 				phoneExt = phoneExt.substring(0,5);
 				extensionTooLong = true;
@@ -3170,7 +3235,7 @@ public class DemographicExportAction4 extends Action {
 				cdsDt.PersonNameSimple reviewerName = reviewer.addNewName();
 				ProviderData pvd = new ProviderData(lab_provider_no);
 				Util.writeNameSimple(reviewerName, pvd.getFirst_name(), pvd.getLast_name());
-				if (StringUtils.noNull(pvd.getOhip_no()).length()<=6) reviewer.setOHIPPhysicianId(pvd.getOhip_no());
+				if (StringUtils.filled(pvd.getOhip_no()) && pvd.getOhip_no().length()<=6) reviewer.setOHIPPhysicianId(pvd.getOhip_no());
 			}
 		}
 	}
@@ -3274,6 +3339,13 @@ public class DemographicExportAction4 extends Action {
 			return "yyyy-MM";
 		}
 		return null;
+	}
+	
+	protected void addResidualInformation(ResidualInformation ri, String dataType, String name, String value) {
+		DataElement de = ri.addNewDataElement();
+		de.setContent(value);
+		de.setDataType(dataType);
+		de.setName(name);
 	}
 }
 

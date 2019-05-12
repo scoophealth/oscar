@@ -29,6 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.ws.WebServiceException;
 
@@ -75,6 +76,13 @@ public class DocumentWs extends AbstractWs {
 		LoggedInInfo loggedInInfo = getLoggedInInfo();
 		List<Document> documents = documentManager.getDocumentsByProgramProviderDemographicDate(loggedInInfo, programId, providerNo, demographicId, updatedAfterThisDateExclusive, itemsToReturn);
 		logger.debug("programId="+programId+", providerNo="+providerNo+", demographicId="+demographicId+", updatedAfterThisDateExclusive="+DateFormatUtils.ISO_DATETIME_FORMAT.format(updatedAfterThisDateExclusive)+", itemsToReturn="+itemsToReturn+", results="+documents.size());
+		return (DocumentTransfer.getTransfers(loggedInInfo, documents));
+	}
+
+	public DocumentTransfer[] getDocumentsByDemographicIdAfter(@WebParam(name="lastUpdate") Calendar lastUpdate, @WebParam(name="demographicId") Integer demographicId)
+	{
+		LoggedInInfo loggedInInfo = getLoggedInInfo();
+		List<Document> documents = documentManager.getDocumentsByDemographicIdUpdateAfterDate(loggedInInfo, demographicId, lastUpdate.getTime());
 		return (DocumentTransfer.getTransfers(loggedInInfo, documents));
 	}
 }

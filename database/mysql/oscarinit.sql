@@ -323,7 +323,7 @@ CREATE TABLE consultationRequests (
   followUpDate date default NULL,
   site_name varchar(255),
   signature_img VARCHAR(20),
-  letterheadName VARCHAR(20),
+  letterheadName VARCHAR(255),
   letterheadAddress TEXT,
   letterheadPhone VARCHAR(50),
   letterheadFax VARCHAR(50),
@@ -10754,6 +10754,7 @@ CREATE TABLE `fax_config` (
   `queue` varchar(255),
   `active` tinyint(1),
   `faxNumber` varchar(10),
+  `senderEmail` varchar(255),
   PRIMARY KEY (`id`)
 );
 
@@ -11965,6 +11966,7 @@ CREATE TABLE `AppDefinition` (
   `active` tinyint(1),
   `addedBy` varchar(8),
   `added` datetime,
+  `consentTypeId` int(15),
   PRIMARY KEY (`id`)
 );
 
@@ -12412,7 +12414,7 @@ CREATE TABLE consultationRequestsArchive (
   followUpDate date default NULL,
   site_name varchar(255),
   signature_img VARCHAR(20),
-  letterheadName VARCHAR(20),
+  letterheadName VARCHAR(255),
   letterheadAddress TEXT,
   letterheadPhone VARCHAR(50),
   letterheadFax VARCHAR(50),
@@ -12455,3 +12457,14 @@ CREATE TABLE `PreventionReport` (
   `uuid` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
+
+CREATE TABLE `EFormDocs` (
+  `id` int(10) NOT NULL auto_increment PRIMARY KEY,
+  `fdid` int(10) NOT NULL,
+  `document_no` int(10) NOT NULL,
+  `doctype` char(1) NOT NULL,
+  `deleted` char(1) DEFAULT NULL,
+  `attach_date` date,
+  `provider_no` varchar(6) NOT NULL
+);
+

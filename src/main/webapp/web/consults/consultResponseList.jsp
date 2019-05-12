@@ -57,14 +57,14 @@
 			<div class="col-xs-2">
 				<input ng-model="search.referralStartDate" type="text"
 					id="referralStartDate" name="referralStartDate"
-					class="form-control" datepicker-popup="yyyy-MM-dd"
+					class="form-control" uib-datepicker-popup="yyyy-MM-dd"
 					datepicker-append-to-body="true" is-open="data.isOpen"
 					ng-click="data.isOpen = true" placeholder="<bean:message key="consult.list.referralStartDate" bundle="ui"/>">
 			</div>
 			<div class="col-xs-2">
 				<input ng-model="search.referralEndDate" type="text"
 					id="referralEndDate" name="referralEndDate" class="form-control"
-					datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true"
+					uib-datepicker-popup="yyyy-MM-dd" datepicker-append-to-body="true"
 					is-open="data2.isOpen" ng-click="data2.isOpen = true"
 					placeholder="<bean:message key="consult.list.referralEndDate" bundle="ui"/>">
 			</div>
@@ -87,14 +87,14 @@
 			<div class="col-xs-2">
 				<input ng-model="search.appointmentStartDate" type="text"
 					id="appointmentStartDate" name="appointmentStartDate"
-					class="form-control" datepicker-popup="yyyy-MM-dd"
+					class="form-control" uib-datepicker-popup="yyyy-MM-dd"
 					datepicker-append-to-body="true" is-open="data3.isOpen"
 					ng-click="data3.isOpen = true" placeholder="<bean:message key="consult.list.appointmentStartDate" bundle="ui"/>">
 			</div>
 			<div class="col-xs-2">
 				<input ng-model="search.appointmentEndDate" type="text"
 					id="appointmentEndDate" name="appointmentEndDate"
-					class="form-control" datepicker-popup="yyyy-MM-dd"
+					class="form-control" uib-datepicker-popup="yyyy-MM-dd"
 					datepicker-append-to-body="true" is-open="data4.isOpen"
 					ng-click="data4.isOpen = true" placeholder="<bean:message key="consult.list.appointmentEndDate" bundle="ui"/>">
 			</div>

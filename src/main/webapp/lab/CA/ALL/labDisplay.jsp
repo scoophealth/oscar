@@ -263,13 +263,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
         <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/effects.js"></script>
         <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/jquery/jquery-1.4.2.js"></script>
       	<script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/jquery/jquery.form.js"></script>
-      	
-
-       <script  type="text/javascript" charset="utf-8">
-
-     	  jQuery.noConflict();
-		</script>
-		
+        <script type="text/javascript" charset="utf-8">jQuery.noConflict();</script>
 	
 	<oscar:customInterface section="labView"/>
 
@@ -768,10 +762,10 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 						                	 labelval = "(not set)";
 
 						                 } %>
-					                 <span id="labelspan_<%=segmentID%>" class="Field2"><i>Label: <%=labelval %> </i></span>
+					                 <span id="labelspan_<%=segmentID%>" class="Field2"><i>Label: <%=labelval %> </i></span><br>
 
 									<% } %>
-                                    <span class="Field2"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span>
+                                    <span class="Field2" onclick="javascript:popupStart('600','800','../../../demographic/demographiccontrol.jsp?demographic_no=<%=demographicID%>&last_name=<%=java.net.URLEncoder.encode(handler.getFirstName())%>&first_name=<%=java.net.URLEncoder.encode(handler.getLastName())%>&orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25')" style="cursor:pointer;"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span>
                                 </td>
                             </tr>
                         </table>
@@ -1119,7 +1113,7 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 							    TicklerManager ticklerManager = SpringUtils.getBean(TicklerManager.class);
 							    List<Tickler> LabTicklers = null;
 							    if(demographicID != null) {
-							    	LabTicklers = ticklerManager.getTicklerByLabId(loggedInInfo, Integer.valueOf(segmentID), Integer.valueOf(demographicID));
+							    	LabTicklers = ticklerManager.getTicklerByLabIdAnyProvider(loggedInInfo, Integer.valueOf(segmentID), Integer.valueOf(demographicID));
 							    }
 							    
 							    if(LabTicklers!=null && LabTicklers.size()>0){
@@ -1643,7 +1637,7 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 										    	<td align="left"><%= rtfText + disclaimer %></td>
 										    <%}else{%>
                                            		<td align="left">
-	                                           		<pre><%= handler.getOBXResult( j, k) %><%= handler.isTestResultBlocked(j, k) ? "<a href='#' title='Do Not Disclose Without Explicit Patient Consent'>(BLOCKED)</a>" : ""%></pre>
+	                                           		<span><%= handler.getOBXResult( j, k) %><%= handler.isTestResultBlocked(j, k) ? "<a href='#' title='Do Not Disclose Without Explicit Patient Consent'>(BLOCKED)</a>" : ""%></span>
                                            		</td>
                                            	<%} %>
                                            	

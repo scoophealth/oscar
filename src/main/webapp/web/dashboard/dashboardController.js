@@ -23,7 +23,7 @@
     Ontario, Canada
 
 */
-oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerService,messageService, inboxService, k2aService, $modal,noteService, securityService, personaService) {
+oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerService,messageService, inboxService, k2aService, $uibModal,noteService, securityService, personaService) {
 	
 	//header	
 	$scope.displayDate= function() {return new Date();}
@@ -188,30 +188,30 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 		if ($scope.busyLoadingData) return;
   		$scope.busyLoadingData = true;
 		k2aService.getK2aFeed(startPoint,numberOfRows).then(function(response){
-			if(response.post == null) {
+			if(response.content == null) {
 				return;
 			}
 			
-			if (response.post instanceof Array) {
-				for(var i=0; i < response.post.length; i++) {
-					if(!Array.isArray(response.post[i].comments)) {
+			if (response.content instanceof Array) {
+				for(var i=0; i < response.content.length; i++) {
+					if(!Array.isArray(response.content[i].comments)) {
 						var arr = new Array();
-						arr[0] = response.post[i].comments;
-						response.post[i].comments = arr;						
+						arr[0] = response.content[i].comments;
+						response.content[i].comments = arr;						
 					}					
 				}
 				if(typeof $scope.k2afeed === 'undefined') {
-					$scope.k2afeed = response.post;
+					$scope.k2afeed = response.content;
 				} else {
-					$scope.k2afeed = $scope.k2afeed.concat(response.post);
+					$scope.k2afeed = $scope.k2afeed.concat(response.content);
 				}
 				$scope.busyLoadingData = false;	
 			} else {
-				if(response.post.authenticatek2a) {
-					$scope.authenticatek2a = response.post.description;
+				if(response.content.authenticatek2a) {
+					$scope.authenticatek2a = response.content.description;
 				} else {
 					var arr = new Array();
-					arr[0] = response.post;
+					arr[0] = response.content;
 					$scope.k2afeed = arr;
 				}
 			}	
@@ -277,7 +277,7 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 	}
 
 	$scope.viewTickler = function(tickler) {
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
         	templateUrl: 'tickler/ticklerView.jsp',
             controller: 'TicklerViewController',
             backdrop: false,
@@ -310,7 +310,7 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 	}
 	
 	$scope.configureTicklers = function() {
-        var modalInstance = $modal.open({
+        var modalInstance = $uibModal.open({
         	templateUrl: 'tickler/configureDashboard.jsp',
             controller: 'TicklerConfigureController',
             backdrop: false,
@@ -337,21 +337,21 @@ oscarApp.controller('DashboardCtrl', function ($scope,providerService,ticklerSer
 });
 
 
-oscarApp.controller('TicklerConfigureController',function($scope,$modalInstance,personaService,prefs) {
+oscarApp.controller('TicklerConfigureController',function($scope,$uibModalInstance,personaService,prefs) {
 	
 	$scope.prefs = prefs.dashboardPreferences;
 	
-	   $scope.close = function () {
-		   $modalInstance.close(false);		
+	    $scope.close = function () {
+		   $uibModalInstance.close(false);		
 	    }
 	    $scope.save = function () {
 	    	
 	    	personaService.updateDashboardPreferences($scope.prefs).then(function(data){
-    			$modalInstance.close(true);
+    			$uibModalInstance.close(true);
     			
     			
     		}, function(reason){
-    			$modalInstance.close(false);
+    			$uibModalInstance.close(false);
     		});
 	    	
 	    }

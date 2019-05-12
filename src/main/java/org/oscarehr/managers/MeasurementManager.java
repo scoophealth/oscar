@@ -35,6 +35,7 @@ import org.oscarehr.common.dao.MeasurementDao;
 import org.oscarehr.common.dao.MeasurementGroupStyleDao;
 import org.oscarehr.common.dao.MeasurementMapDao;
 import org.oscarehr.common.dao.PropertyDao;
+import org.oscarehr.common.model.ConsentType;
 import org.oscarehr.common.model.Measurement;
 import org.oscarehr.common.model.MeasurementGroupStyle;
 import org.oscarehr.common.model.MeasurementMap;
@@ -55,6 +56,9 @@ public class MeasurementManager {
 
 	@Autowired
 	private MeasurementMapDao measurementMapDao;
+	
+	@Autowired
+	private PatientConsentManager patientConsentManager;
 	
 	public List<Measurement> getCreatedAfterDate(LoggedInInfo loggedInInfo, Date updatedAfterThisDateExclusive, int itemsToReturn) {
 		List<Measurement> results = measurementDao.findByCreateDate(updatedAfterThisDateExclusive, itemsToReturn);
@@ -79,6 +83,18 @@ public class MeasurementManager {
 		List<Measurement> results = measurementDao.findByType(id, types);
 		if (results.size() > 0) {
 			LogAction.addLogSynchronous(loggedInInfo, "MeasurementManager.getMeasurementByType", "id=" + id);
+		}
+		return results;
+	}
+
+	public List<Measurement> getMeasurementByDemographicIdAfter(LoggedInInfo loggedInInfo, Integer demographicId, Date updateAfter) {
+		List<Measurement> results = new ArrayList<Measurement>();
+		ConsentType consentType = patientConsentManager.getProviderSpecificConsent(loggedInInfo);
+		if (patientConsentManager.hasPatientConsented(demographicId, consentType)) {
+			results = measurementDao.findByDemographicLastUpdateAfterDate(demographicId, updateAfter);
+			if (results.size() > 0) {
+				LogAction.addLogSynchronous(loggedInInfo, "MeasurementManager.getMeasurementByDemographicIdAfter", "demographicId="+demographicId+" updateAfter="+updateAfter);
+			}
 		}
 		return results;
 	}

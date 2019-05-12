@@ -1,4 +1,4 @@
-oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$location,$modal,consultService,demographicService,securityService,summaryService,staticDataService,consult,user) {
+oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$location,$uibModal,consultService,demographicService,securityService,summaryService,staticDataService,consult,user) {
 	
 	//get access rights
 	securityService.hasRight("_con", "r").then(function(data){
@@ -175,7 +175,7 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 	}
 	
 	$scope.attachFiles = function(){
-		var modalInstance = $modal.open({
+		var modalInstance = $uibModal.open({
 			templateUrl: "consults/consultAttachment.jsp",
 			controller: AttachmentCtrl,
 			windowClass: "attachment-modal-window"
@@ -190,7 +190,7 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 	}
 
 	//attachment modal controller
-	function AttachmentCtrl($scope, $modalInstance) {
+	function AttachmentCtrl($scope, $uibModalInstance) {
 		$scope.atth = {};
 		$scope.atth.patientName = consult.demographic.lastName + ", " + consult.demographic.firstName;
 		
@@ -243,7 +243,7 @@ oscarApp.controller('ConsultRequestCtrl', function ($scope,$http,$resource,$loca
 		}
 		
 		$scope.done = function() {
-			$modalInstance.close();
+			$uibModalInstance.close();
 		}
 	}
 	//end modal controller

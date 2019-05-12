@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.apache.cxf.annotations.GZIP;
@@ -56,6 +57,12 @@ public class AllergyWs extends AbstractWs {
 
 	public AllergyTransfer[] getAllergiesByProgramProviderDemographicDate(Integer programId, String providerNo, Integer demographicId, Calendar updatedAfterThisDateInclusive, int itemsToReturn) {
 		List<Allergy> allergies = allergyManager.getAllergiesByProgramProviderDemographicDate(getLoggedInInfo(), programId, providerNo, demographicId, updatedAfterThisDateInclusive, itemsToReturn);
+		return (AllergyTransfer.toTransfers(allergies));
+	}
+
+	public AllergyTransfer[] getAllergiesByDemographicIdAfter(@WebParam(name="lastUpdate") Calendar lastUpdate, @WebParam(name="demographicId") Integer demographicId)
+	{
+		List<Allergy> allergies = allergyManager.getByDemographicIdUpdatedAfterDate(getLoggedInInfo(), demographicId, lastUpdate.getTime());
 		return (AllergyTransfer.toTransfers(allergies));
 	}
 }

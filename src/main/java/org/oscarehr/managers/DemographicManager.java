@@ -34,6 +34,7 @@ import java.util.Objects;
 import org.apache.log4j.Logger;
 import org.oscarehr.common.Gender;
 import org.oscarehr.common.dao.AdmissionDao;
+import org.oscarehr.common.dao.ConsentDao;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicContactDao;
 import org.oscarehr.common.dao.DemographicCustArchiveDao;
@@ -45,6 +46,7 @@ import org.oscarehr.common.dao.DemographicMergedDao;
 import org.oscarehr.common.dao.PHRVerificationDao;
 import org.oscarehr.common.exception.PatientDirectiveException;
 import org.oscarehr.common.model.Admission;
+import org.oscarehr.common.model.Consent;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Demographic.PatientStatus;
 import org.oscarehr.common.model.DemographicContact;
@@ -107,6 +109,12 @@ public class DemographicManager {
 	
 	@Autowired
 	private SecurityInfoManager securityInfoManager;
+	
+	@Autowired
+	AppManager appManager;
+	
+	@Autowired
+	ConsentDao consentDao;
 	
 
 	public Demographic getDemographic(LoggedInInfo loggedInInfo, Integer demographicId) throws PatientDirectiveException {
@@ -185,6 +193,21 @@ public class DemographicManager {
 		}
 
 		return (results);
+	}
+	
+	public List<Demographic> getActiveDemographicAfter(LoggedInInfo loggedInInfo, Date afterDateExclusive) {
+		// lastDate format: yyyy-MM-dd HH:mm:ss
+		checkPrivilege(loggedInInfo, SecurityInfoManager.READ);
+		List<Demographic> results = demographicDao.getActiveDemographicAfter(afterDateExclusive);
+		
+		//--- log action ---
+		if (results != null) {
+			for (Demographic item : results) {
+				LogAction.addLogSynchronous(loggedInInfo, "DemographicManager.getActiveDemographicAfter(date)", "id=" + item.getId());
+			}
+		}
+
+		return results;
 	}
 
 	public List<DemographicExt> getDemographicExts(LoggedInInfo loggedInInfo, Integer id) {
@@ -540,42 +563,29 @@ public class DemographicManager {
 		return (result);
 	}
 
-	public String getPhrVerificationLevelByDemographicId(LoggedInInfo loggedInInfo, Integer demographicId) {
-		PHRVerification phrVerification = getLatestPhrVerificationByDemographicId(loggedInInfo, demographicId);
-
-		if (phrVerification != null) {
-			String authLevel = phrVerification.getVerificationLevel();
-			if (PHRVerification.VERIFICATION_METHOD_FAX.equals(authLevel) || PHRVerification.VERIFICATION_METHOD_MAIL.equals(authLevel) || PHRVerification.VERIFICATION_METHOD_EMAIL.equals(authLevel)) {
-				return PHR_VERIFICATION_LEVEL_1;
-			} else if (PHRVerification.VERIFICATION_METHOD_TEL.equals(authLevel) || PHRVerification.VERIFICATION_METHOD_VIDEOPHONE.equals(authLevel)) {
-				return PHR_VERIFICATION_LEVEL_2;
-			} else if (PHRVerification.VERIFICATION_METHOD_INPERSON.equals(authLevel)) {
-				return PHR_VERIFICATION_LEVEL_3;
+	public boolean getPhrVerificationLevelByDemographicId(LoggedInInfo loggedInInfo, Integer demographicId) {
+		Integer consentId = appManager.getAppDefinitionConsentId(loggedInInfo, "PHR");
+		if(consentId != null) {
+			Consent consent = consentDao.findByDemographicAndConsentTypeId( demographicId,  consentId  ) ;
+			if(consent != null && consent.getPatientConsented()) {
+				return true;
 			}
 		}
-
-		// blank string because preserving existing behaviour moved from PHRVerificationDao, I would have preferred returnning null on a new method...
-		return ("");
+		return false;
 	}
 
 	/**
 	 * This method should only return true if the demographic passed in is "phr verified" to a sufficient level to allow a provider to send this phr account messages.
 	 */
 	public boolean isPhrVerifiedToSendMessages(LoggedInInfo loggedInInfo, Integer demographicId) {
-		String level = getPhrVerificationLevelByDemographicId(loggedInInfo, demographicId);
-		// hard coded to 3 until some one tells me how to configure/check this
-		if (PHR_VERIFICATION_LEVEL_3.equals(level)) return (true);
-		else return (false);
+		return getPhrVerificationLevelByDemographicId(loggedInInfo, demographicId);
 	}
 
 	/**
 	 * This method should only return true if the demographic passed in is "phr verified" to a sufficient level to allow a provider to send this phr account medicalData.
 	 */
 	public boolean isPhrVerifiedToSendMedicalData(LoggedInInfo loggedInInfo, Integer demographicId) {
-		String level = getPhrVerificationLevelByDemographicId(loggedInInfo, demographicId);
-		// hard coded to 3 until some one tells me how to configure/check this
-		if (PHR_VERIFICATION_LEVEL_3.equals(level)) return (true);
-		else return (false);
+		return getPhrVerificationLevelByDemographicId(loggedInInfo, demographicId);
 	}
 
 	/**

@@ -50,6 +50,8 @@
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:HashMap m = new HashMap();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable result = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/phr/model/PHRMessage.java:Hashtable results = new Hashtable();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/rx/util/DrugrefUtil.java:List all = new ArrayList();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/rx/util/DrugrefUtil.java:Vector vec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/survey/SurveyReport.java:private List entries = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/survey/service/SurveyModelManager.java:List result = new ArrayList();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/survey/service/SurveyModelManager.java:List results = new ArrayList();</ViolationValue>
@@ -1183,6 +1185,8 @@
         <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Hashtable drug = dr.getDrug2(id, true);</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Hashtable generic = dr.getGenericName(id);</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Vector&lt;Hashtable&lt;String, Object&gt;&gt; components = (Vector&lt;Hashtable&lt;String, Object&gt;&gt;) h.get("components");</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Vector&lt;Hashtable&gt; v = (Vector&lt;Hashtable&gt;) dr.list_brands_from_element(s);</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Vector&lt;Hashtable&gt; v = (Vector&lt;Hashtable&gt;) dr.list_drug_element(s);</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:Vector&lt;Hashtable&gt; v = (Vector&lt;Hashtable&gt;) dr.list_drug_element3(s, false);</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:for (Hashtable h : v) {</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/managers/DrugLookUpManager.java:for (Hashtable&lt;String, Object&gt; o : components) {</ViolationValue>
@@ -1215,6 +1219,12 @@
         <ViolationValue>/src/main/java/org/oscarehr/provider/web/ProviderPropertyAction.java:for(Hashtable ht:queues){</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/provider/web/ProviderPropertyAction.java:import java.util.Hashtable;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/provider/web/ProviderPropertyAction.java:import java.util.Vector;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/rx/util/DrugrefUtil.java:Hashtable dsPrefs= dsmessageDao.getHashofMessages(provider,UserDSMessagePrefs.MYDRUGREF);</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/rx/util/DrugrefUtil.java:Hashtable&lt;String,String&gt; h = new Hashtable&lt;String,String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/rx/util/DrugrefUtil.java:Vector codes = new Vector(atcCodes);</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/rx/util/DrugrefUtil.java:Vector vec = new Vector();</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/rx/util/DrugrefUtil.java:import java.util.Hashtable;</ViolationValue>
+        <ViolationValue>/src/main/java/org/oscarehr/rx/util/DrugrefUtil.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/util/MiscUtilsOld.java:Vector retVec=new Vector();</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/util/MiscUtilsOld.java:import java.util.Vector;</ViolationValue>
         <ViolationValue>/src/main/java/org/oscarehr/util/MiscUtilsOld.java:public static Vector findUniqueElementVector (Vector v){</ViolationValue>

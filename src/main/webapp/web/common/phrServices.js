@@ -56,9 +56,46 @@ angular.module("phrServices", [])
                 });
            return deferred.promise;
         },
+        isPHRConsentCheck: function () {
+        	var deferred = $q.defer();
+        	$http({
+                url: this.apiPath+'/app/PHRActiveAndConsentConfigured',
+                method: "GET",
+                headers: this.configHeaders,
+              }).then(function(response){
+            	  deferred.resolve(response.data);
+                },function (data, status, headers) {
+                	deferred.reject("An error occured while getting phr content");
+                });
+           return deferred.promise;
+        },
         initPHR: function(clinicName){
            	var deferred = $q.defer();
            	 $http.post(this.apiPath+'/app/PHRInit',clinicName,this.configHeaders).then(function(response){
+               	console.log("returned from /PHRInit",response.data);
+               	deferred.resolve(response.data);
+               },function(data, status, headers){
+               	console.log("error initializing phr",data, status, headers);
+               	deferred.reject("An error occured while trying to fetching data from  PHR");
+               });
+        
+             return deferred.promise;
+        },
+        createPHRuser: function(provider){
+           	var deferred = $q.defer();
+           	 $http.post(this.apiPath+'/app/PHRCreateUser',provider,this.configHeaders).then(function(response){
+               	console.log("returned from /PHRCreateUser",response.data);
+               	deferred.resolve(response.data);
+               },function(data, status, headers){
+               	console.log("error initializing phr",data, status, headers);
+               	deferred.reject("An error occured while trying to fetching data from  PHR");
+               });
+        
+             return deferred.promise;
+        },
+        linkPHRUser: function(provider){
+           	var deferred = $q.defer();
+           	 $http.post(this.apiPath+'/app/PHRLinkUser',provider,this.configHeaders).then(function(response){
                	console.log("returned from /PHRInit",response.data);
                	deferred.resolve(response.data);
                },function(data, status, headers){
