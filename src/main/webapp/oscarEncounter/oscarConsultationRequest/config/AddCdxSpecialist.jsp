@@ -158,18 +158,18 @@
                                                  String fName = provider.getFirstName();
                                                  String lName = provider.getLastName();
                                                  String address = "";
-                                                 if (provider.getClinicName() != null) {
+                                                 if (provider.getClinicName() != null && !provider.getClinicName().isEmpty()) {
                                                      address = provider.getClinicName();
-                                                 } else if (provider.getStreetAddress() != null) {
-                                                     address += " " + provider.getStreetAddress();
-                                                 } else if (provider.getCity() != null) {
-                                                     address += " " + provider.getCity();
-                                                 } else if (provider.getProvince() != null) {
-                                                     address += " " + provider.getProvince();
-                                                 } else if (provider.getPostalCode() != null) {
-                                                     address += " " + provider.getPostalCode();
-                                                 } else if (provider.getClinicID() != null) {
-                                                     address += " " + provider.getClinicID();
+                                                 } else if (provider.getStreetAddress() != null && !provider.getStreetAddress().isEmpty()) {
+                                                     address = provider.getStreetAddress();
+                                                 } else if (provider.getCity() != null && !provider.getStreetAddress().isEmpty()) {
+                                                     address = provider.getCity();
+                                                 } else if (provider.getProvince() != null && !provider.getProvince().isEmpty()) {
+                                                     address = provider.getProvince();
+                                                 } else if (provider.getPostalCode() != null && !provider.getPostalCode().isEmpty()) {
+                                                     address = provider.getPostalCode();
+                                                 } else if (provider.getClinicID() != null && !provider.getClinicID().isEmpty()) {
+                                                     address = provider.getClinicID();
                                                  }
                                                  List<ITelco> phones = providers.get(0).getPhones();
                                                  if (phones != null && phones.size() > 0) {
@@ -188,7 +188,7 @@
                                             </td>
                                             <td>
                                                 <%
-                                                    out.print(lName + " " + fName);
+                                                    out.print(lName + "," + fName);
                                                 %>
                                             </td>
                                             <td><%=address%>

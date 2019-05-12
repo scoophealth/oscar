@@ -53,7 +53,7 @@ public class CDXSpecialist {
             List<IProvider> providers = searchProviders.findByName(s);
             if (providers != null) {
                 for (IProvider p : providers) {
-                    if (p.getLastName().startsWith(s) && !allProviders.contains(p)) {
+                    if (p.getLastName().toUpperCase().startsWith(s) && !allProviders.contains(p)) {
                         allProviders.add(p);
                     }
                 }
