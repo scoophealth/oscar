@@ -700,22 +700,7 @@ public class EctConsultationFormRequestAction extends Action {
 		}
 		// TODO:need to do something about the docs that are not PDFs
 		// create pdfs from attached labs
-//        CommonLabResultData labData = new CommonLabResultData();
-//		ArrayList labs = labData.populateLabResultsData(loggedInInfo, ""+demographic.getDemographicNo(), ""+consultationRequestId, CommonLabResultData.ATTACHED);
-//		LabResultData resData;
-//		for (int idx = 0; idx < labs.size(); ++idx) {
-//			resData = (LabResultData) labs.get(idx);
-//			resData.getSegmentID();
-//			MiscUtils.getLogger().info("lab discipline: " + resData.getDiscipline() + " datetime: " + resData.getDateTime());
-//		}
-//
-//		PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class);
-
 		try {
-//			for(Object[] i : dao.findRoutingsAndConsultDocsByRequestId(ConversionUtils.fromIntString(reqId), "L")) {
-//				PatientLabRouting p = (PatientLabRouting) i[0];
-//
-//				String segmentId = "" + p.getLabNo();
             CommonLabResultData labData = new CommonLabResultData();
             ArrayList labs = labData.populateLabResultsData(loggedInInfo, ""+demoNo, reqId, CommonLabResultData.ATTACHED);
             LabResultData resData;
@@ -778,10 +763,7 @@ public class EctConsultationFormRequestAction extends Action {
 				}
 			}
 		}
-		// TODO:need to do something about the docs that are not PDFs
 		// create pdfs from attached labs
-		PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class);
-
 		try {
             CommonLabResultData labData = new CommonLabResultData();
             ArrayList labs = labData.populateLabResultsData(loggedInInfo, demoNo, reqId, CommonLabResultData.ATTACHED);
@@ -798,10 +780,6 @@ public class EctConsultationFormRequestAction extends Action {
 			}
 		}catch(DocumentException de) {
 			MiscUtils.getLogger().error("PDF generation error: " + de.getMessage());
-		}catch(IOException ioe) {
-			MiscUtils.getLogger().error("PDF generation error: " + ioe.getMessage());
-		}catch(Exception e){
-			MiscUtils.getLogger().error("PDF generation error: " + e.getMessage());
 		}
 		ConcatPDF.concat(pdfDocs,out);
 		return fileName;
