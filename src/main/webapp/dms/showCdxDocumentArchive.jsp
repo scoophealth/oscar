@@ -48,19 +48,14 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
 
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
-<%@page import="org.springframework.web.context.WebApplicationContext,org.oscarehr.common.dao.*,org.oscarehr.common.model.*,org.oscarehr.util.SpringUtils" %>
+<%@page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="java.util.*" %>
-<%@ page import="oscar.oscarMDS.data.ReportStatus" %>
-<%@ page import="oscar.oscarLab.ca.all.AcknowledgementData" %>
-<%@ page import="java.text.SimpleDateFormat" %>
+
 <%@ page import="org.oscarehr.integration.cdx.dao.*" %>
-<%@ page import="static org.caisi.comp.web.WebComponentUtil.getServletContext" %>
 <%@ page import="org.oscarehr.integration.cdx.model.CdxProvenance" %>
 <%@ page import="org.oscarehr.integration.cdx.model.CdxAttachment" %>
 <%
 
-    WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 
     String docId = request.getParameter("ID");
     int docIdNo = Integer.parseInt(docId);
@@ -69,7 +64,6 @@
 
 
     CdxProvenance provenanceDoc = provenanceDao.getCdxProvenance(docIdNo);
-    List<CdxProvenance> versions = provenanceDao.findReceivedVersionsOrderDesc(provenanceDoc.getDocumentId());
 
 
 
@@ -103,8 +97,6 @@
     <script type="text/javascript">
         jQuery.noConflict();
 
-        var contextpath = "<%=request.getContextPath()%>";
-
     </script>
 
 </head>
@@ -132,7 +124,7 @@
                     <ul>
                         <%
                             for (CdxAttachment a : atts) { %>
-                        <li> <a href="#" onclick="javascript:popup(360, 680, '../dms/ManageDocument.do?method=viewCdxAttachment&attId=<%= a.getId() %>', 'Attachment: <%=a.getReference()%>')">
+                        <li> <a href="#" onclick="javascript:popup(360, 680, '<%= request.getContextPath() %>/dms/ManageDocument.do?method=viewCdxAttachment&attId=<%= a.getId() %>', 'Attachment: <%=a.getReference()%>')">
 
                             <%=a.getReference()%> </a> (<%=a.getAttachmentType()%>) </li>
 
