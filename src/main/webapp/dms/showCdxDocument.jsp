@@ -217,7 +217,7 @@ It must have been deleted. Please refresh your Inbox window.
 
 
                                 <input type="button" id="createNewDemo" value="New" class="btn btn-default"
-                                       onclick="popup(700,960,'<%= request.getContextPath() %>/demographic/demographicaddarecordhtm.jsp','demographic')"/>
+                                       onclick="createNewDemoAndLinkIt()"/>
 																																		</span>
 
 
@@ -647,8 +647,16 @@ It must have been deleted. Please refresh your Inbox window.
         }
 
         function updateCdxDocumentAndLinkDemo(eleId) {
-            if (confirm("Are you sure to link to this demographic?"))
+            if (confirm("Are you sure to link to this EXISTING demographic record? (Inconsistencies exist between the demographic master record and the patient named in this document.) Proceed only if you are sure you have the right patient."))
                 return updateCdxDocument(eleId);
+            else return false;
+        }
+
+        function createNewDemoAndLinkIt() {
+            if (confirm("Are you sure to CREATE A NEW demographic for the patient named in this document? (Only do this if you are certain that this patient is new)")) {
+                popup(350,480,'<%= request.getContextPath() %>/cdx/cdxCreateDemographic.jsp?msg_id=<%=provenanceDoc.getMsgId()%>&doc_no=<%=documentNo%>','demographic');
+
+            }
             else return false;
         }
 

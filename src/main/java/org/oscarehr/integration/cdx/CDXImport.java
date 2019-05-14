@@ -30,10 +30,7 @@ import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
 import ca.uvic.leadlab.obibconnector.impl.receive.ReceiveDoc;
 import ca.uvic.leadlab.obibconnector.impl.receive.SearchDoc;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.common.dao.CtlDocumentDao;
-import org.oscarehr.common.dao.DemographicDao;
-import org.oscarehr.common.dao.DocumentDao;
-import org.oscarehr.common.dao.ProviderLabRoutingDao;
+import org.oscarehr.common.dao.*;
 import org.oscarehr.common.model.*;
 import org.oscarehr.integration.cdx.dao.CdxAttachmentDao;
 import org.oscarehr.integration.cdx.dao.CdxPendingDocsDao;
@@ -62,6 +59,7 @@ public class CDXImport {
     private CdxAttachmentDao atDao;
     private DemographicDao demoDao;
     private CtlDocumentDao ctlDocDao;
+    private PatientLabRoutingDao patientLabRoutingDao;
 
     public CDXImport() {
 
@@ -79,6 +77,7 @@ public class CDXImport {
         atDao = getBean(CdxAttachmentDao.class);
         demoDao = getBean(DemographicDao.class);
         ctlDocDao = getBean(CtlDocumentDao.class);
+        patientLabRoutingDao = getBean(PatientLabRoutingDao.class);
 
 
     }
@@ -143,6 +142,21 @@ public class CDXImport {
                     MiscUtils.getLogger().error("Could not communicate CDX Error to OBIB support channel", e2);
                 }
             }
+    }
+
+
+    public IDocument retrieveDocument(String msgId) {
+        IDocument result = null;
+            try {
+
+                MiscUtils.getLogger().info("Retrieving CDX document " + msgId );
+
+                result = receiver.retrieveDocument(msgId);
+
+            } catch (Exception e) {
+                MiscUtils.getLogger().error("Error retrieving CDX message " + msgId, e);
+                }
+            return result;
     }
 
     public void storeDocument(IDocument doc, String msgId) {
@@ -310,6 +324,16 @@ public class CDXImport {
         ctlDoc.getId().setModuleId((matchedDemo==null ? -1 : matchedDemo.getId()));
         ctlDoc.setStatus("A");
         ctlDocDao.persist(ctlDoc);
+
+        if (matchedDemo != null) {
+
+            PatientLabRouting patientLabRouting = new PatientLabRouting();
+
+            patientLabRouting.setLabNo(docEntity.getDocumentNo());
+            patientLabRouting.setLabType("DOC");
+            patientLabRouting.setDemographicNo(matchedDemo.getDemographicNo());
+            patientLabRoutingDao.persist(patientLabRouting);
+        }
 
         if (matchedDemo != null && matchedDemo.getProvider() !=null) {
             ProviderLabRoutingModel plr = new ProviderLabRoutingModel();

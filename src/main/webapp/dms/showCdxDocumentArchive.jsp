@@ -110,7 +110,7 @@
 
                 <div class="panel panel-default">
 
-                    <c:import url="/share/xslt/Production_2016July07_CDA_to_HTML.xsl" var="xslt"/>
+                    <c:import url="/share/xslt/CDA_to_HTML.xsl" var="xslt"/>
                     <x:transform xml="<%=provenanceDoc.getPayload()%>" xslt="${xslt}"/>
                 </div>
 

@@ -3,7 +3,7 @@ CREATE TABLE cdx_attachment (
 															document             int ,
 															attachment_type      varchar(30)  NOT NULL  ,
 															reference 					 varchar(60) NOT NULL ,
-															content              blob  NOT NULL  ,
+															content              mediumblob  NOT NULL  ,
 															CONSTRAINT pk_cdx_attachment PRIMARY KEY ( id )
 );
 
