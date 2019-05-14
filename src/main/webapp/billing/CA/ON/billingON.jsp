@@ -710,7 +710,7 @@ function checkSli() {
 }
 
 function checkAllDates() {
-    var b = true;
+	var b = true;
 
     if(document.forms[0].xml_provider.value=="000000"){
 		alert("Please select a provider.");
@@ -724,6 +724,8 @@ function checkAllDates() {
     <% } %>
     else if(document.forms[0].xml_vdate.value.length>0) {
 		b = checkServiceDate(document.forms[0].xml_vdate.value);
+    } else if(document.forms[0].service_date.value.length>0) {
+		b = checkServiceDate(document.forms[0].service_date.value);
     } else if(document.forms[0].referralCode.value.length>0) {
 		if(document.forms[0].referralCode.value.length!=6 || !isInteger(document.forms[0].referralCode.value)) {
 		    alert("Wrong referral code!");
