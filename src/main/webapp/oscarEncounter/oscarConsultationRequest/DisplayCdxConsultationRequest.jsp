@@ -55,6 +55,14 @@
     CdxProvenance cdxProvenance = cdxProvenanceDao.getCdxProvenance(Integer.parseInt(provenanceId));
 %>
 
+
+<html>
+<head>
+    <title>CDX Consultation Request Viewer</title>
+    <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js" ></script>
+</head>
+<body>
+
 <c:import url="/share/xslt/CDA_to_HTML.xsl" var="xslt"/>
 <x:transform xml="<%=cdxProvenance.getPayload()%>" xslt="${xslt}"/>
 
@@ -64,12 +72,15 @@
     if (!atts.isEmpty()) {
 %>
 
+
 <div class="panel-footer">
     <h3>Attachments:</h3>
     <ul>
         <%
-            for (CdxAttachment a : atts) { %>
-        <li> <a href="#" onclick="javascript:popup(360, 680, '../dms/ManageDocument.do?method=viewCdxAttachment&attId=<%= a.getId() %>', 'Attachment: <%=a.getReference()%>')">
+            for (CdxAttachment a : atts) {
+                MiscUtils.getLogger().info( "id: " + a.getId() + " reference: " + a.getReference() + " type: " + a.getAttachmentType());
+        %>
+        <li> <a href="#" onclick="popup(360, 680, '../../dms/ManageDocument.do?method=viewCdxAttachment&attId=<%= a.getId() %>', 'Attachment: <%=a.getReference()%>')">
 
             <%=a.getReference()%> </a> (<%=a.getAttachmentType()%>) </li>
 
@@ -77,3 +88,5 @@
     </ul>
 </div>
 <% } %>
+</body>
+</html>

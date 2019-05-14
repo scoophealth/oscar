@@ -56,7 +56,7 @@ public class SubmitDocTest extends FacadesBaseTest {
     public void testSubmitDoc() {
 
         IDocument response = null;
-        ISubmitDoc submitDoc = new SubmitDoc(configClinicA);
+        ISubmitDoc submitDoc = new SubmitDoc(configClinicC);
         String result = null;
         try {
             response = submitDoc.newDoc()
@@ -86,15 +86,15 @@ public class SubmitDocTest extends FacadesBaseTest {
                         .address(AddressType.HOME, "111 Main St", "Victoria", "BC", "V8V Z9Z", "CA")
                         .phone(TelcoType.HOME, "250-111-1234")
                     .and().participant()
-//                        .functionCode("PCP")
-                        .id("5555")
+                        .functionCode("PCP")
+                        .id("555")
                         .name(NameType.LEGAL, "Joseph", "Cloud")
                         .address(AddressType.HOME, "111 Main St", "Victoria", "BC", "V8V Z9Z", "CA")
                         .phone(TelcoType.HOME, "250-111-1234")
                     .and().inFulfillmentOf()
                         .id("1111")
                     .and()
-                        .receiverId(clinicIdC)
+                        .receiverId(clinicIdA)
                         .content("Document plain text")
                     .submit();
             result = "success";
@@ -143,7 +143,9 @@ public class SubmitDocTest extends FacadesBaseTest {
                     .phone(TelcoType.HOME, "250-111-1234")
                 .and()
                     .receiverId(clinicIdA)
+                    .content("New referral with multiple attachments...")
                     .attach(AttachmentType.PDF, "logo.pdf", DatatypeConverter.parseBase64Binary(base64Pdf))
+                    .attach(AttachmentType.PDF, "logo2.pdf", DatatypeConverter.parseBase64Binary(base64Pdf))
                 .submit();
         logResponse(response);
         Assert.assertNotNull(response);
@@ -187,7 +189,9 @@ public class SubmitDocTest extends FacadesBaseTest {
                     .id("1111")
                     .and()
                     .receiverId(clinicIdA)
-                    .content("Document plain text")
+                    .content("Document plain text with 2 attachments")
+                    .attach(AttachmentType.PDF, "logo.pdf", DatatypeConverter.parseBase64Binary(base64Pdf))
+                    .attach(AttachmentType.PDF, "logo2.pdf", DatatypeConverter.parseBase64Binary(base64Pdf))
                     .submit();
             result = "success";
         } catch (OBIBException e) {
