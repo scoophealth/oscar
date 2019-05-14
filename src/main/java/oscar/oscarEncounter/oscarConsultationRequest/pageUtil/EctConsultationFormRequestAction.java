@@ -32,6 +32,7 @@ import ca.uvic.leadlab.obibconnector.facades.datatypes.*;
 import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
 import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
+import ca.uvic.leadlab.obibconnector.facades.send.ISubmitDoc;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -535,13 +536,16 @@ public class EctConsultationFormRequestAction extends Action {
 		Demographic demographic = demographicManager.getDemographic(loggedInInfo, consultationRequest.getDemographicId());
 
 		// Create pdf version of Consultation Request which can be attached to request.
+		String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 		String filename = null;
 //		EctConsultationFormRequestPrintPdf pdf = new EctConsultationFormRequestPrintPdf(consultationRequestId.toString(), professionalSpecialist.getAddress(), professionalSpecialist.getPhone(), professionalSpecialist.getFax(), demographic.getDemographicNo().toString());
         byte[] newBytes = null;
 		try {
-			filename = createPDF(loggedInInfo, ""+demographic.getDemographicNo(), ""+consultationRequestId); //pdf.printPdf(loggedInInfo);
-			newBytes = pdfFileToByteArray(filename);
-			MiscUtils.getLogger().info("Consultation Request PDF: " + filename);
+			filename = createPDF2(loggedInInfo, ""+demographic.getDemographicNo(), ""+consultationRequestId); //pdf.printPdf(loggedInInfo);
+			if (filename != null) {
+				newBytes = pdfFileToByteArray(path + filename);
+				MiscUtils.getLogger().info("Consultation Request PDF: " + path + filename);
+			}
 		} catch (IOException e) {
 			MiscUtils.getLogger().info(e.getMessage());
 		}
@@ -590,7 +594,8 @@ public class EctConsultationFormRequestAction extends Action {
 //			MiscUtils.getLogger().info("lab discipline: " + resData.getDiscipline() + " datetime: " + resData.getDateTime());
 //		}
 
-		response = submitDoc.newDoc()
+//		response = submitDoc.newDoc()
+        ISubmitDoc doc = submitDoc.newDoc()
                 .documentType(DocumentType.REFERRAL_NOTE)
 				.patient()
 					.id(patientId)
@@ -615,11 +620,14 @@ public class EctConsultationFormRequestAction extends Action {
 					.id(Integer.toString(consultationRequestId))
 				.and()
 					.receiverId(clinicID)
-					.content(message)
-					.attach(AttachmentType.PDF, "document.pdf", newBytes)
-				.submit();
+					.content(message);
+        if (filename != null && newBytes != null) {
+			doc = doc
+					.attach(AttachmentType.PDF, filename, newBytes);
+		}
+				response = doc.submit();
 
-		logResponse(response);
+		//logResponse(response);
 		MiscUtils.getLogger().info("Attempting to save document using logSentAction");
         CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
 		cdxProvenanceDao.logSentAction(response);
@@ -728,7 +736,7 @@ public class EctConsultationFormRequestAction extends Action {
 	private String createPDF(LoggedInInfo loggedInInfo, String demoNo, String reqId) throws IOException {
 		//Create new file to save attachments to
 		String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
-		String fileName = path + "ConsultationRequestForm-"+ UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss")+".pdf";
+		String fileName = path + "ConsultationRequestForm-"+ UtilDateUtilities.getToday("yyyy-MM-dd_hhmmss")+".pdf";
 		FileOutputStream out = new FileOutputStream(fileName);
 
 		ArrayList<EDoc> consultdocs = EDocUtil.listDocs(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
@@ -802,6 +810,7 @@ public class EctConsultationFormRequestAction extends Action {
     Exception exception = null;
     try {
 
+/*
         bos = new ByteOutputStream();
 //        ConsultationPDFCreator cpdfc = new ConsultationPDFCreator(request,bos);
 //        cpdfc.printPdf(loggedInInfo);
@@ -811,6 +820,7 @@ public class EctConsultationFormRequestAction extends Action {
         bos.close();
         streams.add(bis);
         alist.add(bis);
+*/
 
         boolean success = false;
         for (int i = 0; i < docs.size(); i++) {
@@ -869,8 +879,8 @@ public class EctConsultationFormRequestAction extends Action {
 //                    + ".pdf";
 //            response.getOutputStream().write(bos.getBytes(), 0, bos.getCount());
 //        }
-        fileName = path + "ConsultationRequestAttachedPDF-" + UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss") + ".pdf";
-        FileOutputStream out = new FileOutputStream(fileName);
+        fileName = "ConsultationRequestAttachedPDF-" + UtilDateUtilities.getToday("yyyy-MM-dd_hhmmss") + ".pdf";
+        FileOutputStream out = new FileOutputStream(path + fileName);
         out.write(bos.getBytes(), 0, bos.getCount());
     }
 
