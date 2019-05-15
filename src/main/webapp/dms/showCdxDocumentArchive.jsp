@@ -120,7 +120,7 @@
                 %>
 
                 <div class="panel-footer">
-                    <h3>Attachments:</h3>
+                    <h3>Attachments (<%=atts.size()%>):</h3>
                     <ul>
                         <%
                             for (CdxAttachment a : atts) { %>
