@@ -75,6 +75,17 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
     @Column(name = "document_no")
     private Integer documentNo;
 
+    public String getWarnings() {
+        return warnings;
+    }
+
+    public void setWarnings(String warnings) {
+        this.warnings = warnings;
+    }
+
+    @Column(name = "warnings")
+    private String warnings;
+
     public Integer getDocumentNo() {
         return documentNo;
     }

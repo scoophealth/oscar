@@ -23,6 +23,7 @@ CREATE TABLE oscar.cdx_provenance (
 																		action               varchar(10)  NOT NULL  ,
 																		log                  bigint    ,
 																		payload              text    ,
+																		warnings             text,
 																		CONSTRAINT pk_cdx_provenance_id PRIMARY KEY ( id ),
 																		CONSTRAINT cdx_prov_unique UNIQUE ( doc_id, version, action ),
 																		CONSTRAINT cdx_prov_docno_unique UNIQUE ( document_no )

@@ -147,16 +147,16 @@ public class CDXImport {
 
     public IDocument retrieveDocument(String msgId) {
         IDocument result = null;
-            try {
+        try {
 
-                MiscUtils.getLogger().info("Retrieving CDX document " + msgId );
+            MiscUtils.getLogger().info("Retrieving CDX document " + msgId );
 
-                result = receiver.retrieveDocument(msgId);
+            result = receiver.retrieveDocument(msgId);
 
-            } catch (Exception e) {
-                MiscUtils.getLogger().error("Error retrieving CDX message " + msgId, e);
-                }
-            return result;
+        } catch (Exception e) {
+            MiscUtils.getLogger().error("Error retrieving CDX message " + msgId, e);
+        }
+        return result;
     }
 
     public void storeDocument(IDocument doc, String msgId) {
@@ -183,7 +183,53 @@ public class CDXImport {
             pendDocDao.removePendDoc(pendingDocs.get(0).getDocId());
         }
 
+
+        String warnings = generateWarningsIfDemographicInconsistency(inboxDoc, doc);
+        prov.setWarnings(warnings);
+        provDao.merge(prov);
     }
+
+
+    private String generateWarningsIfDemographicInconsistency (Document inboxDoc, IDocument doc) {
+
+        String warnings = "";
+        PatientLabRouting patientLabRouting = patientLabRoutingDao.findByLabNo(inboxDoc.getDocumentNo());
+        if (patientLabRouting != null) { // was the patient successfully matched?
+            Demographic d = demoDao.getDemographic(Integer.toString(patientLabRouting.getDemographicNo()));
+            IPatient p = doc.getPatient();
+
+            if (!d.getAddress().toUpperCase().equals(p.getStreetAddress().toUpperCase()))
+                warnings = "<p>The <strong>street address</strong> in the patient's master file does not agree with the one in this document.</p>";
+
+            if (!d.getPostal().toUpperCase().equals(p.getPostalCode().toUpperCase()))
+                warnings += "<p>The <strong>postal code</strong> in the patient's master file does not agree with the one in this document.</p>";
+
+            if (!d.getCity().toUpperCase().equals(p.getCity().toUpperCase()))
+                warnings += "<p>The <strong>city</strong> in the patient's master file does not agree with the one in this document.</p>";
+            if (!d.getFirstName().toUpperCase().equals(p.getFirstName().toUpperCase()))
+                warnings += "<p>The <strong>first name</strong> in the patient's master file does not agree with the one in this document.</p>";
+
+            Boolean newTelco = false;
+
+            for (ITelco t : p.getPhones()) {
+                if (!(t.getAddress().equals(d.getPhone()) || t.getAddress().equals(d.getPhone2()))) newTelco = true;
+            }
+
+            if (newTelco)
+                warnings += "<p>The CDX document contains <strong>phone numbers</strong> for the patient that are not in the database.</p>";
+
+            newTelco = false;
+
+            for (ITelco t : p.getEmails()) {
+                if (!t.getAddress().equals(d.getEmail())) newTelco = true;
+            }
+
+            if (newTelco)
+                warnings += "<p>The CDX document contains <strong>email addresses</strong> for the patient that are not in the database.</p>";
+        }
+        return warnings;
+    }
+
 
     private Document reviseInboxData(IDocument doc, int inboxDocId) {
 

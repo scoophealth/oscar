@@ -233,27 +233,39 @@ It must have been deleted. Please refresh your Inbox window.
 
                         <% } else {
                             Demographic pat = demoDao.getDemographic(demoNo);
+                            Boolean warningsExist = !(provenanceDoc.getWarnings() == null || provenanceDoc.getWarnings().equals(""));
                         %>
 
                         <div class="panel panel-default">
                             <div class="panel-heading"> Linked Demographic </div>
                             <div class="panel-body">
-                                <strong>
 
-                                    <a href="javascript:popupStart(360, 680, '../oscarMDS/SearchPatient.do?labType=DOC&segmentID=<%= documentNo %>&name=<%=java.net.URLEncoder.encode(pat.getLastName()+", "+pat.getFirstName())%>', 'searchPatientWindow')">
-                                        <%
 
-                                            out.print(" " + pat.getFirstName()
-                                                    + " " + pat.getLastName()
-                                                    + " " + pat.getSex()
-                                                    + " " + pat.getBirthDayAsString()); %>
-                                    </a> </strong>
+                                <h1>
+                                    <%
+
+                                        out.print(" " + pat.getFirstName()
+                                                + " " + pat.getLastName()
+                                                + " " + pat.getSex()
+                                                + " " + pat.getBirthDayAsString()); %>
+                                </h1>
                             </div>
+                            <%
+                                if (warningsExist) { %>
+                            <div class="alert alert-danger" role="alert">
+                                <h4 class="alert-heading">Warning!</h4>
+                                <%=provenanceDoc.getWarnings()%>
+                            </div>
+
+                            <%
+                                provenanceDoc.setWarnings(null);
+                                provenanceDao.merge(provenanceDoc);}
+                            %>
                         </div>
                         <div class = "row">
                             <div class = "col-md-6">
 
-                                <div class="panel panel-default">
+                                <div class="panel panel-default" >
                                     <div class="panel-heading"> <bean:message key="inboxmanager.document.LinkedProvidersMsg"/> </div>
                                     <div class="panel-body">
                                         <%
@@ -503,7 +515,7 @@ It must have been deleted. Please refresh your Inbox window.
                                 List<CdxProvenance> parentDocs = provenanceDao.findReceivedVersionsOrderDesc(parentDocId);
                                 if (!parentDocs.isEmpty()) {
                                     CdxProvenance parentDoc = parentDocs.get(0);
-                                    %>
+                        %>
                         <li> <a href="showCdxDocumentArchive.jsp?ID=<%=parentDoc.getId()%>">
 
                             <%=parentDoc.getDocumentId()%> (parent document) </a>  </li>
@@ -531,7 +543,7 @@ It must have been deleted. Please refresh your Inbox window.
                             if(setId != null && (!setId.equals(""))) {
                                 List<CdxProvenance> setDocs = provenanceDao.findRelatedDocsBySetId(setId, provenanceDoc.getDocumentId());
                                 for (CdxProvenance d : setDocs) {
-                                    %>
+                        %>
 
                         <li> <a href="showCdxDocumentArchive.jsp?ID=<%=d.getId()%>">
 
