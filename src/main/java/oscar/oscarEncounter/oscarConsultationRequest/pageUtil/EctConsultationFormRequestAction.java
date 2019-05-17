@@ -423,7 +423,7 @@ public class EctConsultationFormRequestAction extends Action {
 			try {
 				doCdxSend(loggedInInfo, Integer.parseInt(requestId));
 				WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCreatedUpdateESent");
-			} catch (Exception e) {
+			} catch (OBIBException e) {
 				logger.error("Error sending CDX consultation request.", e);
 				WebUtils.addLocalisedErrorMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCreatedUpdateESendError");
 				ParameterActionForward forward = new ParameterActionForward(mapping.findForward("failESend"));
@@ -597,6 +597,9 @@ public class EctConsultationFormRequestAction extends Action {
 //		response = submitDoc.newDoc()
         ISubmitDoc doc = submitDoc.newDoc()
                 .documentType(DocumentType.REFERRAL_NOTE)
+				.inFulfillmentOf()
+					.id(Integer.toString(consultationRequestId))
+					.statusCode(OrderStatus.ACTIVE).and()
 				.patient()
 					.id(patientId)
 					.name(NameType.LEGAL, demographic.getFirstName(), demographic.getLastName())
