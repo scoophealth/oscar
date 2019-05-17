@@ -1529,8 +1529,16 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
          }
      }
      bColor=bColor?false:true;
+     
+     boolean hideColumn=false;
+     if("true".equals(OscarProperties.getInstance().getProperty("schedule.hideNonScheduledDaysInWeekView","false"))) {
+    	 if(sd == null || "0".equals(String.valueOf(sd.getAvailable())) ) {
+    		 hideColumn=true;
+    	 }
+     }
+     
 %>
-            <td valign="top" width="<%=isWeekView?100/7:100/numProvider%>%"> <!-- for the first provider's schedule -->
+            <td valign="top" width="<%=isWeekView?100/7:100/numProvider%>%" <%=hideColumn?"style=\"display:none\" ":"" %>> <!-- for the first provider's schedule -->
 
         <table border="0" cellpadding="0" bgcolor="#486ebd" cellspacing="0" width="100%"><!-- for the first provider's name -->
           <tr><td class="infirmaryView" NOWRAP ALIGN="center" BGCOLOR="<%=bColor?"#bfefff":"silver"%>">
@@ -1813,7 +1821,7 @@ for(nProvider=0;nProvider<numProvider;nProvider++) {
 
             <%
                 String nextStatus =null;
-            try {as.getNextStatus();} catch(Exception e){}
+            try {nextStatus = as.getNextStatus();} catch(Exception e){}
 			    if (nextStatus != null && !nextStatus.equals("")) {
             %>
 			<!-- Short letters -->
