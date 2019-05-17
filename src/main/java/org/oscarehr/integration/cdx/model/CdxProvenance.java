@@ -74,6 +74,16 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
     private String payload;
     @Column(name = "document_no")
     private Integer documentNo;
+    @Column(name = "status")
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getWarnings() {
         return warnings;
@@ -203,6 +213,7 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
         this.inFulfillmentOfId = doc.getInFulFillmentOfId();
         this.kind = doc.getLoincCodeDisplayName();
         this.payload = doc.getContents();
+        this.setStatus(doc.getStatusCode().code);
     }
 }
 

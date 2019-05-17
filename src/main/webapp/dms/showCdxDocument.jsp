@@ -257,9 +257,9 @@ It must have been deleted. Please refresh your Inbox window.
                                 <%=provenanceDoc.getWarnings()%>
                             </div>
 
-                            <%
-                                provenanceDoc.setWarnings(null);
-                                provenanceDao.merge(provenanceDoc);}
+                           <%
+                              //  provenanceDoc.setWarnings(null);
+                              //  provenanceDao.merge(provenanceDoc);}
                             %>
                         </div>
                         <div class = "row">
@@ -694,6 +694,12 @@ It must have been deleted. Please refresh your Inbox window.
             return false;
         }
 
+
+
+        window.onunload = refreshParent;
+        function refreshParent() {
+            window.opener.location.reload();
+        }
 
     </script>
 

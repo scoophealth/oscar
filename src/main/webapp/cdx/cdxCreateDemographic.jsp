@@ -135,6 +135,8 @@
 	demographic.setHin(cdxDoc.getPatient().getID());
 	demographic.setSex(cdxDoc.getPatient().getGender().label);
 
+	demographic.setPatientStatus(Demographic.PatientStatus.AC.toString());
+
     demographicDao.save(demographic);
 
     // -------------- now register new patient with program "OSCAR"
