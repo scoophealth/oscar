@@ -24,11 +24,12 @@
 
 package org.oscarehr.integration.cdx;
 
-import ca.uvic.leadlab.obibconnector.Support;
+import ca.uvic.leadlab.obibconnector.facades.support.ISupport;
 import ca.uvic.leadlab.obibconnector.facades.receive.*;
 import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
 import ca.uvic.leadlab.obibconnector.impl.receive.ReceiveDoc;
 import ca.uvic.leadlab.obibconnector.impl.receive.SearchDoc;
+import ca.uvic.leadlab.obibconnector.impl.support.Support;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.*;
 import org.oscarehr.common.model.*;
@@ -50,7 +51,7 @@ public class CDXImport {
     private IReceiveDoc receiver;
     private ISearchDoc docSearcher;
     private CDXConfiguration cdxConfig;
-    private Support support;
+    private ISupport support;
     private CdxPendingDocsDao pendDocDao;
     private DocumentDao     docDao;
     private ProviderDao providerDao;
