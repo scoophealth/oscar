@@ -47,6 +47,7 @@
 <%@page import="org.oscarehr.util.MiscUtils"%>
 <%@page import="java.util.Set,java.util.HashSet"%>
 <%@page import="org.oscarehr.managers.ProgramManager2"%>
+<%@page import="oscar.OscarProperties" %>
 <%
  
   String DONOTBOOK = "Do_Not_Book";
@@ -356,20 +357,27 @@ function pasteAppt(multipleSameDayGroupAppt) {
         else {
            warnMsgId.style.display = "none";
         }
-        //document.forms[0].status.value = "<%=apptObj.getStatus()%>";
         document.forms[0].duration.value = "<%=apptObj.getDuration()%>";
-        //document.forms[0].chart_no.value = "<%=apptObj.getChart_no()%>";
         document.forms[0].keyword.value = "<%=apptObj.getName()%>";
         document.forms[0].demographic_no.value = "<%=apptObj.getDemographic_no()%>";
         document.forms[0].reason.value = "<%= StringEscapeUtils.escapeJavaScript(apptObj.getReason()) %>";
         document.forms[0].notes.value = "<%= StringEscapeUtils.escapeJavaScript(apptObj.getNotes()) %>";
-        //document.forms[0].location.value = "<%=apptObj.getLocation()%>";
         document.forms[0].resources.value = "<%=apptObj.getResources()%>";
         document.forms[0].type.value = "<%=apptObj.getType()%>";
         if('<%=apptObj.getUrgency()%>' == 'critical') {
                 document.forms[0].urgency.checked = "checked";
         }
-
+		document.forms[0].reasonCode.value = "<%=apptObj.getReasonCode() %>";
+		
+		<%if("true".equals(pros.getProperty("appointment.paste.status","false"))) {%>
+			document.forms[0].status.value = "<%=apptObj.getStatus()%>";
+		<%}%>
+		<%if("true".equals(pros.getProperty("appointment.paste.location","false"))) {%>
+			document.forms[0].location.value = "<%=apptObj.getLocation()%>";
+		<%}%>
+		
+		//document.forms[0].chart_no.value = "<%=apptObj.getChart_no()%>";
+		
 }
 <% } %>
 

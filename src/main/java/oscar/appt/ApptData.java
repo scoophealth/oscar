@@ -47,6 +47,7 @@ public class ApptData {
 	String providerFirstName;
 	String ohipNo;
 	String urgency;
+	String reasonCode;
 
 	public String getAppointment_date() {
 		return appointment_date;
@@ -257,6 +258,14 @@ public class ApptData {
 	public void setUrgency(String urgency) {
     	this.urgency = urgency;
     }
+
+	public String getReasonCode() {
+		return reasonCode;
+	}
+
+	public void setReasonCode(String reasonCode) {
+		this.reasonCode = reasonCode;
+	}
 	
 	
 }
