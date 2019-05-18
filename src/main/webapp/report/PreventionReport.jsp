@@ -186,6 +186,20 @@ if(!authed) {
 						<li ng-repeat="exCode in newReport.exclusionCodes">{{exCode}} <a ng-click="deleteElement(newReport.exclusionCodes,$index)">-del-</a></li>
 					</ul>
 				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+					    <label for="provider">Exclusion Code Start Date</label>
+						<input type="date" ng-model="newReport.billingCodeStart" class="form-control"/>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+					    <label for="provider">Exclusion Code End Date</label>
+						<input type="date" ng-model="newReport.billingCodeEnd" class="form-control"/>
+					</div>
+				</div>
+			</div class="row">
+			<div class="row">
 				<div class="col-sm-2">
 					<label for="provider">Tracking Codes</label>
 					<div class="input-group">
@@ -200,17 +214,18 @@ if(!authed) {
 				</div>
 				<div class="col-sm-3">
 					<div class="form-group">
-					    <label for="provider">Exclusion and Tracking Code Start Date</label>
-						<input type="date" ng-model="newReport.billingCodeStart" class="form-control"/>
+					    <label for="provider">Tracking Code Start Date</label>
+						<input type="date" ng-model="newReport.billingTrackingCodeStart" class="form-control"/>
 					</div>
 				</div>
 				<div class="col-sm-3">
 					<div class="form-group">
-					    <label for="provider">Exclusion and Tracking Code End Date</label>
-						<input type="date" ng-model="newReport.billingCodeEnd" class="form-control"/>
+					    <label for="provider">Tracking Code End Date</label>
+						<input type="date" ng-model="newReport.billingTrackingCodeEnd" class="form-control"/>
 					</div>
 				</div>
-				
+			</div class="row">
+			<div class="row">
 				<div class="col-sm-8">
 					<div class="form-group">
 					    <label for="provider">Preventions </label>
@@ -861,8 +876,8 @@ if(!authed) {
 					reportStr = reportStr + report.searchConfig.exclusionCodes[prev] + "\n";
 					
 				}
-				
-				reportStr = reportStr+"\nTracking Codes:";
+				reportStr=reportStr + "\nExclusion Billing Code Range: "+$filter('date')(report.searchConfig.billingCodeStart)+" to "+$filter('date')(report.searchConfig.billingCodeEnd)+"\n";
+				reportStr = reportStr+"Tracking Codes:";
 				exFirst = false;
 				for(prev in report.searchConfig.trackingCodes){
 					console.log("prev",prev);
@@ -874,7 +889,7 @@ if(!authed) {
 					
 				}
 				
-				reportStr=reportStr + "\nBilling Code Range: "+$filter('date')(report.searchConfig.billingCodeStart)+" to "+$filter('date')(report.searchConfig.billingCodeEnd)+"\n";
+				reportStr=reportStr + "\nTracking Billing Code Range: "+$filter('date')(report.searchConfig.billingTrackingCodeStart)+" to "+$filter('date')(report.searchConfig.billingTrackingCodeEnd)+"\n";
 				
 				
 				
