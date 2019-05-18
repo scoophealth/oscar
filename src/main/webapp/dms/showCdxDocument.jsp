@@ -98,7 +98,6 @@ It must have been deleted. Please refresh your Inbox window.
     String demoNo = demoNoInt.toString();
     Document curdoc = docDao.findActiveByDocumentNo(documentNoInt).get(0);
     CdxProvenance provenanceDoc = provenanceDao.findByDocumentNo(documentNoInt);
-    List<CdxProvenance> versions = provenanceDao.findReceivedVersionsOrderDesc(provenanceDoc.getDocumentId());
 
 
     String providerNo = request.getParameter("providerNo");
@@ -257,11 +256,13 @@ It must have been deleted. Please refresh your Inbox window.
                                 <%=provenanceDoc.getWarnings()%>
                             </div>
 
-                           <%
-                              //  provenanceDoc.setWarnings(null);
-                              //  provenanceDao.merge(provenanceDoc);}
+                            <%
+                                //  provenanceDoc.setWarnings(null);
+                                //  provenanceDao.merge(provenanceDoc);
+                                }
                             %>
                         </div>
+
                         <div class = "row">
                             <div class = "col-md-6">
 
@@ -448,7 +449,12 @@ It must have been deleted. Please refresh your Inbox window.
 
             </div>
 
+            <!--  ************************************ this code below duplicated in showCdxDocumentArchive
+                  ************************************ keep consistent upon changing
+                  *********************BEGIN *********************************************************** -->
+
             <%
+                List<CdxProvenance> versions = provenanceDao.findReceivedVersionsOrderDesc(provenanceDoc.getDocumentId());
                 if (versions.size() > 1) {
                     if (provenanceDoc.getId().equals(versions.get(0).getId())) {
             %>
@@ -467,7 +473,7 @@ It must have been deleted. Please refresh your Inbox window.
                             <%
                                 for (CdxProvenance p : versions) {
                             %>
-                            <a href="showCdxDocument.jsp?inWindow=true&segmentID=<%=p.getDocumentNo()%>&providerNo=<%=providerNo%>" class="list-group-item <%=(p.getId().equals(provenanceDoc.getId()) ? "list-group-item-info" : "")%> ">
+                            <a href="showCdxDocumentArchive.jsp?ID=<%=p.getDocumentNo()%>" class="list-group-item <%=(p.getId().equals(provenanceDoc.getId()) ? "list-group-item-info" : "")%> ">
                                 Version <%=p.getVersion()%>, Effective time: <%=p.getEffectiveTime()%>
                             </a>
 
@@ -503,7 +509,6 @@ It must have been deleted. Please refresh your Inbox window.
                 </div>
 
                 <% }%>
-
 
 
                 <div class="panel-footer">
@@ -558,6 +563,10 @@ It must have been deleted. Please refresh your Inbox window.
                 </div>
 
             </div>
+
+            <!--        ************************************ the code above is duplicated in showCdxDocumentArchive
+                        ************************************ keep consistent upon changing
+                        *********************END *********************************************************** -->
 
 
         </div>
@@ -694,12 +703,6 @@ It must have been deleted. Please refresh your Inbox window.
             return false;
         }
 
-
-
-        window.onunload = refreshParent;
-        function refreshParent() {
-            window.opener.location.reload();
-        }
 
     </script>
 
