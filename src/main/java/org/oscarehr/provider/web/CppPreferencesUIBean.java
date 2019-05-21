@@ -303,6 +303,18 @@ public class CppPreferencesUIBean {
 		
 	}
 	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		Map<String,String> map = this.serialize();
+		for(String key:map.keySet()) {
+			String value = map.get(key);
+			
+			sb.append(key + "=" + value + "\n");
+		}
+		
+		return sb.toString();
+	}
+	
 	public void deserialize(Map<String,String> map) {
 		if(map.get(SOCIAL_HISTORY_POS)!=null)
 			setSocialHxPosition(map.get(SOCIAL_HISTORY_POS));
