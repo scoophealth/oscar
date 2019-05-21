@@ -57,6 +57,7 @@ import javax.xml.validation.Validator;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
@@ -72,6 +73,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.AbstractCodeSystemDao;
 import org.oscarehr.common.dao.ContactDao;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicContactDao;
@@ -79,6 +81,8 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.DemographicPharmacyDao;
 import org.oscarehr.common.dao.DrugReasonDao;
+import org.oscarehr.common.dao.DxresearchDAO;
+import org.oscarehr.common.dao.EpisodeDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
@@ -86,6 +90,7 @@ import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.dao.PharmacyInfoDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.exception.PatientDirectiveException;
+import org.oscarehr.common.model.AbstractCodeSystemModel;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Contact;
@@ -94,6 +99,8 @@ import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.DemographicPharmacy;
 import org.oscarehr.common.model.DrugReason;
+import org.oscarehr.common.model.Dxresearch;
+import org.oscarehr.common.model.Episode;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.PartialDate;
@@ -956,6 +963,7 @@ public class DemographicExportAction4 extends Action {
 						
 					}
 				}
+
 				if (exProblemList) {
 					// PROBLEM LIST (Concerns)
 					if (StringUtils.filled(concerns)) {
@@ -1206,6 +1214,69 @@ public class DemographicExportAction4 extends Action {
 				}
 			}
 
+			if (exProblemList) {
+				//disease registry
+				DxresearchDAO dxDao = SpringUtils.getBean(DxresearchDAO.class);
+				List<Dxresearch> dxItems = dxDao.getDxResearchItemsByPatient(demographic.getDemographicNo());
+				for(Dxresearch dx:dxItems) {
+					if(dx.getStatus() == 'A' || dx.getStatus() == 'C') {	//active
+						ProblemList pList = patientRec.addNewProblemList();
+						//pList.setProblemDiagnosisDescription("");
+						if(dx.getStartDate() != null) {
+							Util.putPartialDate(pList.addNewOnsetDate(),  dx.getStartDate(), "yyyy-MM-dd");
+						}
+						if(dx.getStatus() == 'C') {
+							Util.putPartialDate(pList.addNewResolutionDate(),  dx.getUpdateDate(), "yyyy-MM-dd");
+						}
+						cdsDt.StandardCoding diagnosis = pList.addNewDiagnosisCode();
+						diagnosis.setStandardCodingSystem(dx.getCodingSystem());
+						String code = dx.getCodingSystem().equalsIgnoreCase("icd9") ? Util.formatIcd9(dx.getDxresearchCode()) : dx.getDxresearchCode();
+						diagnosis.setStandardCode(code);
+						
+						AbstractCodeSystemDao dao = (AbstractCodeSystemDao)SpringUtils.getBean(WordUtils.uncapitalize(dx.getCodingSystem()) + "Dao");
+						if(dao != null) {
+							 AbstractCodeSystemModel result = dao.findByCode(dx.getDxresearchCode());
+							 if(result != null) {
+								 diagnosis.setStandardCodeDescription(result.getDescription());
+							 }
+						}
+						//pList.setProblemDescription(arg0);
+						//pList.setProblemStatus(arg0);
+						addOneEntry(PROBLEMLIST);
+						
+					}
+				}
+			}
+			
+			if (exProblemList) {
+				EpisodeDao episodeDao = SpringUtils.getBean(EpisodeDao.class);
+				List<Episode> episodes = episodeDao.findAll(demographic.getDemographicNo());
+				for(Episode episode : episodes) {
+					ProblemList pList = patientRec.addNewProblemList();
+					//pList.setProblemDiagnosisDescription("");
+					if(episode.getStartDate() != null) {
+						Util.putPartialDate(pList.addNewOnsetDate(),  episode.getStartDate(), "yyyy-MM-dd");
+					}
+					if(episode.getEndDate() != null) {
+						Util.putPartialDate(pList.addNewResolutionDate(),  episode.getEndDate(), "yyyy-MM-dd");
+					}
+					cdsDt.StandardCoding diagnosis = pList.addNewDiagnosisCode();
+					diagnosis.setStandardCodingSystem(episode.getCodingSystem());
+					String code = episode.getCodingSystem().equalsIgnoreCase("icd9") ? Util.formatIcd9(episode.getCode()) : episode.getCode();
+					diagnosis.setStandardCode(code);
+					
+					AbstractCodeSystemDao dao = (AbstractCodeSystemDao)SpringUtils.getBean(WordUtils.uncapitalize(episode.getCodingSystem()) + "Dao");
+					if(dao != null) {
+						 AbstractCodeSystemModel result = dao.findByCode(episode.getCode());
+						 if(result != null) {
+							 diagnosis.setStandardCodeDescription(result.getDescription());
+						 }
+					}
+					//pList.setProblemDescription(arg0);
+					//pList.setProblemStatus(arg0);
+					addOneEntry(PROBLEMLIST);
+				}
+			}
 			if (exAllergiesAndAdverseReactions) {
 				// ALLERGIES & ADVERSE REACTIONS
 				Allergy[] allergies = RxPatientData.getPatient(loggedInInfo, demoNo).getActiveAllergies();
