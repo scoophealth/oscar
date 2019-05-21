@@ -28,7 +28,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.ws.rs.Consumes;
@@ -46,17 +48,15 @@ import org.apache.log4j.Logger;
 import org.apache.tools.ant.util.DateUtils;
 import org.oscarehr.appointment.search.SearchConfig;
 import org.oscarehr.common.dao.AppointmentSearchDao;
+import org.oscarehr.common.dao.BillingONCHeader1Dao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.AppointmentSearch;
 import org.oscarehr.common.model.AppointmentStatus;
 import org.oscarehr.common.model.AppointmentType;
+import org.oscarehr.common.model.BillingONCHeader1;
 import org.oscarehr.common.model.LookupListItem;
 import org.oscarehr.common.model.ScheduleTemplateCode;
-
-import org.oscarehr.common.dao.BillingONCHeader1Dao;
-import org.oscarehr.common.model.*;
-
 import org.oscarehr.managers.AppointmentManager;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.ScheduleManager;
@@ -66,10 +66,10 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.XmlUtils;
 import org.oscarehr.web.PatientListApptBean;
 import org.oscarehr.web.PatientListApptItemBean;
-
 import org.oscarehr.ws.rest.conversion.AppointmentConverter;
 import org.oscarehr.ws.rest.conversion.AppointmentStatusConverter;
 import org.oscarehr.ws.rest.conversion.AppointmentTypeConverter;
+import org.oscarehr.ws.rest.conversion.BillingDetailConverter;
 import org.oscarehr.ws.rest.conversion.LookupListItemConverter;
 import org.oscarehr.ws.rest.conversion.NewAppointmentConverter;
 import org.oscarehr.ws.rest.conversion.ScheduleCodesConverter;
@@ -82,21 +82,15 @@ import org.oscarehr.ws.rest.to.model.AppointmentExtTo;
 import org.oscarehr.ws.rest.to.model.AppointmentSearchTo1;
 import org.oscarehr.ws.rest.to.model.AppointmentStatusTo1;
 import org.oscarehr.ws.rest.to.model.AppointmentTo1;
+import org.oscarehr.ws.rest.to.model.BillingDetailTo1;
 import org.oscarehr.ws.rest.to.model.NewAppointmentTo1;
 import org.oscarehr.ws.rest.to.model.ProviderApptsCountTo;
 import org.oscarehr.ws.rest.to.model.ProviderPeriodAppsTo;
 import org.oscarehr.ws.rest.to.model.ScheduleTemplateCodeTo;
 import org.oscarehr.ws.rest.to.model.SearchConfigTo1;
-import org.oscarehr.ws.rest.conversion.*;
-import org.oscarehr.ws.rest.to.*;
-import org.oscarehr.ws.rest.to.model.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
-
-import javax.ws.rs.*;
-import java.util.*;
 
 @Path("/schedule")
 @Component("scheduleService")
