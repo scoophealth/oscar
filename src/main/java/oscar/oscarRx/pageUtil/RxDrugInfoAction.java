@@ -26,6 +26,7 @@
 package oscar.oscarRx.pageUtil;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -64,7 +65,7 @@ public final class RxDrugInfoAction extends Action {
             if(request.getParameter("GN") != null){
                 if(! request.getParameter("GN").equals("null")){
                     GN = request.getParameter("GN");                    
-                    response.sendRedirect("http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="+GN);
+                    response.sendRedirect("http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="+ URLEncoder.encode(GN,"UTF-8"));
                 }
             }
 
@@ -78,7 +79,7 @@ public final class RxDrugInfoAction extends Action {
                     }catch(Exception e){
                      genName = BN   ;
                     }
-                    response.sendRedirect("http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="+genName);
+                    response.sendRedirect("http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="+URLEncoder.encode(genName,"UTF-8"));
                 }
             }
             
