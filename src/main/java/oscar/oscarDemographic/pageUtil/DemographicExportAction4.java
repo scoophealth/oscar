@@ -311,7 +311,7 @@ public class DemographicExportAction4 extends Action {
 		options.put( XmlOptions.SAVE_PRETTY_PRINT );
 		options.put( XmlOptions.SAVE_PRETTY_PRINT_INDENT, 3 );
 		options.put( XmlOptions.SAVE_AGGRESSIVE_NAMESPACES );
-
+		
 		HashMap<String,String> suggestedPrefix = new HashMap<String,String>();
 		suggestedPrefix.put("cds_dt","cdsd");
 		options.setSaveSuggestedPrefixes(suggestedPrefix);
@@ -2395,7 +2395,13 @@ public class DemographicExportAction4 extends Action {
 				logger.error("Error", e);
 			}
 			try {
-					omdCdsDoc.save(files.get(files.size()-1), options);
+				FileWriter fw = new FileWriter(files.get(files.size()-1));
+				omdCdsDoc.save(fw,options);
+				fw.flush();
+				fw.close();
+				
+					//omdCdsDoc.save(files.get(files.size()-1), options);
+					
 			} catch (IOException ex) {logger.error("Error", ex);
 					throw new Exception("Cannot write .xml file(s) to export directory.\n Please check directory permissions.");
 		}
@@ -2953,7 +2959,7 @@ public class DemographicExportAction4 extends Action {
 				}
 				if (StringUtils.filled(contactNote)) contact.setNote(contactNote);
 
-				fillContactInfo(loggedInInfo, contact, contactId[j], demoNo, j);
+				fillContactInfo(loggedInInfo, contact, contactId[j], demoNo, j, demoContact.getType());
 			}
 		}
 	}
@@ -3009,44 +3015,84 @@ public class DemographicExportAction4 extends Action {
 				}
 				if (StringUtils.filled(contactNote)) contact.setNote(contactNote);
 
-				fillContactInfo(loggedInInfo, contact, contactId[j], demoNo, j);
+				fillContactInfo(loggedInInfo, contact, contactId[j], demoNo, j, DemographicContact.TYPE_DEMOGRAPHIC);
 			}
 		}
 	}
 
-	private void fillContactInfo(LoggedInInfo loggedInInfo, Demographics.Contact contact, String contactId, String demoNo, int index) {
+	private void fillContactInfo(LoggedInInfo loggedInInfo, Demographics.Contact contact, String contactId, String demoNo, int index, int type) {
 
-		org.oscarehr.common.model.Demographic relDemo = new DemographicData().getDemographic(loggedInInfo, contactId);
-		HashMap<String,String> relDemoExt = new HashMap<String,String>();
-		relDemoExt.putAll(demographicExtDao.getAllValuesForDemo(Integer.parseInt(contactId)));
-
-		Util.writeNameSimple(contact.addNewName(), relDemo.getFirstName(), relDemo.getLastName());
-		if (StringUtils.empty(relDemo.getFirstName())) {
-			exportError.add("Error! No First Name for contact ("+index+") for Patient "+demoNo);
-		}
-		if (StringUtils.empty(relDemo.getLastName())) {
-			exportError.add("Error! No Last Name for contact ("+index+") for Patient "+demoNo);
-		}
-
-		if (StringUtils.filled(relDemo.getEmail())) contact.setEmailAddress(relDemo.getEmail());
-
-		boolean phoneExtTooLong = false;
-		if (phoneNoValid(relDemo.getPhone())) {
-			phoneExtTooLong = addPhone(relDemo.getPhone(), relDemoExt.get("hPhoneExt"), cdsDt.PhoneNumberType.R, contact.addNewPhoneNumber());
-			if (phoneExtTooLong) {
-				exportError.add("Home phone extension too long, export trimmed for contact ("+(index+1)+") of Patient "+demoNo);
+		if(type == DemographicContact.TYPE_DEMOGRAPHIC) {
+			org.oscarehr.common.model.Demographic relDemo = new DemographicData().getDemographic(loggedInInfo, contactId);
+			HashMap<String,String> relDemoExt = new HashMap<String,String>();
+			relDemoExt.putAll(demographicExtDao.getAllValuesForDemo(Integer.parseInt(contactId)));
+	
+			Util.writeNameSimple(contact.addNewName(), relDemo.getFirstName(), relDemo.getLastName());
+			if (StringUtils.empty(relDemo.getFirstName())) {
+				exportError.add("Error! No First Name for contact ("+index+") for Patient "+demoNo);
+			}
+			if (StringUtils.empty(relDemo.getLastName())) {
+				exportError.add("Error! No Last Name for contact ("+index+") for Patient "+demoNo);
+			}
+	
+			if (StringUtils.filled(relDemo.getEmail())) contact.setEmailAddress(relDemo.getEmail());
+	
+			boolean phoneExtTooLong = false;
+			if (phoneNoValid(relDemo.getPhone())) {
+				phoneExtTooLong = addPhone(relDemo.getPhone(), relDemoExt.get("hPhoneExt"), cdsDt.PhoneNumberType.R, contact.addNewPhoneNumber());
+				if (phoneExtTooLong) {
+					exportError.add("Home phone extension too long, export trimmed for contact ("+(index+1)+") of Patient "+demoNo);
+				}
+			}
+	
+			if (phoneNoValid(relDemo.getPhone2())) {
+				phoneExtTooLong = addPhone(relDemo.getPhone2(), relDemoExt.get("wPhoneExt"), cdsDt.PhoneNumberType.W, contact.addNewPhoneNumber());
+				if (phoneExtTooLong) {
+					exportError.add("Work phone extension too long, export trimmed for contact ("+(index+1)+") of Patient "+demoNo);
+				}
+			}
+	
+			if (phoneNoValid(relDemoExt.get("demo_cell"))) {
+				addPhone(relDemoExt.get("demo_cell"), null, cdsDt.PhoneNumberType.C, contact.addNewPhoneNumber());
 			}
 		}
-
-		if (phoneNoValid(relDemo.getPhone2())) {
-			phoneExtTooLong = addPhone(relDemo.getPhone2(), relDemoExt.get("wPhoneExt"), cdsDt.PhoneNumberType.W, contact.addNewPhoneNumber());
-			if (phoneExtTooLong) {
-				exportError.add("Work phone extension too long, export trimmed for contact ("+(index+1)+") of Patient "+demoNo);
+		
+		if(type == DemographicContact.TYPE_CONTACT) {
+			ContactDao cDao = SpringUtils.getBean(ContactDao.class);
+			Contact c = cDao.find(Integer.parseInt(contactId));
+			if(c != null) {
+				Util.writeNameSimple(contact.addNewName(), c.getFirstName(), c.getLastName());
+				if (StringUtils.empty(c.getFirstName())) {
+					exportError.add("Error! No First Name for contact ("+index+") for Patient "+demoNo);
+				}
+				if (StringUtils.empty(c.getLastName())) {
+					exportError.add("Error! No Last Name for contact ("+index+") for Patient "+demoNo);
+				}
+		
+				if (StringUtils.filled(c.getEmail())) contact.setEmailAddress(c.getEmail());
+					
+				boolean phoneExtTooLong = false;
+				if (phoneNoValid(c.getPhone())) {
+					phoneExtTooLong = addPhone(c.getPhone(), "", cdsDt.PhoneNumberType.R, contact.addNewPhoneNumber());
+					if (phoneExtTooLong) {
+						exportError.add("Home phone extension too long, export trimmed for contact ("+(index+1)+") of Patient "+demoNo);
+					}
+				}
+		
+				if (phoneNoValid(c.getWorkPhone())) {
+					phoneExtTooLong = addPhone(c.getWorkPhone(), c.getWorkPhoneExtension(), cdsDt.PhoneNumberType.W, contact.addNewPhoneNumber());
+					if (phoneExtTooLong) {
+						exportError.add("Work phone extension too long, export trimmed for contact ("+(index+1)+") of Patient "+demoNo);
+					}
+				}
+		
+				if (phoneNoValid(c.getCellPhone())) {
+					addPhone(c.getCellPhone(), null, cdsDt.PhoneNumberType.C, contact.addNewPhoneNumber());
+				}
+			} else {
+				exportError.add("Contact not found in DB");
 			}
-		}
-
-		if (phoneNoValid(relDemoExt.get("demo_cell"))) {
-			addPhone(relDemoExt.get("demo_cell"), null, cdsDt.PhoneNumberType.C, contact.addNewPhoneNumber());
+			
 		}
 	}
 
