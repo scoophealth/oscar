@@ -34,7 +34,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.common.model.OscarLog;
 import org.oscarehr.util.LoggedInInfo;
+
+import oscar.log.LogAction;
 
 public class CppPreferencesAction extends DispatchAction {
 
@@ -59,6 +62,17 @@ public class CppPreferencesAction extends DispatchAction {
 		bean.deserializeParams(parameters);
 		bean.saveValues();
 		bean.loadValues();
+		
+		OscarLog oscarLog = new OscarLog();
+		oscarLog.setAction("SAVE_CUSTOM_CPP");
+		oscarLog.setContent(null);
+		oscarLog.setContentId(null);
+		oscarLog.setData(bean.toString());
+		oscarLog.setDemographicId(null);
+		oscarLog.setIp(request.getRemoteAddr());
+		oscarLog.setProviderNo(loggedInInfo.getLoggedInProviderNo());
+		LogAction.addLogSynchronous(oscarLog);
+		
 		request.setAttribute("bean", bean);
 		return mapping.findForward("exit");
 	}
