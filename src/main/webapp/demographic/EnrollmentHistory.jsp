@@ -168,7 +168,7 @@
 					String itemRosterStatus = da.getRosterStatus();
 					
 					//has any field changed.
-					if(!itemRosterStatus.equals(currentRosterStatus)) {
+					if(itemRosterStatus != null && !itemRosterStatus.equals(currentRosterStatus)) {
 						String iRosterStatus = da.getRosterStatus();
 						
 						if("".equals(iRosterStatus)) {
