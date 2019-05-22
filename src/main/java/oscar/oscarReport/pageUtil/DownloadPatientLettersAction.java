@@ -27,6 +27,7 @@ package oscar.oscarReport.pageUtil;
 
 import java.util.Hashtable;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -71,9 +72,14 @@ public class DownloadPatientLettersAction extends Action {
             Hashtable h = manageLetters.getReportData(fileId);
             String filename = (String) h.get("file_name");
             response.addHeader("Content-Disposition", "attachment;filename=" + filename);
-            response.addHeader("Content-Disposition", "attachment;filename=report.txt" );   
-            manageLetters.writeLetterToStream(fileId,response.getOutputStream());
-        } catch (Exception ex) {MiscUtils.getLogger().error("Error", ex);
+            response.addHeader("Content-Disposition", "attachment;filename=report.txt" );  
+            ServletOutputStream output = response.getOutputStream();
+            manageLetters.writeLetterToStream(fileId,output);
+            output.flush();
+            output.close();
+           
+        } catch (Exception ex) {
+        		log.error("Error", ex);
         }
         
         if (log.isTraceEnabled()) { log.trace("End of DownloadPatientLettersAction Action");}
