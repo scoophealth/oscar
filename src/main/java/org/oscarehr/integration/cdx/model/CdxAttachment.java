@@ -48,7 +48,6 @@ public class CdxAttachment extends AbstractModel<Integer> implements Serializabl
     @Basic(optional = false)
     @Column(name = "document")
     private Integer document;
-    @Basic(optional = false)
     @Column(name = "reference")
     private String reference;
     @Basic(optional = false)
