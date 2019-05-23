@@ -57,6 +57,7 @@ import javax.xml.validation.Validator;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
@@ -72,6 +73,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteExt;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.common.dao.AbstractCodeSystemDao;
 import org.oscarehr.common.dao.ContactDao;
 import org.oscarehr.common.dao.DemographicArchiveDao;
 import org.oscarehr.common.dao.DemographicContactDao;
@@ -79,6 +81,8 @@ import org.oscarehr.common.dao.DemographicDao;
 import org.oscarehr.common.dao.DemographicExtDao;
 import org.oscarehr.common.dao.DemographicPharmacyDao;
 import org.oscarehr.common.dao.DrugReasonDao;
+import org.oscarehr.common.dao.DxresearchDAO;
+import org.oscarehr.common.dao.EpisodeDao;
 import org.oscarehr.common.dao.Hl7TextInfoDao;
 import org.oscarehr.common.dao.Hl7TextMessageDao;
 import org.oscarehr.common.dao.OscarAppointmentDao;
@@ -86,6 +90,7 @@ import org.oscarehr.common.dao.PartialDateDao;
 import org.oscarehr.common.dao.PharmacyInfoDao;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.exception.PatientDirectiveException;
+import org.oscarehr.common.model.AbstractCodeSystemModel;
 import org.oscarehr.common.model.Allergy;
 import org.oscarehr.common.model.Appointment;
 import org.oscarehr.common.model.Contact;
@@ -94,6 +99,8 @@ import org.oscarehr.common.model.DemographicArchive;
 import org.oscarehr.common.model.DemographicContact;
 import org.oscarehr.common.model.DemographicPharmacy;
 import org.oscarehr.common.model.DrugReason;
+import org.oscarehr.common.model.Dxresearch;
+import org.oscarehr.common.model.Episode;
 import org.oscarehr.common.model.Hl7TextInfo;
 import org.oscarehr.common.model.Hl7TextMessage;
 import org.oscarehr.common.model.PartialDate;
@@ -311,7 +318,7 @@ public class DemographicExportAction4 extends Action {
 		options.put( XmlOptions.SAVE_PRETTY_PRINT );
 		options.put( XmlOptions.SAVE_PRETTY_PRINT_INDENT, 3 );
 		options.put( XmlOptions.SAVE_AGGRESSIVE_NAMESPACES );
-
+		
 		HashMap<String,String> suggestedPrefix = new HashMap<String,String>();
 		suggestedPrefix.put("cds_dt","cdsd");
 		options.setSaveSuggestedPrefixes(suggestedPrefix);
@@ -956,6 +963,7 @@ public class DemographicExportAction4 extends Action {
 						
 					}
 				}
+
 				if (exProblemList) {
 					// PROBLEM LIST (Concerns)
 					if (StringUtils.filled(concerns)) {
@@ -1206,6 +1214,69 @@ public class DemographicExportAction4 extends Action {
 				}
 			}
 
+			if (exProblemList) {
+				//disease registry
+				DxresearchDAO dxDao = SpringUtils.getBean(DxresearchDAO.class);
+				List<Dxresearch> dxItems = dxDao.getDxResearchItemsByPatient(demographic.getDemographicNo());
+				for(Dxresearch dx:dxItems) {
+					if(dx.getStatus() == 'A' || dx.getStatus() == 'C') {	//active
+						ProblemList pList = patientRec.addNewProblemList();
+						//pList.setProblemDiagnosisDescription("");
+						if(dx.getStartDate() != null) {
+							Util.putPartialDate(pList.addNewOnsetDate(),  dx.getStartDate(), "yyyy-MM-dd");
+						}
+						if(dx.getStatus() == 'C') {
+							Util.putPartialDate(pList.addNewResolutionDate(),  dx.getUpdateDate(), "yyyy-MM-dd");
+						}
+						cdsDt.StandardCoding diagnosis = pList.addNewDiagnosisCode();
+						diagnosis.setStandardCodingSystem(dx.getCodingSystem());
+						String code = dx.getCodingSystem().equalsIgnoreCase("icd9") ? Util.formatIcd9(dx.getDxresearchCode()) : dx.getDxresearchCode();
+						diagnosis.setStandardCode(code);
+						
+						AbstractCodeSystemDao dao = (AbstractCodeSystemDao)SpringUtils.getBean(WordUtils.uncapitalize(dx.getCodingSystem()) + "Dao");
+						if(dao != null) {
+							 AbstractCodeSystemModel result = dao.findByCode(dx.getDxresearchCode());
+							 if(result != null) {
+								 diagnosis.setStandardCodeDescription(result.getDescription());
+							 }
+						}
+						//pList.setProblemDescription(arg0);
+						//pList.setProblemStatus(arg0);
+						addOneEntry(PROBLEMLIST);
+						
+					}
+				}
+			}
+			
+			if (exProblemList) {
+				EpisodeDao episodeDao = SpringUtils.getBean(EpisodeDao.class);
+				List<Episode> episodes = episodeDao.findAll(demographic.getDemographicNo());
+				for(Episode episode : episodes) {
+					ProblemList pList = patientRec.addNewProblemList();
+					//pList.setProblemDiagnosisDescription("");
+					if(episode.getStartDate() != null) {
+						Util.putPartialDate(pList.addNewOnsetDate(),  episode.getStartDate(), "yyyy-MM-dd");
+					}
+					if(episode.getEndDate() != null) {
+						Util.putPartialDate(pList.addNewResolutionDate(),  episode.getEndDate(), "yyyy-MM-dd");
+					}
+					cdsDt.StandardCoding diagnosis = pList.addNewDiagnosisCode();
+					diagnosis.setStandardCodingSystem(episode.getCodingSystem());
+					String code = episode.getCodingSystem().equalsIgnoreCase("icd9") ? Util.formatIcd9(episode.getCode()) : episode.getCode();
+					diagnosis.setStandardCode(code);
+					
+					AbstractCodeSystemDao dao = (AbstractCodeSystemDao)SpringUtils.getBean(WordUtils.uncapitalize(episode.getCodingSystem()) + "Dao");
+					if(dao != null) {
+						 AbstractCodeSystemModel result = dao.findByCode(episode.getCode());
+						 if(result != null) {
+							 diagnosis.setStandardCodeDescription(result.getDescription());
+						 }
+					}
+					//pList.setProblemDescription(arg0);
+					//pList.setProblemStatus(arg0);
+					addOneEntry(PROBLEMLIST);
+				}
+			}
 			if (exAllergiesAndAdverseReactions) {
 				// ALLERGIES & ADVERSE REACTIONS
 				Allergy[] allergies = RxPatientData.getPatient(loggedInInfo, demoNo).getActiveAllergies();
@@ -2395,7 +2466,13 @@ public class DemographicExportAction4 extends Action {
 				logger.error("Error", e);
 			}
 			try {
-					omdCdsDoc.save(files.get(files.size()-1), options);
+				FileWriter fw = new FileWriter(files.get(files.size()-1));
+				omdCdsDoc.save(fw,options);
+				fw.flush();
+				fw.close();
+				
+					//omdCdsDoc.save(files.get(files.size()-1), options);
+					
 			} catch (IOException ex) {logger.error("Error", ex);
 					throw new Exception("Cannot write .xml file(s) to export directory.\n Please check directory permissions.");
 		}
@@ -2953,7 +3030,7 @@ public class DemographicExportAction4 extends Action {
 				}
 				if (StringUtils.filled(contactNote)) contact.setNote(contactNote);
 
-				fillContactInfo(loggedInInfo, contact, contactId[j], demoNo, j);
+				fillContactInfo(loggedInInfo, contact, contactId[j], demoNo, j, demoContact.getType());
 			}
 		}
 	}
@@ -3009,44 +3086,84 @@ public class DemographicExportAction4 extends Action {
 				}
 				if (StringUtils.filled(contactNote)) contact.setNote(contactNote);
 
-				fillContactInfo(loggedInInfo, contact, contactId[j], demoNo, j);
+				fillContactInfo(loggedInInfo, contact, contactId[j], demoNo, j, DemographicContact.TYPE_DEMOGRAPHIC);
 			}
 		}
 	}
 
-	private void fillContactInfo(LoggedInInfo loggedInInfo, Demographics.Contact contact, String contactId, String demoNo, int index) {
+	private void fillContactInfo(LoggedInInfo loggedInInfo, Demographics.Contact contact, String contactId, String demoNo, int index, int type) {
 
-		org.oscarehr.common.model.Demographic relDemo = new DemographicData().getDemographic(loggedInInfo, contactId);
-		HashMap<String,String> relDemoExt = new HashMap<String,String>();
-		relDemoExt.putAll(demographicExtDao.getAllValuesForDemo(Integer.parseInt(contactId)));
-
-		Util.writeNameSimple(contact.addNewName(), relDemo.getFirstName(), relDemo.getLastName());
-		if (StringUtils.empty(relDemo.getFirstName())) {
-			exportError.add("Error! No First Name for contact ("+index+") for Patient "+demoNo);
-		}
-		if (StringUtils.empty(relDemo.getLastName())) {
-			exportError.add("Error! No Last Name for contact ("+index+") for Patient "+demoNo);
-		}
-
-		if (StringUtils.filled(relDemo.getEmail())) contact.setEmailAddress(relDemo.getEmail());
-
-		boolean phoneExtTooLong = false;
-		if (phoneNoValid(relDemo.getPhone())) {
-			phoneExtTooLong = addPhone(relDemo.getPhone(), relDemoExt.get("hPhoneExt"), cdsDt.PhoneNumberType.R, contact.addNewPhoneNumber());
-			if (phoneExtTooLong) {
-				exportError.add("Home phone extension too long, export trimmed for contact ("+(index+1)+") of Patient "+demoNo);
+		if(type == DemographicContact.TYPE_DEMOGRAPHIC) {
+			org.oscarehr.common.model.Demographic relDemo = new DemographicData().getDemographic(loggedInInfo, contactId);
+			HashMap<String,String> relDemoExt = new HashMap<String,String>();
+			relDemoExt.putAll(demographicExtDao.getAllValuesForDemo(Integer.parseInt(contactId)));
+	
+			Util.writeNameSimple(contact.addNewName(), relDemo.getFirstName(), relDemo.getLastName());
+			if (StringUtils.empty(relDemo.getFirstName())) {
+				exportError.add("Error! No First Name for contact ("+index+") for Patient "+demoNo);
+			}
+			if (StringUtils.empty(relDemo.getLastName())) {
+				exportError.add("Error! No Last Name for contact ("+index+") for Patient "+demoNo);
+			}
+	
+			if (StringUtils.filled(relDemo.getEmail())) contact.setEmailAddress(relDemo.getEmail());
+	
+			boolean phoneExtTooLong = false;
+			if (phoneNoValid(relDemo.getPhone())) {
+				phoneExtTooLong = addPhone(relDemo.getPhone(), relDemoExt.get("hPhoneExt"), cdsDt.PhoneNumberType.R, contact.addNewPhoneNumber());
+				if (phoneExtTooLong) {
+					exportError.add("Home phone extension too long, export trimmed for contact ("+(index+1)+") of Patient "+demoNo);
+				}
+			}
+	
+			if (phoneNoValid(relDemo.getPhone2())) {
+				phoneExtTooLong = addPhone(relDemo.getPhone2(), relDemoExt.get("wPhoneExt"), cdsDt.PhoneNumberType.W, contact.addNewPhoneNumber());
+				if (phoneExtTooLong) {
+					exportError.add("Work phone extension too long, export trimmed for contact ("+(index+1)+") of Patient "+demoNo);
+				}
+			}
+	
+			if (phoneNoValid(relDemoExt.get("demo_cell"))) {
+				addPhone(relDemoExt.get("demo_cell"), null, cdsDt.PhoneNumberType.C, contact.addNewPhoneNumber());
 			}
 		}
-
-		if (phoneNoValid(relDemo.getPhone2())) {
-			phoneExtTooLong = addPhone(relDemo.getPhone2(), relDemoExt.get("wPhoneExt"), cdsDt.PhoneNumberType.W, contact.addNewPhoneNumber());
-			if (phoneExtTooLong) {
-				exportError.add("Work phone extension too long, export trimmed for contact ("+(index+1)+") of Patient "+demoNo);
+		
+		if(type == DemographicContact.TYPE_CONTACT) {
+			ContactDao cDao = SpringUtils.getBean(ContactDao.class);
+			Contact c = cDao.find(Integer.parseInt(contactId));
+			if(c != null) {
+				Util.writeNameSimple(contact.addNewName(), c.getFirstName(), c.getLastName());
+				if (StringUtils.empty(c.getFirstName())) {
+					exportError.add("Error! No First Name for contact ("+index+") for Patient "+demoNo);
+				}
+				if (StringUtils.empty(c.getLastName())) {
+					exportError.add("Error! No Last Name for contact ("+index+") for Patient "+demoNo);
+				}
+		
+				if (StringUtils.filled(c.getEmail())) contact.setEmailAddress(c.getEmail());
+					
+				boolean phoneExtTooLong = false;
+				if (phoneNoValid(c.getPhone())) {
+					phoneExtTooLong = addPhone(c.getPhone(), "", cdsDt.PhoneNumberType.R, contact.addNewPhoneNumber());
+					if (phoneExtTooLong) {
+						exportError.add("Home phone extension too long, export trimmed for contact ("+(index+1)+") of Patient "+demoNo);
+					}
+				}
+		
+				if (phoneNoValid(c.getWorkPhone())) {
+					phoneExtTooLong = addPhone(c.getWorkPhone(), c.getWorkPhoneExtension(), cdsDt.PhoneNumberType.W, contact.addNewPhoneNumber());
+					if (phoneExtTooLong) {
+						exportError.add("Work phone extension too long, export trimmed for contact ("+(index+1)+") of Patient "+demoNo);
+					}
+				}
+		
+				if (phoneNoValid(c.getCellPhone())) {
+					addPhone(c.getCellPhone(), null, cdsDt.PhoneNumberType.C, contact.addNewPhoneNumber());
+				}
+			} else {
+				exportError.add("Contact not found in DB");
 			}
-		}
-
-		if (phoneNoValid(relDemoExt.get("demo_cell"))) {
-			addPhone(relDemoExt.get("demo_cell"), null, cdsDt.PhoneNumberType.C, contact.addNewPhoneNumber());
+			
 		}
 	}
 
