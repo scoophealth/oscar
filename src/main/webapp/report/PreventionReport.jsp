@@ -43,6 +43,7 @@ if(!authed) {
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 
+
 <html ng-app="preventionReport">
 <head>
 	<title><bean:message key="oscarprevention.index.oscarpreventiontitre" /></title>
