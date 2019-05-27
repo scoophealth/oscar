@@ -279,13 +279,19 @@ public class AppointmentManager {
 		cal.set(Calendar.DAY_OF_MONTH, 1);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
-		
+		cal.set(Calendar.SECOND,0);
 		Date startDate = cal.getTime();
 		
-		cal.set(Calendar.DAY_OF_MONTH,cal.getActualMaximum(Calendar.DAY_OF_MONTH)+1);
+		cal.set(Calendar.DAY_OF_MONTH,cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		//cal.add(Calendar.MINUTE,-1);  //this won't get the last day of the month
 		
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		
+		cal.add(Calendar.SECOND, -1);
 		Date endDate = cal.getTime();
+		
 		
 		logger.info("monthly - checking from " + startDate + " to " + endDate);
 		

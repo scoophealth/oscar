@@ -113,7 +113,6 @@ import org.oscarehr.common.model.DemographicPharmacy;
 import org.oscarehr.common.model.DocumentExtraReviewer;
 import org.oscarehr.common.model.Drug;
 import org.oscarehr.common.model.DrugReason;
-import org.oscarehr.common.model.Facility;
 import org.oscarehr.common.model.MeasurementsExt;
 import org.oscarehr.common.model.PartialDate;
 import org.oscarehr.common.model.PharmacyInfo;
@@ -133,7 +132,6 @@ import org.oscarehr.hospitalReportManager.model.HRMDocumentToProvider;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SessionConstants;
 import org.oscarehr.util.SpringUtils;
 
 import ca.uhn.hl7v2.HL7Exception;
@@ -191,7 +189,6 @@ import oscar.OscarProperties;
 import oscar.dms.EDocUtil;
 import oscar.oscarDemographic.data.DemographicAddResult;
 import oscar.oscarDemographic.data.DemographicData;
-import oscar.oscarDemographic.data.DemographicRelationship;
 import oscar.oscarEncounter.data.EctProgram;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportExportMeasurements;
 import oscar.oscarLab.FileUploadCheck;
@@ -364,6 +361,70 @@ import oscar.util.UtilDateUtilities;
             logger.error("Error", e);
 	}
 
+	
+	
+	//CONTACTS MUST BE PROCESSED AFTER
+	try {
+		byte[] buf = new byte[1024];
+        int len;
+        
+        if (matchFileExt(ifile, "zip")) {
+        	saveParts(tmpDir,ifile);
+            ZipInputStream in = new ZipInputStream(new FileInputStream(ifile));
+            boolean noXML = true;
+            ZipEntry entry = in.getNextEntry();
+            String entryDir = "";
+
+            while (entry!=null) {
+                String entryName = entry.getName();
+                if (entry.isDirectory()) entryDir = entryName;
+                if (entryName.startsWith(entryDir)) entryName = entryName.substring(entryDir.length());
+
+                String ofile = tmpDir + entryName;
+                if (matchFileExt(ofile, "xml")) {
+                	new File(ofile).getParentFile().mkdirs();
+                	
+                    noXML = false;
+                    OutputStream out = null;    
+                    try {
+                        out = new FileOutputStream(ofile);
+                        while ((len=in.read(buf)) > 0) out.write(buf,0,len);
+                        out.close();
+                    } finally {
+                    	IOUtils.closeQuietly(out);
+                    }
+                    //process for contacts only
+                  //  logger.info("processing for contacts - " + ofile);
+                    logs.add(importContacts(LoggedInInfo.getLoggedInInfoFromSession(request) , ofile, warnings, request,frm.getTimeshiftInDays(),students,courseId));
+                 
+                    demographicNo=null;
+                }
+                entry = in.getNextEntry();
+            }
+            if (noXML) {
+                Util.cleanFile(ifile);
+                    throw new Exception ("Error! No .xml file in zip");
+            } else {
+               // importLog = makeImportLog(logs, tmpDir);
+            }
+            in.close();
+            Util.cleanFile(ifile);
+
+        } else if (matchFileExt(ifile, "xml")) {
+        	logger.info("processing for contacts - " + ifile);
+        	logs.add(importContacts(LoggedInInfo.getLoggedInInfoFromSession(request), ifile, warnings, request,frm.getTimeshiftInDays(),students,courseId));
+            demographicNo=null;
+           // importLog = makeImportLog(logs, tmpDir);
+        } else {
+            Util.cleanFile(ifile);
+            throw new Exception ("Error! Import file must be .xml or .zip");
+        }
+} catch (Exception e) {
+        warnings.add("Error processing file: " + imp.getFileName());
+        logger.error("Error", e);
+}
+	
+	
         //channel warnings and importlog to browser
         request.setAttribute("warnings",warnings);
         if (importLog!=null) request.setAttribute("importlog",importLog.getPath());
@@ -419,6 +480,10 @@ import oscar.util.UtilDateUtilities;
     	}
     	request.getSession().setAttribute("providerBean", providerBean);
     }
+    String[] importContacts(LoggedInInfo loggedInInfo, String xmlFile, ArrayList<String> warnings, HttpServletRequest request, int timeShiftInDays,List<Provider> students, int courseId) throws SQLException, Exception {
+    	return importContacts(loggedInInfo, xmlFile,warnings,request,timeShiftInDays,null,null,0);
+    }
+    
     String[] importXML(LoggedInInfo loggedInInfo, String xmlFile, ArrayList<String> warnings, HttpServletRequest request, int timeShiftInDays,List<Provider> students, int courseId) throws SQLException, Exception {
         if(students == null || students.isEmpty()) {
             return importXML(loggedInInfo, xmlFile,warnings,request,timeShiftInDays,null,null,0);
@@ -448,6 +513,233 @@ import oscar.util.UtilDateUtilities;
     	return tmp;
     }
 
+    String[] importContacts(LoggedInInfo loggedInInfo, String xmlFile, ArrayList<String> warnings, HttpServletRequest request, int timeShiftInDays, Provider student, Program admitTo, int courseId) throws SQLException, Exception {
+    	DemographicData dd = new DemographicData();
+    	 
+    	String docDir = oscarProperties.getProperty("DOCUMENT_DIR");
+        docDir = Util.fixDirName(docDir);
+        if (!Util.checkDir(docDir)) {
+                logger.debug("Error! Cannot write to DOCUMENT_DIR - Check oscar.properties or dir permissions.");
+        }
+
+        File xmlF = new File(xmlFile);
+        OmdCdsDocument.OmdCds omdCds=null;
+        try {
+        	XmlOptions opts = new XmlOptions(); 
+        	List c = new ArrayList();
+        	
+        	opts.setErrorListener(c);
+        	opts.setDocumentType(OmdCdsDocument.Factory.newInstance().schemaType()); 
+        	omdCds = OmdCdsDocument.Factory.parse(xmlF,opts).getOmdCds();
+
+        	omdCds.validate(opts);
+        	
+           
+        } catch (IOException ex) {logger.error("Error", ex);
+        } catch (XmlException ex) {logger.error("Error", ex);
+        }
+        PatientRecord patientRec = omdCds.getPatientRecord();
+
+        //DEMOGRAPHICS
+        Demographics demo = patientRec.getDemographics();
+        cdsDt.PersonNameStandard.LegalName legalName = demo.getNames().getLegalName();
+        String lastName="", firstName="";
+        String lastNameQualifier=null, firstNameQualifier=null;
+        if (legalName!=null) {
+            if (legalName.getLastName()!=null) {
+            	lastName = StringUtils.noNull(legalName.getLastName().getPart());
+            	if (legalName.getLastName().getPartQualifier()!=null) {
+            		lastNameQualifier = legalName.getLastName().getPartQualifier().toString();
+            	}
+            }
+            if (legalName.getFirstName()!=null) {
+            	firstName = StringUtils.noNull(legalName.getFirstName().getPart());
+            	if (legalName.getFirstName().getPartQualifier()!=null) {
+            		firstNameQualifier = legalName.getFirstName().getPartQualifier().toString();
+            	}
+            }
+            patientName = lastName+","+firstName;
+        }
+        
+        String birthDate = getCalDate(demo.getDateOfBirth(), timeShiftInDays);
+        String sex = demo.getGender()!=null ? demo.getGender().toString() : "";
+        String hin = null;
+        cdsDt.HealthCard healthCard = demo.getHealthCard();
+        if (healthCard!=null) {
+            hin = StringUtils.noNull(healthCard.getNumber());
+        }
+
+        //Check duplicate
+        ArrayList<Demographic> demodup = null;
+        if (StringUtils.filled(hin)) demodup = dd.getDemographicWithHIN(loggedInInfo, hin);
+        else demodup = dd.getDemographicWithLastFirstDOB(loggedInInfo, lastName, firstName, birthDate);
+        if (demodup.size() == 0) {
+            logger.info("patient to add contact to not found");
+            return null;
+        }
+        if(demodup.size()>1) {
+        	logger.info("found multiple patients to add contact to");
+        	return null;
+        }
+        
+        Demographic patient = demodup.get(0);
+
+        
+        
+        Demographics.Contact[] contt = demo.getContactArray();
+        for (int i=0; i<contt.length; i++) {
+            HashMap<String,String> contactName = getPersonName(contt[i].getName());
+            String cFirstName = StringUtils.noNull(contactName.get("firstname"));
+            String cLastName  = StringUtils.noNull(contactName.get("lastname"));
+            String cEmail = StringUtils.noNull(contt[i].getEmailAddress());
+
+            cdsDt.PhoneNumber[] pn = contt[i].getPhoneNumberArray();
+            String workPhone="", workExt="", homePhone="", homeExt="", cellPhone="", ext="", patientPhone="";
+            
+            workPhone=""; workExt=""; homePhone=""; homeExt=""; cellPhone=""; ext="";
+            for (int j=0; j<pn.length; j++) {
+                String phone = pn[j].getPhoneNumber();
+                if (phone==null) {
+                    if (pn[j].getNumber()!=null) {
+                        if (pn[j].getAreaCode()!=null) phone = pn[j].getAreaCode()+"-"+pn[j].getNumber();
+                        else phone = pn[j].getNumber();
+                    }
+                }
+                if (phone!=null) {
+                    if (pn[j].getExtension()!=null) ext = pn[j].getExtension();
+                    else if (pn[j].getExchange()!=null) ext = pn[j].getExchange();
+
+                    if (pn[j].getPhoneNumberType()==cdsDt.PhoneNumberType.W) {
+                        workPhone = phone;
+                        workExt   = ext;
+                    } else if (pn[j].getPhoneNumberType()==cdsDt.PhoneNumberType.R) {
+                        homePhone = phone;
+                        homeExt   = ext;
+                    } else if (pn[j].getPhoneNumberType()==cdsDt.PhoneNumberType.C) {
+                        cellPhone = phone;
+                    }
+                }
+            }
+
+            String contactNote = StringUtils.noNull(contt[i].getNote());
+            String cDemoNo = dd.getDemoNoByNamePhoneEmail(loggedInInfo, cFirstName, cLastName, homePhone, workPhone, cEmail);
+           
+            logger.info("adding contacts: " + cLastName + "," + cFirstName + " = " + cDemoNo);
+            
+            
+            cdsDt.PurposeEnumOrPlainText[] contactPurposes = contt[i].getContactPurposeArray();
+            String sdm="", emc="", cPurpose=null;
+            String[] rel = new String[contactPurposes.length];
+
+            for (int j=0; j<contactPurposes.length; j++) {
+                cPurpose = contactPurposes[j].getPurposeAsPlainText();
+                if (cPurpose==null) cPurpose = contactPurposes[j].getPurposeAsEnum().toString();
+                if (cPurpose!=null) cPurpose = cPurpose.trim();
+                else continue;
+
+                if (cPurpose.equals("EC") || cPurpose.equalsIgnoreCase("emergency contact"))
+                	emc = "true";
+                else if (cPurpose.equals("SDM") || cPurpose.equalsIgnoreCase("substitute decision maker"))
+                	sdm = "true";
+                else if (cPurpose.equals("NK")) rel[j] = "Next of Kin";
+                else if (cPurpose.equals("AS")) rel[j] = "Administrative Staff";
+                else if (cPurpose.equals("CG")) rel[j] = "Care Giver";
+                else if (cPurpose.equals("PA")) rel[j] = "Power of Attorney";
+                else if (cPurpose.equals("IN")) rel[j] = "Insurance";
+                else if (cPurpose.equals("GT")) rel[j] = "Guarantor";
+                else if (cPurpose.equals("O")) rel[j] = "Other";
+                else {
+                    rel[j] = cPurpose;
+                }
+            }
+
+            if (StringUtils.filled(cDemoNo)) {
+            	//this contact was found as a patient in the system, so we will link as an "internal"
+            	
+	                for (int j=0; j<rel.length; j++) {
+	                	if (rel[j]==null) continue;
+	
+	                    DemographicContact demoContact = new DemographicContact();
+	                    demoContact.setCreated(new Date());
+	                    demoContact.setUpdateDate(new Date());
+	                    demoContact.setDemographicNo(patient.getDemographicNo());
+	                    demoContact.setContactId(cDemoNo);
+	                    demoContact.setType(1); 
+	                    demoContact.setCategory("personal");
+	                	demoContact.setRole(rel[j]);
+	                    demoContact.setEc(emc);
+	                    demoContact.setSdm(sdm);
+	                    demoContact.setNote(contactNote);
+	                    demoContact.setCreator(loggedInInfo.getLoggedInProviderNo());
+	                	contactDao.persist(demoContact);
+	
+	                	//clear emc, sdm, contactNote after 1st save
+	                	emc = "";
+	                	sdm = "";
+	                	contactNote = "";
+	                }
+                      
+            	} else {
+            		//this contact was NOT found in the DB, so we will create an external contact
+            		logger.info("need to create external contact for " + cLastName + "," + cFirstName);
+            		
+            		// String cDemoNo = dd.getDemoNoByNamePhoneEmail(loggedInInfo, cFirstName, cLastName, homePhone, workPhone, cEmail);
+                    
+            		Contact c = new Contact();
+            		c.setLastName(cLastName);
+            		c.setFirstName(cFirstName);
+            		c.setPhone(homePhone);
+            		c.setWorkPhone(workPhone);
+            		c.setEmail(cEmail);
+            		
+            		ContactDao cDao = SpringUtils.getBean(ContactDao.class);
+            		cDao.saveEntity(c);
+            		
+	                for (int j=0; j<rel.length; j++) {
+	                	if (rel[j]==null) continue;
+	
+	                    DemographicContact demoContact = new DemographicContact();
+	                    demoContact.setCreated(new Date());
+	                    demoContact.setUpdateDate(new Date());
+	                    demoContact.setDemographicNo(patient.getDemographicNo());
+	                    demoContact.setContactId(String.valueOf(c.getId()));
+	                    demoContact.setType(DemographicContact.TYPE_CONTACT); 
+	                    demoContact.setCategory("personal");
+	                	demoContact.setRole(rel[j]);
+	                    demoContact.setEc(emc);
+	                    demoContact.setSdm(sdm);
+	                    demoContact.setNote(contactNote);
+	                    demoContact.setCreator(loggedInInfo.getLoggedInProviderNo());
+	                	contactDao.persist(demoContact);
+	
+	                	//clear emc, sdm, contactNote after 1st save
+	                	emc = "";
+	                	sdm = "";
+	                	contactNote = "";
+	                }
+/*
+            		Facility facility = (Facility) request.getSession().getAttribute(SessionConstants.CURRENT_FACILITY);
+			        Integer facilityId = null;
+			        if (facility!=null) facilityId = facility.getId();
+
+			        for (int j=0; j<rel.length; j++) {
+			        	if (rel[j]==null) continue;
+
+						DemographicRelationship demoRel = new DemographicRelationship();
+						demoRel.addDemographicRelationship(demographicNo, cDemoNo, rel[j], sdm.equals("true"), emc.equals("true"), contactNote, admProviderNo, facilityId);
+
+                    	//clear emc, sdm, contactNote after 1st save
+                    	emc = "";
+                    	sdm = "";
+                    	contactNote = "";
+			        }
+            	}
+*/            	
+            }     
+       }
+       
+        return null;
+    }
 
 
     String[] importXML(LoggedInInfo loggedInInfo, String xmlFile, ArrayList<String> warnings, HttpServletRequest request, int timeShiftInDays, Provider student, Program admitTo, int courseId) throws SQLException, Exception {
@@ -806,7 +1098,7 @@ import oscar.util.UtilDateUtilities;
             demographicNo = dd.getDemoNoByNamePhoneEmail(loggedInInfo, firstName, lastName, homePhone, workPhone, email);
             demographic = dd.getDemographic(loggedInInfo, demographicNo);
         }
-
+/*
         if (demographic!=null && StringUtils.nullSafeEqualsIgnoreCase(demographic.getPatientStatus(), "Contact-only")) {
         	//found contact-only demo, replace!
         	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -874,9 +1166,12 @@ import oscar.util.UtilDateUtilities;
             err_note.add("Replaced Contact-only patient "+patientName+" (Demo no="+demographicNo+")");
 
         } else { //add patient!
+*/
             demoRes = dd.addDemographic(loggedInInfo, title, lastName, firstName, middleNames, address, city, province, postalCode, mailingAddress, mailingCity, mailingProvince, mailingPostalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, rosterStatus, rosterDate, termDate, termReason, rosterEnrolledTo, patient_status, psDate, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, hc_type, hc_renew_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
             demographicNo = demoRes.getId();
-        }
+/*        }
+
+ */
 
         if (StringUtils.filled(demographicNo))
         {
@@ -999,7 +1294,7 @@ import oscar.util.UtilDateUtilities;
             }
 
             //Demographic Contacts
-           
+/*           
             Demographics.Contact[] contt = demo.getContactArray();
             for (int i=0; i<contt.length; i++) {
                 HashMap<String,String> contactName = getPersonName(contt[i].getName());
@@ -1038,10 +1333,10 @@ import oscar.util.UtilDateUtilities;
                 String cPatient = cLastName+","+cFirstName;
                 if (StringUtils.empty(cDemoNo)) {   //add new demographic as contact
                     psDate = UtilDateUtilities.DateToString(new Date(),"yyyy-MM-dd");
-                    demoRes = dd.addDemographic(loggedInInfo, ""/*title*/, cLastName, cFirstName,"" /*middleNames*/, ""/*address*/, ""/*city*/, ""/*province*/, ""/*postal*/,"","","","",
-                    			homePhone, workPhone, ""/*year_of_birth*/, ""/*month_*/, ""/*date_*/, ""/*hin*/, ""/*ver*/, ""/*roster_status*/, "", "", "",null,
-                    			"Contact-only", psDate, ""/*date_joined*/, ""/*chart_no*/, ""/*official_lang*/, ""/*spoken_lang*/, ""/*provider_no*/,
-                    			"F", ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, ""/*hc_type*/, ""/*hc_renew_date*/, ""/*family_doctor*/,
+                    demoRes = dd.addDemographic(loggedInInfo, "", cLastName, cFirstName,"" , "", "", "", "","","","","",
+                    			homePhone, workPhone, "", "", "", "", "", "", "", "", "",null,
+                    			"Contact-only", psDate, "", "", "", "", "",
+                    			"F", "", "", "", "", "", "",
                     			cEmail, "", "", "", "", "", "", "");
                 	cDemoNo = demoRes.getId();
                     err_note.add("Contact-only patient "+cPatient+" (Demo no="+cDemoNo+") created");
@@ -1121,7 +1416,7 @@ import oscar.util.UtilDateUtilities;
                 	}
                 }
             }
-
+*/
             Set<CaseManagementIssue> scmi = null;	//Declare a set for CaseManagementIssues
             //PERSONAL HISTORY
             PersonalHistory[] pHist = patientRec.getPersonalHistoryArray();

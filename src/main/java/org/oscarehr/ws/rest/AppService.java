@@ -670,7 +670,7 @@ public class AppService extends AbstractServiceImpl {
 	@GET
 	@Path("/PHREmailInvite/{demographicId}")
 	public GenericRESTResponse phrEmailInvite(@Context HttpServletRequest request, @PathParam("demographicId") String demographicId) {
-		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_appDefinition", "w", null)) {
+		if (!securityInfoManager.hasPrivilege(getLoggedInInfo(), "_appDefinition", "r", null)) {
 			throw new RuntimeException("Access Denied");
 		}
 		
@@ -687,7 +687,7 @@ public class AppService extends AbstractServiceImpl {
 			try {
 				Response response = callPHR("/clinics/phr/invite", getLoggedInInfo().getLoggedInProviderNo(), invite.toJson().toString());
 				
-				if (response.getStatus()==Response.Status.OK.getStatusCode()) {
+				if (response.getStatus()==Response.Status.CREATED.getStatusCode()) {
 					return new GenericRESTResponse(true, "Email invite sent");
 				} else {
 					return new GenericRESTResponse(false, "Connect PHR error");
