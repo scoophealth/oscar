@@ -423,7 +423,12 @@ public class EctConsultationFormRequestAction extends Action {
 				WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCreatedUpdateESent");
 			} catch (OBIBException e) {
 				logger.error("Error sending CDX consultation request.", e);
-				WebUtils.addLocalisedErrorMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCreatedUpdateESendError");
+				String additionalText = e.getObibMessage();
+				if (additionalText == null || additionalText.isEmpty()) {
+					additionalText = e.getMessage();
+				}
+				WebUtils.addLocalisedErrorMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCreatedUpdateESendError",
+						"The reported error was: " + additionalText);
 				ParameterActionForward forward = new ParameterActionForward(mapping.findForward("failESend"));
 				forward.addParameter("de", demographicNo);
 				forward.addParameter("requestId", requestId);
@@ -546,9 +551,12 @@ public class EctConsultationFormRequestAction extends Action {
 		if (providers != null && !providers.isEmpty()) {
 			IProvider cdxProvider = providers.get(0);
 			clinicID = cdxProvider.getClinicID();
+			if (!professionalSpecialist.getLastName().equalsIgnoreCase(cdxProvider.getLastName())) {
+				throw new OBIBException("Last name reported by CDX does not match last name of selected specialist.");
+			}
 		} else {
-			MiscUtils.getLogger().error("Sending providers CDX ID not found");
-			throw new OBIBException("Sending providers CDX ID not found");
+			MiscUtils.getLogger().error("Selected specialist's CDX ID not found");
+			throw new OBIBException("Selected specialist's CDX ID not found");
 		}
 
 		// Add pdf attachments (scanned images, lab reports and PDF files)

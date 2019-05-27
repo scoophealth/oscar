@@ -72,8 +72,6 @@
         <title><bean:message
                 key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.title"/>
         </title>
-            <%--        <html:base />--%>
-
     </head>
     <script>
         function BackToOscar() {
@@ -99,9 +97,5 @@
     <form id="main" method="post" name="main" action="" onclick="redirect(this);">
         <button>Continue</button>
     </form>
-        <%--<form id="main" method="post" name="main" action="" onsubmit="redirect(this);">
-                <input type="submit" name="Continue"/>
-            </form>--%>
-
     </body>
 </html:html>
