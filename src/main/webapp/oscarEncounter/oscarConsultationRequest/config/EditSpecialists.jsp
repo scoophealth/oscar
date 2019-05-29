@@ -90,6 +90,9 @@ function BackToOscar()
                   %>
 		</td>
 		<td class="MainTableRightColumn">
+			<% if (showCdx) { %>
+			<a href="../../oscarConsultationRequest/config/TestCdxAvailability.jsp">Test CDX Availability</a>
+			<% } %>
 		<table cellpadding="0" cellspacing="2"
 			style="border-collapse: collapse" bordercolor="#111111" width="100%"
 			height="100%">
