@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.GenericValidator;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -143,6 +144,10 @@ public class EctMeasurementsAction extends Action {
 			comments = (String) frm.getValue(commentsName);
 			dateObserved = (String) frm.getValue(dateName);
 
+			if(StringUtils.isEmpty(inputValue)) {
+				continue;
+			}
+			
 			regExp = null;
 			dMax = new Double(0);
 			dMin = new Double(0);
