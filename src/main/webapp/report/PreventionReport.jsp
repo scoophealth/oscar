@@ -43,6 +43,7 @@ if(!authed) {
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 
+
 <html ng-app="preventionReport">
 <head>
 	<title><bean:message key="oscarprevention.index.oscarpreventiontitre" /></title>
@@ -186,6 +187,20 @@ if(!authed) {
 						<li ng-repeat="exCode in newReport.exclusionCodes">{{exCode}} <a ng-click="deleteElement(newReport.exclusionCodes,$index)">-del-</a></li>
 					</ul>
 				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+					    <label for="provider">Exclusion Code Start Date</label>
+						<input type="date" ng-model="newReport.billingCodeStart" class="form-control"/>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="form-group">
+					    <label for="provider">Exclusion Code End Date</label>
+						<input type="date" ng-model="newReport.billingCodeEnd" class="form-control"/>
+					</div>
+				</div>
+			</div class="row">
+			<div class="row">
 				<div class="col-sm-2">
 					<label for="provider">Tracking Codes</label>
 					<div class="input-group">
@@ -200,20 +215,21 @@ if(!authed) {
 				</div>
 				<div class="col-sm-3">
 					<div class="form-group">
-					    <label for="provider">Exclusion and Tracking Code Start Date</label>
-						<input type="date" ng-model="newReport.billingCodeStart" class="form-control"/>
+					    <label for="provider">Tracking Code Start Date</label>
+						<input type="date" ng-model="newReport.billingTrackingCodeStart" class="form-control"/>
 					</div>
 				</div>
 				<div class="col-sm-3">
 					<div class="form-group">
-					    <label for="provider">Exclusion and Tracking Code End Date</label>
-						<input type="date" ng-model="newReport.billingCodeEnd" class="form-control"/>
+					    <label for="provider">Tracking Code End Date</label>
+						<input type="date" ng-model="newReport.billingTrackingCodeEnd" class="form-control"/>
 					</div>
 				</div>
-				
+			</div class="row">
+			<div class="row">
 				<div class="col-sm-8">
 					<div class="form-group">
-					    <label for="provider">Preventions <button ng-click="addPrevention(newPrevReport)" class="btn btn-xs btn-default">Add</button></label>
+					    <label for="provider">Preventions </label>
 					    <div>
 					    		<div class="col-sm-2">                     
 			               		<div class="form-group">
@@ -318,7 +334,7 @@ if(!authed) {
 									</select>
 							  	</div>
 							</div>
-							<div class="col-sm-6" ng-if="newPrevReport.dateCalcType == 1">   <%-- public final static int ASOFDATE = 1; --%>
+							<div class="col-sm-5" ng-if="newPrevReport.dateCalcType == 1">   <%-- public final static int ASOFDATE = 1; --%>
 								<div class="col-sm-5">
 									<div class="form-group">
 									    <label for="provider">As of Date</label>
@@ -337,7 +353,7 @@ if(!authed) {
 							private String cuttoffTimeType = "M";
 							--%>
 							</div>
-							<div class="col-sm-6"  ng-if="newPrevReport.dateCalcType == 2"> <%-- public final static int BYAGE = 2;  --%>
+							<div class="col-sm-5"  ng-if="newPrevReport.dateCalcType == 2"> <%-- public final static int BYAGE = 2;  --%>
 								<div class="col-sm-12">
 									<div class="form-group">
 									    <label for="provider">By Age</label>
@@ -349,7 +365,12 @@ if(!authed) {
 							private String byAgeTimeType = "M";
 							 --%>
 							</div>
-							
+							<div class="col=sm-1">
+									<div class="form-group">
+									<label >&nbsp;</label><br>
+										<button ng-click="addPrevention(newPrevReport)" class="btn btn-default">Add</button>
+									</div>
+							</div>
 					    </div>
 					    
 					</div>
@@ -856,8 +877,8 @@ if(!authed) {
 					reportStr = reportStr + report.searchConfig.exclusionCodes[prev] + "\n";
 					
 				}
-				
-				reportStr = reportStr+"\nTracking Codes:";
+				reportStr=reportStr + "\nExclusion Billing Code Range: "+$filter('date')(report.searchConfig.billingCodeStart)+" to "+$filter('date')(report.searchConfig.billingCodeEnd)+"\n";
+				reportStr = reportStr+"Tracking Codes:";
 				exFirst = false;
 				for(prev in report.searchConfig.trackingCodes){
 					console.log("prev",prev);
@@ -869,7 +890,7 @@ if(!authed) {
 					
 				}
 				
-				reportStr=reportStr + "\nBilling Code Range: "+$filter('date')(report.searchConfig.billingCodeStart)+" to "+$filter('date')(report.searchConfig.billingCodeEnd)+"\n";
+				reportStr=reportStr + "\nTracking Billing Code Range: "+$filter('date')(report.searchConfig.billingTrackingCodeStart)+" to "+$filter('date')(report.searchConfig.billingTrackingCodeEnd)+"\n";
 				
 				
 				

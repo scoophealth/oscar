@@ -223,8 +223,8 @@ public class ReportBuilder {
 			//Need to search billing for the tracking Codes
 			//If found return as up to date, if not continue on.
 			
-			Date startDate = searchConfig.getBillingCodeStart();
-			Date endDate = searchConfig.getBillingCodeEnd();
+			Date startDate = searchConfig.getBillingTrackingCodeStart();
+			Date endDate = searchConfig.getBillingTrackingCodeEnd();
 			boolean trackingCodeFound = false;
 			for(String serviceCode:searchConfig.getTrackingCodes()) {
 				if(billingONCHeader1Dao.billedBetweenTheseDays(serviceCode,demographicNo, startDate,  endDate)) {

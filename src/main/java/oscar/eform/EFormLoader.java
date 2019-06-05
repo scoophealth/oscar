@@ -34,12 +34,16 @@ import java.util.Vector;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
 import oscar.eform.data.DatabaseAP;
 import oscar.eform.data.EForm;
 
 public class EFormLoader {
+	
+	private static Logger logger = MiscUtils.getLogger();
+	
     static private EFormLoader _instance;
     static private Vector<DatabaseAP> eFormAPs = new Vector<DatabaseAP>();
     static private String marker = "oscarDB";
@@ -51,7 +55,7 @@ public class EFormLoader {
         if (_instance == null) {
             _instance = new EFormLoader();
             parseXML();
-            MiscUtils.getLogger().debug("NumElements ====" + eFormAPs.size());
+            logger.debug("NumElements ====" + eFormAPs.size());
         }
         return _instance;
     }
@@ -135,6 +139,7 @@ public class EFormLoader {
                 return curAP;
             }
         }
+        logger.error("AP: "+apName+" was not found returning null");
         return null;
     }
 

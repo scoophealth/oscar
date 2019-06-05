@@ -58,6 +58,9 @@ public class PreventionSearchTo1 {
 	private Date billingCodeStart;
 	private Date billingCodeEnd; 
 	
+	private Date billingTrackingCodeStart;
+	private Date billingTrackingCodeEnd;
+	
 	private String providerNo;
 	private String providerName;
 	
@@ -263,6 +266,22 @@ public class PreventionSearchTo1 {
 
 	public void setProviderName(String providerName) {
 		this.providerName = providerName;
+	}
+
+	public Date getBillingTrackingCodeStart() {
+		return billingTrackingCodeStart;
+	}
+
+	public void setBillingTrackingCodeStart(Date billingTrackingCodeStart) {
+		this.billingTrackingCodeStart = billingTrackingCodeStart;
+	}
+
+	public Date getBillingTrackingCodeEnd() {
+		return billingTrackingCodeEnd;
+	}
+
+	public void setBillingTrackingCodeEnd(Date billingTrackingCodeEnd) {
+		this.billingTrackingCodeEnd = billingTrackingCodeEnd;
 	}
 	
 	
