@@ -498,6 +498,18 @@ public class ContactAction extends DispatchAction {
 		}
 		return mapping.findForward("cForm");
 	}
+	
+	public ActionForward viewContact(ActionMapping mapping, ActionForm form, 
+			HttpServletRequest request, HttpServletResponse response) {
+		String id = request.getParameter("contact.id");
+		Contact contact = null;
+		if(StringUtils.isNotBlank(id)) {
+			id = id.trim();
+			contact = contactDao.find(Integer.parseInt(id));
+			request.setAttribute("contact", contact);
+		}
+		return mapping.findForward("view");
+	}
 
 	public ActionForward editProContact(ActionMapping mapping, ActionForm form, 
 			HttpServletRequest request, HttpServletResponse response) {
@@ -532,6 +544,7 @@ public class ContactAction extends DispatchAction {
 			contact.setId(null);
 			contactDao.persist(contact);
 		}
+		request.setAttribute("contact", contact);
 	   return mapping.findForward("cForm");
 	}
 
