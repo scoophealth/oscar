@@ -1681,6 +1681,9 @@ if(oscarProps.getProperty("new_label_print") != null && oscarProps.getProperty("
 								if(DemographicContact.CATEGORY_PERSONAL.equals(dContact.getCategory()) && DemographicContact.TYPE_DEMOGRAPHIC == dContact.getType() ) {
 									 masterLink = "<a target=\"demographic"+dContact.getContactId()+"\" href=\"" + request.getContextPath() + "/demographic/demographiccontrol.jsp?demographic_no="+dContact.getContactId()+"&displaymode=edit&dboperation=search_detail\">M</a>";
 								}
+								if(DemographicContact.CATEGORY_PERSONAL.equals(dContact.getCategory()) && DemographicContact.TYPE_CONTACT == dContact.getType()) {
+									masterLink = "<a target=\"_blank\" href=\""+ request.getContextPath() +"/demographic/Contact.do?method=viewContact&contact.id="+ dContact.getContactId() + "\">details</a>";
+								}
 %>
 
 								<li><span class="label"><%=dContact.getRole()%>:</span>
