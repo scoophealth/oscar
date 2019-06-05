@@ -1589,19 +1589,25 @@ function changeLt(drugId){
          var url="<c:out value="${ctx}"/>" + "/oscarRx/getAllergyData.jsp"  ;
          var data="atcCode="+atcCode+"&id="+id +"&rand="+ Math.floor(Math.random()*10001);
          new Ajax.Request(url,{method: 'post',postBody:data,onSuccess:function(transport){
-                 var json=transport.responseText.evalJSON();
-            	
-                 if(json != null && json.id != null && json.DESCRIPTION == null && json.reaction == null) {
-                	 var str = "<font color='red'>Allergy not Found. Please check your allergy list</font>" ;
-                	 $('alleg_'+json.id).innerHTML = str;
-                     document.getElementById('alleg_tbl_'+json.id).style.display='table';
-                 }
-                 if(json!=null&&json.DESCRIPTION!=null&&json.reaction!=null){
-                      var str = "<font color='red'>Allergy:</font> "+ json.DESCRIPTION + " <font color='red'>Reaction:</font> "+json.reaction + " <font color='red'>Severity of Reaction:</font> "+json.severity;
-                      $('alleg_'+json.id).innerHTML = str;
-                      document.getElementById('alleg_tbl_'+json.id).style.display='table';
-                 }
-            }});
+	         var response = JSON.parse(transport.responseText);       	 
+	       	 var items = response.items;
+	       	 var output = "";
+	       	 
+	       	 if(items != null && items.length>0) {
+		       	 for(var x=0;x<items.length;x++) {
+		       		 if(items[x].warning != null && items[x].warning == true) {
+		       			 var str = "<font color='red'>Warning: Allergy \""+ items[x].description + "\" with reaction  \""+items[x].reaction + "\" and "+items[x].severity + " severity Found.</font><br/>";                     
+	                     output += str;
+		       		 }
+		       		if(items[x].missing != null && items[x].missing == true) {
+		       			var str = "<font color='red'>Warning Allergy: \""+ items[x].description + "\" not Found in drug database. Please update this Allergy.</font><br/>";
+		       			output += str;
+		       		}
+		       	 }
+		       	$('alleg_'+response.id).innerHTML = output; 	 
+		       	document.getElementById('alleg_tbl_'+response.id).style.display='table';
+	       	 }
+         }});
    }
    function checkIfInactive(id,dinNumber){
         var url="<c:out value="${ctx}"/>" + "/oscarRx/getInactiveDate.jsp"  ;

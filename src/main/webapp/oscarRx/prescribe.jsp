@@ -195,8 +195,8 @@ if(listRxDrugs!=null){
 		</tr>
 	
 		<tr>
-			<td style="padding:5px;" >    
-	    		<span id="alleg_<%=rand%>" style="font-size:11px;padding:10px 5px;"></span>
+			<td >    
+	    		<span id="alleg_<%=rand%>" style="font-size:11px;"></span>
 			</td>
 		</tr>
 	</table> 
