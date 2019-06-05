@@ -319,7 +319,7 @@ public class BillingCorrectionAction extends DispatchAction{
 		 * from 3rd Party Pay Program to Ministry of Health Pay Program
 		 * so default payee to "P"
 		*/
-		bCh1.setPayee(BillingDataHlp.CLAIMHEADER1_PAYEE);
+	    	bCh1.setPayee(BillingDataHlp.CLAIMHEADER1_PAYEE);
 	    }
 
             bCh1.setPayProgram(payProgram);
@@ -337,7 +337,12 @@ public class BillingCorrectionAction extends DispatchAction{
             bCh1.setCreator(providerNo);
             bCh1.setClinic(request.getParameter("site"));			
             bCh1.setProvince(request.getParameter("hc_type"));
-            bCh1.setLocation(request.getParameter("xml_slicode"));                        
+            bCh1.setLocation(request.getParameter("xml_slicode"));     
+            
+            if(!provider.getProviderNo().equals(request.getParameter("provider_no"))) {
+            	Provider newProvider = providerDao.getProvider(request.getParameter("provider_no"));
+            	bCh1.setProviderOhipNo(newProvider.getOhipNo());
+            }
         }
 
         if( was3rdPartyPayProgram && nowMohPayProgram) {
