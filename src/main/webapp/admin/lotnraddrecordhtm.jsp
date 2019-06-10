@@ -75,6 +75,8 @@ ArrayList<HashMap<String,String>> prevList = PreventionDisplayConfig.getInstance
             }
         }
 PreventionsLotNrsDao PreventionsLotNrsDao = (PreventionsLotNrsDao)SpringUtils.getBean(PreventionsLotNrsDao.class);
+
+String selectedPrevention = request.getParameter("prevention");
 %>
 <html:html locale="true">
 <head>
@@ -116,7 +118,7 @@ function onsub() {
 		 <select id="prevention" name="prevention">
                              <% for (String s:inject_prev_list) {
 							 %>
-                               <option value="<%=s%>" ><%=s%> </option>
+                               <option value="<%=s%>" <%=(s.equals(selectedPrevention)) ? " selected=\"selected\" ":"" %>><%=s%> </option>
                              <%}%>
                          </select>
 		</td>
