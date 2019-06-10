@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="java.net.URLEncoder"%>
 <%@page import="java.text.SimpleDateFormat, java.util.*,oscar.oscarPrevention.*,oscar.util.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -103,7 +104,7 @@ boolean authed=true;
 			onclick="document.forms['searchlotnr'].keyword.focus();"><bean:message
 			key="admin.lotnrsearch.prevention" /></font></td>
 		<td valign="middle" rowspan="2" ALIGN="left"><input type="text"
-			NAME="keyword" SIZE="17" MAXLENGTH="100"> <INPUT
+			NAME="keyword" SIZE="17" MAXLENGTH="100" value="<%=request.getParameter("keyword") != null ? request.getParameter("keyword") : ""%>"> <INPUT
 			TYPE="hidden" NAME="orderby" VALUE="prevention_type"> <INPUT
 			TYPE="hidden" NAME="dboperation" VALUE="lotnr_search_prevention">
 		<INPUT TYPE="hidden" NAME="limit1" VALUE="0"> <INPUT
@@ -149,7 +150,7 @@ boolean authed=true;
 <tr bgcolor="<%=bodd?"white":weakcolor%>">
 	<td><%=pRec.getPreventionType()%></td>
 	<td><a
-	href="lotnrdeleterecordhtm.jsp?prevention=<%=pRec.getPreventionType()%>&lotnr=<%=pRec.getLotNr()%>"><%= pRec.getLotNr()%></a></td>
+	href="lotnrdeleterecordhtm.jsp?prevention=<%=pRec.getPreventionType()%>&lotnr=<%=URLEncoder.encode(pRec.getLotNr(),"UTF-8")%>"><%= pRec.getLotNr()%></a></td>
 	</tr>
 	<% }
 	%>
@@ -175,6 +176,8 @@ boolean authed=true;
 }
 %>
 <p><bean:message key="admin.lotnrsearchresults.msgClickForEditing" /></p>
+<br/>
+<a href="lotnraddrecordhtm.jsp">Add new Lot #</a>
 </center>
 </body>
 </html:html>
