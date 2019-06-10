@@ -9,6 +9,7 @@
 
 --%>
 
+<%@page import="org.apache.commons.lang3.StringUtils"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
       String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -35,14 +36,23 @@ if(!authed) {
 
 	if ("add".equals(action))
 	{
+		String id = request.getParameter("id");
 		String categoryName=request.getParameter("categoryName");
 		String subClassNameMnemonic=request.getParameter("subClassNameMnemonic");
 		
-		HRMCategory category=new HRMCategory();
-		category.setCategoryName(categoryName);
-		category.setSubClassNameMnemonic(subClassNameMnemonic);
+		if(StringUtils.isEmpty(id)) {
+			HRMCategory category=new HRMCategory();
+			category.setCategoryName(categoryName);
+			category.setSubClassNameMnemonic(subClassNameMnemonic);
+			hrmCategoryDao.persist(category);
+		} else {
+			HRMCategory category = hrmCategoryDao.find(Integer.parseInt(id));
+			category.setCategoryName(categoryName);
+			category.setSubClassNameMnemonic(subClassNameMnemonic);
+			hrmCategoryDao.merge(category);
+		}
 		
-		hrmCategoryDao.persist(category);
+		
 	}
 	else if ("delete".equals(action))
 	{

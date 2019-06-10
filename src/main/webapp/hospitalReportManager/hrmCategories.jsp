@@ -28,6 +28,15 @@ if(!authed) {
 <%@page import="org.oscarehr.hospitalReportManager.model.HRMCategory"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.oscarehr.hospitalReportManager.dao.HRMCategoryDao"%>
+
+<%
+	HRMCategoryDao hrmCategoryDao = SpringUtils.getBean(HRMCategoryDao.class);
+	String id = request.getParameter("id");
+	HRMCategory existingCategory = null;
+	if(id != null) {
+		existingCategory = hrmCategoryDao.find(Integer.parseInt(id));
+	}
+%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html:html locale="true">
@@ -52,21 +61,22 @@ if(!authed) {
 
 <form method="post" action="hrm_categories_action.jsp">
 	<input type="hidden" name="action" value="add" />
+	<input type="hidden" name="id" value="<%=existingCategory != null ? existingCategory.getId() : ""%>"/>
 	<fieldset>
 		<div class="control-group">
 			<label class="control-label">Category Name:</label>
 			<div class="controls">
-				<input type="text" name="categoryName" />
+				<input type="text" name="categoryName" value="<%=existingCategory != null ? existingCategory.getCategoryName() : ""  %>" />
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">SubClass Name Mnemonic:</label>
 			<div class="controls">
-				<input type="text" name="subClassNameMnemonic" /> (should be of the format &lt;subclass_name&gt;:&lt;subclass_mnemonic&gt;)
+				<input type="text" name="subClassNameMnemonic" value="<%=existingCategory != null ? existingCategory.getSubClassNameMnemonic() : ""  %>"/> (should be of the format &lt;subclass_name&gt;:&lt;subclass_mnemonic&gt;)
 			</div>
 		</div>
 		<div class="control-group">
-			<input type="submit" class="btn btn-primary" value="Add" />
+			<input type="submit" class="btn btn-primary" value="<%=existingCategory != null ? "Save" : "Add" %>" />
 		</div>
 	</fieldset>	
 </form>
@@ -74,6 +84,7 @@ if(!authed) {
 <table class="table table-bordered table-striped table-hover table-condensed">
 	<thead>
 		<tr>
+			<td></td>
 			<th>ID</th>
 			<th>Category Name</th>
 			<th>SubClass Name Mnemonic</th>
@@ -81,11 +92,11 @@ if(!authed) {
 	</thead>
 	<tbody>
 	<%
-		HRMCategoryDao hrmCategoryDao = (HRMCategoryDao) SpringUtils.getBean("HRMCategoryDao");
 		for (HRMCategory category:  hrmCategoryDao.findAll()) {
 	%>
 		<tr>
-			<td><%=category.getId()%>&nbsp;</td>
+			<td><a href="hrm_categories_action.jsp?action=delete&id=<%=category.getId()%>"><img src="<%=request.getContextPath()%>/images/icons/101.png" border="0"/></a></td>
+			<td><a href="hrmCategories.jsp?id=<%=category.getId()%>"><%=category.getId()%></a></td>
 			<td><%=StringEscapeUtils.escapeHtml(category.getCategoryName())%>&nbsp;</td>
 			<td><%=StringEscapeUtils.escapeHtml(category.getSubClassNameMnemonic())%>&nbsp;</td>
 		</tr>
