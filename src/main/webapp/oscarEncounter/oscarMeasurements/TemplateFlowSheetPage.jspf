@@ -262,12 +262,44 @@ div.headPrevention p {
 
     }
 
+    function isValidDate(dateString) {
+    	  var regEx = /^\d{4}-\d{2}-\d{2}$/;
+    	  if(!dateString.match(regEx)) return false;  // Invalid format
+    	  var d = new Date(dateString);
+    	  var dNum = d.getTime();
+    	  if(!dNum && dNum !== 0) return false; // NaN value, Invalid date
+    	  return d.toISOString().slice(0,10) === dateString;
+    	}
+    
 
+    function clearDifferentElements(){
+    	$('numEle').value = '';
+    	$('flowsheetStartDate').value = '';
+    	 $('flowsheetEndDate').value = '';
+    	 loadDifferentElements();
+    	
+    }
    function loadDifferentElements(){
        //console.log("hapy");
         var numEle = $('numEle').value;
         var sdate = $('flowsheetStartDate').value;
         var edate = $('flowsheetEndDate').value;
+        
+        if(numEle.length>0 && (isNaN(numEle) || parseInt(numEle) <= 0)) {
+        	alert("# of Elements needs to be a number greater than 0")
+        	return;
+        }
+        
+        if(sdate.length > 0 && !isValidDate(sdate)) {
+        	alert("Start Date must be a valid date in yyyy-mm-dd format");
+        	return;
+        }
+        
+        if(edate.length > 0 && !isValidDate(edate)) {
+        	alert("End Date must be a valid date in yyyy-mm-dd format");
+        	return;
+        }
+        
         
         //get selected elements
         var selectedItems = [];
@@ -280,7 +312,20 @@ div.headPrevention p {
         	selectedItemsStr = "&selectedItems=" + encodeURIComponent(selectedItems.join(','));
         }
         
+        var url = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>';
+        if( !numEle.blank()){
+        	url = url + '&numEle='+numEle;
+        }
+        if(!sdate.blank()) {
+        	url = url + '&sdate='+sdate;
+        }
+        if(!edate.blank()) {
+        	url = url + '&edate='+edate;
+        }
+        url = url + selectedItemsStr;
         
+        window.location = url;
+        /*
         if( !numEle.blank()){
             window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>&numEle='+numEle + selectedItemsStr;
             //console.log("one");
@@ -290,7 +335,7 @@ div.headPrevention p {
         }else{
             window.location = 'TemplateFlowSheet.jsp?demographic_no=<%=demographic_no%>&template=<%=temp%>' + selectedItemsStr;
         }
-
+		*/
     }
 
 
@@ -469,11 +514,12 @@ div.recommendations li{
              <tr>
              	<td>
                		<span class="DoNotPrint">
-                    #Of Elements <input type="text" size="3" id="numEle"/>
+                    #Of Elements <input type="text" size="3" id="numEle" value="<%=request.getParameter("numEle") != null ? request.getParameter("numEle") : "" %>"/>
 
-                    Start Date <input type="text" size="10" id="flowsheetStartDate" />
-                    End Date <input type="text" size="10"id="flowsheetEndDate"/>
+                    Start Date <input type="text" size="10" id="flowsheetStartDate" value="<%=request.getParameter("sdate") != null ? request.getParameter("sdate") : "" %>" />
+                    End Date <input type="text" size="10"id="flowsheetEndDate" value="<%=request.getParameter("edate") != null ? request.getParameter("edate") : "" %>"/>
                     <input type="button" value="go" onclick="javascript: loadDifferentElements()"/>
+                    <input type="button" value="clear" onclick="javascript: clearDifferentElements()"/>
                     </span>
                 </td>
                 <td>
@@ -743,6 +789,22 @@ div.recommendations li{
             if (request.getParameter("show") !=null && request.getParameter("show").equals("lastOnly")){
                 num =1;
             }
+            Date itDate = mdb.getDateObservedAsDate();
+            
+            if(sdate != null) {
+            	 if (itDate.before(sdate)){
+                     hider = "style=\"display:none\"";
+             	}
+            }
+            if(edate != null) {
+           	 if (itDate.after(edate)){
+                    hider = "style=\"display:none\"";
+            	}
+            }
+            if(k > num) {
+            	 hider = "style=\"display:none;\"";
+            }
+            /*
             if(sdate != null && edate != null){
                 Date itDate = mdb.getDateObservedAsDate();
                 if (itDate.before(sdate) || itDate.after(edate)){
@@ -751,7 +813,7 @@ div.recommendations li{
             }else if ( k > num){
                 hider = "style=\"display:none;\"";
             }
-
+*/
             String indColour = "";
             if ( mdb.getIndicationColour() != null ){
                 indColour = "style=\"background-color:"+mFlowsheet.getIndicatorColour(mdb.getIndicationColour())+"\"";
