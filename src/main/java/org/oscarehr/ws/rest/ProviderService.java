@@ -107,7 +107,9 @@ public class ProviderService extends AbstractServiceImpl {
     	for(Provider p: providerDao.getActiveProviders()) {
     		lst.getContent().add(ProviderTransfer.toTransfer(p));
     	} 
-      
+    	lst.setTimestamp(new Date());
+    	lst.setTotal(lst.getContent().size());
+     
         return lst;
     }
  
@@ -122,6 +124,9 @@ public class ProviderService extends AbstractServiceImpl {
     	
     	AbstractSearchResponse<ProviderTo1> response = new AbstractSearchResponse<ProviderTo1>();
     	response.setContent(providers);
+    	response.setTimestamp(new Date());
+    	response.setTotal(response.getContent().size());
+     
   
     	return response;
     }
@@ -169,7 +174,7 @@ public class ProviderService extends AbstractServiceImpl {
 		AbstractSearchResponse<ProviderTo1> response = new AbstractSearchResponse<ProviderTo1>();
 		
 		int startIndexVal = startIndex==null?0:startIndex.intValue();
-		int itemsToReturnVal = itemsToReturn==null?5000:startIndex.intValue();
+		int itemsToReturnVal = itemsToReturn==null?5000:itemsToReturn.intValue();
 		boolean active = Boolean.valueOf(json.getString("active"));
 		
 		String term = null;
