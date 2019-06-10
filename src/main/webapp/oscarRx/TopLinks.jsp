@@ -40,7 +40,7 @@
 		<td id="topLinkCenterColumn" >
 
 		<c:if test="${ not empty param.patientName }" >
-	        <a href="#" onClick="popupPage(700,1000,'${ param.title }','${ url }'); return false;" 
+	        <a href="javascript:void(0)" onClick="popupPage(700,1000,'${ url }'); return false;" 
 	        	title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>" > 
 	        	<c:out value="${ param.patientName }" />
 	        </a> 

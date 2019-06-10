@@ -372,6 +372,7 @@ function addCustomNKDA(){
 			<jsp:param value="${ patient.surname }, ${ patient.firstName }" name="patientName" />
 			<jsp:param value="${ patient.sex }" name="sex" />
 			<jsp:param value="${ patient.age }" name="age" />
+			<jsp:param value="${ patient.demographicNo }" name="demographicNo" />
 			<jsp:param value="<%= roleName2$ %>" name="security" /> 
 			<jsp:param value='<%= (String)session.getAttribute("demographicNo") %>' name="demographicNo" />
 		</jsp:include>
