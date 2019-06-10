@@ -300,6 +300,48 @@ function onChangeSelect(){
 }
 // -->
       </script>
+      <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>
+      <script>
+      
+      function uncheckSiblings(el) {
+    	  var myName = el.attr('name');
+    	  el.parents("td").find("input:checkbox[name ^= 'privilege']").each(function(){
+    		  if(jQuery(this).attr('name') != myName) {
+    			  jQuery(this).prop("checked",false);
+    		  }
+    	  });
+      }
+      function uncheckSiblings1(el) {
+    	  var myName = el.attr('name');
+    	  el.parents("td").find("input:checkbox[name ^= 'privilege']").each(function(){
+    		  if(jQuery(this).attr('name') != myName && jQuery(this).attr('name').endsWith("x") ) {
+    			  jQuery(this).prop("checked",false);
+    		  }
+    		  if(jQuery(this).attr('name') != myName && jQuery(this).attr('name').endsWith("o") ) {
+    			  jQuery(this).prop("checked",false);
+    		  }
+    	  });
+    	  
+      }
+      
+      jQuery(document).ready(function(){
+    	  jQuery("input:checkbox[name ^= 'privilege']").change(function(){
+    			if(jQuery(this).is(":checked")) {
+    				var priv  = jQuery(this).attr('name')[jQuery(this).attr('name').length-1];
+    				if(priv === 'x' || priv === 'o') {
+    					uncheckSiblings(jQuery(this));	
+    				}
+    				
+    				if(priv === 'r' || priv === 'w' || priv === 'u' || priv === 'd') {
+    					uncheckSiblings1(jQuery(this));
+    				}
+    				
+    			} 
+        		
+        	});
+      });
+      	
+      </script>
 </head>
 <body bgproperties="fixed" bgcolor="ivory" onLoad="setfocus()"
 	topmargin="0" leftmargin="0" rightmargin="0">
