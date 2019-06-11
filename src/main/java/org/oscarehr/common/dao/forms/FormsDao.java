@@ -57,9 +57,44 @@ public class FormsDao {
 		return query.getResultList();
 	}
 	
+	@NativeSql("formLabReq10")
+	public List<Object[]> findIdFormCreatedAndPatientNameFromFormLabReq10() {
+		String sql = "SELECT ID, formCreated, patientName FROM formLabReq10";
+		Query query = entityManager.createNativeQuery(sql);
+		return query.getResultList();
+	}
+	
+	@NativeSql("formLabReq07")
+	public List<Object[]> findIdFormCreatedAndPatientNameFromFormLabReq07(String demographicNo) {
+		if(demographicNo == null) {
+			return findIdFormCreatedAndPatientNameFromFormLabReq07();
+		}
+		String sql = "SELECT ID, formCreated, patientName FROM formLabReq07 where demographic_no = " + Integer.parseInt(demographicNo);
+		Query query = entityManager.createNativeQuery(sql);
+		return query.getResultList();
+	}
+	
+	@NativeSql("formLabReq10")
+	public List<Object[]> findIdFormCreatedAndPatientNameFromFormLabReq10(String demographicNo) {
+		if(demographicNo == null) {
+			return findIdFormCreatedAndPatientNameFromFormLabReq10();
+		}
+		String sql = "SELECT ID, formCreated, patientName FROM formLabReq10 where demographic_no = " + Integer.parseInt(demographicNo);
+		Query query = entityManager.createNativeQuery(sql);
+		return query.getResultList();
+	}
+	
 	@NativeSql("formLabReq07")
 	public List<Object> findFormCreatedFromFormLabReq07ById(Integer linkReqId) {
 		String sql = "SELECT formCreated FROM formLabReq07 WHERE ID = :linkReqId";
+		Query query = entityManager.createNativeQuery(sql);
+		query.setParameter("linkReqId", linkReqId);
+		return query.getResultList();
+	}
+	
+	@NativeSql("formLabReq10")
+	public List<Object> findFormCreatedFromFormLabReq10ById(Integer linkReqId) {
+		String sql = "SELECT formCreated FROM formLabReq10 WHERE ID = :linkReqId";
 		Query query = entityManager.createNativeQuery(sql);
 		query.setParameter("linkReqId", linkReqId);
 		return query.getResultList();

@@ -649,8 +649,6 @@
         <ViolationValue>/src/main/webapp/oscarRx/WarningDisplayMyD.jsp:Vector vec = new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/WriteScript.jsp:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/chartDrugProfile.jsp:Hashtable h = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarRx/getAllergyData.jsp:// Hashtable d = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarRx/getAllergyData.jsp:Hashtable d2=new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/getInactiveDate.jsp:Hashtable d = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/getInactiveDate.jsp:Vector vec=new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/search2.jsp:ArrayList genWBrand = new ArrayList();</ViolationValue>
@@ -2788,7 +2786,10 @@
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:Hashtable ht = (Hashtable) IdMap.get(IdMap.keySet().iterator().next());</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/CumulativeLabValues3.jsp:Hashtable ht = (Hashtable) IdMap.get(dateIdHash.get("id"));</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/DisplayLabValue.jsp:Collections.sort(list,new SortHashtable());</ViolationValue>
+        <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:Vector&lt;Integer&gt; formType = new Vector&lt;Integer&gt;(); //1=form, 2=eform</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:Vector&lt;String&gt; formCreated = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:Vector&lt;String&gt; formDisplayName = new Vector&lt;String&gt;();</ViolationValue>
+        <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:Vector&lt;String&gt; formName = new Vector&lt;String&gt;(); //formname or eformname</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:Vector&lt;String&gt; patientName = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:Vector&lt;String&gt; req_id      = new Vector&lt;String&gt;();</ViolationValue>
         <ViolationValue>/src/main/webapp/lab/LinkReq.jsp:java.util.Hashtable,</ViolationValue>
@@ -3068,8 +3069,6 @@
         <ViolationValue>/src/main/webapp/oscarRx/chartDrugProfile.jsp:Hashtable h = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/chartDrugProfile.jsp:String getChecked(Hashtable h,String reg){</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/chartDrugProfile.jsp:StringBuffer sb = new StringBuffer();</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarRx/getAllergyData.jsp:// Hashtable d = new Hashtable();</ViolationValue>
-        <ViolationValue>/src/main/webapp/oscarRx/getAllergyData.jsp:Hashtable d2=new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/getInactiveDate.jsp:Hashtable d = new Hashtable();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/getInactiveDate.jsp:Vector vec=new Vector();</ViolationValue>
         <ViolationValue>/src/main/webapp/oscarRx/search2.jsp:Vector&lt;Hashtable&gt; vec = rxref.list_drug_element2(searchString);</ViolationValue>

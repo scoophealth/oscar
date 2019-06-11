@@ -283,7 +283,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
         }
 
 	function linkreq(rptId, reqId) {
-	    var link = "../../LinkReq.jsp?table=hl7TextMessage&rptid="+rptId+"&reqid="+reqId;
+	    var link = "../../LinkReq.jsp?table=hl7TextMessage&rptid="+rptId+"&reqid="+reqId + "<%=demographicID != null ? "&demographicNo=" + demographicID : ""%>";
 	    window.open(link, "linkwin", "width=500, height=200");
 	}
 
