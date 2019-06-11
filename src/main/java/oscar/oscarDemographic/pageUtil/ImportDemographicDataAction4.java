@@ -333,7 +333,7 @@ import oscar.util.UtilDateUtilities;
 	                    } finally {
 	                    	IOUtils.closeQuietly(out);
 	                    }
-                        logs.add(importXML(LoggedInInfo.getLoggedInInfoFromSession(request) , ofile, warnings, request,frm.getTimeshiftInDays(),students,courseId));
+                        logs.add(importXML(LoggedInInfo.getLoggedInInfoFromSession(request) , ofile, warnings, request,frm.getTimeshiftInDays(),students,courseId,true));
                         importNo++;
                         demographicNo=null;
                     }
@@ -349,7 +349,7 @@ import oscar.util.UtilDateUtilities;
                 Util.cleanFile(ifile);
 
             } else if (matchFileExt(ifile, "xml")) {
-                logs.add(importXML(LoggedInInfo.getLoggedInInfoFromSession(request), ifile, warnings, request,frm.getTimeshiftInDays(),students,courseId));
+                logs.add(importXML(LoggedInInfo.getLoggedInInfoFromSession(request), ifile, warnings, request,frm.getTimeshiftInDays(),students,courseId,false));
                 demographicNo=null;
                 importLog = makeImportLog(logs, tmpDir);
             } else {
@@ -484,9 +484,9 @@ import oscar.util.UtilDateUtilities;
     	return importContacts(loggedInInfo, xmlFile,warnings,request,timeShiftInDays,null,null,0);
     }
     
-    String[] importXML(LoggedInInfo loggedInInfo, String xmlFile, ArrayList<String> warnings, HttpServletRequest request, int timeShiftInDays,List<Provider> students, int courseId) throws SQLException, Exception {
+    String[] importXML(LoggedInInfo loggedInInfo, String xmlFile, ArrayList<String> warnings, HttpServletRequest request, int timeShiftInDays,List<Provider> students, int courseId, boolean cleanFile) throws SQLException, Exception {
         if(students == null || students.isEmpty()) {
-            return importXML(loggedInInfo, xmlFile,warnings,request,timeShiftInDays,null,null,0);
+            return importXML(loggedInInfo, xmlFile,warnings,request,timeShiftInDays,null,null,0, cleanFile);
         }
 
         List<String> logs = new ArrayList<String>();
@@ -501,7 +501,7 @@ import oscar.util.UtilDateUtilities;
             }
             Program p = programManager.getProgram(pid);
 
-            String[] result = importXML(loggedInInfo, xmlFile,warnings,request,timeShiftInDays,student,p,courseId);
+            String[] result = importXML(loggedInInfo, xmlFile,warnings,request,timeShiftInDays,student,p,courseId, cleanFile);
             logs.addAll(convertLog(result));
         }
         return logs.toArray(new String[logs.size()]);
@@ -742,7 +742,7 @@ import oscar.util.UtilDateUtilities;
     }
 
 
-    String[] importXML(LoggedInInfo loggedInInfo, String xmlFile, ArrayList<String> warnings, HttpServletRequest request, int timeShiftInDays, Provider student, Program admitTo, int courseId) throws SQLException, Exception {
+    String[] importXML(LoggedInInfo loggedInInfo, String xmlFile, ArrayList<String> warnings, HttpServletRequest request, int timeShiftInDays, Provider student, Program admitTo, int courseId, boolean cleanFile) throws SQLException, Exception {
         ArrayList<String> err_demo = new ArrayList<String>(); //errors: duplicate demographics
         ArrayList<String> err_data = new ArrayList<String>(); //errors: discrete data
         ArrayList<String> err_summ = new ArrayList<String>(); //errors: summary
@@ -1631,6 +1631,11 @@ import oscar.util.UtilDateUtilities;
                     		ongConcerns = probList[i].getDiagnosisCode().getStandardCodeDescription();
                     	}
                     }
+                    else if (StringUtils.empty(ongConcerns)) {
+                		if(!StringUtils.empty(probList[i].getProblemDescription())) {
+                			ongConcerns = probList[i].getProblemDescription();
+                		}
+                	}
                     if (StringUtils.empty(ongConcerns)) ongConcerns = "Imported Concern";
                     cmNote.setNote(ongConcerns);
                     caseManagementManager.saveNoteSimple(cmNote);
@@ -1674,8 +1679,6 @@ import oscar.util.UtilDateUtilities;
                         cme.setDateValue(dateFPtoDate(probList[i].getOnsetDate(), timeShiftInDays));
                         cme.setValue(dateFPGetPartial(probList[i].getOnsetDate()));
                         caseManagementManager.saveNoteExt(cme);
-                    } else {
-                        err_data.add("Error! No Onset Date for Problem List ("+(i+1)+")");
                     }
                     if (probList[i].getResolutionDate()!=null) {
                         cme.setKeyVal(CaseManagementNoteExt.RESOLUTIONDATE);
@@ -2916,7 +2919,9 @@ import oscar.util.UtilDateUtilities;
             if(demoRes != null) {
                 err_demo.addAll(demoRes.getWarningsCollection());
             }
-            Util.cleanFile(xmlFile);
+            if (cleanFile) {
+            	Util.cleanFile(xmlFile);
+            }
 
             return packMsgs(err_demo, err_data, err_summ, err_othe, err_note, warnings);
 	}
