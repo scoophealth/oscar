@@ -158,12 +158,15 @@ Boolean showAll = showAllstr != null && !"null".equalsIgnoreCase(showAllstr);
 
 if (remoteFacilityIdString==null) // local lab
 {
-    
-	Long reqIDL = LabRequestReportLink.getIdByReport("hl7TextMessage",Long.valueOf(segmentID));
-	reqID = reqIDL==null ? "" : reqIDL.toString();
-	reqIDL = LabRequestReportLink.getRequestTableIdByReport("hl7TextMessage",Long.valueOf(segmentID));
-	reqTableID = reqIDL==null ? "" : reqIDL.toString();
-	
+
+	HashMap<String,Object> reqMap =  LabRequestReportLink.getLinkByReport("hl7TextMessage",Long.valueOf(segmentID));
+	if(reqMap.get("id") != null) {
+		reqID = reqMap.get("id").toString();
+		reqTableID = reqMap.get("request_id").toString();
+	} else {
+		reqID = "";
+		reqTableID = "";
+	}
 	
 
 	PatientLabRoutingDao dao = SpringUtils.getBean(PatientLabRoutingDao.class); 
@@ -446,7 +449,7 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
         }
 
 	function linkreq(rptId, reqId) {
-	    var link = "../../LinkReq.jsp?table=hl7TextMessage&rptid="+rptId+"&reqid="+reqId;
+	    var link = "../../LinkReq.jsp?table=hl7TextMessage&rptid="+rptId+"&reqid="+reqId + "<%=demographicID != null ? "&demographicNo=" + demographicID : ""%>";
 	    window.open(link, "linkwin", "width=500, height=200");
 	}
 

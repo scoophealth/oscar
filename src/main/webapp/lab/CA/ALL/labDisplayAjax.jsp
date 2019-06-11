@@ -216,7 +216,7 @@ if (request.getAttribute("printError") != null && (Boolean) request.getAttribute
         }
 
 	 linkreq=function(rptId, reqId) {
-	    var link = "../lab/LinkReq.jsp?table=hl7TextMessage&rptid="+rptId+"&reqid="+reqId;
+	    var link = "../lab/LinkReq.jsp?table=hl7TextMessage&rptid="+rptId+"&reqid="+reqId + "<%=demographicID != null ? "&demographicNo=" + demographicID : ""%>";
 	    window.open(link, "linkwin", "width=500, height=200");
 	}
 

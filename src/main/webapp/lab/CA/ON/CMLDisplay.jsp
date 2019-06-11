@@ -127,7 +127,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 }
 
 function linkreq(rptId, reqId) {
-    var link = "../../LinkReq.jsp?table=labPatientPhysicianInfo&rptid="+rptId+"&reqid="+reqId;
+    var link = "../../LinkReq.jsp?table=labPatientPhysicianInfo&rptid="+rptId+"&reqid="+reqId + "<%=demographicID != null ? "&demographicNo=" + demographicID : ""%>";
     window.open(link, "linkwin", "width=500, height=200");
 }
 </script>

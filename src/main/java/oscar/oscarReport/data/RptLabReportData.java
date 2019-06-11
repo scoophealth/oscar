@@ -85,7 +85,7 @@ public class RptLabReportData {
 		try {
 			ResultSet rs;
 			// mysql function for dates = select date_sub(now(),interval 1 month); 
-			String sql = "select distinct l.demographic_no from formLabReq l , demographic d where " 
+			String sql = "select distinct l.demographic_no from formLabReq07 l , demographic d where " 
 					+ " ( to_days( now() ) - to_days(formCreated) ) <= " + " ( to_days( now() ) - to_days( date_sub(now(),interval " + days + " month) ) )" 
 					+ " and l.demographic_no = d.demographic_no ";
 			if (!providerNo.equals("-1")) {
@@ -118,7 +118,7 @@ public class RptLabReportData {
 
 		public ArrayList getLabReqs() {
 			try {
-				String sql = " select ID, formCreated, provider_no from formLabReq where demographic_no = '" 
+				String sql = " select ID, formCreated, provider_no from formLabReq07 where demographic_no = '" 
 						+ demoNo + "' " + " and to_days(now()) - to_days(formCreated) <=  " + " (to_days( now() ) - to_days( date_sub( now(), interval " 
 						+ days + " month ) ) )";
 				Consult con;
