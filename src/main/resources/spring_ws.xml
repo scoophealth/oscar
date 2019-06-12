@@ -20,13 +20,14 @@
 	<import resource="classpath:META-INF/cxf/cxf.xml" />
 	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
-	<!-- interceptors --> 
+	<!-- interceptors  --> 
 	<bean id="abstractLoggingInterceptor" abstract="true">
 		<property name="prettyLogging" value="true" />
 	</bean>
 	<bean id="loggingInInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor" parent="abstractLoggingInterceptor">
 		<property name="limit" value="1024000" />
 	</bean>
+
 	<bean id="loggingOutInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor" parent="abstractLoggingInterceptor" />
 
     <cxf:bus>
@@ -41,7 +42,7 @@
 			<ref bean="loggingOutInterceptor" />
 		</cxf:outInterceptors>
 		
-		<!-- logging interceptors -->
+		<!-- logging interceptors 
 		 
 		<cxf:inInterceptors>
 			<ref bean="loggingInInterceptor" />
@@ -53,6 +54,7 @@
 		<cxf:inFaultInterceptors>
 			<ref bean="loggingInInterceptor" />
 		</cxf:inFaultInterceptors>
+		-->
 		 
     </cxf:bus>
 

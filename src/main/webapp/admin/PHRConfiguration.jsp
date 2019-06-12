@@ -69,15 +69,18 @@
 		</div>
 		
 		<%--  div class="container"> --%>
-			<div class="row">
-  				<div class="col-md-12">
+			<div class="row" data-ng-show="phrActive">
+  				<div class="col-xs-12">
+  				    <h6>PHR Connector Launch Bar</h6>
 					<div>
 						<button style="margin-left:3px;" ng-repeat="recc in audit.launchItems" type="button" class="btn btn-primary" ng-click="openPHRWindow(recc)">{{recc.heading}}</button>
+				
+						
 					</div>
 				</div>
 			</div>	
 			<div class="row">
-  				<div class="col-md-9">	
+  				<div class="col-xs-9">	
 					<div data-ng-hide="phrActive" class="jumbotron" ng-cloak>
 						<h2>PHR Clinic Configuration Wizard</h2>
 						<div class="alert alert-warning" role="alert" data-ng-show="userpassError">Invalid Username and Password.</div>
@@ -121,7 +124,7 @@
 												 </ul>
 												<button type="button" class="btn btn-primary btn-block" ng-click="selectPHRUser()">Create a new User</button>
 											<h3>Link an existing user</h3>
-									 			<p>This will create the consentType to record which patients are participating with using the PHR. Communicating the user information to the PHR will need to be done manually.</p>
+									 			<p>This will create the "OSCAR Consent" to record which patients are participating with using the PHR. Communicating the user information to the PHR will need to be done manually.</p>
 												<button type="button" class="btn btn-primary btn-block" ng-click="selectLinkExistingUser()">Link an existing user</button>
 									</div>
 									<div ng-if="showPHRUserCreate">
@@ -173,10 +176,10 @@
 					</div>
 					
 					<%-- APPT CONFIG UI --%>
-					<div  ng-show="currentSearchConfig != null">
+					<div  ng-show="false">  <%-- currentSearchConfig != null">   --%>
 		 		
 		 		<div class="form-group">
-				    <label for="ClinicTitleId">Booking Title</label>
+				    <label for="ClinicTitleId">Clinic Name <small>Name patient's will see when booking online</small></label>
 				    <input type="text" class="form-control" id="ClinicTitleId" placeholder="Name of Clinic" ng-model="currentSearchConfig.title">
 				  </div>
 		 		<ul class="nav nav-tabs nav-justified">
@@ -309,9 +312,9 @@
 		 	</div>
 					<%-- APPT CONFIG UI END --%>
 					
-					<div btf-markdown="audit.markdownText"></div>
+					<div style="margin-top:5px;" btf-markdown="audit.markdownText"></div>
 				</div>
-				<div class="col-md-3">
+				<div class="col-xs-3">
 					
 					<div  > <%-- </div>class="jumbotron" ng-if="!serverOffline && !audit.clinicInformationSetup">  --%>
 					  <h3></h3>
