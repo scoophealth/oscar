@@ -405,6 +405,7 @@ try
 					<option value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&amp;FUNCTION=search&amp;SERVER2=server2&amp;SERVER1=server1&amp;PARAMETER="><bean:message key="global.medlineplus" /></option>
                     <option value="tripsearch.jsp?searchterm=">Trip Database</option>
                     <option value="macplussearch.jsp?searchterm=">MacPlus Database</option>
+                    <option value="https://empendium.com/mcmtextbook/search?type=textbook&q=">McMaster Text Book</option>
     	        </select>
 				</div>				
 
