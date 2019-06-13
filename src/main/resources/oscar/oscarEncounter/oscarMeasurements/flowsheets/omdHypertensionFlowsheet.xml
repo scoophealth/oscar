@@ -21,7 +21,7 @@
 	<indicator key="LOW" colour="#9999FF" />
 	<indicator key="HIGH" colour="orange" />
 	<indicator key="HIGH 1" colour="#E00000" />
-	
+	<header display_name="General">	
 	<item measurement_type="FBS" display_name="Fasting Plasma Glucose" guideline="Target: %lt;=6 mmol/L" graphable="yes" value_name="Value" >
 		<ruleset>
 			<rule indicationColor="HIGH">
@@ -127,6 +127,7 @@
 			</rule>
 		</ruleset>
 	</item>	
+	</header>
 	<!-- 
 
 	<item prevention_type="Flu" display_name="Flu Vaccine" guideline="Annually" graphable="no" />
