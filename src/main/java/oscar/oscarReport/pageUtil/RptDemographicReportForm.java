@@ -59,6 +59,7 @@ public final class RptDemographicReportForm extends ActionForm {
 	public String studyId;
 	public String demoIds;
 
+	public String setName;
 	////////////////////////////////////////////////////////////////////////
 	public void copyConstructor(RptDemographicReportForm drf) {
 		this.select = drf.select;
@@ -392,6 +393,14 @@ public final class RptDemographicReportForm extends ActionForm {
 
 	public void setStudyId(String studyId) {
 		this.studyId = studyId;
+	}
+
+	public String getSetName() {
+		return setName;
+	}
+
+	public void setSetName(String setName) {
+		this.setName = setName;
 	}
 
 }
