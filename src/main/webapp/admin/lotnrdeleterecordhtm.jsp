@@ -108,7 +108,7 @@ function onsub() {
 		<td width="50%" align="right"><bean:message
 			key="admin.admin.add_lot_nr.prevention" /><font color="red">:</font></td>
 		<td>
-		 <input type="text" name="prevention" size=30 maxlength="30" value=<%=request.getParameter("prevention")==null?"":request.getParameter("prevention")%>>
+		 <input type="text" name="prevention" size=30 maxlength="30" value="<%=request.getParameter("prevention")==null?"":request.getParameter("prevention")%>">
 		</td>
 	</tr>
 	
@@ -116,7 +116,7 @@ function onsub() {
 			<td align="right"><bean:message
 				key="admin.admin.add_lot_nr.lotnr" />:</td>
 			<td><input type="text" name="lotnr" size="20"
-				maxlength="20" value=<%=request.getParameter("lotnr")==null?"":request.getParameter("lotnr")%>></td>
+				maxlength="20" value="<%=request.getParameter("lotnr")==null?"":request.getParameter("lotnr")%>"></td>
 	</tr>		
 
 	<tr>

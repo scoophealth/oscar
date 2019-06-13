@@ -196,7 +196,7 @@ demoData = (RptLabReportData.DemoLabDataStruct)  conData.demoList.get(i);
                   %>
 							<tr>
 								<td class="fieldBox" bgcolor="#ddddff"><a
-									href="javascript:popupOscarConsultationConfig(700,960,'../form/formlabreq.jsp?demographic_no=<%=demoData.demoNo%>&formId=<%=demoLab.requestId%>&provNo=<%=demoLab.proNo%>&readOnly=true')"><%=demoLab.referalDate%></a>
+									href="javascript:popupOscarConsultationConfig(700,960,'../form/formlabreq07.jsp?demographic_no=<%=demoData.demoNo%>&formId=<%=demoLab.requestId%>&provNo=<%=demoLab.proNo%>&readOnly=true')"><%=demoLab.referalDate%></a>
 								</td>
 							</tr>
 							<%

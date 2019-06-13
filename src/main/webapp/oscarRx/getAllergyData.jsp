@@ -53,50 +53,52 @@ String id = request.getParameter("id");
 String disabled = oscar.OscarProperties.getInstance().getProperty("rx3.disable_allergy_warnings","false");
 if(disabled.equals("false")) {
 
-oscar.oscarRx.pageUtil.RxSessionBean rxSessionBean = (oscar.oscarRx.pageUtil.RxSessionBean) session.getAttribute("RxSessionBean");
-Allergy[] allergies = RxPatientData.getPatient(loggedInInfo, rxSessionBean.getDemographicNo()).getAllergies(loggedInInfo);
-
-if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
-	try {
-		ArrayList<Allergy> remoteAllergies=RemoteDrugAllergyHelper.getRemoteAllergiesAsAllergyItems(loggedInInfo,rxSessionBean.getDemographicNo());
-
-		// now merge the 2 lists
-		for (Allergy alleryTemp : allergies) remoteAllergies.add(alleryTemp);
-		allergies=remoteAllergies.toArray(new Allergy[0]);
-	} catch (Exception e) {
-		MiscUtils.getLogger().error("error getting remote allergies", e);
+	oscar.oscarRx.pageUtil.RxSessionBean rxSessionBean = (oscar.oscarRx.pageUtil.RxSessionBean) session.getAttribute("RxSessionBean");
+	Allergy[] allergies = RxPatientData.getPatient(loggedInInfo, rxSessionBean.getDemographicNo()).getActiveAllergies();
+	
+	if (loggedInInfo.getCurrentFacility().isIntegratorEnabled()) {
+		try {
+			ArrayList<Allergy> remoteAllergies=RemoteDrugAllergyHelper.getRemoteAllergiesAsAllergyItems(loggedInInfo,rxSessionBean.getDemographicNo());
+	
+			// now merge the 2 lists
+			for (Allergy alleryTemp : allergies) 
+				remoteAllergies.add(alleryTemp);
+			allergies=remoteAllergies.toArray(new Allergy[0]);
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("error getting remote allergies", e);
+		}
 	}
-}
+	
+	Allergy[] allergyWarnings = null;
+	RxDrugData drugData = new RxDrugData();
+	List<Allergy> missing = new ArrayList<Allergy>();
+	allergyWarnings = drugData.getAllergyWarnings(atcCode, allergies,missing);
 
-Allergy[] allergyWarnings = null;
-   RxDrugData drugData = new RxDrugData();
-   List<Allergy> missing = new ArrayList<Allergy>();
-   allergyWarnings = drugData.getAllergyWarnings(atcCode, allergies,missing);
-
-
-   // Hashtable d = new Hashtable();
-    Hashtable d2=new Hashtable();
-
-  //  d.put("id",id);
-    d2.put("id",id);
-    for(Allergy allg:allergyWarnings){
-   	 	String temp=StringUtils.trimToEmpty(allg.getDescription());
-        d2.put("DESCRIPTION", temp);
-
-        temp=StringUtils.trimToEmpty(allg.getReaction());
-        d2.put("reaction", temp);
-        
-        temp=StringUtils.trimToEmpty(allg.getSeverityOfReactionDesc());
-        d2.put("severity", temp);
-    }
-
-   try{
-    response.setContentType("text/x-json");
-    JSONObject jsonArray = (JSONObject) JSONSerializer.toJSON( d2 );
-    jsonArray.write(out);
-    }
-   catch(Exception e){
-	   MiscUtils.getLogger().error("Error", e);
-    }
+	JSONObject root = new JSONObject();
+	root.put("id",id);
+	
+	JSONArray items = new JSONArray();
+	for(Allergy allg: allergyWarnings) {
+		JSONObject item = new JSONObject();
+		item.put("description", StringUtils.trimToEmpty(allg.getDescription()));
+		item.put("reaction",StringUtils.trimToEmpty(allg.getReaction()));
+		item.put("severity",StringUtils.trimToEmpty(allg.getSeverityOfReactionDesc()));
+		item.put("warning",true);
+		items.add(item);
+	}
+	for(Allergy missingAllergy : missing) {
+		JSONObject item = new JSONObject();
+		item.put("description", StringUtils.trimToEmpty(missingAllergy.getDescription()));
+		item.put("missing",true);
+		items.add(item);
+	}
+	
+	root.put("items",items);
+	try{
+	    response.setContentType("application/json");
+	    root.write(out);
+	} catch(Exception e){
+		MiscUtils.getLogger().error("Error", e);
+	}
 }
 %>

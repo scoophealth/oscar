@@ -23,6 +23,7 @@
     Ontario, Canada
 
 --%>
+<%@page import="java.net.URLEncoder"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -118,7 +119,9 @@ if (p.getId() != null) {
 	}
 }
 %>
-
+<br/>
+<a href="lotnraddrecordhtm.jsp?prevention=<%=URLEncoder.encode(prevention,"UTF-8")%>">Add Another Lot # to <%=prevention %></a> <br/>
+<a href="lotnrsearchresults.jsp?search_mode=search_prev&keyword=<%=URLEncoder.encode(prevention,"UTF-8")%>&orderby=prevention_type&dboperation=lotnr_search_prevention&limit1=0&limit2=10&button=submit">View Lots for <%=prevention %></a>
 </center>
 </body>
 </html:html>

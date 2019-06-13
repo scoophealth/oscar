@@ -164,9 +164,10 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
 		}
 		if(secExceptionMsg.length() > 0)
 			msg += secExceptionMsg;
-		else
+		else {
 			msg += "Role/Obj/Rights " + roleUserGroup + "/" + objectName + "/" + privilege + " is added. ";
-	    LogAction.addLog(curUser_no, LogConst.ADD, LogConst.CON_PRIVILEGE, roleUserGroup +"|"+ objectName +"|"+privilege, ip);
+		    LogAction.addLog(curUser_no, LogConst.ADD, LogConst.CON_PRIVILEGE, roleUserGroup +"|"+ objectName +"|"+privilege, ip);
+		}
 	}
 }
 
@@ -218,7 +219,7 @@ if (request.getParameter("buttonUpdate") != null && request.getParameter("button
     	sop.setPriority(Integer.parseInt(priority));
     	secObjPrivilegeDao.merge(sop);
     	msg = "Role/Obj/Rights " + roleUserGroup + "/" + objectName + "/" + privilege + " is updated. ";
-	    LogAction.addLog(curUser_no, LogConst.UPDATE, LogConst.CON_PRIVILEGE, roleUserGroup +"|"+ objectName, ip);
+	    LogAction.addLog(curUser_no, LogConst.UPDATE, LogConst.CON_PRIVILEGE, roleUserGroup +"|"+ objectName  + "|" + privilege, ip);
     } else {
     	msg = "Role/Obj/Rights " + roleUserGroup + "/" + objectName + "/" + privilege + " is <font color='red'>NOT</font> updated!!! ";
     }
@@ -298,6 +299,48 @@ function onChangeSelect(){
 	}
 }
 // -->
+      </script>
+      <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.7.1.min.js"></script>
+      <script>
+      
+      function uncheckSiblings(el) {
+    	  var myName = el.attr('name');
+    	  el.parents("td").find("input:checkbox[name ^= 'privilege']").each(function(){
+    		  if(jQuery(this).attr('name') != myName) {
+    			  jQuery(this).prop("checked",false);
+    		  }
+    	  });
+      }
+      function uncheckSiblings1(el) {
+    	  var myName = el.attr('name');
+    	  el.parents("td").find("input:checkbox[name ^= 'privilege']").each(function(){
+    		  if(jQuery(this).attr('name') != myName && jQuery(this).attr('name').endsWith("x") ) {
+    			  jQuery(this).prop("checked",false);
+    		  }
+    		  if(jQuery(this).attr('name') != myName && jQuery(this).attr('name').endsWith("o") ) {
+    			  jQuery(this).prop("checked",false);
+    		  }
+    	  });
+    	  
+      }
+      
+      jQuery(document).ready(function(){
+    	  jQuery("input:checkbox[name ^= 'privilege']").change(function(){
+    			if(jQuery(this).is(":checked")) {
+    				var priv  = jQuery(this).attr('name')[jQuery(this).attr('name').length-1];
+    				if(priv === 'x' || priv === 'o') {
+    					uncheckSiblings(jQuery(this));	
+    				}
+    				
+    				if(priv === 'r' || priv === 'w' || priv === 'u' || priv === 'd') {
+    					uncheckSiblings1(jQuery(this));
+    				}
+    				
+    			} 
+        		
+        	});
+      });
+      	
       </script>
 </head>
 <body bgproperties="fixed" bgcolor="ivory" onLoad="setfocus()"

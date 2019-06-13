@@ -1681,6 +1681,9 @@ if(oscarProps.getProperty("new_label_print") != null && oscarProps.getProperty("
 								if(DemographicContact.CATEGORY_PERSONAL.equals(dContact.getCategory()) && DemographicContact.TYPE_DEMOGRAPHIC == dContact.getType() ) {
 									 masterLink = "<a target=\"demographic"+dContact.getContactId()+"\" href=\"" + request.getContextPath() + "/demographic/demographiccontrol.jsp?demographic_no="+dContact.getContactId()+"&displaymode=edit&dboperation=search_detail\">M</a>";
 								}
+								if(DemographicContact.CATEGORY_PERSONAL.equals(dContact.getCategory()) && DemographicContact.TYPE_CONTACT == dContact.getType()) {
+									masterLink = "<a target=\"_blank\" href=\""+ request.getContextPath() +"/demographic/Contact.do?method=viewContact&contact.id="+ dContact.getContactId() + "\">details</a>";
+								}
 %>
 
 								<li><span class="label"><%=dContact.getRole()%>:</span>
@@ -3178,7 +3181,7 @@ if ( Dead.equals(PatStat) ) {%>
                         %>
 									<option value="<%=p.getProviderNo()%>"
 										<%=p.getProviderNo().equals(demographic.getProviderNo())?"selected":""%>>
-									<%=Misc.getShortStr( (p.getLastName()+","+p.getFirstName()),"",nStrShowLen)%></option>
+									<%=p.getLastName()+","+p.getFirstName()%></option>
 									<% } %>
 								</select></td>
 								<td align="right" nowrap><b><bean:message
@@ -3193,7 +3196,7 @@ if ( Dead.equals(PatStat) ) {%>
                         %>
 									<option value="<%=p.getProviderNo()%>"
 										<%=p.getProviderNo().equals(nurse)?"selected":""%>>
-									<%=Misc.getShortStr( (p.getLastName()+","+p.getFirstName()),"",nStrShowLen)%></option>
+									<%=p.getLastName()+","+p.getFirstName()%></option>
 									<% } %>
 								</select></td>
 							</tr>
@@ -3208,7 +3211,7 @@ if ( Dead.equals(PatStat) ) {%>
                         %>
 									<option value="<%=p.getProviderNo()%>"
 										<%=p.getProviderNo().equals(midwife)?"selected":""%>>
-									<%=Misc.getShortStr( (p.getLastName()+","+p.getFirstName()),"",nStrShowLen)%></option>
+									<%=p.getLastName()+","+p.getFirstName()%></option>
 									<% } %>
 								</select></td>
 								<td align="right"><b><bean:message
@@ -3220,7 +3223,7 @@ if ( Dead.equals(PatStat) ) {%>
                         %>
 									<option value="<%=p.getProviderNo()%>"
 										<%=p.getProviderNo().equals(resident)?"selected":""%>>
-									<%=Misc.getShortStr( (p.getLastName()+","+p.getFirstName()),"",nStrShowLen)%></option>
+									<%=p.getLastName()+","+p.getFirstName()%></option>
 									<% } %>
 								</select></td>
 							</tr>
@@ -3253,7 +3256,7 @@ if ( Dead.equals(PatStat) ) {%>
 									<option
 										value="<%=prop.getProperty("last_name")+","+prop.getProperty("first_name")%>"
 										<%=prop.getProperty("referral_no").equals(rdohip)?"selected":""%>>
-									<%=Misc.getShortStr( (prop.getProperty("last_name")+","+prop.getProperty("first_name")),"",nStrShowLen)%></option>
+									<%=prop.getProperty("last_name")+","+prop.getProperty("first_name")%></option>
 									<% }
  	                      	
  	                       %>
@@ -3391,7 +3394,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                      			   %>
 									<option value="<%=p.getProviderNo()%>"
 										<%=p.getProviderNo().equals(demographic.getRosterEnrolledTo())?"selected":""%>>
-									<%=Misc.getShortStr( (p.getLastName()+","+p.getFirstName()),"",nStrShowLen)%></option>
+									<%=p.getLastName()+","+p.getFirstName()%></option>
 									<% } %>
 								</select>
 								

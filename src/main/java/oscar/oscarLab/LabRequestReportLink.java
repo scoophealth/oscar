@@ -104,7 +104,7 @@ public class LabRequestReportLink {
 		org.oscarehr.common.model.LabRequestReportLink l = new org.oscarehr.common.model.LabRequestReportLink();
 		l.setRequestTable(requestTable);
 		l.setRequestId(requestId == null ? null : requestId.intValue());
-		l.setRequestDate(ConversionUtils.fromTimestampString(requestDate));
+		l.setRequestDate(ConversionUtils.fromDateString(requestDate));
 		l.setReportTable(reportTable);
 		l.setReportId(reportId.intValue());
 		
@@ -116,6 +116,12 @@ public class LabRequestReportLink {
 			saveRequestDate_MeasurementsExt(requestDate, measurementId);
 		}
 	}
+	
+	public static void delete(String reportTable, Long reportId) {
+		for(org.oscarehr.common.model.LabRequestReportLink link : dao.findByReportTableAndReportId(reportTable, reportId.intValue())) {
+			dao.remove(link.getId());
+		}
+	}
 
 	public static void update(Long id, String requestTable, Long requestId, String requestDate) {
 		if (id==null) return;
@@ -124,7 +130,7 @@ public class LabRequestReportLink {
 		if(l != null) {
 			l.setRequestTable(requestTable);
 			l.setRequestId(requestId.intValue());
-			l.setRequestDate(ConversionUtils.fromTimestampString(requestDate));
+			l.setRequestDate(ConversionUtils.fromDateString(requestDate));
 			dao.merge(l);
 		}
 		
@@ -132,7 +138,7 @@ public class LabRequestReportLink {
 		//update request_datetime in measurementsExt
 		HashMap<String,Object> link = getLinkByRequestId(requestTable, requestId);
 		String reportTbl = (String) link.get("report_table");
-		String reportId = (String) link.get("report_id");
+		String reportId = String.valueOf(link.get("report_id"));
 		
 		Integer measurementId = getMeasurementIdFromExt(reportTbl, reportId);
 		MeasurementsExt mExt = getRequestDate_MeasurementsExt(measurementId);

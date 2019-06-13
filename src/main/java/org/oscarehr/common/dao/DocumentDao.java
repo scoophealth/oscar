@@ -94,7 +94,7 @@ public class DocumentDao extends AbstractDao<Document> {
     	String sql = "FROM CtlDocument c, Document d " +
     			"WHERE c.id.module = :module " +
     			"AND c.id.documentNo = d.documentNo " +
-    			"AND d.docType = :docType " +
+    			"AND d.doctype = :docType " +
     			"AND c.id.moduleId = :moduleId";
 		Query query = entityManager.createQuery(sql);
 		query.setParameter("module", module.getName());

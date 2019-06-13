@@ -40,6 +40,8 @@ import org.oscarehr.common.model.LogLetters;
 import org.oscarehr.common.model.ReportLetters;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.apache.log4j.Logger;
+
 
 import oscar.OscarDocumentCreator;
 
@@ -50,6 +52,8 @@ import oscar.OscarDocumentCreator;
 
 
 public class ManageLetters {
+	
+	private static Logger logger = MiscUtils.getLogger();
 
 	private ReportLettersDao reportLettersDao = SpringUtils.getBean(ReportLettersDao.class);
 	private LogLettersDao logLettersDao = SpringUtils.getBean(LogLettersDao.class);
@@ -109,14 +113,18 @@ public class ManageLetters {
 
     //method to write file to stream
     public void writeLetterToStream(String id,OutputStream out){
-    	ReportLetters r = reportLettersDao.find(Integer.parseInt(id));
-    	if(r != null) {
-    		try {
-    			out.write(r.getReportFile(), 0, r.getReportFile().length);
-    		}catch(IOException e) {
-    			 MiscUtils.getLogger().error("Error", e);
-    		}
-    	}
+	    	ReportLetters r = reportLettersDao.find(Integer.parseInt(id));
+	    
+	    	if(r != null) {
+	    		try {
+	    			out.write(r.getReportFile(), 0, r.getReportFile().length);
+	    		}catch(IOException e) {
+	    			 logger.error("Error", e);
+	    		}
+	    	}else {
+	    		logger.error("Could not find letter for id: "+id);
+	    	}
+	    	
     }
 
 

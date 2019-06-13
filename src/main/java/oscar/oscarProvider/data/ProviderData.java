@@ -582,8 +582,7 @@ public class ProviderData {
 
 	public static List<Map<String, String>> getProviderList() {
 		ProviderDataDao dao = SpringUtils.getBean(ProviderDataDao.class);
-		List<org.oscarehr.common.model.ProviderData> providers = dao.findByType(PROVIDER_TYPE_DOCTOR);
-
+		List<org.oscarehr.common.model.ProviderData> providers = dao.findAll(false);
 		List<Map<String, String>> result = new ArrayList<Map<String, String>>();
 		for (org.oscarehr.common.model.ProviderData p : providers) {
 			result.add(toMap(p));

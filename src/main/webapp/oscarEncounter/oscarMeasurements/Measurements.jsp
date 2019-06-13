@@ -93,9 +93,16 @@ function check() {
     if(ret) {
 
       	 $.post('<%=request.getContextPath()%>/oscarEncounter/Measurements.do?ajax=true&skipCreateNote=true',$('#theForm').serialize(),function(data){
-			opener.postMessage(data,"*");
-      		window.close();
-      	 });
+      		$("#errors_list").empty();
+      		 if(data.errors) {
+      			 for(var x=0;x<data.errors.length;x++) {
+      				 $("#errors_list").append(data.errors[x]);
+      			 }
+      		 } else {
+				opener.postMessage(data,"*");
+      			window.close();
+      		 }
+      	 },'json');
 
     }
 }
@@ -139,12 +146,14 @@ function check() {
 			</td>
 			<td class="MainTableRightColumn">
 			<%=measurementManager.getDShtml(groupName)%>
+			<ul id="errors_list" style="color:red">
+			</ul>
 			<table border=0 cellspacing=0>
 				<tr>
 					<td>
 					<table>
 						<tr>
-							<td>
+							<td>	
 							<table>
 								<html:errors />
 								<tr>

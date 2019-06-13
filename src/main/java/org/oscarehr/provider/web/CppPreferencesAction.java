@@ -65,7 +65,7 @@ public class CppPreferencesAction extends DispatchAction {
 		
 		OscarLog oscarLog = new OscarLog();
 		oscarLog.setAction("SAVE_CUSTOM_CPP");
-		oscarLog.setContent(null);
+		oscarLog.setContent("");
 		oscarLog.setContentId(null);
 		oscarLog.setData(bean.toString());
 		oscarLog.setDemographicId(null);

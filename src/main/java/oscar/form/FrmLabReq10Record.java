@@ -170,7 +170,7 @@ public class FrmLabReq10Record extends FrmRecord {
                 String strSpecialtyCode = "00";
                 String comments = provider.getComments();     
 
-                if( comments.indexOf(xmlSpecialtyCode) != -1 ) {                                    
+                if( comments != null &&  comments.indexOf(xmlSpecialtyCode) != -1 ) {                                    
                     String specialtyCode = comments.substring(comments.indexOf(xmlSpecialtyCode)+xmlSpecialtyCode.length(), comments.indexOf(xmlSpecialtyCode2));
                     specialtyCode = specialtyCode.trim();
                     if(!specialtyCode.isEmpty()) {
