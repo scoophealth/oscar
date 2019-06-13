@@ -1633,7 +1633,7 @@ import oscar.util.UtilDateUtilities;
                     		ongConcerns = probList[i].getDiagnosisCode().getStandardCodeDescription();
                     	}
                     }
-                    else if (StringUtils.empty(ongConcerns)) {
+                    if (StringUtils.empty(ongConcerns)) {
                 		if(!StringUtils.empty(probList[i].getProblemDescription())) {
                 			ongConcerns = probList[i].getProblemDescription();
                 		}
