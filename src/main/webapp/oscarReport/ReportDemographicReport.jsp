@@ -47,7 +47,24 @@ if(!authed) {
 
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
-
+<script src ="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$("#demographicNoCheckbox").bind('change',function(){
+			updateSetBox();
+			//alert('test');
+		});
+		updateSetBox();
+	});
+	
+	function updateSetBox() {
+		if($("#demographicNoCheckbox").is(":checked")) {
+			$("#submitPatientSet").show();
+		} else {
+			$("#submitPatientSet").hide();
+		}
+	}
+</script>
 <%
     oscar.oscarReport.data.RptSearchData searchData  = new oscar.oscarReport.data.RptSearchData();
     java.util.ArrayList rosterArray;
@@ -90,6 +107,7 @@ function checkQuery() {
     if (!ret) alert("Please select at least one field");
     return ret;
 }
+
 </script>
 
 <style type="text/css" media="print">
@@ -209,7 +227,7 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
         </tr>
         <tr>
             <td>
-            <html:multibox property="select" value="demographic_no"/>
+            <html:multibox property="select" value="demographic_no" styleId="demographicNoCheckbox"/>
             </td>
             <td>
             Demographic #
@@ -445,6 +463,9 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
 <html:text property="queryName"/><br>
 <input type="submit" value="Save Query" name="query"/>
 <input type="submit" value="Run Query"  name="query"/><br/>
+<span id="submitPatientSet" >
+	<input type="submit" value="Run Query And Save to Patient Set" name="query"/>&nbsp;<input type="text" name="setName" placeholder="Set Name"/>
+</span>
 <%if( studyId != null && !studyId.equals("") && !studyId.equalsIgnoreCase("null")) {%>
 <input type="submit" value="Add to Study" name="query"/>
 <%} %>
@@ -685,16 +706,8 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
         %>
 
         Search Returned : <%=searchList.size()%> Results
-        <html:form action="/report/CreateDemographicSet" >
-        <% boolean includesDemo = false;
-           if (selectArray[0].equals("demographic_no")){ 
-              includesDemo = true; %>      
-              <div class="hiddenInPrint">
-              Set Name:<input type="text" name="setName"/>
-              <input type="submit" value="Save Patient Set"/>
-              <input type="hidden" name="size" value="<%=searchList.size()%>"/>
-              </div>
-        <% } %>
+       
+       
         
         <table border=1>
         <tr>
@@ -718,9 +731,7 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
                     %>
                     <td>
                         <%=str%>
-                        <%if (includesDemo && j == 0){ %>
-                           <input type="hidden" name="demoNo<%=i%>" value="<%=str%>"/>
-                        <%}%>
+                        
                     </td>
 
                     <%}%>
@@ -728,7 +739,7 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
             <%}%>
 
         </table>        
-              </html:form>        
+                   
             
 
     <%}%>
