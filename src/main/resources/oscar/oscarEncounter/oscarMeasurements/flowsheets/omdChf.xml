@@ -18,7 +18,7 @@
 	<indicator key="HIGH 1" colour="#E00000" />
 	<indicator key="HIGH" colour="orange" />
 	<indicator key="LOW" colour="#9999FF" />
-
+	<header display_name="General">
 	<item measurement_type="EGFR" display_name="eGFR" guideline="Caution if &lt;60 mL/min" graphable="yes" value_name="EGFR" >
 		<ruleset>
 			<rule indicationColor="HIGH">
@@ -81,7 +81,7 @@
 	<item measurement_type="CEDS" display_name="Education Salt Fluid Vigilance" guideline="" graphable="yes" value_name="Reviewed" />
 	<item measurement_type="CEDW" display_name="Education Daily Weight Monitor" guideline="" graphable="yes" value_name="Reviewed" />
 	<item measurement_type="CEDE" display_name="Education Exercise Activity" guideline="" graphable="yes" value_name="Reviewed" />
-	
+	</header>	
 	<!-- 
 	<item prevention_type="Flu" display_name="Flu Vaccine" guideline="Annually" graphable="no" />
 	<item prevention_type="Pneumovax" display_name="Pneumococcal vaccine" guideline="" graphable="no" />

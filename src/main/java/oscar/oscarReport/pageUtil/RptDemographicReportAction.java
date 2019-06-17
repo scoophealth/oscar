@@ -25,6 +25,8 @@
 
 package oscar.oscarReport.pageUtil;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +39,7 @@ import org.apache.struts.action.ActionMapping;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 
+import oscar.oscarReport.data.DemographicSets;
 import oscar.oscarReport.data.RptDemographicQueryBuilder;
 import oscar.oscarReport.data.RptDemographicQueryLoader;
 import oscar.oscarReport.data.RptDemographicQuerySaver;
@@ -95,6 +98,27 @@ public  class RptDemographicReportAction extends Action {
             request.setAttribute("selectArray",select);
             request.setAttribute("studyId", studyId);
             return (mapping.findForward("addToStudy"));
+        } else if (query.equals("Run Query And Save to Patient Set")){
+            MiscUtils.getLogger().debug("run query and save to patient set");
+            RptDemographicQueryBuilder demoQ = new RptDemographicQueryBuilder();
+            java.util.ArrayList searchedArray = demoQ.buildQuery(loggedInInfo, frm);
+            
+            if(select != null && select.length>0 && select[0].equals("demographic_no")) {
+            	 DemographicSets demoSet = new DemographicSets();
+            	 
+
+            	 List<String> theDemos = new ArrayList<String>();
+            	 for(int x=0;x<searchedArray.size();x++) {
+            		 ArrayList<String> row = (ArrayList<String>)searchedArray.get(x);
+            		 theDemos.add(row.get(0));
+            	 }
+            	demoSet.addDemographicSet(frm.getSetName(),theDemos);
+            }
+            
+            MiscUtils.getLogger().debug("searchArray size "+searchedArray.size());
+            request.setAttribute("searchedArray",searchedArray);
+            request.setAttribute("selectArray",select);
+            request.setAttribute("studyId", studyId);
         }
 
         return (mapping.findForward("success"));

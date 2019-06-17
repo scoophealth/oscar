@@ -23,6 +23,7 @@
 	if ("add".equals(method)) {
 		String valNew = request.getParameter("name");
 		String uri = request.getParameter("uri");
+		String lifetime = request.getParameter("lifetime");
 		
 		json.put("name", valNew);
 		
@@ -41,6 +42,11 @@
 				sc.setKey(randomString(16,"0123456789abcdefghijklmnopqrstuvwxyz"));
 				sc.setSecret(randomString(16,"0123456789abcdefghijklmnopqrstuvwxyz"));
 				sc.setUri(uri);
+				try {
+				sc.setLifetime(Integer.parseInt(lifetime));
+				}catch(Exception e) {
+					sc.setLifetime(0);
+				}
 				serviceClientDao.persist(sc);
 				
 				int j = sc.getId();

@@ -81,7 +81,8 @@ if(!authed) {
 						var key = data[x].key;
 						var secret = data[x].secret;
 						var uri = data[x].uri;
-						$('#clientTable > tbody:last').append('<tr><td>'+name+'</td><td>'+key+'</td><td>'+secret+'</td><td>'+uri+'</td><td><a href="javascript:void(0);" onclick="deleteClient('+id+');"><img border="0" title="delete" src="../../images/Delete16.gif"/></a></td></tr>');
+						var lifetime = data[x].lifetime;
+						$('#clientTable > tbody:last').append('<tr><td>'+name+'</td><td>'+key+'</td><td>'+secret+'</td><td>'+uri+'</td><td>'+lifetime+'</td><td><a href="javascript:void(0);" onclick="deleteClient('+id+');"><img border="0" title="delete" src="../../images/Delete16.gif"/></a></td></tr>');
 					}
         });
 	}
@@ -130,7 +131,7 @@ if(!authed) {
 		
 		$( "#new-form" ).dialog({
 			autoOpen: false,
-			height: 275,
+			height: 400,
 			width: 450,
 			modal: true,
 			buttons: {
@@ -138,17 +139,23 @@ if(!authed) {
 					$( this ).dialog( "close" );	
 					var name = $("#clientName").val();
 					var uri = $("#clientURI").val();
+					var lifetime = $("#lifetime").val();
 					 jQuery.getJSON("clientManage.json",
 				                {
 				                        method: "add",
 				                        name: name,
-				                        uri:uri
+				                        uri:uri,
+				                        lifetime:lifetime
 				                },
 				                function(xml){
-				                	if(xml.success)
+				                	if(xml.success) {
+				                		$("#clientName").val('');
+				                		$("#clientURI").val('');
+				                		$("#lifetime").val('');
 				                		listClients();
-				                	else
+				                	} else {
 				                		alert(xml.error);
+				                	}
 				                });
 					
 				},
@@ -174,6 +181,7 @@ if(!authed) {
 			<th>Client Key</th>
 			<th>Client Secret</th>
 			<th>URI</td>
+			<th>Token TTL</td>
 			<th>Actions</th>
 		</tr>
 	</thead>
@@ -230,6 +238,12 @@ if(!authed) {
 				<label class="control-label" for="clientURI">URI:</label>
 				<div class="controls">
 					<input type="text" name="clientURI" id="clientURI" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="lifetime">Token Lifetime (seconds):</label>
+				<div class="controls">
+					<input type="text" name="lifetime" id="lifetime" />
 				</div>
 			</div>
 		</fieldset>

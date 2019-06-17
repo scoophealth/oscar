@@ -129,7 +129,7 @@ if (!Util.checkDir(op.getProperty("TMP_DIR"))) { %>
                         <html:radio property="matchProviderNames" value="false">
                             Import as new - same provider may have multiple entries
                         </html:radio><br><br>
-                        <p><input class="btn btn-primary" type="submit" name="Submit" value="Import (CMS spec 4.0)"></p>
+                        <p><input class="btn btn-primary" type="submit" name="Submit" value="Import (EMR DM 5.0)"></p>
 		</html:form>
 
 		<div id="waitingMessage" style="display: none;">

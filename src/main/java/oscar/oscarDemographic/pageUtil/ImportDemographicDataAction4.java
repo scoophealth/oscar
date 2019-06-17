@@ -346,7 +346,7 @@ import oscar.util.UtilDateUtilities;
                     importLog = makeImportLog(logs, tmpDir);
                 }
                 in.close();
-                Util.cleanFile(ifile);
+//                Util.cleanFile(ifile);
 
             } else if (matchFileExt(ifile, "xml")) {
                 logs.add(importXML(LoggedInInfo.getLoggedInInfoFromSession(request), ifile, warnings, request,frm.getTimeshiftInDays(),students,courseId,false));
@@ -460,6 +460,8 @@ import oscar.util.UtilDateUtilities;
             if (!matchFileExt(ofile, "xml")) {
                 OutputStream out = null;    
                 try {
+                	String path = ofile.substring(0,ofile.lastIndexOf(File.separator));
+                	new File(path).mkdirs();
                     out = new FileOutputStream(ofile);
                     while ((len=in.read(buf)) > 0) out.write(buf,0,len);
                     out.close();
@@ -1631,7 +1633,7 @@ import oscar.util.UtilDateUtilities;
                     		ongConcerns = probList[i].getDiagnosisCode().getStandardCodeDescription();
                     	}
                     }
-                    else if (StringUtils.empty(ongConcerns)) {
+                    if (StringUtils.empty(ongConcerns)) {
                 		if(!StringUtils.empty(probList[i].getProblemDescription())) {
                 			ongConcerns = probList[i].getProblemDescription();
                 		}
@@ -2635,7 +2637,12 @@ import oscar.util.UtilDateUtilities;
                                 } else {
                                 	 String tmpDir = oscarProperties.getProperty("TMP_DIR");
                                      tmpDir = Util.fixDirName(tmpDir);
-                                     FileUtils.copyFile(new File(tmpDir + repR[i].getFilePath().substring(repR[i].getFilePath().lastIndexOf("\\")+1)), new File(docDir + docFileName));
+                                     String path3 = tmpDir + repR[i].getFilePath() + contentType;
+                                     if(path3.indexOf("\\") != -1) {
+                                    	 path3 = path3.replace("\\", File.separator);
+                                     }
+                                     //FileUtils.copyFile(new File(tmpDir + repR[i].getFilePath().substring(repR[i].getFilePath().lastIndexOf("\\")+1)), new File(docDir + docFileName));
+                                     FileUtils.copyFile(new File(path3), new File(docDir + docFileName));
                                 }
 
                                 if (repR[i].getClass1()!=null) {
