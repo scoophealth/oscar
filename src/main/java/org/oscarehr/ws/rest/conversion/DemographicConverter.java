@@ -38,6 +38,7 @@ public class DemographicConverter extends AbstractConverter<Demographic, Demogra
 	private DemographicExtConverter demoExtConverter = new DemographicExtConverter();
 	private ProviderConverter providerConverter = new ProviderConverter();
 
+
 	/**
 	 * Converts TO, excluding provider and extras.
 	 */
