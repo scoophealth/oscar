@@ -52,6 +52,8 @@ public class ServiceClient extends AbstractModel<Integer>{
 	private Date dateCreated = new Date();
 	
 	private String uri;
+	
+	private Integer lifetime;
 
 	public Integer getId() {
 		return id;
@@ -100,7 +102,14 @@ public class ServiceClient extends AbstractModel<Integer>{
 	public void setUri(String uri) {
 		this.uri = uri;
 	}
-	
+
+	public Integer getLifetime() {
+		return lifetime;
+	}
+
+	public void setLifetime(Integer lifetime) {
+		this.lifetime = lifetime;
+	}
 	
 	
 }
