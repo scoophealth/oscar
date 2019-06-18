@@ -59,6 +59,20 @@
         </attribute>
 
     </tag>
+    
+    <tag>
+        <name>phrNotRegistered</name>
+        <tag-class>oscar.util.ProviderPHRCheck</tag-class>
+        <body-content>JSP</body-content>
+        
+        <attribute>
+            <name>provider</name>
+                <required>true</required>
+                <rtexprvalue>true</rtexprvalue>
+                <type>String</type>            
+        </attribute>
+        
+    </tag>
         <tag>
         <name>ifDocumentPreviouslySent</name>
         <tag-class>org.oscarehr.phr.taglib.IfDocumentPreviouslySent</tag-class>
