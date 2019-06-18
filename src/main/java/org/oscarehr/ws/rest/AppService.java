@@ -598,8 +598,8 @@ public class AppService extends AbstractServiceImpl {
 			bufferedReader.close();
 	   		
 			logger.info("response code "+reps.getStatus());
-	   		if(reps.getStatus() == 200) {
-	   			return Response.ok(response).build();
+	   		if(reps.getStatus() >= 200 && reps.getStatus() < 300) {
+	   			return Response.ok(response).status(reps.getStatus()).build();
 	   		}
 	   		
 			}catch(Exception e) {

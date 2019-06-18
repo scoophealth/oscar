@@ -157,7 +157,7 @@ public class PHRMessageAction extends DispatchAction {
 
 		//Check if patient has been verified
 		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
-		if (demographicManager.getPhrVerificationLevelByDemographicId(loggedInInfo, Integer.parseInt(demographicNo))) { //Prompt for verification
+		if (!demographicManager.getPhrVerificationLevelByDemographicId(loggedInInfo, Integer.parseInt(demographicNo))) { //Prompt for verification
 			request.setAttribute("forwardToOnSuccess", "/phr/PhrMessage.do?method=createMessage&providerNo=" + provNo + "&demographicNo=" + demographicNo);
 			request.setAttribute("demographicNo", demographicNo);
 			return mapping.findForward("verifyAndRedirect");
