@@ -411,7 +411,9 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
         </style>
 
         <script language="JavaScript">
+        var labNo = '<%=segmentID%>';
         var providerNo = '<%=providerNo%>';
+        var demographicNo = '<%=isLinkedToDemographic ? demographicID : ""%>';
         function popupStart(vheight,vwidth,varpage,windowname) {
             var page = varpage;
             windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
@@ -511,7 +513,7 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                                                             else if( action == 'addComment' ) {
                                                                             	addComment(formid,labid);
                                                                             } else if (action == 'unlinkDemo') {
-                                                                                unlinkDemographic(labid);
+                                                                            	unlinkDemographic(labid);
                                                                             }
 
                                                                         }else{
@@ -579,17 +581,37 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
             	return false;
             }
             
-            var urlStr='<%=request.getContextPath()%>'+"/lab/CA/ALL/UnlinkDemographic.do";
-            var dataStr="reason="+reason+"&labNo="+labNo;
-            jQuery.ajax({
-    			type: "POST",
-    			url:  urlStr,
-    			data: dataStr,
-    			success: function (data) {
-                            top.opener.location.reload();
-                            window.close();
-    			}
-            });                            
+            var all = '<%=request.getParameter("all") != null ? request.getParameter("all") : ""%>';
+        	if("true" == all) {
+        		var multiID = '<%=request.getParameter("multiID") != null ? request.getParameter("multiID") : ""%>';
+        		for(var x=0;x<multiID.split(",").length;x++) {
+        			console.log('unlinking '  +multiID.split(",")[x] );
+        			var urlStr='<%=request.getContextPath()%>'+"/lab/CA/ALL/UnlinkDemographic.do";
+                    var dataStr="reason="+reason+"&labNo="+multiID.split(",")[x];
+                    jQuery.ajax({
+            			type: "POST",
+            			url:  urlStr,
+            			data: dataStr,
+            			success: function (data) {
+                                    top.opener.location.reload();
+                                    window.close();
+            			}
+                    }); 
+        		}
+        	} else {
+        		var urlStr='<%=request.getContextPath()%>'+"/lab/CA/ALL/UnlinkDemographic.do";
+                var dataStr="reason="+reason+"&labNo="+labNo;
+                jQuery.ajax({
+        			type: "POST",
+        			url:  urlStr,
+        			data: dataStr,
+        			success: function (data) {
+                                top.opener.location.reload();
+                                window.close();
+        			}
+                }); 
+        	}
+        	                                       
         }
 
         function addComment(formid,labid) {
