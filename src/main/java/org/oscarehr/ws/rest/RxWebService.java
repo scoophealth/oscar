@@ -105,6 +105,14 @@ public class RxWebService extends AbstractServiceImpl {
     @Autowired
     protected PrescriptionManager prescriptionManager;
 
+    @GET
+    @Path("/drugs")
+    @Produces("application/json")
+    public DrugSearchResponse drugs(@QueryParam("demographicNo") int demographicNo)
+            throws OperationNotSupportedException {
+    	return drugs(demographicNo,null);
+    	
+    }
     /**
      * Gets drugs for the demographic and filter based on their status.
      *
