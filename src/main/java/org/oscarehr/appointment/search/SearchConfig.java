@@ -259,6 +259,7 @@ public class SearchConfig {
 				Element appointmentType = doc.createElement("appointment_type");
 				appointmentType.setAttribute("id",""+aType.getId());
 				appointmentType.setAttribute("name",aType.getName());
+				appointmentType.setAttribute("mappingOscarApptType", ""+aType.getMappingOscarApptType());
 				doc.getFirstChild().appendChild(appointmentType);
 			}
 		}

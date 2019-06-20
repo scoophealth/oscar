@@ -165,12 +165,13 @@ public class BookingWs extends AbstractWs {
 		try {
 
 			TimeSlot timeslot = config.decryptTimeSlot(encryptedAppointmentTimeSlot);
+			AppointmentType apptType = config.getAppointmentType(timeslot.getAppointmentType());
+			String reason = apptType.getName();
 			
-			String reason = config.getAppointmentType(timeslot.getAppointmentType()).getName();
 			String appointmentLocation = config.getAppointmentLocation();
 			Calendar endTime = calculateEndTime(config, timeslot.getAvailableApptTime(), timeslot.getProviderNo(), timeslot.getAppointmentType(), timeslot.getCode());
 			Appointment appointment = new Appointment();
-			
+			appointment.setReasonCode(apptType.getMappingOscarApptType());  
 			//appointmentTransfer.copyTo(appointment);
 			appointment.setAppointmentDate(timeslot.getAvailableApptTime().getTime());
 			appointment.setEndTime(endTime.getTime());
