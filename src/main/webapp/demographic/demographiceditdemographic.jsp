@@ -2929,7 +2929,7 @@ if ( Dead.equals(PatStat) ) {%>
 									onclick="<%=onclickString%>"><sub
 									style="white-space: nowrap;"><bean:message key="demographic.demographiceditdemographic.msgRegisterPHR"/></sub></a> 
 								<%}else{%>
-									<input type="button" id="phrConsent" style="display:none;"  value="Confirm" />
+									<input type="button" id="phrConsent" style="display:none;" title="<bean:message key="demographic.demographiceditdemographic.confirmAccount"/>"  value="Confirm" />
 								<%}%>
 								</td>
 							</tr>

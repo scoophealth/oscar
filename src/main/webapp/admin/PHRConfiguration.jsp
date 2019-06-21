@@ -69,8 +69,9 @@
 		</div>
 		
 		<%--  div class="container"> --%>
-			<div class="row">
-  				<div class="col-md-12">
+			<div class="row" data-ng-show="phrActive">
+  				<div class="col-xs-12">
+  				    <h6>PHR Connector Launch Bar</h6>
 					<div>
 						<button style="margin-left:3px;" ng-repeat="recc in audit.launchItems" type="button" class="btn btn-primary" ng-click="openPHRWindow(recc)">{{recc.heading}}</button>
 						<button style="margin-left:3px;" ng-show="hasLaunchItems" type="button" onclick="window.open('ApptSearchConfiguration.jsp');" class="btn btn-primary" >On-line Booking</button>
@@ -78,7 +79,7 @@
 				</div>
 			</div>	
 			<div class="row">
-  				<div class="col-md-9">	
+  				<div class="col-xs-9">	
 					<div data-ng-hide="phrActive" class="jumbotron" ng-cloak>
 						<h2>PHR Clinic Configuration Wizard</h2>
 						<div class="alert alert-warning" role="alert" data-ng-show="userpassError">Invalid Username and Password.</div>
@@ -107,22 +108,24 @@
 						<div class="alert alert-warning" role="alert" data-ng-show="userpassError">Invalid Username and Password.</div>
 						<form   method="POST">
 							<fieldset>
-								<h4>The PHR needs an OSCAR system user to interact with. This OSCAR user will show as the creator of appointments booked online.</h4>
-								<div class="form-group col-xs-10">
-									
-								
+								<h4 ng-if="!showPHRUserCreate && !showPHRUserLink">We're almost there!  To complete the connection, the PHR needs to register a primary OSCAR user to interact with at the system level.  This OSCAR user will show in OSCAR as the creator of appointments booked on-line through the PHR.  You have two options for registering (Option 1 strongly recommended):</h4>
+								<div class="form-group col-xs-10">								
 									<h3>Set PHR User</h3>
 										<div ng-if="selectUserMethod">
-									 		<p>This will include: 
+									 		<p>Option 1 - Create a New User for PHR
+									 		<small>
 												 <ul> 
-													 <li>creating a provider record with the name self-Book</li>
-													 <li>creating a security record with a strong random user/password</li>
-													 <li>creating consent type to record which patients are participating with using the PHR</li>
-													 <li>And communicate this user to the PHR server for integration.</li>
+													 <li>create the New User as a Provider in OSCAR with the name Self-Book</li>
+													 <li>create a strong random user/password for the New User</li>
+													 <li>create a "OSCAR consent" record associated with the New User to track which patients agree to connecting with the clinic through the PHR</li>
+													 <li>automatically register this New User with the PHR to complete the connection.</li>
 												 </ul>
+												 </small>
 												<button type="button" class="btn btn-primary btn-block" ng-click="selectPHRUser()">Create a new User</button>
-											<h3>Link an existing user</h3>
-									 			<p>This will create the consentType to record which patients are participating with using the PHR. Communicating the user information to the PHR will need to be done manually.</p>
+											<h3>Option 2 - Link with an Existing User</h3>
+												<small>
+									 			<p>Selecting this option will create an "OSCAR consent" record associated with the selected Existing User to track which patients agree to connecting with the clinic through the PHR.  To complete the connection with the PHR, you will need to manually register the Existing User in the PHR.</p>
+									 			</small>
 												<button type="button" class="btn btn-primary btn-block" ng-click="selectLinkExistingUser()">Link an existing user</button>
 									</div>
 									<div ng-if="showPHRUserCreate">
@@ -175,9 +178,9 @@
 					
 					
 					
-					<div btf-markdown="audit.markdownText"></div>
+					<div style="margin-top:5px;" btf-markdown="audit.markdownText"></div>
 				</div>
-				<div class="col-md-3">
+				<div class="col-xs-3">
 					
 					<div  > <%-- </div>class="jumbotron" ng-if="!serverOffline && !audit.clinicInformationSetup">  --%>
 					  <h3></h3>

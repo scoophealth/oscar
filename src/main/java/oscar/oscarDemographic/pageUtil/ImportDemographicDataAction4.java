@@ -455,7 +455,7 @@ import oscar.util.UtilDateUtilities;
             }
             	
             
-            String ofile = tmpDir + entryName;
+            String ofile = tmpDir + entryDir +  entryName;
             
             if (!matchFileExt(ofile, "xml")) {
                 OutputStream out = null;    
@@ -2637,10 +2637,14 @@ import oscar.util.UtilDateUtilities;
                                 } else {
                                 	 String tmpDir = oscarProperties.getProperty("TMP_DIR");
                                      tmpDir = Util.fixDirName(tmpDir);
-                                     String path3 = tmpDir + repR[i].getFilePath() + contentType;
+                                     String path3 = tmpDir + repR[i].getFilePath();
+                                     if(!path3.endsWith(contentType)) {
+                                    	 path3 = path3 + contentType;
+                                     }
                                      if(path3.indexOf("\\") != -1) {
                                     	 path3 = path3.replace("\\", File.separator);
                                      }
+                                     
                                      //FileUtils.copyFile(new File(tmpDir + repR[i].getFilePath().substring(repR[i].getFilePath().lastIndexOf("\\")+1)), new File(docDir + docFileName));
                                      FileUtils.copyFile(new File(path3), new File(docDir + docFileName));
                                 }

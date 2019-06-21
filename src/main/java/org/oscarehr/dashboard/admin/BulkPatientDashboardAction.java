@@ -100,11 +100,11 @@ public class BulkPatientDashboardAction extends DispatchAction {
 			subject,
 			message,
 			providerNo,
-			parseIntegers(patientIdsJson)
+			null //parseIntegers(patientIdsJson)
 		);
 		String mrp = getMRP(loggedInInfo);
 		if (mrp != null && !providerNo.equals(mrp)) {
-			messageHandler.notifyProvider(subject, message, mrp, parseIntegers(patientIdsJson));
+			messageHandler.notifyProvider(subject, message, mrp, null); //parseIntegers(patientIdsJson));
 		}
 
 		logger.info(message);
@@ -154,10 +154,10 @@ public class BulkPatientDashboardAction extends DispatchAction {
 			"} to disease registry for patient demographic_no {" + patientIdsJson + "}" +
 			" with provider no {" + providerNo + "}";
 
-		messageHandler.notifyProvider(subject, message, providerNo, patientIdList);
+		messageHandler.notifyProvider(subject, message, providerNo, null); //patientIdList);
 		String mrp = getMRP(loggedInInfo);
 		if (mrp != null && !providerNo.equals(mrp)) { // operation done by MOA for doctor
-			messageHandler.notifyProvider(subject, message, mrp, patientIdList);
+			messageHandler.notifyProvider(subject, message, mrp, null); //patientIdList);
 		}
 
 		logger.info(message);
@@ -214,10 +214,10 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		String message = "Patient demographic_no(s) {" + patientIdsJson +
 			"} set inactive by " + providerNo;
 
-		messageHandler.notifyProvider(subject, message, providerNo, patientIdList);
+		messageHandler.notifyProvider(subject, message, providerNo, null); // patientIdList);
 		String mrp = getMRP(loggedInInfo);
 		if (mrp != null && !providerNo.equals(mrp)) {  // operation done by MOA for doctor
-			messageHandler.notifyProvider(subject, message, mrp, patientIdList);
+			messageHandler.notifyProvider(subject, message, mrp, null); // patientIdList);
 		}
 
 		logger.info(message);
@@ -241,7 +241,7 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		return jsonArray;
 	}
 
-	private List<Integer> parseIntegers(String jsonString) {
+/*	private List<Integer> parseIntegers(String jsonString) {
 		List<Integer> ints = new ArrayList<Integer>();
 
 		JSONArray jsonArray = asJsonArray(jsonString);
@@ -250,7 +250,7 @@ public class BulkPatientDashboardAction extends DispatchAction {
 		}
 
 		return ints;
-	}
+	}*/
 	
 	private String getProviderNo(LoggedInInfo loggedInInfo) {
 		String providerNo = null;

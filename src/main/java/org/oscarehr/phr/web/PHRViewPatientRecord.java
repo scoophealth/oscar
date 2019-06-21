@@ -100,7 +100,7 @@ public class PHRViewPatientRecord extends DispatchAction {
         	//Check if patient has been verified
         DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class); 
     	   	
-    	   	if (demographicManager.getPhrVerificationLevelByDemographicId(loggedInInfo, Integer.parseInt(demographicNo))){ //Prompt for verification
+    	   	if (!demographicManager.getPhrVerificationLevelByDemographicId(loggedInInfo, Integer.parseInt(demographicNo))){ //Prompt for verification
     	   		request.setAttribute("forwardToOnSuccess", "/demographic/viewPhrRecord.do?demographic_no=" + demographicNo);
     	   		request.setAttribute("demographicNo", demographicNo);
     	   		return mapping.findForward("viewVerification");//verifyAndRedirect");

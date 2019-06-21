@@ -978,7 +978,14 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 				window.setTimeout(pollMessageCount, 2000);
 			</script>
 	    </li>
-    </myoscar:indivoRegistered>
+	</myoscar:indivoRegistered>
+    <phr:phrNotRegistered provider="<%=curUser_no%>">
+    		<li>
+			<a HREF="#" ONCLICK ="popup('600', '1024','../phr/PHRSignup.jsp','INDIVOMESSENGER2<%=curUser_no%>')" title='<bean:message key="global.phr"/>'>
+				<bean:message key="global.btnphr"/>
+			</a>
+	    </li>
+    </phr:phrNotRegistered>
 <%if(appManager.isK2AEnabled()){ %>
 <li>
 	<a href="javascript:void(0);" id="K2ALink">K2A<span><sup id="k2a_new_notifications"></sup></span></a>
