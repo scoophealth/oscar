@@ -685,7 +685,23 @@ function checkFav(){
             }});
    	 }
     }
-       
+
+    function printDrugProfile() {
+    	var ids=[];
+    	jQuery("input[type='checkbox'][id ^= 'reRxCheckBox']").each(function(){
+    		if(jQuery(this).is(":checked")) {
+    			var name = jQuery(this).attr('name').substring(9);
+    			ids.push(name);
+    		}
+    	});
+    	if(ids.length>0) {
+    		popupWindow(720,700,'PrintDrugProfile2.jsp?ids=' + ids.join(','),'PrintDrugProfile');
+    	} else {
+    		popupWindow(720,700,'PrintDrugProfile2.jsp','PrintDrugProfile');
+    	}
+    }
+    
+    
 </script>
                
                <style type="text/css" media="print">
@@ -916,7 +932,7 @@ THEME 2*/
                                                 <div class="DivContentSectionHead">
                                                     <bean:message key="SearchDrug.section2Title" />
                                                     &nbsp;
-                                                    <a href="javascript:popupWindow(720,700,'PrintDrugProfile2.jsp','PrintDrugProfile')"><bean:message key="SearchDrug.Print"/></a>
+                                                    <a href="javascript:void(0)" onClick="printDrugProfile();"><bean:message key="SearchDrug.Print"/></a>
                                                     &nbsp;
 													<%if(securityManager.hasWriteAccess("_rx",roleName2$,true)) {%>
                                                     <a href="#" onclick="$('reprint').toggle();return false;"><bean:message key="SearchDrug.Reprint"/></a>

@@ -65,6 +65,17 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
 
 String userfirstname = (String) session.getAttribute("userfirstname");
 String userlastname = (String) session.getAttribute("userlastname");
+
+String ids = request.getParameter("ids");
+List<Integer> idFilter = null;
+if(ids != null) {
+	idFilter = new ArrayList<Integer>();
+	String[] tmp = ids.split(",");
+	for(String t:tmp) {
+		idFilter.add(Integer.parseInt(t));
+	}
+}
+
 %>
 
 <% RxPharmacyData pharmacyData = new RxPharmacyData();
@@ -177,6 +188,10 @@ String userlastname = (String) session.getAttribute("userlastname");
 
 
     for (Drug drug: prescriptDrugs) {
+    	
+    	if(idFilter != null && !idFilter.contains(drug.getId())) {
+    		continue;
+    	}
         String styleColor = "";
                                                 %>
                                                 <tr>
