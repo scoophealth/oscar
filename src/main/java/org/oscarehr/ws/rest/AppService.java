@@ -819,6 +819,26 @@ public class AppService extends AbstractServiceImpl {
 		return  Response.noContent().build();
 	}
 	
+	Object chartLaunchItems  = null;
+	@GET
+	@Path("/providerChartLaunchItems")
+	@Produces("application/json")
+	public Response providerChartLaunchItems(@Context HttpServletRequest request,@Context HttpServletResponse resp){
+		String providerNo = getLoggedInInfo().getLoggedInProviderNo();
+		if( appManager.hasAppDefinition(getLoggedInInfo(), "PHR")){
+			if(chartLaunchItems!= null) {
+				return Response.ok(chartLaunchItems).build();
+			}
+			Response response = callPHR("/providerChartLaunchItems", providerNo,providerNo);
+			
+			if(response.getStatus() == Response.Status.OK.getStatusCode()) {
+				chartLaunchItems = response.getEntity();
+				return Response.ok(chartLaunchItems).build();
+			}
+		}
+		return  Response.noContent().build();
+	}
+	
 	@GET
 	@Path("/openPHRWindow/{windowName}")
 	public Response openPHRWindow(@Context HttpServletRequest request,@Context HttpServletResponse response,@PathParam("windowName") String windowName) throws IOException{

@@ -29,6 +29,7 @@ public class AppointmentTypeTransfer {
 	Long id;
 	String name;
 	int duration;
+	private Integer mappingOscarApptType;
 
 	/*public static AppointmentTypeTransfer getFromTransfer(org.oscarehr.ws.AppointmentTypeTransfer appointmentTypeTransfer){
 		AppointmentTypeTransfer at = new AppointmentTypeTransfer();
@@ -49,6 +50,7 @@ public class AppointmentTypeTransfer {
 		at.id = appointmentTypeTransfer.getId();
 		at.name = appointmentTypeTransfer.getName();
 		at.duration = appointmentTypeTransfer.getDefaultDurationMinutes();
+		at.mappingOscarApptType = appointmentTypeTransfer.getMappingOscarApptType();
 		return at;
 	}
 	
@@ -74,6 +76,14 @@ public class AppointmentTypeTransfer {
 
 	public void setDuration(int duration) {
 		this.duration = duration;
+	}
+
+	public Integer getMappingOscarApptType() {
+		return mappingOscarApptType;
+	}
+
+	public void setMappingOscarApptType(Integer mappingOscarApptType) {
+		this.mappingOscarApptType = mappingOscarApptType;
 	}
 	
 	
