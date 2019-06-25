@@ -40,7 +40,7 @@ if(!authed) {
 %>
 <%
 	OscarProperties props = oscar.OscarProperties.getInstance();
-	Boolean showCdx = "bc".equalsIgnoreCase(props.getProperty("billregion"));
+	boolean showCdx = "bc".equalsIgnoreCase(props.getProperty("billregion"));
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -129,14 +129,19 @@ function BackToOscar()
 							</th>
 							<% if (showCdx) { %>
 							<th><bean:message
-									key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.cdx" />
+									key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.referralNo" />
+							</th>
+							<th><bean:message
+									key="oscarEncounter.oscarConsultationRequest.config.EditSpecialists.cdxId" />
 							</th>
 							<% } %>
 						</tr>
 						<tr>
 							<td><!--<div class="ChooseRecipientsBox1">--> <%
 
-								 String cdx = "";
+								 //String cdx = "";
+								 String referralNo = "";
+								 String cdxId = "";
                                  for(int i=0;i < displayServiceUtil.specIdVec.size(); i++){
                                  String  specId     = displayServiceUtil.specIdVec.elementAt(i);
                                  String  fName      = displayServiceUtil.fNameVec.elementAt(i);
@@ -146,7 +151,9 @@ function BackToOscar()
                                  String  phone      = displayServiceUtil.phoneVec.elementAt(i);
                                  String  fax        = displayServiceUtil.faxVec.elementAt(i);
                                  if (showCdx) {
-                                 	cdx        = displayServiceUtil.cdxVec.elementAt(i);
+                                 	//cdx         = displayServiceUtil.cdxVec.elementAt(i);
+                                 	referralNo = displayServiceUtil.referralNoVec.get(i);
+                                 	cdxId		= displayServiceUtil.cdxIdVec.elementAt(i);
                                  }
                               %>
 							
@@ -164,12 +171,11 @@ function BackToOscar()
 							<td><%=phone%></td>
 							<td><%=fax%></td>
 							<% if (showCdx) { %>
-							<td><%=cdx%></td>
+							<td><%=referralNo%></td>
+							<td><%=cdxId%></td>
 							<% } %>
 						</tr>
 						<% }%>
-						</td>
-						</tr>
 					</table>
 					</div>
 				</html:form></td>

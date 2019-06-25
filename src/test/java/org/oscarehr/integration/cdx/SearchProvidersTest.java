@@ -51,8 +51,8 @@ public class SearchProvidersTest extends FacadesBaseTest {
             providers = searchProviders.findByName("pli");
             if (providers != null && !providers.isEmpty()) {
                 for (IProvider p: providers) {
-                    MiscUtils.getLogger().info("CDX provider: " + p.getLastName() + "," +p.getFirstName() + "," +
-                            p.getClinicName() +"," + p.getClinicID() + "," + p.getCity());
+//                    MiscUtils.getLogger().info("CDX provider: " + p.getLastName() + "," +p.getFirstName() + "," +
+//                            p.getClinicName() +"," + p.getClinicID() + "," + p.getCity());
                 }
             }
         } catch (OBIBException e) {

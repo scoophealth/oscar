@@ -51,10 +51,10 @@ import java.util.Date;
 public class TestRestClient {
 
     private ObjectMapper mapper = new ObjectMapper();
-    private String obibUrl = "http://192.168.100.101:8081";
-    private String clinicId = "cdxpostprod-otca";
+    private final String obibUrl = "http://192.168.100.101:8081";
+    private final String clinicId = "cdxpostprod-otca";
 
-    private Config config = new Config() {
+    private final Config config = new Config() {
         @Override
         public String getUrl() {
             return obibUrl;
@@ -112,12 +112,12 @@ public class TestRestClient {
                     .receiverId("cdxpostprod-obctc")
                     .content("Plain text document content"))
                 .getDocument();
-        MiscUtils.getLogger().info("testSubmitDocument document:");
-        MiscUtils.getLogger().info(mapper.writeValueAsString(document));
-
-        MiscUtils.getLogger().info("testSubmitDocument response:");
+//        MiscUtils.getLogger().info("testSubmitDocument document:");
+//        MiscUtils.getLogger().info(mapper.writeValueAsString(document));
+//
+//        MiscUtils.getLogger().info("testSubmitDocument response:");
         SubmitDocumentResponse response = restClient.submitCDA(document);
-        MiscUtils.getLogger().info(mapper.writeValueAsString(response));
+//        MiscUtils.getLogger().info(mapper.writeValueAsString(response));
 
         Assert.assertNotNull("response from testSubmitDocument was null", response);
     }
@@ -127,21 +127,21 @@ public class TestRestClient {
         IOscarInformation restClient = new RestClient(obibUrl, clinicId);
 
         ListDocumentsResponse response = restClient.listDocument();
-        MiscUtils.getLogger().info("testListDocument response:");
-        MiscUtils.getLogger().info(mapper.writeValueAsString(response));
+//        MiscUtils.getLogger().info("testListDocument response:");
+//        MiscUtils.getLogger().info(mapper.writeValueAsString(response));
 
         Assert.assertNotNull("response from testListDocument was null", response);
     }
 
     @Test
-    public void testSearchDocument() throws Exception {
+    public void testSearchDocument() {
         IOscarInformation restClient = new RestClient(obibUrl, clinicId);
 
         ListDocumentsResponse response = null;
-        MiscUtils.getLogger().info("testSearchDocument response:");
+//        MiscUtils.getLogger().info("testSearchDocument response:");
         try {
             response = restClient.searchDocument(SearchDocumentCriteria.byClinicId("cdxpostprod-otca"));
-            MiscUtils.getLogger().info(mapper.writeValueAsString(response));
+//            MiscUtils.getLogger().info(mapper.writeValueAsString(response));
         } catch (OBIBRequestException e) {
             MiscUtils.getLogger().error(e.getMessage());
         }
@@ -155,8 +155,8 @@ public class TestRestClient {
 
         ListDocumentsResponse response = restClient.getDocument(SearchDocumentCriteria
                 .byDocumentId("ad0007b5-c846-e911-a96a-0050568c55a6"));
-        MiscUtils.getLogger().info("testGetDocument response:");
-        MiscUtils.getLogger().info(mapper.writeValueAsString(response));
+//        MiscUtils.getLogger().info("testGetDocument response:");
+//        MiscUtils.getLogger().info(mapper.writeValueAsString(response));
 
         Assert.assertNotNull("response from testGetDocument was null", response);
     }
@@ -166,8 +166,8 @@ public class TestRestClient {
         IOscarInformation restClient = new RestClient(obibUrl, clinicId);
 
         ListClinicsResponse response = restClient.listClinics(SearchClinicCriteria.byClinicId("cdxpostprod-otca"));
-        MiscUtils.getLogger().info("testListClinics response:");
-        MiscUtils.getLogger().info(mapper.writeValueAsString(response));
+//        MiscUtils.getLogger().info("testListClinics response:");
+//        MiscUtils.getLogger().info(mapper.writeValueAsString(response));
 
         Assert.assertNotNull("resopnse from testListCLinics was null", response);
     }
@@ -177,8 +177,8 @@ public class TestRestClient {
         IOscarInformation restClient = new RestClient(obibUrl, clinicId);
 
         ListProvidersResponse response = restClient.listProviders(SearchProviderCriteria.byProviderId("93188"));
-        MiscUtils.getLogger().info("testListProviders response:");
-        MiscUtils.getLogger().info(mapper.writeValueAsString(response));
+//        MiscUtils.getLogger().info("testListProviders response:");
+//        MiscUtils.getLogger().info(mapper.writeValueAsString(response));
 
         Assert.assertNotNull("response from testListProvider was null", response);
     }

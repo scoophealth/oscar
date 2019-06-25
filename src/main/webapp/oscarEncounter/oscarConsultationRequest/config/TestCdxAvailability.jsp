@@ -34,6 +34,10 @@
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.regex.Pattern" %>
+<%@ page import="java.util.regex.Matcher" %>
+<%@ page import="oscar.Misc" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
@@ -52,50 +56,53 @@
 <%
     OscarProperties props = OscarProperties.getInstance();
     boolean showCdx = "bc".equalsIgnoreCase(props.getProperty("billregion"));
-    Map<Integer, String> updates = new HashMap<Integer, String>();
-    Map<Integer, String> possibleUpdates = new HashMap<Integer, String>();
+    boolean bcReferralNo = "\\d{5}".equals(props.getProperty("referral_no.pattern"));
+    MiscUtils.getLogger().info("bcReferralNo: " + bcReferralNo);
     ProfessionalSpecialistDao dao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
-
+    StringBuilder changeMsg = new StringBuilder();
+    StringBuilder errorMsg = new StringBuilder();
     if (showCdx) {
-        String lastName;
-        String firstName;
+        String referralNo;
+        String cdxId;
         CDXSpecialist cdxSpecialist = new CDXSpecialist();
         List<IProvider> providers;
 
-
         for (ProfessionalSpecialist ps : dao.findAll()) {
-            firstName = ps.getFirstName();
-            lastName = ps.getLastName();
-            providers = cdxSpecialist.findCdxSpecialistByName(lastName.trim());
-            if (providers != null && !providers.isEmpty()) {
-                for (IProvider p : providers) {
-                    if (lastName.trim().equalsIgnoreCase(p.getLastName().trim())) {
-                        MiscUtils.getLogger().info("For '" + lastName + "," + firstName + "' found lastName in CDX");
-                        if (firstName.equalsIgnoreCase(p.getFirstName())) {
-                            if ((ps.getCdxId() == null || ps.getCdxId().isEmpty()) && (p.getID() != null && !p.getID().isEmpty())) {
-                                updates.put(ps.getId(), p.getID());
-                                MiscUtils.getLogger().info("Found firstName as well.  Modified CDX ID for specId: " + ps.getId());
-                            } else {
-                                MiscUtils.getLogger().info("Found firstName as well and matching CDX ID");
-                            }
-                        } else {
-                            possibleUpdates.put(ps.getId(), p.getFirstName());
-                            MiscUtils.getLogger().info("but not firstName. Can't update CDX ID");
-                        }
-                    } else {
-                        if (ps.getCdxCapable() || (ps.getCdxId() != null && !ps.getCdxId().isEmpty())) {
-                            updates.put(ps.getId(), "");
-                            MiscUtils.getLogger().info("Exact match for last name '" + lastName + "' not found.  Disabling CDX for specId: " + ps.getId());
-                        } else {
-                            MiscUtils.getLogger().info("No exact match for last name '" + lastName + "'");
-                        }
+            referralNo = ps.getReferralNo();
+            cdxId = ps.getCdxId();
+            // if professionalSpecialists table has stored cdxId check that it can still be found in CDX
+            if (cdxId != null && cdxId.trim().length() != 0) {
+                providers = cdxSpecialist.findCdxSpecialistById(cdxId);
+                if (providers == null || providers.isEmpty()) {
+                    ps.setCdxCapable(false);
+                    ps.setCdxId(null);
+                    try {
+                        dao.merge(ps);
+                    } catch (Exception e) {
+                        MiscUtils.getLogger().error("Got exception updating professional specialist: " + e.getMessage());
+                        errorMsg.append("Failed to update professional specialist with stored cdxId: ").append(cdxId);
+                    }
+                    changeMsg.append("<tr><td>").append(ps.getLastName()).append("</td><td>").append(ps.getFirstName()).append("</td><td>").append(ps.getCdxId()).append("</td></tr>");
+                } else {
+                    if (providers.size() != 1) {  // cdxId should uniquely identify the provider
+                        errorMsg.append("Multiple providers for cdxId: ").append(cdxId);
+                        MiscUtils.getLogger().error("Multiple providers for cdxId: " + cdxId);
                     }
                 }
-            } else {
-                MiscUtils.getLogger().info("For '" + lastName + "," + firstName + "' last name not found in CDX");
-                if (ps.getCdxCapable() || (ps.getCdxId() != null && !ps.getCdxId().isEmpty())) {
-                    updates.put(ps.getId(), "");
-                    MiscUtils.getLogger().info("Disabled CDX available for specId: " + ps.getId());
+            }
+            // in BC expect 5 digit MSP billing numbers
+            if ((cdxId == null || cdxId.trim().length() == 0) && referralNo != null && referralNo.length() == 5 && referralNo.matches("[0-9]+")) {
+                providers = cdxSpecialist.findCdxSpecialistById(referralNo);
+                if (providers != null && !providers.isEmpty()) {
+                    ps.setCdxCapable(true);
+                    ps.setCdxId(referralNo);
+                    try {
+                        dao.merge(ps);
+                    } catch (Exception e) {
+                        MiscUtils.getLogger().error("Got exception updating professional specialist: " + e.getMessage());
+                        errorMsg.append("Failed to update professional specialist with Referral No.: ").append(referralNo);
+                    }
+                    changeMsg.append("<tr><td>").append(ps.getLastName()).append("</td><td>").append(ps.getFirstName()).append("</td><td>").append(ps.getCdxId()).append("</td></tr>");
                 }
             }
         }
@@ -145,11 +152,28 @@
 
     <html:errors/>
 
-    <%
-        if (!updates.isEmpty()) {
-            MiscUtils.getLogger().debug("Size of update map: " + updates.size());
+    <% if (showCdx && !bcReferralNo) {
+        %>
+    <b>
+        Testing whether specialists are CDX enabled requires that the
+        5-digit BC MSP billing number be recorded in the "Referral No." field,
+        unless the specialist already has a CDX ID.
 
-    %>
+        This server has not been configured for 5-digit referral numbers.
+        Your OSP needs to configure the property "referral_no.pattern=\\d{5}"
+        in the oscar properties file.
+
+        If the specialist has a CDX ID recorded but is no longer CDX enabled,
+            the CDX ID will be removed.
+    </b>
+    <% } %>
+
+    <% if (errorMsg.length() > 0) {
+        out.println("<b>"+errorMsg+"</b>");
+    }
+
+        if (changeMsg.length() > 0) {
+     %>
 
     <p>These specialists have had their CDX capability updated:</p>
     <table>
@@ -159,60 +183,15 @@
             <th>CDX ID</th>
         </tr>
         <%
-            for (ProfessionalSpecialist ps : dao.findAll()) {
-                if (updates.containsKey(ps.getId())) {
-                    out.println("<tr><td>" + ps.getLastName() + "</td><td>" + ps.getFirstName() +
-                            "</td><td>" + updates.get(ps.getId()) + "</td></tr>");
-                    if (updates.get(ps.getId()).isEmpty()) {
-                        ps.setCdxCapable(false);
-                        ps.setCdxId(null);
-                    } else {
-                        ps.setCdxCapable(true);
-                        ps.setCdxId(updates.get(ps.getId()));
-                    }
-                    try {
-                        dao.merge(ps);
-                    } catch (Exception e) {
-                        MiscUtils.getLogger().error("Got exception updating professional specialist: " + e.getMessage());
-                    }
-
-                }
-            }
+            out.println(changeMsg.toString());
         %>
     </table>
     <%
         } else {
-            out.println("No specialists have had their CDX capability modified");
+            out.println("No specialists have had their CDX capability updated.");
         }
     %>
 
-    <%
-        if (!possibleUpdates.isEmpty()) {
-            MiscUtils.getLogger().debug("Size of possibleUpdates map: " + possibleUpdates.size());
-
-    %>
-
-    <p>These CDX capable specialists have the same last name as an existing specialist but their first name doesn't
-        match:</p>
-    <table>
-        <tr>
-            <th>Last Name</th>
-            <th>First Name</th>
-            <th>CDX First Name</th>
-        </tr>
-        <%
-            for (ProfessionalSpecialist ps : dao.findAll()) {
-                if (possibleUpdates.containsKey(ps.getId())) {
-                    out.println("<tr><td>" + ps.getLastName() + "</td><td>" + ps.getFirstName() +
-                            "</td><td>" + possibleUpdates.get(ps.getId()) + "</td></tr>");
-                }
-            }
-        %>
-    </table>
-    <%
-        }
-    %>
-    
     <p>Use the Edit Specialists screen if you wish to make further modifications.</p>
     <form id="main" method="post" name="main" action="" onclick="redirect(this);">
         <button>Continue</button>

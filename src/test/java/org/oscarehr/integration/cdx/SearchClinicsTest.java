@@ -40,6 +40,7 @@ import java.util.List;
 
 public class SearchClinicsTest extends FacadesBaseTest {
     private String result = null;
+    private boolean debug = false;
 
     @Test
     public void testFindByName() {
@@ -114,7 +115,7 @@ public class SearchClinicsTest extends FacadesBaseTest {
             if (clinics != null && !clinics.isEmpty()) {
                 for (IClinic clinic: clinics) {
                     if (clinic.getProvider() != null) {
-                        MiscUtils.getLogger().info("1: " + clinic.getProvider().getFirstName() + " " + clinic.getProvider().getLastName() + " " + clinic.getProvider().getID());
+                        if (debug) MiscUtils.getLogger().info("1: " + clinic.getProvider().getFirstName() + " " + clinic.getProvider().getLastName() + " " + clinic.getProvider().getID());
                     }
                 }
             }
@@ -187,7 +188,7 @@ public class SearchClinicsTest extends FacadesBaseTest {
             if (clinics != null && !clinics.isEmpty()) {
                 for (IClinic clinic: clinics) {
                     if (clinic.getProvider() != null) {
-                        MiscUtils.getLogger().info("3: " + clinic.getProvider().getFirstName() + " " + clinic.getProvider().getLastName() + " " + clinic.getProvider().getID());
+                        if (debug) MiscUtils.getLogger().info("3: " + clinic.getProvider().getFirstName() + " " + clinic.getProvider().getLastName() + " " + clinic.getProvider().getID());
                     }
                 }
             }

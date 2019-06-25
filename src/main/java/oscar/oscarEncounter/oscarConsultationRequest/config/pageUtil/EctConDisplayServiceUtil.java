@@ -50,6 +50,7 @@ public class EctConDisplayServiceUtil
     public Vector<String> phoneVec;
     public Vector<String> faxVec;
     public Vector<String> cdxVec;
+    public Vector<String> cdxIdVec;
     public Vector<String> websiteVec;
     public Vector<String> emailVec;
     public Vector<String> specTypeVec;
@@ -83,6 +84,7 @@ public class EctConDisplayServiceUtil
         phoneVec = new Vector<String>();
         faxVec = new Vector<String>();
         cdxVec = new Vector<String>();
+        cdxIdVec = new Vector<String>();
         websiteVec = new Vector<String>();
         emailVec = new Vector<String>();
         specTypeVec = new Vector<String>();
@@ -98,6 +100,8 @@ public class EctConDisplayServiceUtil
             phoneVec.add(ps.getPhoneNumber());
             faxVec.add(ps.getFaxNumber());
             cdxVec.add(Boolean.toString(ps.getCdxCapable()));
+            referralNoVec.add(ps.getReferralNo());
+            cdxIdVec.add(ps.getCdxId());
             websiteVec.add(ps.getWebSite());
             emailVec.add(ps.getEmailAddress());
             specTypeVec.add(ps.getSpecialtyType());
