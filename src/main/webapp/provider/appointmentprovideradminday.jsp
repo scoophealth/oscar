@@ -779,7 +779,11 @@ java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.stru
 <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%" id="firstTable" class="noprint">
 <tr>
 <td align="center" >
-<a href="../web/" title="OSCAR EMR"><img src="<%=request.getContextPath()%>/images/oscar_small.png" border="0"></a>
+<%if("true".equals(OscarProperties.getInstance().getProperty("newui.enabled", "false"))) { %>
+	<a href="../web/" title="OSCAR EMR"><img src="<%=request.getContextPath()%>/images/oscar_small.png" border="0"></a>
+<% } else { %>
+	<img src="<%=request.getContextPath()%>/images/oscar_small.png" border="0">
+<% } %>
 </td>
 <td id="firstMenu">
 <ul id="navlist">
@@ -1997,7 +2001,7 @@ start_time += iSm + ":00";
 
 <!-- doctor code block 3 -->
 <% if(bShowEncounterLink && !isWeekView) { %>
-<% if (oscar.OscarProperties.getInstance().isPropertyActive("SINGLE_PAGE_CHART")) { 
+<% if ("true".equals(OscarProperties.getInstance().getProperty("newui.enabled", "false")) && oscar.OscarProperties.getInstance().isPropertyActive("SINGLE_PAGE_CHART")) { 
 	
 	newUxUrl = "../web/#/record/" + demographic_no + "/";
 	
@@ -2089,7 +2093,7 @@ start_time += iSm + ":00";
 <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
      &#124; <a href=# onClick="popupWithApptNo(700,1027,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>','rx',<%=appointment.getId()%>)" title="<bean:message key="global.prescriptions"/>"><bean:message key="global.rx"/>
       </a>
-      <%if(OscarProperties.getInstance().isPropertyActive("RX2")) {
+      <%if("true".equals(OscarProperties.getInstance().getProperty("newui.enabled", "false")) && OscarProperties.getInstance().isPropertyActive("RX2")) {
     		// This is temporary for testing the angularRx
     	  %>
 	&#124; <a href=# onClick="popupWithApptNo(700,1027,'../webp/#!/record/<%=demographic_no%>/rx','rx',<%=appointment.getId()%>)" title="<bean:message key="global.prescriptions"/>"><bean:message key="global.rx"/>2
