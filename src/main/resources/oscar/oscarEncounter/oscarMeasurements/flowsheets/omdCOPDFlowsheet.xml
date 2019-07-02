@@ -13,7 +13,7 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 -->
-<flowsheet name="COPD" display_name="Chronic Obstructive Pulmonary" dxcode_triggers="icd9:416" ds_rules="diab.drl" top_HTML=""
+<flowsheet name="COPD" display_name="Chronic Obstructive Pulmonary" dxcode_triggers="icd9:416,icd9:496" ds_rules="diab.drl" top_HTML=""
 		warning_colour="#E00000" recommendation_colour="yellow">
 	<indicator key="LOW" colour="#9999FF" />
 	<indicator key="HIGH" colour="orange" />
