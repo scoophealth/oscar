@@ -430,14 +430,14 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 		infoTable.addCell(setInfoCell(cell, getResource("msgReason")));
 		infoTable.addCell(setDataCell(cell, reqFrm.reasonForConsultation));
 
-		if(getlen(reqFrm.clinicalInformation) > 1) {
+		if(getlen(reqFrm.clinicalInformation) > 0) {
 			infoTable.addCell(setInfoCell(cell, getResource("msgClinicalInfom")));
 			infoTable.addCell(setDataCell(cell, divy(reqFrm.clinicalInformation)));
 		}
 
-		if(getlen(reqFrm.concurrentProblems) > 1) {
+		if(getlen(reqFrm.concurrentProblems) > 0) {
 			if (props.getProperty("significantConcurrentProblemsTitle", "")
-					.length() > 1) {
+					.length() > 0) {
 				infoTable.addCell(setInfoCell(cell, props.getProperty("significantConcurrentProblemsTitle", "")));
 			} else {
 				infoTable.addCell(setInfoCell(cell,getResource("msgSigProb")));
@@ -445,8 +445,8 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 			infoTable.addCell(setDataCell(cell, divy(reqFrm.concurrentProblems)));
 		}
 
-		if(getlen(reqFrm.currentMedications) > 1) {
-			if (props.getProperty("currentMedicationsTitle", "").length() > 1) {
+		if(getlen(reqFrm.currentMedications) > 0) {
+			if (props.getProperty("currentMedicationsTitle", "").length() > 0) {
 				infoTable.addCell(setInfoCell(cell, props.getProperty("currentMedicationsTitle", "")));
 			} else {
 				infoTable.addCell(setInfoCell(cell, getResource("msgCurrMed")));
@@ -454,7 +454,7 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 			infoTable.addCell(setDataCell(cell, divy(reqFrm.currentMedications)));
 		}
 
-		if(getlen(reqFrm.allergies) > 1) {
+		if(getlen(reqFrm.allergies) > 0) {
 			infoTable.addCell(setInfoCell(cell, getResource("msgAllergies")));
 			infoTable.addCell(setDataCell(cell, divy(reqFrm.allergies)));
 		}
