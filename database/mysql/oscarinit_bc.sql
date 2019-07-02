@@ -53,7 +53,7 @@ CREATE TABLE billingmaster (
   phn varchar(10) default '0000000000',
   name_verify varchar(4) default '',
   dependent_num char(2) default '00',
-  billing_unit char(3) default '000',
+  billing_unit varchar(3) default '000',
   clarification_code char(2) default '00',
   anatomical_area char(2) default NULL,
   after_hour char(1) default '0',
