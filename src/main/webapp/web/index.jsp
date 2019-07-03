@@ -496,8 +496,7 @@ font-size:20px
 	<script src="common/diseaseRegistryServices.js"></script>
 	<script src="common/consentServices.js"></script>
 	<script src="filters.js"></script>
-	<script src="app.js"></script>
-
+	
 	<script src="../web/common/rxServices.js"></script>	
 	<script src="../web/record/rx/rx.component.js"></script>
 	<script src="../web/record/rx/rxModel.js"></script>
@@ -510,6 +509,9 @@ font-size:20px
 	<script src="../web/record/rx/reprint/reprint.component.js"></script>
 	<script src="../web/record/rx/fullsearch/fullsearch.component.js"></script>
 	<script src="../web/common/components/provider/provider.component.js"></script>
+	
+	<script src="app.js"></script>
+	
 	
 	<script src="../web/oscarController.js"></script>
 	<script src="../web/dashboard/dashboardController.js"></script>

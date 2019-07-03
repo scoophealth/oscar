@@ -2137,6 +2137,7 @@ insert into `secObjPrivilege` values('nurse','_tasks','x',0,'999998');
 insert into `secObjPrivilege` values('nurse','_phr','x',0,'999998');
 insert into `secObjPrivilege` values('nurse','_pmm','x',0,'999998');
 insert into `secObjPrivilege` values('nurse','_pref','x',0,'999998');
+insert into `secObjPrivilege` values('nurse','_tickler','x',0,'999998');
 
 
 
