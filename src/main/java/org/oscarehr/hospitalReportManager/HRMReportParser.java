@@ -109,7 +109,7 @@ public class HRMReportParser {
 				Source schemaFile = new StreamSource(new File(SFTPConnector.OMD_directory + "report_manager_cds.xsd"));
 				
 				logger.debug("reading XML from " + tmpXMLholder);
-				logger.debug("reading schema from " + SFTPConnector.OMD_directory + "report_manager_cds.xsd");
+				logger.debug("reading schema from " +  OscarProperties.getInstance().getProperty("OMD_directory") + "report_manager_cds.xsd");
 				
 				Schema schema = factory.newSchema(schemaFile); 
 
