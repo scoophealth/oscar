@@ -439,8 +439,12 @@ function findConsultantByLocation(phrase){
 var item = '';
 var result = '';
 
+//restrict to selected service
+var serviceSelect = document.getElementById("service");
+var serviceNumber = serviceSelect.options[serviceSelect.selectedIndex].value;
+
 $H(servicesName).each(function(pair){
-if(pair.value!=-1){
+if(pair.value!=-1 && pair.value==serviceNumber){
     for (var i=0; i < services[pair.value].specialists.length; i++) {
 
 	name = services[pair.value].specialists[i].specName;
@@ -461,9 +465,10 @@ return result;
 
 jQuery("input#consultant-by-location-input").keyup(function(){
 
-if(jQuery(this).val().length>=3)
+if(jQuery(this).val().length>=3){
 jQuery('#consultant-by-location-dropdown').slideDown();
 jQuery("#consultant-by-location-display").html( findConsultantByLocation(jQuery(this).val()) );
+}
 
 });
 
@@ -476,10 +481,6 @@ service = jQuery(this).attr('data-service');
 
 jQuery('#consultant-by-location-dropdown').slideUp();
 
-//make service selection
-jQuery('#service').val(service);
-document.getElementById('service').onchange();
-
 //auto select specialist
 jQuery('#specialist').val(spec_num);
 document.getElementById('specialist').onchange();
@@ -491,13 +492,22 @@ jQuery('#consultant-by-location-input').val('');
 
 jQuery('#consultant-by-location-dropdown a').click(function(e){
 e.preventDefault();
-console.log('close me');
 jQuery('#consultant-by-location-dropdown').slideUp();
 jQuery('#consultant-by-location-input').val('');
-
 });
 
 })
+
+function unlockSearchByLocationInput(n){
+if(n>0){
+document.getElementById('consultant-by-location-input').readOnly = false;
+document.getElementById('consultant-by-location-input').placeholder = "Enter location";
+}else{
+jQuery('#consultant-by-location-dropdown').slideUp();
+document.getElementById('consultant-by-location-input').readOnly = true;
+document.getElementById('consultant-by-location-input').placeholder = "No consultants found for selected service";
+}
+}
 
 function getClinicalData( data, target ) {
 	jQuery.ajax({
@@ -611,7 +621,6 @@ function Service(  ){
 // construct model selection on page
 function fillSpecialistSelect( aSelectedService ){
 
-
 	var selectedIdx = aSelectedService.selectedIndex;
 	var makeNbr = (aSelectedService.options[ selectedIdx ]).value;
 
@@ -633,6 +642,9 @@ function fillSpecialistSelect( aSelectedService ){
 		   aPit = specs[ specIndex ];	   	
            document.EctConsultationFormRequestForm.specialist.options[ i++ ] = new Option( aPit.specName , aPit.specNbr );
 	}
+
+	//unlock search consultant by location
+        unlockSearchByLocationInput(specs.length);
 
 }
 //-------------------------------------------------------------------
@@ -1797,18 +1809,6 @@ function statusChanged(val) {
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formService" />:
 							</td>
 							<td  class="tite1">
-
-							<div class="consultant-by-location-container">
-							<label>Select Consultant by Location</small>
-							<input type="text" id="consultant-by-location-input" style="border:0px;">
-							</div>
-
-							<div id="consultant-by-location-dropdown">
-							 <a href="#">[X]</a>
-							 <span class="consultant-by-location-message">Enter at least 3 characters.</span>
-							 <div id="consultant-by-location-display"></div>
-							</div>
-
 							  <html:select styleId="service" property="service" onchange="fillSpecialistSelect(this);">
 							  </html:select>
 							</td>
@@ -1817,6 +1817,7 @@ function statusChanged(val) {
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCons" />:
 							</td>
 							<td  class="tite2">
+
 							<%
 								if (thisForm.iseReferral())
 								{
@@ -1827,6 +1828,17 @@ function statusChanged(val) {
 								else
 								{
 									%>
+
+							<div class="consultant-by-location-container">
+							<label>Select Consultant by Location</small>
+							<input type="text" id="consultant-by-location-input" style="border:0px;" placeholder="Choose a service first" readonly>
+							</div>
+
+							<div id="consultant-by-location-dropdown">
+							 <a href="#">[X]</a>
+							 <span class="consultant-by-location-message">Enter at least 3 characters.</span>
+							 <div id="consultant-by-location-display"></div>
+							</div>
 									
 									<span id="consult-disclaimer" title="When consult was saved this was the saved consultant but is no longer on this specialist list." style="display:none;font-size:24px;">*</span> <html:select styleId="specialist" property="specialist" size="1" onchange="onSelectSpecialist(this)">
 									
