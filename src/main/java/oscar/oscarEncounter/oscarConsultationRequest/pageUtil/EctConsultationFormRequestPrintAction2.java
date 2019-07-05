@@ -16,6 +16,9 @@
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -42,6 +45,8 @@ import org.oscarehr.util.WKHtmlToPdfUtils;
 import com.lowagie.text.DocumentException;
 import com.sun.xml.messaging.saaj.util.ByteInputStream;
 import com.sun.xml.messaging.saaj.util.ByteOutputStream;
+
+import com.lowagie.text.DocumentException;
 
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
@@ -81,11 +86,10 @@ public class EctConsultationFormRequestPrintAction2 extends Action {
 		ArrayList<EDoc> docs = EDocUtil.listDocs(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
 		String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 		ArrayList<Object> alist = new ArrayList<Object>();
-		byte[] buffer;
-		ByteInputStream bis;
-		ByteOutputStream bos;
+		
 		CommonLabResultData consultLabs = new CommonLabResultData();
 		ArrayList<InputStream> streams = new ArrayList<InputStream>();
+		ArrayList<File> filesToDelete = new ArrayList<File>();
 
 		ArrayList<LabResultData> labs = consultLabs.populateLabResultsData(loggedInInfo, demoNo, reqId, CommonLabResultData.ATTACHED);
 		HRMDocumentToDemographicDao hrmDocumentToDemographicDao = SpringUtils.getBean(HRMDocumentToDemographicDao.class);
@@ -94,32 +98,38 @@ public class EctConsultationFormRequestPrintAction2 extends Action {
 		Exception exception = null;
 		try {
 
-			bos = new ByteOutputStream();
-			ConsultationPDFCreator cpdfc = new ConsultationPDFCreator(request,bos);
+			File f = File.createTempFile("consult"+reqId,"pdf");
+	        FileOutputStream fos = new FileOutputStream(f);
+			
+			ConsultationPDFCreator cpdfc = new ConsultationPDFCreator(request,fos);
 			cpdfc.printPdf(loggedInInfo);
 			
-			buffer = bos.getBytes();
-			bis = new ByteInputStream(buffer, bos.getCount());
-			bos.close();
-			streams.add(bis);
-			alist.add(bis);
-
+			fos.close();
+			
+			FileInputStream fis = new FileInputStream(f);
+			alist.add(fis);
+			streams.add(fis);
+			filesToDelete.add(f);
+			
 			for (int i = 0; i < docs.size(); i++) {
 				EDoc doc = docs.get(i);  
 				if (doc.isPrintable()) {
 					if (doc.isImage()) {
-						bos = new ByteOutputStream();
+						File f2 = File.createTempFile("image"+doc.getDocId(),"pdf");
+						FileOutputStream fos2 = new FileOutputStream(f2);
+						
 						request.setAttribute("imagePath", path + doc.getFileName());
 						request.setAttribute("imageTitle", doc.getDescription());
-						ImagePDFCreator ipdfc = new ImagePDFCreator(request, bos);
+
+						ImagePDFCreator ipdfc = new ImagePDFCreator(request, fos2);
 						ipdfc.printPdf();
 						
-						buffer = bos.getBytes();
-						bis = new ByteInputStream(buffer, bos.getCount());
-						bos.close();
-						streams.add(bis);
-						alist.add(bis);
+						fos2.close();
 						
+						FileInputStream fis2 = new FileInputStream(f2);
+						alist.add(fis2);
+						streams.add(fis2);
+						filesToDelete.add(f2);
 					}
 					else if (doc.isPDF()) {
 						alist.add(path + doc.getFileName());
@@ -130,22 +140,31 @@ public class EctConsultationFormRequestPrintAction2 extends Action {
 				}
 			}
 
+			
 			// Iterating over requested labs.
 			for (int i = 0; labs != null && i < labs.size(); i++) {
 				// Storing the lab in PDF format inside a byte stream.
-				bos = new ByteOutputStream();
 				request.setAttribute("segmentID", labs.get(i).segmentID);
-				LabPDFCreator lpdfc = new LabPDFCreator(request, bos);
+				request.setAttribute("providerNo",LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo());
+				File f2 = File.createTempFile("lab"+request.getAttribute("segmentID"),"pdf");
+				File f3 = File.createTempFile("lab"+request.getAttribute("segmentID") + "-complete","pdf");
+		        
+				FileOutputStream fos2 = new FileOutputStream(f2);
+				FileOutputStream fos3 = new FileOutputStream(f3);
+		            
+				LabPDFCreator lpdfc = new LabPDFCreator(request, fos2);
 				lpdfc.printPdf();
+				lpdfc.addEmbeddedDocuments(f2,fos3);
 
-				// Transferring PDF to an input stream to be concatenated with
-				// the rest of the documents.
-				buffer = bos.getBytes();
-				bis = new ByteInputStream(buffer, bos.getCount());
-				bos.close();
-				streams.add(bis);
-				alist.add(bis);
-
+				fos2.close();
+				fos3.close();
+				
+				FileInputStream fis2 = new FileInputStream(f3);
+				
+				alist.add(fis2);
+				streams.add(fis2);
+				filesToDelete.add(f2);
+				filesToDelete.add(f3);
 			}
 
 			for (HRMDocumentToDemographic attachedHRM : attachedHRMReports) {
@@ -171,16 +190,15 @@ public class EctConsultationFormRequestPrintAction2 extends Action {
             }
             
 			if (alist.size() > 0) {
-				
-				bos = new ByteOutputStream();
-				ConcatPDF.concat(alist, bos);
 				response.setContentType("application/pdf"); // octet-stream
 				response.setHeader(
 						"Content-Disposition",
 						"inline; filename=\"combinedPDF-"
 								+ UtilDateUtilities.getToday("yyyy-mm-dd.hh.mm.ss")
 								+ ".pdf\"");
-				response.getOutputStream().write(bos.getBytes(), 0, bos.getCount());
+				
+				ConcatPDF.concat(alist, response.getOutputStream());
+				
 			}
 
 		} catch (DocumentException de) {
@@ -191,12 +209,17 @@ public class EctConsultationFormRequestPrintAction2 extends Action {
 			exception = ioe;
 		} finally { 
 			// Cleaning up InputStreams created for concatenation.
+			
 			for (InputStream is : streams) {
 				try {
 					is.close();
 				} catch (IOException e) {
 					error = "IOException";
 				}
+			}
+			
+			for(File f:filesToDelete) {
+				f.delete();
 			}
 		}
 		if (!error.equals("")) {
