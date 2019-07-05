@@ -24,6 +24,10 @@
 
 --%>
 
+<%@page import="net.sf.json.JSONException"%>
+<%@page import="net.sf.json.JSONSerializer"%>
+<%@page import="net.sf.json.JSONArray"%>
+<%@page import="net.sf.json.JSONObject"%>
 <%@ page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ page import="oscar.util.ConversionUtils"%>
@@ -410,6 +414,50 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 }      
         </style>
 
+<style>
+/* Dropdown Button */
+.dropbtn {
+/*  background-color: #4CAF50;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;*/
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+</style>
+
         <script language="JavaScript">
         var labNo = '<%=segmentID%>';
         var providerNo = '<%=providerNo%>';
@@ -708,6 +756,37 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
       });
 
 		</script>
+		
+		<script>
+			//first check to see if lab is linked, if it is, we can send the demographicNo to the macro
+			function runMacro(name,formid, closeOnSuccess) {
+	          		 var url='../../../dms/inboxManage.do';
+	                 var data='method=isLabLinkedToDemographic&labid=<%= segmentID %>';
+	                 new Ajax.Request(url, {method: 'post',parameters:data,onSuccess:function(transport){
+	                 var json=transport.responseText.evalJSON();
+	                 if(json!=null){
+	                     var success=json.isLinkedToDemographic;
+	                     var demoid='';
+	                     if(success){
+	                     	demoid = json.demoId;
+	                     }
+	                     runMacroInternal(name,formid,closeOnSuccess,demoid);
+	                 }
+	                 }});
+			}
+			
+			function runMacroInternal(name,formid,closeOnSuccess,demographicNo) {
+				var url='<%=request.getContextPath()%>'+"/oscarMDS/RunMacro.do?name=" + name + (demographicNo.length>0 ? "&demographicNo=" + demographicNo : "");
+	            var data=$(formid).serialize(true);
+
+	            new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(data){
+	            	if(closeOnSuccess) {
+	            		window.close();
+	            	}
+	        	}});
+			}
+		</script>
+
 		<div id="lab_<%=segmentID%>">
         <form name="reassignForm_<%=segmentID%>" method="post" action="Forward.do">
             <input type="hidden" name="flaggedLabs" value="<%=segmentID%>" />
@@ -740,7 +819,34 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
                                     <%
                                     if ( !ackFlag ) {
                                     %>
-
+									<%
+										UserPropertyDAO upDao = SpringUtils.getBean(UserPropertyDAO.class);
+										UserProperty up = upDao.getProp(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo(),UserProperty.LAB_MACRO_JSON);
+										if(up != null && !StringUtils.isEmpty(up.getValue())) {
+									%>
+											<div class="dropdown">
+											  <button class="dropbtn">Macros</button>
+											  <div class="dropdown-content">
+											  <%
+											    try {
+												  	JSONArray macros = (JSONArray) JSONSerializer.toJSON(up.getValue());
+												  	if(macros != null) {
+													  	for(int x=0;x<macros.size();x++) {
+													  		JSONObject macro = macros.getJSONObject(x);
+													  		String name = macro.getString("name");
+													  		boolean closeOnSuccess = macro.has("closeOnSuccess") && macro.getBoolean("closeOnSuccess");
+													  		
+													  		%><a href="javascript:void(0);" onClick="runMacro('<%=name%>','acknowledgeForm_<%=segmentID%>',<%=closeOnSuccess%>)"><%=name %></a><%
+													  	}
+												  	}
+											    }catch(JSONException e ) {
+											    	MiscUtils.getLogger().warn("Invalid JSON for lab macros",e);
+											    }
+											  %>
+											    
+											  </div>
+											</div>
+									<% } %>
                                     <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="<%=ackLabFunc%>" >
                                     <input type="button" value="<bean:message key="oscarMDS.segmentDisplay.btnComment"/>" onclick="return getComment('addComment',<%=segmentID%>);">
                                     <% } %>
