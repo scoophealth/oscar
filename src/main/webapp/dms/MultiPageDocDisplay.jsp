@@ -24,6 +24,7 @@
 
 --%>
 
+<%@page import="org.oscarehr.util.LoggedInInfo"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security"%>
 <%
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -147,6 +148,28 @@
 
         	}
         </style>               
+        
+        <script>
+        	//?segmentID=1&providerNo=999998&searchProviderNo=999998&status=A&demoName=
+       	   function checkDelete(url, docDescription){
+        	// revision Apr 05 2004 - we now allow anyone to delete documents
+        	  if(confirm("<bean:message key="dms.documentReport.msgDelete"/> " + docDescription)) {
+        	    window.location = url;
+        	  }
+        	}
+
+			<%
+				if(request.getParameter("delDocumentNo") != null) {
+					EDocUtil.deleteDocument(request.getParameter("delDocumentNo"));
+					%>
+						if(window.opener != null) {
+							window.opener.location.reload();
+						}
+						window.close();
+					<%
+				}
+			%>
+        </script>
     </head>
     <body >
         <div id="labdoc_<%=docId%>">
@@ -782,6 +805,17 @@ function sendMRP(ele){
                                                         <input type="button"  tabindex="<%=tabindex++%>" value="Msg" onclick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
                                                         <input type="button"  tabindex="<%=tabindex++%>" value="Tickler" onclick="popup(450,600,'../tickler/ForwardDemographicTickler.do?docType=DOC&docId=<%=docId%>&demographic_no=<%=demographicID%>','tickler')"/>
                                                         <input type="button"  tabindex="<%=tabindex++%>" value="eChart" onclick="popup(710,1024,'<%=eURL%>','encounter')"/>
+                                                        <%if(curdoc.getCreatorId().equals(LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo())) {
+                                                        	%>
+                                                        	<input type="button"  tabindex="<%=tabindex++%>" value="Delete" onClick="javascript: checkDelete('MultiPageDocDisplay.jsp?delDocumentNo=<%=curdoc.getDocId()%>','<%=curdoc.getDescription()%>')"/>
+                                                       
+                                                        	<%
+                                                        } else {
+                                                        %>
+                                                        <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.edocdelete" rights="r">
+                                                        	<input type="button"  tabindex="<%=tabindex++%>" value="Delete" onClick="javascript: checkDelete('documentReport.jsp?delDocumentNo=1&amp;function=demographic&amp;functionid=1&amp;viewstatus=active','test')"/>
+                                                        </security:oscarSec>
+                                                        <% } %>
                                                         <%if (MyOscarUtils.isMyOscarEnabled((String) session.getAttribute("user"))){
 															MyOscarLoggedInInfo myOscarLoggedInInfo=MyOscarLoggedInInfo.getLoggedInInfo(session);
 															boolean enabledMyOscarButton=MyOscarUtils.isMyOscarSendButtonEnabled(myOscarLoggedInInfo, Integer.valueOf(demographicID));
