@@ -1472,7 +1472,7 @@ function updateFaxButton() {
 							<%
 									if (cdxProvenanceList != null && !cdxProvenanceList.isEmpty()) {
 										for (CdxProvenance cdxProvenance : cdxProvenanceList) {
-											DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+											DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 											out.print("<a target=\"_blank\" href=\"../../dms/showCdxDocumentArchive.jsp?ID="+cdxProvenance.getId()+"\"/>");
 											out.print("<small><small>"+dateFormat.format(cdxProvenance.getEffectiveTime())+"</small></small>");
 											out.println("</a>");

@@ -70,8 +70,6 @@ import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
 import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
-import oscar.oscarLab.ca.all.parsers.Factory;
-import oscar.oscarLab.ca.all.parsers.MessageHandler;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.ConcatPDF;
@@ -100,7 +98,7 @@ public class EctConsultationFormRequestAction extends Action {
 
 	private static final Logger logger=MiscUtils.getLogger();
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
-	
+
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -425,7 +423,12 @@ public class EctConsultationFormRequestAction extends Action {
 				WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCreatedUpdateESent");
 			} catch (OBIBException e) {
 				logger.error("Error sending CDX consultation request.", e);
-				WebUtils.addLocalisedErrorMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCreatedUpdateESendError");
+				String additionalText = e.getObibMessage();
+				if (additionalText == null || additionalText.isEmpty()) {
+					additionalText = e.getMessage();
+				}
+				WebUtils.addLocalisedErrorMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCreatedUpdateESendError",
+						"The reported error was: " + additionalText);
 				ParameterActionForward forward = new ParameterActionForward(mapping.findForward("failESend"));
 				forward.addParameter("de", demographicNo);
 				forward.addParameter("requestId", requestId);
@@ -515,7 +518,6 @@ public class EctConsultationFormRequestAction extends Action {
 
 		ConsultationRequestDao consultationRequestDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
 		ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
-//		Hl7TextInfoDao hl7TextInfoDao = (Hl7TextInfoDao) SpringUtils.getBean("hl7TextInfoDao");
 		ClinicDAO clinicDAO = (ClinicDAO) SpringUtils.getBean("clinicDAO");
 
 		ConsultationRequest consultationRequest = consultationRequestDao.find(consultationRequestId);
@@ -525,30 +527,14 @@ public class EctConsultationFormRequestAction extends Action {
 		// set status now so the remote version shows this status
 		consultationRequest.setStatus("2");
 
-		//REF_I12 refI12 = RefI12.makeRefI12(clinic, consultationRequest);
 		String message = fillReferralNotes(consultationRequest);
 
-		// save after the sending just in case the sending fails.
+		// save just in case the sending fails.
 		consultationRequestDao.merge(consultationRequest);
 
 		Provider sendingProvider = loggedInInfo.getLoggedInProvider();
 		DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
 		Demographic demographic = demographicManager.getDemographic(loggedInInfo, consultationRequest.getDemographicId());
-
-		// Create pdf version of Consultation Request which can be attached to request.
-		String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
-		String filename = null;
-//		EctConsultationFormRequestPrintPdf pdf = new EctConsultationFormRequestPrintPdf(consultationRequestId.toString(), professionalSpecialist.getAddress(), professionalSpecialist.getPhone(), professionalSpecialist.getFax(), demographic.getDemographicNo().toString());
-        byte[] newBytes = null;
-		try {
-			filename = createPDF2(loggedInInfo, ""+demographic.getDemographicNo(), ""+consultationRequestId); //pdf.printPdf(loggedInInfo);
-			if (filename != null) {
-				newBytes = pdfFileToByteArray(path + filename);
-				MiscUtils.getLogger().info("Consultation Request PDF: " + path + filename);
-			}
-		} catch (IOException e) {
-			MiscUtils.getLogger().info(e.getMessage());
-		}
 
 		String patientId = demographic.getHin();
 		if (patientId == null || patientId.isEmpty()) {
@@ -565,38 +551,30 @@ public class EctConsultationFormRequestAction extends Action {
 		if (providers != null && !providers.isEmpty()) {
 			IProvider cdxProvider = providers.get(0);
 			clinicID = cdxProvider.getClinicID();
+			if (!professionalSpecialist.getLastName().equalsIgnoreCase(cdxProvider.getLastName())) {
+				throw new OBIBException("Last name reported by CDX does not match last name of selected specialist.");
+			}
 		} else {
-			MiscUtils.getLogger().error("Sending providers CDX ID not found");
-			throw new OBIBException("Sending providers CDX ID not found");
+			MiscUtils.getLogger().error("Selected specialist's CDX ID not found");
+			throw new OBIBException("Selected specialist's CDX ID not found");
+		}
+
+		// Add pdf attachments (scanned images, lab reports and PDF files)
+		String filename = null;
+		byte[] newBytes = null;
+		ByteOutputStream bos = createPDF(loggedInInfo, "" + demographic.getDemographicNo(), "" + consultationRequestId);
+		if (bos != null) {
+			newBytes = bos.toByteArray();
+			filename = "ConsultationRequestAttachedPDF-" + demographic.getLastName() + "," + demographic.getFirstName() + "-" + UtilDateUtilities.getToday("yyyy-MM-dd_HHmmss") + ".pdf";
+			MiscUtils.getLogger().debug("File: " + filename + ", Size: " + newBytes.length);
 		}
 
 		IDocument response = null;
 		CDXConfiguration cdxConfig = new CDXConfiguration();
 		SubmitDoc submitDoc = new SubmitDoc(cdxConfig);
 
-//		ArrayList<Object> pdfDocs = new ArrayList<Object>();
-//		ArrayList<EDoc> privatedocs = new ArrayList<EDoc>();
-//		privatedocs = EDocUtil.listDocs(loggedInInfo, ""+demographic.getDemographicNo(), ""+consultationRequestId, EDocUtil.ATTACHED);
-//		EDoc curDoc;
-//		for (int idx = 0; idx < privatedocs.size(); ++idx) {
-//			curDoc = (EDoc) privatedocs.get(idx);
-//			if (curDoc.isPDF()) {
-//				pdfDocs.add(curDoc);
-//			}
-//			MiscUtils.getLogger().info("curDoc.getDocId(): " + curDoc.getDocId() + " curDoc.getDescription: " + curDoc.getDescription() +
-//					" curDoc.getContentType: " + curDoc.getContentType());
-//		}
-//		CommonLabResultData labData = new CommonLabResultData();
-//		ArrayList labs = labData.populateLabResultsData(loggedInInfo, ""+demographic.getDemographicNo(), ""+consultationRequestId, CommonLabResultData.ATTACHED);
-//		LabResultData resData;
-//		for (int idx = 0; idx < labs.size(); ++idx) {
-//			resData = (LabResultData) labs.get(idx);
-//			MiscUtils.getLogger().info("lab discipline: " + resData.getDiscipline() + " datetime: " + resData.getDateTime());
-//		}
-
-//		response = submitDoc.newDoc()
-        ISubmitDoc doc = submitDoc.newDoc()
-                .documentType(DocumentType.REFERRAL_NOTE)
+		ISubmitDoc doc = submitDoc.newDoc()
+				.documentType(DocumentType.REFERRAL_NOTE)
 				.inFulfillmentOf()
 					.id(Integer.toString(consultationRequestId))
 					.statusCode(OrderStatus.ACTIVE).and()
@@ -605,7 +583,7 @@ public class EctConsultationFormRequestAction extends Action {
 					.name(NameType.LEGAL, demographic.getFirstName(), demographic.getLastName())
 					.address(AddressType.HOME, demographic.getAddress(), demographic.getCity(), demographic.getProvince(), demographic.getPostal(), "CA")
 					.phone(TelcoType.HOME, demographic.getPhone())
-					.birthday(demographic.getYearOfBirth(),demographic.getMonthOfBirth(),demographic.getDateOfBirth())
+					.birthday(demographic.getYearOfBirth(), demographic.getMonthOfBirth(), demographic.getDateOfBirth())
 					.gender("M".equalsIgnoreCase(demographic.getSex()) ? Gender.MALE : Gender.FEMALE)
 				.and().author()
 					.id(authorId)
@@ -619,22 +597,19 @@ public class EctConsultationFormRequestAction extends Action {
 					.name(NameType.LEGAL, professionalSpecialist.getFirstName(), professionalSpecialist.getLastName())
 					.address(AddressType.HOME, professionalSpecialist.getAddress(), professionalSpecialist.getCity(), professionalSpecialist.getProvince(), professionalSpecialist.getPostal(), "CA")
 					.phone(TelcoType.HOME, professionalSpecialist.getPhoneNumber())
-				.and().inFulfillmentOf()
-					.id(Integer.toString(consultationRequestId))
 				.and()
-					.receiverId(clinicID)
-					.content(message);
-        if (filename != null && newBytes != null) {
-			doc = doc
-					.attach(AttachmentType.PDF, filename, newBytes);
+				.receiverId(clinicID)
+				.content(message);
+		if (newBytes != null) {
+			doc = doc.attach(AttachmentType.PDF, filename, newBytes);
 		}
-				response = doc.submit();
+		response = doc.submit();
 
-		//logResponse(response);
-		MiscUtils.getLogger().info("Attempting to save document using logSentAction");
-        CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
+		boolean debug = false;
+		if (debug) logResponse(response);
+		MiscUtils.getLogger().debug("Attempting to save document using logSentAction");
+		CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
 		cdxProvenanceDao.logSentAction(response);
-
 	}
 
 	private boolean logResponse(IDocument doc) {
@@ -654,272 +629,128 @@ public class EctConsultationFormRequestAction extends Action {
 
 		StringBuilder sb = new StringBuilder();
 		String temp = consultationRequest.getReasonForReferral();
-		String br ="\r\n";
+		String br = "\r\n";
 		if (temp != null && !temp.trim().isEmpty()) {
-			sb.append("REASON FOR CONSULTATION: " + temp + br);
+			sb.append("REASON FOR CONSULTATION: ").append(temp).append(br);
 		}
 
-		temp=consultationRequest.getClinicalInfo();
-		if (temp!=null && !temp.trim().isEmpty()) {
-			sb.append("CLINICAL INFORMATION: " + temp  + br);
+		temp = consultationRequest.getClinicalInfo();
+		if (temp != null && !temp.trim().isEmpty()) {
+			sb.append("CLINICAL INFORMATION: ").append(temp).append(br);
 		}
 
-		temp=consultationRequest.getConcurrentProblems();
-		if (temp!=null && !temp.trim().isEmpty()) {
-			sb.append("CONCURRENT PROBLEMS: " + temp + br);
+		temp = consultationRequest.getConcurrentProblems();
+		if (temp != null && !temp.trim().isEmpty()) {
+			sb.append("CONCURRENT PROBLEMS: ").append(temp).append(br);
 		}
 
-		temp=consultationRequest.getCurrentMeds();
-		if (temp!=null && !temp.trim().isEmpty()) {
-			sb.append("CURRENT MEDICATIONS: " + temp + br);
+		temp = consultationRequest.getCurrentMeds();
+		if (temp != null && !temp.trim().isEmpty()) {
+			sb.append("CURRENT MEDICATIONS: ").append(temp).append(br);
 		}
 
-		temp=consultationRequest.getAllergies();
-		if (temp!=null && !temp.trim().isEmpty()) {
-			sb.append("ALLERGIES: " + temp);
+		temp = consultationRequest.getAllergies();
+		if (temp != null && !temp.trim().isEmpty()) {
+			sb.append("ALLERGIES: ").append(temp);
 		}
 
 		return sb.toString();
 	}
 
-	private byte[] pdfFileToByteArray(String filename) throws IOException {
-		byte[] bytes = null;
-		if (filename != null && !filename.isEmpty()) {
-			File file = new File(filename);
-			bytes = new byte[(int) file.length()];
-			FileInputStream fis = new FileInputStream(file);
-			fis.read(bytes);
-			fis.close();
-		}
-        return bytes;
-	}
-
-	private String combinePDFs(LoggedInInfo loggedInInfo, String demoNo, String reqId) throws IOException{
-		//Create new file to save attachments to
+	private ByteOutputStream createPDF(LoggedInInfo loggedInInfo, String demoNo, String reqId) {
+		ArrayList<EDoc> docs = EDocUtil.listDocs(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
 		String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
-		String fileName = path + "ConsultationRequestForm-"+ UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss")+".pdf";
-		FileOutputStream out = new FileOutputStream(fileName);
-
-		ArrayList<EDoc> consultdocs = EDocUtil.listDocs(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
-		ArrayList<Object> pdfDocs = new ArrayList<Object>();
-
-		for (int i=0; i < consultdocs.size(); i++){
-			EDoc curDoc =  consultdocs.get(i);
-			if ( curDoc.isPDF() ) {
-				pdfDocs.add(curDoc.getFilePath());
-			}
-		}
-		// TODO:need to do something about the docs that are not PDFs
-		// create pdfs from attached labs
-		try {
-            CommonLabResultData labData = new CommonLabResultData();
-            ArrayList labs = labData.populateLabResultsData(loggedInInfo, ""+demoNo, reqId, CommonLabResultData.ATTACHED);
-            LabResultData resData;
-            for (int idx = 0; idx < labs.size(); ++idx) {
-                resData = (LabResultData) labs.get(idx);
-                String segmentId = resData.getSegmentID();
-				MessageHandler handler = Factory.getHandler(segmentId);
-				String pdfFileName = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"//"+handler.getPatientName().replaceAll("\\s", "_")+"_"+handler.getMsgDate()+"_LabReport.pdf";
-				OutputStream os = new FileOutputStream(pdfFileName);
-				LabPDFCreator pdf = new LabPDFCreator(os, segmentId, loggedInInfo.getLoggedInProviderNo());
-				pdf.printPdf();
-				pdfDocs.add(pdfFileName);
-			}
-		}catch(DocumentException de) {
-			MiscUtils.getLogger().error("PDF generation error: " + de.getMessage());
-		}catch(IOException ioe) {
-			MiscUtils.getLogger().error("PDF generation error: " + ioe.getMessage());
-		}catch(Exception e){
-			MiscUtils.getLogger().error("PDF generation error: " + e.getMessage());
-		}
-		ConcatPDF.concat(pdfDocs,out);
-		return fileName;
-	}
-
-	private String createPDF(LoggedInInfo loggedInInfo, String demoNo, String reqId) throws IOException {
-		//Create new file to save attachments to
-		String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
-		String fileName = path + "ConsultationRequestForm-"+ UtilDateUtilities.getToday("yyyy-MM-dd_hhmmss")+".pdf";
-		FileOutputStream out = new FileOutputStream(fileName);
-
-		ArrayList<EDoc> consultdocs = EDocUtil.listDocs(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
-		ArrayList<Object> pdfDocs = new ArrayList<Object>();
-		ArrayList<InputStream> streams = new ArrayList<InputStream>();
-
+		ArrayList<Object> alist = new ArrayList<Object>();
 		byte[] buffer;
 		ByteInputStream bis;
-		ByteOutputStream bos;
+		ByteOutputStream bos = null;
+		CommonLabResultData consultLabs = new CommonLabResultData();
+		ArrayList<InputStream> streams = new ArrayList<InputStream>();
 
-		for (int i=0; i < consultdocs.size(); i++){
-			EDoc curDoc =  consultdocs.get(i);
-			if ( curDoc.isPDF() ) {
-				pdfDocs.add(curDoc.getFilePath());
-			} else if (curDoc.isImage()) {
-				boolean success = false;
-				bos = new ByteOutputStream();
-				String imagePath = path + curDoc.getFileName();
-				String imageTitle = curDoc.getDescription();
-				try {
-					imageToPdf(imagePath, imageTitle, bos);
-					success = true;
-				} catch (DocumentException e) {
-					MiscUtils.getLogger().error(e.getMessage());
-				}
-				if (success) {
-					buffer = bos.getBytes();
-					bis = new ByteInputStream(buffer, bos.getCount());
-					bos.close();
-					streams.add(bis);
-					pdfDocs.add(bis);
-				}
-			}
-		}
-		// create pdfs from attached labs
+		ArrayList<LabResultData> labs = consultLabs.populateLabResultsData(loggedInInfo, demoNo, reqId, CommonLabResultData.ATTACHED);
+		String error = "";
+		Exception exception = null;
 		try {
-            CommonLabResultData labData = new CommonLabResultData();
-            ArrayList labs = labData.populateLabResultsData(loggedInInfo, demoNo, reqId, CommonLabResultData.ATTACHED);
-            LabResultData resData;
-            for (int idx = 0; idx < labs.size(); ++idx) {
-                resData = (LabResultData) labs.get(idx);
-                String segmentId = resData.getSegmentID();
-                MessageHandler handler = Factory.getHandler(segmentId);
-                String pdfFileName = OscarProperties.getInstance().getProperty("DOCUMENT_DIR")+"//"+handler.getPatientName().replaceAll("\\s", "_")+"_"+handler.getMsgDate()+"_LabReport.pdf";
-                OutputStream os = new FileOutputStream(pdfFileName);
-                LabPDFCreator pdf = new LabPDFCreator(os, segmentId, loggedInInfo.getLoggedInProviderNo());
-                pdf.printPdf();
-                pdfDocs.add(pdfFileName);
+			boolean success = false;
+			for (int i = 0; i < docs.size(); i++) {
+				EDoc doc = docs.get(i);
+				if (doc.isPrintable()) {
+					if (doc.isImage()) {
+						success = false;
+						bos = new ByteOutputStream();
+						String imagePath = path + doc.getFileName();
+						String imageTitle = doc.getDescription();
+						try {
+							imageToPdf(imagePath, imageTitle, bos);
+							success = true;
+						} catch (DocumentException e) {
+							MiscUtils.getLogger().error(e.getMessage());
+						}
+						if (success) {
+							buffer = bos.getBytes();
+							bis = new ByteInputStream(buffer, bos.getCount());
+							bos.close();
+							streams.add(bis);
+							alist.add(bis);
+						}
+					} else if (doc.isPDF()) {
+						alist.add(path + doc.getFileName());
+					} else {
+						logger.error("EctConsultationFormRequestAction: " + doc.getType() +
+								" is marked as printable but no means have been established to print it.");
+					}
+				}
 			}
-		}catch(DocumentException de) {
-			MiscUtils.getLogger().error("PDF generation error: " + de.getMessage());
+
+			// Iterating over requested labs.
+			for (int i = 0; labs != null && i < labs.size(); i++) {
+				// Storing the lab in PDF format inside a byte stream.
+				bos = new ByteOutputStream();
+				LabPDFCreator lpdfc = new LabPDFCreator(bos, labs.get(i).segmentID, loggedInInfo.getLoggedInProviderNo());
+				lpdfc.printPdf();
+
+				// Transferring PDF to an input stream to be concatenated with
+				// the rest of the documents.
+				buffer = bos.getBytes();
+				bis = new ByteInputStream(buffer, bos.getCount());
+				bos.close();
+				streams.add(bis);
+				alist.add(bis);
+			}
+			if (alist.size() > 0) {
+				bos = new ByteOutputStream();
+				ConcatPDF.concat(alist, bos);
+			}
+		} catch (DocumentException de) {
+			error = "DocumentException";
+			exception = de;
+		} catch (IOException ioe) {
+			error = "IOException";
+			exception = ioe;
+		} finally {
+			// Cleaning up InputStreams created for concatenation.
+			for (InputStream is : streams) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					error = "IOException";
+				}
+			}
 		}
-		ConcatPDF.concat(pdfDocs,out);
-		return fileName;
+		if (!error.equals("")) {
+			logger.error(error + " occured insided createPDF", exception);
+		}
+		return bos;
 	}
 
-    private String createPDF2(LoggedInInfo loggedInInfo, String demoNo, String reqId) throws IOException {
-
-    ArrayList<EDoc> docs = EDocUtil.listDocs(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
-    String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
-    String fileName = null;
-    ArrayList<Object> alist = new ArrayList<Object>();
-    byte[] buffer;
-    ByteInputStream bis;
-    ByteOutputStream bos;
-    CommonLabResultData consultLabs = new CommonLabResultData();
-    ArrayList<InputStream> streams = new ArrayList<InputStream>();
-
-    ArrayList<LabResultData> labs = consultLabs.populateLabResultsData(loggedInInfo, demoNo, reqId, CommonLabResultData.ATTACHED);
-    String error = "";
-    Exception exception = null;
-    try {
-
-/*
-        bos = new ByteOutputStream();
-//        ConsultationPDFCreator cpdfc = new ConsultationPDFCreator(request,bos);
-//        cpdfc.printPdf(loggedInInfo);
-
-        buffer = bos.getBytes();
-        bis = new ByteInputStream(buffer, bos.getCount());
-        bos.close();
-        streams.add(bis);
-        alist.add(bis);
-*/
-
-        boolean success = false;
-        for (int i = 0; i < docs.size(); i++) {
-            EDoc doc = docs.get(i);
-            if (doc.isPrintable()) {
-                if (doc.isImage()) {
-                    success = false;
-                    bos = new ByteOutputStream();
-                    String imagePath = path + doc.getFileName();
-                    String imageTitle = doc.getDescription();
-                    try {
-                        imageToPdf(imagePath, imageTitle, bos);
-                        success = true;
-                    } catch (DocumentException e) {
-                        MiscUtils.getLogger().error(e.getMessage());
-                    }
-                    if (success) {
-                        buffer = bos.getBytes();
-                        bis = new ByteInputStream(buffer, bos.getCount());
-                        bos.close();
-                        streams.add(bis);
-                        alist.add(bis);
-                    }
-                } else if (doc.isPDF()) {
-                    alist.add(path + doc.getFileName());
-                } else {
-                    logger.error("EctConsultationFormRequestAction: " + doc.getType() +
-                            " is marked as printable but no means have been established to print it.");
-                }
-            }
-        }
-
-        // Iterating over requested labs.
-        for (int i = 0; labs != null && i < labs.size(); i++) {
-            // Storing the lab in PDF format inside a byte stream.
-            bos = new ByteOutputStream();
-            LabPDFCreator lpdfc = new LabPDFCreator(bos, labs.get(i).segmentID, loggedInInfo.getLoggedInProviderNo());
-            lpdfc.printPdf();
-
-            // Transferring PDF to an input stream to be concatenated with
-            // the rest of the documents.
-            buffer = bos.getBytes();
-            bis = new ByteInputStream(buffer, bos.getCount());
-            bos.close();
-            streams.add(bis);
-            alist.add(bis);
-
-        }
-
-        if (alist.size() > 0) {
-
-            bos = new ByteOutputStream();
-            ConcatPDF.concat(alist, bos);
-//            String filename = "combinedPDF-"
-//                    + UtilDateUtilities.getToday("yyyy-mm-dd.hh.mm.ss")
-//                    + ".pdf";
-//            response.getOutputStream().write(bos.getBytes(), 0, bos.getCount());
-//        }
-        fileName = "ConsultationRequestAttachedPDF-" + UtilDateUtilities.getToday("yyyy-MM-dd_hhmmss") + ".pdf";
-        FileOutputStream out = new FileOutputStream(path + fileName);
-        out.write(bos.getBytes(), 0, bos.getCount());
-    }
-
-
-    } catch (DocumentException de) {
-        error = "DocumentException";
-        exception = de;
-    } catch (IOException ioe) {
-        error = "IOException";
-        exception = ioe;
-    } finally {
-        // Cleaning up InputStreams created for concatenation.
-        for (InputStream is : streams) {
-            try {
-                is.close();
-            } catch (IOException e) {
-                error = "IOException";
-            }
-        }
-    }
-    if (!error.equals("")) {
-        logger.error(error + " occured insided ConsultationPrintAction", exception);
-//        request.setAttribute("printError", new Boolean(true));
-//        return mapping.findForward("error");
-    }
-    return fileName;
-
-}
-
-		/**
-         * Converts attached image in the consultation request to PDF.
-         * @param os the output stream where the PDF will be written
-         * @throws IOException when an error with the output stream occurs
-         * @throws DocumentException when an error in document construction occurs
-         */
-        private void imageToPdf(String imagePath, String imageTitle, OutputStream os) throws IOException, DocumentException {
+	/**
+	 * Converts attached image in the consultation request to PDF.
+	 *
+	 * @param os the output stream where the PDF will be written
+	 * @throws IOException       when an error with the output stream occurs
+	 * @throws DocumentException when an error in document construction occurs
+	 */
+	private void imageToPdf(String imagePath, String imageTitle, OutputStream os) throws IOException, DocumentException {
 
 		Image image;
 		try {
@@ -954,22 +785,20 @@ public class EctConsultationFormRequestAction extends Action {
 						document.setPageSize(new Rectangle(img.getScaledWidth(), img.getScaledHeight()));
 						document.newPage();
 						img.setAbsolutePosition(0, 0);
-					}
-					else {
+					} else {
 						if (img.getScaledWidth() > 500 || img.getScaledHeight() > 700) {
 							img.scaleToFit(500, 700);
 						}
 						img.setAbsolutePosition(20, 20);
 						document.newPage();
-						document.add(new Paragraph(imageTitle +" - page " + (c + 1)));
+						document.add(new Paragraph(imageTitle + " - page " + (c + 1)));
 					}
 					cb.addImage(img);
 
 				}
 			}
 			ra.close();
-		}
-		else {
+		} else {
 			PdfContentByte cb = writer.getDirectContent();
 			if (image.getScaledWidth() > 500 || image.getScaledHeight() > 700) {
 				image.scaleToFit(500, 700);

@@ -5307,7 +5307,7 @@ CREATE TABLE cdx_attachment (
   document             int,
   attachment_type      varchar(30)  NOT NULL,
   reference            varchar(60) NOT NULL,
-  content              blob  NOT NULL,
+  content              mediumblob  NOT NULL,
   CONSTRAINT pk_cdx_attachment PRIMARY KEY ( id )
 );
 CREATE INDEX idx_cdx_attachment ON cdx_attachment ( document );
@@ -5325,6 +5325,8 @@ CREATE TABLE cdx_provenance (
   action               varchar(10)  NOT NULL,
   log                  bigint,
   payload              text,
+  warnings             text,
+  status               varchar(30),
   CONSTRAINT pk_cdx_provenance_id PRIMARY KEY ( id ),
   CONSTRAINT cdx_prov_unique UNIQUE ( doc_id, version ),
   CONSTRAINT cdx_prov_docno_unique UNIQUE ( document_no )
