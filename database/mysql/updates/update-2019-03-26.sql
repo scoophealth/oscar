@@ -2,7 +2,7 @@ CREATE TABLE cdx_attachment (
 															id                   int  NOT NULL  AUTO_INCREMENT,
 															document             int ,
 															attachment_type      varchar(30)  NOT NULL  ,
-															reference 					 varchar(60) NOT NULL ,
+															reference 					 varchar(60),
 															content              mediumblob  NOT NULL  ,
 															CONSTRAINT pk_cdx_attachment PRIMARY KEY ( id )
 );

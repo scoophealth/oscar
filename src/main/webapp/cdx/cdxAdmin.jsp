@@ -93,16 +93,7 @@
     up = userPropertyDao.getProp("cdx_url");
     if (up != null) cdxUrl = up.getValue();
 
-//    up = userPropertyDao.getProp("cdx_default_provider");
-//    if (up != null) defaultProvider = up.getValue();
 
-//    up = userPropertyDao.getProp("cdx_privateKey");
-//    if (up != null) privateKey = up.getValue();
-//
-//    up = userPropertyDao.getProp("cdx_decryptionKey");
-//    if (up != null) decryptionKey = up.getValue();
-
-//    MiscUtils.getLogger().info("defaultProvider: " + defaultProvider);
     MiscUtils.getLogger().info("cdxOid: " + cdxOid);
     MiscUtils.getLogger().info("pollInterval: " + pollInterval);
 
@@ -179,6 +170,14 @@
             $('#downButton').click(function () {
                 runFetchOld(table.rows('.selected').data());
             });
+
+            $('#selAll').click(function () {
+                $('#doctable tbody tr').toggleClass('selected');
+                if (table.rows('.selected').data().length > 0)
+                    $('#downButton').show();
+                else $('#downButton').hide();
+            });
+
             $('#newButton').click(function () {
                 runFetch();
             });
@@ -357,9 +356,11 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-md-6">
-                        <h5 class="panel-title">Select all documents you want to (re)import below</h5>
+                        <h5 class="panel-title">Select the documents you want to (re)import (click on rows)</h5>
                     </div>
                     <div class="col-md-6">
+                        <button id="selAll" class="btn btn-default btn-xs" type="button" >Toggle Selection
+                        </button>
                         <button id="downButton" class="btn btn-primary btn-xs" type="button" style="display:none">Import
                             selected documents
                         </button>
