@@ -739,6 +739,12 @@ public class HRMAction extends DispatchAction {
 				orderBy = "formattedName";
 			} else if ("patient_dob".equals(columnInfo.getData())) {
 				orderBy = "dob";
+			} else if ("report_date".equals(columnInfo.getData())) {
+				orderBy = "reportDate";
+			}  else if ("received_date".equals(columnInfo.getData())) {
+				orderBy = "timeReceived";
+			} else if ("sending_facility".equals(columnInfo.getData())) {
+				orderBy = "sourceFacility";
 			}
 		}
 		
