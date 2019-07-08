@@ -64,7 +64,7 @@
     StringBuilder errorMsg = new StringBuilder();
     boolean cdxConnected = CDXConfiguration.obibIsConnected();
     if (!cdxConnected) {
-        errorMsg.append("OBIB is not connected to CDX.  Can not test for CDX availability.");
+        errorMsg.append("OSCAR is not connected to CDX via OBIB.  Can not test for CDX availability.<br>");
     }
     if (showCdx && cdxConnected) {
         String referralNo;
@@ -194,7 +194,7 @@
     </table>
     <%
         } else {
-            out.println("No specialists have had their CDX capability updated.");
+            out.println("<br>No specialists have had their CDX capability updated.");
         }
     %>
 

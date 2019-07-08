@@ -147,7 +147,7 @@ public class CDXConfiguration implements Config {
         try {
             newDocs = receiveDoc.pollNewDocIDs();
         } catch (Exception e) {
-            MiscUtils.getLogger().info("OBIB pollNewDocIDs failed", e);
+            //MiscUtils.getLogger().info("OBIB pollNewDocIDs failed", e);
         }
 
         if (newDocs == null) {
