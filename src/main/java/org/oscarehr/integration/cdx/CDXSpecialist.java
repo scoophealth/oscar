@@ -166,7 +166,7 @@ public class CDXSpecialist {
             }
 
         } catch (OBIBException e) {
-            MiscUtils.getLogger().error("Searching for CDX specialist by ID failed");
+            MiscUtils.getLogger().warn("Searching for CDX specialist by ID failed for ID [" + id + "]");
         }
         return result;
     }

@@ -157,14 +157,15 @@
     <b>
         Testing whether specialists are CDX enabled requires that the
         5-digit BC MSP billing number be recorded in the "Referral No." field,
-        unless the specialist already has a CDX ID.
+        <i>unless the specialist already has a CDX ID</i>.
 
-        This server has not been configured for 5-digit referral numbers.
+        <br><br>This server has not been configured for 5-digit referral numbers.
         Your OSP needs to configure the property "referral_no.pattern=\\d{5}"
         in the oscar properties file.
 
-        If the specialist has a CDX ID recorded but is no longer CDX enabled,
+        <br><br>If the specialist has a CDX ID recorded but is no longer CDX enabled,
             the CDX ID will be removed.
+        <br><br>
     </b>
     <% } %>
 
