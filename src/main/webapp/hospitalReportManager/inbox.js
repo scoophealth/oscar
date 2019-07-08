@@ -97,7 +97,8 @@ $(document).ready( function() {
 	            { "data": "class_subclass" },
 	            { "data": "category" , "visible" : false},
 	            { "data":  "description"}
-	        ]
+	        ],
+	        "order":[[6,"desc"]]
 
 	});
 	

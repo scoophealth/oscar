@@ -150,7 +150,8 @@ public class HRMDocumentDao extends AbstractDao<HRMDocument> {
 	
 	public List<HRMDocument> query(String providerNo, boolean providerUnmatched, boolean noSignOff, boolean demographicUnmatched, int start, int length, String orderColumn, String orderDirection) {
 		
-		if(orderColumn != null && !orderColumn.equals("formattedName") && !orderColumn.equals("dob") ) {
+		if(orderColumn != null && !orderColumn.equals("formattedName") && !orderColumn.equals("dob") && !orderColumn.equals("reportDate")
+				&& !orderColumn.equals("timeReceived") && !orderColumn.equals("sourceFacility")) {
 			return new ArrayList<HRMDocument>();
 		}
 		if(orderDirection != null && !orderDirection.equalsIgnoreCase("ASC") && !orderDirection.equalsIgnoreCase("DESC")) {
