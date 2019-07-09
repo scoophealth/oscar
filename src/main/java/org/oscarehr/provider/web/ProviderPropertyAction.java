@@ -2840,6 +2840,10 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
 	}
 
     public ActionForward viewLabMacroPrefs(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request, HttpServletResponse response) {
+        DynaActionForm frm = (DynaActionForm)actionform;
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+        String providerNo=loggedInInfo.getLoggedInProviderNo();
+
         UserProperty prop = loadProperty(providerNo, UserProperty.LAB_MACRO_JSON);
         
         request.setAttribute("labMacroJSON", prop);
