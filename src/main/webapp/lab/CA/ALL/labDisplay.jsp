@@ -1616,9 +1616,9 @@ input[type=button], button, input[id^='acklabel_']{ font-size:12px !important;pa
 										    	<td align="left"><%= rtfText + disclaimer %></td>
 										    <%}else{%>
                                            		<td align="left">
-	                                           		<pre>
+	                                           		<span>
 	                                           			<%= handler.getOBXResult( j, k) %>
-	                                           		</pre>
+	                                           		</span>
                                            		</td>
                                            	<%} %>
                                            	

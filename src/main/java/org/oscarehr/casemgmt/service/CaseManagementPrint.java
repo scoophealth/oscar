@@ -234,7 +234,12 @@ public class CaseManagementPrint {
                 FileOutputStream os2=null;
                 
                 FileOutputStream fos = null;
+                List<Object> pdfDocs = new ArrayList<Object>();
+        		
+                
                 try {
+                	
+                	
                 file= new File(fileName);
 		out = new FileOutputStream(file);
 
@@ -260,7 +265,6 @@ public class CaseManagementPrint {
 		}
 		printer.finish();
 
-		List<Object> pdfDocs = new ArrayList<Object>();
 		pdfDocs.add(fileName);
 
 		if (printLabs) {
@@ -327,7 +331,11 @@ public class CaseManagementPrint {
                   if (file2!=null) {
                       file2.delete();
                   }
+                  for(Object o:pdfDocs) {
+                	  new File((String)o).delete();
+                  }
                 }
+               
 	}
 	
 	public String[] getIssueIds(List<Issue> issues) {
