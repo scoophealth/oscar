@@ -2503,7 +2503,7 @@ function updateShortTerm(rand,val) {
 }
 
 function updateLongTerm(rand,repeatEl) {
-	<%if(OscarProperties.getInstance().getProperty("rx_select_long_term_when_repeat", "true")) { %>
+	<%if("true".equals(OscarProperties.getInstance().getProperty("rx_select_long_term_when_repeat", "true"))) { %>
 	var repeats = jQuery('#repeats_' + rand).val().trim();
 	if(!isNaN(repeats) && repeats > 0) {
 		jQuery("#longTermY_" + rand).prop("checked",true);
