@@ -43,8 +43,6 @@ import org.oscarehr.util.SpringUtils;
 import org.oscarehr.util.WKHtmlToPdfUtils;
 
 import com.lowagie.text.DocumentException;
-import com.sun.xml.messaging.saaj.util.ByteInputStream;
-import com.sun.xml.messaging.saaj.util.ByteOutputStream;
 
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
@@ -166,25 +164,39 @@ public class EctConsultationFormRequestPrintAction2 extends Action {
 			}
 
 			for (HRMDocumentToDemographic attachedHRM : attachedHRMReports) {
-				bos = new ByteOutputStream();
-				HRMPDFCreator hrmPdfCreator = new HRMPDFCreator(bos, attachedHRM.getHrmDocumentId(), loggedInInfo);
+				
+				File f2 = File.createTempFile("hrm"+attachedHRM.getHrmDocumentId(),"pdf");
+				FileOutputStream fos2 = new FileOutputStream(f2);
+			
+				HRMPDFCreator hrmPdfCreator = new HRMPDFCreator(fos2, attachedHRM.getHrmDocumentId(), loggedInInfo);
 				hrmPdfCreator.printPdf();
 
-				buffer = bos.getBytes();
-				bis = new ByteInputStream(buffer, bos.getCount());
-				bos.close();
-				streams.add(bis);
-				alist.add(bis);
+				fos2.close();
+				
+				FileInputStream fis2 = new FileInputStream(f2);
+
+				alist.add(fis2);
+				streams.add(fis2);
+				filesToDelete.add(f2);
+				
 			}
 			
             //Get attached eForms
             List<EFormData> eForms = EFormUtil.listPatientEformsCurrentAttachedToConsult(reqId);
             for (EFormData eForm : eForms) {
                 String localUri = PrintAction.getEformRequestUrl(request);
-                buffer = WKHtmlToPdfUtils.convertToPdf(localUri + eForm.getId());
-                bis = new ByteInputStream(buffer, buffer.length);
-                streams.add(bis);
-                alist.add(bis);
+                byte[] buffer = WKHtmlToPdfUtils.convertToPdf(localUri + eForm.getId());
+                File f2 = File.createTempFile("eform-" + eForm.getFormId(),"pdf");
+				FileOutputStream fos2 = new FileOutputStream(f2);
+				fos2.write(buffer);
+				fos2.close();
+				
+				FileInputStream fis2 = new FileInputStream(f2);
+
+				alist.add(fis2);
+				streams.add(fis2);
+				filesToDelete.add(f2);
+				
             }
             
 			if (alist.size() > 0) {
