@@ -207,4 +207,62 @@ public class HRMDocumentDao extends AbstractDao<HRMDocument> {
 		List<HRMDocument> documents = query.getResultList();
 		return documents;
 	}
+	
+	public long queryForCount(String providerNo, boolean providerUnmatched, boolean noSignOff, boolean demographicUnmatched, int start, int length, String orderColumn, String orderDirection) {
+		
+		if(orderColumn != null && !orderColumn.equals("formattedName") && !orderColumn.equals("dob") && !orderColumn.equals("reportDate")
+				&& !orderColumn.equals("timeReceived") && !orderColumn.equals("sourceFacility")) {
+			return 0;
+		}
+		if(orderDirection != null && !orderDirection.equalsIgnoreCase("ASC") && !orderDirection.equalsIgnoreCase("DESC")) {
+			return 0;
+		}
+		String sql = "select count(x) from " + this.modelClass.getName() + " x   ";
+
+	//	if(providerNo != null || providerUnmatched) {
+			sql += " inner JOIN x.matchedProviders p ";
+	//	} 
+		
+		sql += " WHERE x.parentReport IS NULL  ";
+		
+		if(demographicUnmatched) {
+			sql = sql + " AND SIZE(x.matchedDemographics) = 0 ";
+		}
+		
+		if(providerUnmatched) {
+			sql += "  AND p.providerNo = :pNo ";
+		} else {
+			if(providerNo != null) {
+				sql += "  AND p.providerNo = :pNo ";
+			}
+			if(noSignOff) {
+				sql += " AND p.signedOff = 0" ;
+			}
+		}
+		
+		
+		if(!StringUtils.isEmpty(orderColumn) && !StringUtils.isEmpty(orderDirection)) {
+			sql = sql + " ORDER BY x." + orderColumn + " " + orderDirection;
+		}
+		
+		
+		Query query = entityManager.createQuery(sql);
+		if(providerNo != null || providerUnmatched) {
+			
+		}
+		
+		if(providerUnmatched) {
+			query.setParameter("pNo", "-1");
+		} else {
+			if(providerNo != null) {
+				query.setParameter("pNo", providerNo);
+			}
+		}
+		
+	
+		Long count = (Long)query.getSingleResult();
+		
+
+		return count;
+	}
 }

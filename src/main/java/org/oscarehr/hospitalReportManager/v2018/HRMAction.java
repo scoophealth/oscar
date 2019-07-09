@@ -750,9 +750,14 @@ public class HRMAction extends DispatchAction {
 		
 		JSONArray data = new JSONArray();
 
+		long total = 0L;
+		
+		
 		if(isHrm) {
 			List<HRMDocument> docs = hrmDocumentDao.query(providerNo,"true".equals(providerUnmatched), "true".equals(noSignOff),  "true".equals(demographicUnmatched), Integer.parseInt(start), Integer.parseInt(length), orderBy, orderingColumnDirection);
 	
+			total = hrmDocumentDao.queryForCount(providerNo,"true".equals(providerUnmatched), "true".equals(noSignOff),  "true".equals(demographicUnmatched), Integer.parseInt(start), Integer.parseInt(length), orderBy, orderingColumnDirection);
+			
 			
 			SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	
@@ -829,8 +834,8 @@ public class HRMAction extends DispatchAction {
 
 		JSONObject obj = new JSONObject();
 		obj.put("draw", ++draw);
-		obj.put("recordsTotal", data.length());
-		obj.put("recordsFiltered", data.length());
+		obj.put("recordsTotal", total);
+		obj.put("recordsFiltered", total);
 		obj.put("data", data);
 		//obj.put("error", "error occurred");
 
