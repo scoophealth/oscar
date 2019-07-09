@@ -46,8 +46,6 @@ import com.lowagie.text.DocumentException;
 import com.sun.xml.messaging.saaj.util.ByteInputStream;
 import com.sun.xml.messaging.saaj.util.ByteOutputStream;
 
-import com.lowagie.text.DocumentException;
-
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
