@@ -225,22 +225,23 @@ if(listRxDrugs!=null){
         </div>
 		<div>
         <label id="labelQuantity_<%=rand%>"  style="float:left;width:80px;">Qty/Mitte:</label><input size="8" <%if(rx.isCustomNote()){%> disabled <%}%> type="text" id="quantity_<%=rand%>"     name="quantity_<%=rand%>"     value="<%=quantityText%>" onblur="updateQty(this);" />
-        <label style="">Repeats:</label><input type="text" size="5" id="repeats_<%=rand%>"  <%if(rx.isCustomNote()){%> disabled <%}%>    name="repeats_<%=rand%>"   value="<%=repeats%>" />
+        <label style="">Repeats:</label><input type="text" size="5" id="repeats_<%=rand%>"  <%if(rx.isCustomNote()){%> disabled <%}%>    name="repeats_<%=rand%>"   value="<%=repeats%>" onInput="updateLongTerm('<%=rand %>',this)"/>
 		</div>
 		<div id="medTerm_<%=rand%>">
 			<label><bean:message key="WriteScript.msgLongTermMedication" />: </label>
 			<span>
 				<label for="longTermY_<%=rand%>" ><bean:message key="WriteScript.msgYes" /> </label>
-			  	<input type="radio" id="longTermY_<%=rand%>"  name="longTerm_<%=rand%>" value="yes" class="med-term" <%if(longTerm != null && longTerm) {%> checked="checked" <%}%> />
+			  	<input type="radio" id="longTermY_<%=rand%>"  name="longTerm_<%=rand%>" value="yes" class="med-term" <%if(longTerm != null && longTerm) {%> checked="checked" <%}%> onChange="updateShortTerm('<%=rand%>',false)"/>
 			  	
 			  	<label for="longTermN_<%=rand%>" ><bean:message key="WriteScript.msgNo" /> </label>
-			  	<input type="radio" id="longTermN_<%=rand%>"  name="longTerm_<%=rand%>" value="no" class="med-term" <%if(longTerm != null && ! longTerm) {%> checked="checked" <%}%> />
+			  	<input type="radio" id="longTermN_<%=rand%>"  name="longTerm_<%=rand%>" value="no" class="med-term" <%if(longTerm != null && ! longTerm) {%> checked="checked" <%}%> onChange="updateShortTerm('<%=rand%>',true)"/>
 			  	
 			  	<label for="longTermE_<%=rand%>" ><bean:message key="WriteScript.msgUnset" /> </label>
-			  	<input type="radio" id="longTermE_<%=rand%>"  name="longTerm_<%=rand%>" value="unset" class="med-term" <%if(longTerm == null) {%> checked="checked" <%}%> />
-
-				<label for="shortTerm_<%=rand%>" ><bean:message key="WriteScript.msgSortTermMedication"/> </label> 
-	        	<input  type="checkbox" id="shortTerm_<%=rand%>"  name="shortTerm_<%=rand%>" class="med-term" <%if(shortTerm) {%> checked="checked" <%}%> />
+			  	<input type="radio" id="longTermE_<%=rand%>"  name="longTerm_<%=rand%>" value="unset" class="med-term" <%if(longTerm == null) {%> checked="checked" <%}%> onChange="updateShortTerm('<%=rand%>',false)"/>
+				<div style="display:none">
+					<label for="shortTerm_<%=rand%>" ><bean:message key="WriteScript.msgSortTermMedication"/> </label> 
+	        		<input  type="checkbox" id="shortTerm_<%=rand%>"  name="shortTerm_<%=rand%>" class="med-term" <%if(shortTerm) {%> checked="checked" <%}%> />
+	        	</div>
 	        </span>
 		</div>
         
