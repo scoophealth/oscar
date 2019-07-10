@@ -3948,8 +3948,11 @@ function assignNoteAjax(method, chain,programId,demographicNo) {
 window.addEventListener("message", receiveMessage, false);
 	
 function receiveMessage(event) {
-	var data = JSON.parse(event.data);
-	if(data.encounterText != null && data.encounterText.length > 0) {
+	var data = event.data;
+	if(!(typeof data === 'object')) {
+		data = JSON.parse(event.data);
+	}
+	if(data != null && data.encounterText != null && data.encounterText.length > 0) {
 		var x = {};
 		x.responseText = data.encounterText;
 		writeToEncounterNote(x);
