@@ -67,13 +67,15 @@ public class CdxAttachmentDao extends AbstractDao<CdxAttachment> {
     }
 
     public void saveAttachments(IDocument doc, CdxProvenance prov) {
+        int count = 1;
+        String attachRef;
 
         for (IAttachment a : doc.getAttachments()) {
             CdxAttachment attachmentEntity = new CdxAttachment();
-
             attachmentEntity.setDocument(prov.getId());
             attachmentEntity.setAttachmentType(a.getType().mediaType);
-            attachmentEntity.setReference(a.getReference());
+            attachRef = (null == a.getReference() ? "attachment " + count++ : a.getReference());
+            attachmentEntity.setReference(attachRef);
             attachmentEntity.setContent(a.getContent());
             persist(attachmentEntity);
         }
