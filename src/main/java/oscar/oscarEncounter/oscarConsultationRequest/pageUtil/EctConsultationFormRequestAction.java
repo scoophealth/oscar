@@ -523,7 +523,7 @@ public class EctConsultationFormRequestAction extends Action {
 		ConsultationRequest consultationRequest = consultationRequestDao.find(consultationRequestId);
 		ProfessionalSpecialist professionalSpecialist = professionalSpecialistDao.find(consultationRequest.getSpecialistId());
 		Clinic clinic = clinicDAO.getClinic();
-		
+
 		String message = fillReferralNotes(consultationRequest);
 
 		// save just in case the sending fails.
@@ -608,6 +608,7 @@ public class EctConsultationFormRequestAction extends Action {
 		CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
 		cdxProvenanceDao.logSentAction(response);
 
+		// Set status to pending specialist callback
 		consultationRequest.setStatus("2");
 	}
 
