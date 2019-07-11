@@ -212,9 +212,9 @@
 
                     <label for="cdx_url">OBIB URL</label>
                     <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon3">http://&lt;ip_address&gt;:&lt;port&gt;</span>
+                        <span class="input-group-addon" id="basic-addon1">http://&lt;ip_address&gt;:&lt;port&gt;</span>
                         <input type="text" class="form-control" id="cdx_url" name="cdx_url" value="<%=cdxUrl%>"
-                               aria-describedby="basic-addon3">
+                               aria-describedby="basic-addon1">
                     </div>
                 </div>
 
@@ -253,9 +253,9 @@
 
                     <label for="cdx_polling_interval">Polling Interval</label>
                     <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon3">minutes</span>
+                        <span class="input-group-addon" id="basic-addon2">minutes</span>
                         <input type="text" class="form-control" id="cdx_polling_interval" name="cdx_polling_interval"
-                               value="<%=pollInterval%>" aria-describedby="basic-addon3">
+                               value="<%=pollInterval%>" aria-describedby="basic-addon2">
                     </div>
                 </div>
 

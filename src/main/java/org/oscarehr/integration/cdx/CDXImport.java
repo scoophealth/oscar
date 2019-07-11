@@ -388,6 +388,7 @@ public class CDXImport {
             patientLabRoutingDao.persist(patientLabRouting);
         }
 
+        // route to MRP if existent
         if (matchedDemo != null && matchedDemo.getProvider() !=null) {
             ProviderLabRoutingModel plr = new ProviderLabRoutingModel();
             plr.setLabNo(docEntity.getDocumentNo());
@@ -424,7 +425,7 @@ public class CDXImport {
         ProviderLabRoutingModel plr = new ProviderLabRoutingModel();
 
         plr.setLabNo(docEntity.getDocumentNo());
-        plr.setStatus("N"); // Status:New? (need to confirm semantics)
+        plr.setStatus("N");
         plr.setLabType("DOC");
         plr.setProviderNo("0");
         plrDao.persist(plr);
