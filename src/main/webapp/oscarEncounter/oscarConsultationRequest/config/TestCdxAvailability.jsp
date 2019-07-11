@@ -38,6 +38,7 @@
 <%@ page import="java.util.regex.Pattern" %>
 <%@ page import="java.util.regex.Matcher" %>
 <%@ page import="oscar.Misc" %>
+<%@ page import="org.oscarehr.integration.cdx.CDXConfiguration" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
@@ -61,7 +62,11 @@
     ProfessionalSpecialistDao dao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
     StringBuilder changeMsg = new StringBuilder();
     StringBuilder errorMsg = new StringBuilder();
-    if (showCdx) {
+    boolean cdxConnected = CDXConfiguration.obibIsConnected();
+    if (!cdxConnected) {
+        errorMsg.append("OSCAR is not connected to CDX via OBIB.  Can not test for CDX availability.<br>");
+    }
+    if (showCdx && cdxConnected) {
         String referralNo;
         String cdxId;
         CDXSpecialist cdxSpecialist = new CDXSpecialist();
@@ -189,7 +194,7 @@
     </table>
     <%
         } else {
-            out.println("No specialists have had their CDX capability updated.");
+            out.println("<br>No specialists have had their CDX capability updated.");
         }
     %>
 

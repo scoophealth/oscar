@@ -524,9 +524,6 @@ public class EctConsultationFormRequestAction extends Action {
 		ProfessionalSpecialist professionalSpecialist = professionalSpecialistDao.find(consultationRequest.getSpecialistId());
 		Clinic clinic = clinicDAO.getClinic();
 
-		// set status now so the remote version shows this status
-		consultationRequest.setStatus("2");
-
 		String message = fillReferralNotes(consultationRequest);
 
 		// save just in case the sending fails.
@@ -610,6 +607,9 @@ public class EctConsultationFormRequestAction extends Action {
 		MiscUtils.getLogger().debug("Attempting to save document using logSentAction");
 		CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
 		cdxProvenanceDao.logSentAction(response);
+
+		// Set status to pending specialist callback
+		consultationRequest.setStatus("2");
 	}
 
 	private boolean logResponse(IDocument doc) {
