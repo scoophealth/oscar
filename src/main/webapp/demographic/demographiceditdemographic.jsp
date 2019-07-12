@@ -884,13 +884,13 @@ if("true".equals(OscarProperties.getInstance().getProperty("iso3166.2.enabled","
 	if(Arrays.asList("BC","AB","SK","MB","ON","QC","NB","NS","NL","NS","PE","YT","NT").contains(demographic.getProvince())) {
 		demographic.setProvince("CA-" + demographic.getProvince());	
 	}
-	if(Arrays.asList("BC","AB","SK","MB","ON","QC","NB","NS","NL","NS","PE","YT","NT").contains(demographic.getMailingProvince())) {
-		demographic.setMailingProvince("CA-" + demographic.getMailingProvince());	
+	if(Arrays.asList("BC","AB","SK","MB","ON","QC","NB","NS","NL","NS","PE","YT","NT").contains(demographic.getResidentialProvince())) {
+		demographic.setResidentialProvince("CA-" + demographic.getResidentialProvince());	
 	}
 %>
 jQuery(document).ready(function(){
 	setProvince('<%=StringUtils.trimToEmpty(demographic.getProvince())%>');
-	setMailingProvince('<%=demographic.getMailingProvince()%>');
+	setResidentialProvince('<%=demographic.getResidentialProvince()%>');
 });
 <% } %>
 
@@ -1984,21 +1984,21 @@ if ( Dead.equals(PatStat) ) {%>
 
 
                                                     <li><span class="label"><bean:message
-                                                            key="demographic.demographiceditdemographic.formMailingAddr" />:</span>
-                                                        <span class="info"><%=StringUtils.trimToEmpty(demographic.getMailingAddress())%></span>
+                                                            key="demographic.demographiceditdemographic.formResidentialAddr" />:</span>
+                                                        <span class="info"><%=StringUtils.trimToEmpty(demographic.getResidentialAddress())%></span>
 							</li>
                                                     <li><span class="label"><bean:message
-                                                            key="demographic.demographiceditdemographic.formMailingCity" />:</span>
-                                                        <span class="info"><%=StringUtils.trimToEmpty(demographic.getMailingCity())%></span>
+                                                            key="demographic.demographiceditdemographic.formResidentialCity" />:</span>
+                                                        <span class="info"><%=StringUtils.trimToEmpty(demographic.getResidentialCity())%></span>
                                                     </li>
                                                     <li><span class="label">
-														<bean:message key="demographic.demographiceditdemographic.formMailingProvince" />:</span>
-                                                        <span class="info"><%=StringUtils.trimToEmpty(ISO36612.getInstance().translateCodeToHumanReadableString(demographic.getMailingProvince()))%></span></li>
+														<bean:message key="demographic.demographiceditdemographic.formResidentialProvince" />:</span>
+                                                        <span class="info"><%=StringUtils.trimToEmpty(ISO36612.getInstance().translateCodeToHumanReadableString(demographic.getResidentialProvince()))%></span></li>
                                                     <li><span class="label">
 							
 							<bean:message
-								key="demographic.demographiceditdemographic.formMailingPostal" />:</span>
-                                                       <span class="info"><%=StringUtils.trimToEmpty(demographic.getMailingPostal())%></span></li>
+								key="demographic.demographiceditdemographic.formResidentialPostal" />:</span>
+                                                       <span class="info"><%=StringUtils.trimToEmpty(demographic.getResidentialPostal())%></span></li>
 
 
                                                     <li><span class="label"><bean:message
@@ -2682,121 +2682,121 @@ if ( Dead.equals(PatStat) ) {%>
 							
 							<tr valign="top">
 								<td align="right"><b><bean:message
-									key="demographic.demographiceditdemographic.formMailingAddr" />: </b></td>
-								<td align="left"><input type="text" name="mailingAddress" <%=getDisabled("mailingAddress")%>
-									size="30" value="<%=StringUtils.trimToEmpty(demographic.getMailingAddress())%>">
+									key="demographic.demographiceditdemographic.formResidentialAddr" />: </b></td>
+								<td align="left"><input type="text" name="residentialAddress" <%=getDisabled("residentialAddress")%>
+									size="30" value="<%=StringUtils.trimToEmpty(demographic.getResidentialAddress())%>">
 								</td>
 								<td align="right"><b><bean:message
-									key="demographic.demographiceditdemographic.formMailingCity" />: </b></td>
-								<td align="left"><input type="text" name="mailingCity" size="30" <%=getDisabled("mailingCity")%>
-									value="<%=StringEscapeUtils.escapeHtml(StringUtils.trimToEmpty(demographic.getMailingCity()))%>"></td>
+									key="demographic.demographiceditdemographic.formResidentialCity" />: </b></td>
+								<td align="left"><input type="text" name="residentialCity" size="30" <%=getDisabled("residentialCity")%>
+									value="<%=StringEscapeUtils.escapeHtml(StringUtils.trimToEmpty(demographic.getResidentialCity()))%>"></td>
 							</tr>
 
 							<tr valign="top">
 								<td align="right"><b> 
 								<bean:message
-									key="demographic.demographiceditdemographic.formMailingProvince" />  : </b></td>
+									key="demographic.demographiceditdemographic.formResidentialProvince" />  : </b></td>
 								<td align="left">
 								
-								<% String mailingProvince = demographic.getMailingProvince(); %> 
+								<% String residentialProvince = demographic.getResidentialProvince(); %> 
 				<%
 					if("true".equals(OscarProperties.getInstance().getProperty("iso3166.2.enabled","false"))) { 	
 				%>
-					<select name="mailingProvince" id="mailingProvince"></select> 
+					<select name="residentialProvince" id="residentialProvince"></select> 
 					<br/>
-					Filter by Country: <select name="mailingCountry" id="mailingCountry" ></select>
+					Filter by Country: <select name="residentialCountry" id="residentialCountry" ></select>
 							
 						<% } else { %> 
 
-								<select name="mailingProvince" style="width: 200px" <%=getDisabled("mailingProvince")%>>
+								<select name="residentialProvince" style="width: 200px" <%=getDisabled("residentialProvince")%>>
 									<option value="OT"
-										<%=(mailingProvince==null || mailingProvince.equals("OT") || mailingProvince.equals("") || mailingProvince.length() > 2)?" selected":""%>>Other</option>
+										<%=(residentialProvince==null || residentialProvince.equals("OT") || residentialProvince.equals("") || residentialProvince.length() > 2)?" selected":""%>>Other</option>
 									<% if (pNames.isDefined()) {
                                        for (ListIterator li = pNames.listIterator(); li.hasNext(); ) {
                                            String pr2 = (String) li.next(); %>
 									<option value="<%=pr2%>"
-										<%=pr2.equals(mailingProvince)?" selected":""%>><%=li.next()%></option>
+										<%=pr2.equals(residentialProvince)?" selected":""%>><%=li.next()%></option>
 									<% }//for %>
 									<% } else { %>
-									<option value="AB" <%="AB".equals(mailingProvince)?" selected":""%>>AB-Alberta</option>
-									<option value="BC" <%="BC".equals(mailingProvince)?" selected":""%>>BC-British Columbia</option>
-									<option value="MB" <%="MB".equals(mailingProvince)?" selected":""%>>MB-Manitoba</option>
-									<option value="NB" <%="NB".equals(mailingProvince)?" selected":""%>>NB-New Brunswick</option>
-									<option value="NL" <%="NL".equals(mailingProvince)?" selected":""%>>NL-Newfoundland Labrador</option>
-									<option value="NT" <%="NT".equals(mailingProvince)?" selected":""%>>NT-Northwest Territory</option>
-									<option value="NS" <%="NS".equals(mailingProvince)?" selected":""%>>NS-Nova Scotia</option>
-									<option value="NU" <%="NU".equals(mailingProvince)?" selected":""%>>NU-Nunavut</option>
-									<option value="ON" <%="ON".equals(mailingProvince)?" selected":""%>>ON-Ontario</option>
-									<option value="PE" <%="PE".equals(mailingProvince)?" selected":""%>>PE-Prince Edward Island</option>
-									<option value="QC" <%="QC".equals(mailingProvince)?" selected":""%>>QC-Quebec</option>
-									<option value="SK" <%="SK".equals(mailingProvince)?" selected":""%>>SK-Saskatchewan</option>
-									<option value="YT" <%="YT".equals(mailingProvince)?" selected":""%>>YT-Yukon</option>
-									<option value="US" <%="US".equals(mailingProvince)?" selected":""%>>US resident</option>
-									<option value="US-AK" <%="US-AK".equals(mailingProvince)?" selected":""%>>US-AK-Alaska</option>
-									<option value="US-AL" <%="US-AL".equals(mailingProvince)?" selected":""%>>US-AL-Alabama</option>
-									<option value="US-AR" <%="US-AR".equals(mailingProvince)?" selected":""%>>US-AR-Arkansas</option>
-									<option value="US-AZ" <%="US-AZ".equals(mailingProvince)?" selected":""%>>US-AZ-Arizona</option>
-									<option value="US-CA" <%="US-CA".equals(mailingProvince)?" selected":""%>>US-CA-California</option>
-									<option value="US-CO" <%="US-CO".equals(mailingProvince)?" selected":""%>>US-CO-Colorado</option>
-									<option value="US-CT" <%="US-CT".equals(mailingProvince)?" selected":""%>>US-CT-Connecticut</option>
-									<option value="US-CZ" <%="US-CZ".equals(mailingProvince)?" selected":""%>>US-CZ-Canal Zone</option>
-									<option value="US-DC" <%="US-DC".equals(mailingProvince)?" selected":""%>>US-DC-District Of Columbia</option>
-									<option value="US-DE" <%="US-DE".equals(mailingProvince)?" selected":""%>>US-DE-Delaware</option>
-									<option value="US-FL" <%="US-FL".equals(mailingProvince)?" selected":""%>>US-FL-Florida</option>
-									<option value="US-GA" <%="US-GA".equals(mailingProvince)?" selected":""%>>US-GA-Georgia</option>
-									<option value="US-GU" <%="US-GU".equals(mailingProvince)?" selected":""%>>US-GU-Guam</option>
-									<option value="US-HI" <%="US-HI".equals(mailingProvince)?" selected":""%>>US-HI-Hawaii</option>
-									<option value="US-IA" <%="US-IA".equals(mailingProvince)?" selected":""%>>US-IA-Iowa</option>
-									<option value="US-ID" <%="US-ID".equals(mailingProvince)?" selected":""%>>US-ID-Idaho</option>
-									<option value="US-IL" <%="US-IL".equals(mailingProvince)?" selected":""%>>US-IL-Illinois</option>
-									<option value="US-IN" <%="US-IN".equals(mailingProvince)?" selected":""%>>US-IN-Indiana</option>
-									<option value="US-KS" <%="US-KS".equals(mailingProvince)?" selected":""%>>US-KS-Kansas</option>
-									<option value="US-KY" <%="US-KY".equals(mailingProvince)?" selected":""%>>US-KY-Kentucky</option>
-									<option value="US-LA" <%="US-LA".equals(mailingProvince)?" selected":""%>>US-LA-Louisiana</option>
-									<option value="US-MA" <%="US-MA".equals(mailingProvince)?" selected":""%>>US-MA-Massachusetts</option>
-									<option value="US-MD" <%="US-MD".equals(mailingProvince)?" selected":""%>>US-MD-Maryland</option>
-									<option value="US-ME" <%="US-ME".equals(mailingProvince)?" selected":""%>>US-ME-Maine</option>
-									<option value="US-MI" <%="US-MI".equals(mailingProvince)?" selected":""%>>US-MI-Michigan</option>
-									<option value="US-MN" <%="US-MN".equals(mailingProvince)?" selected":""%>>US-MN-Minnesota</option>
-									<option value="US-MO" <%="US-MO".equals(mailingProvince)?" selected":""%>>US-MO-Missouri</option>
-									<option value="US-MS" <%="US-MS".equals(mailingProvince)?" selected":""%>>US-MS-Mississippi</option>
-									<option value="US-MT" <%="US-MT".equals(mailingProvince)?" selected":""%>>US-MT-Montana</option>
-									<option value="US-NC" <%="US-NC".equals(mailingProvince)?" selected":""%>>US-NC-North Carolina</option>
-									<option value="US-ND" <%="US-ND".equals(mailingProvince)?" selected":""%>>US-ND-North Dakota</option>
-									<option value="US-NE" <%="US-NE".equals(mailingProvince)?" selected":""%>>US-NE-Nebraska</option>
-									<option value="US-NH" <%="US-NH".equals(mailingProvince)?" selected":""%>>US-NH-New Hampshire</option>
-									<option value="US-NJ" <%="US-NJ".equals(mailingProvince)?" selected":""%>>US-NJ-New Jersey</option>
-									<option value="US-NM" <%="US-NM".equals(mailingProvince)?" selected":""%>>US-NM-New Mexico</option>
-									<option value="US-NU" <%="US-NU".equals(mailingProvince)?" selected":""%>>US-NU-Nunavut</option>
-									<option value="US-NV" <%="US-NV".equals(mailingProvince)?" selected":""%>>US-NV-Nevada</option>
-									<option value="US-NY" <%="US-NY".equals(mailingProvince)?" selected":""%>>US-NY-New York</option>
-									<option value="US-OH" <%="US-OH".equals(mailingProvince)?" selected":""%>>US-OH-Ohio</option>
-									<option value="US-OK" <%="US-OK".equals(mailingProvince)?" selected":""%>>US-OK-Oklahoma</option>
-									<option value="US-OR" <%="US-OR".equals(mailingProvince)?" selected":""%>>US-OR-Oregon</option>
-									<option value="US-PA" <%="US-PA".equals(mailingProvince)?" selected":""%>>US-PA-Pennsylvania</option>
-									<option value="US-PR" <%="US-PR".equals(mailingProvince)?" selected":""%>>US-PR-Puerto Rico</option>
-									<option value="US-RI" <%="US-RI".equals(mailingProvince)?" selected":""%>>US-RI-Rhode Island</option>
-									<option value="US-SC" <%="US-SC".equals(mailingProvince)?" selected":""%>>US-SC-South Carolina</option>
-									<option value="US-SD" <%="US-SD".equals(mailingProvince)?" selected":""%>>US-SD-South Dakota</option>
-									<option value="US-TN" <%="US-TN".equals(mailingProvince)?" selected":""%>>US-TN-Tennessee</option>
-									<option value="US-TX" <%="US-TX".equals(mailingProvince)?" selected":""%>>US-TX-Texas</option>
-									<option value="US-UT" <%="US-UT".equals(mailingProvince)?" selected":""%>>US-UT-Utah</option>
-									<option value="US-VA" <%="US-VA".equals(mailingProvince)?" selected":""%>>US-VA-Virginia</option>
-									<option value="US-VI" <%="US-VI".equals(mailingProvince)?" selected":""%>>US-VI-Virgin Islands</option>
-									<option value="US-VT" <%="US-VT".equals(mailingProvince)?" selected":""%>>US-VT-Vermont</option>
-									<option value="US-WA" <%="US-WA".equals(mailingProvince)?" selected":""%>>US-WA-Washington</option>
-									<option value="US-WI" <%="US-WI".equals(mailingProvince)?" selected":""%>>US-WI-Wisconsin</option>
-									<option value="US-WV" <%="US-WV".equals(mailingProvince)?" selected":""%>>US-WV-West Virginia</option>
-									<option value="US-WY" <%="US-WY".equals(mailingProvince)?" selected":""%>>US-WY-Wyoming</option>
+									<option value="AB" <%="AB".equals(residentialProvince)?" selected":""%>>AB-Alberta</option>
+									<option value="BC" <%="BC".equals(residentialProvince)?" selected":""%>>BC-British Columbia</option>
+									<option value="MB" <%="MB".equals(residentialProvince)?" selected":""%>>MB-Manitoba</option>
+									<option value="NB" <%="NB".equals(residentialProvince)?" selected":""%>>NB-New Brunswick</option>
+									<option value="NL" <%="NL".equals(residentialProvince)?" selected":""%>>NL-Newfoundland Labrador</option>
+									<option value="NT" <%="NT".equals(residentialProvince)?" selected":""%>>NT-Northwest Territory</option>
+									<option value="NS" <%="NS".equals(residentialProvince)?" selected":""%>>NS-Nova Scotia</option>
+									<option value="NU" <%="NU".equals(residentialProvince)?" selected":""%>>NU-Nunavut</option>
+									<option value="ON" <%="ON".equals(residentialProvince)?" selected":""%>>ON-Ontario</option>
+									<option value="PE" <%="PE".equals(residentialProvince)?" selected":""%>>PE-Prince Edward Island</option>
+									<option value="QC" <%="QC".equals(residentialProvince)?" selected":""%>>QC-Quebec</option>
+									<option value="SK" <%="SK".equals(residentialProvince)?" selected":""%>>SK-Saskatchewan</option>
+									<option value="YT" <%="YT".equals(residentialProvince)?" selected":""%>>YT-Yukon</option>
+									<option value="US" <%="US".equals(residentialProvince)?" selected":""%>>US resident</option>
+									<option value="US-AK" <%="US-AK".equals(residentialProvince)?" selected":""%>>US-AK-Alaska</option>
+									<option value="US-AL" <%="US-AL".equals(residentialProvince)?" selected":""%>>US-AL-Alabama</option>
+									<option value="US-AR" <%="US-AR".equals(residentialProvince)?" selected":""%>>US-AR-Arkansas</option>
+									<option value="US-AZ" <%="US-AZ".equals(residentialProvince)?" selected":""%>>US-AZ-Arizona</option>
+									<option value="US-CA" <%="US-CA".equals(residentialProvince)?" selected":""%>>US-CA-California</option>
+									<option value="US-CO" <%="US-CO".equals(residentialProvince)?" selected":""%>>US-CO-Colorado</option>
+									<option value="US-CT" <%="US-CT".equals(residentialProvince)?" selected":""%>>US-CT-Connecticut</option>
+									<option value="US-CZ" <%="US-CZ".equals(residentialProvince)?" selected":""%>>US-CZ-Canal Zone</option>
+									<option value="US-DC" <%="US-DC".equals(residentialProvince)?" selected":""%>>US-DC-District Of Columbia</option>
+									<option value="US-DE" <%="US-DE".equals(residentialProvince)?" selected":""%>>US-DE-Delaware</option>
+									<option value="US-FL" <%="US-FL".equals(residentialProvince)?" selected":""%>>US-FL-Florida</option>
+									<option value="US-GA" <%="US-GA".equals(residentialProvince)?" selected":""%>>US-GA-Georgia</option>
+									<option value="US-GU" <%="US-GU".equals(residentialProvince)?" selected":""%>>US-GU-Guam</option>
+									<option value="US-HI" <%="US-HI".equals(residentialProvince)?" selected":""%>>US-HI-Hawaii</option>
+									<option value="US-IA" <%="US-IA".equals(residentialProvince)?" selected":""%>>US-IA-Iowa</option>
+									<option value="US-ID" <%="US-ID".equals(residentialProvince)?" selected":""%>>US-ID-Idaho</option>
+									<option value="US-IL" <%="US-IL".equals(residentialProvince)?" selected":""%>>US-IL-Illinois</option>
+									<option value="US-IN" <%="US-IN".equals(residentialProvince)?" selected":""%>>US-IN-Indiana</option>
+									<option value="US-KS" <%="US-KS".equals(residentialProvince)?" selected":""%>>US-KS-Kansas</option>
+									<option value="US-KY" <%="US-KY".equals(residentialProvince)?" selected":""%>>US-KY-Kentucky</option>
+									<option value="US-LA" <%="US-LA".equals(residentialProvince)?" selected":""%>>US-LA-Louisiana</option>
+									<option value="US-MA" <%="US-MA".equals(residentialProvince)?" selected":""%>>US-MA-Massachusetts</option>
+									<option value="US-MD" <%="US-MD".equals(residentialProvince)?" selected":""%>>US-MD-Maryland</option>
+									<option value="US-ME" <%="US-ME".equals(residentialProvince)?" selected":""%>>US-ME-Maine</option>
+									<option value="US-MI" <%="US-MI".equals(residentialProvince)?" selected":""%>>US-MI-Michigan</option>
+									<option value="US-MN" <%="US-MN".equals(residentialProvince)?" selected":""%>>US-MN-Minnesota</option>
+									<option value="US-MO" <%="US-MO".equals(residentialProvince)?" selected":""%>>US-MO-Missouri</option>
+									<option value="US-MS" <%="US-MS".equals(residentialProvince)?" selected":""%>>US-MS-Mississippi</option>
+									<option value="US-MT" <%="US-MT".equals(residentialProvince)?" selected":""%>>US-MT-Montana</option>
+									<option value="US-NC" <%="US-NC".equals(residentialProvince)?" selected":""%>>US-NC-North Carolina</option>
+									<option value="US-ND" <%="US-ND".equals(residentialProvince)?" selected":""%>>US-ND-North Dakota</option>
+									<option value="US-NE" <%="US-NE".equals(residentialProvince)?" selected":""%>>US-NE-Nebraska</option>
+									<option value="US-NH" <%="US-NH".equals(residentialProvince)?" selected":""%>>US-NH-New Hampshire</option>
+									<option value="US-NJ" <%="US-NJ".equals(residentialProvince)?" selected":""%>>US-NJ-New Jersey</option>
+									<option value="US-NM" <%="US-NM".equals(residentialProvince)?" selected":""%>>US-NM-New Mexico</option>
+									<option value="US-NU" <%="US-NU".equals(residentialProvince)?" selected":""%>>US-NU-Nunavut</option>
+									<option value="US-NV" <%="US-NV".equals(residentialProvince)?" selected":""%>>US-NV-Nevada</option>
+									<option value="US-NY" <%="US-NY".equals(residentialProvince)?" selected":""%>>US-NY-New York</option>
+									<option value="US-OH" <%="US-OH".equals(residentialProvince)?" selected":""%>>US-OH-Ohio</option>
+									<option value="US-OK" <%="US-OK".equals(residentialProvince)?" selected":""%>>US-OK-Oklahoma</option>
+									<option value="US-OR" <%="US-OR".equals(residentialProvince)?" selected":""%>>US-OR-Oregon</option>
+									<option value="US-PA" <%="US-PA".equals(residentialProvince)?" selected":""%>>US-PA-Pennsylvania</option>
+									<option value="US-PR" <%="US-PR".equals(residentialProvince)?" selected":""%>>US-PR-Puerto Rico</option>
+									<option value="US-RI" <%="US-RI".equals(residentialProvince)?" selected":""%>>US-RI-Rhode Island</option>
+									<option value="US-SC" <%="US-SC".equals(residentialProvince)?" selected":""%>>US-SC-South Carolina</option>
+									<option value="US-SD" <%="US-SD".equals(residentialProvince)?" selected":""%>>US-SD-South Dakota</option>
+									<option value="US-TN" <%="US-TN".equals(residentialProvince)?" selected":""%>>US-TN-Tennessee</option>
+									<option value="US-TX" <%="US-TX".equals(residentialProvince)?" selected":""%>>US-TX-Texas</option>
+									<option value="US-UT" <%="US-UT".equals(residentialProvince)?" selected":""%>>US-UT-Utah</option>
+									<option value="US-VA" <%="US-VA".equals(residentialProvince)?" selected":""%>>US-VA-Virginia</option>
+									<option value="US-VI" <%="US-VI".equals(residentialProvince)?" selected":""%>>US-VI-Virgin Islands</option>
+									<option value="US-VT" <%="US-VT".equals(residentialProvince)?" selected":""%>>US-VT-Vermont</option>
+									<option value="US-WA" <%="US-WA".equals(residentialProvince)?" selected":""%>>US-WA-Washington</option>
+									<option value="US-WI" <%="US-WI".equals(residentialProvince)?" selected":""%>>US-WI-Wisconsin</option>
+									<option value="US-WV" <%="US-WV".equals(residentialProvince)?" selected":""%>>US-WV-West Virginia</option>
+									<option value="US-WY" <%="US-WY".equals(residentialProvince)?" selected":""%>>US-WY-Wyoming</option>
 									<% } %>
 								</select>
 					<% } %>
 								</td>
 								<td align="right"><b>
 								<bean:message
-									key="demographic.demographiceditdemographic.formMailingPostal" /> : </b></td>
-								<td align="left"><input type="text" name="mailingPostal" size="30" <%=getDisabled("mailingPostal")%>
-									value="<%=StringUtils.trimToEmpty(demographic.getMailingPostal())%>"
+									key="demographic.demographiceditdemographic.formResidentialPostal" /> : </b></td>
+								<td align="left"><input type="text" name="residentialPostal" size="30" <%=getDisabled("residentialPostal")%>
+									value="<%=StringUtils.trimToEmpty(demographic.getResidentialPostal())%>"
 									onBlur="upCaseCtrl(this)" onChange="isPostalCode2()"></td>
 							</tr>
 							

@@ -613,7 +613,7 @@ public class DemographicExportAction4 extends Action {
 				cdsDt.Address addr = demo.addNewAddress();
 				cdsDt.AddressStructured address = addr.addNewStructured();
 
-				addr.setAddressType(cdsDt.AddressType.R);
+				addr.setAddressType(cdsDt.AddressType.M);
 				address.setLine1(demographic.getAddress());
 				if (StringUtils.filled(demographic.getCity()) || StringUtils.filled(demographic.getProvince()) || StringUtils.filled(demographic.getPostal())) {
 					address.setCity(StringUtils.noNull(demographic.getCity()));
@@ -622,16 +622,16 @@ public class DemographicExportAction4 extends Action {
 				}
 			}
 			
-			if (StringUtils.filled(demographic.getMailingAddress())) {
+			if (StringUtils.filled(demographic.getResidentialAddress())) {
 				cdsDt.Address addr = demo.addNewAddress();
 				cdsDt.AddressStructured address = addr.addNewStructured();
 
-				addr.setAddressType(cdsDt.AddressType.M);
-				address.setLine1(demographic.getMailingAddress());
-				if (StringUtils.filled(demographic.getMailingCity()) || StringUtils.filled(demographic.getMailingProvince()) || StringUtils.filled(demographic.getMailingPostal())) {
-					address.setCity(StringUtils.noNull(demographic.getMailingCity()));
-					address.setCountrySubdivisionCode(Util.setCountrySubDivCode(demographic.getMailingProvince()));
-					address.addNewPostalZipCode().setPostalCode(StringUtils.noNull(demographic.getMailingPostal()).replace(" ",""));
+				addr.setAddressType(cdsDt.AddressType.R);
+				address.setLine1(demographic.getResidentialAddress());
+				if (StringUtils.filled(demographic.getResidentialCity()) || StringUtils.filled(demographic.getResidentialProvince()) || StringUtils.filled(demographic.getResidentialPostal())) {
+					address.setCity(StringUtils.noNull(demographic.getResidentialCity()));
+					address.setCountrySubdivisionCode(Util.setCountrySubDivCode(demographic.getResidentialProvince()));
+					address.addNewPostalZipCode().setPostalCode(StringUtils.noNull(demographic.getResidentialPostal()).replace(" ",""));
 				}
 			}
 

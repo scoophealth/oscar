@@ -985,11 +985,11 @@ import oscar.util.UtilDateUtilities;
         }
 
         String address="", city="", province="", postalCode="";
-        String mailingAddress="", mailingCity="",mailingProvince="",mailingPostalCode="";
+        String residentialAddress="", residentialCity="",residentialProvince="",residentialPostalCode="";
 		
         if(demo.getAddressArray()!= null) {
 	        for (cdsDt.Address addr :demo.getAddressArray()) {
-	        	if(addr.getAddressType() == AddressType.R) {
+	        	if(addr.getAddressType() == AddressType.M) {
 	                if (StringUtils.filled(addr.getFormatted())) {
 	                    address = addr.getFormatted();
 	                } else {
@@ -1006,22 +1006,22 @@ import oscar.util.UtilDateUtilities;
 	        		
 	        		//there's an address we don't support
 	        		 if (StringUtils.filled(addr.getFormatted())) {
-		                    mailingAddress = addr.getFormatted();
-		                    extra = Util.addLine(extra, "Mailing Address: ", mailingAddress);
+		                    residentialAddress = addr.getFormatted();
+		                    extra = Util.addLine(extra, "Residential Address: ", residentialAddress);
 		                } else {
 		                    cdsDt.AddressStructured addrStr = addr.getStructured();
 		                    if (addrStr!=null) {
-		                        mailingAddress = StringUtils.noNull(addrStr.getLine1()) + StringUtils.noNull(addrStr.getLine2()) + StringUtils.noNull(addrStr.getLine3());
-		                        mailingCity = StringUtils.noNull(addrStr.getCity());
-		                        mailingProvince = getCountrySubDivCode(addrStr.getCountrySubdivisionCode());
-		                        cdsDt.PostalZipCode mailingPostalZip = addrStr.getPostalZipCode();
-		                        if (mailingPostalZip!=null)
-		                        	mailingPostalCode = StringUtils.noNull(mailingPostalZip.getPostalCode());
+		                        residentialAddress = StringUtils.noNull(addrStr.getLine1()) + StringUtils.noNull(addrStr.getLine2()) + StringUtils.noNull(addrStr.getLine3());
+		                        residentialCity = StringUtils.noNull(addrStr.getCity());
+		                        residentialProvince = getCountrySubDivCode(addrStr.getCountrySubdivisionCode());
+		                        cdsDt.PostalZipCode residentialPostalZip = addrStr.getPostalZipCode();
+		                        if (residentialPostalZip!=null)
+		                        	residentialPostalCode = StringUtils.noNull(residentialPostalZip.getPostalCode());
 		                        
-		                        extra = Util.addLine(extra, "Mailing Address: ", mailingAddress);
-		                        extra = Util.addLine(extra, "Mailing City: ", mailingCity);
-		                        extra = Util.addLine(extra, "Mailing Province: ", mailingProvince);
-		                        extra = Util.addLine(extra, "Mailing Postal Code: ", mailingPostalCode);
+		                        extra = Util.addLine(extra, "Residential Address: ", residentialAddress);
+		                        extra = Util.addLine(extra, "Residential City: ", residentialCity);
+		                        extra = Util.addLine(extra, "Residential Province: ", residentialProvince);
+		                        extra = Util.addLine(extra, "Residential Postal Code: ", residentialPostalCode);
 		                        
 		                        
 		                    }
@@ -1169,7 +1169,7 @@ import oscar.util.UtilDateUtilities;
 
         } else { //add patient!
 */
-            demoRes = dd.addDemographic(loggedInInfo, title, lastName, firstName, middleNames, address, city, province, postalCode, mailingAddress, mailingCity, mailingProvince, mailingPostalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, rosterStatus, rosterDate, termDate, termReason, rosterEnrolledTo, patient_status, psDate, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, hc_type, hc_renew_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
+            demoRes = dd.addDemographic(loggedInInfo, title, lastName, firstName, middleNames, address, city, province, postalCode, residentialAddress, residentialCity, residentialProvince, residentialPostalCode, homePhone, workPhone, year_of_birth, month_of_birth, date_of_birth, hin, versionCode, rosterStatus, rosterDate, termDate, termReason, rosterEnrolledTo, patient_status, psDate, ""/*date_joined*/, chart_no, official_lang, spoken_lang, primaryPhysician, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, hc_type, hc_renew_date, ""/*family_doctor*/, email, ""/*pin*/, ""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, ""/*citizenship*/, sin);
             demographicNo = demoRes.getId();
 /*        }
 

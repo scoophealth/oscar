@@ -628,8 +628,8 @@ jQuery(document).ready(function(){
 		updateProvinces('');
 	});
 	
-	jQuery("#mailingCountry").bind('change',function(){
-		updateMailingProvinces('');
+	jQuery("#residentialCountry").bind('change',function(){
+		updateResidentialProvinces('');
 	});
 	
     jQuery.ajax({
@@ -664,9 +664,9 @@ jQuery(document).ready(function(){
         data: 'method=getCountryAndProvinceCodes',
         dataType: 'json',
         success: function (data) {
-        	jQuery('#mailingCountry').append(jQuery('<option>').text('').attr('value', ''));
+        	jQuery('#residentialCountry').append(jQuery('<option>').text('').attr('value', ''));
         	jQuery.each(data, function(i, value) {
-                 jQuery('#mailingCountry').append(jQuery('<option>').text(value.label).attr('value', value.value));
+                 jQuery('#residentialCountry').append(jQuery('<option>').text(value.label).attr('value', value.value));
              });
         	
         	var defaultProvince = '<%=OscarProperties.getInstance().getProperty("demographic.default_province","")%>';
@@ -677,9 +677,9 @@ jQuery(document).ready(function(){
         	}
         	defaultCountry = defaultProvince.substring(0,defaultProvince.indexOf('-'));
         	
-        	jQuery("#mailingCountry").val(defaultCountry);
+        	jQuery("#residentialCountry").val(defaultCountry);
         	
-        	updateMailingProvinces(defaultProvince);
+        	updateResidentialProvinces(defaultProvince);
         	
         }
 	});
@@ -717,8 +717,8 @@ function updateProvinces(province) {
 }
 
 
-function updateMailingProvinces(province) {
-	var country = jQuery("#mailingCountry").val();
+function updateResidentialProvinces(province) {
+	var country = jQuery("#residentialCountry").val();
 	
 	
 	jQuery.ajax({
@@ -727,15 +727,15 @@ function updateMailingProvinces(province) {
         data: 'method=getCountryAndProvinceCodes&country=' + country,
         dataType: 'json',
         success: function (data) {
-        	jQuery('#mailingProvince').empty();
+        	jQuery('#residentialProvince').empty();
         	 
         	jQuery.each(data, function(i, value) {
-                 jQuery('#mailingProvince').append(jQuery('<option>').text(value.label).attr('value', value.value));
+                 jQuery('#residentialProvince').append(jQuery('<option>').text(value.label).attr('value', value.value));
              });
         	
         	
         	if(province != null) {
-        		jQuery("#mailingProvince").val(province);
+        		jQuery("#residentialProvince").val(province);
         	}
         	
         	
@@ -1038,29 +1038,29 @@ function updateMailingProvinces(province) {
 			
 			<tr valign="top">
 				<td id="addrLbl" align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formMailingAddress" />: </b></td>
-				<td id="addressCell" align="left"><input id="mailingAddress" type="text" name="mailingAddress" size=40 />
+					key="demographic.demographicaddrecordhtm.formResidentialAddress" />: </b></td>
+				<td id="addressCell" align="left"><input id="residentialAddress" type="text" name="residentialAddress" size=40 />
 
 				</td>
 				<td id="cityLbl" align="right"><b><bean:message
-					key="demographic.demographicaddrecordhtm.formMailingCity" />: </b></td>
-				<td id="cityCell" align="left"><input type="text" id="mailingCity" name="mailingCity"
+					key="demographic.demographicaddrecordhtm.formResidentialCity" />: </b></td>
+				<td id="cityCell" align="left"><input type="text" id="residentialCity" name="residentialCity"
 					value="" /></td>
 			</tr>
 			
 			<tr valign="top">
 				<td id="provLbl" align="right"><b> 
-				<bean:message key="demographic.demographicaddrecordhtm.formMailingProvince" />  : </b></td>
+				<bean:message key="demographic.demographicaddrecordhtm.formResidentialProvince" />  : </b></td>
 				<td id="provCell" align="left">
 				<%
 					if("true".equals(OscarProperties.getInstance().getProperty("iso3166.2.enabled","false"))) { 	
 				%>
-					<select name="mailingProvince" id="mailingProvince"></select> 
+					<select name="residentialProvince" id="residentialProvince"></select> 
 					<br/>
-					Filter by Country: <select name="mailingCountry" id="mailingCountry" ></select>
+					Filter by Country: <select name="residentialCountry" id="residentialCountry" ></select>
 							
 				<% } else { %>			
-				<select id="mailingProvince" name="mailingProvince">
+				<select id="residentialProvince" name="residentialProvince">
 					<option value="OT"
 						<%=defaultProvince.equals("")||defaultProvince.equals("OT")?" selected":""%>>Other</option>
 					<%-- <option value="">None Selected</option> --%>
@@ -1146,9 +1146,9 @@ function updateMailingProvinces(province) {
 				<% } %>
 				</td>
 				<td id="postalLbl" align="right"><b>
-				<bean:message key="demographic.demographicaddrecordhtm.formMailingPostal" />
+				<bean:message key="demographic.demographicaddrecordhtm.formResidentialPostal" />
 				 : </b></td>
-				<td id="postalCell" align="left"><input type="text" id="mailingPostal" name="mailingPostal"
+				<td id="postalCell" align="left"><input type="text" id="residentialPostal" name="residentialPostal"
 					onBlur="upCaseCtrl(this)"></td>
 			</tr>
 
