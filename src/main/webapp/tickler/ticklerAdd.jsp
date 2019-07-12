@@ -324,7 +324,7 @@ function refresh() {
       <td><font color="#003366" size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="tickler.ticklerAdd.formServiceDate"/>:</strong></font></td>
       <td><input type="text" name="xml_appointment_date" value="<%=xml_appointment_date%>"> 
         <font color="#003366" size="1" face="Verdana, Arial, Helvetica, sans-serif">
-        <a href="#" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')" title="<bean:message key="tickler.ticklerAdd.btnCalendarLookup"/>">
+        <a href="javascript:void(0)" onClick="openBrWindow('../billing/billingCalendarPopup.jsp?type=end&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300');return false;" title="<bean:message key="tickler.ticklerAdd.btnCalendarLookup"/>">
             <input type="image" src="../images/cal.gif" width="25" height="22" border="0" align="top" alt="<bean:message key="tickler.ticklerAdd.btnCalendarLookup"/>"/>
         </a>
         <a href="#" onClick="toggleQuickPickDateDisplay(this)" title="<bean:message key="tickler.ticklerAdd.btnToggleQuickpickDates"/>" style="padding-left:5px; vertical-align: middle;"><bean:message key="tickler.ticklerAdd.btnShowQuickpick"/></a>
