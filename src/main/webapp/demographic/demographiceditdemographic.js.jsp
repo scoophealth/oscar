@@ -247,14 +247,14 @@ return true;
 function isPostalCode2()
 {
     if(isCanadian()){
-         e = document.updatedelete.mailingPostal;
+         e = document.updatedelete.residentialPostal;
          postalcode = e.value;
         	
          rePC = new RegExp(/(^s*([a-z](\s)?\d(\s)?){3}$)s*/i);
     
          if (!rePC.test(postalcode)) {
               e.focus();
-              alert("The entered mailing Postal Code is not valid");
+              alert("The entered residential Postal Code is not valid");
               return false;
          }
     }//end cdn check
@@ -331,9 +331,9 @@ function updateProvinces(province) {
 }
 
 
-function setMailingProvince(sdCode) {
-	jQuery("#mailingCountry").bind('change',function(){
-		updateMailingProvinces('');
+function setResidentialProvince(sdCode) {
+	jQuery("#residentialCountry").bind('change',function(){
+		updateResidentialProvinces('');
 	});
 	
     jQuery.ajax({
@@ -342,25 +342,25 @@ function setMailingProvince(sdCode) {
         data: 'method=getCountryAndProvinceCodes',
         dataType: 'json',
         success: function (data) {
-        	jQuery('#mailingCountry').append(jQuery('<option>').text('').attr('value', ''));
+        	jQuery('#residentialCountry').append(jQuery('<option>').text('').attr('value', ''));
         	jQuery.each(data, function(i, value) {
-                 jQuery('#mailingCountry').append(jQuery('<option>').text(value.label).attr('value', value.value));
+                 jQuery('#residentialCountry').append(jQuery('<option>').text(value.label).attr('value', value.value));
              });
              
              if(sdCode.indexOf('-') != -1) {
-            	 jQuery("#mailingCountry").val(sdCode.split("-")[0]);
+            	 jQuery("#residentialCountry").val(sdCode.split("-")[0]);
              } else {
-           	//  jQuery("#mailingCountry").val('CA');
+           	//  jQuery("#residentialCountry").val('CA');
              }
         	
-        	updateMailingProvinces(sdCode);
+        	updateResidentialProvinces(sdCode);
         }
 	});
   }
 
 
-function updateMailingProvinces(province) {
-	var country = jQuery("#mailingCountry").val();
+function updateResidentialProvinces(province) {
+	var country = jQuery("#residentialCountry").val();
 	if(country == '') {
 		return;
 	}
@@ -370,15 +370,15 @@ function updateMailingProvinces(province) {
         data: 'method=getCountryAndProvinceCodes&country=' + country,
         dataType: 'json',
         success: function (data) {
-        	jQuery('#mailingProvince').empty();
+        	jQuery('#residentialProvince').empty();
         	 
         	jQuery.each(data, function(i, value) {
-                 jQuery('#mailingProvince').append(jQuery('<option>').text(value.label).attr('value', value.value));
+                 jQuery('#residentialProvince').append(jQuery('<option>').text(value.label).attr('value', value.value));
              });
         	
         	
         	if(province != null) {
-        		jQuery("#mailingProvince").val(province);
+        		jQuery("#residentialProvince").val(province);
         	}
         	
         	

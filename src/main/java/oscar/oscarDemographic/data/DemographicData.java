@@ -319,7 +319,7 @@ public class DemographicData {
 
 
 	public DemographicAddResult addDemographic(LoggedInInfo loggedInInfo, String title, String last_name, String first_name, String middleNames, String address,
-			String city, String province, String postal, String mailingAddress, String mailingCity, String mailingProvince, String mailingPostal, String phone, String phone2, String year_of_birth,
+			String city, String province, String postal, String residentialAddress, String residentialCity, String residentialProvince, String residentialPostal, String phone, String phone2, String year_of_birth,
 			String month_of_birth, String date_of_birth, String hin, String ver, String roster_status,
 			String roster_date, String roster_termination_date, String roster_termination_reason, String rosterEnrolledTo,
 			String patient_status, String patient_status_date, String date_joined, String chart_no,
@@ -339,10 +339,10 @@ public class DemographicData {
 		demographic.setCity(city);
 		demographic.setProvince(province);
 		demographic.setPostal(postal);
-		demographic.setMailingAddress(mailingAddress);
-		demographic.setMailingCity(mailingCity);
-		demographic.setMailingProvince(mailingProvince);
-		demographic.setMailingPostal(mailingPostal);
+		demographic.setResidentialAddress(residentialAddress);
+		demographic.setResidentialCity(residentialCity);
+		demographic.setResidentialProvince(residentialProvince);
+		demographic.setResidentialPostal(residentialPostal);
 		demographic.setPhone(phone);
 		demographic.setPhone2(phone2);
 		demographic.setYearOfBirth(year_of_birth);
