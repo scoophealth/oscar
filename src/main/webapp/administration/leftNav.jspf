@@ -708,6 +708,9 @@ String curProvider_no = (String)session.getAttribute("user");
 							<bean:message key="admin.admin.lookUpLists"/>
 						</a>
 					</li>
+					
+					<li><a href='javascript:void(0);' class="xlink" rel="${ctx}/admin/iso36612.jsp"><bean:message key="admin.iso36612.manager"/></a></li>
+					
 			
 			      	<oscar:oscarPropertiesCheck property="LOGINTEST" value="yes">
 			            <li><a href='javascript:void(0);'
