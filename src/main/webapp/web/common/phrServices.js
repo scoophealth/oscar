@@ -105,6 +105,18 @@ angular.module("phrServices", [])
         
              return deferred.promise;
         },
+        createProviderPHRuser: function(provider){
+           	var deferred = $q.defer();
+           	 $http.post(this.apiPath+'/app/createPHRAccount',provider,this.configHeaders).then(function(response){
+               	console.log("returned from /createPHRAccount",response.data);
+               	deferred.resolve(response.data);
+               },function(data, status, headers){
+               	console.log("error initializing phr",data, status, headers);
+               	deferred.reject("An error occured while trying to fetching data from  PHR");
+               });
+        
+             return deferred.promise;
+        },
         phrAbilities: function(){
            	var deferred = $q.defer();
            	 $http.post(this.apiPath+'/app/PHRAbilities',this.configHeaders).then(function(response){

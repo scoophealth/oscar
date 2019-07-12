@@ -314,6 +314,7 @@ public class RxPrescriptionData {
 		p.setHideCpp(drug.getHideFromCpp());
 		p.setPharmacyId(drug.getPharmacyId());
 		if(drug.isNonAuthoritative() != null) p.setNonAuthoritative(drug.isNonAuthoritative());
+		p.discontinued = drug.isDiscontinued();
 		return p;
 	}
 

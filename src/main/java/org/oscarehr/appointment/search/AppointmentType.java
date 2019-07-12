@@ -34,6 +34,7 @@ public final class AppointmentType{
 	private Long id;
 	private String name;
 	private int defaultDurationMinutes;
+	private Integer mappingOscarApptType;
 	private HashMap<String, Integer> roleDurations = new HashMap<String, Integer>();
 
 	public Long getId(){
@@ -73,11 +74,19 @@ public final class AppointmentType{
 
 		result.id = XmlUtils.getChildNodeLongContents(node, "id");
 		result.name = XmlUtils.getChildNodeTextContents(node, "name");
+		
+
 		try{
 			result.defaultDurationMinutes = XmlUtils.getChildNodeIntegerContents(node, "default_duration_minutes");
 		}catch (Exception e){
 			//may not have a duration
 		}
+		try{
+			result.mappingOscarApptType = XmlUtils.getChildNodeIntegerContents(node, "mappingOscarApptType");
+		}catch (Exception e){
+			//may not have a duration
+		}
+		
 		ArrayList<Node> roles = XmlUtils.getChildNodes(node, "role");
 		for (Node roleNode : roles){
 			String roleName = XmlUtils.getChildNodeTextContents(roleNode, "role_name");
@@ -94,7 +103,12 @@ public final class AppointmentType{
 
 		result.id = Long.parseLong(XmlUtils.getAttributeValue(node, "id"));
 		result.name = XmlUtils.getAttributeValue(node, "name");
-
+		try{
+			result.mappingOscarApptType =  Integer.parseInt(XmlUtils.getAttributeValue(node, "mappingOscarApptType")); 
+		}catch (Exception e){
+			//may not have a duration
+		}
+			
 		return(result);
 	}
 
@@ -104,8 +118,17 @@ public final class AppointmentType{
 
 		result.id = apptNode.getId();
 		result.name = apptNode.getName();
+		result.mappingOscarApptType = apptNode.getMappingOscarApptType();
 
 		return(result);
+	}
+
+	public Integer getMappingOscarApptType() {
+		return mappingOscarApptType;
+	}
+
+	public void setMappingOscarApptType(Integer mappingOscarApptType) {
+		this.mappingOscarApptType = mappingOscarApptType;
 	}
 	
 }

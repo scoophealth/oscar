@@ -685,7 +685,23 @@ function checkFav(){
             }});
    	 }
     }
-       
+
+    function printDrugProfile() {
+    	var ids=[];
+    	jQuery("input[type='checkbox'][id ^= 'reRxCheckBox']").each(function(){
+    		if(jQuery(this).is(":checked")) {
+    			var name = jQuery(this).attr('name').substring(9);
+    			ids.push(name);
+    		}
+    	});
+    	if(ids.length>0) {
+    		popupWindow(720,700,'PrintDrugProfile2.jsp?ids=' + ids.join(','),'PrintDrugProfile');
+    	} else {
+    		popupWindow(720,700,'PrintDrugProfile2.jsp','PrintDrugProfile');
+    	}
+    }
+    
+    
 </script>
                
                <style type="text/css" media="print">
@@ -916,7 +932,7 @@ THEME 2*/
                                                 <div class="DivContentSectionHead">
                                                     <bean:message key="SearchDrug.section2Title" />
                                                     &nbsp;
-                                                    <a href="javascript:popupWindow(720,700,'PrintDrugProfile2.jsp','PrintDrugProfile')"><bean:message key="SearchDrug.Print"/></a>
+                                                    <a href="javascript:void(0)" onClick="printDrugProfile();"><bean:message key="SearchDrug.Print"/></a>
                                                     &nbsp;
 													<%if(securityManager.hasWriteAccess("_rx",roleName2$,true)) {%>
                                                     <a href="#" onclick="$('reprint').toggle();return false;"><bean:message key="SearchDrug.Reprint"/></a>
@@ -2428,14 +2444,16 @@ function checkMedTerm(){
 
 function isMedTermChecked(rnd){
 	var termChecked = false;
-	var longTerm = jQuery("#longTerm_" + rnd);
+	var longTermY = jQuery("#longTermY_" + rnd);
+	var longTermN = jQuery("#longTermN_" + rnd);
+	
 	var shortTerm = jQuery("#shortTerm_" + rnd);
 	var medTermWrap = jQuery("#medTerm_" + rnd);
 		
-	if(longTerm.prop( "checked" ) || shortTerm.prop( "checked" )){
+	if(longTermY.is(":checked") || longTermN.is(":checked")) {
 		termChecked = true;
-		medTermWrap.css('color', 'black');		
-	}else{
+		medTermWrap.css('color', 'black');	
+	} else {
 		termChecked = false; 
 		medTermWrap.css('color', 'red');
 	}
@@ -2468,12 +2486,31 @@ jQuery( document ).ready(function() {
 	    isMedTermChecked(randId);
 	    <%}%> 
 	    
-	    var el = jQuery( this );
-	    medTermCheckOne(randId, el);
+	    //var el = jQuery( this );
+	    //medTermCheckOne(randId, el);
     });
 });
 </script>
 
+<script>
+function updateShortTerm(rand,val) {
+	if(val) {
+		jQuery("#shortTerm_" + rand).prop("checked",true);
+	} else {
+		jQuery("#shortTerm_" + rand).prop("checked",false);
+	}
+	
+}
+
+function updateLongTerm(rand,repeatEl) {
+	<%if("true".equals(OscarProperties.getInstance().getProperty("rx_select_long_term_when_repeat", "true"))) { %>
+	var repeats = jQuery('#repeats_' + rand).val().trim();
+	if(!isNaN(repeats) && repeats > 0) {
+		jQuery("#longTermY_" + rand).prop("checked",true);
+	}
+	<% } %>
+}
+</script>
 <script language="javascript" src="../commons/scripts/sort_table/css.js"></script>
 <script language="javascript" src="../commons/scripts/sort_table/common.js"></script>
 <script language="javascript" src="../commons/scripts/sort_table/standardista-table-sorting.js"></script>

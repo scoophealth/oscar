@@ -70,7 +70,7 @@ public final class MyOscarUtils {
 
 	public static boolean isMyOscarEnabled(String providerNo)
 	{
-		return isMyOscarUserNameSet(providerNo);
+		return isMyOscarUserNameSet(providerNo) && MyOscarLoggedInInfo.getMyOscarServerBaseUrl() != null;
 	}
 	
 	public static String getDisabledStringForMyOscarSendButton(MyOscarLoggedInInfo myOscarLoggedInInfo, Integer demographicId) {
@@ -147,6 +147,10 @@ public final class MyOscarUtils {
 	}
 	
 	public static void attemptMyOscarAutoLoginIfNotAlreadyLoggedIn(LoggedInInfo loggedInInfo, boolean forceReLogin) {
+		
+		if(!isMyOscarEnabled(loggedInInfo.getLoggedInProviderNo())) {
+			return;
+		}
 		HttpSession session = loggedInInfo.getSession();
 
 		ProviderPreferenceDao providerPreferenceDao = (ProviderPreferenceDao) SpringUtils.getBean("providerPreferenceDao");

@@ -10401,6 +10401,7 @@ CREATE TABLE `ServiceClient` (
   `clientKey` varchar(255) NOT NULL,
   `clientSecret` varchar(255) NOT NULL,
   `uri` varchar(255) DEFAULT NULL,
+  `lifetime` int,
   `dateCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 );

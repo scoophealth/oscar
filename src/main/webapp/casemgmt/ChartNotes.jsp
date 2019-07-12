@@ -444,11 +444,33 @@ try
 					</select>
 				</security:oscarSec>
 				
+				<span id="phrButtonArea">
+				</span>
 				<script>
 				function updateMYOSCAR(){
 					jQuery.getScript('phrLinks.jsp?demographicNo=<%=demographicNo%>');
 				}
 				updateMYOSCAR();
+				
+				jQuery(document).ready(function(){
+		    			jQuery.ajax({
+			  			type: "GET",
+		    		        url: "<%=request.getContextPath()%>/ws/rs/app/providerChartLaunchItems",
+				        dataType: 'json',
+				        success: function (data) {
+					
+				       		for(i =0; i < data.length; i++){
+				        			d = data[i];
+				       			jQuery("#phrButtonArea").append(
+				       			jQuery("<button/>")
+				       		    .text(d.heading)
+				       		    .click(function () { window.open('../ws/rs/app/openProviderPHRWindow/'+d.link+'<%=demographicNo%>'); }));
+
+				       		}
+				    		}
+					});
+			    });
+				
 				</script>
 				
 			</div>	

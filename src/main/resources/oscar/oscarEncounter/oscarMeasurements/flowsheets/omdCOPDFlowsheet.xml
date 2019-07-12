@@ -13,13 +13,13 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. 
 -->
-<flowsheet name="COPD" display_name="Chronic Obstructive Pulmonary" dxcode_triggers="icd9:416" ds_rules="diab.drl" top_HTML=""
+<flowsheet name="COPD" display_name="Chronic Obstructive Pulmonary" dxcode_triggers="icd9:416,icd9:496" ds_rules="diab.drl" top_HTML=""
 		warning_colour="#E00000" recommendation_colour="yellow">
 	<indicator key="LOW" colour="#9999FF" />
 	<indicator key="HIGH" colour="orange" />
 	<indicator key="HIGH 1" colour="#E00000" />
 	
-		
+	<header display_name="General">		
 	<item prevention_type="Flu" display_name="Flu Vaccine" guideline="Annually" graphable="no" />
 	<item prevention_type="Pneumovax" display_name="Pneumococcal vaccine" guideline="" graphable="no" />
 	<item measurement_type="BMI" display_name="BMI" guideline="Target &lt;=27 kg/m2" graphable="yes" value_name="BMI" >
@@ -119,7 +119,7 @@
 		</rules>
 	</item>
 	<item measurement_type="COPE" display_name="Provide Patient Education Materials" guideline="" graphable="no" value_name="Provided" />
-	
+	</header>	
 	<!--  ??? -->
 	<!-- 
 	<item measurement_type="SKST" display_name="Smoking Status" guideline="" graphable="no" value_name="Smoker" />

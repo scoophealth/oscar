@@ -814,7 +814,6 @@ public class DemographicExportAction4 extends Action {
 						fHist.setProblemDiagnosisProcedureDescription(StringUtils.maxLenString(famHist, 250, 23, "... (see residual)"));
 						
 						
-						fHist.setProblemDiagnosisProcedureDescription(famHist);
 						summary = Util.addSummary("Problem Description", famHist);
 
 						boolean diagnosisAssigned = false;

@@ -10,6 +10,8 @@
 package org.oscarehr.hospitalReportManager;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,6 +29,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.helpers.FileUtils;
 import org.apache.log4j.Logger;
@@ -75,6 +78,8 @@ public class HRMReportParser {
 		String fileData = null;
 		if (hrmReportFileLocation != null) {
 			
+			FileInputStream fis = null;
+			
 			try {
 				//a lot of the parsers need to refer to a file and even when they provide functions like parse(String text)
 				//it will not parse the same way because it will treat the text as a URL
@@ -102,16 +107,26 @@ public class HRMReportParser {
 
 				// Load a WXS schema, represented by a Schema instance.
 				Source schemaFile = new StreamSource(new File(SFTPConnector.OMD_directory + "report_manager_cds.xsd"));
+				
+				logger.debug("reading XML from " + tmpXMLholder);
+				logger.debug("reading schema from " +  OscarProperties.getInstance().getProperty("OMD_directory") + "report_manager_cds.xsd");
+				
 				Schema schema = factory.newSchema(schemaFile); 
 
 				JAXBContext jc = JAXBContext.newInstance("org.oscarehr.hospitalReportManager.xsd");
 				Unmarshaller u = jc.createUnmarshaller();
 				u.setSchema(schema);
+		
 				
-				root = (OmdCds) u.unmarshal(tmpXMLholder);
-
+				fis = new FileInputStream(tmpXMLholder);
+				root = (OmdCds) u.unmarshal(fis);
+			
 				tmpXMLholder = null;
-
+			}  catch (FileNotFoundException e) {
+				logger.error("File Not Found " + e);
+				if(errors!=null) {
+					errors.add(e);
+				}
 			} catch (SAXException e) {
 				logger.error("SAX ERROR PARSING XML " + e);
 				if(errors!=null) {
@@ -137,6 +152,10 @@ public class HRMReportParser {
 					}
 				}
 				
+			} finally {
+				if(fis != null) {
+					IOUtils.closeQuietly(fis);
+				}
 			}
 
             if (root!=null && hrmReportFileLocation!=null && fileData!=null) {

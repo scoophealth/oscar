@@ -431,9 +431,11 @@ public final class LoginAction extends DispatchAction {
             }
             
             //are they using the new UI?
-            UserProperty prop = propDao.getProp(provider.getProviderNo(), UserProperty.COBALT);
-            if(prop != null && prop.getValue() != null && prop.getValue().equals("yes")) {
-            	where="cobalt";
+            if("true".equals(OscarProperties.getInstance().getProperty("newui.enabled", "false"))) {
+	            UserProperty prop = propDao.getProp(provider.getProviderNo(), UserProperty.COBALT);
+	            if(prop != null && prop.getValue() != null && prop.getValue().equals("yes")) {
+	            	where="cobalt";
+	            }
             }
         }
         // expired password

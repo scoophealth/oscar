@@ -209,7 +209,7 @@ public class CaisiIntegratorUpdateTask extends TimerTask {
 	
 	private ObjectOutputStream out = null;
 
-	private static String outputDirectory = OscarProperties.getInstance().getProperty("DOCUMENT_DIR").trim();
+	private static String outputDirectory = (OscarProperties.getInstance().getProperty("DOCUMENT_DIR") != null) ? OscarProperties.getInstance().getProperty("DOCUMENT_DIR").trim() : System.getProperty("java.io.tmpdir");
 	
 	private PrintWriter documentMetaWriter;
 	
