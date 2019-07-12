@@ -205,6 +205,7 @@ public final class ImageRenderingServlet extends HttpServlet {
 				return;
 			} else {
 				renderImage(response, getDefaultImage(request), "jpeg");
+				return;
 			}
 		} catch (Exception e) {
 			logger.error("Unexpected error.", e);
