@@ -12468,3 +12468,11 @@ CREATE TABLE `EFormDocs` (
   `attach_date` date,
   `provider_no` varchar(6) NOT NULL
 );
+
+CREATE TABLE ISO36612 (
+    id int(11) auto_increment,
+    code varchar(255),
+    province varchar(255),
+    country varchar(255),
+    PRIMARY KEY(id)
+);
