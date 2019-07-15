@@ -220,7 +220,7 @@ function valDate(dateBox)
 function checkAllDates()
 {
     var b = true;
-    if(valDate(document.forms[0].dateDX)==false){
+    if(valDate(document.forms[0].dateDx)==false){
         b = false;
     }else
     if(valDate(document.forms[0].date1)==false){
