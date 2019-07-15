@@ -26,7 +26,9 @@ package org.oscarehr.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -113,6 +115,41 @@ public class WKHtmlToPdfUtils {
 		File f = new File(outputFilename);
 		Process process = Runtime.getRuntime().exec(command.toArray(new String[0]));
 
+		// Drain inputstreams (Magenta health)
+        InputStream[] iStreams = {
+            process.getErrorStream(),
+            process.getInputStream()
+        };
+
+        List<Thread> threads = new ArrayList<Thread>();
+        for (final InputStream is : iStreams) {
+            threads.add(
+                new Thread(new Runnable() {
+                    public void run() {
+                        try {
+                            while (true) {
+                                int res = is.read();
+                                if (res == -1) {
+                                    break;
+                                }
+                            }
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+            }));
+            threads.get(threads.size() - 1).start();
+        }
+
+        for (Thread t : threads) {
+            try {
+                t.join();
+            } catch(Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        
+        
 		long previousFileSize = 0;
 		int noFileSizeChangeCounter = 0;
 
@@ -145,7 +182,7 @@ public class WKHtmlToPdfUtils {
 				} catch (IllegalThreadStateException e) {
 					long tempSize = f.length();
 
-					logger.error("Progress output filename=" + outputFilename + ", filesize=" + tempSize);
+					logger.info("Progress output filename=" + outputFilename + ", filesize=" + tempSize);
 
 					if (tempSize != previousFileSize) noFileSizeChangeCounter = 0;
 					else {
