@@ -79,15 +79,22 @@
             if (cdxId != null && cdxId.trim().length() != 0) {
                 providers = cdxSpecialist.findCdxSpecialistById(cdxId);
                 if (providers == null || providers.isEmpty()) {
-                    ps.setCdxCapable(false);
-                    ps.setCdxId(null);
-                    try {
-                        dao.merge(ps);
-                    } catch (Exception e) {
-                        MiscUtils.getLogger().error("Got exception updating professional specialist: " + e.getMessage());
-                        errorMsg.append("Failed to update professional specialist with stored cdxId: ").append(cdxId);
+                    // We should only get here if a specialist has left CDX
+                    // Important: confirm that we didn't lose CDX connectivity before marking specialist as no longer CDX available
+                    if (CDXConfiguration.obibIsConnected()) {
+                        ps.setCdxCapable(false);
+                        ps.setCdxId(null);
+                        try {
+                            dao.merge(ps);
+                        } catch (Exception e) {
+                            MiscUtils.getLogger().error("Got exception updating professional specialist: " + e.getMessage());
+                            errorMsg.append("Failed to update professional specialist with stored cdxId: ").append(cdxId);
+                        }
+                        changeMsg.append("<tr><td>").append(ps.getLastName()).append("</td><td>").append(ps.getFirstName()).append("</td><td>").append(ps.getCdxId()).append("</td></tr>");
+                    } else {
+                        errorMsg.append("OSCAR lost connection to CDX via OBIB during CDX availability testing.");
+                        MiscUtils.getLogger().info("OSCAR has lost connection to CDX via OBIB");
                     }
-                    changeMsg.append("<tr><td>").append(ps.getLastName()).append("</td><td>").append(ps.getFirstName()).append("</td><td>").append(ps.getCdxId()).append("</td></tr>");
                 } else {
                     if (providers.size() != 1) {  // cdxId should uniquely identify the provider
                         errorMsg.append("Multiple providers for cdxId: ").append(cdxId);
