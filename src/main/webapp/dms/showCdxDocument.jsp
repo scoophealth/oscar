@@ -485,9 +485,13 @@ It must have been deleted. Please refresh your Inbox window.
 
 
                 <div class="panel panel-default">
+                    <div class="panel-heading">Status: <%=provenanceDoc.getStatus()%></div>
 
-                    <c:import url="/share/xslt/CDA_to_HTML.xsl" var="xslt"/>
-                    <x:transform xml="<%=provenanceDoc.getPayload()%>" xslt="${xslt}"/>
+                    <div class="panel-body">
+
+                        <c:import url="/share/xslt/CDA_to_HTML.xsl" var="xslt"/>
+                        <x:transform xml="<%=provenanceDoc.getPayload()%>" xslt="${xslt}"/>
+                    </div>
                 </div>
 
                 <%
