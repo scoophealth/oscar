@@ -801,7 +801,7 @@ public class HRMAction extends DispatchAction {
 				data1.put("report_date", reportDate != null ? reportDate : "");
 				
 				
-				data1.put("sending_facility", d.getSourceFacility());
+				data1.put("sending_facility", d.getSourceFacility() != null ? d.getSourceFacility() : "");
 				if(!StringUtils.isEmpty(d.getClassName()) && !StringUtils.isEmpty(d.getSubClassName())) {
 					String className = d.getClassName();
 					String subClassName = d.getSubClassName();
