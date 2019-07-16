@@ -160,6 +160,8 @@ public interface MessageHandler {
      */
     public String getOBXName( int i, int j);
 
+    public String getOBXNameLong( int i, int j);
+
     /**
      *  Return the result from the jth OBX segment of the ith OBR group
      */

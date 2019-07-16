@@ -541,10 +541,10 @@ CREATE TABLE demographic (
   lastUpdateUser varchar(6),
   lastUpdateDate datetime not null,
   middleNames varchar(100),
-  mailingAddress varchar(60),
-  mailingCity varchar(50),
-  mailingProvince varchar(20),
-  mailingPostal varchar(9),
+  residentialAddress varchar(60),
+  residentialCity varchar(50),
+  residentialProvince varchar(20),
+  residentialPostal varchar(9),
   PRIMARY KEY  (demographic_no),
   KEY hin (hin),
   KEY name (last_name,first_name),
@@ -8921,10 +8921,10 @@ CREATE TABLE demographicArchive (
   anonymous varchar(32),
   lastUpdateUser varchar(6),
   lastUpdateDate date,
-  mailingAddress varchar(60),
-  mailingCity varchar(50),
-  mailingProvince varchar(20),
-  mailingPostal varchar(9)
+  residentialAddress varchar(60),
+  residentialCity varchar(50),
+  residentialProvince varchar(20),
+  residentialPostal varchar(9)
 );
 
 CREATE TABLE providerArchive (
@@ -12469,3 +12469,10 @@ CREATE TABLE `EFormDocs` (
   `provider_no` varchar(6) NOT NULL
 );
 
+CREATE TABLE ISO36612 (
+    id int(11) auto_increment,
+    code varchar(255),
+    province varchar(255),
+    country varchar(255),
+    PRIMARY KEY(id)
+);

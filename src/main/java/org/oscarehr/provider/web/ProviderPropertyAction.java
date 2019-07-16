@@ -26,12 +26,11 @@ package org.oscarehr.provider.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
-
-import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,13 +42,13 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.apache.struts.util.LabelValueBean;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.CtlBillingServiceDao;
 import org.oscarehr.common.dao.QueueDao;
 import org.oscarehr.common.dao.UserPropertyDAO;
-import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.model.Facility;
-import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.common.model.Provider;
+import org.oscarehr.common.model.UserProperty;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -2839,7 +2838,60 @@ public ActionForward viewEDocBrowserInDocumentReport(ActionMapping actionmapping
         return actionmapping.findForward("genClinicalConnectPrefs");
 
 	}
+
+    public ActionForward viewLabMacroPrefs(ActionMapping actionmapping,ActionForm actionform,HttpServletRequest request, HttpServletResponse response) {
+        DynaActionForm frm = (DynaActionForm)actionform;
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+        String providerNo=loggedInInfo.getLoggedInProviderNo();
+
+        UserProperty prop = loadProperty(providerNo, UserProperty.LAB_MACRO_JSON);
+        
+        request.setAttribute("labMacroJSON", prop);
+        
+        request.setAttribute("providertitle","provider.labMacroPrefs.title"); 
+        request.setAttribute("providermsgPrefs","provider.labMacroPrefs.msgPrefs"); //=Preferences
+        request.setAttribute("providerbtnSubmit","provider.labMacroPrefs.btnSubmit"); //=Save
+        request.setAttribute("providerbtnCancel","provider.labMacroPrefs.btnCancel"); //=Cancel
+        request.setAttribute("method","saveLabMacroPrefs");
+
+        frm.set("labMacroJSON", prop);
+        
+        return actionmapping.findForward("genLabMacroPrefs");
+    }
     
+
+    public ActionForward saveLabMacroPrefs(ActionMapping actionmapping,ActionForm actionform, HttpServletRequest request, HttpServletResponse response) {
+        LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
+        String providerNo=loggedInInfo.getLoggedInProviderNo();
+        DynaActionForm frm=(DynaActionForm)actionform;
+
+		UserProperty s = (UserProperty)frm.get("labMacroJSON");
+
+		String length = s != null ? s.getValue() : "";
+
+		UserProperty wProperty = this.userPropertyDAO.getProp(providerNo,UserProperty.LAB_MACRO_JSON);
+		if( wProperty == null ) {
+			wProperty = new UserProperty();
+			wProperty.setProviderNo(providerNo);
+			wProperty.setName(UserProperty.LAB_MACRO_JSON);
+		}
+		wProperty.setValue(length);
+		userPropertyDAO.saveProp(wProperty);
+		
+        LogAction.addLog(LoggedInInfo.getLoggedInInfoFromSession(request),"LabMacroPreferences","labMacroJSON","",null,wProperty.getValue());
+       
+        request.setAttribute("status", "success");
+        request.setAttribute("labMacroJSON",wProperty);
+        
+        request.setAttribute("providertitle","provider.labMacroPrefs.title"); 
+        request.setAttribute("providermsgPrefs","provider.labMacroPrefs.msgPrefs"); //=Preferences
+        request.setAttribute("providerbtnClose","provider.labMacroPrefs.btnClose"); //=Close
+        request.setAttribute("providermsgSuccess","provider.labMacroPrefs.msgSuccess"); 
+        
+        request.setAttribute("method","saveLabMacroPrefs");
+
+        return actionmapping.findForward("genLabMacroPrefs");
+    }
     /**
      * Creates a new instance of ProviderPropertyAction
      */

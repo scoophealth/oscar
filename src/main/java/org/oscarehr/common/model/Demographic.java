@@ -125,10 +125,10 @@ public class Demographic extends AbstractModel<Integer> implements Serializable 
     private String middleNames;
     private String rosterEnrolledTo;
     
-    private String mailingAddress;
-    private String mailingCity;
-	private String mailingProvince;
-	private String mailingPostal;
+    private String residentialAddress;
+    private String residentialCity;
+	private String residentialProvince;
+	private String residentialPostal;
 	
     
         public String getTitle() {
@@ -1269,36 +1269,36 @@ public class Demographic extends AbstractModel<Integer> implements Serializable 
 		}
 	}
 
-	public String getMailingAddress() {
-		return mailingAddress;
+	public String getResidentialAddress() {
+		return residentialAddress;
 	}
 
-	public void setMailingAddress(String mailingAddress) {
-		this.mailingAddress = mailingAddress;
+	public void setResidentialAddress(String residentialAddress) {
+		this.residentialAddress = residentialAddress;
 	}
 
-	public String getMailingCity() {
-		return mailingCity;
+	public String getResidentialCity() {
+		return residentialCity;
 	}
 
-	public void setMailingCity(String mailingCity) {
-		this.mailingCity = mailingCity;
+	public void setResidentialCity(String residentialCity) {
+		this.residentialCity = residentialCity;
 	}
 
-	public String getMailingProvince() {
-		return mailingProvince;
+	public String getResidentialProvince() {
+		return residentialProvince;
 	}
 
-	public void setMailingProvince(String mailingProvince) {
-		this.mailingProvince = mailingProvince;
+	public void setResidentialProvince(String residentialProvince) {
+		this.residentialProvince = residentialProvince;
 	}
 
-	public String getMailingPostal() {
-		return mailingPostal;
+	public String getResidentialPostal() {
+		return residentialPostal;
 	}
 
-	public void setMailingPostal(String mailingPostal) {
-		this.mailingPostal = mailingPostal;
+	public void setResidentialPostal(String residentialPostal) {
+		this.residentialPostal = residentialPostal;
 	}
 	
 	

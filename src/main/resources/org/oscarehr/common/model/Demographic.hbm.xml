@@ -26,10 +26,10 @@
 		<property column="city" length="50" name="City" type="string" />
 		<property column="province" length="20" name="Province" type="string" />
 		<property column="postal" length="9" name="Postal" type="string" />
-		<property column="mailingAddress" length="60" name="MailingAddress" type="string" />
-		<property column="mailingCity" length="50" name="MailingCity" type="string" />
-		<property column="mailingProvince" length="20" name="MailingProvince" type="string" />
-		<property column="mailingPostal" length="9" name="MailingPostal" type="string" />
+		<property column="residentialAddress" length="60" name="ResidentialAddress" type="string" />
+		<property column="residentialCity" length="50" name="ResidentialCity" type="string" />
+		<property column="residentialProvince" length="20" name="ResidentialProvince" type="string" />
+		<property column="residentialPostal" length="9" name="ResidentialPostal" type="string" />
 		<property column="email" length="100" name="Email" type="string" />
 		<property column="phone" length="20" name="Phone" type="string" />
 		<property column="phone2" length="20" name="Phone2" type="string" />

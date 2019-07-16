@@ -66,8 +66,8 @@
         <ap-output>${last_name}, ${first_name} \n${address}, ${city}, ${province} ${postal} \nTel:${phone}(H)  ${phone2}(W) \n${date_of_birth}/${month_of_birth}/${year_of_birth}(${sex})  HIN:${hin}${ver}</ap-output>
     </databaseap>
     <databaseap>
-		<ap-name>mailing_address</ap-name>
-		<ap-sql>SELECT IF(LENGTH(mailingAddress)>1, mailingAddress, address) as adr, IF(LENGTH(mailingCity)>1,mailingCity,city) as cit, RIGHT(IF(LENGTH(mailingProvince)>1,mailingProvince,province),2) as pro, IF(LENGTH(mailingPostal)>1,mailingPostal,postal) as pos, IF(LEFT(IF(LENGTH(mailingProvince)>1,mailingProvince,province),2)="CA","Canada",LEFT(IF(LENGTH(mailingProvince)>1,mailingProvince,province),2)) as country FROM demographic WHERE demographic_no=${demographic}
+		<ap-name>residential_address</ap-name>
+		<ap-sql>SELECT IF(LENGTH(residentialAddress)>1, residentialAddress, address) as adr, IF(LENGTH(residentialCity)>1,residentialCity,city) as cit, RIGHT(IF(LENGTH(residentialProvince)>1,residentialProvince,province),2) as pro, IF(LENGTH(residentialPostal)>1,residentialPostal,postal) as pos, IF(LEFT(IF(LENGTH(residentialProvince)>1,residentialProvince,province),2)="CA","Canada",LEFT(IF(LENGTH(residentialProvince)>1,residentialProvince,province),2)) as country FROM demographic WHERE demographic_no=${demographic}
 		</ap-sql>
 		<ap-output>${adr} \n${cit}, ${pro}, ${pos}\n${country}</ap-output>
 	</databaseap>

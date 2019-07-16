@@ -524,6 +524,14 @@ X = deleted (available on request; not always preceded by non-X OBRs in an earli
         }
     }
 
+
+    public String getOBXNameLong(int i, int j){
+        try{
+            return(getString(msg.getPIDPD1NK1NTEPV1PV2ORCOBRNTEOBXNTECTI().getORCOBRNTEOBXNTECTI(i).getOBXNTE(j).getOBX().getObservationIdentifier().getText().getValue()));
+        }catch(Exception e){
+            return("");
+        }
+    }
     
     public String getOBXResult(int i, int j){
         try{

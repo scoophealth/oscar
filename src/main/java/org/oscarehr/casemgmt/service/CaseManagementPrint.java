@@ -66,8 +66,10 @@ import com.lowagie.text.DocumentException;
 
 import oscar.OscarProperties;
 import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
+import oscar.oscarLab.ca.all.pageUtil.OLISLabPDFCreator;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
+import oscar.oscarLab.ca.all.parsers.OLISHL7Handler;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.ConcatPDF;
@@ -129,7 +131,10 @@ public class CaseManagementPrint {
 			} else {
 				Long noteId = ConversionUtils.fromLongString(noteIds[idx]);
 				if (noteId > 0) {
-					notes.add(this.caseManagementMgr.getNote(noteId.toString()));
+					CaseManagementNote note = this.caseManagementMgr.getNote(noteId.toString());
+					if (note!=null && note.getProviderNo()!=null && Integer.parseInt(note.getProviderNo())!=-1){
+						notes.add(note);
+					}
 				}
 			}
 		}
@@ -185,7 +190,7 @@ public class CaseManagementPrint {
 				tmpNotes = caseManagementMgr.getNotes(demono, issueIds);
 				issueNotes = new ArrayList<CaseManagementNote>();
 				for (int k = 0; k < tmpNotes.size(); ++k) {
-					if (!tmpNotes.get(k).isLocked()) {
+					if (!tmpNotes.get(k).isLocked() && !tmpNotes.get(k).isArchived()) {
 						List<CaseManagementNoteExt> exts = caseManagementMgr.getExtByNote(tmpNotes.get(k).getId());
 						boolean exclude = false;
 						for (CaseManagementNoteExt ext : exts) {
@@ -294,18 +299,25 @@ public class CaseManagementPrint {
 				String fileName2 = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + "//" + handler.getPatientName().replaceAll("\\s", "_") + "_" + handler.getMsgDate() + "_LabReport.pdf";
                                 file2= new File(fileName2);
 				os2 = new FileOutputStream(file2);
-				LabPDFCreator pdfCreator = new LabPDFCreator(os2, segmentId, loggedInInfo.getLoggedInProviderNo());
-				pdfCreator.printPdf();
-				os2.close();
-				
-				String fileName3 = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + "//" + handler.getPatientName().replaceAll("\\s", "_") + "_" + handler.getMsgDate() + "_LabReport.1.pdf";
-                File file3= new File(fileName3);
-                
-                fos = new FileOutputStream(file3);
-				pdfCreator.addEmbeddedDocuments(file2,fos);
-				
-				
-				pdfDocs.add(fileName3);
+				if (handler instanceof OLISHL7Handler) {
+					OLISLabPDFCreator olisLabPdfCreator = new OLISLabPDFCreator(os2, request, segmentId);
+					olisLabPdfCreator.printPdf();
+					os2.close();
+					pdfDocs.add(fileName2);
+				}
+				else {
+					LabPDFCreator pdfCreator = new LabPDFCreator(os2, segmentId, loggedInInfo.getLoggedInProviderNo());
+					pdfCreator.printPdf();
+					os2.close();
+					String fileName3 = OscarProperties.getInstance().getProperty("DOCUMENT_DIR") + "//" + handler.getPatientName().replaceAll("\\s", "_") + "_" + handler.getMsgDate() + "_LabReport.1.pdf";
+					File file3= new File(fileName3);
+					
+					fos = new FileOutputStream(file3);
+					pdfCreator.addEmbeddedDocuments(file2,fos);
+					
+					pdfDocs.add(fileName3);
+				}
+
 			}
 
 		}

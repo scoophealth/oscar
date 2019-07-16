@@ -250,7 +250,7 @@ public class OLISHL7Handler implements MessageHandler {
 
 	public boolean reportBlocked = false;
 
-	public boolean isReportBlocked() {
+	public Boolean isReportBlocked() {
 		return reportBlocked;
 	}
 
@@ -1420,7 +1420,7 @@ public class OLISHL7Handler implements MessageHandler {
 
 	@Override
 	public String getMsgType() {
-		return (null);
+		return ("OLIS");
 	}
 
 	@Override
@@ -1716,6 +1716,19 @@ public class OLISHL7Handler implements MessageHandler {
 		// If we're unable to find a LOINC match for the identifier then try to parse out the obx name.
 		obxName = getOBXField(i, j, 3, 0, 2);
 		return "".equals(obxName) ? " " : obxName.indexOf(":") == -1 ? obxName : obxName.substring(0, obxName.indexOf(":"));
+	}
+
+	@Override
+	public String getOBXNameLong(int i, int j) {
+		String obxNameLong = "";
+
+		try {
+			obxNameLong = getOBXField(i, j, 3, 0, 2);
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("OLIS HL7 Error", e);
+		}
+		
+		return obxNameLong;
 	}
 
 	public String getOBXCEName(int i, int j) {

@@ -411,7 +411,7 @@ function refreshImage()
 {
 	counter=counter+1;
 	frames["preview"].document.getElementById("signature").src="<%=imageUrl%>&rand="+counter;
-	frames['preview'].document.getElementById('imgFile').value='<%=System.getProperty("java.io.tmpdir")%>/signature_<%=signatureRequestId%>.jpg';	
+	frames['preview'].document.getElementById('imgFile').value='<%=System.getProperty("java.io.tmpdir")%>/signature_<%=signatureRequestId.replace("\\","\\\\")%>.jpg';	
 }
 
 function sendFax()

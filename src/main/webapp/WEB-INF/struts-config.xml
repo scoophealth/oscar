@@ -311,6 +311,7 @@
 			<form-property name="preventionNonISPAWarningProperty" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="clinicalConnectDisableCloseWindow" type="org.oscarehr.common.model.UserProperty" />
 			<form-property name="clinicalConnectDisableLogoutWarning" type="org.oscarehr.common.model.UserProperty" />
+			<form-property name="labMacroJSON" type="org.oscarehr.common.model.UserProperty" />
 		</form-bean>
 		<form-bean name="setMyOscarIdForm" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="myOscarLoginId" type="java.lang.String" />
@@ -1039,6 +1040,9 @@
 			<forward name="failure" path="/errorpage.jsp" />
 			<forward name="success" path="/oscarMDS/Close.jsp" />
 		</action>
+		<action path="/oscarMDS/RunMacro" parameter="method" scope="request" type="oscar.oscarMDS.pageUtil.ReportMacroAction">
+			
+		</action>
 		<action input="/Index.jsp" path="/oscarMDS/ReportReassign" scope="request" type="oscar.oscarMDS.pageUtil.ReportReassignAction">
 			<forward name="failure" path="/errorpage.jsp" />
 			<forward name="success" path="/dms/inboxManage.do?method=prepareForIndexPage" />
@@ -1708,6 +1712,7 @@
              <forward name="genDashboardPrefs"     path="/provider/setDashboardPrefs.jsp"/>
               <forward name="genPreventionPrefs"     path="/provider/setPreventionPrefs.jsp"/>
               <forward name="genClinicalConnectPrefs"     path="/provider/setClinicalConnectPrefs.jsp"/>
+	    <forward name="genLabMacroPrefs"     path="/provider/setLabMacroPrefs.jsp"/>
         </action>
 		<action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
 			<forward name="success" path="/provider/providerIndivoIdSetter.jsp" />

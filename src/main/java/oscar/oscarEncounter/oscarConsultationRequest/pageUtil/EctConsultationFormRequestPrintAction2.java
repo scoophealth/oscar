@@ -50,6 +50,10 @@ import oscar.dms.EDocUtil;
 import oscar.eform.EFormUtil;
 import oscar.eform.actions.PrintAction;
 import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
+import oscar.oscarLab.ca.all.pageUtil.OLISLabPDFCreator;
+import oscar.oscarLab.ca.all.parsers.Factory;
+import oscar.oscarLab.ca.all.parsers.MessageHandler;
+import oscar.oscarLab.ca.all.parsers.OLISHL7Handler;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.ConcatPDF;
@@ -141,26 +145,39 @@ public class EctConsultationFormRequestPrintAction2 extends Action {
 			for (int i = 0; labs != null && i < labs.size(); i++) {
 				// Storing the lab in PDF format inside a byte stream.
 				request.setAttribute("segmentID", labs.get(i).segmentID);
+
 				request.setAttribute("providerNo",LoggedInInfo.getLoggedInInfoFromSession(request).getLoggedInProviderNo());
 				File f2 = File.createTempFile("lab"+request.getAttribute("segmentID"),"pdf");
-				File f3 = File.createTempFile("lab"+request.getAttribute("segmentID") + "-complete","pdf");
-		        
+
 				FileOutputStream fos2 = new FileOutputStream(f2);
-				FileOutputStream fos3 = new FileOutputStream(f3);
-		            
-				LabPDFCreator lpdfc = new LabPDFCreator(request, fos2);
-				lpdfc.printPdf();
-				lpdfc.addEmbeddedDocuments(f2,fos3);
+				FileInputStream fis2 = null;
+
+				MessageHandler messageHandler = Factory.getHandler(labs.get(i).getSegmentID()); 
+				if (messageHandler instanceof OLISHL7Handler){
+					//If the lab is HL7, use the OLISLabPDFCreator to print the lab
+					OLISLabPDFCreator olisLabPdfCreator = new OLISLabPDFCreator(request, fos2);
+					olisLabPdfCreator.printPdf();
+					fis2 = new FileInputStream(f2);
+				}
+				else {
+					File f3 = File.createTempFile("lab"+request.getAttribute("segmentID") + "-complete","pdf");
+					FileOutputStream fos3 = new FileOutputStream(f3);
+
+					//If it isn't HL7, use the normal LabPDFCreator to print
+					LabPDFCreator lpdfc = new LabPDFCreator(request, fos2);
+					lpdfc.printPdf();
+					lpdfc.addEmbeddedDocuments(f2,fos3);
+					fos3.close();
+					fis2 = new FileInputStream(f3);
+
+					filesToDelete.add(f3);
+				}
 
 				fos2.close();
-				fos3.close();
-				
-				FileInputStream fis2 = new FileInputStream(f3);
-				
 				alist.add(fis2);
 				streams.add(fis2);
+
 				filesToDelete.add(f2);
-				filesToDelete.add(f3);
 			}
 
 			for (HRMDocumentToDemographic attachedHRM : attachedHRMReports) {

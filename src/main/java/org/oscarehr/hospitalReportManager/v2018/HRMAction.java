@@ -739,14 +739,25 @@ public class HRMAction extends DispatchAction {
 				orderBy = "formattedName";
 			} else if ("patient_dob".equals(columnInfo.getData())) {
 				orderBy = "dob";
+			} else if ("report_date".equals(columnInfo.getData())) {
+				orderBy = "reportDate";
+			}  else if ("received_date".equals(columnInfo.getData())) {
+				orderBy = "timeReceived";
+			} else if ("sending_facility".equals(columnInfo.getData())) {
+				orderBy = "sourceFacility";
 			}
 		}
 		
 		JSONArray data = new JSONArray();
 
+		long total = 0L;
+		
+		
 		if(isHrm) {
 			List<HRMDocument> docs = hrmDocumentDao.query(providerNo,"true".equals(providerUnmatched), "true".equals(noSignOff),  "true".equals(demographicUnmatched), Integer.parseInt(start), Integer.parseInt(length), orderBy, orderingColumnDirection);
 	
+			total = hrmDocumentDao.queryForCount(providerNo,"true".equals(providerUnmatched), "true".equals(noSignOff),  "true".equals(demographicUnmatched), Integer.parseInt(start), Integer.parseInt(length), orderBy, orderingColumnDirection);
+			
 			
 			SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	
@@ -790,7 +801,7 @@ public class HRMAction extends DispatchAction {
 				data1.put("report_date", reportDate != null ? reportDate : "");
 				
 				
-				data1.put("sending_facility", d.getSourceFacility());
+				data1.put("sending_facility", d.getSourceFacility() != null ? d.getSourceFacility() : "");
 				if(!StringUtils.isEmpty(d.getClassName()) && !StringUtils.isEmpty(d.getSubClassName())) {
 					String className = d.getClassName();
 					String subClassName = d.getSubClassName();
@@ -823,8 +834,8 @@ public class HRMAction extends DispatchAction {
 
 		JSONObject obj = new JSONObject();
 		obj.put("draw", ++draw);
-		obj.put("recordsTotal", data.length());
-		obj.put("recordsFiltered", data.length());
+		obj.put("recordsTotal", total);
+		obj.put("recordsFiltered", total);
 		obj.put("data", data);
 		//obj.put("error", "error occurred");
 
