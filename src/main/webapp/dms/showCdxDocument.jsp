@@ -518,12 +518,13 @@ It must have been deleted. Please refresh your Inbox window.
                 <div class="panel-footer">
                     <h3>Related documents:</h3>
                     <ul>
-                        <%
+                        <%  boolean anyRelated = false;
                             String parentDocId = provenanceDoc.getParentDoc();
                             if(parentDocId != null) {
                                 List<CdxProvenance> parentDocs = provenanceDao.findReceivedVersionsOrderDesc(parentDocId);
                                 if (!parentDocs.isEmpty()) {
                                     CdxProvenance parentDoc = parentDocs.get(0);
+                                    anyRelated = true;
                         %>
                         <li> <a href="showCdxDocumentArchive.jsp?ID=<%=parentDoc.getId()%>">
 
@@ -538,6 +539,7 @@ It must have been deleted. Please refresh your Inbox window.
                                 List<CdxProvenance> iffoDocs = provenanceDao.findVersionsOrderDesc(infulfillmentOfId);
                                 if (!iffoDocs.isEmpty()) {
                                     CdxProvenance iffoDoc = iffoDocs.get(0);
+                                    anyRelated = true;
                         %>
                         <li> <a href="showCdxDocumentArchive.jsp?ID=<%=iffoDoc.getId()%>">
 
@@ -552,6 +554,7 @@ It must have been deleted. Please refresh your Inbox window.
                             if(setId != null && (!setId.equals(""))) {
                                 List<CdxProvenance> setDocs = provenanceDao.findRelatedDocsBySetId(setId, provenanceDoc.getDocumentId());
                                 for (CdxProvenance d : setDocs) {
+                                    anyRelated = true;
                         %>
 
                         <li> <a href="showCdxDocumentArchive.jsp?ID=<%=d.getId()%>">
@@ -563,6 +566,11 @@ It must have been deleted. Please refresh your Inbox window.
                         %>
 
                     </ul>
+
+                    <%
+                        if (anyRelated == false)
+                            out.print("none");
+                    %>
 
                 </div>
 

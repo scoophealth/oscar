@@ -63,7 +63,7 @@
     CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
 
 
-    CdxProvenance provenanceDoc = provenanceDao.getCdxProvenance(docIdNo);
+    CdxProvenance provenanceDoc = provenanceDao.findByDocumentNo(docIdNo);
 
 
 
@@ -109,7 +109,7 @@
             <div class="row">
 
 
-                <!--  ************************************ this code below duplicated in showCdxDocumentArchive
+                <!--  ************************************ this code below duplicated in showCdxDocument
                        ************************************ keep consistent upon changing
                        *********************BEGIN *********************************************************** -->
 
@@ -175,16 +175,16 @@
                     <% }%>
 
 
-
                     <div class="panel-footer">
                         <h3>Related documents:</h3>
                         <ul>
-                            <%
+                            <%  boolean anyRelated = false;
                                 String parentDocId = provenanceDoc.getParentDoc();
                                 if(parentDocId != null) {
                                     List<CdxProvenance> parentDocs = provenanceDao.findReceivedVersionsOrderDesc(parentDocId);
                                     if (!parentDocs.isEmpty()) {
                                         CdxProvenance parentDoc = parentDocs.get(0);
+                                        anyRelated = true;
                             %>
                             <li> <a href="showCdxDocumentArchive.jsp?ID=<%=parentDoc.getId()%>">
 
@@ -199,6 +199,7 @@
                                     List<CdxProvenance> iffoDocs = provenanceDao.findVersionsOrderDesc(infulfillmentOfId);
                                     if (!iffoDocs.isEmpty()) {
                                         CdxProvenance iffoDoc = iffoDocs.get(0);
+                                        anyRelated = true;
                             %>
                             <li> <a href="showCdxDocumentArchive.jsp?ID=<%=iffoDoc.getId()%>">
 
@@ -213,6 +214,7 @@
                                 if(setId != null && (!setId.equals(""))) {
                                     List<CdxProvenance> setDocs = provenanceDao.findRelatedDocsBySetId(setId, provenanceDoc.getDocumentId());
                                     for (CdxProvenance d : setDocs) {
+                                        anyRelated = true;
                             %>
 
                             <li> <a href="showCdxDocumentArchive.jsp?ID=<%=d.getId()%>">
@@ -225,11 +227,16 @@
 
                         </ul>
 
+                        <%
+                            if (anyRelated == false)
+                                out.print("none");
+                        %>
+
                     </div>
 
                 </div>
 
-                <!--        ************************************ the code above is duplicated in showCdxDocumentArchive
+                <!--        ************************************ the code above is duplicated in showCdxDocument
                             ************************************ keep consistent upon changing
                             *********************END *********************************************************** -->
 
