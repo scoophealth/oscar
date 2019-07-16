@@ -93,6 +93,8 @@ public class PrintLabsAction extends Action{
 	            LabPDFCreator pdf = new LabPDFCreator(request,fos);
 	            pdf.printPdf();
 	            pdf.addEmbeddedDocuments(f,response.getOutputStream());
+	            
+	            f.delete();
             }
         }catch(DocumentException de) {
             logger.error("DocumentException occured insided PrintLabsAction", de);
