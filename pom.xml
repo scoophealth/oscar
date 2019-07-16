@@ -560,7 +560,7 @@
 		<dependency>
 			<groupId>ca.uvic.leadlab</groupId>
 			<artifactId>obibconnector</artifactId>
-			<version>1.0-38</version>
+			<version>1.0-40</version>
 		</dependency>
 
 		<!-- HRM module -->
