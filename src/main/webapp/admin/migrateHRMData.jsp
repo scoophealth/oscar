@@ -124,7 +124,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
           
         <h3>Update</h3>
         
-        <p>This utility will updated your current HRM data to use the new schema</p>
+        <p>This utility will update your current HRM data to use the new schema</p>
         <br/>
         
         
