@@ -74,7 +74,7 @@ public class CdxAttachmentDao extends AbstractDao<CdxAttachment> {
             CdxAttachment attachmentEntity = new CdxAttachment();
             attachmentEntity.setDocument(prov.getId());
             attachmentEntity.setAttachmentType(a.getType().mediaType);
-            attachRef = (null == a.getReference() ? "attachment " + count++ : a.getReference());
+            attachRef = "attachment " + count++;
             attachmentEntity.setReference(attachRef);
             attachmentEntity.setContent(a.getContent());
             persist(attachmentEntity);
