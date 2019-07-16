@@ -190,6 +190,19 @@ public class CDLHandler implements MessageHandler {
         }
     }
 
+    @Override
+    public String getOBXNameLong(int i, int j) {
+	String ret = "";
+        try{
+            ret = getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getComponent(2).toString());
+        }catch(Exception e){
+            logger.error("Error returning OBX test name", e);
+        }
+
+        return ret;
+    }
+
+
     public String getOBXResult(int i, int j){
         try{
             return(getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1)));

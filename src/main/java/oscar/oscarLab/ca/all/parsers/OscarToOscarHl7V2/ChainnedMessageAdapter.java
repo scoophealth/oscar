@@ -134,6 +134,11 @@ public abstract class ChainnedMessageAdapter<T extends AbstractMessage> implemen
 		return (null);
 	}
 
+	@Override
+	public String getOBXNameLong(int i, int j) {
+		return (null);
+	}
+
 	public String getOBXResult(int i, int j) {
 		return (null);
 	}

@@ -287,7 +287,28 @@ public class AlphaHandler extends DefaultGenericHandler implements MessageHandle
             return("");
         }
     }
-    
+
+    @Override
+    public String getOBXNameLong(int i, int j) {
+        try{
+            if (version.equals("2.2")) {
+                OBX obx = msg22.getPATIENT_RESULT().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX();
+                if (!obx.getValueType().getValue().equals("CE") && !obx.getValueType().getValue().equals("FT") && !oBXHasForm(i,j) ||
+                        obx.getValueType().getValue().equals("FT") && oBXHasForm(i,j)) {
+                    return(getString(obx.getObservationIdentifier().getComponent(2).toString()));
+                }
+                else {
+                    return "";
+                }
+            } else {
+                return(getString(msg23.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getComponent(2).toString()));
+            }
+        }catch(Exception e){
+            logger.error("Error retrieving obx name", e);
+            return("");
+        }
+    }
+
     public String getOBXValueType(int i, int j){
         try{
         	if (version.equals("2.2")) {
