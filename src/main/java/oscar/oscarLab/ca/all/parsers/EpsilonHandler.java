@@ -26,6 +26,7 @@ package oscar.oscarLab.ca.all.parsers;
 import java.util.ArrayList;
 import java.util.Date;
 
+import ca.uhn.hl7v2.model.Type;
 import org.apache.log4j.Logger;
 import org.oscarehr.util.MiscUtils;
 
@@ -264,8 +265,17 @@ public class EpsilonHandler  extends CMLHandler implements MessageHandler {
 	            // leave the name blank if the value type is 'FT' this is because it
 	            // is a comment, if the name is blank the obx segment will not be displayed
 	            OBX obxSeg = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX();
-	            if ((obxSeg.getValueType().getValue()!=null) && (!obxSeg.getValueType().getValue().equals("FT")))
-	                ret = getString(obxSeg.getObservationIdentifier().getText().getValue());
+				// UNLESS it is not a comment when the current obx has a different type
+				// than the previous obx, it is a new obx, so display the name even if
+				// the value type is 'FT'
+	            Type[] currentObx = obxSeg.getObservationIdentifier().getComponents();
+	            Type[] previousObx = j>0?msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j-1).getOBX().getObservationIdentifier().getComponents():null;
+	            boolean sameAsBefore = ((currentObx!=null && previousObx!=null) && currentObx[0].toString().equals(previousObx[0].toString()) && currentObx[1].toString().equals(previousObx[1].toString()) && currentObx[2].toString().equals(previousObx[2].toString()));
+	            if ((obxSeg.getValueType().getValue()!=null) && ((!obxSeg.getValueType().getValue().equals("FT") || !sameAsBefore) ))
+	                ret = getString(obxSeg.getObservationIdentifier().getComponent(2).toString());
+	            	if((ret !=null &&ret.length()>=3) && ret.substring(0,3).contains("FOB") && obxSeg.getValueType().getValue().equals("FT")) {
+						ret = Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(), 3, 0, 3, 1);
+					}
 	        }catch(Exception e){
 	            logger.error("Error returning OBX name", e);
 	        }

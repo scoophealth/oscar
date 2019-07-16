@@ -192,6 +192,14 @@ public class CMLHandler implements MessageHandler {
         }
     }
 
+    public String getOBXNameLong(int i, int j){
+        try{
+            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getComponent(2).toString()));
+        }catch(Exception e){
+            return("");
+        }
+    }
+
     public String getOBXResult(int i, int j){
         try{
             return(getString(Terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1)));
