@@ -87,9 +87,7 @@ public class EctDisplayHRMAction extends EctDisplayAction {
 				String reportStatus = hrmDocument.getReportStatus();
 				String dispFilename = hrmDocument.getReportType();
 				String dispDocNo    = hrmDocument.getId().toString();
-				String description = hrmDocument.getDescription();
-				
-				
+
 				
 				title = hrmDocument.getReportType();
 				if(hrmDocument.getHrmCategoryId() != null ) {
