@@ -201,73 +201,79 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">CDX Configuration</h3>
+
+
+        <h3 class="panel-title">CDX Configuration 		<button type="button" class="btn btn-small" aria-label="CDX help" onClick="window.open('https://oscarcdxman.wbaer.info/018_administration/');">
+            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+        </button></h3>
     </div>
-    <div class="panel-body">
-        <form action="<%=request.getContextPath()%>/cdx/CDXAdmin.do" method="post">
 
-            <div class="form-group row">
+</div>
+<div class="panel-body">
+    <form action="<%=request.getContextPath()%>/cdx/CDXAdmin.do" method="post">
 
-                <div class="col-md-6">
+        <div class="form-group row">
 
-                    <label for="cdx_url">OBIB URL</label>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon1">http://&lt;ip_address&gt;:&lt;port&gt;</span>
-                        <input type="text" class="form-control" id="cdx_url" name="cdx_url" value="<%=cdxUrl%>"
-                               aria-describedby="basic-addon1">
-                    </div>
+            <div class="col-md-6">
+
+                <label for="cdx_url">OBIB URL</label>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">http://&lt;ip_address&gt;:&lt;port&gt;</span>
+                    <input type="text" class="form-control" id="cdx_url" name="cdx_url" value="<%=cdxUrl%>"
+                           aria-describedby="basic-addon1">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+
+                <label for="cdxOid">Clinic OID</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="cdxOid" name="cdxOid" value="<%=cdxOid%>">
                 </div>
 
-                <div class="col-md-6">
+            </div>
+        </div>
 
-                    <label for="cdxOid">Clinic OID</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="cdxOid" name="cdxOid" value="<%=cdxOid%>">
+
+        <div class="form-group row">
+            <div class="col-md-3">
+
+                <div class="control-group">
+                    <label class="control-label">Automatic Import:</label>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="cdx_polling_enabled"
+                               name="cdx_polling_enabled" value="true" <%=pollEnabled%>>
+                        <label class="custom-control-label" for="cdx_polling_enabled">Enabled</label>
                     </div>
 
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="cdx_polling_disabled"
+                               name="cdx_polling_enabled" <%=pollDisabled%> value="false">
+                        <label class="custom-control-label" for="cdx_polling_disabled">Disabled</label>
+                    </div>
                 </div>
             </div>
 
 
-            <div class="form-group row">
-                <div class="col-md-3">
+            <div class="col-md-3">
 
-                    <div class="control-group">
-                        <label class="control-label">Automatic Import:</label>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="cdx_polling_enabled"
-                                   name="cdx_polling_enabled" value="true" <%=pollEnabled%>>
-                            <label class="custom-control-label" for="cdx_polling_enabled">Enabled</label>
-                        </div>
-
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="cdx_polling_disabled"
-                                   name="cdx_polling_enabled" <%=pollDisabled%> value="false">
-                            <label class="custom-control-label" for="cdx_polling_disabled">Disabled</label>
-                        </div>
-                    </div>
+                <label for="cdx_polling_interval">Polling Interval</label>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon2">minutes</span>
+                    <input type="text" class="form-control" id="cdx_polling_interval" name="cdx_polling_interval"
+                           value="<%=pollInterval%>" aria-describedby="basic-addon2">
                 </div>
-
-
-                <div class="col-md-3">
-
-                    <label for="cdx_polling_interval">Polling Interval</label>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="basic-addon2">minutes</span>
-                        <input type="text" class="form-control" id="cdx_polling_interval" name="cdx_polling_interval"
-                               value="<%=pollInterval%>" aria-describedby="basic-addon2">
-                    </div>
-                </div>
-
             </div>
 
-            <div class="control-group">
-                <button type="submit" id="saveBtn" class="btn btn-primary"
-                        data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving"> Save
-                </button>
-            </div>
-        </form>
-    </div>
+        </div>
+
+        <div class="control-group">
+            <button type="submit" id="saveBtn" class="btn btn-primary"
+                    data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving"> Save
+            </button>
+        </div>
+    </form>
+</div>
 </div>
 
 

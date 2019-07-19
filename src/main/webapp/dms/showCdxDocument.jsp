@@ -25,10 +25,9 @@
 --%>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "x" uri = "http://java.sun.com/jsp/jstl/xml" %>
 <%
-    String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    String roleName$ = session.getAttribute("userrole") + "," + session.getAttribute("user");
     boolean authed = true;
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_edoc" rights="r" reverse="<%=true%>">
@@ -356,12 +355,12 @@ It must have been deleted. Please refresh your Inbox window.
 
                             </form>
 
-                            <form name="acknowledgeForm_<%=documentNo%>" id="acknowledgeForm_<%=documentNo%>" onsubmit="acknowledgeCdxDocument()" method="post" action="javascript:void(0);">
+                            <form id="acknowledgeForm_<%=documentNo%>" onsubmit="acknowledgeCdxDocument()" method="post" action="javascript:void(0);">
 
                                 <input type="hidden" name="segmentID" value="<%= documentNo%>"/>
                                 <input type="hidden" name="multiID" value="<%= documentNo%>" />
                                 <input type="hidden" name="providerNo" value="<%= providerNo%>"/>
-                                <input type="hidden" name="status" value="A"/ id="status_<%=documentNo%>">
+                                <input type="hidden" name="status" value="A" id="status_<%=documentNo%>">
                                 <input type="hidden" name="labType" value="DOC"/>
                                 <input type="hidden" name="ajaxcall" value="yes"/>
                                 <input type="hidden" name="demofind" id="demofind_<%=documentNo%>" value="<%= demoNo%>"/>
@@ -369,6 +368,9 @@ It must have been deleted. Please refresh your Inbox window.
 
                                 <input type="button" class="btn btn-default" id="closeBtn_<%=documentNo%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                                 <input type="button" class="btn btn-danger" id="deleteBtn_<%=documentNo%>" value=" Delete" onClick="deleteCdxDocument(<%=documentNo%>)" <%=(demoLinked? "style='display:none'" : "")%>>
+                                <button type="button" class="btn btn-small" aria-label="CDX help" onClick="window.open('https://oscarcdxman.wbaer.info/009_receiving/cdx_10/');">
+                                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                </button>
                                 <div class="btn-group" role="group" <%=(!demoLinked? "style='display:none'" : "")%>>
 
 
@@ -717,7 +719,7 @@ It must have been deleted. Please refresh your Inbox window.
 
 
     </script>
-
+</div>
 </body>
 </html>
 <%
