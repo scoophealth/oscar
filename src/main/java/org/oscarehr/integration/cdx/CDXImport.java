@@ -200,40 +200,53 @@ public class CDXImport {
     private String generateWarningsIfDemographicInconsistency (Document inboxDoc, IDocument doc) {
 
         String warnings = "";
-        PatientLabRouting patientLabRouting = patientLabRoutingDao.findByLabNo(inboxDoc.getDocumentNo());
-        if (patientLabRouting != null) { // was the patient successfully matched?
-            Demographic d = demoDao.getDemographic(Integer.toString(patientLabRouting.getDemographicNo()));
-            IPatient p = doc.getPatient();
 
-            if (!d.getAddress().toUpperCase().equals(p.getStreetAddress().toUpperCase()))
-                warnings = "<p>The <strong>street address</strong> in the patient's master file does not agree with the one in this document.</p>";
+        try {
+            PatientLabRouting patientLabRouting = patientLabRoutingDao.findByLabNo(inboxDoc.getDocumentNo());
+            if (patientLabRouting != null) { // was the patient successfully matched?
+                Demographic d = demoDao.getDemographic(Integer.toString(patientLabRouting.getDemographicNo()));
+                IPatient p = doc.getPatient();
 
-            if (!d.getPostal().toUpperCase().equals(p.getPostalCode().toUpperCase()))
-                warnings += "<p>The <strong>postal code</strong> in the patient's master file does not agree with the one in this document.</p>";
+                String dAddress = (d.getAddress() == null ? "" : d.getAddress());
+                String pAddress = (p.getStreetAddress() == null ? "" : p.getStreetAddress());
 
-            if (!d.getCity().toUpperCase().equals(p.getCity().toUpperCase()))
-                warnings += "<p>The <strong>city</strong> in the patient's master file does not agree with the one in this document.</p>";
-            if (!d.getFirstName().toUpperCase().equals(p.getFirstName().toUpperCase()))
-                warnings += "<p>The <strong>first name</strong> in the patient's master file does not agree with the one in this document.</p>";
+                if (!dAddress.toUpperCase().equals(pAddress.toUpperCase())) warnings = "<p>The <strong>street address</strong> in the patient's master file does not agree with the one in this document.</p>";
 
-            Boolean newTelco = false;
+                String dPostal = (d.getPostal() == null ? "" : d.getPostal());
+                String pPostal = (p.getPostalCode() == null ? "" : p.getPostalCode());
 
-            for (ITelco t : p.getPhones()) {
-                if (!(t.getAddress().equals(d.getPhone()) || t.getAddress().equals(d.getPhone2()))) newTelco = true;
+                if (!dPostal.toUpperCase().equals(pPostal.toUpperCase())) warnings += "<p>The <strong>postal code</strong> in the patient's master file does not agree with the one in this document.</p>";
+
+                String dCity = (d.getCity() == null ? "" : d.getCity());
+                String pCity = (p.getCity() == null ? "" : p.getCity());
+
+                if (!dCity.toUpperCase().equals(pCity.toUpperCase())) warnings += "<p>The <strong>city</strong> in " +
+                        "the patient's master file does not agree with the one in this document.</p>";
+
+                String dFirstName = (d.getFirstName() == null ? "" : d.getFirstName());
+                String pFirstName = (p.getFirstName() == null ? "" : p.getFirstName());
+
+                if (!dFirstName.toUpperCase().equals(pFirstName.toUpperCase())) warnings += "<p>The <strong>first " +
+                        "name</strong> in the patient's master file does not agree with the one in this document.</p>";
+
+                Boolean newTelco = false;
+
+                for (ITelco t : p.getPhones()) {
+                    if (!(t.getAddress().equals(d.getPhone()) || t.getAddress().equals(d.getPhone2()))) newTelco = true;
+                }
+
+                if (newTelco) warnings += "<p>The CDX document contains <strong>phone numbers</strong> for the patient that are not in the database.</p>";
+
+                newTelco = false;
+
+                for (ITelco t : p.getEmails()) {
+                    if (!t.getAddress().equals(d.getEmail())) newTelco = true;
+                }
+
+                if (newTelco) warnings += "<p>The CDX document contains <strong>email addresses</strong> for the patient that are not in the database.</p>";
             }
 
-            if (newTelco)
-                warnings += "<p>The CDX document contains <strong>phone numbers</strong> for the patient that are not in the database.</p>";
-
-            newTelco = false;
-
-            for (ITelco t : p.getEmails()) {
-                if (!t.getAddress().equals(d.getEmail())) newTelco = true;
-            }
-
-            if (newTelco)
-                warnings += "<p>The CDX document contains <strong>email addresses</strong> for the patient that are not in the database.</p>";
-        }
+        } catch (Exception e) {MiscUtils.getLogger().error("Demographics consistency check failed (not fatal)", e);};
         return warnings;
     }
 
@@ -331,8 +344,8 @@ public class CDXImport {
     }
 
     private boolean routed(Document docEntity) {
-        List<ProviderLabRoutingModel> plrs = plrDao.getProviderLabRoutingForLabAndType(docEntity.getDocumentNo(), "DOC");
-        return !plrs.isEmpty();
+        ProviderLabRoutingModel plr = plrDao.findByLabNoAndLabType(docEntity.getDocumentNo(), "DOC");
+        return plr != null;
     }
 
 
@@ -404,7 +417,7 @@ public class CDXImport {
         Provider provEntity = null;
 
         try {
-            providerDao.getProviderByOhipNo(prov.getID());
+            provEntity = providerDao.getProviderByOhipNo(prov.getID());
         } catch (Exception e) {
             MiscUtils.getLogger().info("Provider in CDX document does not have valid ID");
         }
