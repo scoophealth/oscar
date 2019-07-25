@@ -46,8 +46,15 @@ public class ProviderInboxRoutingDao extends AbstractDao<ProviderInboxItem> {
 	public ProviderInboxRoutingDao() {
 		super(ProviderInboxItem.class);
 	}
-    
 
+
+	public void deleteLinkForDeletedDocument(int docNo, String providerNo) {
+		String sql = "DELETE FROM ProviderInboxItem p where p.labNo = :docid and p.providerNo = :pno and p.labType ='DOC'";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("docid", docNo);
+		query.setParameter("pno", providerNo);
+		query.executeUpdate();
+	}
 
 
     public boolean removeLinkFromDocument(String docType, Integer docId, String providerNo) {

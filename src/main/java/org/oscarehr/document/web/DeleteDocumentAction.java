@@ -85,7 +85,7 @@ public class DeleteDocumentAction extends DispatchAction {
 
 
 			for (ProviderInboxItem prov : providerInboxRoutingDAO.getProvidersWithRoutingForDocument("DOC", docNo)) {
-				providerInboxRoutingDAO.removeLinkFromDocument("DOC", docNo, prov.getProviderNo());
+				providerInboxRoutingDAO.deleteLinkForDeletedDocument(docNo, prov.getProviderNo());
 			}
 
 
