@@ -334,7 +334,9 @@ public class CDXImport {
 
         addPatient(docEntity, doc.getPatient());
 
-        addProviderRouting(docEntity, doc.getPrimaryRecipient());
+        for (IProvider q : doc.getPrimaryRecipients()) {
+            addProviderRouting(docEntity, q);
+        }
 
         for (IProvider q : doc.getSecondaryRecipients()) {
             addProviderRouting(docEntity, q);
