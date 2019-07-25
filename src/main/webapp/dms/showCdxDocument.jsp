@@ -717,7 +717,10 @@ It must have been deleted. Please refresh your Inbox window.
             return false;
         }
 
-
+        window.onunload = refreshParent;
+        function refreshParent() {
+            window.opener.location.reload();
+        }
     </script>
 </div>
 </body>

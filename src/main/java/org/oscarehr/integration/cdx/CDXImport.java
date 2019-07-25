@@ -246,7 +246,9 @@ public class CDXImport {
                 if (newTelco) warnings += "<p>The CDX document contains <strong>email addresses</strong> for the patient that are not in the database.</p>";
             }
 
-        } catch (Exception e) {MiscUtils.getLogger().error("Demographics consistency check failed (not fatal)", e);};
+        } catch (Exception e) {
+            MiscUtils.getLogger().error("Demographics consistency check failed (not fatal)", e);
+        };
         return warnings;
     }
 
@@ -351,64 +353,69 @@ public class CDXImport {
 
     private void addPatient(Document docEntity, IPatient patient) {
 
-        Demographic matchedDemo=null;
+        try {
+
+            Demographic matchedDemo = null;
 
 
-        // implement 4 point matching as required by CDX conformance spec
+            // implement 4 point matching as required by CDX conformance spec
 
 
-        List<Demographic> demos = demoDao.getDemographicsByHealthNum(patient.getID());
+            List<Demographic> demos = demoDao.getDemographicsByHealthNum(patient.getID());
 
-        if (demos.size() == 1) {
-            Demographic demo = demos.get(0);
-            if (demo.getLastName().equals(patient.getLastName().toUpperCase())) {
+            if (demos.size() == 1) {
+                Demographic demo = demos.get(0);
+                if (demo.getLastName().toUpperCase().equals(patient.getLastName().toUpperCase())) {
 
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    Date d = sdf.parse(demo.getFormattedDob());
+                    try {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        Date d = sdf.parse(demo.getFormattedDob());
 
-                    Date d2 = patient.getBirthdate();
+                        Date d2 = patient.getBirthdate();
 
-                    if (sameDates(d, d2) && (patient.getGender() != null)) {
+                        if (sameDates(d, d2) && (patient.getGender() != null)) {
 
-                        if (patient.getGender().label.equals(demo.getSex())) {
+                            if (patient.getGender().label.equals(demo.getSex())) {
 
-                            matchedDemo = demo; // we found the patient
+                                matchedDemo = demo; // we found the patient
+                            }
                         }
+                    } catch (ParseException e) {
+                        MiscUtils.getLogger().error("Error", e);
                     }
-                } catch (ParseException e) {
-                    MiscUtils.getLogger().error("Error", e);
                 }
             }
-        }
 
 
-        CtlDocument ctlDoc = new CtlDocument();
+            CtlDocument ctlDoc = new CtlDocument();
 
-        ctlDoc.getId().setDocumentNo(docEntity.getDocumentNo());
-        ctlDoc.getId().setModule("demographic");
-        ctlDoc.getId().setModuleId((matchedDemo==null ? -1 : matchedDemo.getId()));
-        ctlDoc.setStatus("A");
-        ctlDocDao.persist(ctlDoc);
+            ctlDoc.getId().setDocumentNo(docEntity.getDocumentNo());
+            ctlDoc.getId().setModule("demographic");
+            ctlDoc.getId().setModuleId((matchedDemo == null ? -1 : matchedDemo.getId()));
+            ctlDoc.setStatus("A");
+            ctlDocDao.persist(ctlDoc);
 
-        if (matchedDemo != null) {
+            if (matchedDemo != null) {
 
-            PatientLabRouting patientLabRouting = new PatientLabRouting();
+                PatientLabRouting patientLabRouting = new PatientLabRouting();
 
-            patientLabRouting.setLabNo(docEntity.getDocumentNo());
-            patientLabRouting.setLabType("DOC");
-            patientLabRouting.setDemographicNo(matchedDemo.getDemographicNo());
-            patientLabRoutingDao.persist(patientLabRouting);
-        }
+                patientLabRouting.setLabNo(docEntity.getDocumentNo());
+                patientLabRouting.setLabType("DOC");
+                patientLabRouting.setDemographicNo(matchedDemo.getDemographicNo());
+                patientLabRoutingDao.persist(patientLabRouting);
+            }
 
-        // route to MRP if existent
-        if (matchedDemo != null && matchedDemo.getProvider() !=null) {
-            ProviderLabRoutingModel plr = new ProviderLabRoutingModel();
-            plr.setLabNo(docEntity.getDocumentNo());
-            plr.setStatus("N");
-            plr.setLabType("DOC");
-            plr.setProviderNo(matchedDemo.getProvider().getProviderNo());
-            plrDao.persist(plr);
+            // route to MRP if existent
+            if (matchedDemo != null && matchedDemo.getProvider() != null) {
+                ProviderLabRoutingModel plr = new ProviderLabRoutingModel();
+                plr.setLabNo(docEntity.getDocumentNo());
+                plr.setStatus("N");
+                plr.setLabType("DOC");
+                plr.setProviderNo(matchedDemo.getProvider().getProviderNo());
+                plrDao.persist(plr);
+            }
+        } catch (Exception e) {
+            MiscUtils.getLogger().error("Patient linking with CDX document failed (not fatal)", e);
         }
     }
 

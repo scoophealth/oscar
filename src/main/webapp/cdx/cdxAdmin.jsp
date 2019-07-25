@@ -304,7 +304,7 @@
 
         There are <%=newDocs.size()%> new documents waiting.
         <% if (newDocs.size() > 0) { %>
-        <button id="newButton" class="btn btn-default btn-xs">Import</button>
+        <button id="newButton" class="btn btn-default btn-xs" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Importing">Import</button>
         <%}%>
 
         <%
@@ -367,7 +367,7 @@
                     <div class="col-md-6">
                         <button id="selAll" class="btn btn-default btn-xs" type="button" >Toggle Selection
                         </button>
-                        <button id="downButton" class="btn btn-primary btn-xs" type="button" style="display:none">Import
+                        <button id="downButton" class="btn btn-primary btn-xs" type="button" style="display:none" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Importing">Import
                             selected documents
                         </button>
                     </div>
