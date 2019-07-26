@@ -68,10 +68,9 @@ public class CdxProvenanceDao extends AbstractDao<CdxProvenance> {
         return query.getResultList();
     }
 
-    public List<CdxProvenance> findByKindAndInFulFillment(String kind, String inFulfillmentId) {
-        String sql = "FROM CdxProvenance p where p.kind = :kind and p.inFulfillmentOfId = :inFulfillmentId";
+    public List<CdxProvenance> findByInFulFillment(String inFulfillmentId) {
+        String sql = "FROM CdxProvenance p where p.inFulfillmentOfId = :inFulfillmentId";
         Query query = entityManager.createQuery(sql);
-        query.setParameter("kind", kind);
         query.setParameter("inFulfillmentId", inFulfillmentId);
         return query.getResultList();
     }

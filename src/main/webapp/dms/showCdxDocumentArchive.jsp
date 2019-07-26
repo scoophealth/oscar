@@ -63,7 +63,7 @@
     CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
 
 
-    CdxProvenance provenanceDoc = provenanceDao.findByDocumentNo(docIdNo);
+    CdxProvenance provenanceDoc = provenanceDao.getCdxProvenance(docIdNo);
 
 
 
@@ -133,7 +133,7 @@
                                 <%
                                     for (CdxProvenance p : versions) {
                                 %>
-                                <a href="showCdxDocumentArchive.jsp?ID=<%=p.getDocumentNo()%>" class="list-group-item <%=(p.getId().equals(provenanceDoc.getId()) ? "list-group-item-info" : "")%> ">
+                                <a href="showCdxDocumentArchive.jsp?ID=<%=p.getId()%>" class="list-group-item <%=(p.getId().equals(provenanceDoc.getId()) ? "list-group-item-info" : "")%> ">
                                     Version <%=p.getVersion()%>, Effective time: <%=p.getEffectiveTime()%>
                                 </a>
 

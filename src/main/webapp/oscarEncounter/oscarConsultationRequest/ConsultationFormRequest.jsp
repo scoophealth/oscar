@@ -1435,18 +1435,25 @@ function updateFaxButton() {
 				</tr>
 
 				<% if (show_CDX) {
-					String status = "<b>Not Sent</b>";
-					List<CdxProvenance> cdxProvenanceList = null;
+					String sentStatus = "<b>Not Sent</b>";
+					List<CdxProvenance> sentDocs = null;
 					CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
 					if (requestId != null && !requestId.isEmpty()) {
-						cdxProvenanceList = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
-						if (cdxProvenanceList == null || cdxProvenanceList.isEmpty()) {
-							MiscUtils.getLogger().warn("Find by DocumentType.REFERRAL_NOTE failed.");
-							cdxProvenanceList = cdxProvenanceDao.findByKindAndInFulFillment("Referral note", requestId);
+						sentDocs = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
+						if (sentDocs != null && !sentDocs.isEmpty()) {
+							sentStatus = "<b>Sent</b>";
 						}
-						if (cdxProvenanceList != null && !cdxProvenanceList.isEmpty()) {
-							status = "<b>Sent</b>";
+					}
+
+					String receivedStatus = "<b>Nothing Received</b>";
+					List<CdxProvenance> receivedDocs = null;
+
+					if (sentDocs != null && !sentDocs.isEmpty()) {
+						receivedDocs = cdxProvenanceDao.findByInFulFillment(sentDocs.get(0).getDocumentId());
+						if (receivedDocs != null && !receivedDocs.isEmpty()) {
+							receivedStatus = "<b>Response received</b>";
 						}
+
 					}
 
 				%>
@@ -1458,7 +1465,7 @@ function updateFaxButton() {
 					<td class="tite4" colspan="2">
 						<table>
 							<tr>
-								<td class="stat"><%=status%>
+								<td class="stat"><%=sentStatus%>
 								</td>
 							</tr>
 						</table>
@@ -1470,8 +1477,8 @@ function updateFaxButton() {
 							<tr>
 								<td>
 							<%
-									if (cdxProvenanceList != null && !cdxProvenanceList.isEmpty()) {
-										for (CdxProvenance cdxProvenance : cdxProvenanceList) {
+									if (sentDocs != null && !sentDocs.isEmpty()) {
+										for (CdxProvenance cdxProvenance : sentDocs) {
 											DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 											out.print("<a target=\"_blank\" href=\"../../dms/showCdxDocumentArchive.jsp?ID="+cdxProvenance.getId()+"\"/>");
 											out.print("<small><small>"+dateFormat.format(cdxProvenance.getEffectiveTime())+"</small></small>");
@@ -1479,6 +1486,36 @@ function updateFaxButton() {
 										}
 									}
 							%>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="tite4" colspan="2">
+						<table>
+							<tr>
+								<td class="stat"><%=receivedStatus%>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="tite4" colspan="2">
+						<table>
+							<tr>
+								<td>
+									<%
+										if (receivedDocs != null && !receivedDocs.isEmpty()) {
+											for (CdxProvenance cdxProvenance : receivedDocs) {
+												DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+												out.print("<a target=\"_blank\" href=\"../../dms/showCdxDocumentArchive.jsp?ID="+cdxProvenance.getId()+"\"/>");
+												out.print("<small><small>"+dateFormat.format(cdxProvenance.getEffectiveTime())+"</small></small>");
+												out.println("</a>");
+											}
+										}
+									%>
 								</td>
 							</tr>
 						</table>

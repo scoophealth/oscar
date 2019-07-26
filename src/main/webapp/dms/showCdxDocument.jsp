@@ -475,7 +475,7 @@ It must have been deleted. Please refresh your Inbox window.
                             <%
                                 for (CdxProvenance p : versions) {
                             %>
-                            <a href="showCdxDocumentArchive.jsp?ID=<%=p.getDocumentNo()%>" class="list-group-item <%=(p.getId().equals(provenanceDoc.getId()) ? "list-group-item-info" : "")%> ">
+                            <a href="showCdxDocumentArchive.jsp?ID=<%=p.getId()%>" class="list-group-item <%=(p.getId().equals(provenanceDoc.getId()) ? "list-group-item-info" : "")%> ">
                                 Version <%=p.getVersion()%>, Effective time: <%=p.getEffectiveTime()%>
                             </a>
 
@@ -717,10 +717,7 @@ It must have been deleted. Please refresh your Inbox window.
             return false;
         }
 
-        window.onunload = refreshParent;
-        function refreshParent() {
-            window.opener.location.reload();
-        }
+
     </script>
 </div>
 </body>
