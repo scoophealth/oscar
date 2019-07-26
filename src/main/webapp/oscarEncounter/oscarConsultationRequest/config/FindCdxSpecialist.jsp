@@ -46,7 +46,8 @@
 </head>
 <body>
 Enter some characters from the providers first, last or middle name and submit.<br>
-(If no characters are provided all CDX capable providers will be returned. That is very slow!!!):
+<sl>If no characters are provided all CDX capable providers with an non-empty last name will be returned.</sl><br>
+<b>That is very slow!!!</b>:
 <form action="../../oscarConsultationRequest/config/AddCdxSpecialist.jsp">
     <label>
         First/Last name:

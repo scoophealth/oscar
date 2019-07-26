@@ -183,37 +183,52 @@ public class CDXSpecialist {
 
         ProfessionalSpecialist professionalSpecialist = new ProfessionalSpecialist();
         List<IProvider> providers = findCdxSpecialistById(cdxSpecId);
+        ArrayList<String> address = new ArrayList<String>();
         String annotations = null;
         String comma = " ,";
         String tmpStr;
+        String emailW = null;
+        String emailH = null;
+        String emailM = null;
         if (providers != null && !providers.isEmpty()) {
             IProvider p = providers.get(0);
             professionalSpecialist.setLastName(p.getLastName());
             professionalSpecialist.setFirstName(p.getFirstName());
             professionalSpecialist.setProfessionalLetters(p.getPrefix());
             professionalSpecialist.setSalutation(p.getPrefix());
-            professionalSpecialist.setAddress(p.getStreetAddress());
+            if (p.getClinicName() != null && !p.getClinicName().trim().isEmpty()) {
+                address.add(p.getClinicName().trim());
+            }
+            if (p.getStreetAddress() != null && !p.getStreetAddress().trim().isEmpty()) {
+                address.add(p.getStreetAddress().trim());
+            }
+            String[] addressArr = new String[address.size()];
+            for (int j=0; j < address.size(); j++) {
+                addressArr[j] = address.get(j);
+            }
+            professionalSpecialist.setStreetAddress(addressArr);
             professionalSpecialist.setCity(p.getCity());
             professionalSpecialist.setProvince(p.getProvince());
             professionalSpecialist.setPostal(p.getPostalCode());
             // Organization name overwrites first name!!!
             // professionalSpecialist.setOrganizationName(p.getClinicName());
-            if (p.getClinicName() != null && !p.getClinicName().isEmpty()) {
-                tmpStr = "Clinic Name: " + p.getClinicName();
-                if (annotations == null) {
-                    annotations = tmpStr;
-                } else {
-                    annotations += comma + tmpStr;
-                }
-            }
-            if (p.getClinicID() != null && !p.getClinicID().isEmpty()) {
-                tmpStr = "Clinic ID: " + p.getClinicID();
-                if (annotations == null) {
-                    annotations = tmpStr;
-                } else {
-                    annotations += comma + tmpStr;
-                }
-            }
+
+//            if (p.getClinicName() != null && !p.getClinicName().isEmpty()) {
+//                tmpStr = "Clinic Name: " + p.getClinicName();
+//                if (annotations == null) {
+//                    annotations = tmpStr;
+//                } else {
+//                    annotations += comma + tmpStr;
+//                }
+//            }
+//            if (p.getClinicID() != null && !p.getClinicID().isEmpty()) {
+//                tmpStr = "Clinic ID: " + p.getClinicID();
+//                if (annotations == null) {
+//                    annotations = tmpStr;
+//                } else {
+//                    annotations += comma + tmpStr;
+//                }
+//            }
 
             professionalSpecialist.setAnnotation(p.getClinicName()+" ("+p.getClinicID()+")");
             List<ITelco> phones = p.getPhones();
@@ -227,24 +242,36 @@ public class CDXSpecialist {
                 }
             }
             List<ITelco> emails = p.getEmails();
+            //professionalSpecialists has one email field,
+            //prefer work email, mobile email, home email in that order
             for (ITelco email: emails) {
                 if (TelcoType.WORK.equals(email.getTelcoType())) {
-                    professionalSpecialist.setEmailAddress(email.getAddress());
-                } else if (TelcoType.HOME.equals(email.getTelcoType())) {
-                    tmpStr = "Email(H): " + email.getAddress();
-                    if (annotations == null) {
-                        annotations = tmpStr;
-                    } else {
-                        annotations += comma + tmpStr;
-                    }
+                    //professionalSpecialist.setEmailAddress(email.getAddress());
+                    emailW = email.getAddress().trim();
                 } else if (TelcoType.MOBILE.equals((email.getTelcoType()))) {
-                    tmpStr = "Email(M): " + email.getAddress();
-                    if (annotations == null) {
-                        annotations = tmpStr;
-                    } else {
-                        annotations += comma + tmpStr;
-                    }
+//                    tmpStr = "Email(M): " + email.getAddress();
+//                    if (annotations == null) {
+//                        annotations = tmpStr;
+//                    } else {
+//                        annotations += comma + tmpStr;
+//                    }
+                    emailM = email.getAddress().trim();
+                } else if (TelcoType.HOME.equals(email.getTelcoType())) {
+//                    tmpStr = "Email(H): " + email.getAddress();
+//                    if (annotations == null) {
+//                        annotations = tmpStr;
+//                    } else {
+//                        annotations += comma + tmpStr;
+//                    }
+                    emailH = email.getAddress().trim();
                 }
+            }
+            if (emailW != null && !emailW.isEmpty()) {
+                professionalSpecialist.setEmailAddress(emailW);
+            } else if (emailM != null && !emailM.isEmpty()) {
+                professionalSpecialist.setEmailAddress(emailM);
+            } else if (emailH != null && !emailH.isEmpty()) {
+                professionalSpecialist.setEmailAddress(emailH);
             }
             professionalSpecialist.setCdxCapable(true);
             professionalSpecialist.setCdxId(cdxSpecId);
