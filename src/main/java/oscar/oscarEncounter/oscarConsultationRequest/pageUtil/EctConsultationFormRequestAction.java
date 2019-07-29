@@ -610,6 +610,7 @@ public class EctConsultationFormRequestAction extends Action {
 
 		// Set status to pending specialist callback
 		consultationRequest.setStatus("2");
+		consultationRequestDao.merge(consultationRequest);
 	}
 
 	private boolean logResponse(IDocument doc) {
