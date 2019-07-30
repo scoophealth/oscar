@@ -368,7 +368,7 @@ It must have been deleted. Please refresh your Inbox window.
 
                                 <input type="button" class="btn btn-default" id="closeBtn_<%=documentNo%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                                 <input type="button" class="btn btn-danger" id="deleteBtn_<%=documentNo%>" value=" Delete" onClick="deleteCdxDocument(<%=documentNo%>)" <%=(demoLinked? "style='display:none'" : "")%>>
-                                <button type="button" class="btn btn-small" aria-label="CDX help" onClick="window.open('https://oscarcdxman.wbaer.info/009_receiving/cdx_10/');">
+                                <button type="button" class="btn btn-small" aria-label="CDX help" onClick="window.open('https://simbioses.github.io/cdxuserman/009_receiving/cdx_10/');">
                                     <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                                 </button>
                                 <div class="btn-group" role="group" <%=(!demoLinked? "style='display:none'" : "")%>>
@@ -530,7 +530,7 @@ It must have been deleted. Please refresh your Inbox window.
                         %>
                         <li> <a href="showCdxDocumentArchive.jsp?ID=<%=parentDoc.getId()%>">
 
-                            <%=parentDoc.getDocumentId()%> (parent document) </a>  </li>
+                            <%=parentDoc.getKind()%> (parent document) </a>  </li>
 
                         <%
                                 }} %>
@@ -545,7 +545,7 @@ It must have been deleted. Please refresh your Inbox window.
                         %>
                         <li> <a href="showCdxDocumentArchive.jsp?ID=<%=iffoDoc.getId()%>">
 
-                            <%=iffoDoc.getDocumentId()%> (in fulfillment of) </a>  </li>
+                            <%=iffoDoc.getKind()%> (in fulfillment of) </a>  </li>
 
                         <%
                                 }} %>
@@ -561,7 +561,7 @@ It must have been deleted. Please refresh your Inbox window.
 
                         <li> <a href="showCdxDocumentArchive.jsp?ID=<%=d.getId()%>">
 
-                            <%=d.getDocumentId()%> (same document set)</a>  </li>
+                            <%=d.getKind()%> (same document set)</a>  </li>
                         <%
                                 }}
 

@@ -203,7 +203,7 @@
     <div class="panel-heading">
 
 
-        <h3 class="panel-title">CDX Configuration 		<button type="button" class="btn btn-small" aria-label="CDX help" onClick="window.open('https://oscarcdxman.wbaer.info/018_administration/');">
+        <h3 class="panel-title">CDX Configuration 		<button type="button" class="btn btn-small" aria-label="CDX help" onClick="window.open('https://simbioses.github.io/cdxuserman/018_administration/');">
             <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
         </button></h3>
     </div>

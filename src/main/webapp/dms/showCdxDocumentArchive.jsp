@@ -54,6 +54,8 @@
 <%@ page import="org.oscarehr.integration.cdx.dao.*" %>
 <%@ page import="org.oscarehr.integration.cdx.model.CdxProvenance" %>
 <%@ page import="org.oscarehr.integration.cdx.model.CdxAttachment" %>
+<%@ page import="ca.uvic.leadlab.obibconnector.facades.receive.IDocument" %>
+<%@ page import="ca.uvic.leadlab.obibconnector.facades.datatypes.DocumentType" %>
 <%
 
 
@@ -107,7 +109,6 @@
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-
 
                 <!--  ************************************ this code below duplicated in showCdxDocument
                        ************************************ keep consistent upon changing
@@ -188,7 +189,7 @@
                             %>
                             <li> <a href="showCdxDocumentArchive.jsp?ID=<%=parentDoc.getId()%>">
 
-                                <%=parentDoc.getDocumentId()%> (parent document) </a>  </li>
+                                <%=parentDoc.getKind()%> (parent document) </a>  </li>
 
                             <%
                                     }} %>
@@ -203,7 +204,7 @@
                             %>
                             <li> <a href="showCdxDocumentArchive.jsp?ID=<%=iffoDoc.getId()%>">
 
-                                <%=iffoDoc.getDocumentId()%> (in fulfillment of) </a>  </li>
+                                <%=iffoDoc.getKind()%> (in fulfillment of) </a>  </li>
 
                             <%
                                     }} %>
@@ -219,7 +220,7 @@
 
                             <li> <a href="showCdxDocumentArchive.jsp?ID=<%=d.getId()%>">
 
-                                <%=d.getDocumentId()%> (same document set)</a>  </li>
+                                <%=d.getKind()%> (same document set)</a>  </li>
                             <%
                                     }}
 
@@ -242,6 +243,14 @@
 
             </div>
 
+            <%
+                if (provenanceDoc.getAction().equals("SEND")) {
+
+                    if (provenanceDoc.getKind().equals(DocumentType.REFERRAL_NOTE.label)) {
+                        out.print("<div> <a href=\"/oscar/oscarEncounter/ViewRequest.do?requestId=" + provenanceDoc.getInFulfillmentOfId() + "\"" + " class =\"btn btn-info\" role=\"button\">  Open corresponding consultation </a> </div>");
+                    }
+                }
+            %>
 
         </div>
     </div>
