@@ -63,6 +63,7 @@ import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.integration.cdx.CDXConfiguration;
 import org.oscarehr.integration.cdx.CDXSpecialist;
 import org.oscarehr.integration.cdx.dao.CdxProvenanceDao;
+import org.oscarehr.integration.cdx.model.CdxProvenance;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.*;
@@ -406,7 +407,7 @@ public class EctConsultationFormRequestAction extends Action {
 	    		forward.addParameter("requestId", requestId);
 	    		return forward;
             }
-		} else if (submission.endsWith("And Save")) {  //for BC CDX messages
+		} else if (submission.endsWith("CDX_send") || submission.endsWith("CDX_update")) {  //for BC CDX messages
 			// upon success continue as normal with success message
 			// upon failure, go to consultation update page with message
 			ConsultationRequest consultationRequest=consultationRequestDao.find(Integer.parseInt(requestId));
@@ -418,8 +419,9 @@ public class EctConsultationFormRequestAction extends Action {
 				forward.addParameter("requestId", requestId);
 				return forward;
 			}
+
 			try {
-				doCdxSend(loggedInInfo, Integer.parseInt(requestId));
+				doCdxSend(loggedInInfo, Integer.parseInt(requestId), submission.endsWith("CDX_update"), requestId);
 				WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCreatedUpdateESent");
 			} catch (OBIBException e) {
 				logger.error("Error sending CDX consultation request.", e);
@@ -514,7 +516,7 @@ public class EctConsultationFormRequestAction extends Action {
 	    }
     }
 
-	private void doCdxSend(LoggedInInfo loggedInInfo, Integer consultationRequestId) throws OBIBException {
+	private void doCdxSend(LoggedInInfo loggedInInfo, Integer consultationRequestId, Boolean isUpdate, String requestId) throws OBIBException {
 
 		ConsultationRequestDao consultationRequestDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
 		ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
@@ -566,12 +568,25 @@ public class EctConsultationFormRequestAction extends Action {
 			MiscUtils.getLogger().debug("File: " + filename + ", Size: " + newBytes.length);
 		}
 
-		IDocument response = null;
+		IDocument response;
 		CDXConfiguration cdxConfig = new CDXConfiguration();
 		SubmitDoc submitDoc = new SubmitDoc(cdxConfig);
 
-		ISubmitDoc doc = submitDoc.newDoc()
-				.documentType(DocumentType.REFERRAL_NOTE)
+		ISubmitDoc doc = null;
+
+		if (isUpdate) {
+			List<CdxProvenance> sentDocs;
+			CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
+			sentDocs = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
+			String docId = sentDocs.get(0).getDocumentId();
+			Integer docVersion = sentDocs.get(0).getVersion();
+			doc = submitDoc.updateDoc(docId, docVersion);
+		} else {
+			doc = submitDoc.newDoc();
+		}
+
+
+		doc.documentType(DocumentType.REFERRAL_NOTE)
 				.inFulfillmentOf()
 					.id(Integer.toString(consultationRequestId))
 					.statusCode(OrderStatus.ACTIVE).and()

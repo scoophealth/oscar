@@ -121,6 +121,8 @@ if(!authed) {
 		hide_eRequestResponse = true;
 	}
 	Boolean show_CDX = false;
+	Boolean previous_CDX_doc_sent = false;
+
     if ("bc".equalsIgnoreCase(oscar.OscarProperties.getInstance().getProperty("billregion"))) {
         show_CDX = true;
 
@@ -1442,6 +1444,7 @@ function updateFaxButton() {
 						sentDocs = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
 						if (sentDocs != null && !sentDocs.isEmpty()) {
 							sentStatus = "<b>Sent</b>";
+							previous_CDX_doc_sent = true;
 						}
 					}
 
@@ -1479,10 +1482,12 @@ function updateFaxButton() {
 							<%
 									if (sentDocs != null && !sentDocs.isEmpty()) {
 										for (CdxProvenance cdxProvenance : sentDocs) {
-											DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-											out.print("<a target=\"_blank\" href=\"../../dms/showCdxDocumentArchive.jsp?ID="+cdxProvenance.getId()+"\"/>");
-											out.print("<small><small>"+dateFormat.format(cdxProvenance.getEffectiveTime())+"</small></small>");
-											out.println("</a>");
+											if (cdxProvenance.getAction().equals("SEND")) {
+												DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+												out.print("<a target=\"_blank\" href=\"../../dms/showCdxDocumentArchive.jsp?ID=" + cdxProvenance.getId() + "\"/>");
+												out.print("<small><small>" + dateFormat.format(cdxProvenance.getEffectiveTime()) + "</small></small>");
+												out.println("</a>");
+											}
 										}
 									}
 							%>
@@ -1646,11 +1651,21 @@ function updateFaxButton() {
 						</logic:equal>
 						<% } %>
                         <% if (show_CDX) { %>
+						<% if (previous_CDX_doc_sent) { %>
                         <logic:equal value="true" name="EctConsultationFormRequestForm" property="CDXeReferral">
+
                             <input name="updateAndSendElectronicallyCdxTop" type="button"
-                                   value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndSendCDXeReferral"/>"
-                                   onclick="return checkForm('Update CDX Consultation Request And Save','EctConsultationFormRequestForm');" />
+                                   value="Update and Send (via CDX)"
+                                   onclick="return checkForm('Update_CDX_update','EctConsultationFormRequestForm');" />
                         </logic:equal>
+						<% } else {%>
+						<logic:equal value="true" name="EctConsultationFormRequestForm" property="CDXeReferral">
+
+							<input name="updateAndSendElectronicallyCdxTop" type="button"
+								   value="Update and Send (via CDX)"
+								   onclick="return checkForm('Update_CDX_send','EctConsultationFormRequestForm');" />
+						</logic:equal>
+						<% } %>
                         <% } %>
 						<oscar:oscarPropertiesCheck value="yes" property="faxEnable">
 							<input id="fax_button" name="updateAndFax" type="button" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndFax"/>" onclick="return checkForm('Update And Fax','EctConsultationFormRequestForm');" />
@@ -1669,8 +1684,8 @@ function updateFaxButton() {
                         <% if (show_CDX) { %>
                         <logic:equal value="true" name="EctConsultationFormRequestForm" property="CDXeReferral">
                             <input name="submitAndSendElectronicallyCdxTop" type="button"
-                                   value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndSendCDXeReferral"/>"
-                                   onclick="return checkForm('Submit CDX Consultation Request And Save','EctConsultationFormRequestForm');" />
+                                   value="Submit and Send (via CDX)"
+                                   onclick="return checkForm('Submit_CDX_send','EctConsultationFormRequestForm');" />
                         </logic:equal>
                         <% } %>
 						<oscar:oscarPropertiesCheck value="yes" property="faxEnable">
@@ -1680,7 +1695,7 @@ function updateFaxButton() {
 						<input type="button" value="Send eResponse" onclick="$('saved').value='true';document.location='<%=thisForm.getOruR01UrlString(request)%>'" />
 						<% } %>
                         <% if (show_CDX) { %>
-						<input name="submitAndSaveCdx" type="button" value="Submit and Save CDX e-Referral" onclick="return checkForm('Submit CDX Consultation Request And Save','EctConsultationFormRequestForm'); " />
+						<input name="submitAndSaveCdx" type="button" value="Submit and Send (via CDX)" onclick="return checkForm('Submit_CDX_send','EctConsultationFormRequestForm'); " />
 						<% } %>
 					<% } %>
 						<% if (!hide_eRequestResponse) { %>
@@ -2429,11 +2444,22 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 							</logic:equal>
 							<% } %>
 							<% if (show_CDX) { %>
-							<logic:equal value="true" name="EctConsultationFormRequestForm" property="CDXeReferral">
-								<input name="updateAndSendElectronicallyCdx" type="button"
-			   						value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnUpdateAndSendCDXeReferral"/>"
-			   						onclick="return checkForm('Update CDX Consultation Request And Save','EctConsultationFormRequestForm');" />
-							</logic:equal>
+	<% if (previous_CDX_doc_sent) { %>
+	<logic:equal value="true" name="EctConsultationFormRequestForm" property="CDXeReferral">
+
+		<input name="updateAndSendElectronicallyCdxTop" type="button"
+			   value="Update and Send (via CDX)"
+			   onclick="return checkForm('Update_CDX_update','EctConsultationFormRequestForm');" />
+	</logic:equal>
+	<% } else {%>
+	<logic:equal value="true" name="EctConsultationFormRequestForm" property="CDXeReferral">
+
+		<input name="updateAndSendElectronicallyCdxTop" type="button"
+			   value="Update and Send (via CDX)"
+			   onclick="return checkForm('Update_CDX_send','EctConsultationFormRequestForm');" />
+	</logic:equal>
+	<% } %>
+
 							<% } %>
 							<oscar:oscarPropertiesCheck value="yes" property="faxEnable">
 								<input id="fax_button2" name="updateAndFax" type="button" 
@@ -2459,8 +2485,8 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 							<% if (show_CDX) { %>
 							<logic:equal value="true" name="EctConsultationFormRequestForm" property="CDXeReferral">
 								<input name="submitAndSendElectronicallyCdx" type="button"
-									   value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnSubmitAndSendCDXeReferral"/>"
-									   onclick="return checkForm('Submit CDX Consultation Request And Save','EctConsultationFormRequestForm');" />
+									   value="Submit and Send (via CDX)"
+									   onclick="return checkForm('Submit_CDX_send');" />
 							</logic:equal>
 							<% } %>
 							<oscar:oscarPropertiesCheck value="yes" property="faxEnable">
@@ -2469,7 +2495,7 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 									onclick="return checkForm('Submit And Fax','EctConsultationFormRequestForm');" />
 							</oscar:oscarPropertiesCheck>
 							<% if (show_CDX) { %>
-								<input name="submitAndSaveCdx" type="button" value="Submit and Save CDX e-Referral" onclick="return checkForm('Submit CDX Consultation Request And Save','EctConsultationFormRequestForm'); " />
+								<input name="submitAndSaveCdx" type="button" value="Submit and Send (via CDX)" onclick="return checkForm('Submit_CD_send','EctConsultationFormRequestForm'); " />
 							<% } %>
 						<% }%>
 						<% if (!hide_eRequestResponse) { %>
