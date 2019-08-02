@@ -39,6 +39,8 @@ import org.oscarehr.integration.cdx.dao.CdxProvenanceDao;
 import org.oscarehr.integration.cdx.model.CdxPendingDoc;
 import org.oscarehr.integration.cdx.model.CdxProvenance;
 import org.oscarehr.util.MiscUtils;
+import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -432,12 +434,8 @@ public class CDXImport {
         }
 
         if (provEntity != null) {
-            ProviderLabRoutingModel plr = new ProviderLabRoutingModel();
-            plr.setLabNo(docEntity.getDocumentNo());
-            plr.setStatus("N");
-            plr.setLabType("DOC");
-            plr.setProviderNo(provEntity.getProviderNo());
-            plrDao.persist(plr);
+            ProviderLabRouting router = new ProviderLabRouting();
+            router.routeMagic(docEntity.getDocumentNo(), provEntity.getProviderNo(), "DOC");
         }
     }
 
