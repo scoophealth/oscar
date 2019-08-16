@@ -1390,7 +1390,10 @@ if(oscarProps.getProperty("new_label_print") != null && oscarProps.getProperty("
                             <security:oscarSec roleName="<%=roleName$%>" objectName="_demographicExport" rights="r" reverse="<%=false%>">
                                 <input type="button" value="<bean:message key="demographic.demographiceditdemographic.msgExport"/>"
                                     onclick="window.open('demographicExport.jsp?demographicNo=<%=demographic.getDemographicNo()%>');">
-                             </security:oscarSec>     
+                             </security:oscarSec>
+
+                                <input type="button" value="CareConnect" onclick="console.log('TODO: POST to CareConnect')">
+
                                 </td>
                                 <td width="30%" align='center' valign="top">
                                 <% if (oscarProps.getBooleanProperty("workflow_enhance", "true")) { %>
