@@ -1392,8 +1392,6 @@ if(oscarProps.getProperty("new_label_print") != null && oscarProps.getProperty("
                                     onclick="window.open('demographicExport.jsp?demographicNo=<%=demographic.getDemographicNo()%>');">
                              </security:oscarSec>
 
-                                <input type="button" value="CareConnect" onclick="console.log('TODO: POST to CareConnect')">
-
                                 </td>
                                 <td width="30%" align='center' valign="top">
                                 <% if (oscarProps.getBooleanProperty("workflow_enhance", "true")) { %>
@@ -3702,6 +3700,10 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 									onclick="window.open('demographicExport.jsp?demographicNo=<%=demographic.getDemographicNo()%>');">
 								</security:oscarSec>
 									<br>
+
+								<input type="button" value="CareConnect" onclick="console.log('TODO: POST to CareConnect')">
+								<br>
+
 								<input
 									type="button" name="Button" id="cancelButton" class="leftButton top"
 									value="Exit Master Record"	onclick="self.close();">
