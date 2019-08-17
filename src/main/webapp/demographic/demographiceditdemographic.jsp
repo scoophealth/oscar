@@ -3701,7 +3701,8 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 								</security:oscarSec>
 									<br>
 
-								<input type="button" value="CareConnect" onclick="console.log('TODO: POST to CareConnect')">
+								<script src="../careconnect/careconnect.js"></script>
+								<input type="button" value="CareConnect" onclick="if (eHealth) { console.log('Loaded eHealth object'); }")}.">
 								<br>
 
 								<input
