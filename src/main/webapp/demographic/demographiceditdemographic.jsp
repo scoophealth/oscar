@@ -3708,8 +3708,8 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 										var personalHealthNumber = "phn";
 										var firstName = "<%= demographic.getFirstName() %>";
 										var lastName = "<%= demographic.getLastName() %>";
-										var dateOfBirth = "dob";
-										var gender = "gender";
+										var dateOfBirth = "<%= demographic.getFormattedDob().replace("-", "") %>";
+										var gender = "<%= demographic.getSex() %>"; // TODO: U and UN, does Oscar have equivalent?
 										var organization = "org";
 										var domain = "dom";
 										
@@ -3717,6 +3717,8 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 										console.log("URL: " + url);
 										console.log("First name: " + firstName);
 										console.log("Last name: " + lastName);
+										console.log("Date of birth: " + dateOfBirth);
+										console.log("Gender: " + gender);
 										if (eHealth) {
 											console.log("Got eHealth object");
 										}
