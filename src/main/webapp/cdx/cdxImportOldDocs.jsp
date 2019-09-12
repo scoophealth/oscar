@@ -1,5 +1,4 @@
 <%@ page import="org.oscarehr.integration.cdx.CDXImport" %>
-<%@ page import="java.util.List" %>
 <%@ page import="java.util.Arrays" %><%--
 
     Copyright (c) 2013-2015. Department of Computer Science, University of Victoria. All Rights Reserved.
@@ -28,7 +27,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>BC CDX Download Old Documents</title>
+    <title>BC CDX Download Selected Documents</title>
 </head>
 <body>
 <%

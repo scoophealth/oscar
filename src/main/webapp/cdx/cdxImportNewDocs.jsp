@@ -1,4 +1,4 @@
-<%@ page import="org.oscarehr.integration.cdx.CDXDownloadJob" %><%--
+<%@ page import="org.oscarehr.integration.cdx.CDXImport" %><%--
 
     Copyright (c) 2013-2015. Department of Computer Science, University of Victoria. All Rights Reserved.
     This software is published under the GPL GNU General Public License.
@@ -30,12 +30,8 @@
 </head>
 <body>
 <%
-    Boolean result = CDXDownloadJob.runOnce();
-    if (result) {
-        out.println("<h4>CDX Download Succeeded</h4>");
-    } else {
-        out.println("<h4>CDX Download Failed.  Check Tomcat log for details.</h4>");
-    }
+    CDXImport cdxImport = new CDXImport();
+    cdxImport.importNewDocs();
 %>
 </body>
 </html>

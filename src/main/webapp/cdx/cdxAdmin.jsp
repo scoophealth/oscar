@@ -168,6 +168,8 @@
             });
 
             $('#downButton').click(function () {
+                var $this = $(this);
+                $this.button('loading');
                 runFetchOld(table.rows('.selected').data());
             });
 

@@ -26,6 +26,7 @@ package org.oscarehr.integration.cdx;
 
 import ca.uvic.leadlab.obibconnector.facades.Config;
 import ca.uvic.leadlab.obibconnector.impl.receive.ReceiveDoc;
+import ca.uvic.leadlab.obibconnector.utils.OBIBConnectorHelper;
 import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.dao.ClinicDAO;
 import org.oscarehr.common.dao.OscarJobDao;
@@ -44,6 +45,8 @@ import org.oscarehr.util.SpringUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import oscar.OscarProperties;
 
 public class CDXConfiguration implements Config {
 
@@ -166,18 +169,12 @@ public class CDXConfiguration implements Config {
         return url;
     }
 
-    @Override
     public String getClinicId() {
-        String cdxOid = "cdxpostprod-otca";
-        ClinicDAO clinicDAO = SpringUtils.getBean(ClinicDAO.class);
-        Clinic clinic = clinicDAO.getClinic();
-        if (clinic != null && clinic.getCdxOid() != null) cdxOid = clinic.getCdxOid();
+        String cdxOid = OBIBConnectorHelper.getProperty("cdx.clinic.id");
+        if (cdxOid.equals("")) {
+            MiscUtils.getLogger().error("Error: CDX_Clinic_ID not set in properties file");
+        }
         return cdxOid;
     }
-
-//    String getDefaultProvider() {
-//        return "0"; // fixme
-//    }
-
 
 }

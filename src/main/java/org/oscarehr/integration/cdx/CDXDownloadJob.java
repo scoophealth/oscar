@@ -90,29 +90,6 @@ public class CDXDownloadJob implements OscarRunnable {
         }
     }
 
-    public static Boolean runOnce() {
-
-//        LoggedInInfo x = new LoggedInInfo();
-//        x.setLoggedInProvider(provider);
-//        x.setLoggedInSecurity(security);
-
-        Boolean result = false;
-        try {
-            if (!running) {
-                logger.info("Starting CDX run once");
-                CDXImport cdxImport = new CDXImport();
-                cdxImport.importNewDocs();
-                logger.info("Done CDX run once");
-                result = true;
-            }
-        } catch (Exception e) {
-            logger.error("Error", e);
-        } finally {
-            DbConnectionFilter.releaseAllThreadDbResources();
-            running = false;
-        }
-        return result;
-    }
 
     public void setConfig(String config) {
     }
