@@ -334,7 +334,7 @@
 
             List<IDocument> availableDocs = null;
             try {
-                availableDocs = docSearcher.searchDocumentsByClinic(cdxConfiguration.getClinicId());
+                availableDocs = docSearcher.searchDocuments();
             } catch (Exception e) {
                 MiscUtils.getLogger().info("OBIB searchDocumentsByClinic failed", e);
             }
