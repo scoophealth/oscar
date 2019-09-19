@@ -3704,7 +3704,7 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 								<script src="../careconnect/careconnect.js"></script>
 								<script type="text/javascript">
 									function callCareConnect() {
-										var url = "url";
+										var url = "https://demo-careconnect.ca/";
 										var personalHealthNumber = "phn";
 										var firstName = "<%= demographic.getFirstName() %>";
 										var lastName = "<%= demographic.getLastName() %>";
