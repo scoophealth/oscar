@@ -3705,7 +3705,7 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 								<script type="text/javascript">
 									function callCareConnect() {
 										var url = "https://demo-careconnect.ca/";
-										var personalHealthNumber = "phn";
+										var personalHealthNumber = "<%= demographic.getHin() %>";
 										var firstName = "<%= demographic.getFirstName() %>";
 										var lastName = "<%= demographic.getLastName() %>";
 										var dateOfBirth = "<%= demographic.getFormattedDob().replace("-", "") %>";
@@ -3714,10 +3714,13 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 										
 										console.log("POSTING to CareConnect with parameters:")
 										console.log("URL: " + url);
+										console.log("Personal health number: " + personalHealthNumber);
 										console.log("First name: " + firstName);
 										console.log("Last name: " + lastName);
 										console.log("Date of birth: " + dateOfBirth);
 										console.log("Gender: " + gender);
+										console.log("Organization: " + organization);
+
 										if (eHealth) {
 											console.log("Got eHealth object");
 											console.log("TODO actually post");
