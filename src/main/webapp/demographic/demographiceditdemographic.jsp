@@ -46,12 +46,10 @@
 <%@page import="oscar.util.ConversionUtils"%>
 <%@page import="org.oscarehr.myoscar.utils.MyOscarLoggedInInfo"%>
 <%@page import="org.oscarehr.phr.util.MyOscarUtils"%>
-<%@page import="org.oscarehr.util.LoggedInInfo" %>
 <%@page import="org.oscarehr.PMmodule.caisi_integrator.ConformanceTestHelper"%>
 <%@page import="org.oscarehr.common.dao.DemographicExtDao" %>
 <%@page import="org.oscarehr.common.dao.DemographicArchiveDao" %>
 <%@page import="org.oscarehr.common.dao.DemographicExtArchiveDao" %>
-<%@page import="org.oscarehr.util.SpringUtils" %>
 <%@page import="oscar.OscarProperties" %>
 <%@page import="org.oscarehr.common.dao.ScheduleTemplateCodeDao" %>
 <%@page import="org.oscarehr.common.model.ScheduleTemplateCode" %>
@@ -248,7 +246,9 @@ if(!authed) {
 
 
 <%@page import="org.oscarehr.util.SpringUtils"%>
-<%@page import="org.apache.commons.lang.StringUtils"%><html:html locale="true">
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@ page import="org.oscarehr.util.*" %>
+<html:html locale="true">
 
 <head>
 <title><bean:message
@@ -3700,40 +3700,44 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 									onclick="window.open('demographicExport.jsp?demographicNo=<%=demographic.getDemographicNo()%>');">
 								</security:oscarSec>
 									<br>
-								<%
-									if ("BC".equals(oscarProps.getProperty("billregion").toUpperCase())) {
-								%>
-								<script src="../careconnect/careconnect.js"></script>
-								<script type="text/javascript">
-									function callCareConnect() {
-										var url = "https://demo-careconnect.ca/";
-										var personalHealthNumber = "<%= demographic.getHin() %>";
-										var firstName = "<%= demographic.getFirstName() %>";
-										var lastName = "<%= demographic.getLastName() %>";
-										var dateOfBirth = "<%= demographic.getFormattedDob().replace("-", "") %>";
-										var gender = "<%= demographic.getSex() %>"; // TODO: U and UN, does Oscar have equivalent?
-										var organization = "TODO";
-										
-										console.log("POSTING to CareConnect with parameters:")
-										console.log("URL: " + url);
-										console.log("Personal health number: " + personalHealthNumber);
-										console.log("First name: " + firstName);
-										console.log("Last name: " + lastName);
-										console.log("Date of birth: " + dateOfBirth);
-										console.log("Gender: " + gender);
-										console.log("Organization: " + organization);
+									<%
+										if ("BC".equals(oscarProps.getProperty("billregion").toUpperCase())) {
+											String url = (oscarProps.getProperty("BC_CareConnect_URL", "")).trim().toUpperCase();
+											if (!url.isEmpty()) {
+									%>
+									<script src="../careconnect/careconnect.js"></script>
+									<script type="text/javascript">
+										function callCareConnect() {
+											//var url = "https://demo-careconnect.ca/";
+											var url = "<%=url%>";
+											var personalHealthNumber = "<%= demographic.getHin() %>";
+											var firstName = "<%= demographic.getFirstName() %>";
+											var lastName = "<%= demographic.getLastName() %>";
+											var dateOfBirth = "<%= demographic.getFormattedDob().replace("-", "") %>";
+											var gender = "<%= demographic.getSex() %>"; // TODO: U and UN, does Oscar have equivalent?
+											var organization = "TODO";
 
-										if (eHealth) {
-											console.log("Got eHealth object");
-											console.log("TODO actually post");
-		                                                                        // Note that domain is not passed
-		                                                                        // eHealth.postwith.theFollowingPatientInfo(url, personalHealthNumber, firstName, lastName, dateOfBirth, gender, organization);
+											console.log("POSTING to CareConnect with parameters:")
+											console.log("URL: " + url);
+											console.log("Personal health number: " + personalHealthNumber);
+											console.log("First name: " + firstName);
+											console.log("Last name: " + lastName);
+											console.log("Date of birth: " + dateOfBirth);
+											console.log("Gender: " + gender);
+											console.log("Organization: " + organization);
+
+											if (eHealth) {
+												console.log("Got eHealth object");
+												console.log("TODO actually post");
+												// Note that domain is not passed
+												// eHealth.postwith.theFollowingPatientInfo(url, personalHealthNumber, firstName, lastName, dateOfBirth, gender, organization);
+											}
 										}
-									}
-								</script>
-								<input type="button" value="CareConnect" onclick="callCareConnect()">
-								<br>
-								<% } %>
+									</script>
+									<input type="button" value="CareConnect" onclick="callCareConnect()">
+									<br>
+									<% }
+									} %>
 
 								<input
 									type="button" name="Button" id="cancelButton" class="leftButton top"
