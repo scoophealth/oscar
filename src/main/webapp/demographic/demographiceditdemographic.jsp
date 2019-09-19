@@ -3704,6 +3704,8 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 										if ("BC".equals(oscarProps.getProperty("billregion").toUpperCase())) {
 											String url = (oscarProps.getProperty("BC_CareConnect_URL", "")).trim().toUpperCase();
 											if (!url.isEmpty()) {
+												String[] orgs = OscarProperties.getInstance().getProperty(
+														"BC_CareConnect_Orgs","").split(",");
 									%>
 									<script src="../careconnect/careconnect.js"></script>
 									<script type="text/javascript">
@@ -3717,8 +3719,10 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 											if (gender !== "M" || gender !== "F" || gender !== 'U' || gender !== "UN" ) {
 												gender = "U";
 											}
-											var organization = "TODO";
-
+											var organization = "";
+											if (<%= orgs.length!=0 %>) {  // TODO make this a dropdown
+												organization = "<%= orgs[0] %>";
+											}
 											console.log("POSTING to CareConnect with parameters:")
 											console.log("URL: " + url);
 											console.log("Personal health number: " + personalHealthNumber);
@@ -3730,7 +3734,7 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 
 											if (eHealth) {
 												console.log("Got eHealth object");
-												console.log("TODO actually post");
+												//console.log("TODO actually post");
 												// Note that domain is not passed
 												eHealth.postwith.theFollowingPatientInfo(url, personalHealthNumber, firstName, lastName, dateOfBirth, gender, organization);
 											}
