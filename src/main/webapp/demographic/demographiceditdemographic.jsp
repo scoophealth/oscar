@@ -3700,7 +3700,9 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 									onclick="window.open('demographicExport.jsp?demographicNo=<%=demographic.getDemographicNo()%>');">
 								</security:oscarSec>
 									<br>
-
+								<%
+									if ("BC".equals(oscarProps.getProperty("billregion").toUpperCase())) {
+								%>
 								<script src="../careconnect/careconnect.js"></script>
 								<script type="text/javascript">
 									function callCareConnect() {
@@ -3731,6 +3733,7 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 								</script>
 								<input type="button" value="CareConnect" onclick="callCareConnect()">
 								<br>
+								<% } %>
 
 								<input
 									type="button" name="Button" id="cancelButton" class="leftButton top"
