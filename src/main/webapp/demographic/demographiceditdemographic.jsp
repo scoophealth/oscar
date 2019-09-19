@@ -3708,13 +3708,15 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 									<script src="../careconnect/careconnect.js"></script>
 									<script type="text/javascript">
 										function callCareConnect() {
-											//var url = "https://demo-careconnect.ca/";
 											var url = "<%=url%>";
 											var personalHealthNumber = "<%= demographic.getHin() %>";
 											var firstName = "<%= demographic.getFirstName() %>";
 											var lastName = "<%= demographic.getLastName() %>";
 											var dateOfBirth = "<%= demographic.getFormattedDob().replace("-", "") %>";
-											var gender = "<%= demographic.getSex() %>"; // TODO: U and UN, does Oscar have equivalent?
+											var gender = "<%= demographic.getSex() %>".toUpperCase();
+											if (gender !== "M" || gender !== "F" || gender !== 'U' || gender !== "UN" ) {
+												gender = "U";
+											}
 											var organization = "TODO";
 
 											console.log("POSTING to CareConnect with parameters:")
@@ -3730,7 +3732,7 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 												console.log("Got eHealth object");
 												console.log("TODO actually post");
 												// Note that domain is not passed
-												// eHealth.postwith.theFollowingPatientInfo(url, personalHealthNumber, firstName, lastName, dateOfBirth, gender, organization);
+												eHealth.postwith.theFollowingPatientInfo(url, personalHealthNumber, firstName, lastName, dateOfBirth, gender, organization);
 											}
 										}
 									</script>
