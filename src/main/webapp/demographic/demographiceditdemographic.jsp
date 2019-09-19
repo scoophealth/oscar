@@ -3702,7 +3702,7 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 									<br>
 									<%
 										if ("BC".equals(oscarProps.getProperty("billregion").toUpperCase())) {
-											String url = (oscarProps.getProperty("BC_CareConnect_URL", "")).trim().toUpperCase();
+											String url = (oscarProps.getProperty("BC_CareConnect_URL", "")).trim();
 											if (!url.isEmpty()) {
 												String[] orgs = OscarProperties.getInstance().getProperty(
 														"BC_CareConnect_Orgs","").split(",");
