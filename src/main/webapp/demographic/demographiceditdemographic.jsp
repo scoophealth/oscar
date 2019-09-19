@@ -3716,7 +3716,7 @@ if(oscarProps.getProperty("demographicExtJScript") != null) { out.println(oscarP
 											var lastName = "<%= demographic.getLastName() %>";
 											var dateOfBirth = "<%= demographic.getFormattedDob().replace("-", "") %>";
 											var gender = "<%= demographic.getSex() %>".toUpperCase();
-											if (gender !== "M" || gender !== "F" || gender !== 'U' || gender !== "UN" ) {
+											if (gender !== "M" && gender !== "F" && gender !== 'U' && gender !== "UN" ) {
 												gender = "U";
 											}
 											var organization = "";
