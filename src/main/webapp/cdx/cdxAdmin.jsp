@@ -205,7 +205,7 @@
     <div class="panel-heading">
 
 
-        <h3 class="panel-title">CDX Configuration 		<button type="button" class="btn btn-small" aria-label="CDX help" onClick="window.open('https://simbioses.github.io/cdxuserman/018_administration/');">
+        <h3 class="panel-title">CDX Configuration 		<button type="button" class="btn btn-small" aria-label="CDX help" onClick="window.open('https://simbioses.github.io/cdxuserman/006_for_users/018_administration/cdx_03/');">
             <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
         </button></h3>
     </div>
@@ -230,7 +230,7 @@
 
                 <label for="cdxOid">Clinic OID</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="cdxOid" name="cdxOid" value="<%=cdxOid%>">
+                    <input disabled type="text" class="form-control" id="cdxOid" name="cdxOid" value="<%=cdxOid%>">
                 </div>
 
             </div>
