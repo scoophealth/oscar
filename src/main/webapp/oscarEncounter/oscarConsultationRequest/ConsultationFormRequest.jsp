@@ -79,6 +79,11 @@ if(!authed) {
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="ca.uvic.leadlab.obibconnector.facades.datatypes.DocumentType" %>
+<%@ page import="org.oscarehr.integration.cdx.CDXConfiguration" %>
+<%@ page import="ca.uvic.leadlab.obibconnector.impl.receive.SearchDoc" %>
+<%@ page import="ca.uvic.leadlab.obibconnector.facades.receive.IDocument" %>
+<%@ page import="ca.uvic.leadlab.obibconnector.facades.receive.IDistributionStatus" %>
+<%@ page import="ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException" %>
 <jsp:useBean id="displayServiceUtil" scope="request" class="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConDisplayServiceUtil" />
 
 <html:html locale="true">
@@ -1479,15 +1484,45 @@ function updateFaxButton() {
 						<table>
 							<tr>
 								<td>
-							<%
+							<%     CDXConfiguration cdxConfiguration = new CDXConfiguration();
+							       SearchDoc docSearcher = new SearchDoc(cdxConfiguration);
+							       int allDelivered=0;
+							       String documentId=null;
 									if (sentDocs != null && !sentDocs.isEmpty()) {
 										for (CdxProvenance cdxProvenance : sentDocs) {
 											if (cdxProvenance.getAction().equals("SEND")) {
+												documentId=cdxProvenance.getDocumentId();
 												DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 												out.print("<a target=\"_blank\" href=\"../../dms/showCdxDocumentArchive.jsp?ID=" + cdxProvenance.getId() + "\"/>");
 												out.print("<small><small>" + dateFormat.format(cdxProvenance.getEffectiveTime()) + "</small></small>");
 												out.println("</a>");
+
 											}
+										}
+
+										if(documentId!=null) {
+
+											try {
+												List<IDocument> documents = docSearcher.distributionStatus(documentId);
+												outer:
+												for(IDocument doc: documents) {
+													for (IDistributionStatus status : doc.getDistributionStatus()) {
+														if (status.getStatusName().equals("DELIVERED")) {
+															allDelivered = 1;
+														} else {
+															allDelivered = 0;
+															break outer;
+														}
+													}
+												}
+												if (allDelivered == 1) {
+													out.print("*");
+												}
+
+
+											} catch (Exception e) {
+                                                MiscUtils.getLogger().info("OBIB Distribution status failed", e);
+                                            }
 										}
 									}
 							%>
