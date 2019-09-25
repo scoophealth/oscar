@@ -9,7 +9,7 @@
 		// domain is an optional parameter that will put CareConnect into
 		// ‘PORTLET’ mode
 		theFollowingPatientInfo : function(uri, phn, firstName, lastName,
-				dateOfBirth, gender, org, domain) {
+				dateOfBirth, gender, org) {
 			var postToCareConnect = function(params) {
 				var form = document.createElement("form");
 				form.setAttribute("method", "post");
@@ -30,17 +30,15 @@
 			this.init = function() {
 				var integrationInfo = new Object({
 					"phn" : phn,
-					fn : firstName,
-					ln : lastName,
-					dob : dateOfBirth,
-					g : gender,
-					o : org,
-					d : domain
+					"fn" : firstName,
+					"ln" : lastName,
+					"dob" : dateOfBirth,
+					"g" : gender,
+					"o" : org
 				});
 				postToCareConnect(integrationInfo);
 			};
-			this.init(uri, phn, firstName, lastName, dateOfBirth, gender, org,
-					domain);
+			this.init(uri, phn, firstName, lastName, dateOfBirth, gender, org);
 		}
 	};
 })(window.eHealth = window.eHealth || {});
