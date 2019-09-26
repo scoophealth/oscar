@@ -18,6 +18,7 @@ CREATE TABLE cdx_provenance (
 																		document_no						int,
 																		version              int   ,
 																		effective_time       datetime  NOT NULL  ,
+																		received_time        datetime NULL,
 																		parent_doc           varchar(60)    ,
 																		set_id               varchar(60)    ,
 																		in_fulfillment_of_id varchar(60)    ,

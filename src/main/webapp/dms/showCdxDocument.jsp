@@ -487,7 +487,7 @@ It must have been deleted. Please refresh your Inbox window.
 
 
                 <div class="panel panel-default">
-                    <div class="panel-heading">Status: <%=provenanceDoc.getStatus()%></div>
+                    <div class="panel-heading">Status: <%=provenanceDoc.getStatus()%><%= provenanceDoc.getReceivedTime() != null ? ", Received at: " + provenanceDoc.getReceivedTime() : "" %></div>
 
                     <div class="panel-body">
 
