@@ -1516,7 +1516,9 @@ function updateFaxButton() {
 													}
 												}
 												if (allDelivered == 1) {
-													out.print("*");
+													out.print("&#10003");
+												} else {
+													out.print("&#9729");
 												}
 
 
