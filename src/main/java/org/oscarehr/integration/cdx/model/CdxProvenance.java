@@ -56,6 +56,9 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
     @Basic(optional = false)
     @Column(name = "effective_time")
     private Date effectiveTime;
+    @Basic(optional = false)
+    @Column(name = "received_time")
+    private Date receivedTime;
     @Column(name = "parent_doc")
     private String parentDoc;
     @Column(name = "set_id")
@@ -148,6 +151,14 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
         this.effectiveTime = effectiveTime;
     }
 
+    public Date getReceivedTime() {
+        return receivedTime;
+    }
+
+    public void setReceivedTime(Date receivedTime) {
+        this.receivedTime = receivedTime;
+    }
+
     public String getParentDoc() {
         return parentDoc;
     }
@@ -208,6 +219,7 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
         this.documentId = doc.getDocumentID();
         this.version = doc.getVersion();
         this.effectiveTime = doc.getEffectiveTime();
+        this.receivedTime = doc.getReceivedTime();
         this.parentDoc = doc.getParentDocumentID();
         this.setId = doc.getSetId();
         this.inFulfillmentOfId = doc.getInFulFillmentOfId();
