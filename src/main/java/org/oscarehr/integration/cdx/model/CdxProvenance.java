@@ -56,7 +56,6 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
     @Basic(optional = false)
     @Column(name = "effective_time")
     private Date effectiveTime;
-    @Basic(optional = false)
     @Column(name = "received_time")
     private Date receivedTime;
     @Column(name = "parent_doc")
