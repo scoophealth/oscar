@@ -57,6 +57,7 @@
 <%@ page import="org.oscarehr.integration.cdx.dao.*" %>
 <%@ page import="oscar.log.LogAction" %>
 <%@ page import="oscar.log.LogConst" %>
+<%@ page import="ca.uvic.leadlab.obibconnector.facades.datatypes.DocumentStatus" %>
 <%
 
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
@@ -485,8 +486,17 @@ It must have been deleted. Please refresh your Inbox window.
                 </div>
                 <%}%>
 
-
-                <div class="panel panel-default">
+<%
+    if (provenanceDoc.getStatus().equals(DocumentStatus.COMPLETED.code) ) {
+        out.println("<div class=\"panel panel-default\">");
+    }
+    else if (provenanceDoc.getStatus().equals(DocumentStatus.ABORTED.code) ) {
+        out.println("<div class=\"panel panel-danger\">");
+    }
+    else {
+        out.println("<div class=\"panel panel-warning\">");
+    }
+%>
                     <div class="panel-heading">Status: <%=provenanceDoc.getStatus()%><%= provenanceDoc.getReceivedTime() != null ? ", Received at: " + provenanceDoc.getReceivedTime() : "" %></div>
 
                     <div class="panel-body">

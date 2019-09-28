@@ -56,6 +56,7 @@
 <%@ page import="org.oscarehr.integration.cdx.model.CdxAttachment" %>
 <%@ page import="ca.uvic.leadlab.obibconnector.facades.receive.IDocument" %>
 <%@ page import="ca.uvic.leadlab.obibconnector.facades.datatypes.DocumentType" %>
+<%@ page import="ca.uvic.leadlab.obibconnector.facades.datatypes.DocumentStatus" %>
 <%
 
 
@@ -145,7 +146,17 @@
                     <%}%>
 
 
-                    <div class="panel panel-default">
+                    <%
+                        if (provenanceDoc.getStatus().equals(DocumentStatus.COMPLETED.code) ) {
+                            out.println("<div class=\"panel panel-default\">");
+                        }
+                        else if (provenanceDoc.getStatus().equals(DocumentStatus.ABORTED.code) ) {
+                            out.println("<div class=\"panel panel-danger\">");
+                        }
+                        else {
+                            out.println("<div class=\"panel panel-warning\">");
+                        }
+                    %>
                         <div class="panel-heading">Status: <%=provenanceDoc.getStatus()%><%= provenanceDoc.getReceivedTime() != null ? ", Received at: " + provenanceDoc.getReceivedTime() : "" %></div>
 
                         <div class="panel-body">
