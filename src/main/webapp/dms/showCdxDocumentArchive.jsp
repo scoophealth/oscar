@@ -125,7 +125,7 @@
                         Multiple versions of this document exist. You are looking at the <strong> latest</strong> version (<%=provenanceDoc.getVersion()%>).
                     </div>
                     <% } else { %>
-                    <div class="panel panel-warning">
+                    <div class="panel panel-danger">
                         <div class="panel-heading">
                             <strong> Warning! </strong> Multiple versions of this document exist. You are looking at an <strong> outdated </strong> version (<%=provenanceDoc.getVersion()%>).
                         </div>
@@ -147,14 +147,14 @@
 
 
                     <%
-                        if (provenanceDoc.getStatus().equals(DocumentStatus.COMPLETED.code) ) {
-                            out.println("<div class=\"panel panel-default\">");
+                        if (provenanceDoc.getStatus().equals(DocumentStatus.ACTIVE.code) ) {
+                            out.println("<div class=\"panel panel-warning\">");
                         }
                         else if (provenanceDoc.getStatus().equals(DocumentStatus.ABORTED.code) ) {
                             out.println("<div class=\"panel panel-danger\">");
                         }
                         else {
-                            out.println("<div class=\"panel panel-warning\">");
+                            out.println("<div class=\"panel panel-default\">");
                         }
                     %>
                         <div class="panel-heading">Status: <%=provenanceDoc.getStatus()%><%= provenanceDoc.getReceivedTime() != null ? ", Received at: " + provenanceDoc.getReceivedTime() : "" %></div>
