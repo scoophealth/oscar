@@ -407,7 +407,7 @@ public class EctConsultationFormRequestAction extends Action {
 	    		forward.addParameter("requestId", requestId);
 	    		return forward;
             }
-		} else if (submission.endsWith("CDX_send") || submission.endsWith("CDX_update")) {  //for BC CDX messages
+		} else if (submission.endsWith("CDX_send") || submission.endsWith("CDX_update") || submission.endsWith("CDX_cancel")) {  //for BC CDX messages
 			// upon success continue as normal with success message
 			// upon failure, go to consultation update page with message
 			ConsultationRequest consultationRequest=consultationRequestDao.find(Integer.parseInt(requestId));
@@ -421,16 +421,28 @@ public class EctConsultationFormRequestAction extends Action {
 			}
 
 			try {
-				doCdxSend(loggedInInfo, Integer.parseInt(requestId), submission.endsWith("CDX_update"), requestId);
-				WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCreatedUpdateESent");
-			} catch (OBIBException e) {
+				doCdxSend(loggedInInfo, Integer.parseInt(requestId), submission.endsWith("CDX_update"), submission.endsWith("CDX_cancel"), requestId);
+				if(submission.endsWith("CDX_cancel")) {
+					WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCancelESent");
+				}
+				else{
+					WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCreatedUpdateESent");
+				}
+
+				} catch (OBIBException e) {
 				logger.error("Error sending CDX consultation request.", e);
 				String additionalText = e.getObibMessage();
 				if (additionalText == null || additionalText.isEmpty()) {
 					additionalText = e.getMessage();
 				}
-				WebUtils.addLocalisedErrorMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCreatedUpdateESendError",
-						"The reported error was: " + additionalText);
+				if(submission.endsWith("CDX_cancel")) {
+					WebUtils.addLocalisedErrorMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCancelESendError",
+							"The reported error was: " + additionalText);
+				}
+				else{
+					WebUtils.addLocalisedErrorMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCreatedUpdateESendError",
+							"The reported error was: " + additionalText);
+				}
 				ParameterActionForward forward = new ParameterActionForward(mapping.findForward("failESend"));
 				forward.addParameter("de", demographicNo);
 				forward.addParameter("requestId", requestId);
@@ -516,7 +528,7 @@ public class EctConsultationFormRequestAction extends Action {
 	    }
     }
 
-	private void doCdxSend(LoggedInInfo loggedInInfo, Integer consultationRequestId, Boolean isUpdate, String requestId) throws OBIBException {
+	private void doCdxSend(LoggedInInfo loggedInInfo, Integer consultationRequestId, Boolean isUpdate, Boolean isCancel, String requestId) throws OBIBException {
 
 		ConsultationRequestDao consultationRequestDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
 		ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
@@ -581,9 +593,22 @@ public class EctConsultationFormRequestAction extends Action {
 			String docId = sentDocs.get(0).getDocumentId();
 			Integer docVersion = sentDocs.get(0).getVersion();
 			doc = submitDoc.updateDoc(docId, docVersion);
-		} else {
+		}
+
+		else if (isCancel) {
+			List<CdxProvenance> sentDocs;
+			CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
+			sentDocs = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
+			String docId = sentDocs.get(0).getDocumentId();
+			Integer docVersion = sentDocs.get(0).getVersion();
+			doc = submitDoc.cancelDoc(docId, docVersion);
+		}
+
+		else {
 			doc = submitDoc.newDoc();
 		}
+
+
 
 
 		doc.documentType(DocumentType.REFERRAL_NOTE)

@@ -845,6 +845,15 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
 }
 
 
+function confirmCancel()
+{
+	var result = confirm("Are you sure you want to cancel this consultation request?");
+	if (result) {
+		checkForm('Update_CDX_cancel','EctConsultationFormRequestForm');
+	}
+
+}
+
 
 function checkForm(submissionVal,formName){
     //if document attach to consultation is still active user needs to close before submitting
@@ -1694,6 +1703,12 @@ function updateFaxButton() {
                             <input name="updateAndSendElectronicallyCdxTop" type="button"
                                    value="Update and Send (via CDX)"
                                    onclick="return checkForm('Update_CDX_update','EctConsultationFormRequestForm');" />
+
+							<input name="cancelConsultationRequest" type="button"
+								   value="Cancel Consultation Request"
+								   onclick="return confirmCancel();" />
+
+
                         </logic:equal>
 						<% } else {%>
 						<logic:equal value="true" name="EctConsultationFormRequestForm" property="CDXeReferral">
@@ -1701,6 +1716,8 @@ function updateFaxButton() {
 							<input name="updateAndSendElectronicallyCdxTop" type="button"
 								   value="Update and Send (via CDX)"
 								   onclick="return checkForm('Update_CDX_send','EctConsultationFormRequestForm');" />
+
+
 						</logic:equal>
 						<% } %>
                         <% } %>
@@ -2487,6 +2504,11 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 		<input name="updateAndSendElectronicallyCdxTop" type="button"
 			   value="Update and Send (via CDX)"
 			   onclick="return checkForm('Update_CDX_update','EctConsultationFormRequestForm');" />
+
+		<input name="cancelConsultationRequest" type="button"
+			   value="Cancel Consultation Request"
+			   onclick="return confirmCancel();" />
+
 	</logic:equal>
 	<% } else {%>
 	<logic:equal value="true" name="EctConsultationFormRequestForm" property="CDXeReferral">
