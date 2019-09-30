@@ -145,6 +145,8 @@ public class Document extends AbstractModel<Integer> implements Serializable {
     private Integer numberofpages;
     @Column(name="appointment_no")
     private Integer appointmentNo;
+    @Column(name = "report_status")
+    private String reportStatus;
 
     private Boolean restrictToProgram=false;
 
@@ -326,12 +328,20 @@ public class Document extends AbstractModel<Integer> implements Serializable {
 		this.appointmentNo = appointmentNo;
 	}
 
-	public String getDocClass() {
-    	return docClass;
+	public String getReportStatus() {
+    	return reportStatus;
     }
 
-	public void setDocClass(String docClass) {
-    	this.docClass = docClass;
+	public void setReportStatus(String status) {
+    	this.reportStatus = status;
+    }
+
+    public String getDocClass() {
+        return docClass;
+    }
+
+    public void setDocClass(String docClass) {
+        this.docClass = docClass;
     }
 
 	public String getDocSubClass() {

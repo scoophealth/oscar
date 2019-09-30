@@ -314,6 +314,7 @@ public class CDXImport {
         docEntity.setSource(auth != null ? auth.getLastName() : "");
         docEntity.setUpdatedatetime(doc.getAuthoringTime());
         docEntity.setStatus(Document.STATUS_ACTIVE);
+        docEntity.setReportStatus(doc.getStatusCode().code);
         docEntity.setContenttype("text/plain");
 
         if (doc.getObservationDate() != null) {
