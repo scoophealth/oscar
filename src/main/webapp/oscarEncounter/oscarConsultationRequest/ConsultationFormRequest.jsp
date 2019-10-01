@@ -847,7 +847,7 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
 
 function confirmCancel()
 {
-	var result = confirm("Are you sure you want to cancel this consultation request?");
+	var result = confirm("Are you sure you want to send a CANCELLATION for this consultation request via CDX?");
 	if (result) {
 		checkForm('Update_CDX_cancel','EctConsultationFormRequestForm');
 	}
@@ -1705,7 +1705,7 @@ function updateFaxButton() {
                                    onclick="return checkForm('Update_CDX_update','EctConsultationFormRequestForm');" />
 
 							<input name="cancelConsultationRequest" type="button"
-								   value="Cancel Consultation Request"
+								   value="Send Cancellation (CDX)"
 								   onclick="return confirmCancel();" />
 
 
@@ -2506,7 +2506,7 @@ if (defaultSiteId!=0) aburl2+="&site="+defaultSiteId;
 			   onclick="return checkForm('Update_CDX_update','EctConsultationFormRequestForm');" />
 
 		<input name="cancelConsultationRequest" type="button"
-			   value="Cancel Consultation Request"
+			   value="Send Cancellation (CDX)"
 			   onclick="return confirmCancel();" />
 
 	</logic:equal>

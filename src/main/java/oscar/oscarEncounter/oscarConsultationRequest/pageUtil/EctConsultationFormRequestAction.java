@@ -649,7 +649,12 @@ public class EctConsultationFormRequestAction extends Action {
 		cdxProvenanceDao.logSentAction(response);
 
 		// Set status to pending specialist callback
-		consultationRequest.setStatus("2");
+
+		if (isCancel && consultationRequest.getStatus().equals("2")) {
+				consultationRequest.setStatus("3");
+		} else if (consultationRequest.getStatus().equals("1")){
+			consultationRequest.setStatus("3");
+		}
 		consultationRequestDao.merge(consultationRequest);
 	}
 
