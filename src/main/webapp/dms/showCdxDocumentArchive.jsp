@@ -28,7 +28,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "x" uri = "http://java.sun.com/jsp/jstl/xml" %>
 <%
-    String roleName$ = (String) session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    String roleName$ = session.getAttribute("userrole") + "," + session.getAttribute("user");
     boolean authed = true;
 %>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_edoc" rights="r" reverse="<%=true%>">
@@ -41,7 +41,6 @@
     }
 %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
@@ -116,7 +115,7 @@
                        *********************BEGIN *********************************************************** -->
 
                 <%
-                    List<CdxProvenance> versions = provenanceDao.findReceivedVersionsOrderDesc(provenanceDoc.getDocumentId());
+                    List<CdxProvenance> versions = provenanceDao.findVersionsOrderDesc(provenanceDoc.getDocumentId());
                     if (versions.size() > 1) {
                         if (provenanceDoc.getId().equals(versions.get(0).getId())) {
                 %>
@@ -176,7 +175,7 @@
                         <ul>
                             <%
                                 for (CdxAttachment a : atts) { %>
-                            <li> <a href="#" onclick="javascript:popup(360, 680, '../dms/ManageDocument.do?method=viewCdxAttachment&attId=<%= a.getId() %>', 'Attachment: <%=a.getReference()%>')">
+                            <li> <a href="#" onclick="popup(360, 680, '../dms/ManageDocument.do?method=viewCdxAttachment&attId=<%= a.getId() %>', 'Attachment: <%=a.getReference()%>')">
 
                                 <%=a.getReference()%> </a> (<%=a.getAttachmentType()%>) </li>
 
@@ -240,7 +239,7 @@
                         </ul>
 
                         <%
-                            if (anyRelated == false)
+                            if (!anyRelated)
                                 out.print("none");
                         %>
 
@@ -265,8 +264,6 @@
 
         </div>
     </div>
-
-</div>
 
 </body>
 </html>
