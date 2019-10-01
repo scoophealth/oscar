@@ -29,7 +29,6 @@ CREATE TABLE cdx_provenance (
 																		warnings             text,
 																		status               varchar(30),
 																		CONSTRAINT pk_cdx_provenance_id PRIMARY KEY ( id ),
-																		CONSTRAINT cdx_prov_unique UNIQUE ( doc_id, version, action ),
 																		CONSTRAINT cdx_prov_docno_unique UNIQUE ( document_no )
 ) ;
 ALTER TABLE cdx_attachment ADD CONSTRAINT fk_cdx_attachment_prov FOREIGN KEY ( document ) REFERENCES cdx_provenance( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;

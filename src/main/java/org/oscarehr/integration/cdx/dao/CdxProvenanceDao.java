@@ -96,7 +96,7 @@ public class CdxProvenanceDao extends AbstractDao<CdxProvenance> {
     }
 
     public List<CdxProvenance> findReceivedVersionsOrderDesc(String documentId) {
-        String sql = "FROM CdxProvenance p where p.documentId = :docId and p.action = 'import' ORDER BY p.version DESC";
+        String sql = "FROM CdxProvenance p where p.documentId = :docId and p.action = 'import' ORDER BY p.version DESC, p.effectiveTime DESC";
         Query query = entityManager.createQuery(sql);
         query.setParameter("docId", documentId);
 

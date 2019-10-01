@@ -135,7 +135,7 @@
                                 <%
                                     for (CdxProvenance p : versions) {
                                 %>
-                                <a href="showCdxDocumentArchive.jsp?ID=<%=p.getId()%>" class="list-group-item <%=(p.getId().equals(provenanceDoc.getId()) ? "list-group-item-info" : "")%> ">
+                                <a href="showCdxDocumentArchive.jsp?ID=<%=p.getId()%>" class="list-group-item <%=(p.getId().equals(provenanceDoc.getId()) ? "disabled" : "")%> ">
                                     Version <%=p.getVersion()%>, Effective time: <%=p.getEffectiveTime()%>
                                 </a>
 

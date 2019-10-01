@@ -165,6 +165,7 @@ public class CDXImport {
     public void storeDocument(IDocument doc, String msgId) {
         CdxProvenance prov = new CdxProvenance();
         Document    inboxDoc = null;
+        String  warnings = "";
 
         List<CdxProvenance> versions = provDao.findReceivedVersionsOrderDesc(doc.getDocumentID());
 
@@ -172,15 +173,22 @@ public class CDXImport {
 
         if (versions.isEmpty()) // brand new document
             inboxDoc = createInboxData(doc);
-        else { // new version of existing document
+        else { // another version of existing document
             CdxProvenance newestExistingVersion = versions.get(0);
-            inboxDoc = reviseInboxData(doc, newestExistingVersion.getDocumentNo());
-            if (prov.getVersion() <= newestExistingVersion.getVersion())
-                prov.setVersion(newestExistingVersion.getVersion()+1);
+            if (newestExistingVersion.getEffectiveTime().before(doc.getEffectiveTime())) {
+                inboxDoc = reviseInboxData(doc, newestExistingVersion.getDocumentNo());
+//                if (prov.getVersion() <= newestExistingVersion.getVersion())
+//                    prov.setVersion(newestExistingVersion.getVersion() + 1);
+            }
 
         }
 
-        prov.setDocumentNo(inboxDoc.getDocumentNo());
+
+        if (inboxDoc != null) {
+            warnings = generateWarningsIfDemographicInconsistency(inboxDoc, doc);
+            prov.setDocumentNo(inboxDoc.getDocumentNo());
+        }
+        prov.setWarnings(warnings);
         prov.setAction("import");
         prov.setMsgId(msgId);
         provDao.persist(prov);
@@ -192,9 +200,6 @@ public class CDXImport {
             pendDocDao.removePendDoc(pendingDocs.get(0).getDocId());
         }
 
-
-        String warnings = generateWarningsIfDemographicInconsistency(inboxDoc, doc);
-        prov.setWarnings(warnings);
         provDao.merge(prov);
     }
 
@@ -262,6 +267,8 @@ public class CDXImport {
 
         populateInboxDocument(doc, newDocEntity);
         copyPreviousRoutingAndResetStati(newDocEntity, existingDocEntity);
+        existingDocEntity.setStatus(Document.STATUS_DELETED);
+        docDao.merge(existingDocEntity);
         return newDocEntity;
     }
 
@@ -272,7 +279,6 @@ public class CDXImport {
             plrNew.setStatus("N");
             plrNew.setLabType(plr.getLabType());
             plrNew.setLabNo(newDocEntity.getDocumentNo());
-            plrDao.persist(plrNew);
         }
     }
 
