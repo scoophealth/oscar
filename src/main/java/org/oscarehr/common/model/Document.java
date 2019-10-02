@@ -150,7 +150,7 @@ public class Document extends AbstractModel<Integer> implements Serializable {
 
     private Boolean restrictToProgram=false;
 
-    private Integer abnormal;
+    private Integer abnormal = 0;
     
     public Document() {
     }
