@@ -75,8 +75,6 @@
     //String privateKey = "";
     //String decryptionKey = "";
 
-    Clinic clinic = clinicDAO.getClinic();
-    if (clinic != null && clinic.getCdxOid() != null) cdxOid = clinic.getCdxOid();
 
     CDXConfiguration cdxConfiguration = new CDXConfiguration();
     if (cdxConfiguration.isPollingEnabled()) {
@@ -86,6 +84,8 @@
         pollEnabled = "unchecked";
         pollDisabled = "checked";
     }
+
+    cdxOid = cdxConfiguration.getClinicId();
     pollInterval = cdxConfiguration.getPollingInterval();
 
     UserProperty up;
