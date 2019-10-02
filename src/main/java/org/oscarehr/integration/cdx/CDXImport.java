@@ -167,7 +167,7 @@ public class CDXImport {
         Document    inboxDoc = null;
         String  warnings = "";
 
-        List<CdxProvenance> versions = provDao.findReceivedVersionsOrderDesc(doc.getDocumentID());
+        List<CdxProvenance> versions = provDao.findReceivedVersionsOrderDesc(doc.getSetId());
 
         prov.populate(doc);
 

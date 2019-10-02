@@ -457,7 +457,7 @@ It must have been deleted. Please refresh your Inbox window.
                   *********************BEGIN *********************************************************** -->
 
             <%
-                List<CdxProvenance> versions = provenanceDao.findReceivedVersionsOrderDesc(provenanceDoc.getDocumentId());
+                List<CdxProvenance> versions = provenanceDao.findReceivedVersionsOrderDesc(provenanceDoc.getSetId());
                 if (versions.size() > 1) {
                     if (provenanceDoc.getId().equals(versions.get(0).getId())) {
             %>
@@ -527,63 +527,39 @@ It must have been deleted. Please refresh your Inbox window.
 
                 <% }%>
 
+            <%
+                String parentDocId = provenanceDoc.getParentDoc();
+                if(parentDocId != null) {
+                    CdxProvenance parentDoc = provenanceDao.findByDocumentId(parentDocId);
+                    if (!(parentDoc==null)) {
+            %>
 
-                <div class="panel-footer">
-                    <h3>Related documents:</h3>
-                    <ul>
-                        <%  boolean anyRelated = false;
-                            String parentDocId = provenanceDoc.getParentDoc();
-                            if(parentDocId != null) {
-                                List<CdxProvenance> parentDocs = provenanceDao.findReceivedVersionsOrderDesc(parentDocId);
-                                if (!parentDocs.isEmpty()) {
-                                    CdxProvenance parentDoc = parentDocs.get(0);
-                                    anyRelated = true;
-                        %>
-                        <li> <a href="showCdxDocumentArchive.jsp?ID=<%=parentDoc.getId()%>">
+            <div class="panel-footer">
+                <h3>Parent document</h3>
+             <a href="showCdxDocumentArchive.jsp?ID=<%=parentDoc.getId()%>">
 
-                            <%=parentDoc.getKind()%> (parent document) </a>  </li>
+                <%=parentDoc.getKind()%> </a>
+            </div>
 
-                        <%
-                                }} %>
+            <%
+                    }} %>
+
 
                         <%
                             String infulfillmentOfId = provenanceDoc.getInFulfillmentOfId();
                             if(infulfillmentOfId != null) {
-                                List<CdxProvenance> iffoDocs = provenanceDao.findVersionsOrderDesc(infulfillmentOfId);
-                                if (!iffoDocs.isEmpty()) {
-                                    CdxProvenance iffoDoc = iffoDocs.get(0);
-                                    anyRelated = true;
+                                CdxProvenance iffoDoc = provenanceDao.findByDocumentId(infulfillmentOfId);
+                                if (!(iffoDoc==null)) {
                         %>
-                        <li> <a href="showCdxDocumentArchive.jsp?ID=<%=iffoDoc.getId()%>">
+            <div class="panel-footer">
+                <h3>In Fulfillment of</h3>
+                        <a href="showCdxDocumentArchive.jsp?ID=<%=iffoDoc.getId()%>">
 
-                            <%=iffoDoc.getKind()%> (in fulfillment of) </a>  </li>
+                            <%=iffoDoc.getKind()%> </a>
+            </div>
 
                         <%
                                 }} %>
-
-                        <%
-
-                            String setId = provenanceDoc.getSetId();
-                            if(setId != null && (!setId.equals(""))) {
-                                List<CdxProvenance> setDocs = provenanceDao.findRelatedDocsBySetId(setId, provenanceDoc.getDocumentId());
-                                for (CdxProvenance d : setDocs) {
-                                    anyRelated = true;
-                        %>
-
-                        <li> <a href="showCdxDocumentArchive.jsp?ID=<%=d.getId()%>">
-
-                            <%=d.getKind()%> (same document set)</a>  </li>
-                        <%
-                                }}
-
-                        %>
-
-                    </ul>
-
-                    <%
-                        if (anyRelated == false)
-                            out.print("none");
-                    %>
 
                 </div>
 

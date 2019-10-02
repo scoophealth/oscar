@@ -115,7 +115,7 @@
                        *********************BEGIN *********************************************************** -->
 
                 <%
-                    List<CdxProvenance> versions = provenanceDao.findVersionsOrderDesc(provenanceDoc.getDocumentId());
+                    List<CdxProvenance> versions = provenanceDao.findVersionsOrderDesc(provenanceDoc.getSetId());
                     if (versions.size() > 1) {
                         if (provenanceDoc.getId().equals(versions.get(0).getId())) {
                 %>
@@ -186,66 +186,43 @@
                     <% }%>
 
 
-                    <div class="panel-footer">
-                        <h3>Related documents:</h3>
-                        <ul>
-                            <%  boolean anyRelated = false;
-                                String parentDocId = provenanceDoc.getParentDoc();
-                                if(parentDocId != null) {
-                                    List<CdxProvenance> parentDocs = provenanceDao.findReceivedVersionsOrderDesc(parentDocId);
-                                    if (!parentDocs.isEmpty()) {
-                                        CdxProvenance parentDoc = parentDocs.get(0);
-                                        anyRelated = true;
-                            %>
-                            <li> <a href="showCdxDocumentArchive.jsp?ID=<%=parentDoc.getId()%>">
+                <%
+                    String parentDocId = provenanceDoc.getParentDoc();
+                    if(parentDocId != null) {
+                        CdxProvenance parentDoc = provenanceDao.findByDocumentId(parentDocId);
+                        if (!(parentDoc==null)) {
+                %>
 
-                                <%=parentDoc.getKind()%> (parent document) </a>  </li>
+                <div class="panel-footer">
+                    <h3>Parent document</h3>
+                    <a href="showCdxDocumentArchive.jsp?ID=<%=parentDoc.getId()%>">
 
-                            <%
-                                    }} %>
-
-                            <%
-                                String infulfillmentOfId = provenanceDoc.getInFulfillmentOfId();
-                                if(infulfillmentOfId != null) {
-                                    List<CdxProvenance> iffoDocs = provenanceDao.findVersionsOrderDesc(infulfillmentOfId);
-                                    if (!iffoDocs.isEmpty()) {
-                                        CdxProvenance iffoDoc = iffoDocs.get(0);
-                                        anyRelated = true;
-                            %>
-                            <li> <a href="showCdxDocumentArchive.jsp?ID=<%=iffoDoc.getId()%>">
-
-                                <%=iffoDoc.getKind()%> (in fulfillment of) </a>  </li>
-
-                            <%
-                                    }} %>
-
-                            <%
-
-                                String setId = provenanceDoc.getSetId();
-                                if(setId != null && (!setId.equals(""))) {
-                                    List<CdxProvenance> setDocs = provenanceDao.findRelatedDocsBySetId(setId, provenanceDoc.getDocumentId());
-                                    for (CdxProvenance d : setDocs) {
-                                        anyRelated = true;
-                            %>
-
-                            <li> <a href="showCdxDocumentArchive.jsp?ID=<%=d.getId()%>">
-
-                                <%=d.getKind()%> (same document set)</a>  </li>
-                            <%
-                                    }}
-
-                            %>
-
-                        </ul>
-
-                        <%
-                            if (!anyRelated)
-                                out.print("none");
-                        %>
-
-                    </div>
-
+                        <%=parentDoc.getKind()%> </a>
                 </div>
+
+                <%
+                        }} %>
+
+
+                <%
+                    String infulfillmentOfId = provenanceDoc.getInFulfillmentOfId();
+                    if(infulfillmentOfId != null) {
+                        CdxProvenance iffoDoc = provenanceDao.findByDocumentId(infulfillmentOfId);
+                        if (!(iffoDoc==null)) {
+                %>
+                <div class="panel-footer">
+                    <h3>In Fulfillment of</h3>
+                    <a href="showCdxDocumentArchive.jsp?ID=<%=iffoDoc.getId()%>">
+
+                        <%=iffoDoc.getKind()%>  </a>
+                </div>
+
+                <%
+                        }} %>
+
+            </div>
+
+        </div>
 
                 <!--        ************************************ the code above is duplicated in showCdxDocument
                             ************************************ keep consistent upon changing

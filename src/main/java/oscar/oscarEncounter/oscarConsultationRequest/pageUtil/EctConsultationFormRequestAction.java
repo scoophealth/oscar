@@ -584,24 +584,20 @@ public class EctConsultationFormRequestAction extends Action {
 		CDXConfiguration cdxConfig = new CDXConfiguration();
 		SubmitDoc submitDoc = new SubmitDoc(cdxConfig);
 
-		ISubmitDoc doc = null;
+		ISubmitDoc doc;
 
-		if (isUpdate) {
+		if (isUpdate || isCancel ) {
 			List<CdxProvenance> sentDocs;
 			CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
 			sentDocs = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
-			String docId = sentDocs.get(0).getDocumentId();
-			Integer docVersion = sentDocs.get(0).getVersion();
-			doc = submitDoc.updateDoc(docId, docVersion);
-		}
+			String originalDocId = sentDocs.get(sentDocs.size() - 1).getDocumentId();
+			Integer latestDocVersion = sentDocs.get(0).getVersion();
 
-		else if (isCancel) {
-			List<CdxProvenance> sentDocs;
-			CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
-			sentDocs = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
-			String docId = sentDocs.get(0).getDocumentId();
-			Integer docVersion = sentDocs.get(0).getVersion();
-			doc = submitDoc.cancelDoc(docId, docVersion);
+			if (isUpdate) {
+				doc = submitDoc.updateDoc(originalDocId, latestDocVersion);
+			} else {
+				doc = submitDoc.cancelDoc(originalDocId, latestDocVersion);
+			}
 		}
 
 		else {

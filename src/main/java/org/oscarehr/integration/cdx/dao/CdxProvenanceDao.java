@@ -86,19 +86,30 @@ public class CdxProvenanceDao extends AbstractDao<CdxProvenance> {
         else return results.get(0);
     }
 
+    public CdxProvenance findByDocumentId(String docId) {
 
-    public List<CdxProvenance> findVersionsOrderDesc(String documentId) {
-        String sql = "FROM CdxProvenance p where p.documentId = :docId ORDER BY p.version DESC";
+        String sql = "FROM CdxProvenance p where p.documentId = :docid";
         Query query = entityManager.createQuery(sql);
-        query.setParameter("docId", documentId);
+        query.setParameter("docid", docId);
+        List<CdxProvenance> results = query.getResultList();
+        if (results.isEmpty())
+            return null;
+        else return results.get(0);
+    }
+
+
+    public List<CdxProvenance> findVersionsOrderDesc(String setId) {
+        String sql = "FROM CdxProvenance p where p.setId = :setId ORDER BY p.version DESC";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("setId", setId);
 
         return query.getResultList();
     }
 
-    public List<CdxProvenance> findReceivedVersionsOrderDesc(String documentId) {
-        String sql = "FROM CdxProvenance p where p.documentId = :docId and p.action = 'import' ORDER BY p.version DESC, p.effectiveTime DESC";
+    public List<CdxProvenance> findReceivedVersionsOrderDesc(String setId) {
+        String sql = "FROM CdxProvenance p where p.setId = :setId and p.action = 'import' ORDER BY p.version DESC, p.effectiveTime DESC";
         Query query = entityManager.createQuery(sql);
-        query.setParameter("docId", documentId);
+        query.setParameter("setId", setId);
 
         return query.getResultList();
     }
