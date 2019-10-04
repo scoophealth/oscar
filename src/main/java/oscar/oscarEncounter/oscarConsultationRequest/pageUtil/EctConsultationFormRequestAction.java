@@ -646,8 +646,8 @@ public class EctConsultationFormRequestAction extends Action {
 
 		// Set status to pending specialist callback
 
-		if (isCancel && consultationRequest.getStatus().equals("2")) {
-				consultationRequest.setStatus("3");
+		if (isCancel) {
+				consultationRequest.setStatus("1");
 		} else if (consultationRequest.getStatus().equals("1")){
 			consultationRequest.setStatus("3");
 		}
