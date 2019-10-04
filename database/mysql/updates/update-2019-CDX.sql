@@ -43,3 +43,27 @@ CREATE TABLE cdx_pending_docs (
 																			explanation          text  NOT NULL  ,
 																			CONSTRAINT pk_cdx_pending_docs_id PRIMARY KEY ( id )
 );
+
+insert into ctl_doctype (module,  doctype, status)
+   values ("demographic", "progress note", "A");
+
+insert into ctl_doctype (module,  doctype, status)
+values ("demographic", "patient summary", "A");
+
+insert into ctl_doctype (module,  doctype, status)
+values ("demographic", "discharge summary", "A");
+
+insert into ctl_doctype (module,  doctype, status)
+values ("demographic", "care plan", "A");
+
+insert into ctl_doctype (module,  doctype, status)
+values ("demographic", "information request", "A");
+
+insert into ctl_doctype (module,  doctype, status)
+values ("demographic", "general purpose notification", "A");
+
+insert into ctl_doctype (module,  doctype, status)
+values ("demographic", "note", "A");
+
+insert into ctl_doctype (module,  doctype, status)
+values ("demographic", "e-referral note", "A");

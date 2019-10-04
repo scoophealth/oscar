@@ -295,10 +295,11 @@ public class CDXImport {
 
     private void populateInboxDocument(IDocument doc, Document docEntity) {
         IProvider p;
-        docEntity.setDoctype(doc.getLoincCodeDisplayName());
+        docEntity.setDoctype(translateCdxCodeToDocType(doc.getLoincCodeDisplayName()));
         docEntity.setDocdesc(doc.getLoincCodeDisplayName());
         docEntity.setDocfilename("N/A");
         docEntity.setDoccreator(doc.getCustodianName());
+        docEntity.setNumberofpages(0);
 
 
         p = doc.getOrderingProvider();
@@ -310,9 +311,10 @@ public class CDXImport {
         docEntity.setAbnormal(0);
 
 
-        docEntity.setDocClass("CDX");
+        docEntity.setDocClass(doc.getLoincCodeDisplayName());
         docEntity.setDocxml("stored in CDX provenance table");
-        docEntity.setDocfilename(doc.getDocumentID());
+        docEntity.setDocfilename("CDX");
+        docEntity.setContenttype("CDX");
         docEntity.setRestrictToProgram(false); // need to confirm semantics
 
         IProvider auth = doc.getAuthor();
@@ -321,7 +323,6 @@ public class CDXImport {
         docEntity.setUpdatedatetime(doc.getAuthoringTime());
         docEntity.setStatus(Document.STATUS_ACTIVE);
         docEntity.setReportStatus(doc.getStatusCode().code);
-        docEntity.setContenttype("text/plain");
 
         if (doc.getObservationDate() != null) {
             docEntity.setObservationdate(doc.getObservationDate());
@@ -352,6 +353,42 @@ public class CDXImport {
 
         if (!routed(docEntity)) { // even if none of the recipients appears to work at our clinic, we will route to the default provider
             addDefaultProviderRouting(docEntity);
+        }
+    }
+
+    private String translateCdxCodeToDocType(String loincCodeDisplayName) {
+
+        switch (loincCodeDisplayName.toLowerCase()) {
+            case "consult note" :
+                return "consult";
+            case "general lab report" :
+                return "lab";
+            case "mental health consult note" :
+                return "consult";
+            case "diagnostic imaging study" :
+                return "radiology";
+            case "anatomic pathology report" :
+                return "pathology";
+            case "discharge summary" :
+                return "discharge summary";
+            case "admission history and physical note" :
+                return "note";
+            case "procedure note" :
+                return "note";
+            case "progress note" :
+                return "note";
+            case "history and physical note" :
+                return "note";
+            case "outpatient surgical operation note" :
+                return "note";
+            case "surgical operation note" :
+                return "note";
+            case "ereferral note" :
+                return "e-referral note";
+            case "hospital admission notification note" :
+                return "general purpose notification";
+            default :
+                return "other";
         }
     }
 

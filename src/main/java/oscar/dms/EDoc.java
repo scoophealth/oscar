@@ -402,6 +402,16 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 	}
 
 	/**
+	 *Returns true if document is a CDX document.
+	 */
+	public boolean isCDX() {
+		if (this.fileName != null && this.fileName.equals("CDX")) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Returns true if this document's content type is that of an image.	
 	 * @return true if document is an image and false otherwise
 	 */

@@ -156,7 +156,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     				url = "popupPage(window.screen.width,window.screen.height,'" + hash + "','" + request.getContextPath() + "/dms/MultiPageDocDisplay.jsp?segmentID=" + dispDocNo + "&providerNo=" + user + "&searchProviderNo=" + user + "&status=A'); return false;";
     				isURLjavaScript = true;
     			}
-    			else if (curDoc.getDocClass().equals("CDX")) {
+    			else if (curDoc.isCDX()) {
 					url = "popupPage(window.screen.width,window.screen.height,'" + hash + "','" + request.getContextPath() + "/dms/showCdxDocument.jsp?inWindow=true&segmentID=" + dispDocNo + "&providerNo=" + user + "&searchProviderNo=" + user + "&status=A'); return false;";
 					isURLjavaScript = true;
 				}

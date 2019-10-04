@@ -490,8 +490,13 @@ function popup1(height, width, url, windowName){
           </td>
           <td>
           <%
+              String url;
+            if (curdoc.isCDX()) {
+                url = request.getContextPath()+"/dms/showCdxDocument.jsp?inWindow=true&segmentID="+curdoc.getDocId()+"&providerNo="+user_no;
+            } else {
+                url = "ManageDocument.do?method=display&doc_no="+curdoc.getDocId()+"&providerNo="+user_no+(curdoc.getRemoteFacilityId()!=null?"&remoteFacilityId="+curdoc.getRemoteFacilityId():"");
+            }
 
-                              String url = "ManageDocument.do?method=display&doc_no="+curdoc.getDocId()+"&providerNo="+user_no+(curdoc.getRemoteFacilityId()!=null?"&remoteFacilityId="+curdoc.getRemoteFacilityId():"");
                               //String url = "documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(curdoc.getFileName()) + "&type=" + dStatus + "&doc_no=" + curdoc.getDocId();
 
           %>  <a <%=curdoc.getStatus() == 'D' ? "style='text-decoration:line-through'" : ""%>
