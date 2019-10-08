@@ -78,6 +78,8 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
     private Integer documentNo;
     @Column(name = "status")
     private String status;
+    @Column(name = "distribution_status")
+    private String distributionStatus;
 
     public String getStatus() {
         return status;
@@ -85,6 +87,14 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getDistributionStatus() {
+        return distributionStatus;
+    }
+
+    public void setDistributionStatus(String distributionStatus) {
+        this.distributionStatus = distributionStatus;
     }
 
     public String getWarnings() {

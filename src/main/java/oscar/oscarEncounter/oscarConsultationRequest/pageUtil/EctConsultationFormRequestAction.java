@@ -64,6 +64,7 @@ import org.oscarehr.common.model.*;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.integration.cdx.CDXConfiguration;
+import org.oscarehr.integration.cdx.CDXDistribution;
 import org.oscarehr.integration.cdx.CDXSpecialist;
 import org.oscarehr.integration.cdx.dao.CdxAttachmentDao;
 import org.oscarehr.integration.cdx.dao.CdxProvenanceDao;
@@ -616,9 +617,6 @@ public class EctConsultationFormRequestAction extends Action {
 			doc = submitDoc.newDoc();
 		}
 
-
-
-
 		doc.documentType(DocumentType.REFERRAL_NOTE)
 				.inFulfillmentOf()
 					.id(Integer.toString(consultationRequestId))
@@ -655,6 +653,10 @@ public class EctConsultationFormRequestAction extends Action {
 		MiscUtils.getLogger().debug("Attempting to save document using logSentAction");
 		CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
 		cdxProvenanceDao.logSentAction(response);
+
+		// Try to update the document distribution status
+		CDXDistribution cdxDistribution = new CDXDistribution();
+		cdxDistribution.updateDistributionStatus(response.getDocumentID());
 
 		// Set status to pending specialist callback
 

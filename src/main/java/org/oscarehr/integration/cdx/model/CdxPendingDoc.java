@@ -39,6 +39,7 @@ public class CdxPendingDoc extends AbstractModel<Integer> implements Serializabl
 
     public static final String error = "ERR";
     public static final String deleted = "DEL";
+    public static final String status = "STS";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -101,5 +102,16 @@ public class CdxPendingDoc extends AbstractModel<Integer> implements Serializabl
 
     public void setExplanation(String explanation) {
         this.explanation = explanation;
+    }
+
+    public static CdxPendingDoc createPendingDocStatus(String docId) {
+        CdxPendingDoc pendDoc = new CdxPendingDoc();
+
+        pendDoc.setTimestamp(new Date());
+        pendDoc.setDocId(docId);
+        pendDoc.setReasonCode(CdxPendingDoc.status);
+        pendDoc.setExplanation("Pending distribution status.");
+
+        return pendDoc;
     }
 }

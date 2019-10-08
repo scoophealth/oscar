@@ -60,6 +60,13 @@ public class CdxPendingDocsDao extends AbstractDao<CdxPendingDoc> {
         return query.getResultList();
     }
 
+    public List<CdxPendingDoc> getPendingStatusDocs() {
+        String sql = "FROM CdxPendingDoc pd where pd.reasonCode = :rc";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("rc", CdxPendingDoc.status);
+        return query.getResultList();
+    }
+
     public List<CdxPendingDoc> findPendingDocs(String documentId) {
         String sql = "FROM CdxPendingDoc p where p.docId = :docId";
         Query query = entityManager.createQuery(sql);
