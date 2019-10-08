@@ -425,7 +425,7 @@ public class EDoc extends TagObject implements Comparable<EDoc> {
 	 */
 	public boolean isPrintable() {
 		// At this time only PDF  and image files are supported.
-		return isPDF() || isImage();
+		return isPDF() || isImage() || isCDX();
 	}
 
 	public String getObservationDate() {

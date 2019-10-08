@@ -58,16 +58,20 @@
 <%@ page import="ca.uvic.leadlab.obibconnector.facades.datatypes.DocumentStatus" %>
 <%
 
-
-    String docId = request.getParameter("ID");
-    int docIdNo = Integer.parseInt(docId);
     CdxAttachmentDao cdxAttachmentDao = SpringUtils.getBean(CdxAttachmentDao.class);
     CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
+    CdxProvenance provenanceDoc;
 
+    String cdxDocId = request.getParameter("ID");
 
-    CdxProvenance provenanceDoc = provenanceDao.getCdxProvenance(docIdNo);
+    if (cdxDocId != null) {
+        int cdxDocIdNo = Integer.parseInt(cdxDocId);
+        provenanceDoc = provenanceDao.getCdxProvenance(cdxDocIdNo);
 
-
+    } else {
+        String eDocId = request.getParameter("EDID");
+        provenanceDoc = provenanceDao.findByDocumentNo(Integer.parseInt(eDocId));
+    }
 
 %>
 <html>

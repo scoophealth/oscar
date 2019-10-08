@@ -77,7 +77,7 @@ public class CdxProvenanceDao extends AbstractDao<CdxProvenance> {
 
     public CdxProvenance findByDocumentNo(int documentNo) {
 
-        String sql = "FROM CdxProvenance p where p.documentNo = :docno";
+        String sql = "FROM CdxProvenance p where p.documentNo = :docno ORDER BY p.version DESC, p.effectiveTime DESC";
         Query query = entityManager.createQuery(sql);
         query.setParameter("docno", documentNo);
         List<CdxProvenance> results = query.getResultList();

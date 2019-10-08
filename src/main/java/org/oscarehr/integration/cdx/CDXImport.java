@@ -110,7 +110,7 @@ public class CDXImport {
 
                 MiscUtils.getLogger().info("     with " + doc.getAttachments().size() + " attachments");
 
-                storeDocument(doc,id);
+                storeDocument(doc, id);
 
             } catch (Exception e) {
                 MiscUtils.getLogger().error("Error importing CDX message " + id, e);

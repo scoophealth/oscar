@@ -157,7 +157,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     				isURLjavaScript = true;
     			}
     			else if (curDoc.isCDX()) {
-					url = "popupPage(window.screen.width,window.screen.height,'" + hash + "','" + request.getContextPath() + "/dms/showCdxDocument.jsp?inWindow=true&segmentID=" + dispDocNo + "&providerNo=" + user + "&searchProviderNo=" + user + "&status=A'); return false;";
+					url = "popupPage(700,800,'" + hash + "','" + request.getContextPath() + "/dms/showCdxDocumentArchive.jsp?inWindow=true&EDID=" + dispDocNo +"'); return false;";
 					isURLjavaScript = true;
 				}
     			else {

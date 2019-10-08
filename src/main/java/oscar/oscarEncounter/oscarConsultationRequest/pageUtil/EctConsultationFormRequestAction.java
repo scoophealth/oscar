@@ -42,8 +42,11 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.pdf.RandomAccessFileOrArray;
 import com.lowagie.text.pdf.codec.TiffImage;
+import com.lowagie.text.rtf.parser.RtfParser;
 import com.sun.xml.messaging.saaj.util.ByteInputStream;
 import com.sun.xml.messaging.saaj.util.ByteOutputStream;
+import io.woo.htmltopdf.HtmlToPdf;
+import io.woo.htmltopdf.HtmlToPdfObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
@@ -62,7 +65,9 @@ import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.integration.cdx.CDXConfiguration;
 import org.oscarehr.integration.cdx.CDXSpecialist;
+import org.oscarehr.integration.cdx.dao.CdxAttachmentDao;
 import org.oscarehr.integration.cdx.dao.CdxProvenanceDao;
+import org.oscarehr.integration.cdx.model.CdxAttachment;
 import org.oscarehr.integration.cdx.model.CdxProvenance;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.SecurityInfoManager;
@@ -83,6 +88,9 @@ import javax.crypto.NoSuchPaddingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.*;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -94,11 +102,14 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 
 public class EctConsultationFormRequestAction extends Action {
 
 	private static final Logger logger=MiscUtils.getLogger();
 	private SecurityInfoManager securityInfoManager = SpringUtils.getBean(SecurityInfoManager.class);
+	private String contentRoute;
 
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -106,7 +117,8 @@ public class EctConsultationFormRequestAction extends Action {
 		if(!securityInfoManager.hasPrivilege(LoggedInInfo.getLoggedInInfoFromSession(request), "_con", "w", null)) {
 			throw new SecurityException("missing required security object (_con)");
 		}
-		
+
+		contentRoute = request.getSession().getServletContext().getRealPath("/");
 		LoggedInInfo loggedInInfo=LoggedInInfo.getLoggedInInfoFromSession(request);
 		EctConsultationFormRequestForm frm = (EctConsultationFormRequestForm) form;		
 
@@ -699,7 +711,7 @@ public class EctConsultationFormRequestAction extends Action {
 		return sb.toString();
 	}
 
-	private ByteOutputStream createPDF(LoggedInInfo loggedInInfo, String demoNo, String reqId) {
+	private ByteOutputStream createPDF(LoggedInInfo loggedInInfo, String demoNo, String reqId) throws OBIBException {
 		ArrayList<EDoc> docs = EDocUtil.listDocs(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
 		String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 		ArrayList<Object> alist = new ArrayList<Object>();
@@ -737,7 +749,25 @@ public class EctConsultationFormRequestAction extends Action {
 						}
 					} else if (doc.isPDF()) {
 						alist.add(path + doc.getFileName());
-					} else {
+					}  else if (doc.isCDX()) {
+						success = false;
+						bos = new ByteOutputStream();
+						try {
+							cdxToPdf(doc,bos);
+							success = true;
+						} catch (OBIBException e) {
+							MiscUtils.getLogger().error(e.getMessage());
+							throw e;
+
+						}if (success) {
+							buffer = bos.getBytes();
+							bis = new ByteInputStream(buffer, bos.getCount());
+							bos.close();
+							streams.add(bis);
+							alist.add(bis);
+						}
+					}
+					else {
 						logger.error("EctConsultationFormRequestAction: " + doc.getType() +
 								" is marked as printable but no means have been established to print it.");
 					}
@@ -783,6 +813,79 @@ public class EctConsultationFormRequestAction extends Action {
 			logger.error(error + " occured insided createPDF", exception);
 		}
 		return bos;
+	}
+
+	/**
+	 * Converts attached CDX document in the consultation request to PDF.
+	 *
+	 * @param os the output stream where the PDF will be written
+	 * @throws IOException       when an error with the output stream occurs
+	 * @throws DocumentException when an error in document construction occurs
+	 */
+
+	private void cdxToPdf(EDoc doc, ByteOutputStream os) throws OBIBException {
+
+		CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
+		CdxProvenance provDoc = provenanceDao.findByDocumentNo(Integer.parseInt(doc.getDocId()));
+        CdxAttachmentDao attachmentDao = SpringUtils.getBean(CdxAttachmentDao.class);
+
+        ArrayList<Object> streamList = new ArrayList<>();
+
+
+        // transform main document from XML to HTML
+try {
+    StringReader cdaReader = new StringReader(provDoc.getPayload());
+    TransformerFactory tFactory = TransformerFactory.newInstance();
+    Transformer transformer = tFactory.newTransformer(new StreamSource(contentRoute + "/share/xslt/CDA_to_HTML.xsl"));
+
+    ByteOutputStream bos_html = new ByteOutputStream();
+    transformer.transform(new StreamSource(cdaReader), new StreamResult(bos_html));
+
+    String html = new String(bos_html.getBytes(), UTF_8);
+
+		// transform main document from HTML to PDF
+
+        HtmlToPdf htmlToPdf = HtmlToPdf.create()
+            .object(HtmlToPdfObject.forHtml(html));
+
+        InputStream mainDoc = htmlToPdf.convert();
+        // IOUtils.copy(mainDoc, os);
+        streamList.add(mainDoc);
+        mainDoc.close();
+
+        // transform attachments to CDX document
+
+        for (CdxAttachment att : attachmentDao.findByDocNo(provDoc.getId())) {
+            InputStream attDoc = null;
+            if (att.getAttachmentType().equals(AttachmentType.PDF.mediaType)) {
+                attDoc = new ByteArrayInputStream(att.getContent());
+            } else if (att.getAttachmentType().equals(AttachmentType.JPEG.mediaType)
+                    || att.getAttachmentType().equals(AttachmentType.PNG.mediaType)
+                    || att.getAttachmentType().equals(AttachmentType.TIFF.mediaType)) {
+                ByteOutputStream aos = new ByteOutputStream();
+                imageToPdf(att.getContent(), aos);
+                aos.close();
+                byte[] buffer = aos.getBytes();
+                attDoc = new ByteArrayInputStream(buffer);
+            } else if (att.getAttachmentType().equals(AttachmentType.RTF.mediaType)) {
+                Document document = new Document();
+                ByteOutputStream aos = new ByteOutputStream();
+                PdfWriter writer = PdfWriter.getInstance(document, aos);
+                document.open();
+                RtfParser parser = new RtfParser(null);
+                parser.convertRtfDocument(new ByteArrayInputStream(att.getContent()), document);
+                document.close();
+                aos.close();
+                byte[] buffer = aos.getBytes();
+                attDoc = new ByteArrayInputStream(buffer);
+            } else throw new OBIBException("Unknown attachment type of CDX document ("
+            + att.getAttachmentType() + ")");
+            streamList.add(attDoc);
+        }
+        ConcatPDF.concat(streamList, os);
+} catch (Exception e) {
+    throw new OBIBException("Attachment document to PDF automatically. The document has *not* been sent.");
+}
 	}
 
 	/**
@@ -850,4 +953,33 @@ public class EctConsultationFormRequestAction extends Action {
 		}
 		document.close();
 	}
+
+    /**
+     * Converts attached image in the consultation request to PDF.
+     *
+     * @param os the output stream where the PDF will be written
+     * @throws IOException       when an error with the output stream occurs
+     * @throws DocumentException when an error in document construction occurs
+     */
+    private void imageToPdf(byte[] content, OutputStream os) throws IOException, DocumentException {
+        Image image = Image.getInstance(content);
+
+        // Create the document we are going to write to
+        Document document = new Document();
+        // PdfWriter writer = PdfWriter.getInstance(document, os);
+        PdfWriter writer = PdfWriterFactory.newInstance(document, os, FontSettings.HELVETICA_6PT);
+
+
+        document.setPageSize(PageSize.LETTER);
+        document.addCreator("OSCAR");
+        document.open();
+
+        PdfContentByte cb = writer.getDirectContent();
+        if (image.getScaledWidth() > 500 || image.getScaledHeight() > 700) {
+            image.scaleToFit(500, 700);
+        }
+        image.setAbsolutePosition(20, 20);
+        cb.addImage(image);
+        document.close();
+    }
 }

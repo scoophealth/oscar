@@ -207,12 +207,18 @@ function popup1(height, width, url, windowName){
 						style="margin: 0px; padding: 0px;" /> <%}else{%> &nbsp; <%}%>
 					</td>
 					<td>
+
 					<%
-                              String url = "documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(curdoc.getFileName()) + "&type=" + dStatus + "&doc_no=" + curdoc.getDocId();
+						String url = "";
+						if (curdoc.isCDX()) {
+						 url = request.getContextPath() + "/dms/showCdxDocumentArchive.jsp?inWindow=true&EDID=" + curdoc.getDocId();
+					} else {
+						 url = "documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(curdoc.getFileName()) + "&type=" + dStatus + "&doc_no=" + curdoc.getDocId();
+					}
                               if (curdoc.getStatus() == 'H') { %> <a
 						href="<%=url%>" target="_blank"> <% } else { %> <a
 						href="javascript:popup1(480, 480, '<%=url%>', 'edoc<%=i2%>')">
-					<% } %> <%=curdoc.getDescription()%></td>
+					<% } %> <%=curdoc.getDescription() %></td>
 					<td><%=contentType%></td>
 					<td><%=curdoc.getType()%></td>
 					<td><%=curdoc.getCreatorName()%></td>

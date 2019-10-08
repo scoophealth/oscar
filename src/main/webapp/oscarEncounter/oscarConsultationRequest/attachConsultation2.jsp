@@ -173,6 +173,17 @@ function previewPDF(docId, url) {
 					       + "&link=" + encodeURIComponent(url));
 }
 
+
+
+request.getContextPath() + "/dms/showCdxDocument.jsp?inWindow=true&EDID=" + dispDocNo
+
+
+function previewCDX(docId) {
+	$("#previewPane").attr("src",
+			"<%= request.getContextPath() %>/dms/showCdxDocumentArchive.jsp?inWindow=true&EDID="
+			+  docId);
+}
+
 function previewHTML(url) {
 	$("#previewPane").attr("src", url);
 }
@@ -276,6 +287,9 @@ function toggleSelectAll() {
 	                else if (curDoc.isImage()) {
 	                    onClick = "javascript:previewImage('" + url + "');";
 	                }
+					else if (curDoc.isCDX()) {
+						onClick = "javascript:previewCDX('" + curDoc.getDocId() + "');";
+					}
 	                else {
 	                    onClick = "javascript:previewHTML('" + url + "');";
 	                }                
