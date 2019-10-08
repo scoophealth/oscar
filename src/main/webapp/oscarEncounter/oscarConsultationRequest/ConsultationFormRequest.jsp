@@ -1490,13 +1490,11 @@ function updateFaxButton() {
 						<table>
 							<tr>
 								<td>
-							<%     boolean delivered=false;
-							       String documentId=null;
-									if (sentDocs != null && !sentDocs.isEmpty()) {
+							<%     String status = "";
+							       if (sentDocs != null && !sentDocs.isEmpty()) {
 										for (CdxProvenance cdxProvenance : sentDocs) {
 											if (cdxProvenance.getAction().equals("SEND")) {
-												documentId=cdxProvenance.getDocumentId();
-												delivered="DELIVERED".equals(cdxProvenance.getDistributionStatus());
+												status=cdxProvenance.getDistributionStatus();
 												DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 												out.print("<a target=\"_blank\" href=\"../../dms/showCdxDocumentArchive.jsp?ID=" + cdxProvenance.getId() + "\"/>");
 												out.print("<small><small>" + dateFormat.format(cdxProvenance.getEffectiveTime()) + "</small></small>");
@@ -1504,7 +1502,7 @@ function updateFaxButton() {
 
 											}
 										}
-										out.print(delivered ? "&#10003" : "&#9729");
+										out.print("DELIVERED".equals(status) ? "&#10003" : "&#9729");
 									}
 							%>
 								</td>

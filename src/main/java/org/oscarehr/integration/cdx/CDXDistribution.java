@@ -50,9 +50,11 @@ public class CDXDistribution {
     }
 
     /**
-     * Updates the document distribution status (CdxProvenance) and remove the 'pending status' (CdxPendingDoc) if
-     * status is different than QUEUED or UNKNOWN.
-     * If status status equals QUEUED or UNKNOWN, add a 'pending status' (CdxPendingDoc) for this documentId.
+     * Updates the document distribution status (CdxProvenance) and change the 'pending status' (CdxPendingDoc)
+     * as following:
+     * <p>
+     * If the status is equal QUEUED or UNKNOWN, add a 'pending status' for this documentId,
+     * otherwise remove the 'pending status'.
      */
     private void updateDocumentDistributionStatus(String documentId, String status) {
         provDao.updateProvDistributionStatus(documentId, status);
@@ -79,12 +81,12 @@ public class CDXDistribution {
      */
     public void updateDistributionStatus(String documentId) {
         try {
-            String status = QUEUED; // assume QUEUED as default status
+            String status = "";
             DOC_LOOP:
             for (IDocument doc : getDocumentDistributionStatus(documentId)) {
                 for (IDistributionStatus distStatus : doc.getDistributionStatus()) {
                     status = distStatus.getStatusName();
-                    if (status.startsWith(DELIVERED)) { // at least one DELIVERED, return it!
+                    if (!status.startsWith(DELIVERED)) { // if there is a 'not delivered' status, return it.
                         break DOC_LOOP;
                     }
                 }
