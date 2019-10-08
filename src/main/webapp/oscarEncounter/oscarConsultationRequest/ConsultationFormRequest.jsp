@@ -1499,10 +1499,9 @@ function updateFaxButton() {
 												out.print("<a target=\"_blank\" href=\"../../dms/showCdxDocumentArchive.jsp?ID=" + cdxProvenance.getId() + "\"/>");
 												out.print("<small><small>" + dateFormat.format(cdxProvenance.getEffectiveTime()) + "</small></small>");
 												out.println("</a>");
-
+												out.print("DELIVERED".equals(status) ? "&#10003" : "&#9729");
 											}
 										}
-										out.print("DELIVERED".equals(status) ? "&#10003" : "&#9729");
 									}
 							%>
 								</td>
