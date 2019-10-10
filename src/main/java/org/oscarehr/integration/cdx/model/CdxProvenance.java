@@ -30,6 +30,7 @@
 
 package org.oscarehr.integration.cdx.model;
 
+import ca.uvic.leadlab.obibconnector.facades.datatypes.DocumentStatus;
 import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import org.oscarehr.common.model.AbstractModel;
 
@@ -83,6 +84,18 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
 
     public String getStatus() {
         return status;
+    }
+
+    public boolean isStatusWarning() {
+        return status.equals(DocumentStatus.ACTIVE.code)
+                || status.equals(DocumentStatus.CORRECTED.code)
+                || status.equals(DocumentStatus.UPDATED.code);
+    }
+
+    public boolean isStatusDanger() {
+        return status.equals(DocumentStatus.CANCELLED.code)
+                || status.equals(DocumentStatus.ABORTED.code)
+                || status.equals(DocumentStatus.UNRECOGNIZED.code);
     }
 
     public void setStatus(String status) {

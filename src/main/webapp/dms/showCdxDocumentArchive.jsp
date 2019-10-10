@@ -150,14 +150,12 @@
 
 
                     <%
-                        if (provenanceDoc.getStatus().equals(DocumentStatus.ACTIVE.code) ) {
+                        if (provenanceDoc.isStatusWarning() ) {
                             out.println("<div class=\"panel panel-warning\">");
-                        }
-                        else if (provenanceDoc.getStatus().equals(DocumentStatus.ABORTED.code) ) {
-                            out.println("<div class=\"panel panel-danger\">");
-                        }
-                        else {
-                            out.println("<div class=\"panel panel-default\">");
+                        } else if (provenanceDoc.isStatusDanger() ) {
+                                out.println("<div class=\"panel panel-danger\">");
+                        } else {
+                                out.println("<div class=\"panel panel-default\">");
                         }
                     %>
                         <div class="panel-heading">Status: <%=provenanceDoc.getStatus()%><%= provenanceDoc.getReceivedTime() != null ? ", Received at: " + provenanceDoc.getReceivedTime() : "" %></div>

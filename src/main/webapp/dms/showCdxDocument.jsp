@@ -488,10 +488,10 @@ It must have been deleted. Please refresh your Inbox window.
 
 
                 <%
-                    if (provenanceDoc.getStatus().equals(DocumentStatus.ACTIVE.code) ) {
+                    if (provenanceDoc.isStatusWarning() ) {
                         out.println("<div class=\"panel panel-warning\">");
                     }
-                    else if (provenanceDoc.getStatus().equals(DocumentStatus.ABORTED.code) ) {
+                    else if (provenanceDoc.isStatusDanger() ) {
                         out.println("<div class=\"panel panel-danger\">");
                     }
                     else {
