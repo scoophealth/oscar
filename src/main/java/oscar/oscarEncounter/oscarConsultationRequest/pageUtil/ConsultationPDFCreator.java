@@ -78,6 +78,20 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 	}
 
 	/**
+	 * Prepares a ConsultationPDFCreator instance to print a consultation request to PDF.
+	 * @param request and requestID contain the information necessary to construct the consultation request
+	 * @param os the output stream where the PDF will be written
+	 */
+	public ConsultationPDFCreator(HttpServletRequest request, String requestID, OutputStream os) {
+		this.os = os;
+		reqFrm = new EctConsultationFormRequestUtil ();
+		reqFrm.estRequestFromId(LoggedInInfo.getLoggedInInfoFromSession(request), requestID);
+		props = OscarProperties.getInstance();
+		clinic = new ClinicData();
+		oscarR = ResourceBundle.getBundle("oscarResources",request.getLocale());
+	}
+
+	/**
 	 * Prints the consultation request.
 	 * @throws IOException when an error with the output stream occurs
 	 * @throws DocumentException when an error in document construction occurs

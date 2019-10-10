@@ -434,7 +434,7 @@ public class EctConsultationFormRequestAction extends Action {
 			}
 
 			try {
-				doCdxSend(loggedInInfo, Integer.parseInt(requestId), submission.endsWith("CDX_update"), submission.endsWith("CDX_cancel"), requestId);
+				doCdxSend(loggedInInfo, Integer.parseInt(requestId), submission.endsWith("CDX_update"), submission.endsWith("CDX_cancel"), requestId, request);
 				if(submission.endsWith("CDX_cancel")) {
 					WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCancelESent");
 				}
@@ -541,7 +541,7 @@ public class EctConsultationFormRequestAction extends Action {
 	    }
     }
 
-	private void doCdxSend(LoggedInInfo loggedInInfo, Integer consultationRequestId, Boolean isUpdate, Boolean isCancel, String requestId) throws OBIBException {
+	private void doCdxSend(LoggedInInfo loggedInInfo, Integer consultationRequestId, Boolean isUpdate, Boolean isCancel, String requestId, HttpServletRequest request) throws OBIBException {
 
 		ConsultationRequestDao consultationRequestDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
 		ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
@@ -583,10 +583,24 @@ public class EctConsultationFormRequestAction extends Action {
 			throw new OBIBException("Selected specialist's CDX ID not found");
 		}
 
+		// create PDF for consultation request form
+
+		ByteOutputStream os = new ByteOutputStream();
+		ConsultationPDFCreator consultationPDFCreator = new ConsultationPDFCreator(request, requestId, os);
+
+		try {
+			consultationPDFCreator.printPdf(loggedInInfo);
+		} catch (Exception e) {
+			MiscUtils.getLogger().error("Could not generate PDF attachment for consultation request");
+			throw new OBIBException("Could not generate PDF attachment for consultation request");
+		}
+
+		os.close();
+
 		// Add pdf attachments (scanned images, lab reports and PDF files)
 		String filename = null;
 		byte[] newBytes = null;
-		ByteOutputStream bos = createPDF(loggedInInfo, "" + demographic.getDemographicNo(), "" + consultationRequestId);
+		ByteOutputStream bos = createPdfForAttachments(loggedInInfo, "" + demographic.getDemographicNo(), "" + consultationRequestId);
 		if (bos != null) {
 			newBytes = bos.toByteArray();
 			filename = "ConsultationRequestAttachedPDF-" + demographic.getLastName() + "," + demographic.getFirstName() + "-" + UtilDateUtilities.getToday("yyyy-MM-dd_HHmmss") + ".pdf";
@@ -642,7 +656,7 @@ public class EctConsultationFormRequestAction extends Action {
 					.phone(TelcoType.HOME, professionalSpecialist.getPhoneNumber())
 				.and()
 				.receiverId(clinicID)
-				.content(message);
+				.attach(AttachmentType.PDF, "Referral Content", os.getBytes());
 		if (newBytes != null) {
 			doc = doc.attach(AttachmentType.PDF, filename, newBytes);
 		}
@@ -713,7 +727,7 @@ public class EctConsultationFormRequestAction extends Action {
 		return sb.toString();
 	}
 
-	private ByteOutputStream createPDF(LoggedInInfo loggedInInfo, String demoNo, String reqId) throws OBIBException {
+	private ByteOutputStream createPdfForAttachments(LoggedInInfo loggedInInfo, String demoNo, String reqId) throws OBIBException {
 		ArrayList<EDoc> docs = EDocUtil.listDocs(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
 		String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 		ArrayList<Object> alist = new ArrayList<Object>();
@@ -851,7 +865,6 @@ try {
             .object(HtmlToPdfObject.forHtml(html));
 
         InputStream mainDoc = htmlToPdf.convert();
-        // IOUtils.copy(mainDoc, os);
         streamList.add(mainDoc);
         mainDoc.close();
 
