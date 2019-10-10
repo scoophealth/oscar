@@ -257,8 +257,8 @@ It must have been deleted. Please refresh your Inbox window.
                             </div>
 
                             <%
-                                //  provenanceDoc.setWarnings(null);
-                                //  provenanceDao.merge(provenanceDoc);
+                                    //  provenanceDoc.setWarnings(null);
+                                    //  provenanceDao.merge(provenanceDoc);
                                 }
                             %>
                         </div>
@@ -498,214 +498,242 @@ It must have been deleted. Please refresh your Inbox window.
                         out.println("<div class=\"panel panel-default\">");
                     }
                 %>
-                    <div class="panel-heading">Status: <%=provenanceDoc.getStatus()%><%= provenanceDoc.getReceivedTime() != null ? ", Received at: " + provenanceDoc.getReceivedTime() : "" %></div>
+                <div class="panel-heading">Status: <%=provenanceDoc.getStatus()%><%= provenanceDoc.getReceivedTime() != null ? ", Received at: " + provenanceDoc.getReceivedTime() : "" %></div>
 
-                    <div class="panel-body">
+                <div class="panel-body">
 
-                        <c:import url="/share/xslt/CDA_to_HTML.xsl" var="xslt"/>
-                        <x:transform xml="<%=provenanceDoc.getPayload()%>" xslt="${xslt}"/>
-                    </div>
+                    <c:import url="/share/xslt/CDA_to_HTML.xsl" var="xslt"/>
+                    <x:transform xml="<%=provenanceDoc.getPayload()%>" xslt="${xslt}"/>
                 </div>
-
-                <%
-                    List<CdxAttachment> atts = cdxAttachmentDao.findByDocNo(provenanceDoc.getId());
-                    if (!atts.isEmpty()) {
-                %>
-
-                <div class="panel-footer">
-                    <h3>Attachments (<%=atts.size()%>):</h3>
-                    <ul>
-                        <%
-                            for (CdxAttachment a : atts) { %>
-                        <li> <a href="#" onclick="javascript:popup(360, 680, '../dms/ManageDocument.do?method=viewCdxAttachment&attId=<%= a.getId() %>', 'Attachment: <%=a.getReference()%>')">
-
-                            <%=a.getReference()%> </a> (<%=a.getAttachmentType()%>) </li>
-
-                        <% }%>
-                    </ul>
-                </div>
-
-                <% }%>
+            </div>
 
             <%
+                List<CdxAttachment> atts = cdxAttachmentDao.findByDocNo(provenanceDoc.getId());
+                if (!atts.isEmpty()) {
+            %>
+
+            <div class="panel-footer">
+                <h3>Attachments (<%=atts.size()%>):</h3>
+                <ul>
+                    <%
+                        for (CdxAttachment a : atts) { %>
+                    <li> <a href="#" onclick="javascript:popup(360, 680, '../dms/ManageDocument.do?method=viewCdxAttachment&attId=<%= a.getId() %>', 'Attachment: <%=a.getReference()%>')">
+
+                        <%=a.getReference()%> </a> (<%=a.getAttachmentType()%>) </li>
+
+                    <% }%>
+                </ul>
+            </div>
+
+            <% }%>
+
+            <% // was this document amended?
+
+                List<CdxProvenance> childDocs = provenanceDao.findChildDocuments(provenanceDoc.getDocumentId());
+                if(!childDocs.isEmpty()) {
+            %>
+
+            <div class="alert alert-danger">
+                This document has <strong> ammendments</strong>:
+                <ul>
+                    <%
+                        for (CdxProvenance child : childDocs) {
+                            %>
+                            <li>
+                                <a href="showCdxDocumentArchive.jsp?ID=<%=child.getId()%>">
+                                    <%=child.getKind()%> (<%=child.getStatus()%>)</a>
+                            </li>
+                            <%
+                        }
+                    %>
+                </ul>
+            </div>
+
+            <%
+                    } %>
+
+
+            <% // is this document a child document to a parent?
                 String parentDocId = provenanceDoc.getParentDoc();
                 if(parentDocId != null) {
                     CdxProvenance parentDoc = provenanceDao.findByDocumentId(parentDocId);
                     if (!(parentDoc==null)) {
             %>
 
-            <div class="panel-footer">
-                <h3>Parent document</h3>
-             <a href="showCdxDocumentArchive.jsp?ID=<%=parentDoc.getId()%>">
+            <div class="alert alert-warning">
+                This document has a <strong> parent document</strong>:
+                <a href="showCdxDocumentArchive.jsp?ID=<%=parentDoc.getId()%>">
 
-                <%=parentDoc.getKind()%> </a>
+                    <%=parentDoc.getKind()%> </a>
             </div>
 
             <%
                     }} %>
 
 
-                        <%
-                            String infulfillmentOfId = provenanceDoc.getInFulfillmentOfId();
-                            if(infulfillmentOfId != null) {
-                                CdxProvenance iffoDoc = provenanceDao.findByDocumentId(infulfillmentOfId);
-                                if (!(iffoDoc==null)) {
-                        %>
-            <div class="panel-footer">
-                <h3>In Fulfillment of</h3>
-                        <a href="showCdxDocumentArchive.jsp?ID=<%=iffoDoc.getId()%>">
+            <% // was this document created in fulfillment of another document?
+                String infulfillmentOfId = provenanceDoc.getInFulfillmentOfId();
+                if(infulfillmentOfId != null) {
+                    CdxProvenance iffoDoc = provenanceDao.findByDocumentId(infulfillmentOfId);
+                    if (!(iffoDoc==null)) {
+            %>
+            <div class="alert alert-success">
+                This document was created <strong>in fulfillment of</strong>:
+                <a href="showCdxDocumentArchive.jsp?ID=<%=iffoDoc.getId()%>">
 
-                            <%=iffoDoc.getKind()%> </a>
+                    <%=iffoDoc.getKind()%> </a>
             </div>
 
-                        <%
-                                }} %>
+            <%
+                    }} %>
 
-                </div>
-
-            </div>
-
-            <!--        ************************************ the code above is duplicated in showCdxDocumentArchive
-                        ************************************ keep consistent upon changing
-                        *********************END *********************************************************** -->
 
 
         </div>
+
     </div>
 
-    <script type="text/javascript">
+    <!--        ************************************ the code above is duplicated in showCdxDocumentArchive
+                ************************************ keep consistent upon changing
+                *********************END *********************************************************** -->
 
-        function setupDemoAutoCompletion() {
-            if (jQuery("#autocompletedemo<%=documentNo%>")) {
 
-                var url;
-                if (jQuery("#activeOnly<%=documentNo%>").is(":checked")) {
-                    url = "<%= request.getContextPath() %>/demographic/SearchDemographic.do?jqueryJSON=true&activeOnly=" + jQuery("#activeOnly<%=documentNo%>").val();
-                } else {
-                    url = "<%= request.getContextPath() %>/demographic/SearchDemographic.do?jqueryJSON=true";
-                }
+</div>
+</div>
 
-                jQuery("#autocompletedemo<%=documentNo%>").autocomplete({
-                    source: url,
-                    minLength: 2,
+<script type="text/javascript">
 
-                    focus: function (event, ui) {
-                        jQuery("#autocompletedemo<%=documentNo%>").val(ui.item.label);
-                        return false;
-                    },
-                    select: function (event, ui) {
-                        jQuery("#autocompletedemo<%=documentNo%>").val(ui.item.label);
-                        jQuery("#demofind<%=documentNo%>").val(ui.item.value);
-                        jQuery("#demofindName<%=documentNo%>").val(ui.item.formattedName);
-                        selectedDemos.push(ui.item.label);
-                        console.log(ui.item.providerNo);
+    function setupDemoAutoCompletion() {
+        if (jQuery("#autocompletedemo<%=documentNo%>")) {
 
-                        if (ui.item.providerNo != undefined && ui.item.providerNo != null && ui.item.providerNo != "" && ui.item.providerNo != "null") {
-                            addDocToList(ui.item.providerNo, ui.item.provider + " (MRP)", "<%=documentNo%>");
-                        }
-                        //enable Save button whenever a selection is made
-                        jQuery('#save<%=documentNo%>').removeAttr('disabled');
-
-                        jQuery('#msgBtn_<%=documentNo%>').removeAttr('disabled');
-                        return false;
-                    }
-                });
+            var url;
+            if (jQuery("#activeOnly<%=documentNo%>").is(":checked")) {
+                url = "<%= request.getContextPath() %>/demographic/SearchDemographic.do?jqueryJSON=true&activeOnly=" + jQuery("#activeOnly<%=documentNo%>").val();
+            } else {
+                url = "<%= request.getContextPath() %>/demographic/SearchDemographic.do?jqueryJSON=true";
             }
-        }
 
-
-        jQuery(setupDemoAutoCompletion());
-
-        function setupProviderAutoCompletion() {
-            var url = "<%= request.getContextPath() %>/provider/SearchProvider.do?method=labSearch";
-
-            jQuery("#autocompleteprov<%=documentNo%>").autocomplete({
+            jQuery("#autocompletedemo<%=documentNo%>").autocomplete({
                 source: url,
                 minLength: 2,
 
                 focus: function (event, ui) {
-                    jQuery("#autocompleteprov<%=documentNo%>").val(ui.item.label);
+                    jQuery("#autocompletedemo<%=documentNo%>").val(ui.item.label);
                     return false;
                 },
                 select: function (event, ui) {
-                    jQuery("#autocompleteprov<%=documentNo%>").val("");
-                    jQuery("#provfind<%=documentNo%>").val(ui.item.value);
-                    addDocToList(ui.item.value, ui.item.label, "<%=documentNo%>");
+                    jQuery("#autocompletedemo<%=documentNo%>").val(ui.item.label);
+                    jQuery("#demofind<%=documentNo%>").val(ui.item.value);
+                    jQuery("#demofindName<%=documentNo%>").val(ui.item.formattedName);
+                    selectedDemos.push(ui.item.label);
+                    console.log(ui.item.providerNo);
 
+                    if (ui.item.providerNo != undefined && ui.item.providerNo != null && ui.item.providerNo != "" && ui.item.providerNo != "null") {
+                        addDocToList(ui.item.providerNo, ui.item.provider + " (MRP)", "<%=documentNo%>");
+                    }
+                    //enable Save button whenever a selection is made
+                    jQuery('#save<%=documentNo%>').removeAttr('disabled');
+
+                    jQuery('#msgBtn_<%=documentNo%>').removeAttr('disabled');
                     return false;
                 }
             });
         }
+    }
 
-        jQuery(setupProviderAutoCompletion());
 
+    jQuery(setupDemoAutoCompletion());
 
-        jQuery(document).ready(function () { //pushing the autocomplete helper out of the visible page
-            jQuery(".ui-helper-hidden-accessible").css({"position": "absolute", "left": "-999em"}) //{"display","none"} will remove the element from the page
+    function setupProviderAutoCompletion() {
+        var url = "<%= request.getContextPath() %>/provider/SearchProvider.do?method=labSearch";
+
+        jQuery("#autocompleteprov<%=documentNo%>").autocomplete({
+            source: url,
+            minLength: 2,
+
+            focus: function (event, ui) {
+                jQuery("#autocompleteprov<%=documentNo%>").val(ui.item.label);
+                return false;
+            },
+            select: function (event, ui) {
+                jQuery("#autocompleteprov<%=documentNo%>").val("");
+                jQuery("#provfind<%=documentNo%>").val(ui.item.value);
+                addDocToList(ui.item.value, ui.item.label, "<%=documentNo%>");
+
+                return false;
+            }
         });
+    }
+
+    jQuery(setupProviderAutoCompletion());
+
+
+    jQuery(document).ready(function () { //pushing the autocomplete helper out of the visible page
+        jQuery(".ui-helper-hidden-accessible").css({"position": "absolute", "left": "-999em"}) //{"display","none"} will remove the element from the page
+    });
 
 
 
 
-        function updateCdxDocument(eleId){
+    function updateCdxDocument(eleId){
 
-            //save doc info
-            var url="../dms/ManageDocument.do",data=$(eleId).serialize(true);
+        //save doc info
+        var url="../dms/ManageDocument.do",data=$(eleId).serialize(true);
+        new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
+                var json=transport.responseText.evalJSON();
+                var patientId;
+                //oscarLog(json);
+                if(json!=null ){
+                    patientId=json.patientId;
+
+                    var ar=eleId.split("_");
+                    var num=ar[1];
+                    num=num.replace(/\s/g,'');
+                    document.location.reload();
+                }
+            }});
+
+        return false;
+    }
+
+    function updateCdxDocumentAndLinkDemo(eleId) {
+        if (confirm("Are you sure to link to this EXISTING demographic record? (Inconsistencies exist between the demographic master record and the patient named in this document.) Proceed only if you are sure you have the right patient."))
+            return updateCdxDocument(eleId);
+        else return false;
+    }
+
+    function createNewDemoAndLinkIt() {
+        if (confirm("Are you sure to CREATE A NEW demographic for the patient named in this document? (Only do this if you are certain that this patient is new)")) {
+            popup(350,480,'<%= request.getContextPath() %>/cdx/cdxCreateDemographic.jsp?msg_id=<%=provenanceDoc.getMsgId()%>&doc_no=<%=documentNo%>','demographic');
+
+        }
+        else return false;
+    }
+
+    function acknowledgeCdxDocument() {
+        <%  if( skipComment ) { %>
+        updateStatus('acknowledgeForm_<%=documentNo%>', false);
+        <% } else { %>
+        getDocComment(<%=documentNo%>,  <%=providerNo%> , false);
+        <% } %>
+        window.close();
+    }
+
+    function deleteCdxDocument(docNo) {
+        if (confirm("ARE YOU SURE TO DELETE THIS INCOMING CDX DOCUMENT? \n(Documents should only be deleted if they were received in error.)")) {
+
+            var url="../dms/DeleteDocument.do";
+            var data='method=deleteDocument&documentId='+docNo;
             new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-                    var json=transport.responseText.evalJSON();
-                    var patientId;
-                    //oscarLog(json);
-                    if(json!=null ){
-                        patientId=json.patientId;
-
-                        var ar=eleId.split("_");
-                        var num=ar[1];
-                        num=num.replace(/\s/g,'');
-                        document.location.reload();
-                    }
+                    window.close();
                 }});
-
-            return false;
         }
 
-        function updateCdxDocumentAndLinkDemo(eleId) {
-            if (confirm("Are you sure to link to this EXISTING demographic record? (Inconsistencies exist between the demographic master record and the patient named in this document.) Proceed only if you are sure you have the right patient."))
-                return updateCdxDocument(eleId);
-            else return false;
-        }
-
-        function createNewDemoAndLinkIt() {
-            if (confirm("Are you sure to CREATE A NEW demographic for the patient named in this document? (Only do this if you are certain that this patient is new)")) {
-                popup(350,480,'<%= request.getContextPath() %>/cdx/cdxCreateDemographic.jsp?msg_id=<%=provenanceDoc.getMsgId()%>&doc_no=<%=documentNo%>','demographic');
-
-            }
-            else return false;
-        }
-
-        function acknowledgeCdxDocument() {
-            <%  if( skipComment ) { %>
-            updateStatus('acknowledgeForm_<%=documentNo%>', false);
-            <% } else { %>
-            getDocComment(<%=documentNo%>,  <%=providerNo%> , false);
-            <% } %>
-            window.close();
-        }
-
-        function deleteCdxDocument(docNo) {
-            if (confirm("ARE YOU SURE TO DELETE THIS INCOMING CDX DOCUMENT? \n(Documents should only be deleted if they were received in error.)")) {
-
-                var url="../dms/DeleteDocument.do";
-                var data='method=deleteDocument&documentId='+docNo;
-                new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
-                        window.close();
-                    }});
-            }
-
-            return false;
-        }
+        return false;
+    }
 
 
-    </script>
+</script>
 </div>
 </body>
 </html>

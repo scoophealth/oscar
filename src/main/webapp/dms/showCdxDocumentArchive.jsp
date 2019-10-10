@@ -188,15 +188,41 @@
                     <% }%>
 
 
+                <% // was this document amended?
+
+                    List<CdxProvenance> childDocs = provenanceDao.findChildDocuments(provenanceDoc.getDocumentId());
+                    if(!childDocs.isEmpty()) {
+                %>
+
+                <div class="alert alert-danger">
+                    This document has <strong> ammendments</strong>:
+                    <ul>
+                        <%
+                            for (CdxProvenance child : childDocs) {
+                        %>
+                        <li>
+                            <a href="showCdxDocumentArchive.jsp?ID=<%=child.getId()%>">
+                                <%=child.getKind()%> (<%=child.getStatus()%>)</a>
+                        </li>
+                        <%
+                            }
+                        %>
+                    </ul>
+                </div>
+
                 <%
+                    } %>
+
+
+                <% // is this document a child document to a parent?
                     String parentDocId = provenanceDoc.getParentDoc();
                     if(parentDocId != null) {
                         CdxProvenance parentDoc = provenanceDao.findByDocumentId(parentDocId);
                         if (!(parentDoc==null)) {
                 %>
 
-                <div class="panel-footer">
-                    <h3>Parent document</h3>
+                <div class="alert alert-warning">
+                    This document has a <strong> parent document</strong>:
                     <a href="showCdxDocumentArchive.jsp?ID=<%=parentDoc.getId()%>">
 
                         <%=parentDoc.getKind()%> </a>
@@ -206,22 +232,21 @@
                         }} %>
 
 
-                <%
+                <% // was this document created in fulfillment of another document?
                     String infulfillmentOfId = provenanceDoc.getInFulfillmentOfId();
                     if(infulfillmentOfId != null) {
                         CdxProvenance iffoDoc = provenanceDao.findByDocumentId(infulfillmentOfId);
                         if (!(iffoDoc==null)) {
                 %>
-                <div class="panel-footer">
-                    <h3>In Fulfillment of</h3>
+                <div class="alert alert-success">
+                    This document was created <strong>in fulfillment of</strong>:
                     <a href="showCdxDocumentArchive.jsp?ID=<%=iffoDoc.getId()%>">
 
-                        <%=iffoDoc.getKind()%>  </a>
+                        <%=iffoDoc.getKind()%> </a>
                 </div>
 
                 <%
                         }} %>
-
             </div>
 
         </div>
