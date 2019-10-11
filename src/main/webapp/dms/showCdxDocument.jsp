@@ -57,7 +57,6 @@
 <%@ page import="org.oscarehr.integration.cdx.dao.*" %>
 <%@ page import="oscar.log.LogAction" %>
 <%@ page import="oscar.log.LogConst" %>
-<%@ page import="ca.uvic.leadlab.obibconnector.facades.datatypes.DocumentStatus" %>
 <%
 
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
@@ -66,7 +65,6 @@
     String documentNo = request.getParameter("segmentID");
     Integer documentNoInt = Integer.parseInt(documentNo);
     DocumentDao docDao = SpringUtils.getBean(DocumentDao.class);
-    CdxAttachmentDao cdxAttachmentDao = SpringUtils.getBean(CdxAttachmentDao.class);
     CtlDocumentDao ctlDocDao = SpringUtils.getBean(CtlDocumentDao.class);
     DemographicDao demoDao = SpringUtils.getBean(DemographicDao.class);
     CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
@@ -127,21 +125,16 @@ It must have been deleted. Please refresh your Inbox window.
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>CDX Document Viewer</title>
+    <title>CDX Document Inbox Viewer</title>
 
-    <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/prototype.js"></script>
-    <script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
-    <script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
-    <script language="javascript" type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js" ></script>
+    <script src="<%= request.getContextPath() %>/share/javascript/prototype.js"></script>
+    <script src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
+    <script src="<%= request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
+    <script src="<%= request.getContextPath() %>/share/javascript/Oscar.js" ></script>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/share/css/bootstrap.min.css">
 
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-            crossorigin="anonymous"></script>
+    <script src="<%= request.getContextPath() %>/share/javascript/bootstrap.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/share/yui/css/fonts-min.css"/>
     <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/share/yui/css/autocomplete.css"/>
@@ -175,9 +168,9 @@ It must have been deleted. Please refresh your Inbox window.
 
                     <form id="forms_<%=documentNo%>" onsubmit="return updateCdxDocumentAndLinkDemo('forms_<%=documentNo%>');">
                         <input type="hidden" name="documentId" value="<%=documentNo%>" />
-                        <input type="hidden" id="docDesc_<%=documentNo%>"  type="text" name="documentDescription" value="<%=curdoc.getDocdesc()%>" />
-                        <input type="hidden" id="observationDate<%=documentNo%>" name="observationDate" type="text" value="<%=curdoc.getObservationdate()%>"/>
-                        <input type="hidden" id="docType<%=documentNo%>" name="docType" type="text" value="DOC"/>
+                        <input type="hidden" id="docDesc_<%=documentNo%>" name="documentDescription" value="<%=curdoc.getDocdesc()%>" />
+                        <input type="hidden" id="observationDate<%=documentNo%>" name="observationDate" value="<%=curdoc.getObservationdate()%>"/>
+                        <input type="hidden" id="docType<%=documentNo%>" name="docType" value="DOC"/>
                         <input type="hidden" name="method" value="documentUpdateAjax" />
                         <input id="saved<%=documentNo%>" type="hidden" name="saved" value="true"/>
                         <input type="hidden" value="<%=demoNo%>" name="demog" id="demofind<%=documentNo%>"/>
@@ -193,7 +186,7 @@ It must have been deleted. Please refresh your Inbox window.
                         %>
 
                         <font color="red">
-                            <strong>Warning!</strong> Name in document is <strong> not </strong> matched to a demographic. </span>
+                            <strong>Warning!</strong> Name in document is <strong> not </strong> matched to a demographic.
                         </font>
 
 
@@ -232,7 +225,7 @@ It must have been deleted. Please refresh your Inbox window.
 
                         <% } else {
                             Demographic pat = demoDao.getDemographic(demoNo);
-                            Boolean warningsExist = !(provenanceDoc.getWarnings() == null || provenanceDoc.getWarnings().equals(""));
+                            boolean warningsExist = !(provenanceDoc.getWarnings() == null || provenanceDoc.getWarnings().equals(""));
                         %>
 
                         <div class="panel panel-default">
@@ -251,16 +244,13 @@ It must have been deleted. Please refresh your Inbox window.
                             </div>
                             <%
                                 if (warningsExist) { %>
-                            <div class="alert alert-danger" role="alert">
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 class="alert-heading">Warning!</h4>
                                 <%=provenanceDoc.getWarnings()%>
                             </div>
 
-                            <%
-                                    //  provenanceDoc.setWarnings(null);
-                                    //  provenanceDao.merge(provenanceDoc);
-                                }
-                            %>
+                            <%}%>
                         </div>
 
                         <div class = "row">
@@ -329,23 +319,23 @@ It must have been deleted. Please refresh your Inbox window.
                         <div id="labdoc_<%=documentNo%>">
                             <%
                                 ArrayList ackList = AcknowledgementData.getAcknowledgements("DOC",documentNo);
-                                ReportStatus reportStatus = null;
+                                ReportStatus reportStatus;
                                 String docCommentTxt = "";
-                                String rptStatus = "";
+                                String rptStatus;
                                 boolean ackedOrFiled = false;
-                                for( int idx = 0; idx < ackList.size(); ++idx ) {
-                                    reportStatus = (ReportStatus) ackList.get(idx);
+                                for (Object o : ackList) {
+                                    reportStatus = (ReportStatus) o;
 
-                                    if( reportStatus.getOscarProviderNo() != null && reportStatus.getOscarProviderNo().equals(providerNo) ) {
+                                    if (reportStatus.getOscarProviderNo() != null && reportStatus.getOscarProviderNo().equals(providerNo)) {
                                         docCommentTxt = reportStatus.getComment();
-                                        if( docCommentTxt == null ) {
+                                        if (docCommentTxt == null) {
                                             docCommentTxt = "";
                                         }
 
                                         rptStatus = reportStatus.getStatus();
 
-                                        if( rptStatus != null ) {
-                                            ackedOrFiled = rptStatus.equalsIgnoreCase("A") ? true : rptStatus.equalsIgnoreCase("F") ? true : false;
+                                        if (rptStatus != null) {
+                                            ackedOrFiled = rptStatus.equalsIgnoreCase("A") || (rptStatus.equalsIgnoreCase("F"));
                                         }
                                         break;
                                     }
@@ -369,7 +359,7 @@ It must have been deleted. Please refresh your Inbox window.
 
                                 <input type="button" class="btn btn-default" id="closeBtn_<%=documentNo%>" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                                 <input type="button" class="btn btn-danger" id="deleteBtn_<%=documentNo%>" value=" Delete" onClick="deleteCdxDocument(<%=documentNo%>)" <%=(demoLinked? "style='display:none'" : "")%>>
-                                <button type="button" class="btn btn-small" aria-label="CDX help" onClick="window.open('https://simbioses.github.io/cdxuserman/009_receiving/cdx_10/');">
+                                <button type="button" class="btn btn-small" aria-label="CDX help" onClick="window.open('https://simbioses.github.io/cdxuserman/006_for_users/009_receiving/cdx_10/');">
                                     <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                                 </button>
                                 <div class="btn-group" role="group" <%=(!demoLinked? "style='display:none'" : "")%>>
@@ -415,22 +405,24 @@ It must have been deleted. Please refresh your Inbox window.
                                     <td align="left" bgcolor="white">
                                         <div class="FieldData">
                                             <!--center-->
-                                            <% for (int i=0; i < ackList.size(); i++) {
-                                                ReportStatus report = (ReportStatus) ackList.get(i); %>
+                                            <% for (Object o : ackList) {
+                                                ReportStatus report = (ReportStatus) o; %>
                                             <%= report.getProviderName() %> :
 
                                             <% String ackStatus = report.getStatus();
-                                                if(ackStatus.equals("A")){
+                                                if (ackStatus.equals("A")) {
                                                     ackStatus = "Acknowledged";
-                                                }else if(ackStatus.equals("F")){
+                                                } else if (ackStatus.equals("F")) {
                                                     ackStatus = "Filed but not Acknowledged";
-                                                }else{
+                                                } else {
                                                     ackStatus = "Not Acknowledged";
                                                 }
                                             %>
-                                            <font color="red"><%= ackStatus %></font>
+                                            <font color="red"><%= ackStatus %>
+                                            </font>
                                             <span id="timestamp_<%=documentNo + "_" + report.getOscarProviderNo()%>"><%= report.getTimestamp() == null ? "&nbsp;" : report.getTimestamp() + "&nbsp;"%></span>,
-                                            comment: <span id="comment_<%=documentNo + "_" + report.getOscarProviderNo()%>"><%=report.getComment() == null || report.getComment().equals("") ? "no comment" : report.getComment()%></span>
+                                            comment: <span
+                                                id="comment_<%=documentNo + "_" + report.getOscarProviderNo()%>"><%=report.getComment() == null || report.getComment().equals("") ? "no comment" : report.getComment()%></span>
 
                                             <br>
                                             <% }
@@ -452,154 +444,14 @@ It must have been deleted. Please refresh your Inbox window.
 
             </div>
 
-            <!--  ************************************ this code below duplicated in showCdxDocumentArchive
-                  ************************************ keep consistent upon changing
-                  *********************BEGIN *********************************************************** -->
-
-            <%
-                List<CdxProvenance> versions = provenanceDao.findReceivedVersionsOrderDesc(provenanceDoc.getSetId());
-                if (versions.size() > 1) {
-                    if (provenanceDoc.getId().equals(versions.get(0).getId())) {
-            %>
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    Multiple versions of this document exist. You are looking at the <strong> latest</strong> version (<%=provenanceDoc.getVersion()%>).
-                </div>
-                <% } else { %>
-                <div class="panel panel-danger">
-                    <div class="panel-heading">
-                        <strong> Warning! </strong> Multiple versions of this document exist. You are looking at an <strong> outdated </strong> version (<%=provenanceDoc.getVersion()%>).
-                    </div>
-                    <% } %>
-                    <div class="panel panel-body">
-                        <ul class="list-group">
-                            <%
-                                for (CdxProvenance p : versions) {
-                            %>
-                            <a href="showCdxDocumentArchive.jsp?ID=<%=p.getId()%>" class="list-group-item <%=(p.getId().equals(provenanceDoc.getId()) ? "disabled" : "")%> ">
-                                Version <%=p.getVersion()%>, Effective time: <%=p.getEffectiveTime()%>
-                            </a>
-
-                            <% }%>
-                        </ul>
-                    </div>
-                </div>
-                <%}%>
-
-
-                <%
-                    if (provenanceDoc.isStatusWarning() ) {
-                        out.println("<div class=\"panel panel-warning\">");
-                    }
-                    else if (provenanceDoc.isStatusDanger() ) {
-                        out.println("<div class=\"panel panel-danger\">");
-                    }
-                    else {
-                        out.println("<div class=\"panel panel-default\">");
-                    }
-                %>
-                <div class="panel-heading">Status: <%=provenanceDoc.getStatus()%><%= provenanceDoc.getReceivedTime() != null ? ", Received at: " + provenanceDoc.getReceivedTime() : "" %></div>
-
-                <div class="panel-body">
-
-                    <c:import url="/share/xslt/CDA_to_HTML.xsl" var="xslt"/>
-                    <x:transform xml="<%=provenanceDoc.getPayload()%>" xslt="${xslt}"/>
-                </div>
+            <div class="row">
+                <%@include  file = "renderCdxDocument.jsp" %>
             </div>
-
-            <%
-                List<CdxAttachment> atts = cdxAttachmentDao.findByDocNo(provenanceDoc.getId());
-                if (!atts.isEmpty()) {
-            %>
-
-            <div class="panel-footer">
-                <h3>Attachments (<%=atts.size()%>):</h3>
-                <ul>
-                    <%
-                        for (CdxAttachment a : atts) { %>
-                    <li> <a href="#" onclick="javascript:popup(360, 680, '../dms/ManageDocument.do?method=viewCdxAttachment&attId=<%= a.getId() %>', 'Attachment: <%=a.getReference()%>')">
-
-                        <%=a.getReference()%> </a> (<%=a.getAttachmentType()%>) </li>
-
-                    <% }%>
-                </ul>
-            </div>
-
-            <% }%>
-
-            <% // was this document amended?
-
-                List<CdxProvenance> childDocs = provenanceDao.findChildDocuments(provenanceDoc.getDocumentId());
-                if(!childDocs.isEmpty()) {
-            %>
-
-            <div class="alert alert-danger">
-                This document has <strong> ammendments</strong>:
-                <ul>
-                    <%
-                        for (CdxProvenance child : childDocs) {
-                            %>
-                            <li>
-                                <a href="showCdxDocumentArchive.jsp?ID=<%=child.getId()%>">
-                                    <%=child.getKind()%> (<%=child.getStatus()%>)</a>
-                            </li>
-                            <%
-                        }
-                    %>
-                </ul>
-            </div>
-
-            <%
-                    } %>
-
-
-            <% // is this document a child document to a parent?
-                String parentDocId = provenanceDoc.getParentDoc();
-                if(parentDocId != null) {
-                    CdxProvenance parentDoc = provenanceDao.findByDocumentId(parentDocId);
-                    if (!(parentDoc==null)) {
-            %>
-
-            <div class="alert alert-warning">
-                This document has a <strong> parent document</strong>:
-                <a href="showCdxDocumentArchive.jsp?ID=<%=parentDoc.getId()%>">
-
-                    <%=parentDoc.getKind()%> </a>
-            </div>
-
-            <%
-                    }} %>
-
-
-            <% // was this document created in fulfillment of another document?
-                String infulfillmentOfId = provenanceDoc.getInFulfillmentOfId();
-                if(infulfillmentOfId != null) {
-                    CdxProvenance iffoDoc = provenanceDao.findByDocumentId(infulfillmentOfId);
-                    if (!(iffoDoc==null)) {
-            %>
-            <div class="alert alert-success">
-                This document was created <strong>in fulfillment of</strong>:
-                <a href="showCdxDocumentArchive.jsp?ID=<%=iffoDoc.getId()%>">
-
-                    <%=iffoDoc.getKind()%> </a>
-            </div>
-
-            <%
-                    }} %>
-
-
 
         </div>
-
     </div>
-
-    <!--        ************************************ the code above is duplicated in showCdxDocumentArchive
-                ************************************ keep consistent upon changing
-                *********************END *********************************************************** -->
-
-
 </div>
-</div>
+
 
 <script type="text/javascript">
 
@@ -628,7 +480,7 @@ It must have been deleted. Please refresh your Inbox window.
                     selectedDemos.push(ui.item.label);
                     console.log(ui.item.providerNo);
 
-                    if (ui.item.providerNo != undefined && ui.item.providerNo != null && ui.item.providerNo != "" && ui.item.providerNo != "null") {
+                    if (ui.item.providerNo !== undefined && ui.item.providerNo !== "" && ui.item.providerNo !== "null") {
                         addDocToList(ui.item.providerNo, ui.item.provider + " (MRP)", "<%=documentNo%>");
                     }
                     //enable Save button whenever a selection is made
@@ -734,7 +586,6 @@ It must have been deleted. Please refresh your Inbox window.
 
 
 </script>
-</div>
 </body>
 </html>
 <%
