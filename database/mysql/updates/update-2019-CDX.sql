@@ -22,7 +22,7 @@ CREATE TABLE cdx_provenance (
 																		parent_doc           varchar(60)    ,
 																		set_id               varchar(60)    ,
 																		in_fulfillment_of_id varchar(60)    ,
-																		kind                 varchar(30)  NOT NULL  ,
+																		kind                 varchar(50)  NOT NULL  ,
 																		action               varchar(10)  NOT NULL  ,
 																		log                  bigint    ,
 																		payload              text    ,
