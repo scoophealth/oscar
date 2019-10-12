@@ -373,7 +373,7 @@ public class InboxResultsDao {
 							+ " ORDER BY id DESC "
 							+ (isPaged ? "	LIMIT " + (page * pageSize) + "," + pageSize : "");
 				} else {
-					docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8; descriptionLoc = 10; updateDateLoc = 11; reportStatusLoc = 12; docFileNameLoc = 10;
+					docNoLoc = 1; statusLoc = 2; docTypeLoc = 9; lastNameLoc = 3; firstNameLoc = 4; hinLoc = 5; sexLoc = 6; moduleLoc = 7; obsDateLoc = 8; descriptionLoc = 10; updateDateLoc = 11; reportStatusLoc = 12; docFileNameLoc = 13;
 					sql = " SELECT * "
 							+ " FROM (SELECT plr.id, doc.document_no, plr.status, last_name, first_name, hin, sex, module_id, observationdate, plr.lab_type as doctype, docdesc, updatedatetime, report_status, docfilename"
 							+ " FROM ctl_document cd, demographic d, providerLabRouting plr, document doc "
