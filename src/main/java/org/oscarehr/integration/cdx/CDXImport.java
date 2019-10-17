@@ -24,11 +24,11 @@
 
 package org.oscarehr.integration.cdx;
 
+import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
 import ca.uvic.leadlab.obibconnector.facades.support.ISupport;
 import ca.uvic.leadlab.obibconnector.facades.receive.*;
 import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
 import ca.uvic.leadlab.obibconnector.impl.receive.ReceiveDoc;
-import ca.uvic.leadlab.obibconnector.impl.receive.SearchDoc;
 import ca.uvic.leadlab.obibconnector.impl.support.Support;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.common.dao.*;
@@ -51,8 +51,6 @@ import static org.oscarehr.util.SpringUtils.getBean;
 public class CDXImport {
 
     private IReceiveDoc receiver;
-    private ISearchDoc docSearcher;
-    private CDXConfiguration cdxConfig;
     private ISupport support;
     private CdxPendingDocsDao pendDocDao;
     private DocumentDao     docDao;
@@ -66,10 +64,9 @@ public class CDXImport {
 
     public CDXImport() {
 
-        cdxConfig = new CDXConfiguration();
+        CDXConfiguration cdxConfig = new CDXConfiguration();
 
         receiver = new ReceiveDoc(cdxConfig);
-        docSearcher = new SearchDoc(cdxConfig);
 
         support = new Support(cdxConfig);
         pendDocDao = getBean(CdxPendingDocsDao.class);
@@ -86,19 +83,26 @@ public class CDXImport {
     }
 
 
-    public void importNewDocs() throws Exception {
-
+    /**
+     * Imports all NEW documents (i.e., documents that have not been attempted to download before.
+     */
+    public void importNewDocs() {
         List<String> docIds;
+        try {
 
-        docIds = receiver.pollNewDocIDs();
-
-        MiscUtils.getLogger().info("CDX Import: " + docIds.size() + " new messages to import" );
-
-        importDocuments(docIds);
+            docIds = receiver.pollNewDocIDs();
+            MiscUtils.getLogger().info("CDX Import: " + docIds.size() + " new messages to import");
+            importDocuments(docIds);
+        } catch (OBIBException e) {
+            MiscUtils.getLogger().error("Polling for new documents failed", e);
+        }
 
     }
 
-
+    /**
+     * Imports all documents in the given list
+     * @param msgIds a list of message IDs to import
+     */
     public void importDocuments(List<String> msgIds) {
 
         for (String id : msgIds)
@@ -144,6 +148,11 @@ public class CDXImport {
             }
     }
 
+    /**
+     * Retrieve the IDocument object for a given message ID. (This method does not (re)import the document.)
+     * @param msgId The message ID of the document to be retrieved
+     * @return retrieved document
+     */
 
     public IDocument retrieveDocument(String msgId) {
         IDocument result = null;
@@ -159,7 +168,13 @@ public class CDXImport {
         return result;
     }
 
-    public void storeDocument(IDocument doc, String msgId) {
+    /**
+     * Method to persist downloaded document object in EMR database.
+     * @param doc the downloaded IDocument object
+     * @param msgId the message ID of the downloaded document
+     */
+
+    private void storeDocument(IDocument doc, String msgId) {
         CdxProvenance prov = new CdxProvenance();
         Document    inboxDoc = null;
         String  warnings = "";
@@ -174,12 +189,8 @@ public class CDXImport {
             CdxProvenance newestExistingVersion = versions.get(0);
             if (newestExistingVersion.getEffectiveTime().before(doc.getEffectiveTime())) {
                 inboxDoc = reviseInboxData(doc, newestExistingVersion.getDocumentNo());
-//                if (prov.getVersion() <= newestExistingVersion.getVersion())
-//                    prov.setVersion(newestExistingVersion.getVersion() + 1);
             }
-
         }
-
 
         if (inboxDoc != null) {
             warnings = generateWarningsIfDemographicInconsistency(inboxDoc, doc);
@@ -196,11 +207,15 @@ public class CDXImport {
         if (!pendingDocs.isEmpty()) {
             pendDocDao.removePendDoc(pendingDocs.get(0).getDocId());
         }
-
         provDao.merge(prov);
     }
 
-
+    /**
+     * Method to generate warnings in case of inconsistencies between demographic info in document vs. demographic info in database
+     * @param inboxDoc Inbox document object generated for downloaded document
+     * @param doc Downloaded document object
+     * @return warning string
+     */
     private String generateWarningsIfDemographicInconsistency (Document inboxDoc, IDocument doc) {
 
         String warnings = "";
@@ -233,7 +248,7 @@ public class CDXImport {
                 if (!dFirstName.toUpperCase().equals(pFirstName.toUpperCase())) warnings += "<p>The <strong>first " +
                         "name</strong> in the patient's master file does not agree with the one in this document.</p>";
 
-                Boolean newTelco = false;
+                boolean newTelco = false;
 
                 for (ITelco t : p.getPhones()) {
                     if (!(t.getAddress().equals(d.getPhone()) || t.getAddress().equals(d.getPhone2()))) newTelco = true;
@@ -252,10 +267,16 @@ public class CDXImport {
 
         } catch (Exception e) {
             MiscUtils.getLogger().error("Demographics consistency check failed (not fatal)", e);
-        };
+        }
         return warnings;
     }
 
+    /**
+     * This method is called when a new version of a document is received.
+      * @param doc the downloaded new version of the document
+     * @param inboxDocId id of the previous version of the document
+     * @return the inbox document created for the new version of the document
+     */
 
     private Document reviseInboxData(IDocument doc, int inboxDocId) {
 
@@ -269,6 +290,11 @@ public class CDXImport {
         return newDocEntity;
     }
 
+    /**
+     * Copy routing information of "existingDocEntity" to "newDocEntity"
+     * @param newDocEntity new inbox document
+     * @param existingDocEntity old inbox document
+     */
     private void copyPreviousRoutingAndResetStati(Document newDocEntity, Document existingDocEntity) {
         for (ProviderLabRoutingModel plr : plrDao.getProviderLabRoutingForLabAndType(existingDocEntity.getDocumentNo(), "DOC")) {
             ProviderLabRoutingModel plrNew = new ProviderLabRoutingModel();
@@ -279,10 +305,11 @@ public class CDXImport {
         }
     }
 
-
-
-
-
+    /**
+     * create inbox document object for received cdx document
+     * @param doc received cdx document object
+     * @return created inbox document object
+     */
     private Document createInboxData(IDocument doc) {
         Document        docEntity = new Document();
         populateInboxDocument(doc, docEntity);
@@ -290,6 +317,11 @@ public class CDXImport {
         return docEntity;
     }
 
+    /**
+     * populate inbox document with data from received CDX IDocument object
+     * @param doc received CDX IDocument object
+     * @param docEntity new Inbox document object
+     */
     private void populateInboxDocument(IDocument doc, Document docEntity) {
         IProvider p;
         docEntity.setDoctype(translateCdxCodeToDocType(doc.getLoincCodeDisplayName()));
@@ -348,13 +380,17 @@ public class CDXImport {
             addProviderRouting(docEntity, q);
         }
 
-        if (!routed(docEntity)) { // even if none of the recipients appears to work at our clinic, we will route to the default provider
+        if (!isRouted(docEntity)) { // even if none of the recipients appears to work at our clinic, we will route to the default provider
             addDefaultProviderRouting(docEntity);
         }
     }
 
+    /**
+     * translate LOINC code display name to OSCAR document category
+     * @param loincCodeDisplayName loinc code to be translated
+     * @return oscar document category
+     */
     private String translateCdxCodeToDocType(String loincCodeDisplayName) {
-
         switch (loincCodeDisplayName.toLowerCase()) {
             case "consult note" :
             case "mental health consult note" :
@@ -397,38 +433,36 @@ public class CDXImport {
         }
     }
 
-    private boolean routed(Document docEntity) {
+    /**
+     * returns true iff document has been routed to provider
+     * @param docEntity inbox document to be checked
+     * @return Boolean result
+     */
+    private boolean isRouted(Document docEntity) {
         ProviderLabRoutingModel plr = plrDao.findByLabNoAndLabType(docEntity.getDocumentNo(), "DOC");
         return plr != null;
     }
 
-
+    /**
+     * method attempts to link received document to patient demographics. 4-point match is prescribed by CDX conformance spec
+     * @param docEntity inbox document to be linked to demographic
+     * @param patient patient to be matched to demographic
+     */
     private void addPatient(Document docEntity, IPatient patient) {
 
         try {
-
             Demographic matchedDemo = null;
-
-
-            // implement 4 point matching as required by CDX conformance spec
-
-
             List<Demographic> demos = demoDao.getDemographicsByHealthNum(patient.getID());
 
             if (demos.size() == 1) {
                 Demographic demo = demos.get(0);
                 if (demo.getLastName().toUpperCase().equals(patient.getLastName().toUpperCase())) {
-
                     try {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         Date d = sdf.parse(demo.getFormattedDob());
-
                         Date d2 = patient.getBirthdate();
-
                         if (sameDates(d, d2) && (patient.getGender() != null)) {
-
                             if (patient.getGender().label.equals(demo.getSex())) {
-
                                 matchedDemo = demo; // we found the patient
                             }
                         }
@@ -437,7 +471,6 @@ public class CDXImport {
                     }
                 }
             }
-
 
             CtlDocument ctlDoc = new CtlDocument();
 
@@ -471,6 +504,11 @@ public class CDXImport {
         }
     }
 
+    /**
+     * method to route received document to provider.
+     * @param docEntity inbox document to be routed
+     * @param prov provider to be looked up in the EMR
+     */
     private void addProviderRouting(Document docEntity, IProvider prov) {
 
         Provider provEntity = null;
@@ -487,6 +525,10 @@ public class CDXImport {
         }
     }
 
+    /**
+     * Method to link document to default provider
+     * @param docEntity inbox document to be linked to default provider
+     */
     private void addDefaultProviderRouting(Document docEntity) {
 
         ProviderLabRoutingDao plrDao = getBean(ProviderLabRoutingDao.class);
@@ -499,14 +541,14 @@ public class CDXImport {
         plrDao.persist(plr);
     }
 
+    /**
+     * utility method to compare two dates
+     * @param a a date
+     * @param b another date
+     * @return true iff dates are the same
+     */
 
-
-
-    public static boolean sameDates(Date a, Date b) {
-        if (a.getDate() == b.getDate() &&
-                a.getMonth() == b.getMonth() &&
-                a.getYear() == b.getYear())
-            return true;
-        else return false;
+    private static boolean sameDates(Date a, Date b) {
+        return a.getDate() == b.getDate() && a.getMonth() == b.getMonth() && a.getYear() == b.getYear();
     }
 }
