@@ -105,11 +105,8 @@ public class CDXImport {
             try {
 
                 MiscUtils.getLogger().info("CDX Import: importing message " + id );
-
                 IDocument doc = receiver.retrieveDocument(id);
-
                 MiscUtils.getLogger().info("     with " + doc.getAttachments().size() + " attachments");
-
                 storeDocument(doc, id);
 
             } catch (Exception e) {
@@ -360,35 +357,43 @@ public class CDXImport {
 
         switch (loincCodeDisplayName.toLowerCase()) {
             case "consult note" :
+            case "mental health consult note" :
+            case "cardiovascular disease consult note":
+            case "nephrology consult note" :
+            case "psychiatry consult note":
                 return "consult";
             case "general lab report" :
+            case "microbiology lab report":
+            case "transfusion medicine lab report":
+            case "ekg":
                 return "lab";
-            case "mental health consult note" :
-                return "consult";
             case "diagnostic imaging study" :
+            case "breast mammogram":
                 return "radiology";
             case "anatomic pathology report" :
                 return "pathology";
             case "discharge summary" :
                 return "discharge summary";
             case "admission history and physical note" :
-                return "note";
             case "procedure note" :
-                return "note";
             case "progress note" :
-                return "note";
             case "history and physical note" :
-                return "note";
             case "outpatient surgical operation note" :
-                return "note";
             case "surgical operation note" :
+            case "emergency department note":
+            case "telephone encounter note":
+            case "outpatient note":
+            case "orthopedics note":
+            case "respiratory therapy note":
                 return "note";
             case "ereferral note" :
                 return "e-referral note";
             case "hospital admission notification note" :
                 return "general purpose notification";
+            case "labour and delivery summary":
+                return "patient summary";
             default :
-                return "other";
+                return "others";
         }
     }
 
