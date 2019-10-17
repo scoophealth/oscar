@@ -25,7 +25,8 @@
 
 <%-- Note: this file is included in showCdxDocument.jsp and showCdxDocumentArchive.jsp --%>
 
-
+<%@ page import="java.util.List" %>
+<%@ page import="org.oscarehr.integration.cdx.model.CdxAttachment" %>
 
 <%
     List<CdxProvenance> versions = provenanceDao.findReceivedVersionsOrderDesc(provenanceDoc.getSetId());
