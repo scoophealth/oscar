@@ -656,7 +656,7 @@ public class EctConsultationFormRequestAction extends Action {
 					.phone(TelcoType.HOME, professionalSpecialist.getPhoneNumber())
 				.and()
 				.receiverId(clinicID)
-				.attach(AttachmentType.PDF, "Referral Content", os.getBytes());
+				.attach(AttachmentType.PDF, "Referral Letter", os.getBytes());
 		if (newBytes != null) {
 			doc = doc.attach(AttachmentType.PDF, filename, newBytes);
 		}
