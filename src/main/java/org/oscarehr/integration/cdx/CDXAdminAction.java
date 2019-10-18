@@ -46,15 +46,11 @@ public class CDXAdminAction extends DispatchAction {
 
         String enabled = request.getParameter("cdx_polling_enabled");
         String interval = request.getParameter("cdx_polling_interval");
-        String distEnabled = request.getParameter("cdx_distribution_enabled");
-        String distInterval = request.getParameter("cdx_distribution_interval");
         String cdxUrl = request.getParameter("cdx_url");
 //        String defaultProvider = request.getParameter("defaultProvider");
         String cdxOid = request.getParameter("cdxOid");
         MiscUtils.getLogger().info("action cdx_polling_enabled: " + enabled);
         MiscUtils.getLogger().info("action cdx_polling_interval: " + interval);
-        MiscUtils.getLogger().info("action cdx_distribution_enabled: " + distEnabled);
-        MiscUtils.getLogger().info("action cdx_distribution_interval: " + distInterval);
         MiscUtils.getLogger().info("action cdx_url: " + cdxUrl);
 //        MiscUtils.getLogger().info("action defaultProvider: " + defaultProvider);
         MiscUtils.getLogger().info("action cdxOid: " + cdxOid);
@@ -90,14 +86,8 @@ public class CDXAdminAction extends DispatchAction {
                 pollInterval = toInteger(interval);
             }
 
-            int distributionInterval = 10;
-            if (toInteger(distInterval) != null) {
-                distributionInterval = toInteger(distInterval);
-            }
-
             CDXConfiguration cdxConfiguration = new CDXConfiguration();
-            cdxConfiguration.savePolling(LoggedInInfo.getLoggedInInfoFromSession(request), Boolean.valueOf(enabled), pollInterval);
-            cdxConfiguration.saveDistribution(LoggedInInfo.getLoggedInInfoFromSession(request), Boolean.parseBoolean(distEnabled), distributionInterval);
+            cdxConfiguration.savePolling(LoggedInInfo.getLoggedInInfoFromSession(request), Boolean.parseBoolean(enabled), pollInterval);
 
             request.setAttribute("success", true);
         } catch (Exception e) {
