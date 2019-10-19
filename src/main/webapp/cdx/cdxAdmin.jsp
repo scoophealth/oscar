@@ -71,9 +71,6 @@
     String pollEnabled;
     String pollDisabled;
     String pollInterval;
-    String distributionEnabled;
-    String distributionDisabled;
-    String distributionInterval;
     String cdxUrl = "http://127.0.0.1:8081";
     //String privateKey = "";
     //String decryptionKey = "";
@@ -91,15 +88,6 @@
     cdxOid = cdxConfiguration.getClinicId();
     pollInterval = cdxConfiguration.getPollingInterval();
 
-    if (cdxConfiguration.isDistributionEnabled()) {
-        distributionEnabled = "checked";
-        distributionDisabled = "unchecked";
-    } else {
-        distributionEnabled = "unchecked";
-        distributionDisabled = "checked";
-    }
-    distributionInterval = cdxConfiguration.getDistributionInterval();
-
     UserProperty up;
 
     up = userPropertyDao.getProp("cdx_url");
@@ -108,7 +96,6 @@
 
     MiscUtils.getLogger().info("cdxOid: " + cdxOid);
     MiscUtils.getLogger().info("pollInterval: " + pollInterval);
-    MiscUtils.getLogger().info("distributionInterval: " + distributionInterval);
 
     SearchDoc docSearcher = new SearchDoc(cdxConfiguration);
     ReceiveDoc receiveDoc = new ReceiveDoc(cdxConfiguration);
@@ -277,38 +264,6 @@
                     <span class="input-group-addon" id="basic-addon2">minutes</span>
                     <input type="text" class="form-control" id="cdx_polling_interval" name="cdx_polling_interval"
                            value="<%=pollInterval%>" aria-describedby="basic-addon2">
-                </div>
-            </div>
-
-        </div>
-
-        <div class="form-group row">
-            <div class="col-md-3">
-
-                <div class="control-group">
-                    <label class="control-label">Automatic Distribution Checker:</label>
-                    <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" id="cdx_distribution_enabled"
-                               name="cdx_distribution_enabled" value="true" <%=distributionEnabled%>>
-                        <label class="custom-control-label" for="cdx_distribution_enabled">Enabled</label>
-                    </div>
-
-                    <div class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" id="cdx_distribution_disabled"
-                               name="cdx_distribution_enabled" <%=distributionDisabled%> value="false">
-                        <label class="custom-control-label" for="cdx_distribution_disabled">Disabled</label>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="col-md-3">
-
-                <label for="cdx_distribution_interval">Distribution Check Interval</label>
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon3">minutes</span>
-                    <input type="text" class="form-control" id="cdx_distribution_interval" name="cdx_distribution_interval"
-                           value="<%=distributionInterval%>" aria-describedby="basic-addon3">
                 </div>
             </div>
 

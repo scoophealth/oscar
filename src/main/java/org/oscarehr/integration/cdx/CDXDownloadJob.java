@@ -72,7 +72,12 @@ public class CDXDownloadJob implements OscarRunnable {
         x.setLoggedInProvider(provider);
         x.setLoggedInSecurity(security);
 
+        importNewDocs();
 
+        distributionStatus();
+    }
+
+    private void importNewDocs() {
         try {
             if (!running) {
                 logger.info("Starting CDX Job");
@@ -90,6 +95,23 @@ public class CDXDownloadJob implements OscarRunnable {
         }
     }
 
+    private void distributionStatus() {
+        try {
+            if (!running) {
+                logger.info("Starting CDX Distribution Job");
+                running = true;
+                CDXDistribution cdxDistribution = new CDXDistribution();
+                cdxDistribution.updateDistributeStatus();
+                running = false;
+                logger.info("===== CDX DISTRIBUTION JOB DONE RUNNING....");
+            }
+        } catch (Exception e) {
+            logger.error("Error", e);
+        } finally {
+            DbConnectionFilter.releaseAllThreadDbResources();
+            running = false;
+        }
+    }
 
     public void setConfig(String config) {
     }
