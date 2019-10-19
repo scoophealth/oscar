@@ -57,6 +57,7 @@
 <%@ page import="org.oscarehr.integration.cdx.dao.*" %>
 <%@ page import="oscar.log.LogAction" %>
 <%@ page import="oscar.log.LogConst" %>
+<%@ page import="oscar.dms.EDocUtil" %>
 <%
 
     WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
@@ -74,6 +75,7 @@
     String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
     CtlDocument ctlDoc = ctlDocDao.getCtrlDocument(documentNoInt);
+    ArrayList doctypes = EDocUtil.getActiveDocTypes("demographic");
 
     if (ctlDoc == null) { %>
 
@@ -170,7 +172,7 @@ It must have been deleted. Please refresh your Inbox window.
                         <input type="hidden" name="documentId" value="<%=documentNo%>" />
                         <input type="hidden" id="docDesc_<%=documentNo%>" name="documentDescription" value="<%=curdoc.getDocdesc()%>" />
                         <input type="hidden" id="observationDate<%=documentNo%>" name="observationDate" value="<%=curdoc.getObservationdate()%>"/>
-                        <input type="hidden" id="docType<%=documentNo%>" name="docType" value="DOC"/>
+                        <input type="hidden" id="docType<%=documentNo%>" name="docType" value="<%curdoc.getDoctype();%>"/>
                         <input type="hidden" name="method" value="documentUpdateAjax" />
                         <input id="saved<%=documentNo%>" type="hidden" name="saved" value="true"/>
                         <input type="hidden" value="<%=demoNo%>" name="demog" id="demofind<%=documentNo%>"/>
@@ -256,9 +258,32 @@ It must have been deleted. Please refresh your Inbox window.
                         <div class = "row">
                             <div class = "col-md-6">
 
-                                <div class="panel panel-default" >
-                                    <div class="panel-heading"> <bean:message key="inboxmanager.document.LinkedProvidersMsg"/> </div>
-                                    <div class="panel-body">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <bean:message key="dms.documentReport.msgDocType" />:
+                                    </span>
+                                    <select class="form-control" name="docType" id="docTypeSelector" >
+                                        <option value=""><bean:message key="dms.addDocument.formSelect" /></option>
+                                        <%for (int j = 0; j < doctypes.size(); j++) {
+                                            String doctype = (String) doctypes.get(j);%>
+                                        <option value="<%= doctype%>" <%=(curdoc.getDoctype().equals(doctype)) ? " selected" : ""%>><%= doctype%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="input-group">
+                                    <input type="text" placeholder="Flag provider..." class="form-control" id="autocompleteprov<%=documentNo%>" name="providerKeyword"/>
+                                    <span class = "input-group-btn">
+                                    <button type="button" name="save" id="flagsave<%=documentNo%>" <% if (demoNoInt==-1) out.print("disabled");%> class="btn btn-default" onclick="updateCdxDocument('forms_<%=documentNo%>')">
+                                                                        Save
+                                                                </button> </span>
+                                    <div id="autocomplete_choicesprov<%=documentNo%>" class="autocomplete"></div>
+
+                                </div>
+
                                         <%
                                             Properties p = (Properties) session.getAttribute("providerBean");
                                             List<ProviderInboxItem> routeList = providerInboxRoutingDao.getProvidersWithRoutingForDocument("DOC", documentNoInt);
@@ -278,25 +303,6 @@ It must have been deleted. Please refresh your Inbox window.
                                                 }
                                             %>
                                         </ul>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-
-                                <div class="input-group">
-
-                                    <input type="text" placeholder="Flag provider..." class="form-control" id="autocompleteprov<%=documentNo%>" name="providerKeyword"/>
-                                    <span class = "input-group-btn">
-                                    <button type="button" name="save" id="flagsave<%=documentNo%>" <% if (demoNoInt==-1) out.print("disabled");%> class="btn btn-default" onclick="updateCdxDocument('forms_<%=documentNo%>')">
-									Save
-								</button> </span>
-                                    <div id="autocomplete_choicesprov<%=documentNo%>" class="autocomplete"></div>
-
-
-
-                                </div>
-
                                 <div class="panel-body">
                                     <div id="providerList<%=documentNo%>"></div>
                                     <a id="saveSucessMsg_<%=documentNo%>" style="display:none;color:blue;">
@@ -528,8 +534,11 @@ It must have been deleted. Please refresh your Inbox window.
 
 
     function updateCdxDocument(eleId){
-
         //save doc info
+        var selBox = $("docTypeSelector");
+        if (selBox != null) {
+            $("docType<%=documentNo%>").setAttribute("value", selBox.options[selBox.selectedIndex].value);
+        }
         var url="../dms/ManageDocument.do",data=$(eleId).serialize(true);
         new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
                 var json=transport.responseText.evalJSON();
