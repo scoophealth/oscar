@@ -27,11 +27,14 @@ package org.oscarehr.integration.cdx;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.TelcoType;
 import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
 import ca.uvic.leadlab.obibconnector.facades.receive.ITelco;
+import ca.uvic.leadlab.obibconnector.facades.registry.IClinic;
 import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
 import ca.uvic.leadlab.obibconnector.facades.registry.ISearchProviders;
 import ca.uvic.leadlab.obibconnector.impl.registry.SearchProviders;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.integration.cdx.dao.CdxClinicsDao;
+import org.oscarehr.integration.cdx.model.CdxClinics;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -171,9 +174,62 @@ public class CDXSpecialist {
         return result;
     }
 
+
+    public Set<CdxClinics> saveCdxClinics( IProvider p) {
+        Set<CdxClinics> cdxClinics = new HashSet<>();
+        String address = "";
+        CdxClinicsDao cdxClinicsDao = SpringUtils.getBean(CdxClinicsDao.class);
+
+
+        for (IClinic clinic : p.getClinics()) {
+
+            CdxClinics dbClinic = cdxClinicsDao.findByClinicId(clinic.getID());
+            if (dbClinic != null) {
+                cdxClinics.add(dbClinic);
+            } else {
+
+                if (clinic.getID() != null && !clinic.getID().isEmpty()) {
+                    CdxClinics cdxClinic = new CdxClinics();
+                    cdxClinic.setClinicId(clinic.getID().trim());
+
+                    if (clinic.getName() != null && !clinic.getName().isEmpty()) {
+                        cdxClinic.setClinicName(clinic.getName().trim());
+                    }
+                    if (clinic.getStreetAddress() != null && !clinic.getStreetAddress().isEmpty()) {
+                        address = clinic.getStreetAddress();
+                    }
+                    if (clinic.getCity() != null && !clinic.getCity().isEmpty()) {
+                        address = address + "" + clinic.getCity();
+                    }
+                    if (clinic.getProvince() != null && !clinic.getProvince().isEmpty()) {
+                        address = address + "" + clinic.getProvince();
+                    }
+                    if (clinic.getPostalCode() != null && !clinic.getPostalCode().isEmpty()) {
+                        address = address + "" + clinic.getPostalCode();
+                    }
+                    cdxClinic.setClinicAddress(address);
+                    cdxClinics.add(cdxClinic);
+                    try {
+                        cdxClinicsDao.persist(cdxClinic);
+                    } catch (Exception e) {
+                        MiscUtils.getLogger().error("Got exception saving Clinic Information " + e.getMessage());
+                    }
+
+                }
+            }
+
+            }
+
+            return cdxClinics;
+        }
+
+
+
     public Boolean saveProfessionalSpecialist(String cdxSpecId) {
 
         boolean result = false;
+
+
 
         // Make sure we don't add the same CDX ID; they are unique
         // Possibly some sort of data merge should be done here in future
@@ -278,6 +334,8 @@ public class CDXSpecialist {
             professionalSpecialist.setAnnotation(annotations);
 
             try {
+                //Calling saveCdxClinics method to store all the clinics related to the specialist.
+                professionalSpecialist.setClinics(saveCdxClinics(p));
                 professionalSpecialistDao.persist(professionalSpecialist);
                 result = true;
             } catch (Exception e) {
@@ -352,6 +410,18 @@ public class CDXSpecialist {
         if (otherEmail != null) {
             email += " (Other) " + homeEmail;
         }
+        String clinicsIds="";
+        String clinicsNames="";
+
+        for(IClinic clinic : provider.getClinics()) {
+            if(clinic.getID()!=null && !clinic.getID().isEmpty()){
+                clinicsIds= clinicsIds+clinic.getID()+", ";
+            }
+            if(clinic.getName()!=null && !clinic.getName().isEmpty()){
+                clinicsNames= clinicsNames+clinic.getName()+", ";
+            }
+        }
+
 
         String nl = System.lineSeparator();
         return nl + "ID: " + provider.getID() + nl +
@@ -365,8 +435,8 @@ public class CDXSpecialist {
                 "Country: " + provider.getCountry() + nl +
                 phoneStr + nl +
                 email + nl +
-                "Clinic ID: " + provider.getClinicID() + nl +
-                "Clinic Name: " + provider.getClinicName() + nl;
+                "Clinic Ids: " + clinicsIds+ nl +
+                "Clinic Names: " + clinicsNames + nl;
     }
 
     private final Comparator<IProvider> IProviderComparator = new Comparator<IProvider>() {

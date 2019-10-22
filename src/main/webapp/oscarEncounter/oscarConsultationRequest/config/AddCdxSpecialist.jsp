@@ -33,6 +33,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="org.oscarehr.util.MiscUtils" %>
 <%@ page import="oscar.OscarProperties" %>
+<%@ page import="ca.uvic.leadlab.obibconnector.facades.registry.IClinic" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
@@ -125,7 +126,7 @@
                             <form action="../../oscarConsultationRequest/config/PersistCdxSpecialist.jsp">
 
                                 <div class="ChooseRecipientsBox1">
-                                    <table>
+                                    <table border="1">
                                         <tr>
                                             <th>&nbsp;</th>
                                             <th><bean:message
@@ -139,6 +140,24 @@
                                             </th>
                                             <th>CDX Id
                                             </th>
+                                            <th> <table>
+                                                <tr>
+
+
+                                                    <th width="100">
+                                                        Clinic Id
+
+                                                    </th>
+                                                    <th>
+
+                                                    </th>
+                                                    <th width="100">
+                                                        Clinic Name
+
+                                                    </th>
+                                                </tr> </table>
+                                            </th>
+
                                         </tr>
                                         <tr>
                                             <td><!--<div class="ChooseRecipientsBox1">--> <%
@@ -175,34 +194,78 @@
                                                  if (phones != null && phones.size() > 0) {
                                                      phone = phones.get(0).getAddress();
                                                  }
+
+
                               %>
 
                                         <tr>
                                             <td><label>
+
+
                                                 <input type="radio" name="cdxSpecId"
                                                        value="<%=cdxSpecId%>" <%if (first == 0) { %>checked >
+
                                             </label><%
                                                     first++;
                                                 }
                                             %>
+
+
                                             </td>
                                             <td>
                                                 <%
                                                     out.print(lName + "," + fName);
                                                 %>
                                             </td>
-                                            <td><%=address%>
-                                            </td >
+                                            <td>
+                                                <%=address%>
+                                            </td>
                                             <td>
                                                     <%=phone%>
                                             </td>
                                             <td>
                                                     <%=cdxSpecId%>
-                                            </td>
+
+                                        <td>
+                                            <table>
+
+                                                <%
+                                                    for(IClinic clinic : provider.getClinics())
+                                                    {
+                                                %>
+                                                <tr>
+
+                                                    <td width="100">
+
+                                                          <%=clinic.getID()%>
+
+                                                    </td>
+                                                    <td>
+
+                                                    </td>
+
+                                                    <td width="100">
+
+                                                            <%=clinic.getName()%>
+
+
+                                                    </td>
+
+                                                </tr>
+                                                <%
+                                                    }
+                                                %>
+
+                                            </table>
+
+                                        </td>
+
+
                                         </tr >
 
 
                                                     <%
+
                                              }
                                          } else {
                                              String reason;

@@ -32,6 +32,7 @@ import ca.uvic.leadlab.obibconnector.facades.datatypes.*;
 import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
 import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
+import ca.uvic.leadlab.obibconnector.facades.send.IRecipient;
 import ca.uvic.leadlab.obibconnector.facades.send.ISubmitDoc;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -62,7 +63,9 @@ import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.integration.cdx.CDXConfiguration;
 import org.oscarehr.integration.cdx.CDXSpecialist;
+import org.oscarehr.integration.cdx.dao.CdxClinicsDao;
 import org.oscarehr.integration.cdx.dao.CdxProvenanceDao;
+import org.oscarehr.integration.cdx.model.CdxClinics;
 import org.oscarehr.integration.cdx.model.CdxProvenance;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.SecurityInfoManager;
@@ -124,7 +127,8 @@ public class EctConsultationFormRequestAction extends Action {
 		String submission = frm.getSubmission();
 		String providerNo = frm.getProviderNo();
 		String demographicNo = frm.getDemographicNo();
-
+		String clinic=frm.getClinic();
+		System.out.println(clinic);
 		String requestId = "";
 
 		boolean newSignature = request.getParameter("newSignature") != null && request.getParameter("newSignature").equalsIgnoreCase("true");
@@ -421,7 +425,7 @@ public class EctConsultationFormRequestAction extends Action {
 			}
 
 			try {
-				doCdxSend(loggedInInfo, Integer.parseInt(requestId), submission.endsWith("CDX_update"), submission.endsWith("CDX_cancel"), requestId);
+				doCdxSend(loggedInInfo, Integer.parseInt(requestId), submission.endsWith("CDX_update"), submission.endsWith("CDX_cancel"), requestId,frm.getClinic());
 				if(submission.endsWith("CDX_cancel")) {
 					WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCancelESent");
 				}
@@ -528,7 +532,7 @@ public class EctConsultationFormRequestAction extends Action {
 	    }
     }
 
-	private void doCdxSend(LoggedInInfo loggedInInfo, Integer consultationRequestId, Boolean isUpdate, Boolean isCancel, String requestId) throws OBIBException {
+	private void doCdxSend(LoggedInInfo loggedInInfo, Integer consultationRequestId, Boolean isUpdate, Boolean isCancel, String requestId, String clinicId) throws OBIBException {
 
 		ConsultationRequestDao consultationRequestDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
 		ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
@@ -611,7 +615,7 @@ public class EctConsultationFormRequestAction extends Action {
 
 
 
-		doc.documentType(DocumentType.REFERRAL_NOTE)
+		IRecipient recipient = doc.documentType(DocumentType.REFERRAL_NOTE)
 				.inFulfillmentOf()
 					.id(Integer.toString(consultationRequestId))
 					.statusCode(OrderStatus.ACTIVE).and()
@@ -633,10 +637,24 @@ public class EctConsultationFormRequestAction extends Action {
 					.id(recipientId)
 					.name(NameType.LEGAL, professionalSpecialist.getFirstName(), professionalSpecialist.getLastName())
 					.address(AddressType.HOME, professionalSpecialist.getAddress(), professionalSpecialist.getCity(), professionalSpecialist.getProvince(), professionalSpecialist.getPostal(), "CA")
-					.phone(TelcoType.HOME, professionalSpecialist.getPhoneNumber())
-				.and()
+					.phone(TelcoType.HOME, professionalSpecialist.getPhoneNumber());
+
+
+
+
+			if (clinicId!=null && !clinicId.equalsIgnoreCase("1")  )
+			{
+				CdxClinicsDao cdxClinicsDao=SpringUtils.getBean(CdxClinicsDao.class);
+				CdxClinics c=cdxClinicsDao.findByClinicId(clinicId);
+				recipient.recipientOrganization(clinicId,c.getClinicName());
+			}
+
+
+
+		recipient.and()
 				.receiverId(clinicID)
 				.content(message);
+
 		if (newBytes != null) {
 			doc = doc.attach(AttachmentType.PDF, filename, newBytes);
 		}

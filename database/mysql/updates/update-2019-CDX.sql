@@ -43,3 +43,22 @@ CREATE TABLE cdx_pending_docs (
 																			explanation          text  NOT NULL  ,
 																			CONSTRAINT pk_cdx_pending_docs_id PRIMARY KEY ( id )
 );
+create table cdx_clinics
+(
+    Id            int(10) auto_increment
+        primary key,
+    clinicId      varchar(36)  not null,
+    clinicName    varchar(128) not null,
+    clinicAddress varchar(255) null,
+    constraint cdx_clinics_clinicId_uindex
+        unique (clinicId)
+);
+
+create table cdx_ClinicAndProfessionalIds
+(
+    professionalId varchar(10) null,
+    clinicId       varchar(36) null
+);
+
+
+

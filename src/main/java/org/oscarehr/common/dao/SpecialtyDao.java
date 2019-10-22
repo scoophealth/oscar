@@ -4,7 +4,7 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. 
+ * of the License, or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,12 +24,12 @@
 package org.oscarehr.common.dao;
 
 import org.oscarehr.common.model.Specialty;
-import org.springframework.stereotype.Repository;
+		import org.springframework.stereotype.Repository;
 
 @Repository
 public class SpecialtyDao extends AbstractDao<Specialty>{
 
 	public SpecialtyDao() {
-	    super(Specialty.class);
-    }
+		super(Specialty.class);
+	}
 }

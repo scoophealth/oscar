@@ -48,4 +48,6 @@ public class EctConConfigurationJavascriptData {
         }
         return retval;
     }
+
+
 }
