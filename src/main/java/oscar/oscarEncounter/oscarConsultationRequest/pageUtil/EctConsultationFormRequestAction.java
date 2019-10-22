@@ -437,7 +437,7 @@ public class EctConsultationFormRequestAction extends Action {
 			}
 
 			try {
-				doCdxSend(loggedInInfo, Integer.parseInt(requestId), submission.endsWith("CDX_update"), submission.endsWith("CDX_cancel"), requestId,frm.getClinic());
+				doCdxSend(loggedInInfo, Integer.parseInt(requestId), submission.endsWith("CDX_update"), submission.endsWith("CDX_cancel"), requestId,request,frm.getClinic());
 				if(submission.endsWith("CDX_cancel")) {
 					WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCancelESent");
 				}
@@ -544,7 +544,7 @@ public class EctConsultationFormRequestAction extends Action {
 	    }
     }
 
-	private void doCdxSend(LoggedInInfo loggedInInfo, Integer consultationRequestId, Boolean isUpdate, Boolean isCancel, String requestId, String clinicId) throws OBIBException {
+	private void doCdxSend(LoggedInInfo loggedInInfo, Integer consultationRequestId, Boolean isUpdate, Boolean isCancel, String requestId, HttpServletRequest request, String clinicId) throws OBIBException {
 
 		ConsultationRequestDao consultationRequestDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
 		ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");

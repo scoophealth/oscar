@@ -25,15 +25,14 @@
 package org.oscarehr.integration.cdx.model;
 import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.model.AbstractModel;
-import org.oscarehr.common.model.ProfessionalSpecialist;
+import javax.persistence.*;
+import java.io.Serializable;
+
 import org.oscarehr.util.MiscUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
 
 @Entity
 @Table(name = "cdx_clinics")
