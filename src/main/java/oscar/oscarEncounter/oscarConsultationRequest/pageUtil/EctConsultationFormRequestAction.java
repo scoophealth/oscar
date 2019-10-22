@@ -62,6 +62,7 @@ import org.oscarehr.common.model.*;
 import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.integration.cdx.CDXConfiguration;
+import org.oscarehr.integration.cdx.CDXDistribution;
 import org.oscarehr.integration.cdx.CDXSpecialist;
 import org.oscarehr.integration.cdx.dao.CdxClinicsDao;
 import org.oscarehr.integration.cdx.dao.CdxProvenanceDao;
@@ -127,8 +128,7 @@ public class EctConsultationFormRequestAction extends Action {
 		String submission = frm.getSubmission();
 		String providerNo = frm.getProviderNo();
 		String demographicNo = frm.getDemographicNo();
-		String clinic=frm.getClinic();
-		System.out.println(clinic);
+
 		String requestId = "";
 
 		boolean newSignature = request.getParameter("newSignature") != null && request.getParameter("newSignature").equalsIgnoreCase("true");
@@ -665,6 +665,10 @@ public class EctConsultationFormRequestAction extends Action {
 		MiscUtils.getLogger().debug("Attempting to save document using logSentAction");
 		CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
 		cdxProvenanceDao.logSentAction(response);
+
+		// Try to update the document distribution status
+		CDXDistribution cdxDistribution = new CDXDistribution();
+		cdxDistribution.updateDistributionStatus(response.getDocumentID());
 
 		// Set status to pending specialist callback
 		consultationRequest.setStatus("2");

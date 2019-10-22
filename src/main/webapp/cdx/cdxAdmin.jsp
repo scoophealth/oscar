@@ -108,6 +108,7 @@
 
     MiscUtils.getLogger().info("cdxOid: " + cdxOid);
     MiscUtils.getLogger().info("pollInterval: " + pollInterval);
+    MiscUtils.getLogger().info("distributionInterval: " + distributionInterval);
 
     SearchDoc docSearcher = new SearchDoc(cdxConfiguration);
     ReceiveDoc receiveDoc = new ReceiveDoc(cdxConfiguration);

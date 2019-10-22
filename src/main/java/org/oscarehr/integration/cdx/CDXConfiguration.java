@@ -139,6 +139,92 @@ public class CDXConfiguration implements Config {
         return false;
     }
 
+    public void saveDistribution(LoggedInInfo loggedInInfo, boolean enabled, int frequencyInMinutes) {
+        OscarJobDao oscarJobDao = SpringUtils.getBean(OscarJobDao.class);
+        OscarJobTypeDao oscarJobTypeDao = SpringUtils.getBean(OscarJobTypeDao.class);
+
+        OscarJobType oscarJobType;
+        OscarJob oscarJob;
+        List<OscarJobType> jobTypes = oscarJobTypeDao.findByClassName("org.oscarehr.integration.cdx.CDXDistributionJob");
+        if (jobTypes.isEmpty()) {
+            oscarJobType = new OscarJobType();
+            oscarJobType.setClassName("org.oscarehr.integration.cdx.CDXDistributionJob");
+            oscarJobType.setDescription("CDX Distribution Status");
+            oscarJobType.setEnabled(true);
+            oscarJobType.setName("CDXDistributionJobType");
+            oscarJobType.setUpdated(new Date());
+            oscarJobTypeDao.persist(oscarJobType);
+        } else {
+            oscarJobType = jobTypes.get(0);
+        }
+
+        List<OscarJob> jobs = oscarJobDao.findByType(oscarJobType);
+        if (jobs.isEmpty()) {
+            oscarJob = new OscarJob();
+            oscarJob.setCronExpression("0 0/" + frequencyInMinutes + " * * * *");
+            oscarJob.setDescription("CDX Distribution Status");
+            oscarJob.setEnabled(enabled);
+            oscarJob.setName("CDXDistributionJob");
+            oscarJob.setOscarJobTypeId(oscarJobType.getId());
+            oscarJob.setOscarJobType(oscarJobType);
+            oscarJob.setProviderNo(loggedInInfo.getLoggedInProviderNo());
+            oscarJob.setUpdated(new Date());
+            oscarJobDao.persist(oscarJob);
+        } else {
+            oscarJob = jobs.get(0);
+            oscarJob.setCronExpression("0 0/" + frequencyInMinutes + " * * * *");
+            oscarJob.setEnabled(enabled);
+            oscarJobDao.merge(oscarJob);
+        }
+
+        try {
+            OscarJobUtils.resetJobExecutionFramework();
+        } catch (Exception e) {
+            MiscUtils.getLogger().error("Error", e);
+        }
+    }
+
+    private OscarJob getOscarJobForDistribution() {
+        OscarJobDao oscarJobDao = SpringUtils.getBean(OscarJobDao.class);
+        OscarJobTypeDao oscarJobTypeDao = SpringUtils.getBean(OscarJobTypeDao.class);
+
+        List<OscarJobType> jobTypes = oscarJobTypeDao.findByClassName("org.oscarehr.integration.cdx.CDXDistributionJob");
+
+        for (OscarJobType jobType : jobTypes) {
+            List<OscarJob> jobs = oscarJobDao.findByType(jobType);
+            for (OscarJob job : jobs) {
+                return job;
+            }
+        }
+
+        return null;
+    }
+
+    public String getDistributionInterval() {
+
+        OscarJob job = getOscarJobForDistribution();
+
+        if (job != null && !StringUtils.isEmpty(job.getCronExpression())) {
+            String[] expr = job.getCronExpression().split(" ");
+            String val = expr[1];
+            String v = val.split("/")[1];
+            return v;
+        }
+
+        return "N/A";
+    }
+
+    public boolean isDistributionEnabled() {
+
+        OscarJob job = getOscarJobForDistribution();
+
+        if (job != null && job.isEnabled() && job.getOscarJobType().isEnabled() && !StringUtils.isEmpty(job.getCronExpression())) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static boolean obibIsConnected() {
         CDXConfiguration cdxConfiguration = new CDXConfiguration();
         CdxPendingDocsDao cdxPendingDocsDao = SpringUtils.getBean(CdxPendingDocsDao.class);

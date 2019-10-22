@@ -128,4 +128,13 @@ public class CdxProvenanceDao extends AbstractDao<CdxProvenance> {
 
         query.executeUpdate();
     }
+
+    public void updateProvDistributionStatus(String documentId, String distributionStatus) {
+        String sql = "UPDATE CdxProvenance p set p.distributionStatus = :distributionStatus where p.documentId = :documentId";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("documentId", documentId);
+        query.setParameter("distributionStatus", distributionStatus);
+
+        query.executeUpdate();
+    }
 }
