@@ -28,10 +28,6 @@ import org.oscarehr.common.model.AbstractModel;
 import javax.persistence.*;
 import java.io.Serializable;
 
-import org.oscarehr.util.MiscUtils;
-
-import javax.persistence.*;
-import java.io.Serializable;
 
 
 @Entity

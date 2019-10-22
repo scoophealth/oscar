@@ -199,13 +199,13 @@ public class CDXSpecialist {
                         address = clinic.getStreetAddress();
                     }
                     if (clinic.getCity() != null && !clinic.getCity().isEmpty()) {
-                        address = address + "" + clinic.getCity();
+                        address = address + " " + clinic.getCity();
                     }
                     if (clinic.getProvince() != null && !clinic.getProvince().isEmpty()) {
-                        address = address + "" + clinic.getProvince();
+                        address = address + " " + clinic.getProvince();
                     }
                     if (clinic.getPostalCode() != null && !clinic.getPostalCode().isEmpty()) {
-                        address = address + "" + clinic.getPostalCode();
+                        address = address + " " + clinic.getPostalCode();
                     }
                     cdxClinic.setClinicAddress(address);
                     cdxClinics.add(cdxClinic);
