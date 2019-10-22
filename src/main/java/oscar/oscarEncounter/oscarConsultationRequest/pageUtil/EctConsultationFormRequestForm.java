@@ -80,6 +80,8 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 	String service;
 
+	String clinic;
+
 	String specialist;
 
 	String status;
@@ -254,6 +256,9 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 		return (StringUtils.trimToEmpty(service));
 	}
 
+	public String getClinic() { return (StringUtils.trimToEmpty(clinic)); }
+
+
 	public String getSpecialist() {
 		return (StringUtils.trimToEmpty(specialist));
 	}
@@ -346,6 +351,8 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	public void setService(String str) {
 		service = str;
 	}
+
+	public void setClinic(String clinic) { this.clinic = clinic; }
 
 	public void setSpecialist(String str) {
 		specialist = str;

@@ -420,7 +420,7 @@ function getClinicalData( data, target ) {
 		dataType : 'JSON',
 		success: function(data) {
 			var json = JSON.parse(data);
-			jQuery(target).val( jQuery(target).val() + "\n" + json.note );			
+			jQuery(target).val( jQuery(target).val() + "\n" + json.note );
 		}
 	});
 }
@@ -705,7 +705,9 @@ function onSelectSpecialist(SelectedSpec)	{
 	}
 	var selectedService = document.EctConsultationFormRequestForm.service.value;  				// get the service that is selected now
 	var specs = (services[selectedService].specialists); 			// get all the specs the offer this service
-    
+
+       //clinicInfo(SelectedSpec);
+
 	// load the text fields with phone fax and address for past consult review even if spec has been removed from service list
 	<%if(requestId!=null && !consultUtil.specialist.equals("null")){ %>
 	form.phone.value = '<%=StringEscapeUtils.escapeJavaScript(consultUtil.specPhone)%>';
@@ -726,7 +728,7 @@ function onSelectSpecialist(SelectedSpec)	{
             	
        			//since there is a match make sure the dislaimer is hidden
        			document.getElementById("consult-disclaimer").style.display='none';
-        	
+
             	<%
         		if (props.isConsultationFaxEnabled()) {//
 				%>
@@ -740,8 +742,19 @@ function onSelectSpecialist(SelectedSpec)	{
                 		var hasUrl=xml.eDataUrl!=null&&xml.eDataUrl!="";
                 		enableDisableRemoteReferralButton(form, !hasUrl);
 
-                                var annotation = document.getElementById("annotation");
-                                annotation.value = xml.annotation;
+						var annotation = document.getElementById("annotation");
+						annotation.value = xml.annotation;
+
+						//Creating DropDown Menu of Clinics Based on the Selection of the Specialist.
+						document.getElementById('clinic').innerHTML='';
+						var select = document.getElementById('clinic');
+						select.options[select.options.length] = new Option("----All Clinics-------",1);
+						for (var i=0; i<xml.clinics.size(); i++)
+							{
+								select.options[select.options.length] = new Option(xml.clinics[i].clinicName, xml.clinics[i].clinicId);
+							}
+
+
                 	}
             	);
 
@@ -1814,6 +1827,24 @@ function updateFaxButton() {
 							%>
 							</td>
 						</tr>
+
+
+
+
+						<tr>
+							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.clinics" />:
+							</td>
+							<td  class="tite1">
+								<html:select styleId="clinic" property="clinic" >
+								</html:select></td>
+						</tr>
+
+
+
+
+
+
+
                                                 <tr>
                                                     <td class="tite4">
                                                         <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formInstructions" />

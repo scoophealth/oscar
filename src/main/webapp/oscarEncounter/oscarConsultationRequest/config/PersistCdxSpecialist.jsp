@@ -46,12 +46,13 @@
     OscarProperties props = OscarProperties.getInstance();
     boolean showCdx = "bc".equalsIgnoreCase(props.getProperty("billregion"));
     String cdxSpecId;
+
     String cdxSpecialistDetails = null;
     if (showCdx) {
         cdxSpecId = request.getParameter("cdxSpecId");
         MiscUtils.getLogger().debug("parameter cdxSpecId:" + cdxSpecId);
         CDXSpecialist cdxSpecialist = new CDXSpecialist();
-        Boolean result = cdxSpecialist.saveProfessionalSpecialist(cdxSpecId);
+       Boolean result = cdxSpecialist.saveProfessionalSpecialist(cdxSpecId);
         if (result) {
             cdxSpecialistDetails = cdxSpecialist.providerDescription(cdxSpecId);
             MiscUtils.getLogger().debug("description: " + cdxSpecialistDetails);
@@ -61,6 +62,8 @@
         } else {
             cdxSpecialistDetails = "Failed to add cdxSpecId: " + cdxSpecId;
         }
+
+
     }
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>

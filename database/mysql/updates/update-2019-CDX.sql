@@ -68,3 +68,22 @@ values ("demographic", "note", "A");
 
 insert into ctl_doctype (module,  doctype, status)
 values ("demographic", "e-referral note", "A");
+create table cdx_clinics
+(
+    Id            int(10) auto_increment
+        primary key,
+    clinicId      varchar(36)  not null,
+    clinicName    varchar(128) not null,
+    clinicAddress varchar(255) null,
+    constraint cdx_clinics_clinicId_uindex
+        unique (clinicId)
+);
+
+create table cdx_ClinicAndProfessionalIds
+(
+    professionalId varchar(10) null,
+    clinicId       varchar(36) null
+);
+
+
+

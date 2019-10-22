@@ -24,20 +24,12 @@
 package org.oscarehr.common.model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.apache.commons.lang.StringUtils;
+import org.oscarehr.integration.cdx.model.CdxClinics;
 import org.oscarehr.integration.fhir.interfaces.ContactInterface;
 import org.oscarehr.integration.fhir.resources.constants.ContactRelationship;
 import org.oscarehr.integration.fhir.resources.constants.ContactType;
@@ -77,6 +69,11 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 
 	@Column(name = "specType")
 	private String specialtyType;
+
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+	@JoinTable( name="cdx_ClinicAndProfessionalIds", joinColumns=@JoinColumn(name="professionalId"), inverseJoinColumns = @JoinColumn(name="clinicId") )
+	private Set<CdxClinics> clinics=new HashSet<>();
 
 	private String eDataUrl;
 	private String eDataOscarKey;
@@ -172,6 +169,16 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
     		this.addressArray[4] = ","; // country
     	}
     }
+
+	public Set<CdxClinics> getClinics() {
+		return clinics;
+	}
+
+	public void setClinics(Set<CdxClinics> clinics) {
+		this.clinics = clinics;
+	}
+
+
 
 	public String getPhoneNumber() {
     	return phoneNumber;
