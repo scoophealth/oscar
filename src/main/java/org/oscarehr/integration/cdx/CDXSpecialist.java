@@ -229,25 +229,29 @@ public class CDXSpecialist {
 
         boolean result = false;
 
-
-
-        // Make sure we don't add the same CDX ID; they are unique
-        // Possibly some sort of data merge should be done here in future
         ProfessionalSpecialistDao professionalSpecialistDao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
         List<ProfessionalSpecialist> professionalSpecialistList = professionalSpecialistDao.findByCdxId(cdxSpecId);
-        if (professionalSpecialistList != null && professionalSpecialistList.size() != 0) return false;
 
-        ProfessionalSpecialist professionalSpecialist = new ProfessionalSpecialist();
         List<IProvider> providers = findCdxSpecialistById(cdxSpecId);
-        ArrayList<String> address = new ArrayList<String>();
-        String annotations = null;
-        String comma = " ,";
-        String tmpStr;
-        String emailW = null;
-        String emailH = null;
-        String emailM = null;
         if (providers != null && !providers.isEmpty()) {
             IProvider p = providers.get(0);
+
+            if (professionalSpecialistList != null && professionalSpecialistList.size() != 0) {
+                professionalSpecialistList.get(0).setClinics(saveCdxClinics(p));
+                professionalSpecialistDao.merge(professionalSpecialistList.get(0));
+                result =true;
+              }
+            else
+                {
+                 ProfessionalSpecialist professionalSpecialist = new ProfessionalSpecialist();
+                 ArrayList<String> address = new ArrayList<String>();
+                 String annotations = null;
+                 String comma = " ,";
+                 String tmpStr;
+                 String emailW = null;
+                 String emailH = null;
+                 String emailM = null;
+
             professionalSpecialist.setLastName(p.getLastName());
             professionalSpecialist.setFirstName(p.getFirstName());
             professionalSpecialist.setProfessionalLetters(p.getPrefix());
@@ -259,7 +263,7 @@ public class CDXSpecialist {
                 address.add(p.getStreetAddress().trim());
             }
             String[] addressArr = new String[address.size()];
-            for (int j=0; j < address.size(); j++) {
+            for (int j = 0; j < address.size(); j++) {
                 addressArr[j] = address.get(j);
             }
             professionalSpecialist.setStreetAddress(addressArr);
@@ -286,9 +290,9 @@ public class CDXSpecialist {
 //                }
 //            }
 
-            professionalSpecialist.setAnnotation(p.getClinicName()+" ("+p.getClinicID()+")");
+            professionalSpecialist.setAnnotation(p.getClinicName() + " (" + p.getClinicID() + ")");
             List<ITelco> phones = p.getPhones();
-            for (ITelco phone: phones) {
+            for (ITelco phone : phones) {
                 if (TelcoType.WORK.equals(phone.getTelcoType())) {
                     professionalSpecialist.setWorkPhone(phone.getAddress());
                 } else if (TelcoType.HOME.equals(phone.getTelcoType())) {
@@ -300,7 +304,7 @@ public class CDXSpecialist {
             List<ITelco> emails = p.getEmails();
             //professionalSpecialists has one email field,
             //prefer work email, mobile email, home email in that order
-            for (ITelco email: emails) {
+            for (ITelco email : emails) {
                 if (TelcoType.WORK.equals(email.getTelcoType())) {
                     //professionalSpecialist.setEmailAddress(email.getAddress());
                     emailW = email.getAddress().trim();
@@ -338,9 +342,11 @@ public class CDXSpecialist {
                 professionalSpecialist.setClinics(saveCdxClinics(p));
                 professionalSpecialistDao.persist(professionalSpecialist);
                 result = true;
+
             } catch (Exception e) {
                 MiscUtils.getLogger().error("Got exception saving professional specialist: " + e.getMessage());
             }
+        }
         }
         return result;
     }

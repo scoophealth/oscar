@@ -75,7 +75,6 @@
             }
             MiscUtils.getLogger().debug("Maximum cdx id length: " + max);
         }
-        ProfessionalSpecialistDao professionalSpecialistDao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
     %>
     <head>
         <script type="text/javascript" src="<%= request.getContextPath() %>/js/global.js"></script>
@@ -170,10 +169,7 @@
                                          String cdxSpecId = provider.getID();
                                          MiscUtils.getLogger().debug("cdxSpecId: " + cdxSpecId);
                                          if (cdxSpecId != null && !cdxSpecId.isEmpty() && cdxSpecId.length() <= maxCdxSpecIdLength) {
-                                             professionalSpecialists = professionalSpecialistDao.findByCdxId(cdxSpecId);
 
-                                             // don't display specialists that have already been added
-                                             if (professionalSpecialists == null || professionalSpecialists.isEmpty()) {
                                                  String fName = provider.getFirstName();
                                                  String lName = provider.getLastName();
                                                  String address = "";
@@ -266,7 +262,7 @@
 
                                                     <%
 
-                                             }
+
                                          } else {
                                              String reason;
                                              if (cdxSpecId == null) {
