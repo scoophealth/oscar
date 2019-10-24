@@ -90,7 +90,7 @@ create table cdx_clinics
 
 
 /*
-To add foreign key:
+Add foreign key :
 alter table cdx_ClinicAndProfessionalIds
 	add constraint cdx_ClinicAndProfessionalIds_professionalSpecialists_specId_fk
 		foreign key (professionalId) references professionalSpecialists (specId);
