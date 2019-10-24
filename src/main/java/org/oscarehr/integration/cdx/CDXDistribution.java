@@ -18,7 +18,6 @@ public class CDXDistribution {
 
     private static final String DELIVERED = "DELIVERED";
     private static final String QUEUED = "QUEUED";
-    private static final String DO_NOT_DELIVER = "DO NOT DELIVER";
     private static final String UNDELIVERABLE = "UNDELIVERABLE";
     private static final String UNKNOWN = "UNKNOWN";
 

@@ -28,7 +28,7 @@ CREATE TABLE cdx_provenance (
 																		payload              text    ,
 																		warnings             text,
 																		status               varchar(30),
-                                                                        distribution_status  varchar(30),
+                                                                        distribution_status  varchar(60),
 																		CONSTRAINT pk_cdx_provenance_id PRIMARY KEY ( id ),
 																		CONSTRAINT cdx_prov_docno_unique UNIQUE ( document_no )
 ) ;
