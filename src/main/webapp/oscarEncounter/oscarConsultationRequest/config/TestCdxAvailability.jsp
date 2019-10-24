@@ -62,6 +62,7 @@
     ProfessionalSpecialistDao dao = SpringUtils.getBean(ProfessionalSpecialistDao.class);
     StringBuilder changeMsg = new StringBuilder();
     StringBuilder errorMsg = new StringBuilder();
+
     boolean cdxConnected = CDXConfiguration.obibIsConnected();
     if (!cdxConnected) {
         errorMsg.append("OSCAR is not connected to CDX via OBIB.  Can not test for CDX availability.<br>");
@@ -108,6 +109,7 @@
                 if (providers != null && !providers.isEmpty()) {
                     ps.setCdxCapable(true);
                     ps.setCdxId(referralNo);
+                    ps.setClinics(cdxSpecialist.saveCdxClinics(providers.get(0)));
                     try {
                         dao.merge(ps);
                     } catch (Exception e) {

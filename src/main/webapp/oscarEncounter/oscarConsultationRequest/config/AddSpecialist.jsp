@@ -209,6 +209,8 @@ function BackToOscar() {
                             thisForm.setSalutation((String) request.getAttribute("salutation"));
                             thisForm.setHideFromView((Boolean) request.getAttribute("hideFromView"));
                             thisForm.setEformId((Integer) request.getAttribute("eformId"));
+
+							thisForm.setClinics((String) request.getAttribute("clinics"));
                     %>
                     <script>
                         $(document).ready(function () {
@@ -339,7 +341,7 @@ function BackToOscar() {
 						</tr>
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.eDataServiceName" /></td>
-							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eDataServiceName" /></td>
+							<td colspan="5"><html:text style="width:100%" name="EctConAddSpecialistForm" property="eDataServiceName"  /></td>
 						</tr>
 						<% } %>
 						<% if ("bc".equalsIgnoreCase(oscarVariables.getProperty("billregion"))) { %>
@@ -355,6 +357,7 @@ function BackToOscar() {
 						<tr>
 							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.cdxId" /></td>
 							<td colspan="5"><html:text style="width:20%" name="EctConAddSpecialistForm" property="cdxId" readonly="true"/></td>
+
 						</tr>
 						<% } %>
 						<tr>
@@ -374,6 +377,11 @@ function BackToOscar() {
 									<html:options collection="eforms" property="id" labelProperty="formName" />
 								</html:select>
 							</td>
+						</tr>
+
+						<tr aria-rowspan="5">
+							<td><bean:message key="oscarEncounter.oscarConsultationRequest.config.AddSpecialist.clinics" /></td>
+							<td colspan="5" ><html:textarea style="width:55%;"  name="EctConAddSpecialistForm" property="clinics" rows="7" readonly="true"/></td>
 						</tr>
 						<tr>
 							<td colspan="6">

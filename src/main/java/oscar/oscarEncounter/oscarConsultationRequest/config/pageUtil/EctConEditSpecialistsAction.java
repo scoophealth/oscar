@@ -26,6 +26,8 @@
 package oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
@@ -38,6 +40,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.common.dao.ProfessionalSpecialistDao;
 import org.oscarehr.common.model.ProfessionalSpecialist;
+import org.oscarehr.integration.cdx.model.CdxClinics;
 import org.oscarehr.managers.SecurityInfoManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
@@ -105,6 +108,15 @@ public class EctConEditSpecialistsAction extends Action {
         request.setAttribute("salutation",professionalSpecialist.getSalutation());
         request.setAttribute("hideFromView",professionalSpecialist.getHideFromView());
         request.setAttribute("eformId", professionalSpecialist.getEformId());
+        String listClinics ="";
+        for(CdxClinics c:professionalSpecialist.getClinics())
+		{
+			if(c.getClinicName()!=null && !c.getClinicName().isEmpty()) {
+				listClinics=listClinics+ System.lineSeparator()+c.getClinicName();
+
+			}
+		}
+		request.setAttribute("clinics", listClinics);
         
 		request.setAttribute("upd", new Integer(updater));
 		EctConConstructSpecialistsScriptsFile constructSpecialistsScriptsFile = new EctConConstructSpecialistsScriptsFile();

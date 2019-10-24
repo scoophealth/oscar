@@ -32,6 +32,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 
+import java.util.List;
+
 public final class EctConAddSpecialistForm extends ActionForm {
 	String fName;
 	String lName;
@@ -60,6 +62,18 @@ public final class EctConAddSpecialistForm extends ActionForm {
 	String salutation;
 	Boolean hideFromView;
 	Integer eformId;
+
+	String clinics;
+
+	public String getClinics() {
+		return clinics;
+	}
+
+	public void setClinics(String clinics) {
+		this.clinics = clinics;
+	}
+
+
 
 	private String referralNo;
 
@@ -210,6 +224,7 @@ public final class EctConAddSpecialistForm extends ActionForm {
 		pagerNumber = null;
 		salutation = null;
 		whichType = 0;
+		clinics=null;
 	}
 
 	/**
