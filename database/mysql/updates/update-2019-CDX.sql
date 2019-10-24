@@ -68,6 +68,15 @@ values ("demographic", "note", "A");
 
 insert into ctl_doctype (module,  doctype, status)
 values ("demographic", "e-referral note", "A");
+
+create table cdx_ClinicAndProfessionalIds
+(
+    professionalId int(10) not null,
+    clinicId       int(10) not null,
+    primary key (professionalId, clinicId),
+    constraint cdx_ClinicAndProfessionalIds_cdx_clinics_Id_fk
+        foreign key (clinicId) references cdx_clinics (Id)
+);
 create table cdx_clinics
 (
     Id            int(10) auto_increment
@@ -79,11 +88,11 @@ create table cdx_clinics
         unique (clinicId)
 );
 
-create table cdx_ClinicAndProfessionalIds
-(
-    professionalId varchar(10) null,
-    clinicId       varchar(36) null
-);
 
-
+/*
+To add foreign key:
+alter table cdx_ClinicAndProfessionalIds
+	add constraint cdx_ClinicAndProfessionalIds_professionalSpecialists_specId_fk
+		foreign key (professionalId) references professionalSpecialists (specId);
+ */
 
