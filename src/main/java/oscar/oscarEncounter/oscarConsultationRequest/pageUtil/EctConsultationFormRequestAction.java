@@ -652,14 +652,14 @@ public class EctConsultationFormRequestAction extends Action {
 					.id(authorId)
 					.time(new Date())
 					.name(NameType.LEGAL, sendingProvider.getFirstName(), sendingProvider.getLastName())
-					.address(AddressType.HOME, clinic.getAddress(), clinic.getCity(), clinic.getProvince(), clinic.getPostal(), "CA")
-					.phone(TelcoType.HOME, clinic.getPhone())
+					.address(AddressType.WORK, clinic.getAddress(), clinic.getCity(), clinic.getProvince(), clinic.getPostal(), "CA")
+					.phone(TelcoType.WORK, clinic.getPhone())
 				.and().recipient()
 					.primary()
 					.id(recipientId)
 					.name(NameType.LEGAL, professionalSpecialist.getFirstName(), professionalSpecialist.getLastName())
-					.address(AddressType.HOME, professionalSpecialist.getAddress(), professionalSpecialist.getCity(), professionalSpecialist.getProvince(), professionalSpecialist.getPostal(), "CA")
-					.phone(TelcoType.HOME, professionalSpecialist.getPhoneNumber());
+					.address(AddressType.WORK, professionalSpecialist.getAddress(), professionalSpecialist.getCity(), professionalSpecialist.getProvince(), professionalSpecialist.getPostal(), "CA")
+					.phone(TelcoType.WORK, professionalSpecialist.getPhoneNumber());
 
 
 
