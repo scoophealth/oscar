@@ -101,7 +101,28 @@
 <div class="container-fluid">
 
     <div class="row">
+        <br>
+      <div>
+
+          <%         String status = "";
+                          if (provenanceDoc.getAction().equals("SEND")) {
+                          status=provenanceDoc.getDistributionStatus();
+                              out.print("<strong><font size=\"3px\">Distribution Status:</font> </strong>");
+                          if (status.equals("DELIVERED"))
+                              out.print("<strong><font size=\"2px\">DELIVERED </font> </strong>");
+                          else if (status.equals("QUEUED"))
+                              out.print("<strong><font size=\"2px\">QUEUED </font> </strong>");
+                          else if (status.equals("UNKNOWN"))
+                              out.print("<strong><font size=\"2px\">UNKNOWN </font> </strong>");
+                          else out.print("<strong><font size=\"2px\">UNDELIVERABLE </font> </strong>");
+                              out.print(" <a href=\""+request.getContextPath()+"/dms/displayDistributionStatus.jsp?documentId=" + provenanceDoc.getDocumentId() + "\"" + " class =\"btn btn-info\" role=\"button\"> Show Detailed Distribution Status</a> ");
+                      }
+          %>
+      </div> <hr>
         <div class="col-md-12">
+
+
+
             <div class="row">
 
                 <%@include  file = "renderCdxDocument.jsp" %>

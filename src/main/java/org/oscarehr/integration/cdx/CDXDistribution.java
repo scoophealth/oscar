@@ -38,7 +38,7 @@ public class CDXDistribution {
     /**
      * Query the distribution status using OBIBConnector.
      */
-    private List<IDocument> getDocumentDistributionStatus(String docId) {
+    public List<IDocument> getDocumentDistributionStatus(String docId) {
         List<IDocument> documents = new ArrayList<>();
         try {
             documents.addAll(docSearcher.distributionStatus(docId));
