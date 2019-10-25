@@ -59,7 +59,7 @@
 </div> <%}%>
 
 
-<% // was this document amended?
+<% // was this document amended? (does this document have "child" documents?)
 
     List<CdxProvenance> childDocs = provenanceDao.findChildDocuments(provenanceDoc.getDocumentId());
     if(!childDocs.isEmpty()) {
@@ -121,7 +121,28 @@
 
 <%}} %>
 
+<% // was this document fulfilled by other documents?
 
+    childDocs = provenanceDao.findFulfillingDocuments(provenanceDoc.getDocumentId());
+    if(!childDocs.isEmpty()) {
+%>
+
+<div class="alert alert-success alert-dismissable" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <p class="text-success">
+        Note: This document was fulfilled by other documents:
+    <ul>
+        <%for (CdxProvenance child : childDocs) {%>
+        <li>
+            <a class="alert-link alert-success" href="showCdxDocumentArchive.jsp?ID=<%=child.getId()%>">
+                <%=child.getKind()%> (<%=child.getStatus()%>)</a>
+        </li>
+        <%}%>
+    </ul>
+    </p>
+</div>
+
+<% } %>
 
 <% if (provenanceDoc.isStatusWarning() ) { %>
 <div class="panel panel-warning">
