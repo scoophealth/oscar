@@ -1512,7 +1512,14 @@ function updateFaxButton() {
 												out.print("<a target=\"_blank\" href=\"../../dms/showCdxDocumentArchive.jsp?ID=" + cdxProvenance.getId() + "\"/>");
 												out.print("<small><small>" + dateFormat.format(cdxProvenance.getEffectiveTime()) + "</small></small>");
 												out.println("</a>");
-												out.print("DELIVERED".equals(status) ? "&#10003" : "&#9729");
+												if (status.equals("DELIVERED"))
+													out.println("&#10003");
+												else if (status.equals("QUEUED"))
+													out.println("&#9729");
+												else if (status.equals("UNKNOWN"))
+													out.println("?");
+												else out.println("&#9888");
+
 											}
 										}
 									}
