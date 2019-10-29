@@ -80,7 +80,7 @@ public class CDXDistribution {
      */
     public void updateDistributionStatus(String documentId) {
         try {
-            String status = "";
+            String status = UNKNOWN;
             DOC_LOOP:
             for (IDocument doc : getDocumentDistributionStatus(documentId)) {
                 for (IDistributionStatus distStatus : doc.getDistributionStatus()) {
