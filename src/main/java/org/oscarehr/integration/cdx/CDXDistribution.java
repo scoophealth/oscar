@@ -20,6 +20,7 @@ public class CDXDistribution {
     private static final String QUEUED = "QUEUED";
     private static final String UNDELIVERABLE = "UNDELIVERABLE";
     private static final String UNKNOWN = "UNKNOWN";
+    private static final String LOST = "LOST";
 
     private CDXConfiguration cdxConfig;
     private ISearchDoc docSearcher;
@@ -59,7 +60,7 @@ public class CDXDistribution {
         provDao.updateProvDistributionStatus(documentId, status);
         // update pending status
         List<CdxPendingDoc> pendingDocs = pendDocDao.findPendingDocs(documentId);
-        if (status.startsWith(QUEUED) || status.startsWith(UNKNOWN)) { // status is QUEUED or UNKNOWN, create a 'pending status'
+        if (status.startsWith(QUEUED) || status.startsWith(UNKNOWN) || status.startsWith(LOST) ){ // status is QUEUED or UNKNOWN, create a 'pending status'
             if (pendingDocs == null || pendingDocs.isEmpty()) {
                 pendDocDao.persist(CdxPendingDoc.createPendingDocStatus(documentId));
             }
@@ -80,7 +81,7 @@ public class CDXDistribution {
      */
     public void updateDistributionStatus(String documentId) {
         try {
-            String status =UNKNOWN;
+            String status =LOST;
             DOC_LOOP:
             for (IDocument doc : getDocumentDistributionStatus(documentId)) {
                 for (IDistributionStatus distStatus : doc.getDistributionStatus()) {

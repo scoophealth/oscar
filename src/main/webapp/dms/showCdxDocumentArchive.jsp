@@ -112,8 +112,10 @@
                               out.print("<strong><font size=\"2px\">DELIVERED </font> </strong>");
                           else if (status.equals("QUEUED"))
                               out.print("<strong><font size=\"2px\">QUEUED </font> </strong>");
-                          else if (status.equals("UNKNOWN"))
+                          else if (status.startsWith("UNKNOWN"))
                               out.print("<strong><font size=\"2px\">UNKNOWN </font> </strong>");
+                          else if (status.equals("LOST"))
+                              out.print("<strong><font size=\"2px\">LOST </font> </strong>");
                           else out.print("<strong><font size=\"2px\">UNDELIVERABLE </font> </strong>");
                               out.print(" <a href=\""+request.getContextPath()+"/dms/displayDistributionStatus.jsp?documentId=" + provenanceDoc.getDocumentId() + "\"" + " class =\"btn btn-info\" role=\"button\"> Show Detailed Distribution Status</a> ");
                       }
