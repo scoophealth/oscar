@@ -60,7 +60,7 @@ public class CDXDistribution {
         provDao.updateProvDistributionStatus(documentId, status);
         // update pending status
         List<CdxPendingDoc> pendingDocs = pendDocDao.findPendingDocs(documentId);
-        if (status.startsWith(QUEUED) || status.startsWith(UNKNOWN) || status.startsWith(LOST) ){ // status is QUEUED or UNKNOWN, create a 'pending status'
+        if (status.startsWith(QUEUED) || status.startsWith(UNKNOWN) || status.startsWith(LOST) ){ // status is QUEUED or UNKNOWN or LOST, create a 'pending status'
             if (pendingDocs == null || pendingDocs.isEmpty()) {
                 pendDocDao.persist(CdxPendingDoc.createPendingDocStatus(documentId));
             }
