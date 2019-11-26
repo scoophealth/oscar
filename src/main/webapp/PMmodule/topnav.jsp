@@ -185,10 +185,13 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 				<li>
 					<a href='<html:rewrite page="/PMmodule/ProviderInfo.do"/>'>Program</a>
 				</li>
-			</ul>
 
+
+
+			</ul>
 		</td>
 		<td align="right" valign="bottom">
+
  			<a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'<html:rewrite page="/scratch/index.jsp"/>','scratch')"><span id="oscar_scratch"></span></a>
   			&nbsp;&nbsp;
 			<a href=# onClick ="popupPage(600,750,'http://www.oscarcanada.org/manual/oscar-caisi-documentation/');return false;"><u>H</u>elp</a>
@@ -201,7 +204,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 <table width="100%" border="1">
 <tr>
 	<td width="50%"></td>
-	<td width="50%" align="right"><b>Hello &nbsp; <%=userfirstname %> &nbsp;<%=userlastname %></b>
+	<td width="50%" align="right"><b>Hello<%=userfirstname %> &nbsp;<%=userlastname %></b>
 	</td>
 </tr>
 <tr><td colspan="2">

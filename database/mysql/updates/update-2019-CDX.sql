@@ -89,6 +89,24 @@ create table cdx_ClinicAndProfessionalIds
         foreign key (clinicId) references cdx_clinics (Id)
 );
 
+
+create table notifications
+(
+    id          int(10) auto_increment,
+    type        varchar(255) not null,
+    message     varchar(255) null,
+    generatedAt datetime     not null,
+    seenAt      datetime     null on update CURRENT_TIMESTAMP,
+    seenBy      varchar(255) null,
+    constraint notifications_id_uindex
+        unique (id)
+);
+
+alter table notifications
+    add primary key (id);
+
+
+
 /*
 Add foreign key :
 alter table cdx_ClinicAndProfessionalIds

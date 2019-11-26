@@ -36,9 +36,12 @@ import org.oscarehr.common.model.*;
 import org.oscarehr.integration.cdx.dao.CdxAttachmentDao;
 import org.oscarehr.integration.cdx.dao.CdxPendingDocsDao;
 import org.oscarehr.integration.cdx.dao.CdxProvenanceDao;
+import org.oscarehr.integration.cdx.dao.NotificationDao;
 import org.oscarehr.integration.cdx.model.CdxPendingDoc;
 import org.oscarehr.integration.cdx.model.CdxProvenance;
+import org.oscarehr.integration.cdx.model.Notification;
 import org.oscarehr.util.MiscUtils;
+import org.oscarehr.util.SpringUtils;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 
 import java.text.ParseException;
@@ -86,6 +89,19 @@ public class CDXImport {
     /**
      * Imports all NEW documents (i.e., documents that have not been attempted to download before.
      */
+
+
+
+    public void insertNotifications(String type, String message)
+    {
+        NotificationDao notificationDao= SpringUtils.getBean(NotificationDao.class);
+        Notification notification=new Notification();
+        notification.setType(type);
+        notification.setMessage(message);
+
+        notificationDao.persist(notification);
+
+    }
     public void importNewDocs() {
         List<String> docIds;
         try {
@@ -94,7 +110,9 @@ public class CDXImport {
             MiscUtils.getLogger().info("CDX Import: " + docIds.size() + " new messages to import");
             importDocuments(docIds);
         } catch (OBIBException e) {
+            insertNotifications("Warning", e.getObibMessage());
             MiscUtils.getLogger().error("Polling for new documents failed", e);
+
         }
 
     }
@@ -114,6 +132,7 @@ public class CDXImport {
                 storeDocument(doc, id);
 
             } catch (Exception e) {
+                insertNotifications("Warning", e.getMessage());
                 MiscUtils.getLogger().error("Error importing CDX message " + id, e);
 
                 //undo import
@@ -143,6 +162,7 @@ public class CDXImport {
                 try {
                     support.notifyError("Error importing CDX document", e.toString());
                 } catch (Exception e2) {
+                    insertNotifications("Warning", e2.getMessage());
                     MiscUtils.getLogger().error("Could not communicate CDX Error to OBIB support channel", e2);
                 }
             }
@@ -163,6 +183,7 @@ public class CDXImport {
             result = receiver.retrieveDocument(msgId);
 
         } catch (Exception e) {
+            insertNotifications("Warning", e.getMessage());
             MiscUtils.getLogger().error("Error retrieving CDX message " + msgId, e);
         }
         return result;

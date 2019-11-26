@@ -106,6 +106,8 @@ public class CDXDownloadJob implements OscarRunnable {
                 logger.info("===== CDX DISTRIBUTION JOB DONE RUNNING....");
             }
         } catch (Exception e) {
+
+
             logger.error("Error", e);
         } finally {
             DbConnectionFilter.releaseAllThreadDbResources();
