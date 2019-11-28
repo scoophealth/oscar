@@ -287,6 +287,7 @@ public class CDXImport {
             }
 
         } catch (Exception e) {
+            insertNotifications("Warning", e.getMessage());
             MiscUtils.getLogger().error("Demographics consistency check failed (not fatal)", e);
         }
         return warnings;
@@ -521,6 +522,7 @@ public class CDXImport {
                 plrDao.persist(plr);
             }
         } catch (Exception e) {
+            insertNotifications("Warning", e.getMessage());
             MiscUtils.getLogger().error("Patient linking with CDX document failed (not fatal)", e);
         }
     }
@@ -537,6 +539,7 @@ public class CDXImport {
         try {
             provEntity = providerDao.getProviderByOhipNo(prov.getID());
         } catch (Exception e) {
+            insertNotifications("Warning", e.getMessage());
             MiscUtils.getLogger().info("Provider in CDX document does not have valid ID");
         }
 

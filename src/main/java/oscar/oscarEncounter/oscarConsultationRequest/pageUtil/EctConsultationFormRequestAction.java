@@ -66,6 +66,7 @@ import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.integration.cdx.CDXConfiguration;
 import org.oscarehr.integration.cdx.CDXDistribution;
+import org.oscarehr.integration.cdx.CDXImport;
 import org.oscarehr.integration.cdx.CDXSpecialist;
 import org.oscarehr.integration.cdx.dao.CdxClinicsDao;
 import org.oscarehr.integration.cdx.dao.CdxAttachmentDao;
@@ -446,6 +447,7 @@ public class EctConsultationFormRequestAction extends Action {
 				}
 
 				} catch (OBIBException e) {
+				new CDXImport().insertNotifications("Warning",e.getMessage());
 				logger.error("Error sending CDX consultation request.", e);
 				String additionalText = e.getObibMessage();
 				if (additionalText == null || additionalText.isEmpty()) {
