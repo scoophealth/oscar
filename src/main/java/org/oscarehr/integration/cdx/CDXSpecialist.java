@@ -169,6 +169,7 @@ public class CDXSpecialist {
             }
 
         } catch (OBIBException e) {
+            new CDXImport().insertNotifications("Warning",e.getMessage());
             MiscUtils.getLogger().warn("Searching for CDX specialist by ID failed for ID [" + id + "]");
         }
         return result;

@@ -447,7 +447,6 @@ public class EctConsultationFormRequestAction extends Action {
 				}
 
 				} catch (OBIBException e) {
-				new CDXImport().insertNotifications("Warning",e.getMessage());
 				logger.error("Error sending CDX consultation request.", e);
 				String additionalText = e.getObibMessage();
 				if (additionalText == null || additionalText.isEmpty()) {
