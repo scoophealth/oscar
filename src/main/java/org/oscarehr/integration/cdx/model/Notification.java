@@ -18,7 +18,6 @@ public class Notification extends AbstractModel<Integer> implements Serializable
     private String type;
     @Column(name = "message")
     private String message;
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "generatedAt")
     private Date generatedAt;
@@ -26,6 +25,12 @@ public class Notification extends AbstractModel<Integer> implements Serializable
     private String seenBy;
     @Column(name = "seenAt")
     private Date seenAt;
+
+
+    @PrePersist
+    protected void onCreate() {
+        generatedAt= new Date();
+    }
 
     public void setId(Integer id) {
         this.id = id;

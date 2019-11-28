@@ -145,9 +145,8 @@ public class CDXConfiguration implements Config {
 
             return true;
         } catch (OBIBException ex) {
-            String message = status != null ? status.getMessage() : "Error checking OBIB connectivity: returned status is null.";
-
-            MiscUtils.getLogger().error(message);
+            new CDXImport().insertNotifications("Error",ex.getMessage());
+            MiscUtils.getLogger().error(ex.getMessage());
 
             return false;
         }

@@ -72,6 +72,8 @@ public class CDXDownloadJob implements OscarRunnable {
         x.setLoggedInProvider(provider);
         x.setLoggedInSecurity(security);
 
+        checkObibConnection();
+
         importNewDocs();
 
         distributionStatus();
@@ -94,6 +96,25 @@ public class CDXDownloadJob implements OscarRunnable {
             running = false;
         }
     }
+
+
+    private void checkObibConnection() {
+        try {
+            if (!running) {
+                logger.info("Checking OBIB Connection");
+                running = true;
+                CDXConfiguration.obibIsConnected();
+                running = false;
+                logger.info("===== Checked OBIB Connection....");
+            }
+        } catch (Exception e) {
+            logger.error("Error", e);
+        } finally {
+            DbConnectionFilter.releaseAllThreadDbResources();
+            running = false;
+        }
+    }
+
 
     private void distributionStatus() {
         try {
