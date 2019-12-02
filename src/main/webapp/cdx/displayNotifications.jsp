@@ -199,7 +199,7 @@
         </tbody>
     </table>
 <div class="container" style="text-align: center" >
-    <input type="submit" class="btn btn-success" value="Save">
+    <input type="submit" class="btn btn-success" value="Dismiss">
     <input type="button" class="btn btn-info" value="Select all" id="selectAll" >
 </div>
 

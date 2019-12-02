@@ -1155,9 +1155,7 @@ public boolean isBirthday(String schedDate,String demBday){
 			<td>
 
 				<ul class="monitoring-lights">
-					<li class="circle green" id="green" ></li>
-					<a href="../cdx/displayNotifications.jsp" target="_blank" title="Warning: Click to see details"><li id="yellow" class="circle "></li></a>
-					<a href="../cdx/displayNotifications.jsp" target="_blank" title="Error: Click to see details"><li id="red" class="circle "></li></a>
+					<a href="../cdx/displayNotifications.jsp" target="_blank" title="Click to see details"><li id="light" class="circle green"></li></a>
 
 				</ul>
 
@@ -2411,23 +2409,22 @@ start_time += iSm + ":00";
 	{
 	var warning= '<%=war%>';
 	var error='<%=err%>';
+
+
+
 	if(warning!='null' && warning!='' && error!='null' && error!='')
 	{
-	document.getElementById("green").className='circle';
-	document.getElementById("yellow").className='circle yellow';
-	document.getElementById("red").className='circle red blink';
+
+	document.getElementById("light").className='circle red blink';
 	}
 	else if ( error!='null' && error!='')
 	{
-	document.getElementById("green").className='circle';
-	document.getElementById("yellow").className='circle';
-	document.getElementById("red").className='circle red blink';
+
+	document.getElementById("light").className='circle red blink';
 	}
 	else if(warning!='null' && warning!='')
 	{
-	document.getElementById("green").className='circle';
-	document.getElementById("red").className='circle';
-	document.getElementById("yellow").className='circle yellow blink';
+	document.getElementById("light").className='circle yellow blink';
 	}
 
 	}
