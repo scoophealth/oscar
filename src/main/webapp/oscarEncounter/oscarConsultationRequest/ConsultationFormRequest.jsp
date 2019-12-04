@@ -1509,7 +1509,7 @@ function updateFaxButton() {
 											if (cdxProvenance.getAction().equals("SEND")) {
 												status=cdxProvenance.getDistributionStatus();
 												DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-												out.print("<a target=\"_blank\" href=\"../../dms/showCdxDocumentArchive.jsp?ID=" + cdxProvenance.getId() + "\"/>");
+												out.print("<a target=\"_blank\"   href=\"../../dms/showCdxDocumentArchive.jsp?ID=" + cdxProvenance.getId() + "\"/>");
 												out.print("<small><small>" + dateFormat.format(cdxProvenance.getEffectiveTime()) + "</small></small>");
 												out.println("</a>");
 												if (status.equals("DELIVERED"))

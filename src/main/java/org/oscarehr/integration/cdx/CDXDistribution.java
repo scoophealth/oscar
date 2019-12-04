@@ -40,11 +40,12 @@ public class CDXDistribution {
      * Query the distribution status using OBIBConnector.
      */
     public List<IDocument> getDocumentDistributionStatus(String docId) {
+
         List<IDocument> documents = new ArrayList<>();
         try {
             documents.addAll(docSearcher.distributionStatus(docId));
         } catch (Exception e) {
-            new CDXImport().insertNotifications("Warning",e.getMessage());
+            new NotificationController().insertNotifications("Warning",e.getMessage() +" Document ID: "+docId,"polling");
             MiscUtils.getLogger().error("Error retrieving CDX distribution status of document " + docId, e);
         }
         return documents;

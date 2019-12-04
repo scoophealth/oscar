@@ -481,7 +481,9 @@ public boolean isBirthday(String schedDate,String demBday){
 <%@page import="org.oscarehr.web.admin.ProviderPreferencesUIBean"%>
 <%@page import="org.oscarehr.common.model.ProviderPreference"%>
 <%@page import="org.oscarehr.web.AppointmentProviderAdminDayUIBean"%>
-<%@page import="org.oscarehr.common.model.EForm"%><html:html locale="true">
+<%@page import="org.oscarehr.common.model.EForm"%>
+<%@ page import="org.oscarehr.integration.cdx.CDXConfiguration" %>
+<html:html locale="true">
 	<head>
 		<script type="text/javascript" src="<%=request.getContextPath()%>/js/global.js"></script>
 		<title><%=WordUtils.capitalize(userlastname + ", " +  org.apache.commons.lang.StringUtils.substring(userfirstname, 0, 1)) + "-"%><bean:message key="provider.appointmentProviderAdminDay.title"/></title>

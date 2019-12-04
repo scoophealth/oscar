@@ -92,25 +92,16 @@ public class CDXImport {
 
 
 
-    public void insertNotifications(String type, String message)
-    {
-        NotificationDao notificationDao= SpringUtils.getBean(NotificationDao.class);
-        Notification notification=new Notification();
-        notification.setType(type);
-        notification.setMessage(message);
 
-        notificationDao.persist(notification);
 
-    }
     public void importNewDocs() {
         List<String> docIds;
         try {
-
             docIds = receiver.pollNewDocIDs();
             MiscUtils.getLogger().info("CDX Import: " + docIds.size() + " new messages to import");
             importDocuments(docIds);
         } catch (OBIBException e) {
-            insertNotifications("Warning", e.getObibMessage());
+            new NotificationController().insertNotifications("Warning", "Fetching new documents failed, Cause:"+e.getObibMessage(),"polling");
             MiscUtils.getLogger().error("Polling for new documents failed", e);
 
         }
@@ -132,7 +123,7 @@ public class CDXImport {
                 storeDocument(doc, id);
 
             } catch (Exception e) {
-                insertNotifications("Warning", e.getMessage());
+                new NotificationController().insertNotifications("Warning", "Error importing CDX message " + id ,"polling");
                 MiscUtils.getLogger().error("Error importing CDX message " + id, e);
 
                 //undo import
@@ -162,7 +153,7 @@ public class CDXImport {
                 try {
                     support.notifyError("Error importing CDX document", e.toString());
                 } catch (Exception e2) {
-                    insertNotifications("Warning", e2.getMessage());
+                    new NotificationController().insertNotifications("Warning", "Could not communicate CDX Error to OBIB support channel","polling");
                     MiscUtils.getLogger().error("Could not communicate CDX Error to OBIB support channel", e2);
                 }
             }
@@ -179,11 +170,10 @@ public class CDXImport {
         try {
 
             MiscUtils.getLogger().info("Retrieving CDX document " + msgId );
-
             result = receiver.retrieveDocument(msgId);
 
         } catch (Exception e) {
-            insertNotifications("Warning", e.getMessage());
+            new NotificationController().insertNotifications("Warning", "Error retrieving CDX message " + msgId+""+e.getMessage(),"polling");
             MiscUtils.getLogger().error("Error retrieving CDX message " + msgId, e);
         }
         return result;
@@ -287,7 +277,7 @@ public class CDXImport {
             }
 
         } catch (Exception e) {
-            insertNotifications("Warning", e.getMessage());
+            new NotificationController().insertNotifications("Warning", "Demographics consistency check failed (not fatal)"+e.getMessage(),"polling");
             MiscUtils.getLogger().error("Demographics consistency check failed (not fatal)", e);
         }
         return warnings;
@@ -522,7 +512,7 @@ public class CDXImport {
                 plrDao.persist(plr);
             }
         } catch (Exception e) {
-            insertNotifications("Warning", e.getMessage());
+            new NotificationController().insertNotifications("Warning","Patient linking with CDX document failed (not fatal)"+e.getMessage(),"polling");
             MiscUtils.getLogger().error("Patient linking with CDX document failed (not fatal)", e);
         }
     }
@@ -539,7 +529,7 @@ public class CDXImport {
         try {
             provEntity = providerDao.getProviderByOhipNo(prov.getID());
         } catch (Exception e) {
-            insertNotifications("Warning", e.getMessage());
+            new NotificationController().insertNotifications("Warning", "Provider in CDX document does not have valid ID"+e.getMessage(),"polling");
             MiscUtils.getLogger().info("Provider in CDX document does not have valid ID");
         }
 

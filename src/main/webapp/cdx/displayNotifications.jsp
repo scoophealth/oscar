@@ -84,6 +84,8 @@
 </head>
 <%
     NotificationDao notificationDao= SpringUtils.getBean(NotificationDao.class);
+
+
 %>
 <%
     String error[]=request.getParameterValues("Errors");
@@ -202,6 +204,8 @@
     <input type="submit" class="btn btn-success" value="Dismiss">
     <input type="button" class="btn btn-info" value="Select all" id="selectAll" >
 </div>
+
+
 
 </div>
 </form>

@@ -30,6 +30,7 @@ import ca.uvic.leadlab.obibconnector.facades.support.IStatus;
 import ca.uvic.leadlab.obibconnector.facades.support.ISupport;
 import ca.uvic.leadlab.obibconnector.impl.support.Support;
 import ca.uvic.leadlab.obibconnector.utils.OBIBConnectorHelper;
+import ihe.iti.svs._2008.CD;
 import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.dao.OscarJobDao;
 import org.oscarehr.common.dao.OscarJobTypeDao;
@@ -38,6 +39,8 @@ import org.oscarehr.common.jobs.OscarJobUtils;
 import org.oscarehr.common.model.OscarJob;
 import org.oscarehr.common.model.OscarJobType;
 import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.integration.cdx.dao.NotificationDao;
+import org.oscarehr.integration.cdx.model.Notification;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
@@ -51,11 +54,34 @@ public class CDXConfiguration implements Config {
     }
 
     public void savePolling(LoggedInInfo loggedInInfo, boolean enabled, int frequencyInMinutes) {
+
+        NotificationDao notificationDao= SpringUtils.getBean(NotificationDao.class);
+        List<Notification> nList=notificationDao.findByCategory("import");
+        NotificationController notificationController=new NotificationController();
+
+        if(enabled==false) {
+            if(nList!=null && nList.size()!=0 ) {
+            } else {
+                notificationController.insertNotifications("Warning", "Automatic import is disabled: System won't be able to import new documents automatically. ", "import");
+            }
+        } else {
+            if(nList!=null && nList.size()!=0 ) {
+                notificationController.deleteNotifications("import");
+             }
+
+        }
+
+
         OscarJobDao oscarJobDao = SpringUtils.getBean(OscarJobDao.class);
         OscarJobTypeDao oscarJobTypeDao = SpringUtils.getBean(OscarJobTypeDao.class);
 
         OscarJobType oscarJobType;
         OscarJob oscarJob;
+
+
+
+
+
         List<OscarJobType> jobTypes = oscarJobTypeDao.findByClassName("org.oscarehr.integration.cdx.CDXDownloadJob");
         if (jobTypes.isEmpty()) {
             oscarJobType = new OscarJobType();
@@ -137,6 +163,7 @@ public class CDXConfiguration implements Config {
     }
 
     public static boolean obibIsConnected() {
+       NotificationController notificationController= new NotificationController();
         CDXConfiguration cdxConfiguration = new CDXConfiguration();
         ISupport support = new Support(cdxConfiguration);
         IStatus status = null;
@@ -145,7 +172,7 @@ public class CDXConfiguration implements Config {
 
             return true;
         } catch (OBIBException ex) {
-            new CDXImport().insertNotifications("Error",ex.getMessage());
+            notificationController.insertNotifications("Error","OBIB is not Connected,"+ex.getMessage(),"polling");
             MiscUtils.getLogger().error(ex.getMessage());
 
             return false;

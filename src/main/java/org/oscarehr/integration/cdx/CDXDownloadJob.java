@@ -72,10 +72,51 @@ public class CDXDownloadJob implements OscarRunnable {
         x.setLoggedInProvider(provider);
         x.setLoggedInSecurity(security);
 
+        deletePollingNotifications();
+        checkOBIBConnection();
         importNewDocs();
-
         distributionStatus();
     }
+
+
+    private void deletePollingNotifications() {
+        try {
+            if (!running) {
+                logger.info("Starting DELETE Notification Job");
+                running = true;
+                NotificationController notificationController = new NotificationController();
+                notificationController.deleteNotifications("polling");
+                running = false;
+                logger.info("===== JOB DONE RUNNING....");
+            }
+        } catch (Exception e) {
+            logger.error("Error", e);
+        } finally {
+            DbConnectionFilter.releaseAllThreadDbResources();
+            running = false;
+        }
+    }
+
+
+    private void checkOBIBConnection() {
+        try {
+            if (!running) {
+                logger.info("Checking OBIB Connection");
+                running = true;
+                CDXConfiguration.obibIsConnected();
+                running = false;
+                logger.info("===== Checking OBIB Connection JOB DONE RUNNING....");
+            }
+        } catch (Exception e) {
+
+
+            logger.error("Error", e);
+        } finally {
+            DbConnectionFilter.releaseAllThreadDbResources();
+            running = false;
+        }
+    }
+
 
     private void importNewDocs() {
         try {

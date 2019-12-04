@@ -42,6 +42,8 @@ public class NotificationDao extends AbstractDao<Notification> {
             return null;
         else return results;
     }
+
+
     public Notification findById(String id)
     {
         Query query = entityManager.createQuery("select x from "+modelClass.getSimpleName()+" x where x.id='"+id+"'");
@@ -50,4 +52,20 @@ public class NotificationDao extends AbstractDao<Notification> {
             return null;
         else return results.get(0);
     }
+
+    public  List<Notification> findByCategory(String category)
+    {
+        String sql = "SELECT x FROM Notification x  WHERE x.category='"+category+"'";
+        Query query = entityManager.createQuery(sql);
+        List<Notification> results = query.getResultList();
+        if (results.isEmpty())
+            return null;
+        else return results;
+    }
+
+    public void removeByCategory(String category) {
+        Query query = entityManager.createQuery("DELETE FROM Notification x WHERE x.category='"+category+"'");
+        query.executeUpdate();
+    }
+
 }

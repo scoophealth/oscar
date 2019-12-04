@@ -26,6 +26,9 @@ public class Notification extends AbstractModel<Integer> implements Serializable
     @Column(name = "seenAt")
     private Date seenAt;
 
+    private String category;
+    @Column(name = "category")
+
 
     @PrePersist
     protected void onCreate() {
@@ -70,6 +73,9 @@ public class Notification extends AbstractModel<Integer> implements Serializable
     public void setSeenAt(Date seenAt) {
         this.seenAt = seenAt;
     }
+    public String getCategory() { return category; }
+
+    public void setCategory(String category) { this.category = category; }
 
     @Override
     public Integer getId() {
