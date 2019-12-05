@@ -1513,12 +1513,12 @@ function updateFaxButton() {
 												out.print("<small><small>" + dateFormat.format(cdxProvenance.getEffectiveTime()) + "</small></small>");
 												out.println("</a>");
 												if (status.equals("DELIVERED"))
-													out.println("<span title=\"Document has been delivered.\">&#10003</span>");
+													out.println("<span style=\"cursor: pointer\" title=\"Document has been delivered.\">&#10003</span>");
 												else if (status.equals("QUEUED"))
-													out.println("<span title=\"Document has been queued for delivery but not been downloaded.\">&#9729</a>");
+													out.println("<span style=\"cursor: pointer\" title=\"Document has been queued for delivery but not been downloaded.\">&#9729</a>");
 												else if (status.equals("UNKNOWN"))
-													out.println("<span title=\"Document status is unknown.\">?</span>");
-												else out.println("<span title=\"Document is undeliverable.\">&#9888</span>");
+													out.println("<span style=\"cursor: pointer;\" title=\"Document status is unknown.\">?</span>");
+												else out.println("<span style=\"cursor: pointer\" title=\"Document is undeliverable.\">&#9888</span>");
 
 											}
 										}
