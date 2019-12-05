@@ -62,7 +62,7 @@ public class CDXConfiguration implements Config {
         if(enabled==false) {
             if(nList!=null && nList.size()!=0 ) {
             } else {
-                notificationController.insertNotifications("Warning", "Automatic import is disabled: System won't be able to import new documents automatically. ", "import");
+                notificationController.insertNotifications("Warning", "Polling Disabled: System won't be able to search and import documents automatically. ", "import");
             }
         } else {
             if(nList!=null && nList.size()!=0 ) {
@@ -163,7 +163,6 @@ public class CDXConfiguration implements Config {
     }
 
     public static boolean obibIsConnected() {
-       NotificationController notificationController= new NotificationController();
         CDXConfiguration cdxConfiguration = new CDXConfiguration();
         ISupport support = new Support(cdxConfiguration);
         IStatus status = null;
@@ -172,7 +171,6 @@ public class CDXConfiguration implements Config {
 
             return true;
         } catch (OBIBException ex) {
-            notificationController.insertNotifications("Error","OBIB is not Connected,"+ex.getMessage(),"polling");
             MiscUtils.getLogger().error(ex.getMessage());
 
             return false;

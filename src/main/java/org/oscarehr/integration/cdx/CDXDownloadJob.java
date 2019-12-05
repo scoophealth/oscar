@@ -103,7 +103,8 @@ public class CDXDownloadJob implements OscarRunnable {
             if (!running) {
                 logger.info("Checking OBIB Connection");
                 running = true;
-                CDXConfiguration.obibIsConnected();
+                NotificationController notificationController = new NotificationController();
+                notificationController.checkOBIB();
                 running = false;
                 logger.info("===== Checking OBIB Connection JOB DONE RUNNING....");
             }

@@ -39,4 +39,26 @@ public class NotificationController {
         }
 
     }
+
+
+    public void checkOBIB()
+    {
+        NotificationDao notificationDao= SpringUtils.getBean(NotificationDao.class);
+        Boolean connection= CDXConfiguration.obibIsConnected();
+        if(connection)
+        {
+            deleteNotifications("OBIB");
+        }
+        else
+        {
+            List<Notification> nList=notificationDao.findByCategory("OBIB");
+            if(nList!=null && nList.size()!=0)
+            {
+            }
+            else
+            {
+                insertNotifications("Error","OBIB is not Connected: Error checking connectivity, Please check your connection.","OBIB");
+            }
+        }
+    }
 }

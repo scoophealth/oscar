@@ -32,6 +32,8 @@
 <%@ page import="java.sql.Timestamp" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="org.oscarehr.util.MiscUtils" %>
+<%@ page import="org.oscarehr.integration.cdx.CDXConfiguration" %>
+<%@ page import="org.oscarehr.integration.cdx.NotificationController" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
     String roleName$ = session.getAttribute("userrole") + "," + session.getAttribute("user");
@@ -50,6 +52,7 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="refresh" content="180">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -84,29 +87,34 @@
 </head>
 <%
     NotificationDao notificationDao= SpringUtils.getBean(NotificationDao.class);
+    NotificationController notificationController= new NotificationController();
+    CDXConfiguration cdxConfiguration=new CDXConfiguration();
 
 
 %>
 <%
     String error[]=request.getParameterValues("Errors");
     Notification not;
-    if(error!=null && error.length!=0 )
-    {
-        for(String e: error)
-        {
-           not=notificationDao.findById(e);
-           not.setSeenBy(session.getAttribute("userfirstname")+","+session.getAttribute("userlastname"));
-           not.setSeenAt(new Timestamp(new Date().getTime()));
-           try
-           {
-               notificationDao.merge(not);
-           }
-           catch(Exception ex)
-           {
-               MiscUtils.getLogger().error("Got exception saving notification Information " + ex.getMessage());
-           }
+    if(error!=null && error.length!=0 ) {
+        for (String e : error) {
+            not = notificationDao.findById(e);
+            if (not!=null) {
+
+
+                not.setSeenBy(session.getAttribute("userfirstname") + "," + session.getAttribute("userlastname"));
+                not.setSeenAt(new Timestamp(new Date().getTime()));
+                try {
+                    notificationDao.merge(not);
+                } catch (Exception ex) {
+                    MiscUtils.getLogger().error("Got exception saving notification Information " + ex.getMessage());
+                }
+
+                out.print("<br><div><center><strong><font size=\"2px\">*All the SEEN warnings/Errors are logged and ignored!. </font> </strong></center></div>");
+            } else {
+                out.print("<br><div><center><strong><font size=\"2px\">*Unexpected Error occurred, Please reload and try again ! </font> </strong></center></div>");
+            }
+
         }
-        out.print("<br><div><center><strong><font size=\"2px\">*All the SEEN warnings/Errors are logged and ignored!. </font> </strong></center></div>");
     }
 
 
@@ -197,6 +205,12 @@
                 }
             }
 
+        %>
+        <%
+            if(!cdxConfiguration.isPollingEnabled())
+            {
+                notificationController.checkOBIB();
+            }
         %>
         </tbody>
     </table>
