@@ -131,6 +131,7 @@
             <th>Check to ignore</th>
             <th>Message</th>
             <th>Generated At</th>
+            <th>Generated During</th>
         </tr>
         </thead>
         <tbody>
@@ -155,6 +156,8 @@
 
             <td> <%=n.getGeneratedAt()%>
             </td>
+            <td> <%=n.getGeneratedDuring()%>
+            </td>
 
         </tr>
         <%
@@ -174,6 +177,7 @@
             <th>Check to ignore</th>
             <th>Message</th>
             <th>Generated At</th>
+            <th>Generated During</th>
         </tr>
         </thead>
         <tbody>
@@ -198,6 +202,8 @@
             </td>
 
             <td> <%=w.getGeneratedAt()%>
+            </td>
+            <td> <%=w.getGeneratedDuring()%>
             </td>
 
         </tr>

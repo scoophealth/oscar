@@ -45,7 +45,7 @@ public class CDXDistribution {
         try {
             documents.addAll(docSearcher.distributionStatus(docId));
         } catch (Exception e) {
-            new NotificationController().insertNotifications("Warning",e.getMessage() +" Document ID: "+docId,"polling");
+            new NotificationController().insertNotifications("Warning",e.getMessage() +" Document ID: "+docId,"POLLING","Polling of CDX distribution status of the document");
             MiscUtils.getLogger().error("Error retrieving CDX distribution status of document " + docId, e);
         }
         return documents;

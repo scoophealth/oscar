@@ -101,7 +101,7 @@ public class CDXImport {
             MiscUtils.getLogger().info("CDX Import: " + docIds.size() + " new messages to import");
             importDocuments(docIds);
         } catch (OBIBException e) {
-            new NotificationController().insertNotifications("Warning", "Fetching new documents failed, Cause:"+e.getObibMessage(),"polling");
+            new NotificationController().insertNotifications("Warning", "Fetching new documents failed, Cause:"+e.getObibMessage(),"POLLING","Polling new CDX documents.");
             MiscUtils.getLogger().error("Polling for new documents failed", e);
 
         }
@@ -123,7 +123,7 @@ public class CDXImport {
                 storeDocument(doc, id);
 
             } catch (Exception e) {
-                new NotificationController().insertNotifications("Warning", "Error importing CDX message " + id ,"polling");
+                new NotificationController().insertNotifications("Warning", "Error importing CDX message " + id ,"POLLING","Importing CDX document");
                 MiscUtils.getLogger().error("Error importing CDX message " + id, e);
 
                 //undo import
@@ -153,7 +153,7 @@ public class CDXImport {
                 try {
                     support.notifyError("Error importing CDX document", e.toString());
                 } catch (Exception e2) {
-                    new NotificationController().insertNotifications("Warning", "Could not communicate CDX Error to OBIB support channel","polling");
+                    new NotificationController().insertNotifications("Warning", "Could not communicate CDX Error to OBIB support channel","POLLING","Importing CDX document");
                     MiscUtils.getLogger().error("Could not communicate CDX Error to OBIB support channel", e2);
                 }
             }
@@ -173,7 +173,7 @@ public class CDXImport {
             result = receiver.retrieveDocument(msgId);
 
         } catch (Exception e) {
-            new NotificationController().insertNotifications("Warning", "Error retrieving CDX message " + msgId+""+e.getMessage(),"polling");
+            new NotificationController().insertNotifications("Warning", "Error retrieving CDX message " + msgId+""+e.getMessage(),"POLLING","Importing CDX document");
             MiscUtils.getLogger().error("Error retrieving CDX message " + msgId, e);
         }
         return result;
@@ -277,7 +277,7 @@ public class CDXImport {
             }
 
         } catch (Exception e) {
-            new NotificationController().insertNotifications("Warning", "Demographics consistency check failed (not fatal)"+e.getMessage(),"polling");
+            new NotificationController().insertNotifications("Warning", "Demographics consistency check failed (not fatal)"+e.getMessage(),"POLLING","Importing CDX document");
             MiscUtils.getLogger().error("Demographics consistency check failed (not fatal)", e);
         }
         return warnings;
@@ -512,7 +512,7 @@ public class CDXImport {
                 plrDao.persist(plr);
             }
         } catch (Exception e) {
-            new NotificationController().insertNotifications("Warning","Patient linking with CDX document failed (not fatal)"+e.getMessage(),"polling");
+            new NotificationController().insertNotifications("Warning","Patient linking with CDX document failed (not fatal)"+e.getMessage(),"POLLING","Importing CDX document");
             MiscUtils.getLogger().error("Patient linking with CDX document failed (not fatal)", e);
         }
     }
@@ -529,7 +529,7 @@ public class CDXImport {
         try {
             provEntity = providerDao.getProviderByOhipNo(prov.getID());
         } catch (Exception e) {
-            new NotificationController().insertNotifications("Warning", "Provider in CDX document does not have valid ID"+e.getMessage(),"polling");
+            new NotificationController().insertNotifications("Warning", "Provider in CDX document does not have valid ID"+e.getMessage(),"POLLING","Importing CDX document");
             MiscUtils.getLogger().info("Provider in CDX document does not have valid ID");
         }
 

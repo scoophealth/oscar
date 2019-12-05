@@ -85,7 +85,7 @@ public class CDXDownloadJob implements OscarRunnable {
                 logger.info("Starting DELETE Notification Job");
                 running = true;
                 NotificationController notificationController = new NotificationController();
-                notificationController.deleteNotifications("polling");
+                notificationController.deleteNotifications("POLLING");
                 running = false;
                 logger.info("===== JOB DONE RUNNING....");
             }

@@ -154,7 +154,7 @@ public class CDXSpecialist {
         if (id == null || "".equals(id.trim())) {
             return null;
         }
-        new NotificationController().deleteNotifications("specialist");
+        new NotificationController().deleteNotifications("SPECIALIST");
         List<IProvider> providers;
         List<IProvider> result = new ArrayList<IProvider>();
 
@@ -169,7 +169,7 @@ public class CDXSpecialist {
             }
 
         } catch (OBIBException e) {
-            new NotificationController().insertNotifications("Warning","Searching for CDX specialist by ID failed for ID [" + id + "] "+e.getObibMessage(),"specialist");
+            new NotificationController().insertNotifications("Warning","Searching for CDX specialist by ID failed for ID [" + id + "] "+e.getObibMessage(),"SPECIALIST","Sending document. ");
             MiscUtils.getLogger().warn("Searching for CDX specialist by ID failed for ID [" + id + "]");
         }
         return result;

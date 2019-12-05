@@ -25,9 +25,10 @@ public class Notification extends AbstractModel<Integer> implements Serializable
     private String seenBy;
     @Column(name = "seenAt")
     private Date seenAt;
-
-    private String category;
     @Column(name = "category")
+    private String category;
+    @Column(name = "generatedDuring")
+    private String generatedDuring;
 
 
     @PrePersist
@@ -76,6 +77,13 @@ public class Notification extends AbstractModel<Integer> implements Serializable
     public String getCategory() { return category; }
 
     public void setCategory(String category) { this.category = category; }
+    public String getGeneratedDuring() {
+        return generatedDuring;
+    }
+
+    public void setGeneratedDuring(String generatedDuring) {
+        this.generatedDuring = generatedDuring;
+    }
 
     @Override
     public Integer getId() {

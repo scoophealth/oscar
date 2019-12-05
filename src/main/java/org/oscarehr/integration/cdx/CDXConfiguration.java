@@ -56,17 +56,17 @@ public class CDXConfiguration implements Config {
     public void savePolling(LoggedInInfo loggedInInfo, boolean enabled, int frequencyInMinutes) {
 
         NotificationDao notificationDao= SpringUtils.getBean(NotificationDao.class);
-        List<Notification> nList=notificationDao.findByCategory("import");
+        List<Notification> nList=notificationDao.findByCategory("IMPORT");
         NotificationController notificationController=new NotificationController();
 
         if(enabled==false) {
             if(nList!=null && nList.size()!=0 ) {
             } else {
-                notificationController.insertNotifications("Warning", "Polling Disabled: System won't be able to search and import documents automatically. ", "import");
+                notificationController.insertNotifications("Warning", "Polling Disabled: System won't be able to search and import documents automatically. ", "IMPORT","Disabling automatic import.");
             }
         } else {
             if(nList!=null && nList.size()!=0 ) {
-                notificationController.deleteNotifications("import");
+                notificationController.deleteNotifications("IMPORT");
              }
 
         }

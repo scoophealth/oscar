@@ -16,13 +16,14 @@ public class NotificationController {
 
 
 
-    public void insertNotifications(String type, String message, String category)
+    public void insertNotifications(String type, String message, String category, String generatedDuring)
     {
         NotificationDao notificationDao= SpringUtils.getBean(NotificationDao.class);
         Notification notification=new Notification();
         notification.setType(type);
         notification.setMessage(message);
         notification.setCategory(category);
+        notification.setGeneratedDuring(generatedDuring);
 
         notificationDao.persist(notification);
 
@@ -57,7 +58,7 @@ public class NotificationController {
             }
             else
             {
-                insertNotifications("Error","OBIB is not Connected: Error checking connectivity, Please check your connection.","OBIB");
+                insertNotifications("Error","OBIB is not Connected: Error checking connectivity, Please check your connection.","OBIB","Constant checking of OBIB Connection.");
             }
         }
     }
