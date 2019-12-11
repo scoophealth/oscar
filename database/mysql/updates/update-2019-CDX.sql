@@ -92,12 +92,14 @@ create table cdx_ClinicAndProfessionalIds
 
 create table notifications
 (
-    id          int(10) auto_increment,
-    type        varchar(255) not null,
-    message     varchar(255) null,
-    generatedAt datetime     not null,
-    seenAt      datetime     null on update CURRENT_TIMESTAMP,
-    seenBy      varchar(255) null,
+    id              int(10) auto_increment,
+    type            varchar(255) not null,
+    message         varchar(255) null,
+    generatedAt     datetime     not null,
+    seenAt          datetime     null on update CURRENT_TIMESTAMP,
+    seenBy          varchar(255) null,
+    category        varchar(255) null,
+    generatedDuring varchar(255) null,
     constraint notifications_id_uindex
         unique (id)
 );
