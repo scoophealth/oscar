@@ -94,6 +94,7 @@
 %>
 <%
     String error[]=request.getParameterValues("Errors");
+    int flag=0;
     Notification not;
     if(error!=null && error.length!=0 ) {
         for (String e : error) {
@@ -105,16 +106,19 @@
                 not.setSeenAt(new Timestamp(new Date().getTime()));
                 try {
                     notificationDao.merge(not);
+                    flag=1;
                 } catch (Exception ex) {
                     MiscUtils.getLogger().error("Got exception saving notification Information " + ex.getMessage());
                 }
-
-                out.print("<br><div><center><strong><font size=\"2px\">*All the SEEN warnings/Errors are logged and ignored!. </font> </strong></center></div>");
-            } else {
-                out.print("<br><div><center><strong><font size=\"2px\">*Unexpected Error occurred, Please reload and try again ! </font> </strong></center></div>");
             }
 
         }
+        if(flag==1)
+        {
+            out.print("<br><div><center><strong><font size=\"2px\">*All the SEEN warnings/Errors are logged and ignored!. </font> </strong></center></div>");
+        }
+
+
     }
 
 
