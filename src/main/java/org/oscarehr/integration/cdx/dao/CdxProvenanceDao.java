@@ -122,10 +122,11 @@ public class CdxProvenanceDao extends AbstractDao<CdxProvenance> {
         return query.getResultList();
     }
 
-    public List<CdxProvenance> findReceivedVersionsOrderDesc(String setId) {
-        String sql = "FROM CdxProvenance p where p.setId = :setId and p.action = 'import' ORDER BY p.version DESC, p.effectiveTime DESC";
+    public List<CdxProvenance> findReceivedVersions(String setId, String iffId) {
+        String sql = "FROM CdxProvenance p where (p.setId = :setId or p.inFulfillmentOfId = :iffId) and p.action = 'import' ORDER BY p.version DESC, p.effectiveTime DESC";
         Query query = entityManager.createQuery(sql);
         query.setParameter("setId", setId);
+        query.setParameter("iffId", iffId);
 
         return query.getResultList();
     }
