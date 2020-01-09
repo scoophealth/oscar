@@ -36,12 +36,9 @@ import org.oscarehr.common.model.*;
 import org.oscarehr.integration.cdx.dao.CdxAttachmentDao;
 import org.oscarehr.integration.cdx.dao.CdxPendingDocsDao;
 import org.oscarehr.integration.cdx.dao.CdxProvenanceDao;
-import org.oscarehr.integration.cdx.dao.NotificationDao;
 import org.oscarehr.integration.cdx.model.CdxPendingDoc;
 import org.oscarehr.integration.cdx.model.CdxProvenance;
-import org.oscarehr.integration.cdx.model.Notification;
 import org.oscarehr.util.MiscUtils;
-import org.oscarehr.util.SpringUtils;
 import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 
 import java.text.ParseException;
@@ -190,7 +187,7 @@ public class CDXImport {
         Document    inboxDoc = null;
         String  warnings = "";
 
-        List<CdxProvenance> versions = provDao.findReceivedVersionsOrderDesc(doc.getSetId());
+        List<CdxProvenance> versions = provDao.findReceivedVersions(doc.getSetId(), doc.getInFulFillmentOfId());
 
         prov.populate(doc);
 

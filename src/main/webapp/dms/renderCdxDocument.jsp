@@ -29,7 +29,7 @@
 <%@ page import="org.oscarehr.integration.cdx.model.CdxAttachment" %>
 
 <%
-    List<CdxProvenance> versions = provenanceDao.findReceivedVersionsOrderDesc(provenanceDoc.getSetId());
+    List<CdxProvenance> versions = provenanceDao.findReceivedVersions(provenanceDoc.getSetId(), provenanceDoc.getInFulfillmentOfId());
     if (versions.size() > 1) {
         if (provenanceDoc.getId().equals(versions.get(0).getId())) {
 %>
