@@ -135,7 +135,10 @@
                 if (provenanceDoc.getAction().equals("SEND")) {
 
                     if (provenanceDoc.getKind().equals(DocumentType.REFERRAL_NOTE.label)) {
-                        out.print("<div> <a href=\"/oscar/oscarEncounter/ViewRequest.do?requestId=" + provenanceDoc.getInFulfillmentOfId() + "\"" + " class =\"btn btn-info\" role=\"button\">  Open corresponding consultation </a> </div>");
+                        String qualifiedIFID = provenanceDoc.getInFulfillmentOfId();
+                        int posOfLastDot = qualifiedIFID.lastIndexOf('.');
+                        String requestId = qualifiedIFID.substring(posOfLastDot+1);
+                        out.print("<div> <a href=\"/oscar/oscarEncounter/ViewRequest.do?requestId=" + requestId + "\"" + " class =\"btn btn-info\" role=\"button\">  Open corresponding consultation </a> </div>");
                     }
                 }
             %>

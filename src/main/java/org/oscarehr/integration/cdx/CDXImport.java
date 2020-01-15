@@ -198,6 +198,11 @@ public class CDXImport {
             if (newestExistingVersion.getEffectiveTime().before(doc.getEffectiveTime())) {
                 inboxDoc = reviseInboxData(doc, newestExistingVersion.getDocumentNo());
             }
+            if (doc.getVersion()==0) {
+                prov.setVersion(versions.size());
+            } else {
+                prov.setVersion(doc.getVersion());
+            }
         }
 
         if (inboxDoc != null) {

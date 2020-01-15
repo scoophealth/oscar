@@ -81,6 +81,7 @@ if(!authed) {
 <%@ page import="ca.uvic.leadlab.obibconnector.facades.datatypes.DocumentType" %>
 <%@ page import="ca.uvic.leadlab.obibconnector.facades.receive.IDocument" %>
 <%@ page import="ca.uvic.leadlab.obibconnector.facades.receive.IDistributionStatus" %>
+<%@ page import="ca.uvic.leadlab.obibconnector.utils.OBIBConnectorHelper"%>
 <jsp:useBean id="displayServiceUtil" scope="request" class="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConDisplayServiceUtil" />
 
 <html:html locale="true">
@@ -132,6 +133,7 @@ if(!authed) {
 
 	String demo = request.getParameter("de");
 		String requestId = request.getParameter("requestId");
+		String cdxClinicLoc = OBIBConnectorHelper.getProperty("cdx.clinic.location.id");
 		// segmentId is != null when viewing a remote consultation request from an hl7 source
 		String segmentId = request.getParameter("segmentId");
 		String team = request.getParameter("teamVar");
@@ -1465,7 +1467,7 @@ function updateFaxButton() {
 					List<CdxProvenance> sentDocs = null;
 					CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
 					if (requestId != null && !requestId.isEmpty()) {
-						sentDocs = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
+						sentDocs = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, cdxClinicLoc +"."+ requestId);
 						if (sentDocs != null && !sentDocs.isEmpty()) {
 							sentStatus = "<b>Sent</b>";
 							previous_CDX_doc_sent = true;
