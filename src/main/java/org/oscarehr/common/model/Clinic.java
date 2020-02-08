@@ -53,8 +53,6 @@ public class Clinic extends AbstractModel<Integer> implements Serializable, Cont
     private Integer id;
 	@Column(name="clinic_name")
     private String clinicName;
-	@Column(name="cdx_oid")
-	private String cdxOid;
 	@Column(name="clinic_address")
     private String clinicAddress;
 	@Column(name="clinic_city")
@@ -100,14 +98,6 @@ public class Clinic extends AbstractModel<Integer> implements Serializable, Cont
     public void setClinicName(String clinicName) {
         this.clinicName = clinicName;
     }
-
-	public String getCdxOid() {
-		return cdxOid;
-	}
-
-	public void setCdxOid(String cdxid) {
-		this.cdxOid = cdxid;
-	}
 
     public String getClinicAddress() {
         return clinicAddress;
