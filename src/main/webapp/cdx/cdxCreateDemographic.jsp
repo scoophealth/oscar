@@ -129,8 +129,8 @@
 
 
 	demographic.setYearOfBirth(Integer.toString(1900+cdxDoc.getPatient().getBirthdate().getYear()));
-	demographic.setMonthOfBirth(Integer.toString(cdxDoc.getPatient().getBirthdate().getMonth()));
-	demographic.setDateOfBirth(Integer.toString(cdxDoc.getPatient().getBirthdate().getDay()));
+	demographic.setMonthOfBirth(Integer.toString(1+cdxDoc.getPatient().getBirthdate().getMonth()));
+	demographic.setDateOfBirth(Integer.toString(cdxDoc.getPatient().getBirthdate().getDate()));
 
 	demographic.setHin(cdxDoc.getPatient().getID());
 	demographic.setSex(cdxDoc.getPatient().getGender().label);
