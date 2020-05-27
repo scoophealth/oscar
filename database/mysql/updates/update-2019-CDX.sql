@@ -32,9 +32,7 @@ CREATE TABLE cdx_provenance (
 																		CONSTRAINT pk_cdx_provenance_id PRIMARY KEY ( id ),
 																		CONSTRAINT cdx_prov_docno_unique UNIQUE ( document_no )
 ) ;
-ALTER TABLE cdx_attachment ADD CONSTRAINT fk_cdx_attachment_prov FOREIGN KEY ( document ) REFERENCES cdx_provenance( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-ALTER TABLE cdx_provenance ADD CONSTRAINT fk_cdx_prov_doc FOREIGN KEY ( document_no ) REFERENCES document( document_no ) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE cdx_pending_docs (
 																			id                   int  NOT NULL  AUTO_INCREMENT,
