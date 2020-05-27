@@ -1697,7 +1697,7 @@ function updateStatus(formid){//acknowledge
 			var url=contextpath+"/oscarMDS/UpdateStatus.do";
 			var data=$(formid).serialize(true);
 
-			new Ajax.Request(url,{method:'post',parameters:data,onSuccess:function(transport){
+			new Ajax.Request(url,{asynchronous: false, method:'post',parameters:data,onSuccess:function(transport){
 
 					if(doclabid){
 						Effect.BlindUp('labdoc_'+doclabid);
