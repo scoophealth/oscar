@@ -2699,6 +2699,10 @@
 			<forward name="success" path="/cdx/cdxAdmin.jsp" />
 		</action>
 
+		<action path="/cdx/CDXMessenger" type="org.oscarehr.integration.cdx.CDXMessengerAction" scope="request" validate="false">
+			<forward name="success" path="/cdx/cdxMessengerSuccess.jsp" />
+		</action>
+
 		<action path="/caseload/CaseloadContent" scope="request" type="org.oscarehr.caseload.CaseloadContentAction" parameter="method" />
 
                 <action input="/tickler/ticklerEdit.jsp" name="serviceform" path="/tickler/EditTickler" scope="request" type="oscar.oscarTickler.pageUtil.EditTicklerAction" parameter="method">

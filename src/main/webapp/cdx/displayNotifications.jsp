@@ -82,6 +82,8 @@
                 $(this).toggleClass('allChecked');
             })
         });
+
+
     </script>
 
 </head>

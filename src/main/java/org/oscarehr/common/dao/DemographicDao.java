@@ -343,6 +343,38 @@ public class DemographicDao extends HibernateDaoSupport implements ApplicationEv
 		return list;
 	}
 
+	//-- To search patients by either first name or last name.(Cdx Messenger V0.1)
+
+	public List<Demographic> searchDemographicByFullName(String searchStr) {
+		if(searchStr!=null || searchStr.length()!=0){
+			String fieldname = "", regularexp = "like";
+
+
+			fieldname = "last_name " + regularexp + " ?" + " or first_name ";
+
+			String hql = "From Demographic d where " + fieldname + " " + regularexp + " ? ";
+			Object[] object = null;
+			object = new Object[] { searchStr.trim() + "%", searchStr.trim() + "%" };
+
+			List list = getHibernateTemplate().find(hql, object);
+			return list;
+
+		}
+		else {
+			return null;
+		}
+
+	}
+
+
+	//--
+
+
+
+
+
+
+
 	@SuppressWarnings("unchecked")
 	public List<Demographic> searchDemographicByNameString(String searchString, int startIndex, int itemsToReturn) {
 		String sqlCommand = "select x from Demographic x";

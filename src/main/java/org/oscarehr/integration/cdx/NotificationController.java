@@ -24,7 +24,6 @@ public class NotificationController {
         notification.setMessage(message);
         notification.setCategory(category);
         notification.setGeneratedDuring(generatedDuring);
-
         notificationDao.persist(notification);
 
     }

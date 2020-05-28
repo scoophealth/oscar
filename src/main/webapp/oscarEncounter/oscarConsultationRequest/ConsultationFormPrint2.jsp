@@ -354,7 +354,7 @@ if(!authed) {
 			%>
 						<option value="<%=i%>" <%= te.equals(defaultAddrName)?"selected":"" %>><%=te%></option>
 			<%  }%>
-					</select>
+					</select>S
 				</td>
 		<% } %>
 			</tr>
