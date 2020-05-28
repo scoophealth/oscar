@@ -79,6 +79,7 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 	private String currentMeds;
 	private String allergies;
 	private String providerNo;
+	private String providerClinic;
 
 	@Column(name = "demographicNo")
 	private Integer demographicId;
@@ -189,6 +190,15 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
 	public void setProviderNo(String providerNo) {
     	this.providerNo = StringUtils.trimToNull(providerNo);
     }
+
+	public String getProviderClinic() {
+		return providerClinic;
+	}
+
+	public void setProviderClinic(String providerClinic) {
+		this.providerClinic = StringUtils.trimToNull(providerClinic);
+	}
+
 
 	public Integer getDemographicId() {
     	return demographicId;

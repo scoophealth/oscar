@@ -258,7 +258,6 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 
 	public String getClinic() { return (StringUtils.trimToEmpty(clinic)); }
 
-
 	public String getSpecialist() {
 		return (StringUtils.trimToEmpty(specialist));
 	}

@@ -201,6 +201,7 @@ public class EctConsultationFormRequestAction extends Action {
                                 consult.setCurrentMeds(frm.getCurrentMedications());
                                 consult.setAllergies(frm.getAllergies());
                                 consult.setProviderNo(frm.getProviderNo());
+                                consult.setProviderClinic(frm.getClinic());
                                 consult.setDemographicId(new Integer(frm.getDemographicNo()));
                                 consult.setStatus(frm.getStatus());
                                 consult.setStatusText(frm.getAppointmentNotes());
@@ -296,6 +297,7 @@ public class EctConsultationFormRequestAction extends Action {
         		consult.setLetterheadAddress(frm.getLetterheadAddress());
         		consult.setLetterheadPhone(frm.getLetterheadPhone());
         		consult.setLetterheadFax(frm.getLetterheadFax());
+				consult.setProviderClinic(frm.getClinic());
 
                 /*
                  * If Consultant: was changed to "blank/No Consultant Saved" we
@@ -513,6 +515,7 @@ public class EctConsultationFormRequestAction extends Action {
 	        ObservationData observationData=new ObservationData();
 	        observationData.subject=attachment.getDescription();
 	        observationData.textMessage="Attachment for consultation : "+consultationRequestId;
+	        observationData.binaryDataFileName=attachment.getFileName();
 	        observationData.binaryDataFileName=attachment.getFileName();
 	        observationData.binaryData=attachment.getFileBytes();
 

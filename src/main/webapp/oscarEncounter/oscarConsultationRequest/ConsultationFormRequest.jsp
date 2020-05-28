@@ -748,14 +748,24 @@ function onSelectSpecialist(SelectedSpec)	{
 						annotation.value = xml.annotation;
 
 						//Creating DropDown Menu of Clinics Based on the Selection of the Specialist.
+
+						var selClinic = document.getElementById('clinic').innerText;
 						document.getElementById('clinic').innerHTML='';
 						var select = document.getElementById('clinic');
+
+						for (var i=0; i<xml.clinics.size(); i++)
+						{
+							if (selClinic == xml.clinics[i].clinicId) {
+								select.options[select.options.length] = new Option(xml.clinics[i].clinicName, xml.clinics[i].clinicId);
+							}
+						}
+
 						select.options[select.options.length] = new Option("----All Clinics-------",1);
+
 						for (var i=0; i<xml.clinics.size(); i++)
 							{
 								select.options[select.options.length] = new Option(xml.clinics[i].clinicName, xml.clinics[i].clinicId);
 							}
-
 
                 	}
             	);
@@ -1845,13 +1855,9 @@ function updateFaxButton() {
 							</td>
 							<td  class="tite1">
 								<html:select styleId="clinic" property="clinic" >
+									<option value="<%=thisForm.getClinic()%>"><%=thisForm.getClinic()%></option>
 								</html:select></td>
 						</tr>
-
-
-
-
-
 
 
                                                 <tr>

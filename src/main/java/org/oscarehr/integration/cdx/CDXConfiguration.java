@@ -188,7 +188,7 @@ public class CDXConfiguration implements Config {
 
     public String getClinicId() {
         String cdxOid = OBIBConnectorHelper.getProperty("cdx.clinic.id");
-        if (cdxOid.equals("")) {
+        if (cdxOid == null || cdxOid.equals("")) {
             MiscUtils.getLogger().error("Error: CDX_Clinic_ID not set in properties file");
         }
         return cdxOid;

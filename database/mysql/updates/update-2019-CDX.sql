@@ -78,6 +78,7 @@ create table cdx_clinics
     constraint cdx_clinics_clinicId_uindex
         unique (clinicId)
 );
+
 create table cdx_ClinicAndProfessionalIds
 (
     professionalId int(10) not null,
@@ -105,12 +106,5 @@ create table notifications
 alter table notifications
     add primary key (id);
 
-
-
-/*
-Add foreign key :
-alter table cdx_ClinicAndProfessionalIds
-	add constraint cdx_ClinicAndProfessionalIds_professionalSpecialists_specId_fk
-		foreign key (professionalId) references professionalSpecialists (specId);
- */
+ALTER TABLE consultationRequests ADD providerClinic varchar(60);
 

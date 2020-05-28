@@ -180,6 +180,7 @@ public class EctViewRequestAction extends Action {
             ProviderDao provDao = (ProviderDao)SpringUtils.getBean("providerDao");
             Provider prov = provDao.getProvider(consult.getProviderNo());
             thisForm.setProviderName(prov.getFormattedName());
+            thisForm.setClinic(consult.getProviderClinic());
 
             thisForm.seteReferral(false);
             if ("bc".equalsIgnoreCase(oscar.OscarProperties.getInstance().getProperty("billregion"))) {
