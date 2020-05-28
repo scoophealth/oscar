@@ -700,7 +700,7 @@ public class EctConsultationFormRequestAction extends Action {
 		if (isCancel) {
 				consultationRequest.setStatus("1");
 		} else if (consultationRequest.getStatus().equals("1")){
-			consultationRequest.setStatus("3");
+			consultationRequest.setStatus("2");
 		}
 		consultationRequestDao.merge(consultationRequest);
 	}
