@@ -93,7 +93,7 @@ ul#primary li, ul#secondary li{
                     $.ajax({
                         type:'POST',
                         url:'messengerController.jsp',
-                        data:'key='+search,
+                        data:'patient='+search,
                         success:function(data)
                         {
                             console.log(data);
@@ -193,7 +193,7 @@ ul#primary li, ul#secondary li{
              var selectedItems=recipient+"@";
              for(var i=0; i<items.length; i++){
                 if(items[i].type=='checkbox' && items[i].checked==true)
-                    selectedItems+=items[i].value+" ,";
+                    selectedItems+=items[i].value+", ";
              }
              var allclinics= selectedItems.substring(0, selectedItems.length - 1);
 
@@ -220,7 +220,7 @@ ul#primary li, ul#secondary li{
             var selectedItems=recipient+"@";
             for(var i=0; i<items.length; i++){
                 if(items[i].type=='checkbox' && items[i].checked==true)
-                    selectedItems+=items[i].value+" ,";
+                    selectedItems+=items[i].value+", ";
             }
             var allclinics= selectedItems.substring(0, selectedItems.length - 1);
 

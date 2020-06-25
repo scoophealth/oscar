@@ -13,6 +13,7 @@
 <%@ page import="org.oscarehr.util.MiscUtils" %>
 <%@ page import="oscar.OscarProperties" %>
 <%@ page import="ca.uvic.leadlab.obibconnector.facades.registry.IClinic" %>
+<%@ page import="java.util.HashMap" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
@@ -30,14 +31,14 @@
     }
 %>
 <%
-    if(request.getParameter("key")!=null && !request.getParameter("key").isEmpty() )
+    if(request.getParameter("patient")!=null && !request.getParameter("patient").isEmpty() )
     {
 
     DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
     List<Demographic> demoList=null;
 
-        String key = request.getParameter("key");
-        demoList=demographicDao.searchDemographicByFullName(key);
+        String patient = request.getParameter("patient");
+        demoList=demographicDao.searchDemographicByFullName(patient);
         for(int i=0;i<demoList.size();i++){
 
 
@@ -89,13 +90,13 @@
     else if(request.getParameter("names")!=null && !request.getParameter("names").isEmpty()) {
 
                    String searchString = request.getParameter("names");
-                   String[] lastfirst = searchString.split(" ");
+                   String[] lastfirst = searchString.split(" ",2);
                    OscarProperties props = OscarProperties.getInstance();
                    boolean showCdx = "bc".equalsIgnoreCase(props.getProperty("billregion"));
                    List<IProvider> providers = null;
                    if (showCdx) {
                        CDXSpecialist cdxSpecialist = new CDXSpecialist();
-                       providers = cdxSpecialist.findCdxSpecialistByName(lastfirst[1].trim());
+                       providers = cdxSpecialist.findCdxSpecialistByName(lastfirst[0].trim());
                        for (IProvider provider : providers) {
                            //   String cdxSpecId = provider.getID();
                            // MiscUtils.getLogger().debug("cdxSpecId: " + cdxSpecId);
@@ -103,7 +104,7 @@
                            //String lName = provider.getLastName();
 
                            if (provider.getFirstName() != null && !provider.getFirstName().isEmpty()) {
-                                if(provider.getLastName().equalsIgnoreCase(lastfirst[0].trim())) {
+                                if(provider.getLastName().equalsIgnoreCase(lastfirst[0].trim()) && provider.getFirstName().equalsIgnoreCase(lastfirst[1].trim()) ) {
      %>
 
 
@@ -124,8 +125,11 @@
     <%
         if(provider.getClinics()!=null && !provider.getClinics().isEmpty() && provider.getClinics().size()>=1)
         {
+            //Setting ClinicId and Clinic name to later use in doCdxSend.
+            HashMap<String,String> ClinicInfo =new HashMap<String, String>();
         for(IClinic clinic : provider.getClinics())
         {
+            ClinicInfo.put(clinic.getID(),clinic.getName());
 
     %>
     <tr>
@@ -165,6 +169,8 @@
 </table>
 
      <%
+
+                                 session.setAttribute("clinicInfo",ClinicInfo);
                              }
 
         else{

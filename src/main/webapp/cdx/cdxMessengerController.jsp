@@ -1,3 +1,8 @@
+
+
+
+<!-- Page to be deleted-->
+
 <%@ page import="org.oscarehr.common.model.Demographic" %>
 <%@ page import="org.oscarehr.common.dao.DemographicDao" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
@@ -24,6 +29,8 @@
     }
 %>
 <%
+
+
     int flag=0;
     CdxMessengerDao cdxMessengerDao= SpringUtils.getBean(CdxMessengerDao.class);
     CdxMessenger cdxMessenger = new CdxMessenger();
