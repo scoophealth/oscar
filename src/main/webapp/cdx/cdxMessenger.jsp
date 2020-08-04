@@ -2,6 +2,20 @@
 <%@ page import="org.oscarehr.common.dao.DemographicDao" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
 <%@ page import="java.util.List" %>
+<%@ page import="oscar.OscarProperties" %>
+<%@page import="org.oscarehr.util.WebUtilsOld"%>
+<%@ page import="org.oscarehr.integration.cdx.model.CdxProvenance" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!-- add for special encounter -->
+<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
+<%@ taglib uri="/WEB-INF/special_tag.tld" prefix="special" %>
+<!-- end -->
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar"%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
@@ -17,12 +31,6 @@
         return;
     }
 %>
-<%
-
-    DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-
-
-%>
 
 
 <!DOCTYPE html>
@@ -30,6 +38,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <script type="text/javascript" src="/oscar/js/jquery-1.9.1.js"></script>
     <script type="text/javascript" src="/oscar/js/jquery-ui-1.10.2.custom.min.js"></script>
     <script type="text/javascript" src="/oscar/share/javascript/Oscar.js"></script>
@@ -110,6 +119,7 @@ ul#primary li, ul#secondary li{
             });
           $(document).on('click','#showList li',function(){
                 $('#patient').val($(this).text());
+                getDemographicId();
                 $('#showList').hide();
 
             });
@@ -242,6 +252,63 @@ ul#primary li, ul#secondary li{
             $('#butns').hide();
         }
 
+        var demographicid=null;
+        function updateAttached() {
+            var t = setTimeout('fetchAttached(demographicid)', 2000);
+        }
+
+        function fetchAttached(d) {
+            alert("hiee");
+
+            var params = "demo="+d;
+
+            $.ajax({
+                type:'GET',
+                url:'displayMessengerAttachedFiles.jsp',
+                data:params,
+                success:function(data)
+                {
+                    alert("insucess"+d);
+                    $('#tdAttachedDocs').html(data);
+                    alert($('#tdAttachedDocs').text());
+                    console.log(data);
+
+                }
+            });
+        }
+
+
+
+        function getDemographicId(){
+            var search=$('#patient').val();
+
+            alert("Demo");
+            $.ajax({
+                type:'POST',
+                url:'messengerController.jsp',
+                data:'demoName='+search,
+                success:function(data)
+                {
+                    alert("sucess");
+                    console.log(data);
+                    $('#demop').html(data);
+                    alert($('#demoid').text());
+                    demographicid=$('#demoid').text();
+                    fetchAttached($('#demoid').text());
+                }
+            });
+        }
+        var DocPopup = null;
+        function popup() {
+            var location="<rewrite:reWrite jspPage="../cdx/cdxMessengerAttachment.jsp"/>?&demo="+demographicid;
+            DocPopup = window.open(location,"_blank","height=380,width=580");
+
+            if (DocPopup != null) {
+                if (DocPopup.opener == null) {
+                    DocPopup.opener = self;
+                }
+            }
+        }
 
     </script>
 
@@ -324,8 +391,8 @@ ul#primary li, ul#secondary li{
                         <select name="documenttype" class="form-control selectpicker" required>
                             <option value="">Select document type</option>
                             <option>Information Request</option>
-                            <option>Clinical Summaries</option>
-                            <option>Progress Updates</option>
+                            <option>Patient Summary</option>
+                            <option>Progress Note</option>
 
                         </select>
                     </div>
@@ -338,7 +405,7 @@ ul#primary li, ul#secondary li{
                 <label class="col-xs-4 control-label">Content</label>
                 <div class="col-xs-4 inputGroupContainer">
                     <div class="">
-                        <textarea  name="contentmessage" placeholder="Content" class="form-control"  type="text" required></textarea>
+                        <textarea  name="contentmessage" id="content1" placeholder="Content" class="form-control"  type="text"></textarea>
                     </div>
                 </div>
             </div>
@@ -349,7 +416,11 @@ ul#primary li, ul#secondary li{
                 <label class="col-xs-4 control-label" >Attachment</label>
                 <div class="col-xs-4 inputGroupContainer">
                     <div class="custom-file mb-3">
-                        <input type="file" class="custom-file-input" id="customFile" name="filename">
+                        <a href="#" onclick="popup();return false;">
+                            Attach file to Messenger
+                        </a>
+                        <p id="tdAttachedDocs"></p>
+
                     </div>
                 </div>
             </div>
@@ -430,7 +501,7 @@ ul#primary li, ul#secondary li{
     </form>
 </div>
 </div><!-- /.container -->
-
+<p hidden id="demop"> </p>
 </body>
 
 </html>

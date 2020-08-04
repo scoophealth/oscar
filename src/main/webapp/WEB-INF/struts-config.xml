@@ -323,6 +323,13 @@
 			<form-property name="demoNo" type="java.lang.String" />
 			<form-property name="providerNo" type="java.lang.String" />
 		</form-bean>
+
+		<form-bean name="cdxAttachDoc" type="org.apache.struts.action.DynaActionForm">
+			<form-property name="documents" type="java.lang.String[]" />
+			<form-property name="attachedDocs" type="java.lang.String[]" />
+			<form-property name="requestId" type="java.lang.String" />
+			<form-property name="demoNo" type="java.lang.String" />
+		</form-bean>
 		<form-bean name="clientSearchForm" type="org.apache.struts.validator.LazyValidatorForm" />
 
 		<form-bean name="StreetHealthIntakeReportForm" type="org.apache.struts.validator.LazyValidatorForm" />
@@ -2702,7 +2709,9 @@
 		<action path="/cdx/CDXMessenger" type="org.oscarehr.integration.cdx.CDXMessengerAction" scope="request" validate="false">
 			<forward name="success" path="/cdx/cdxMessengerSuccess.jsp" />
 		</action>
-
+		<action name="cdxAttachDoc" path="/cdx/CDXMessengerAttachDocument" type="org.oscarehr.integration.cdx.CDXMessengerAttachDocumentAction" scope="request" validate="false">
+			<forward name="success" path="/oscarEncounter/oscarConsultationRequest/attachSuccessfull.jsp" />
+		</action>
 		<action path="/caseload/CaseloadContent" scope="request" type="org.oscarehr.caseload.CaseloadContentAction" parameter="method" />
 
                 <action input="/tickler/ticklerEdit.jsp" name="serviceform" path="/tickler/EditTickler" scope="request" type="oscar.oscarTickler.pageUtil.EditTicklerAction" parameter="method">

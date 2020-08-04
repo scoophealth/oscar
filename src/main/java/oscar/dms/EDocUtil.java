@@ -69,6 +69,8 @@ import org.oscarehr.common.model.IndivoDocs;
 import org.oscarehr.common.model.Provider;
 import org.oscarehr.common.model.Tickler;
 import org.oscarehr.common.model.TicklerLink;
+import org.oscarehr.integration.cdx.dao.CdxMessengerAttachmentsDao;
+import org.oscarehr.integration.cdx.model.CdxMessengerAttachments;
 import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.managers.ProgramManager2;
 import org.oscarehr.managers.TicklerManager;
@@ -86,7 +88,7 @@ import oscar.util.UtilDateUtilities;
 
 // all SQL statements here
 public final class EDocUtil {
-
+	private static CdxMessengerAttachmentsDao cdxMessengerAttachmentsDao = SpringUtils.getBean(CdxMessengerAttachmentsDao.class);
 	private static ConsultDocsDao consultDocsDao = (ConsultDocsDao) SpringUtils.getBean("consultDocsDao");
 	private static DocumentDao documentDao = (DocumentDao) SpringUtils.getBean(DocumentDao.class);
 	private static IndivoDocsDao indivoDocsDao = (IndivoDocsDao) SpringUtils.getBean(IndivoDocsDao.class);
@@ -285,6 +287,37 @@ public final class EDocUtil {
 		consultDocsDao.persist(consultDoc);
 	}
 
+	//For CDXMessenger
+	public static void detachCdxDoc(String docNo, String requestId,String demoNo) {
+		List<CdxMessengerAttachments> cdxMessengerAttachments = cdxMessengerAttachmentsDao.findByRequestIdDocNoDocType(ConversionUtils.fromIntString(requestId), ConversionUtils.fromIntString(docNo), ConsultDocs.DOCTYPE_DOC,ConversionUtils.fromIntString(demoNo));
+		for (CdxMessengerAttachments cdxAttachments : cdxMessengerAttachments) {
+			cdxAttachments.setDeleted("Y");
+			cdxMessengerAttachmentsDao.merge(cdxAttachments);
+		}
+	}
+
+	//For CDXMessenger
+	public static void attachCdxDocs( String docNo, String requestId,String demoNo) {
+		CdxMessengerAttachments cdxMessengerAttachments = new CdxMessengerAttachments();
+		cdxMessengerAttachments.setRequestId(ConversionUtils.fromIntString(requestId));
+		cdxMessengerAttachments.setDocumentNo(ConversionUtils.fromIntString(docNo));
+		cdxMessengerAttachments.setDemoNo(ConversionUtils.fromIntString(demoNo));
+		cdxMessengerAttachments.setDocType(cdxMessengerAttachments.DOCTYPE_DOC);
+		cdxMessengerAttachments.setAttachDate(new Date());
+		cdxMessengerAttachmentsDao.persist(cdxMessengerAttachments);
+	}
+
+	//for CDXMessenger
+	public static void updateAttachCdxDoc(String docNo, String requestId,String demoNo) {
+		List<CdxMessengerAttachments> cdxMessengerAttachments = cdxMessengerAttachmentsDao.findByRequestIdDocNoDocType(ConversionUtils.fromIntString(null), ConversionUtils.fromIntString(docNo), ConsultDocs.DOCTYPE_DOC,ConversionUtils.fromIntString(demoNo));
+		for (CdxMessengerAttachments cdxAttachments : cdxMessengerAttachments) {
+			cdxAttachments.setRequestId(ConversionUtils.fromIntString(requestId));
+			cdxMessengerAttachmentsDao.merge(cdxAttachments);
+		}
+	}
+
+
+
 	public static void editDocumentSQL(EDoc newDocument, boolean doReview) {
 
 		Document doc = documentDao.find(ConversionUtils.fromIntString(newDocument.getDocId()));
@@ -329,6 +362,19 @@ public final class EDocUtil {
 		}
 		indivoDocsDao.persist(id);
 	}
+
+	/**
+	 * Fetches all CDX Messenger documents attached to specific Document
+	 */
+	public static ArrayList<EDoc> listDocsForCdxMessenger(LoggedInInfo loggedInInfo, String demoNo, String requestId, boolean attached) {
+		List<Object[]> docs = documentDao.findDocsAndCdxMessengerDocs(ConversionUtils.fromIntString(requestId),ConversionUtils.fromIntString(demoNo));
+		List<Object[]> ctlDocs = null;
+		if (!attached) {
+			ctlDocs = documentDao.findCtlDocsAndDocsByModuleAndModuleId(Module.DEMOGRAPHIC, ConversionUtils.fromIntString(demoNo));
+		}
+		return documentProgramFiltering(loggedInInfo,listDocs(loggedInInfo, attached, docs, ctlDocs));
+	}
+
 
 	/**
 	 * Fetches all consult documents attached to specific consultation

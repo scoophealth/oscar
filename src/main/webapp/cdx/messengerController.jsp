@@ -31,6 +31,29 @@
     }
 %>
 <%
+    if(request.getParameter("demoName")!=null && !request.getParameter("demoName").isEmpty()){
+        DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+        List<Demographic> demoList=null;
+
+
+        String demoName = request.getParameter("demoName");
+        String lastFirst[]=demoName.split(",");
+        String demoid=null;
+        demoList=demographicDao.searchDemographicByFullName(lastFirst[0]);
+        for(int i=0;i<demoList.size();i++){
+            if(demoList.get(i).getFirstName().equalsIgnoreCase(lastFirst[1].trim())){
+                demoid=demoList.get(i).getId().toString();
+                break;
+            }
+        }
+
+%>
+<li class="list-group-item" id="demoid"><%=demoid%></li>
+<%
+    }
+
+
+
     if(request.getParameter("patient")!=null && !request.getParameter("patient").isEmpty() )
     {
 
@@ -44,7 +67,7 @@
 
 
 %>
-<li class="list-group-item"><%=demoList.get(i).getFullName()%></li>
+<li class="list-group-item" ><%=demoList.get(i).getFullName()%></li>
 <%
         }
     }

@@ -39,6 +39,7 @@ import javax.persistence.Query;
 import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.Demographic;
 import org.oscarehr.common.model.Document;
+import org.oscarehr.integration.cdx.model.CdxMessengerAttachments;
 import org.springframework.stereotype.Repository;
 
 import oscar.dms.EDocUtil.EDocSort;
@@ -134,8 +135,24 @@ public class DocumentDao extends AbstractDao<Document> {
 		query.setParameter("doctype", ConsultDocs.DOCTYPE_DOC);
 		return query.getResultList();
     }
-    
-    public List<Object[]> findDocsAndConsultResponseDocsByConsultId(Integer consultationId) {
+
+//For CDXMessenger
+	public List<Object[]> findDocsAndCdxMessengerDocs(Integer requestId,Integer demoNo) {
+		String sql = "FROM Document d, CdxMessengerAttachments cd " +
+				"WHERE d.documentNo = cd.documentNo " +
+				"AND cd.requestId = :requestId " +
+				"AND cd.docType = :doctype " +
+				"AND cd.demoNo = :demoNo " +
+				"AND cd.deleted IS NULL";
+		Query query = entityManager.createQuery(sql);
+		query.setParameter("requestId", requestId);
+		query.setParameter("demoNo", demoNo);
+		query.setParameter("doctype", CdxMessengerAttachments.DOCTYPE_DOC);
+		return query.getResultList();
+	}
+
+
+	public List<Object[]> findDocsAndConsultResponseDocsByConsultId(Integer consultationId) {
     	String sql = "FROM Document d, ConsultResponseDoc crd " +
     			"WHERE d.documentNo = crd.documentNo " +
     			"AND crd.responseId = :consultationId " +
