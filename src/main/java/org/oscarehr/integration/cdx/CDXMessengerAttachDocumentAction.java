@@ -49,8 +49,8 @@ public class CDXMessengerAttachDocumentAction
             CDXMessengerAttachDocs Doc = new CDXMessengerAttachDocs(demoNo,requestId,arrDocs);
             Doc.attach(loggedInInfo);
 
-            //CDXMessengerAttachLabs Lab = new CDXMessengerAttachLabs(demoNo,requestId,arrDocs);
-            //Lab.attach(loggedInInfo);
+            CDXMessengerAttachLabs Lab = new CDXMessengerAttachLabs(demoNo,requestId,arrDocs);
+            Lab.attach(loggedInInfo);
             return mapping.findForward("success");
         }
         else {
@@ -62,8 +62,8 @@ public class CDXMessengerAttachDocumentAction
             CDXMessengerAttachDocs Doc = new CDXMessengerAttachDocs(demoNo,requestId,docs);
             Doc.attach(loggedInInfo);
 
-           // CDXMessengerAttachLabs Lab = new CDXMessengerAttachLabs(demoNo,requestId,labs);
-            //Lab.attach(loggedInInfo);
+            CDXMessengerAttachLabs Lab = new CDXMessengerAttachLabs(demoNo,requestId,labs);
+            Lab.attach(loggedInInfo);
             return mapping.findForward("success");
         }
     }

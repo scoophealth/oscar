@@ -101,7 +101,11 @@ public class CommonLabResultData {
 	public ArrayList<LabResultData> populateLabResultsData(LoggedInInfo loggedInInfo, String demographicNo, String reqId, boolean attach) {
 		return populateLabResultsData(loggedInInfo, demographicNo, reqId, attach, false);
 	}
-	
+	//Populate Lab data for CDX Messenger
+	public ArrayList<LabResultData> populateLabResultsDataCdxMessenger(LoggedInInfo loggedInInfo, String demographicNo, String reqId, boolean attach) {
+		return populateLabResultsDataCdxMessenger(loggedInInfo, demographicNo, reqId, attach, false);
+	}
+
 	//Populate Lab data for consultation response
 	public ArrayList<LabResultData> populateLabResultsDataConsultResponse(LoggedInInfo loggedInInfo, String demographicNo, String respId, boolean attach) {
 		return populateLabResultsData(loggedInInfo, demographicNo, respId, attach, true);
@@ -157,7 +161,48 @@ public class CommonLabResultData {
 	}
 
 
-    public ArrayList<LabResultData> populateLabResultsData(LoggedInInfo loggedInInfo, String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, boolean isPaged, Integer page, Integer pageSize, boolean mixLabsAndDocs, Boolean isAbnormal) {
+	//Populate Lab data for CDX Messenger (private shared method)
+	private ArrayList<LabResultData> populateLabResultsDataCdxMessenger(LoggedInInfo loggedInInfo, String demographicNo, String requestId, boolean attach, boolean isConsultResponse) {
+		ArrayList<LabResultData> labs = new ArrayList<LabResultData>();
+		oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
+
+		OscarProperties op = OscarProperties.getInstance();
+
+		String cml = op.getProperty("CML_LABS");
+		String mds = op.getProperty("MDS_LABS");
+		String pathnet = op.getProperty("PATHNET_LABS");
+		String hl7text = op.getProperty("HL7TEXT_LABS");
+		String epsilon = op.getProperty("Epsilon_LABS");
+
+		if (cml != null && cml.trim().equals("yes")) {
+			ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsDataCdxMessenger(demographicNo, requestId, attach);
+			labs.addAll(cmlLabs);
+		}
+		if (epsilon != null && epsilon.trim().equals("yes")) {
+			ArrayList<LabResultData> cmlLabs = mDSData.populateCMLResultsDataCdxMessenger(demographicNo, requestId, attach);
+			labs.addAll(cmlLabs);
+		}
+
+		if (mds != null && mds.trim().equals("yes")) {
+			ArrayList<LabResultData> mdsLabs = mDSData.populateMDSResultsDataCdxMessenger(demographicNo, requestId, attach);
+			labs.addAll(mdsLabs);
+		}
+		if (pathnet != null && pathnet.trim().equals("yes")) {
+			PathnetResultsData pathData = new PathnetResultsData();
+			ArrayList<LabResultData> pathLabs = pathData.populatePathnetResultsDataCdxMessenger(demographicNo, requestId, attach);
+			labs.addAll(pathLabs);
+		}
+		if (hl7text != null && hl7text.trim().equals("yes")) {
+			ArrayList<LabResultData> hl7Labs = Hl7textResultsData.populateHL7ResultsDataCdxMessenger(demographicNo, requestId, attach);
+			labs.addAll(hl7Labs);
+		}
+
+		return labs;
+	}
+
+
+
+	public ArrayList<LabResultData> populateLabResultsData(LoggedInInfo loggedInInfo, String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status, boolean isPaged, Integer page, Integer pageSize, boolean mixLabsAndDocs, Boolean isAbnormal) {
 
     		ArrayList<LabResultData> labs = new ArrayList<LabResultData>();
     		oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();

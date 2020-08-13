@@ -392,11 +392,18 @@ public class CDXMessengerAction extends DispatchAction {
             MiscUtils.getLogger().error("Got exception saving messenger Information " + ex.getMessage());
         }
 
-        //
+        //Now we have request id for the cdx messenger, we update the request id for the attachments.
+        CommonLabResultData consultLabs = new CommonLabResultData();
         ArrayList<EDoc> attachmentlists = EDocUtil.listDocsForCdxMessenger(loggedInInfo, "" + demographic.getDemographicNo(), "" + null,EDocUtil.ATTACHED);
+        ArrayList<LabResultData> labs = consultLabs.populateLabResultsDataCdxMessenger(loggedInInfo, ""+demographic.getDemographicNo(), null, CommonLabResultData.ATTACHED);
         for (int i = 0; i < attachmentlists.size(); ++i) {
             EDocUtil.updateAttachCdxDoc((attachmentlists.get(i)).getDocId(), ""+cdxMessenger.getId(),""+demographic.getDemographicNo());
             EDocUtil.detachCdxDoc((attachmentlists.get(i)).getDocId(), ""+cdxMessenger.getId(),""+demographic.getDemographicNo());
+        }
+
+        for (int i = 0; i < labs.size(); ++i) {
+            EDocUtil.updateAttachCdxDoc((labs.get(i)).labPatientId, ""+cdxMessenger.getId(),""+demographic.getDemographicNo());
+            EDocUtil.detachCdxDoc((labs.get(i)).labPatientId, ""+cdxMessenger.getId(),""+demographic.getDemographicNo());
         }
 
         // Try to update the document distribution status
@@ -481,7 +488,7 @@ public class CDXMessengerAction extends DispatchAction {
         CommonLabResultData consultLabs = new CommonLabResultData();
         ArrayList<InputStream> streams = new ArrayList<InputStream>();
 
-        ArrayList<LabResultData> labs = consultLabs.populateLabResultsData(loggedInInfo, demoNo, reqId, CommonLabResultData.ATTACHED);
+        ArrayList<LabResultData> labs = consultLabs.populateLabResultsDataCdxMessenger(loggedInInfo, demoNo, reqId, CommonLabResultData.ATTACHED);
         String error = "";
         Exception exception = null;
         try {

@@ -45,6 +45,8 @@ import org.oscarehr.common.model.MdsMSH;
 import org.oscarehr.common.model.MdsZRG;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.ProviderLabRoutingModel;
+import org.oscarehr.integration.cdx.dao.CdxMessengerAttachmentsDao;
+import org.oscarehr.integration.cdx.model.CdxMessengerAttachments;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.on.LabResultData;
@@ -54,6 +56,7 @@ import oscar.util.UtilDateUtilities;
 
 public class MDSResultsData {
 	private ConsultDocsDao consultDocsDao = SpringUtils.getBean(ConsultDocsDao.class);
+	private static CdxMessengerAttachmentsDao cdxMessengerAttachmentsDao = SpringUtils.getBean(CdxMessengerAttachmentsDao.class);
 	private ConsultResponseDocDao consultResponseDocDao = SpringUtils.getBean(ConsultResponseDocDao.class);
 	private LabPatientPhysicianInfoDao labPPIDao = SpringUtils.getBean(LabPatientPhysicianInfoDao.class);
 	private PatientLabRoutingDao PLRDao = SpringUtils.getBean(PatientLabRoutingDao.class);
@@ -88,7 +91,19 @@ public class MDSResultsData {
 		}
 		return populateCMLResultsData(demographicNo, attached, attachedLabs);
 	}
-	
+	//Cdx Messenger Request list labs
+	public ArrayList<LabResultData> populateCMLResultsDataCdxMessenger(String demographicNo, String requestId, boolean attached) {
+		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();
+		for(Object[] co : cdxMessengerAttachmentsDao.findLabs(ConversionUtils.fromIntString(requestId),ConversionUtils.fromIntString(demographicNo))) {
+			CdxMessengerAttachments cd = (CdxMessengerAttachments) co[0];
+			LabResultData lbData = new LabResultData(LabResultData.CML);
+			lbData.labType = LabResultData.CML;
+			lbData.labPatientId = String.valueOf(cd.getDocumentNo());
+			attachedLabs.add(lbData);
+		}
+		return populateCMLResultsData(demographicNo, attached, attachedLabs);
+	}
+
 	//Consult Response list labs
 	public ArrayList<LabResultData> populateCMLResultsDataConsultResponse(String demographicNo, String consultationId, boolean attached) {
 		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();
@@ -317,7 +332,21 @@ public class MDSResultsData {
 		List<Object[]> labsMDS = PLRDao.findResultsByDemographicAndLabType(ConversionUtils.fromIntString(demographicNo), "MDS");
 		return populateMDSResultsData(attachedLabs, labsMDS, attached);
 	}
-	
+
+	//CDX Messenger Request list labs
+	public ArrayList<LabResultData> populateMDSResultsDataCdxMessenger(String demographicNo, String requestId, boolean attached) {
+		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();
+		for(Object[] o : cdxMessengerAttachmentsDao.findLabs(ConversionUtils.fromIntString(requestId),ConversionUtils.fromIntString(demographicNo))) {
+			CdxMessengerAttachments cd = (CdxMessengerAttachments) o[0];
+			LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);
+			lbData.labPatientId = "" + cd.getDocumentNo();
+			attachedLabs.add(lbData);
+		}
+		List<Object[]> labsMDS = PLRDao.findResultsByDemographicAndLabType(ConversionUtils.fromIntString(demographicNo), "MDS");
+		return populateMDSResultsData(attachedLabs, labsMDS, attached);
+	}
+
+
 	//Consult Response list labs
 	public ArrayList<LabResultData> populateMDSResultsDataConsultResponse(String demographicNo, String consultationId, boolean attached) {
 		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();

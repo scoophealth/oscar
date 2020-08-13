@@ -289,7 +289,7 @@ public final class EDocUtil {
 
 	//For CDXMessenger
 	public static void detachCdxDoc(String docNo, String requestId,String demoNo) {
-		List<CdxMessengerAttachments> cdxMessengerAttachments = cdxMessengerAttachmentsDao.findByRequestIdDocNoDocType(ConversionUtils.fromIntString(requestId), ConversionUtils.fromIntString(docNo), ConsultDocs.DOCTYPE_DOC,ConversionUtils.fromIntString(demoNo));
+		List<CdxMessengerAttachments> cdxMessengerAttachments = cdxMessengerAttachmentsDao.findByRequestIdDocNoDocType(ConversionUtils.fromIntString(requestId), ConversionUtils.fromIntString(docNo),ConversionUtils.fromIntString(demoNo));
 		for (CdxMessengerAttachments cdxAttachments : cdxMessengerAttachments) {
 			cdxAttachments.setDeleted("Y");
 			cdxMessengerAttachmentsDao.merge(cdxAttachments);
@@ -307,9 +307,20 @@ public final class EDocUtil {
 		cdxMessengerAttachmentsDao.persist(cdxMessengerAttachments);
 	}
 
+	//For CDXMessenger
+	public static void attachCdxLabs( String docNo, String requestId,String demoNo) {
+		CdxMessengerAttachments cdxMessengerAttachments = new CdxMessengerAttachments();
+		cdxMessengerAttachments.setRequestId(ConversionUtils.fromIntString(requestId));
+		cdxMessengerAttachments.setDocumentNo(ConversionUtils.fromIntString(docNo));
+		cdxMessengerAttachments.setDemoNo(ConversionUtils.fromIntString(demoNo));
+		cdxMessengerAttachments.setDocType(cdxMessengerAttachments.DOCTYPE_LAB);
+		cdxMessengerAttachments.setAttachDate(new Date());
+		cdxMessengerAttachmentsDao.persist(cdxMessengerAttachments);
+	}
+
 	//for CDXMessenger
 	public static void updateAttachCdxDoc(String docNo, String requestId,String demoNo) {
-		List<CdxMessengerAttachments> cdxMessengerAttachments = cdxMessengerAttachmentsDao.findByRequestIdDocNoDocType(ConversionUtils.fromIntString(null), ConversionUtils.fromIntString(docNo), ConsultDocs.DOCTYPE_DOC,ConversionUtils.fromIntString(demoNo));
+		List<CdxMessengerAttachments> cdxMessengerAttachments = cdxMessengerAttachmentsDao.findByRequestIdDocNoDocType(ConversionUtils.fromIntString(null), ConversionUtils.fromIntString(docNo),ConversionUtils.fromIntString(demoNo));
 		for (CdxMessengerAttachments cdxAttachments : cdxMessengerAttachments) {
 			cdxAttachments.setRequestId(ConversionUtils.fromIntString(requestId));
 			cdxMessengerAttachmentsDao.merge(cdxAttachments);

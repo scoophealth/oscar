@@ -258,7 +258,7 @@ ul#primary li, ul#secondary li{
         }
 
         function fetchAttached(d) {
-            alert("hiee");
+
 
             var params = "demo="+d;
 
@@ -268,9 +268,8 @@ ul#primary li, ul#secondary li{
                 data:params,
                 success:function(data)
                 {
-                    alert("insucess"+d);
+
                     $('#tdAttachedDocs').html(data);
-                    alert($('#tdAttachedDocs').text());
                     console.log(data);
 
                 }
@@ -282,17 +281,16 @@ ul#primary li, ul#secondary li{
         function getDemographicId(){
             var search=$('#patient').val();
 
-            alert("Demo");
+
             $.ajax({
                 type:'POST',
                 url:'messengerController.jsp',
                 data:'demoName='+search,
                 success:function(data)
                 {
-                    alert("sucess");
+
                     console.log(data);
                     $('#demop').html(data);
-                    alert($('#demoid').text());
                     demographicid=$('#demoid').text();
                     fetchAttached($('#demoid').text());
                 }

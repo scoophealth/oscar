@@ -18,13 +18,12 @@ public class CdxMessengerAttachmentsDao extends AbstractDao<CdxMessengerAttachme
     }
 
 
-    public List<CdxMessengerAttachments> findByRequestIdDocNoDocType(Integer requestId, Integer documentNo, String docType,Integer demoNo) {
-        String sql = "select x from CdxMessengerAttachments x where x.requestId=? and x.documentNo=? and x.docType=? and x.demoNo=? and x.deleted is NULL";
+    public List<CdxMessengerAttachments> findByRequestIdDocNoDocType(Integer requestId, Integer documentNo,Integer demoNo) {
+        String sql = "select x from CdxMessengerAttachments x where x.requestId=? and x.documentNo=? and x.demoNo=? and x.deleted is NULL";
         Query query = entityManager.createQuery(sql);
         query.setParameter(1,requestId);
         query.setParameter(2,documentNo);
-        query.setParameter(3,docType);
-        query.setParameter(4,demoNo);
+        query.setParameter(3,demoNo);
 
         List<CdxMessengerAttachments> results = query.getResultList();
         return results;
@@ -39,19 +38,21 @@ public class CdxMessengerAttachmentsDao extends AbstractDao<CdxMessengerAttachme
         return results;
     }
 
-    /*public List<Object[]> findLabs(Integer consultationId) {
-        String sql = "FROM ConsultDocs cd, PatientLabRouting plr " +
+    public List<Object[]> findLabs(Integer requestId,Integer demoNo) {
+        String sql = "FROM CdxMessengerAttachments cd, PatientLabRouting plr " +
                 "WHERE plr.labNo = cd.documentNo " +
-                "AND cd.requestId = :consultationId " +
+                "AND cd.requestId = :requestId " +
                 "AND cd.docType = :docType " +
+                "AND cd.demoNo = :demoNo " +
                 "AND cd.deleted IS NULL " +
                 "ORDER BY cd.documentNo";
         Query q = entityManager.createQuery(sql);
-        q.setParameter("consultationId", consultationId);
-        q.setParameter("docType", ConsultDocs.DOCTYPE_LAB);
+        q.setParameter("requestId", requestId);
+        q.setParameter("docType", CdxMessengerAttachments.DOCTYPE_LAB);
+        q.setParameter("demoNo", demoNo);
         return q.getResultList();
     }
-    */
+
 
 }
 

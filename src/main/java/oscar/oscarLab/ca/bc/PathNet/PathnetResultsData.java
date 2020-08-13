@@ -48,6 +48,8 @@ import org.oscarehr.common.dao.PatientLabRoutingDao;
 import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.common.model.PatientLabRouting;
 import org.oscarehr.common.model.ProviderLabRoutingModel;
+import org.oscarehr.integration.cdx.dao.CdxMessengerAttachmentsDao;
+import org.oscarehr.integration.cdx.model.CdxMessengerAttachments;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.oscarLab.ca.on.LabResultData;
@@ -60,6 +62,7 @@ import oscar.util.UtilDateUtilities;
  */
 public class PathnetResultsData {
 	private ConsultDocsDao consultDocsDao = SpringUtils.getBean(ConsultDocsDao.class);
+	private static CdxMessengerAttachmentsDao cdxMessengerAttachmentsDao = SpringUtils.getBean(CdxMessengerAttachmentsDao.class);
 	private ConsultResponseDocDao consultResponseDocDao = SpringUtils.getBean(ConsultResponseDocDao.class);
 	private Hl7MessageDao hl7MsgDao = SpringUtils.getBean(Hl7MessageDao.class);
 	private Hl7MshDao hl7MshDao = SpringUtils.getBean(Hl7MshDao.class);
@@ -78,6 +81,20 @@ public class PathnetResultsData {
 		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();
 		for (Object[] o : consultDocsDao.findLabs(ConversionUtils.fromIntString(consultationId))) {
 			ConsultDocs c = (ConsultDocs) o[0];
+			LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);
+			lbData.labPatientId = "" + c.getDocumentNo();
+			attachedLabs.add(lbData);
+		}
+		List<Object[]> labsBCP = hl7MsgDao.findByDemographicAndLabType(ConversionUtils.fromIntString(demographicNo), "BCP");
+		return populatePathnetResultsData(attachedLabs, labsBCP, attached);
+	}
+
+
+	// Populates labs for CDXMessenger
+	public ArrayList<LabResultData> populatePathnetResultsDataCdxMessenger(String demographicNo, String requestId, boolean attached) {
+		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();
+		for (Object[] o : cdxMessengerAttachmentsDao.findLabs(ConversionUtils.fromIntString(requestId),ConversionUtils.fromIntString(demographicNo))) {
+			CdxMessengerAttachments c = (CdxMessengerAttachments) o[0];
 			LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);
 			lbData.labPatientId = "" + c.getDocumentNo();
 			attachedLabs.add(lbData);

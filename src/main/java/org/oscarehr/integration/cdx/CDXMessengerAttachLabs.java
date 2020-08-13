@@ -7,12 +7,16 @@ import java.util.List;
 
 import org.oscarehr.common.dao.ConsultDocsDao;
 import org.oscarehr.common.model.ConsultDocs;
+import org.oscarehr.integration.cdx.dao.CdxMessengerAttachmentsDao;
+import org.oscarehr.integration.cdx.model.CdxMessengerAttachments;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
+import oscar.dms.EDocUtil;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
+import oscar.util.ConversionUtils;
 
 /**
  *
@@ -20,7 +24,7 @@ import oscar.oscarLab.ca.on.LabResultData;
  */
 public class CDXMessengerAttachLabs {
 
-    private static ConsultDocsDao consultDocsDao = (ConsultDocsDao)SpringUtils.getBean("consultDocsDao");
+    private static CdxMessengerAttachmentsDao cdxMessengerAttachmentsDao = SpringUtils.getBean(CdxMessengerAttachmentsDao.class);
 
     public final static boolean ATTACHED = true;
     public final static boolean UNATTACHED = false;
@@ -55,7 +59,7 @@ public class CDXMessengerAttachLabs {
 
         //first we get a list of currently attached labs
         CommonLabResultData labResData = new CommonLabResultData();
-        ArrayList<LabResultData> oldlist = labResData.populateLabResultsData(loggedInInfo, demoNo,reqId,CommonLabResultData.ATTACHED);
+        ArrayList<LabResultData> oldlist = labResData.populateLabResultsDataCdxMessenger(loggedInInfo, demoNo,reqId,CommonLabResultData.ATTACHED);
         ArrayList<String> newlist = new ArrayList<String>();
         ArrayList<LabResultData> keeplist = new ArrayList<LabResultData>();
         boolean alreadyAttached;
@@ -78,30 +82,12 @@ public class CDXMessengerAttachLabs {
             if( keeplist.contains(oldlist.get(i)))
                 continue;
 
-            detachLabConsult((oldlist.get(i)).labPatientId, reqId);
+            EDocUtil.detachCdxDoc((oldlist.get(i)).labPatientId, reqId,demoNo);
         }
 
         //now we can add association to new list
         for(int i = 0; i < newlist.size(); ++i)
-            attachLabConsult(providerNo, newlist.get(i), reqId);
-    }
-
-    public static void detachLabConsult(String LabNo, String consultId) {
-        List<ConsultDocs> consultDocs = consultDocsDao.findByRequestIdDocNoDocType(Integer.parseInt(consultId), Integer.parseInt(LabNo), ConsultDocs.DOCTYPE_LAB);
-        for(ConsultDocs consultDoc:consultDocs) {
-            consultDoc.setDeleted("Y");
-            consultDocsDao.merge(consultDoc);
-        }
-    }
-
-    public static void attachLabConsult(String providerNo, String LabNo, String consultId) {
-        ConsultDocs consultDoc = new ConsultDocs();
-        consultDoc.setRequestId(Integer.parseInt(consultId));
-        consultDoc.setDocumentNo(Integer.parseInt(LabNo));
-        consultDoc.setDocType(ConsultDocs.DOCTYPE_LAB);
-        consultDoc.setAttachDate(new Date());
-        consultDoc.setProviderNo(providerNo);
-        consultDocsDao.persist(consultDoc);
+            EDocUtil.attachCdxLabs(newlist.get(i), reqId,demoNo);
     }
 
 

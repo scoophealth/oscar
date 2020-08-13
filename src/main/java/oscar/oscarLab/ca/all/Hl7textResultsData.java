@@ -48,6 +48,8 @@ import org.oscarehr.common.model.MeasurementType;
 import org.oscarehr.common.model.MeasurementsDeleted;
 import org.oscarehr.common.model.MeasurementsExt;
 import org.oscarehr.common.model.PatientLabRouting;
+import org.oscarehr.integration.cdx.dao.CdxMessengerAttachmentsDao;
+import org.oscarehr.integration.cdx.model.CdxMessengerAttachments;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
@@ -68,6 +70,7 @@ public class Hl7textResultsData {
 	private static ConsultResponseDocDao consultResponseDocDao = SpringUtils.getBean(ConsultResponseDocDao.class);
 	private static Hl7TextInfoDao hl7TxtInfoDao = SpringUtils.getBean(Hl7TextInfoDao.class);
 	private static PatientLabRoutingDao patientLabRoutingDao = SpringUtils.getBean(PatientLabRoutingDao.class);
+	private static CdxMessengerAttachmentsDao cdxMessengerAttachmentsDao = SpringUtils.getBean(CdxMessengerAttachmentsDao.class);
 
 	private Hl7textResultsData() {
 		// no one should instantiate this
@@ -325,6 +328,21 @@ public class Hl7textResultsData {
 		List<Object[]> labsHl7 = hl7TxtInfoDao.findByDemographicId(ConversionUtils.fromIntString(demographicNo));
 		return populateHL7ResultsData(attachedLabs, labsHl7, attached);
 	}
+
+
+	// Populates labs to CDX Messenger
+	public static ArrayList<LabResultData> populateHL7ResultsDataCdxMessenger(String demographicNo, String requestId, boolean attached) {
+		List<LabResultData> attachedLabs = new ArrayList<LabResultData>();
+		for (Object[] o : cdxMessengerAttachmentsDao.findLabs(ConversionUtils.fromIntString(requestId),ConversionUtils.fromIntString(demographicNo))) {
+			CdxMessengerAttachments c = (CdxMessengerAttachments) o[0];
+			LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
+			lbData.labPatientId = ConversionUtils.toIntString(c.getDocumentNo());
+			attachedLabs.add(lbData);
+		}
+		List<Object[]> labsHl7 = hl7TxtInfoDao.findByDemographicId(ConversionUtils.fromIntString(demographicNo));
+		return populateHL7ResultsData(attachedLabs, labsHl7, attached);
+	}
+
 	
 	// Populates labs to consult response
 	public static ArrayList<LabResultData> populateHL7ResultsDataConsultResponse(String demographicNo, String consultationId, boolean attached) {
