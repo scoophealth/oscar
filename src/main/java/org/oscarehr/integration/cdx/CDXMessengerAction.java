@@ -342,10 +342,10 @@ public class CDXMessengerAction extends DispatchAction {
         }
 
 
-        ISubmitDoc iDoc = doc //.content(cdxMessenger.getContent())
+        ISubmitDoc iDoc = doc .content(cdxMessenger.getContent())
                 //.inFulfillmentOf()
-                // .id(Integer.toString(cdxMessenger.getId()))
-                // .statusCode(OrderStatus.ACTIVE).and()
+                 //.id(Integer.toString(demographic.getDemographicNo()))
+                 //.statusCode(OrderStatus.ACTIVE).and()
                 .patient()
                 .id(patientId)
                 .name(NameType.LEGAL, demographic.getFirstName(), demographic.getLastName())
@@ -386,6 +386,7 @@ public class CDXMessengerAction extends DispatchAction {
         CdxMessengerDao cdxMessengerDao = SpringUtils.getBean(CdxMessengerDao.class);
 
         try {
+            cdxMessenger.setDocumentId(response.getDocumentID());
             cdxMessengerDao.persist(cdxMessenger);
 
         } catch (Exception ex) {

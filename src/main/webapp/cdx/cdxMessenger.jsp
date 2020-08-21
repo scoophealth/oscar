@@ -31,7 +31,16 @@
         return;
     }
 %>
+<%
+    String demoName="";
+    int docId=0;
+     demoName= request.getParameter("demoName");
+    CdxProvenance doc= (CdxProvenance)session.getAttribute("document");
+    if(doc!=null){
+        docId=doc.getId();
+    }
 
+%>
 
 <!DOCTYPE html>
 <html>
@@ -93,6 +102,7 @@ ul#primary li, ul#secondary li{
     <script type="text/javascript">
         $(document).ready(function(){
 
+            init();
             //searching patient from a demographic table.
 
             $('#patient').keyup(function(){
@@ -308,6 +318,19 @@ ul#primary li, ul#secondary li{
             }
         }
 
+
+        function init(){
+            var d='<%=demoName%>';
+            if(d!='null' && d!='' && '<%=docId%>' !='null' && '<%=docId%>' !='') {
+                $('#patient').val('<%=demoName%>');
+                getDemographicId();
+                $("a#mtype").attr('href','../dms/showCdxDocumentArchive.jsp?ID=<%=docId%>');
+                $('#msgtype').val('In response to:'+'<%=docId%>');
+                $("span#ptype").text('In response to ');
+                $("#mtype").text('<%=doc.getKind()%>');
+            }
+        }
+
     </script>
 
 </head>
@@ -377,7 +400,9 @@ ul#primary li, ul#secondary li{
                 <label class="col-xs-4 control-label">Message Type</label>
                 <div class="col-xs-4 inputGroupContainer">
                     <div class="">
-                        <input  name="messagetype" value="New" class="form-control"  type="text" readonly style="color:gray;" >
+                        <input  name="messagetype" id="msgtype" value="New" class="form-control"  type="hidden" readonly style="color:gray;" >
+                        <span id="ptype">New</span> <a href="#" id="mtype" target="_blank">
+                    </a>
                     </div>
                 </div>
             </div>

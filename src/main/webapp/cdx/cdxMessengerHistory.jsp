@@ -32,6 +32,8 @@
 <%@ page import="org.oscarehr.util.MiscUtils" %>
 <%@ page import="org.oscarehr.integration.cdx.model.CdxMessenger" %>
 <%@ page import="org.oscarehr.integration.cdx.dao.CdxMessengerDao" %>
+<%@ page import="org.oscarehr.integration.cdx.dao.CdxProvenanceDao" %>
+<%@ page import="org.oscarehr.integration.cdx.model.CdxProvenance" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
@@ -69,6 +71,7 @@
     <link rel="stylesheet" type="text/css" href="/oscar/share/yui/css/autocomplete.css">
         <%
           CdxMessengerDao cdxMessengerDao= SpringUtils.getBean(CdxMessengerDao.class);
+            CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
           List<CdxMessenger> cdxMessengers= cdxMessengerDao.findHistory();
         %>
     <html>
@@ -92,6 +95,7 @@
     <table class="table table-bordered table-striped">
         <thead>
         <tr>
+            <th>Document Details</th>
             <th>Author</th>
             <th>Patient</th>
             <th>Recipients</th>
@@ -110,8 +114,20 @@
 
                 for(CdxMessenger n: cdxMessengers)
                 {
+                    CdxProvenance dkind=null;
+                    CdxProvenance d= provenanceDao.findByDocumentIdAndAction(n.getDocumentId(),"SEND");
+                    if(!n.getCategory().equalsIgnoreCase("New")){
+                        dkind=provenanceDao.getCdxProvenance(Integer.parseInt(n.getCategory().split(":")[1]));
+                    }
+
         %>
         <tr>
+            <td>
+                <% if(d!=null){ %>
+                <a href="../dms/showCdxDocumentArchive.jsp?ID=<%=d.getId()%>" target="_blank" class="btn btn-primary" role="button" title="Document Details">
+                View</a>
+                <% }%>
+            </td>
             <td ><%=n.getAuthor()%>
             </td>
 
@@ -121,15 +137,28 @@
             </td>
             <td> <%=n.getDocumentType()%>
             </td>
-            <td> <%=n.getCategory()%>
+            <td>  <% if(!n.getCategory().equalsIgnoreCase("New")){ %>
+                <span>In response to </span>
+                <a href="../dms/showCdxDocumentArchive.jsp?ID=<%=n.getCategory().split(":")[1]%>" target="_blank" title="Document Details">
+                    <%=dkind.getKind()%></a>
+                <% }
+                else{
+                    %>
+                <%=n.getCategory()%>
+                   <%
+                    }
+                   %>
             </td>
             <td> <%=n.getContent()%>
             </td>
             <td> <%=n.getTimeStamp()%>
             </td>
-            <td> <%=n.getDeliveryStatus()%>
+            <td>
+                <% if(d!=null){
+                %>
+                <%=d.getDistributionStatus().substring(0,23) %>
+                <% }%>
             </td>
-
         </tr>
         <%
                 }

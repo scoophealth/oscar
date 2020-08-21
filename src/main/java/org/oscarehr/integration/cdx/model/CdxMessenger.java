@@ -14,8 +14,11 @@ public class CdxMessenger extends AbstractModel<Integer> implements Serializable
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Column(name = "doc_id")
+    private String documentId;
     @Column(name = "author")
     private String author;
+
     @Column(name = "patient")
     private String patient;
     @Column(name = "recipients")
@@ -47,6 +50,17 @@ public class CdxMessenger extends AbstractModel<Integer> implements Serializable
     public void setId(Integer id) {
         this.id = id;
     }
+
+
+
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
+    }
+
 
     public String getAuthor() {
         return author;
