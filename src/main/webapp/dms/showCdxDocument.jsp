@@ -389,7 +389,7 @@ It must have been deleted. Please refresh your Inbox window.
                                     <input type="button" class="btn btn-default" id="mainMaster_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnMaster"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=','master','<%=documentNo%>')" >
                                     <input type="button" class="btn btn-default" id="mainApptHistory_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnApptHist"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25&demographic_no=','ApptHist','<%=documentNo%>')" >
 
-                                    <a href="../cdx/cdxMessenger.jsp" target="_blank" class="btn btn-default" role="button">Reply</a>
+                                    <a href="../cdx/cdxMessenger.jsp?demoName=<%=demoName%>&demoNo=<%=demoNo%>" target="_blank" class="btn btn-default" role="button">Reply</a>
 
                                 </div>
 
