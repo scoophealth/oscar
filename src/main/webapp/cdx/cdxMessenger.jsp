@@ -34,10 +34,12 @@
 <%
     String demoName="";
     int docId=0;
+    String docKind="";
      demoName= request.getParameter("demoName");
     CdxProvenance doc= (CdxProvenance)session.getAttribute("document");
     if(doc!=null){
         docId=doc.getId();
+        docKind=doc.getKind();
     }
 
 %>
@@ -327,7 +329,7 @@ ul#primary li, ul#secondary li{
                 $("a#mtype").attr('href','../dms/showCdxDocumentArchive.jsp?ID=<%=docId%>');
                 $('#msgtype').val('In response to:'+'<%=docId%>');
                 $("span#ptype").text('In response to ');
-                $("#mtype").text('<%=doc.getKind()%>');
+                $("#mtype").text('<%=docKind%>');
             }
         }
 
