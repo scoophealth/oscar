@@ -209,7 +209,16 @@ public class EctConsultationFormRequestAction extends Action {
                                 consult.setUrgency(frm.getUrgency());
                                 consult.setAppointmentInstructions( frm.getAppointmentInstructions() );
                                 consult.setSiteName(frm.getSiteName());
+
+                                if(frm.isAdviceRequest()){
+									consult.setIsAdviceRequest("Y");
+								}
+                                else {
+									consult.setIsAdviceRequest("N");
+								}
+
                                 Boolean pWillBook = false;
+
                                 if( frm.getPatientWillBook() != null ) {
                                     pWillBook = frm.getPatientWillBook().equals("1");
                                 }
@@ -438,7 +447,7 @@ public class EctConsultationFormRequestAction extends Action {
 			}
 
 			try {
-				doCdxSend(loggedInInfo, Integer.parseInt(requestId), submission.endsWith("CDX_update"), submission.endsWith("CDX_cancel"), requestId,request,frm.getClinic());
+				doCdxSend(loggedInInfo, Integer.parseInt(requestId), submission.endsWith("CDX_update"), submission.endsWith("CDX_cancel"), requestId,request,frm.getClinic(),frm.isAdviceRequest());
 				if(submission.endsWith("CDX_cancel")) {
 					WebUtils.addLocalisedInfoMessage(request, "oscarEncounter.oscarConsultationRequest.ConfirmConsultationRequest.msgCdxCancelESent");
 				}
@@ -545,7 +554,7 @@ public class EctConsultationFormRequestAction extends Action {
 	    }
     }
 
-	private void doCdxSend(LoggedInInfo loggedInInfo, Integer consultationRequestId, Boolean isUpdate, Boolean isCancel, String requestId, HttpServletRequest request, String clinicId) throws OBIBException {
+	private void doCdxSend(LoggedInInfo loggedInInfo, Integer consultationRequestId, Boolean isUpdate, Boolean isCancel, String requestId, HttpServletRequest request, String clinicId, Boolean isAdviceRequest) throws OBIBException {
 
 		ConsultationRequestDao consultationRequestDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
 		ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
@@ -635,10 +644,14 @@ public class EctConsultationFormRequestAction extends Action {
 			doc = submitDoc.newDoc();
 		}
 
+		if(isAdviceRequest){
+			doc.documentType(DocumentType.ADVICE_REQUEST);
+		}
+		else{
+			doc.documentType(DocumentType.REFERRAL_NOTE);
+		}
 
-
-
-		IRecipient recipient = doc.documentType(DocumentType.REFERRAL_NOTE)
+		IRecipient recipient = doc
 				.inFulfillmentOf()
 					.id(Integer.toString(consultationRequestId))
 					.statusCode(OrderStatus.ACTIVE).and()
@@ -662,16 +675,12 @@ public class EctConsultationFormRequestAction extends Action {
 					.address(AddressType.WORK, professionalSpecialist.getAddress(), professionalSpecialist.getCity(), professionalSpecialist.getProvince(), professionalSpecialist.getPostal(), "CA")
 					.phone(TelcoType.WORK, professionalSpecialist.getPhoneNumber());
 
-
-
-
 			if (clinicId!=null && !clinicId.equalsIgnoreCase("1")  )
 			{
 				CdxClinicsDao cdxClinicsDao=SpringUtils.getBean(CdxClinicsDao.class);
 				CdxClinics c=cdxClinicsDao.findByClinicId(clinicId);
 				recipient.recipientOrganization(clinicId,c.getClinicName());
 			}
-
 
 
 		recipient.and()

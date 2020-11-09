@@ -414,6 +414,24 @@ jQuery(document).ready(function(){
 	});
 })
 
+
+function hideFieldsForAdviceRequest(txtArea){
+
+	jQuery("#appInst").toggle();
+	jQuery("#appDate").toggle();
+	jQuery("#appTime").toggle();
+	jQuery("#appFollow").toggle();
+
+	var str="This is just an advice request, there is no need for an appointment.";
+	if(document.getElementById('adviceRequest').checked){
+		txtArea.value = str;
+	}
+	else{
+		txtArea.value = "";
+	}
+
+}
+
 function getClinicalData( data, target ) {
 	jQuery.ajax({
 		method : "POST",
@@ -1862,6 +1880,17 @@ function updateFaxButton() {
                                                         <textarea id="annotation" style="color: blue;" readonly></textarea>
                                                     </td>
                                                 </tr>
+
+						<tr>
+							<td class="tite4">
+								Is an Advice request?
+							</td>
+							<td  class="tite2">
+								<input type="checkbox" id="adviceRequest" name="adviceRequest" onchange="hideFieldsForAdviceRequest(document.forms[0].appointmentNotes)">
+							</td>
+						</tr>
+
+
 						<tr>
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formUrgency" /></td>
 							<td  class="tite2">
@@ -1899,7 +1928,7 @@ function updateFaxButton() {
 						</tr>
 	
 						<oscar:oscarPropertiesCheck defaultVal="false" value="true" property="CONSULTATION_APPOINTMENT_INSTRUCTIONS_LOOKUP">
-							<tr>
+							<tr id="appInst">
 								<td class="tite4">
 									<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.appointmentInstr" />
 								</td>
@@ -1927,14 +1956,14 @@ function updateFaxButton() {
 						</oscar:oscarPropertiesCheck>
 	
 	
-						<tr>						
+						<tr id="appDate">
 							<td class="tite4"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnAppointmentDate" />:
 							</td>
                             <td  class="tite3"><img alt="calendar" id="appointmentDate_cal" src="../../images/cal.gif"> 
  							<html:text styleId="appointmentDate" property="appointmentDate" readonly="true" ondblclick="this.value='';" />
 							</td>
 						</tr>
-						<tr>
+						<tr id="appTime">
 							<td class="tite4"><bean:message	key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAppointmentTime" />:
 							</td>
 							<td  class="tite3">
@@ -2097,7 +2126,7 @@ function updateFaxButton() {
 						</tr>
                        
 						
-						<tr>
+						<tr id="appFollow">
 							<td class="tite4"><bean:message
 								key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formLastFollowup" />:
 							</td>

@@ -1,8 +1,5 @@
 
 
-
-<!-- Page to be deleted-->
-
 <%@ page import="org.oscarehr.common.model.Demographic" %>
 <%@ page import="org.oscarehr.common.dao.DemographicDao" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
@@ -34,41 +31,57 @@
     int flag=0;
     CdxMessengerDao cdxMessengerDao= SpringUtils.getBean(CdxMessengerDao.class);
     CdxMessenger cdxMessenger = new CdxMessenger();
-    String patient = request.getParameter("patientsearch");
+    String patient = request.getParameter("patient");
     //String primaryrecipient = request.getParameter("precipients");
-    String recipients[]=request.getParameterValues("precipients");
-    String specialists="";
-    if(recipients!=null && recipients.length>0){
+    String precipients[]=request.getParameterValues("precipients[]");
+    String srecipients[]=request.getParameterValues("srecipients[]");
+    String msgType = request.getParameter("msgtype");
+    String documentType = request.getParameter("documenttype");
+    String content = request.getParameter("content");
 
-        for (String rec:recipients){
-            specialists=specialists+rec.split("@")[0]+",";
+    String recipientsToStore="";
+    String pSpecialists="";
+    String sSpecialists="";
+    if(precipients!=null && precipients.length>0){
+
+        for (String rec:precipients){
+            String splittedSpecialistsAndClinics[] = rec.split("@");
+            recipientsToStore = recipientsToStore + splittedSpecialistsAndClinics[0] + ", ";
+            pSpecialists=pSpecialists+rec+'#';
         }
-        specialists= specialists.substring(0, specialists.length() - 1);
+        pSpecialists= pSpecialists.substring(0, pSpecialists.length() - 1);
+        recipientsToStore = recipientsToStore.substring(0, recipientsToStore.length() - 2);
+    }
+    if(srecipients!=null && srecipients.length>0){
+
+        for (String rec:srecipients){
+            String splittedSpecialistsAndClinics[] = rec.split("@");
+            recipientsToStore = recipientsToStore + ", " + splittedSpecialistsAndClinics[0];
+            sSpecialists=sSpecialists+rec+'#';
+        }
+        sSpecialists= sSpecialists.substring(0, sSpecialists.length() - 1);
     }
 
-    //String secondaryrecipient = request.getParameter("srecipients");
-    String messagetype = request.getParameter("messagetype");
-    String documenttype = request.getParameter("documenttype");
-    String contentmessage = request.getParameter("contentmessage");
     if(patient!=null ||patient.length()!=0 ) {
         cdxMessenger.setPatient(patient);
-        cdxMessenger.setRecipients(specialists);
-        cdxMessenger.setCategory(messagetype);
-        cdxMessenger.setContent(contentmessage);
-        cdxMessenger.setDocumentType(documenttype);
+        cdxMessenger.setRecipients(recipientsToStore);
+        cdxMessenger.setPrimaryRecipient(pSpecialists);
+        cdxMessenger.setSecondaryRecipient(sSpecialists);
+        cdxMessenger.setCategory(msgType);
+        cdxMessenger.setContent(content);
+        cdxMessenger.setDocumentType(documentType);
         cdxMessenger.setAuthor(session.getAttribute("userfirstname") + "," + session.getAttribute("userlastname"));
         cdxMessenger.setTimeStamp(new Timestamp(new Date().getTime()));
-        cdxMessenger.setDeliveryStatus("Unknown");
+        cdxMessenger.setDeliveryStatus("Not Sent");
+        cdxMessenger.setDraft("Y");
         try {
             cdxMessengerDao.persist(cdxMessenger);
-            flag=1;
         } catch (Exception ex) {
             MiscUtils.getLogger().error("Got exception saving messenger Information " + ex.getMessage());
         }
 
     }
-    if(flag==1)
-    {
+
  %>
 <br>
 <div class="container">
@@ -76,13 +89,6 @@
     <strong>Success!</strong> The document is successfully saved in the database !
 </div>
 </div>
-   <%
-
-       // out.print("<br><div><center><strong><font size=\"2px\">*Success :The document is successfully saved in the database ! </font> </strong></center></div>");
-    }
-
-
-   %>
 <html>
 <head>
     <meta http-equiv="Refresh" content="5;url=../cdx/cdxMessenger.jsp">
@@ -99,8 +105,5 @@
     <title>Success</title>
 </head>
 <body>
-<div class="container">
-<p> *Sending functionality is under implementation phase. </p>
-</div>
 </body>
 </html>

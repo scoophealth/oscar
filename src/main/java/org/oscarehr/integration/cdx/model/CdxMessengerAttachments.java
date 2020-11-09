@@ -23,7 +23,7 @@ public class CdxMessengerAttachments extends AbstractModel<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    @Column(name = "requestId")
     private int requestId;
 
     @Column(name = "document_no")
@@ -31,7 +31,7 @@ public class CdxMessengerAttachments extends AbstractModel<Integer> {
 
     @Column(name = "doctype")
     private String docType;
-
+    @Column(name = "deleted")
     private String deleted;
 
     @Column(name = "attach_date")

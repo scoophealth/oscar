@@ -112,7 +112,18 @@ public class ConsultationRequest extends AbstractModel<Integer> implements Seria
     @ManyToOne(fetch=FetchType.EAGER, targetEntity=LookupListItem.class)
     @JoinColumn(name="appointmentInstructions", referencedColumnName="value", insertable = false, updatable = false)
     private LookupListItem lookupListItem;
-    
+
+	@Column(name = "isAdviceRequest")
+	private String isAdviceRequest;
+
+	public String getIsAdviceRequest() {
+		return isAdviceRequest;
+	}
+
+	public void setIsAdviceRequest(String isAdviceRequest) {
+		this.isAdviceRequest = isAdviceRequest;
+	}
+
 	@Override
     public Integer getId() {
 	    return(id);

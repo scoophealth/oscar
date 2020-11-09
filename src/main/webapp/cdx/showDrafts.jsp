@@ -34,8 +34,6 @@
 <%@ page import="org.oscarehr.integration.cdx.dao.CdxMessengerDao" %>
 <%@ page import="org.oscarehr.integration.cdx.dao.CdxProvenanceDao" %>
 <%@ page import="org.oscarehr.integration.cdx.model.CdxProvenance" %>
-<%@ page import="org.oscarehr.integration.cdx.dao.CdxAttachmentDao" %>
-<%@ page import="org.oscarehr.integration.cdx.model.CdxAttachment" %>
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
@@ -59,7 +57,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>History</title>
+    <title>Drafts</title>
 
     <script type="text/javascript" src="/oscar/js/jquery-1.9.1.js"></script>
     <script type="text/javascript" src="/oscar/js/jquery-ui-1.10.2.custom.min.js"></script>
@@ -71,6 +69,8 @@
 
     <link rel="stylesheet" type="text/css" href="/oscar/share/yui/css/fonts-min.css">
     <link rel="stylesheet" type="text/css" href="/oscar/share/yui/css/autocomplete.css">
+
+
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
 
@@ -96,7 +96,6 @@
             crossorigin="anonymous"></script>
 
     <script>
-
         $(document).ready(function () {
             var table = $('#doctable').DataTable(
                 {
@@ -104,36 +103,35 @@
                 }
             );
         });
+
     </script>
 
-<%
+        <%
           CdxMessengerDao cdxMessengerDao= SpringUtils.getBean(CdxMessengerDao.class);
             CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
-          List<CdxMessenger> cdxMessengers= cdxMessengerDao.findHistory();
+          List<CdxMessenger> cdxMessengers= cdxMessengerDao.findDraft();
         %>
-    <html>
-<head>
-    <title>History</title>
 
-    <style>
-        .ovalbutton{
-            border-radius: 22px;
-            background-color: #E8E8E8;
-            width: 120px;
-        }
 
-    </style>
-</head>
+        <style>
+            .ovalbutton{
+                border-radius: 22px;
+                background-color: #E8E8E8;
+                width: 120px;
+            }
+
+        </style>
+    </head>
 <body>
 <div class="container">
 
 
-      <center><h4> <a href="../cdx/cdxMessengerHistory.jsp" class="btn ovalbutton" style="text-align: center;" role="button">History</a></h4>
-      </center>
+    <center><h4> <a href="../cdx/showDrafts.jsp" class="btn ovalbutton" style="text-align: center;" role="button">Drafts</a></h4>
+    </center>
     <table id="doctable" class="display" style="width:100%">
         <thead>
         <tr>
-            <th>Document Details</th>
+            <th>Edit</th>
             <th>Author</th>
             <th>Patient</th>
             <th>Recipients</th>
@@ -141,7 +139,6 @@
             <th>Category</th>
             <th>Content</th>
             <th>Time</th>
-            <th>Delivery Status</th>
         </tr>
         </thead>
         <tbody>
@@ -161,10 +158,9 @@
         %>
         <tr>
             <td>
-                <% if(d!=null){ %>
-                <a href="../dms/showCdxDocumentArchive.jsp?ID=<%=d.getId()%>" target="_blank" class="btn btn-primary" role="button" title="Document Details">
-                View</a>
-                <% }%>
+
+                <a href="../cdx/cdxMessenger.jsp?Id=<%=n.getId()%>" target="_blank" class="btn btn-primary" role="button" title="Edit Draft">
+                    Edit</a>
             </td>
             <td ><%=n.getAuthor()%>
             </td>
@@ -175,28 +171,21 @@
             </td>
             <td> <%=n.getDocumentType()%>
             </td>
-            <td>  <% if(!n.getCategory().equalsIgnoreCase("New")){ %>
+            <td>  <% if(n.getCategory()!=null && !n.getCategory().equalsIgnoreCase("") && !n.getCategory().equalsIgnoreCase("New")){ %>
                 <span>In response to </span>
                 <a href="../dms/showCdxDocumentArchive.jsp?ID=<%=n.getCategory().split(":")[1]%>" target="_blank" title="Document Details">
                     <%=dkind.getKind()%></a>
                 <% }
                 else{
-                    %>
+                %>
                 <%=n.getCategory()%>
-                   <%
+                <%
                     }
-                   %>
+                %>
             </td>
             <td> <%=n.getContent()%>
             </td>
-
             <td> <%=n.getTimeStamp()%>
-            </td>
-            <td>
-                <% if(d!=null){
-                %>
-                <%=d.getDistributionStatus().substring(0,Math.min(23, d.getDistributionStatus().length())) %>
-                <% }%>
             </td>
         </tr>
         <%

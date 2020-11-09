@@ -5,6 +5,9 @@
 <%@ page import="oscar.OscarProperties" %>
 <%@page import="org.oscarehr.util.WebUtilsOld"%>
 <%@ page import="org.oscarehr.integration.cdx.model.CdxProvenance" %>
+<%@ page import="org.oscarehr.integration.cdx.model.CdxMessenger" %>
+<%@ page import="org.oscarehr.integration.cdx.dao.CdxMessengerDao" %>
+<%@ page import="org.oscarehr.integration.cdx.dao.CdxProvenanceDao" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
@@ -32,6 +35,8 @@
     }
 %>
 <%
+    CdxMessengerDao cdxMessengerDao = SpringUtils.getBean(CdxMessengerDao.class);
+    CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
     String demoName="";
     int docId=0;
     String docKind="";
@@ -41,6 +46,31 @@
         docId=doc.getId();
         docKind=doc.getKind();
     }
+       String draftId=request.getParameter("Id");
+       String patient="";
+       String primary="";
+       String secondary="";
+       String msgType="";
+       String documentType="";
+       String content="";
+      if(draftId!=null && !draftId.equalsIgnoreCase("")){
+          CdxMessenger cdxMessenger=cdxMessengerDao.getCdxMessenger(Integer.parseInt(draftId));
+          patient=cdxMessenger.getPatient();
+          primary=cdxMessenger.getPrimaryRecipient();
+          secondary=cdxMessenger.getSecondaryRecipient();
+          msgType=cdxMessenger.getCategory();
+
+          //Get document details to show in category when populating from draft
+          if(!cdxMessenger.getCategory().equalsIgnoreCase("New")) {
+              CdxProvenance cdxProvenance = provenanceDao.getCdxProvenance(Integer.parseInt(cdxMessenger.getCategory().split(":")[1]));
+              docKind = cdxProvenance.getKind();
+              docId = cdxProvenance.getId();
+          }
+
+          documentType=cdxMessenger.getDocumentType();
+          content=cdxMessenger.getContent();
+      }
+
 
 %>
 
@@ -60,7 +90,7 @@
 
     <link rel="stylesheet" type="text/css" href="/oscar/share/yui/css/fonts-min.css">
     <link rel="stylesheet" type="text/css" href="/oscar/share/yui/css/autocomplete.css">
-    <title>CDX Messenger v0.1</title>
+    <title>CDX Composer v0.1</title>
     <style>
         #success_message{ display: none;}
 
@@ -72,16 +102,19 @@
             max-height:200px;
             overflow-y:scroll;
             width: 100%;
+            display: none;
         }
         .ovalbutton{
             float:right;
             border-radius: 22px;
             background-color: #E8E8E8;
+            width: 120px;
         }
         #showrecipient{
             max-height:200px;
             overflow-y:scroll;
             width: 100%;
+            display: none;
         }
 
         #primary, #secondary{
@@ -92,20 +125,51 @@
             white-space: nowrap;
             background-color: white;
             width: 100%;
+            color: #555;
+            font-size: 14px;
+            line-height: 1.42857143;
         }
 
 ul#primary li, ul#secondary li{
     width: max-content;
     padding: 10px 15px;
 }
+        #otherinfo{
+            max-height: 100px;
+            overflow-y: scroll;
+            background-color: white;
+            border: 1px solid #ccc;
+            min-height: 70px;
+            border-radius: 6px;
+            padding: 10px;
+            color: #555;
+            font-size: 14px;
+            line-height: 1.42857143;
 
+        }
+        #infobuttons button{
+            position: relative;
+            margin: 4px;
+        }
 
     </style>
     <script type="text/javascript">
         $(document).ready(function(){
 
             init();
+            $("form :input").attr("autocomplete", "off");
             //searching patient from a demographic table.
+
+            $('#FamilyHistory').hide();
+            $('#MedicalHistory').hide();
+            $('#ongoingConcerns').hide();
+            $('#SocialHistory').hide();
+            $('#OtherMeds').hide();
+            $('#Reminders').hide();
+            $('#fetchRiskFactors').hide();
+            $('#fetchMedications').hide();
+            $('#fetchLongTermMedications').hide();
+            $('#fetchAllergies').hide();
 
             $('#patient').keyup(function(){
                 var search=$('#patient').val();
@@ -151,9 +215,7 @@ ul#primary li, ul#secondary li{
                             $('#clinics').html('');
                             $('#butns').hide();
                             $('#showrecipient').html(data);
-
                             $('#showrecipient').show();
-
                             console.log(data);
 
                         }
@@ -209,25 +271,34 @@ ul#primary li, ul#secondary li{
 
         });
 
+        $(document).on("click", "a.remove" , function() {
+            $(this).parent().remove();
+            if ( $('#primary').children().length<1 ) {
+                $('#primary').hide();
+                $('#hiddeninput').show();
+            }
+
+        });
+
         function addprimary(){
              var recipient=$('#recipient').val();
              var items=document.getElementsByName('seletectedclinics');
+             checked = $("input[type=checkbox]:checked").length;
+
+            if(!checked) {
+                alert("You must select at least one clinic.");
+                return false;
+            }
              var selectedItems=recipient+"@";
              for(var i=0; i<items.length; i++){
                 if(items[i].type=='checkbox' && items[i].checked==true)
                     selectedItems+=items[i].value+", ";
              }
-             var allclinics= selectedItems.substring(0, selectedItems.length - 1);
+             var allclinics= selectedItems.substring(0, selectedItems.length - 2);
 
             $('#primary').append("<li> <a href='javascript:void(0);' class='remove'><b>&times;</b></a><input type='hidden' name='precipients' value='"+allclinics+"'>"+ allclinics+"</li>");
-            $(document).on("click", "a.remove" , function() {
-                $(this).parent().remove();
-                if ( $('#primary').children().length<1 ) {
-                    $('#primary').hide();
-                    $('#hiddeninput').show();
-                }
 
-            });
+
             $('#addClient_Modal').modal('hide');
             $('#clinics').html('');
             $('#recipient').val('');
@@ -236,9 +307,26 @@ ul#primary li, ul#secondary li{
             $('#butns').hide();
         }
 
+        $(document).on("click", "a.removes" , function() {
+            $(this).parent().remove();
+
+            if ( $('#secondary').children().length<1 ) {
+                $('#secondary').hide();
+                $('#hiddensecondary').show();
+            }
+
+        });
+
         function addsecondary(){
             var recipient=$('#recipient').val();
             var items=document.getElementsByName('seletectedclinics');
+            checked = $("input[type=checkbox]:checked").length;
+
+            if(!checked) {
+                alert("You must select at least one clinic.");
+                return false;
+            }
+
             var selectedItems=recipient+"@";
             for(var i=0; i<items.length; i++){
                 if(items[i].type=='checkbox' && items[i].checked==true)
@@ -246,16 +334,9 @@ ul#primary li, ul#secondary li{
             }
             var allclinics= selectedItems.substring(0, selectedItems.length - 1);
 
-            $('#secondary').append("<li> <a href='javascript:void(0);' class='remove'><b>&times;</b></a><input type='hidden' name='srecipients' value='"+allclinics+"'>"+ allclinics+"</li>");
+            $('#secondary').append("<li> <a href='javascript:void(0);' class='removes'><b>&times;</b></a><input type='hidden' name='srecipients' value='"+allclinics+"'>"+ allclinics+"</li>");
             //select.options[select.options.length] = new Option(allclinics, allclinics);
-            $(document).on("click", "a.remove" , function() {
-                $(this).parent().remove();
-                if ( $('#secondary').children().length<1 ) {
-                    $('#secondary').hide();
-                    $('#hiddensecondary').show();
-                }
 
-            });
             $('#addClient_Modal').modal('hide');
             $('#clinics').html('');
             $('#recipient').val('');
@@ -323,6 +404,7 @@ ul#primary li, ul#secondary li{
 
         function init(){
             var d='<%=demoName%>';
+            var draft='<%=draftId%>';
             if(d!='null' && d!='' && '<%=docId%>' !='null' && '<%=docId%>' !='') {
                 $('#patient').val('<%=demoName%>');
                 getDemographicId();
@@ -331,8 +413,190 @@ ul#primary li, ul#secondary li{
                 $("span#ptype").text('In response to ');
                 $("#mtype").text('<%=docKind%>');
             }
+
+            if(draft!='null' && draft!='' && '<%=patient%>' !='null' && '<%=patient%>' !=''){
+                $('#patient').val('<%=patient%>');
+                getDemographicId();
+                var preci='<%=primary%>';
+                var sreci='<%=secondary%>';
+                var primarysplit=preci.split("#");
+                var secondarysplit=sreci.split("#");
+
+                if(preci!=null && preci!='' && primarysplit.length>=1) {
+                    for (var i = 0; i < primarysplit.length; i++) {
+                        $('#primary').append("<li> <a href='javascript:void(0);' class='remove'><b>&times;</b></a><input type='hidden' name='precipients' value='" + primarysplit[i] + "'>" + primarysplit[i] + "</li>");
+
+                    }
+                    $('#hiddeninput').hide();
+                    $('#primary').show();
+
+                }
+                else{
+                        $('#primary').hide();
+                        $('#hiddeninput').show();
+                    }
+
+
+                if(sreci!=null && sreci!='' && secondarysplit.length>=1) {
+                    for (var i = 0; i < secondarysplit.length; i++) {
+                        $('#secondary').append("<li> <a href='javascript:void(0);' class='removes'><b>&times;</b></a><input type='hidden' name='srecipients' value='" + secondarysplit[i] + "'>" + secondarysplit[i] + "</li>");
+
+                    }
+                    $('#hiddensecondary').hide();
+                    $('#secondary').show();
+
+                }
+                else {
+                    $('#secondary').hide();
+                    $('#hiddensecondary').show();
+                }
+
+
+                $("#msgtype").val('<%=msgType%>');
+
+                if('<%=msgType%>'!='New'){
+                    $("a#mtype").attr('href','../dms/showCdxDocumentArchive.jsp?ID=<%=docId%>');
+                    $("span#ptype").text('In response to ');
+                    $("#mtype").text('<%=docKind%>');
+                }
+
+
+                $('#documenttype').val('<%=documentType%>');
+                $('#content1').val('<%=content%>');
+            }
+
         }
 
+
+        function saveDraft(){
+            var patient=$('#patient').val();
+            var precipients=[];
+            var srecipients=[];
+
+            var primary=document.getElementsByName('precipients');
+            var secondary=document.getElementsByName('srecipients');
+             for(var i=0;i<primary.length;i++){
+                 precipients[i]=primary[i].value;
+             }
+            for(var i=0;i<secondary.length;i++){
+                srecipients[i]=secondary[i].value;
+            }
+
+            var msgtype=$('#msgtype').val();
+            var documenttype=$('#documenttype').val();
+            var content=$('#content1').val();
+
+                $.ajax({
+
+                    type:'POST',
+                    url:'cdxMessengerController.jsp',
+                    data:{patient:patient,"precipients[]":precipients,"srecipients[]":srecipients,msgtype:msgtype,documenttype:documenttype,content:content},
+                    success:function(data)
+                    {
+                        console.log(data);
+                       alert("Saved as draft.");
+
+                    }
+                });
+
+
+
+        }
+        function getInfo(type) {
+
+            $.ajax({
+
+                type: 'POST',
+                url: 'messengerController.jsp',
+                data: {
+                    type: type,
+                    demoid: demographicid
+                },
+                success: function (data) {
+                    console.log(data);
+                    //$('#otherinfo').append(data);
+
+                    if (data) {
+                        if (type == 'FamilyHistory') {
+                            $('#FamilyHistory').show();
+                            $('#FamilyHistory').html('<b>Family History: </b>'+data.trim());
+
+                        } else if (type == 'MedicalHistory') {
+                            $('#MedicalHistory').show();
+                            $('#MedicalHistory').html('<b>Medical History: </b>'+data.trim());
+
+                        } else if (type == 'ongoingConcerns') {
+                            $('#ongoingConcerns').show();
+                            $('#ongoingConcerns').html('<b>Ongoing Concerns: </b>'+data.trim());
+
+                        } else if (type == 'SocialHistory') {
+                            $('#SocialHistory').show();
+                            $('#SocialHistory').html('<b>Social History: </b>'+data.trim());
+
+                        } else if (type == 'OtherMeds') {
+                            $('#OtherMeds').show();
+                            $('#OtherMeds').html('<b>Other Meds: </b>'+data.trim());
+
+                        } else if (type == 'Reminders') {
+                            $('#Reminders').show();
+                            $('#Reminders').html('<b>Reminders: </b>'+data.trim());
+
+                        }
+
+                    }
+                }
+            });
+
+        }
+
+
+        function getRestInfo( type) {
+            $.ajax({
+                type: 'POST',
+                url : "${ pageContext.request.contextPath }/oscarConsultationRequest/consultationClinicalData.do",
+                data: {
+                    method: type,
+                    demographicNo: demographicid
+                },
+                dataType : 'JSON',
+                success: function(data) {
+                    var jsondata=JSON.parse(JSON.stringify(data));
+                    if (type == 'fetchRiskFactors') {
+                        $('#fetchRiskFactors').show();
+                        $('#fetchRiskFactors').html('<b>Risk Factors: </b><br>'+jsondata.note);
+
+                    } else if (type == 'fetchMedications') {
+                        $('#fetchMedications').show();
+                        $('#fetchMedications').html('<b>Medications: </b><br>'+jsondata.note);
+
+                    } else if (type == 'fetchLongTermMedications') {
+                        $('#fetchLongTermMedications').show();
+                        $('#fetchLongTermMedications').html('<b>Long Medications: </b><br>'+jsondata.note);
+
+                    } else if (type == 'fetchAllergies') {
+                        $('#fetchAllergies').show();
+                        $('#fetchAllergies').html('<b>Allergies: </b><br>'+jsondata.note);
+
+                    }
+                }
+            });
+        }
+
+    function populateAndSubmit(){
+
+    $('#hiddentextarea').val($('#FamilyHistory').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#MedicalHistory').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#ongoingConcerns').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#SocialHistory').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#OtherMeds').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#Reminders').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#fetchRiskFactors').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#fetchMedications').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#fetchLongTermMedications').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#fetchAllergies').text().trim()+'\n');
+    $('#messengerForm').submit();
+
+}
     </script>
 
 </head>
@@ -340,23 +604,22 @@ ul#primary li, ul#secondary li{
 <body>
 <div class="container">
 
-    <form class="well form-horizontal" action="<%=request.getContextPath()%>/cdx/CDXMessenger.do" method="post"  id="contact_form">
+    <form class="well form-horizontal" action="<%=request.getContextPath()%>/cdx/CDXMessenger.do" method="post"  id="messengerForm">
         <fieldset>
 
             <!-- Form Name -->
 
 
-                <div>  <legend><center><h2> <b>CDX Messenger v0.1</b>
+                <div>  <legend><center><h2> <b>CDX Composer v0.1</b>
                     <span>
                         <a href="../cdx/cdxMessengerHistory.jsp" target="_blank" class="btn ovalbutton" role="button">History</a>
+                        <a href="../cdx/showDrafts.jsp" target="_blank" class="btn ovalbutton" role="button">Drafts</a>
                     </span>
                 </h2></center></legend><br>
 
                 </div>
 
-
             <!-- Text input-->
-
             <div class="form-group">
                 <label class="col-xs-4 control-label">Patient</label>
                 <div class="col-xs-4 inputGroupContainer">
@@ -413,7 +676,7 @@ ul#primary li, ul#secondary li{
                 <label class="col-xs-4 control-label">Document type</label>
                 <div class="col-xs-4 selectContainer">
                     <div class="">
-                        <select name="documenttype" class="form-control selectpicker" required>
+                        <select name="documenttype" id="documenttype" class="form-control selectpicker" required>
                             <option value="">Select document type</option>
                             <option>Information Request</option>
                             <option>Patient Summary</option>
@@ -435,14 +698,50 @@ ul#primary li, ul#secondary li{
                 </div>
             </div>
 
+            <div class="form-group">
+                <label class="col-xs-4 control-label">Other important info</label>
+                <div class="col-xs-4 inputGroupContainer" id="infobuttons">
+                    <button type="button" class="btn btn-primary btn-xs" onclick="getInfo('FamilyHistory')">Family History</button>
+                    <button type="button" class="btn btn-primary btn-xs" onclick="getInfo('MedicalHistory')">Medical History</button>
+                    <button type="button" class="btn btn-primary btn-xs" onclick="getInfo('ongoingConcerns')">Ongoing Concerns</button>
+                    <button type="button" class="btn btn-primary btn-xs" onclick="getInfo('SocialHistory')">Social History</button>
+                    <button type="button" class="btn btn-primary btn-xs" onclick="getInfo('OtherMeds')">Other Meds</button>
+                    <button type="button" class="btn btn-primary btn-xs" onclick="getInfo('Reminders')">Reminders</button>
+                    <button type="button" class="btn btn-primary btn-xs" onclick="getRestInfo('fetchRiskFactors')">Risk Factors</button>
+                    <button type="button" class="btn btn-primary btn-xs" onclick="getRestInfo('fetchMedications')">Medications</button>
+                    <button type="button" class="btn btn-primary btn-xs" onclick="getRestInfo('fetchLongTermMedications')">Long Term Medications</button>
+                    <button type="button" class="btn btn-primary btn-xs" onclick="getRestInfo('fetchAllergies')">Allergies</button>
+                    <br>
+                    <br>
+                    <textarea  id="hiddentextarea" name="otherinfo" class="form-control"  style="display:none;"></textarea>
+
+                    <div contenteditable="true" id="otherinfo" class="otherinfo">
+                        <p id="FamilyHistory"></p>
+                        <p id="MedicalHistory"></p>
+                        <p id="ongoingConcerns"></p>
+                        <p id="SocialHistory"></p>
+                        <p id="OtherMeds"></p>
+                        <p id="Reminders"></p>
+                        <p id="fetchRiskFactors"></p>
+                        <p id="fetchMedications"></p>
+                        <p id="fetchLongTermMedications"></p>
+                        <p id="fetchAllergies"></p>
+
+                    </div>
+                </div>
+            </div>
+
+
+
             <!-- Text input-->
+
 
             <div class="form-group">
                 <label class="col-xs-4 control-label" >Attachment</label>
                 <div class="col-xs-4 inputGroupContainer">
                     <div class="custom-file mb-3">
                         <a href="#" onclick="popup();return false;">
-                            Attach file to Messenger
+                            Attach file to Composer
                         </a>
                         <p id="tdAttachedDocs"></p>
 
@@ -459,13 +758,14 @@ ul#primary li, ul#secondary li{
             <!-- Button -->
             <div class=" button-group">
                 <div class="col-xs-4">
-                    <button type="submit" class="btn btn-success">Send</button>
+                    <button type="button" class="btn btn-success" onclick="populateAndSubmit()">Send</button>
                 </div>
                 <div class="col-xs-4 ">
-                    <button type="button" class="btn btn-warning">Save Draft</button>
+                    <input  name="draftId"  value=<%=draftId%> class="form-control"  type="hidden">
+                    <button type="button" class="btn btn-warning" onclick="saveDraft()">Save Draft</button>
                 </div>
                 <div class="col-xs-4">
-                    <button type="button" class="btn btn-default">Cancel</button>
+                    <button type="button" class="btn btn-default" onclick="window.open('', '_self', ''); window.close();">Discard</button>
                 </div>
             </div>
 

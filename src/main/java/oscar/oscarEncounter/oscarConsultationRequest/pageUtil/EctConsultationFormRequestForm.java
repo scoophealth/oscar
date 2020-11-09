@@ -123,7 +123,17 @@ public final class EctConsultationFormRequestForm extends ActionForm {
 	
 	private String appointmentInstructions;
 	private String appointmentInstructionsLabel;
-	
+
+	private boolean adviceRequest;
+
+	public boolean isAdviceRequest() {
+		return adviceRequest;
+	}
+
+	public void setAdviceRequest(boolean adviceRequest) {
+		this.adviceRequest = adviceRequest;
+	}
+
 	public String getProfessionalSpecialistName() {
 		return (StringUtils.trimToEmpty(professionalSpecialistName));
 	}

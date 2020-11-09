@@ -82,25 +82,22 @@ public class CDXMessengerAction extends DispatchAction {
         String pRecipients[] = request.getParameterValues("precipients");
         String sRecipients[] = request.getParameterValues("srecipients");
         String specialistsToStore = "";
-        // String clinics[] = null;
-        // String specialists[]=null;
-        // int specialistsAndClinicsIndex=0;
         if (pRecipients != null && pRecipients.length > 0) {
 
             for (String rec : pRecipients) {
                 String splittedSpecialistsAndClinics[] = rec.split("@");
-                specialistsToStore = specialistsToStore + splittedSpecialistsAndClinics[0] + ",";
+                specialistsToStore = specialistsToStore + splittedSpecialistsAndClinics[0] + ", ";
                 specialistAndClinicsPrimary.put(splittedSpecialistsAndClinics[0], splittedSpecialistsAndClinics[1].split(","));
 
             }
-            specialistsToStore = specialistsToStore.substring(0, specialistsToStore.length() - 1);
+            specialistsToStore = specialistsToStore.substring(0, specialistsToStore.length() - 2);
         }
 
         if (sRecipients != null && sRecipients.length > 0) {
 
             for (String rec : sRecipients) {
                 String splittedSpecialistsAndClinics[] = rec.split("@");
-                specialistsToStore = specialistsToStore + "," + splittedSpecialistsAndClinics[0];
+                specialistsToStore = specialistsToStore + ", " + splittedSpecialistsAndClinics[0];
                 specialistAndClinicsSecondary.put(splittedSpecialistsAndClinics[0], splittedSpecialistsAndClinics[1].split(","));
 
             }
@@ -134,10 +131,6 @@ public class CDXMessengerAction extends DispatchAction {
 
         CdxMessenger cdxMessenger = new CdxMessenger();
         String patient = request.getParameter("patientsearch");
-        //String primaryrecipient = request.getParameter("precipients");
-
-
-        //String secondaryrecipient = request.getParameter("srecipients");
         String messagetype = request.getParameter("messagetype");
         String documenttype = request.getParameter("documenttype");
         String contentmessage = request.getParameter("contentmessage");
@@ -160,65 +153,8 @@ public class CDXMessengerAction extends DispatchAction {
 
     private void doCdxSend(LoggedInInfo loggedInInfo, HttpServletRequest request, CdxMessenger cdxMessenger, HashMap<String, String[]> specialistAndClinicsPrimary, HashMap<String, String[]> specialistAndClinicsSecondary) throws OBIBException {
 
-   /*     ConsultationRequestDao consultationRequestDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
-        ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
-        ClinicDAO clinicDAO = (ClinicDAO) SpringUtils.getBean("clinicDAO");
-
-        ConsultationRequest consultationRequest = consultationRequestDao.find(consultationRequestId);
-        ProfessionalSpecialist professionalSpecialist = professionalSpecialistDao.find(consultationRequest.getSpecialistId());
-        Clinic clinic = clinicDAO.getClinic();
-
-        String message = fillReferralNotes(consultationRequest);
-
-        // save just in case the sending fails.
-        consultationRequestDao.merge(consultationRequest);
-
-        Provider sendingProvider = loggedInInfo.getLoggedInProvider();
-        DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
-        Demographic demographic = demographicManager.getDemographic(loggedInInfo, consultationRequest.getDemographicId());
-
-        String patientId = demographic.getHin();
-        if (patientId == null || patientId.isEmpty()) {
-            patientId = demographic.getDemographicNo().toString();
-        }
-        String authorId = sendingProvider.getOhipNo();
-        if (authorId == null || authorId.isEmpty()) {
-            authorId = sendingProvider.getProviderNo();
-        }
-        String recipientId = professionalSpecialist.getCdxId();
-        CDXSpecialist cdxSpecialist = new CDXSpecialist();
-        List<IProvider> providers = cdxSpecialist.findCdxSpecialistById(recipientId);
-        String clinicID = null;
-        if (providers != null && !providers.isEmpty()) {
-            IProvider cdxProvider = providers.get(0);
-            clinicID = cdxProvider.getClinicID();
-            if (!professionalSpecialist.getLastName().equalsIgnoreCase(cdxProvider.getLastName())) {
-                throw new OBIBException("Last name reported by CDX does not match last name of selected specialist.");
-            }
-        } else {
-            MiscUtils.getLogger().error("Selected specialist's CDX ID not found");
-            throw new OBIBException("Selected specialist's CDX ID not found");
-        }
-
-        // create PDF for consultation request form
-
-        ByteOutputStream os = new ByteOutputStream();
-        ConsultationPDFCreator consultationPDFCreator = new ConsultationPDFCreator(request, requestId, os);
-
-        try {
-            consultationPDFCreator.printPdf(loggedInInfo);
-        } catch (Exception e) {
-            MiscUtils.getLogger().error("Could not generate PDF attachment for consultation request");
-            throw new OBIBException("Could not generate PDF attachment for consultation request");
-        }
-
-        os.close();
-        */
-
-
-
-
         DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+        CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
         List<Demographic> demoList = null;
         String patient = request.getParameter("patientsearch");
         demoList = demographicDao.searchDemographic(patient);
@@ -253,99 +189,31 @@ public class CDXMessengerAction extends DispatchAction {
 
 
 
-
-      /*  //Todo for multiple specialists
-       // String specialists[]=cdxMessenger.getRecipients().split(",")[0].split(" ");
-        String specialists[]=cdxMessenger.getRecipients().split(",");
-        List<ProfessionalSpecialist> professionalSpecialistList = null;
-        List<IProvider> providers = null;
-        CDXSpecialist cdxSpecialist = new CDXSpecialist();
-
-        for (String s:specialists){
-            String lastAndFirstName[]=s.split(" ",2);
-            providers = cdxSpecialist.findCdxSpecialistByName(lastAndFirstName[0].trim());
-
-            for (IProvider provider : providers) {
-                //   String cdxSpecId = provider.getID();
-                // MiscUtils.getLogger().debug("cdxSpecId: " + cdxSpecId);
-                //String fName = provider.getFirstName();
-                //String lName = provider.getLastName();
-
-                if (provider.getFirstName() != null && !provider.getFirstName().isEmpty()) {
-                    if (provider.getLastName().equalsIgnoreCase(lastAndFirstName[0].trim()) && provider.getFirstName().equalsIgnoreCase(lastAndFirstName[1].trim())) {
-
-
-                    }
-                }
-            }
-
-
-
-           // professionalSpecialistList.add(professionalSpecialistDao.findByFullName(lastAndFirstName[0],lastAndFirstName[1]).get(0));
-        }
-
-        List<ProfessionalSpecialist> professionalSpecialistList = professionalSpecialistDao.findByFullName(specialists[0],specialists[1]);
-
-        ProfessionalSpecialist professionalSpecialist=professionalSpecialistList.get(0);
-        String recipientId = professionalSpecialist.getCdxId();
-
-
-        //CDXSpecialist cdxSpecialist = new CDXSpecialist();
-        //List<IProvider> providers = cdxSpecialist.findCdxSpecialistById(recipientId);
-        String clinicID = null;
-        if (providers != null && !providers.isEmpty()) {
-            IProvider cdxProvider = providers.get(0);
-            clinicID = cdxProvider.getClinicID();
-            if (!professionalSpecialist.getLastName().equalsIgnoreCase(cdxProvider.getLastName())) {
-                throw new OBIBException("Last name reported by CDX does not match last name of selected specialist.");
-            }
-        } else {
-            MiscUtils.getLogger().error("Selected specialist's CDX ID not found");
-            throw new OBIBException("Selected specialist's CDX ID not found");
-        }
-
-*/
-
-
         IDocument response;
         CDXConfiguration cdxConfig = new CDXConfiguration();
         SubmitDoc submitDoc = new SubmitDoc(cdxConfig);
 
         ISubmitDoc doc;
 
-       /* if (isUpdate || isCancel ) {
-            List<CdxProvenance> sentDocs;
-            CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
-            sentDocs = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
-            String originalDocId = sentDocs.get(sentDocs.size() - 1).getDocumentId();
-            Integer latestDocVersion = sentDocs.get(0).getVersion();
-
-            if (isUpdate) {
-                doc = submitDoc.updateDoc(originalDocId, latestDocVersion);
-            } else {
-                doc = submitDoc.cancelDoc(originalDocId, latestDocVersion);
-            }
-        }
-
-        else {
-            doc = submitDoc.newDoc();
-        }
-        */
-
         doc = submitDoc.newDoc();
-        if (cdxMessenger.getDocumentType().equalsIgnoreCase("Information Request")) {
+      if (cdxMessenger.getDocumentType().equalsIgnoreCase("Information Request")) {
             doc.documentType(DocumentType.INFO_REQUEST);
         } else if (cdxMessenger.getDocumentType().equalsIgnoreCase("Patient Summary")) {
             doc.documentType(DocumentType.PATIENT_SUMMARY);
         } else if (cdxMessenger.getDocumentType().equalsIgnoreCase("Progress Note")) {
             doc.documentType(DocumentType.PROGRESS_NOTE);
         }
+       // doc.documentType(DocumentType.ADVICE_REQUEST);
 
+        String otherInfo=request.getParameter("otherinfo");
+        String content=cdxMessenger.getContent();
 
-        ISubmitDoc iDoc = doc .content(cdxMessenger.getContent())
-                //.inFulfillmentOf()
-                 //.id(Integer.toString(demographic.getDemographicNo()))
-                 //.statusCode(OrderStatus.ACTIVE).and()
+        if(otherInfo!=null && !otherInfo.isEmpty()){
+            content=content+System.lineSeparator()+otherInfo;
+        }
+
+        ISubmitDoc iDoc = doc .content(content)
+
                 .patient()
                 .id(patientId)
                 .name(NameType.LEGAL, demographic.getFirstName(), demographic.getLastName())
@@ -376,6 +244,13 @@ public class CDXMessengerAction extends DispatchAction {
             doc = doc.attach(AttachmentType.PDF, filename, newBytes);
         }
 
+        if(cdxMessenger.getCategory()!=null && !cdxMessenger.getCategory().equalsIgnoreCase("New")){
+            CdxProvenance infulfilmentOfDoc = provenanceDao.getCdxProvenance(Integer.parseInt(cdxMessenger.getCategory().split(":")[1]));
+            doc.inFulfillmentOf()
+            .id(infulfilmentOfDoc.getDocumentId())
+            .statusCode(OrderStatus.ACTIVE).and();
+        }
+
         response = doc.submit();
 
         boolean debug = false;
@@ -385,13 +260,32 @@ public class CDXMessengerAction extends DispatchAction {
         cdxProvenanceDao.logSentAction(response);
         CdxMessengerDao cdxMessengerDao = SpringUtils.getBean(CdxMessengerDao.class);
 
-        try {
-            cdxMessenger.setDocumentId(response.getDocumentID());
-            cdxMessengerDao.persist(cdxMessenger);
+        //remove draft
 
-        } catch (Exception ex) {
-            MiscUtils.getLogger().error("Got exception saving messenger Information " + ex.getMessage());
+        String draftId=request.getParameter("draftId");
+
+        if(!draftId.equalsIgnoreCase("null") && !draftId.isEmpty()){
+            CdxMessenger draft=cdxMessengerDao.getCdxMessenger(Integer.parseInt(draftId));
+            try{
+                if(draft!=null){
+                    cdxMessengerDao.deleteDraftById(draft.getId());
+                }
+
+            }
+            catch(Exception ex){
+                MiscUtils.getLogger().error("Got exception while deleting draft " + ex.getMessage());
+            }
         }
+
+            try {
+                cdxMessenger.setDocumentId(response.getDocumentID());
+                cdxMessenger.setDraft("N");
+                cdxMessengerDao.persist(cdxMessenger);
+
+
+            } catch (Exception ex) {
+                MiscUtils.getLogger().error("Got exception saving messenger Information " + ex.getMessage());
+            }
 
         //Now we have request id for the cdx messenger, we update the request id for the attachments.
         CommonLabResultData consultLabs = new CommonLabResultData();

@@ -35,6 +35,17 @@ public class CdxMessenger extends AbstractModel<Integer> implements Serializable
 
     @Column(name = "delivery_status")
     private String deliveryStatus;
+    @Column(name = "primary_recipient")
+    private String primaryRecipient;
+
+
+    @Column(name = "secondary_recipient")
+    private String secondaryRecipient;
+
+
+
+    @Column(name = "draft")
+    private String draft;
 
     @PrePersist
     protected void onCreate() {
@@ -126,5 +137,27 @@ public class CdxMessenger extends AbstractModel<Integer> implements Serializable
         this.deliveryStatus = deliveryStatus;
     }
 
+    public String getPrimaryRecipient() {
+        return primaryRecipient;
+    }
 
+    public void setPrimaryRecipient(String primaryRecipient) {
+        this.primaryRecipient = primaryRecipient;
+    }
+
+    public String getSecondaryRecipient() {
+        return secondaryRecipient;
+    }
+
+    public void setSecondaryRecipient(String secondaryRecipient) {
+        this.secondaryRecipient = secondaryRecipient;
+    }
+
+    public String getDraft() {
+        return draft;
+    }
+
+    public void setDraft(String draft) {
+        this.draft = draft;
+    }
 }
