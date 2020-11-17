@@ -107,6 +107,7 @@ public class EctConsultationFormRequestUtil {
 	
 	private String appointmentInstructions;
 	private String appointmentInstructionsLabel;
+	public String isAdviceRequest;
 	
 	private ConsultationServiceDao consultationServiceDao = (ConsultationServiceDao) SpringUtils.getBean("consultationServiceDao");
 	private DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
@@ -248,6 +249,16 @@ public class EctConsultationFormRequestUtil {
 			letterheadFax = letterheadFax == null?"":letterheadFax;
 
 			signatureImg = cr.getSignatureImg();
+
+
+			if(cr.getIsAdviceRequest().equalsIgnoreCase("Y")){
+
+				isAdviceRequest="Advice Request";
+			}
+			else{
+				isAdviceRequest="Referral";
+			}
+
 
 			appointmentNotes = cr.getStatusText();
 			if (appointmentNotes == null || appointmentNotes.equals("null")) {

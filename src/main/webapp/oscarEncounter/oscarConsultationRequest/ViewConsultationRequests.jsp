@@ -395,6 +395,13 @@ function gotoPage(next) {
                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgRefDate"/>
                                    </a>
                                 </th>
+
+                                <th align="left" class="VCRheads">
+                                    <a href=# onclick="setOrder('11'); return false;">
+                                       Consultation Type
+                                    </a>
+                                </th>
+
                                 <th align="left" class="VCRheads">
                                    <a href=# onclick="setOrder('8'); return false;">
                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgAppointmentDate"/>
@@ -445,6 +452,7 @@ function gotoPage(next) {
                             String patBook =  theRequests.patientWillBook.elementAt(i);
                             String urgency =  theRequests.urgency.elementAt(i);
                             String sendTo  =  theRequests.teams.elementAt(i);
+                            String isAdvice  =  theRequests.isAdvice.elementAt(i);
                             if (sendTo==null) sendTo = "-1";
                             String specialist = theRequests.vSpecialist.elementAt(i);
                             String followUpDate = theRequests.followUpDate.elementAt(i);
@@ -536,6 +544,14 @@ function gotoPage(next) {
                                 <td class="stat<%=status%>">
                                     <%=date%>
                                 </td>
+                                 <td class="stat<%=status%>">
+                                     <% if (isAdvice!=null && isAdvice.equals("Y")){ %>
+                                     Advice Request
+                                     <% }else { %>
+                                     Referral
+                                     <% } %>
+                                 </td>
+
                                 <td class="stat<%=status%>">
                                    <% if ( patBook != null && patBook.trim().equals("1") ){%>
                                     Patient will book

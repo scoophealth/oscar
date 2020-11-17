@@ -479,6 +479,15 @@ if(!authed) {
                                 <table border=0  >
                                     <tr>
                                         <td class="subTitles">
+                                            Consultation Type:
+                                        </td>
+                                        <td class="fillLine">
+                                            <%=reqFrm.isAdviceRequest %>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="subTitles">
                                             <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgDate"/>:
                                         </td>
                                         <td class="fillLine">
@@ -626,7 +635,8 @@ for(ConsultationRequestExt ext:exts) {
                                         <td class="fillLine">
                              (<%=reqFrm.patientHealthCardType%>)&nbsp;<%=reqFrm.patientHealthNum %>&nbsp;<%=reqFrm.patientHealthCardVersionCode%>&nbsp;
                                         </td>
-                                    </tr>                                                                           
+                                    </tr>
+                                    <% if(!reqFrm.isAdviceRequest.equalsIgnoreCase("Advice Request")){%>
                                     <tr>
                                         <td class="subTitles">
                                             <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgappDate"/>:
@@ -651,6 +661,7 @@ for(ConsultationRequestExt ext:exts) {
 		                      <%}%>
                                         </td>
                                     </tr>
+                                    <% }%>
                                     <tr>
                                         <td class="subTitles">
                                             <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgChart"/>

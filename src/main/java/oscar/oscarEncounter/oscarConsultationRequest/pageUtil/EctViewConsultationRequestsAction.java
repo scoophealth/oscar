@@ -68,10 +68,19 @@ public class EctViewConsultationRequestsAction extends Action {
            includedComp = true; 
         }                        
         try{
-           startDate = UtilDateUtilities.getDateFromString(frm.getStartDate(),defaultPattern);            
-        }catch(Exception e){/*ignore*/}        
+
+            if(frm.getStartDate()!=null && !frm.getStartDate().isEmpty()){
+                startDate = UtilDateUtilities.getDateFromString(frm.getStartDate(),defaultPattern);
+            }
+
+
+        }catch(Exception e){/*ignore*/}
         try{
-           endDate = UtilDateUtilities.getDateFromString(frm.getEndDate(),defaultPattern);            
+
+            if(frm.getEndDate()!=null && !frm.getEndDate().isEmpty()){
+                endDate = UtilDateUtilities.getDateFromString(frm.getEndDate(),defaultPattern);
+            }
+
         }catch(Exception e){/*ignore*/}
                                 
         request.setAttribute("startDate",startDate);               

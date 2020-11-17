@@ -129,6 +129,14 @@ public class EctViewRequestAction extends Action {
             ConsultationRequestDao consultDao = (ConsultationRequestDao)SpringUtils.getBean("consultationRequestDao");
             ConsultationRequest consult = consultDao.find(requestId);
 
+            //to check the checkbox for advice request
+            if(consult.getIsAdviceRequest()!=null && consult.getIsAdviceRequest().equalsIgnoreCase("Y")){
+                thisForm.setAdviceRequest(true);
+            }
+            else{
+                thisForm.setAdviceRequest(false);
+            }
+
             thisForm.setAllergies(consult.getAllergies());
             thisForm.setReasonForConsultation(consult.getReasonForReferral());
             thisForm.setClinicalInformation(consult.getClinicalInfo());

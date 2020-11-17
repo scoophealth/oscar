@@ -396,6 +396,16 @@ if(!authed) {
 						<tr>
 							<td valign="top" align="left" width="50%">
 								<table border=0 width="100%" >
+
+									<tr>
+										<td class="subTitles">
+											Consultation Type:
+										</td>
+										<td class="fillLine">
+											<%=reqFrm.isAdviceRequest %>
+										</td>
+									</tr>
+
 									<tr>
 										<td class="subTitles">
 											<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgDate"/>:
@@ -516,6 +526,7 @@ if (requestId!=null) aburl+="&requestId="+requestId; %>
 											 <%=reqFrm.patientHealthCardType%>&nbsp;<%=reqFrm.patientHealthNum %>&nbsp;<%=reqFrm.patientHealthCardVersionCode%>&nbsp;
 										</td>
 									</tr>
+									<% if(!reqFrm.isAdviceRequest.equalsIgnoreCase("Advice Request")){%>
 									<tr>
 										<td class="subTitles">
 											<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgappDate"/>:
@@ -532,6 +543,7 @@ if (requestId!=null) aburl+="&requestId="+requestId; %>
 							  		  	   <%}%>
 										</td>
 									</tr>
+									<% }%>
 									<% if(getlen(reqFrm.patientChartNo) > 1) {%>
 	                                    <tr>
     	                                    <td class="subTitles">

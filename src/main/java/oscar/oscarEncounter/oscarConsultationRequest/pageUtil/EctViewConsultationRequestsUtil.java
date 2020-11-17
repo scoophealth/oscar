@@ -80,6 +80,7 @@ public class EctViewConsultationRequestsUtil {
       followUpDate = new Vector<String>();
       boolean verdict = true;
       consultProvider = new Vector();
+       isAdvice=new Vector<String>();
       
       try {
           ConsultationRequestDao consultReqDao = (ConsultationRequestDao) SpringUtils.getBean("consultationRequestDao");
@@ -131,6 +132,7 @@ public class EctViewConsultationRequestsUtil {
               urgency.add(consult.getUrgency());
               siteName.add(consult.getSiteName());
               teams.add(consult.getSendTo());
+              isAdvice.add(consult.getIsAdviceRequest());
               
               date1 = consult.getAppointmentDate();
               date2 = consult.getAppointmentTime();
@@ -177,6 +179,7 @@ public class EctViewConsultationRequestsUtil {
       urgency = new Vector<String>();
       apptDate = new Vector<String>();
       consultProvider = new Vector();
+
       
       boolean verdict = true;      
       try {                           
@@ -243,4 +246,5 @@ public class EctViewConsultationRequestsUtil {
    public Vector<String> providerNo;   
    public Vector<String> siteName;
    public Vector consultProvider;
+    public Vector<String> isAdvice;
 }

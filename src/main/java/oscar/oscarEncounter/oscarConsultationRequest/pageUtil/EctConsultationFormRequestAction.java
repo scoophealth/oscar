@@ -272,9 +272,7 @@ public class EctConsultationFormRequestAction extends Action {
 
 			request.setAttribute("transType", "2");
 
-		} else
-
-		if (submission.startsWith("Update")) {
+		} else if (submission.startsWith("Update")) {
 
 			requestId = frm.getRequestId();
 
@@ -334,6 +332,14 @@ public class EctConsultationFormRequestAction extends Action {
 				MiscUtils.getLogger().error("Invalid Time", e);
 			}
                 }
+
+
+                else{
+					consult.setAppointmentDate(null);
+					consult.setAppointmentTime(null);
+				}
+
+
                 consult.setReasonForReferral(frm.getReasonForConsultation());
                 consult.setClinicalInfo(frm.getClinicalInformation());
                 consult.setCurrentMeds(frm.getCurrentMedications());
@@ -346,6 +352,14 @@ public class EctConsultationFormRequestAction extends Action {
                 consult.setUrgency(frm.getUrgency());
                 consult.setAppointmentInstructions( frm.getAppointmentInstructions() );
                 consult.setSiteName(frm.getSiteName());
+
+				if(frm.isAdviceRequest()){
+					consult.setIsAdviceRequest("Y");
+				}
+				else {
+					consult.setIsAdviceRequest("N");
+				}
+
                  Boolean pWillBook = false;
                 if( frm.getPatientWillBook() != null ) {
                     pWillBook = frm.getPatientWillBook().equals("1");
@@ -356,6 +370,12 @@ public class EctConsultationFormRequestAction extends Action {
                     date = DateUtils.parseDate(frm.getFollowUpDate(), format);
                     consult.setFollowUpDate(date);
                 }
+
+                else{
+					consult.setFollowUpDate(null);
+				}
+
+
                 
                 if(frm.getSource()!=null && !"null".equals(frm.getSource())) {
                 	consult.setSource(frm.getSource());
@@ -386,7 +406,6 @@ public class EctConsultationFormRequestAction extends Action {
 		else if( submission.equalsIgnoreCase("And Print Preview")) {
 			requestId = frm.getRequestId();
 		}
-				
 
 		frm.setRequestId("");
 
@@ -629,7 +648,11 @@ public class EctConsultationFormRequestAction extends Action {
 		if (isUpdate || isCancel ) {
 			List<CdxProvenance> sentDocs;
 			CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
-			sentDocs = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
+			//old implementation
+			//sentDocs = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
+
+			sentDocs = cdxProvenanceDao.findByInFulFillmentDesc(requestId);
+
 			String originalDocId = sentDocs.get(sentDocs.size() - 1).getDocumentId();
 			Integer latestDocVersion = sentDocs.get(0).getVersion();
 

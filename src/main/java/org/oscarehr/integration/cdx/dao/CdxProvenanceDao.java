@@ -75,6 +75,13 @@ public class CdxProvenanceDao extends AbstractDao<CdxProvenance> {
         return query.getResultList();
     }
 
+    public List<CdxProvenance> findByInFulFillmentDesc(String inFulfillmentId) {
+        String sql = "FROM CdxProvenance p where p.inFulfillmentOfId = :inFulfillmentId ORDER BY p.version DESC";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("inFulfillmentId", inFulfillmentId);
+        return query.getResultList();
+    }
+
     public CdxProvenance findByDocumentNo(int documentNo) {
 
         String sql = "FROM CdxProvenance p where p.documentNo = :docno ORDER BY p.version DESC, p.effectiveTime DESC";

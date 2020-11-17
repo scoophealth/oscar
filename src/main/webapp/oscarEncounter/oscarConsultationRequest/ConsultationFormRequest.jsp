@@ -417,19 +417,29 @@ jQuery(document).ready(function(){
 
 function hideFieldsForAdviceRequest(txtArea){
 
-	jQuery("#appInst").toggle();
-	jQuery("#appDate").toggle();
-	jQuery("#appTime").toggle();
-	jQuery("#appFollow").toggle();
-
 	var str="This is just an advice request, there is no need for an appointment.";
+
 	if(document.getElementById('adviceRequest').checked){
+		jQuery("#appInst").hide();
+		jQuery("#appDate").hide();
+		jQuery("#appTime").hide();
+		jQuery("#appFollow").hide();
 		txtArea.value = str;
 	}
 	else{
+		jQuery("#appInst").show();
+		jQuery("#appDate").show();
+		jQuery("#appTime").show();
+		jQuery("#appFollow").show();
 		txtArea.value = "";
 	}
 
+	document.forms[0].followUpDate.value="";
+	document.forms[0].appointmentInstructions.value=document.forms[0].appointmentInstructions.defaultValue;
+	document.forms[0].appointmentDate.value="";
+	document.forms[0].appointmentHour.value="-1";
+	document.forms[0].appointmentMinute.value="-1";
+	document.forms[0].appointmentpm.value="AM";
 }
 
 function getClinicalData( data, target ) {
@@ -1106,6 +1116,8 @@ function addCCName(){
         else document.EctConsultationFormRequestForm.ext_cc.value+="; "+document.EctConsultationFormRequestForm.docName.value;
 }
 
+
+
 </script>
 
 
@@ -1366,7 +1378,7 @@ function updateFaxButton() {
 <%=WebUtilsOld.popErrorMessagesAsAlert(session)%>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF" 
-	onload="window.focus();disableDateFields();fetchAttached();disableEditing();showSignatureImage();">
+	onload="window.focus();disableDateFields();fetchAttached();disableEditing();showSignatureImage();hideFieldsForAdviceRequest();">
 <html:errors />
 <html:form action="/oscarEncounter/RequestConsultation"
 	onsubmit="alert('HTHT'); return false;">
@@ -1885,8 +1897,15 @@ function updateFaxButton() {
 							<td class="tite4">
 								Is an Advice request?
 							</td>
+							<%
+								String checked="";
+								if(thisForm.isAdviceRequest()){
+                  					 checked="checked";
+							}
+							%>
+
 							<td  class="tite2">
-								<input type="checkbox" id="adviceRequest" name="adviceRequest" onchange="hideFieldsForAdviceRequest(document.forms[0].appointmentNotes)">
+								<input type="checkbox" id="adviceRequest" name="adviceRequest" <%=checked%> onchange="hideFieldsForAdviceRequest(document.forms[0].appointmentNotes)">
 							</td>
 						</tr>
 
