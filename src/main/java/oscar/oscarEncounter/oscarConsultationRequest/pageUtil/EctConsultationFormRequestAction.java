@@ -353,12 +353,6 @@ public class EctConsultationFormRequestAction extends Action {
                 consult.setAppointmentInstructions( frm.getAppointmentInstructions() );
                 consult.setSiteName(frm.getSiteName());
 
-				if(frm.isAdviceRequest()){
-					consult.setIsAdviceRequest("Y");
-				}
-				else {
-					consult.setIsAdviceRequest("N");
-				}
 
                  Boolean pWillBook = false;
                 if( frm.getPatientWillBook() != null ) {

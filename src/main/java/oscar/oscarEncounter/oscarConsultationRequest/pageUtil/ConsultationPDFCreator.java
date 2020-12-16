@@ -314,8 +314,11 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 	private PdfPTable createSpecialistTable() {
 		float[] tableWidths;
 		PdfPCell cell = new PdfPCell();
-		tableWidths = new float[]{ 1.5f, 2.5f };
+		tableWidths = new float[]{ 2.0f, 2.5f };
 		PdfPTable infoTable = new PdfPTable(tableWidths);
+
+		infoTable.addCell(setInfoCell(cell, "Consultation Type"));
+		infoTable.addCell(setDataCell(cell, reqFrm.isAdviceRequest));
 
 		infoTable.addCell(setInfoCell(cell, getResource("msgDate")));
 		infoTable.addCell(setDataCell(cell, reqFrm.pwb.equals("1") ? getResource("pwb") : reqFrm.referalDate));
@@ -406,15 +409,18 @@ public class ConsultationPDFCreator extends PdfPageEventHelper {
 														    reqFrm.patientHealthNum,
 														    reqFrm.patientHealthCardVersionCode)));
 
-		if (!reqFrm.pwb.equals("1")) {
-			infoTable.addCell(setInfoCell(cell, getResource("msgappDate")));
-			infoTable.addCell(setDataCell(cell, reqFrm.pwb.equals("1") ? getResource("pwb") : reqFrm.appointmentDate));
-			infoTable.addCell(setInfoCell(cell, getResource("msgTime")));
-			infoTable.addCell(setDataCell(cell, String.format("%s%s%s %s", reqFrm.appointmentHour,
-					 !reqFrm.appointmentMinute.equals("") ? ":" : "",
-					 reqFrm.appointmentMinute,
-					 reqFrm.appointmentPm)));
+		if(!reqFrm.isAdviceRequest.equalsIgnoreCase("Advice Request")){
+			if (!reqFrm.pwb.equals("1")) {
+				infoTable.addCell(setInfoCell(cell, getResource("msgappDate")));
+				infoTable.addCell(setDataCell(cell, reqFrm.pwb.equals("1") ? getResource("pwb") : reqFrm.appointmentDate));
+				infoTable.addCell(setInfoCell(cell, getResource("msgTime")));
+				infoTable.addCell(setDataCell(cell, String.format("%s%s%s %s", reqFrm.appointmentHour,
+						!reqFrm.appointmentMinute.equals("") ? ":" : "",
+						reqFrm.appointmentMinute,
+						reqFrm.appointmentPm)));
+			}
 		}
+
 
 		infoTable.addCell(setInfoCell(cell, getResource("msgChart")));
 		infoTable.addCell(setDataCell(cell, reqFrm.patientChartNo));

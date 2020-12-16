@@ -179,7 +179,7 @@ public class EctViewConsultationRequestsUtil {
       urgency = new Vector<String>();
       apptDate = new Vector<String>();
       consultProvider = new Vector();
-
+      isAdvice=new Vector<String>();
       
       boolean verdict = true;      
       try {                           
@@ -218,6 +218,7 @@ public class EctViewConsultationRequestsUtil {
               urgency.add(consult.getUrgency());
               patientWillBook.add(""+consult.isPatientWillBook());
               date.add(DateFormatUtils.ISO_DATE_FORMAT.format(consult.getReferralDate()));
+              isAdvice.add(consult.getIsAdviceRequest());
               
               Provider cProv = providerDao.getProvider(consult.getProviderNo());
               consultProvider.add(cProv);

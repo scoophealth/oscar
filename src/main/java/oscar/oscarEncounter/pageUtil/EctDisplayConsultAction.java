@@ -101,6 +101,11 @@ public class EctDisplayConsultAction extends EctDisplayAction {
             for (int idx = theRequests.ids.size() - 1; idx >= 0; --idx ){
                 NavBarDisplayDAO.Item item = NavBarDisplayDAO.Item();
                 String service =  theRequests.service.get(idx);
+
+                if(theRequests.isAdvice.get(idx)!=null && theRequests.isAdvice.get(idx).equalsIgnoreCase("Y")){
+                    service=service+" AR";
+                }
+
                 String dateStr    =  theRequests.date.get(idx);
                 String status = theRequests.status.get(idx);
                 DateFormat formatter = new SimpleDateFormat(dbFormat);

@@ -251,7 +251,7 @@ public class EctConsultationFormRequestUtil {
 			signatureImg = cr.getSignatureImg();
 
 
-			if(cr.getIsAdviceRequest().equalsIgnoreCase("Y")){
+			if(cr.getIsAdviceRequest()!=null && cr.getIsAdviceRequest().equalsIgnoreCase("Y")){
 
 				isAdviceRequest="Advice Request";
 			}

@@ -550,6 +550,25 @@ CasemgmtNoteLock casemgmtNoteLock = (CasemgmtNoteLock)session.getAttribute("case
 								<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=globalNoteId%>" href="#" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 10px;"> <bean:message key="oscarEncounter.view" /> </a>
 							<%
 			 			}
+
+						//
+
+						else if(doc.isCDX())
+						{ //CDX Document
+							String url;
+							Enumeration em = request.getAttributeNames();
+							String winName = "docs" + demographicNo;
+							int hash = Math.abs(winName.hashCode());
+
+							url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/showCdxDocumentArchive.jsp?inWindow=true&EDID="+ dispDocNo + "');";
+							url = url + "return false;";
+							%>
+				<a class="links" title="<bean:message key="oscarEncounter.view.docView"/>" id="view<%=globalNoteId%>" href="javascript:void(0);" onclick="<%=url%>" style="float: right; margin-right: 5px; font-size: 10px;color:black">
+					<bean:message key="oscarEncounter.view" />
+				</a>
+				<%
+					}
+						//
 						else
 						{ //document note
 							String url;

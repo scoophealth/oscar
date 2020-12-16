@@ -417,6 +417,9 @@ jQuery(document).ready(function(){
 
 function hideFieldsForAdviceRequest(txtArea){
 
+	if(requestId!='null'){
+		document.getElementById('adviceRequest').disabled=true;
+	}
 	var str="This is just an advice request, there is no need for an appointment.";
 
 	if(document.getElementById('adviceRequest').checked){
@@ -440,6 +443,7 @@ function hideFieldsForAdviceRequest(txtArea){
 	document.forms[0].appointmentHour.value="-1";
 	document.forms[0].appointmentMinute.value="-1";
 	document.forms[0].appointmentpm.value="AM";
+	alert("leaving func.");
 }
 
 function getClinicalData( data, target ) {

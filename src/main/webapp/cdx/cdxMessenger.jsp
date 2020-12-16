@@ -585,15 +585,17 @@ ul#primary li, ul#secondary li{
     function populateAndSubmit(){
 
     $('#hiddentextarea').val($('#FamilyHistory').text().trim()+'\n');
-    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#MedicalHistory').text().trim()+'\n');
-    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#ongoingConcerns').text().trim()+'\n');
-    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#SocialHistory').text().trim()+'\n');
-    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#OtherMeds').text().trim()+'\n');
-    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#Reminders').text().trim()+'\n');
-    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#fetchRiskFactors').text().trim()+'\n');
-    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#fetchMedications').text().trim()+'\n');
-    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#fetchLongTermMedications').text().trim()+'\n');
-    $('#hiddentextarea').val(  $('#hiddentextarea').val()+$('#fetchAllergies').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val().trim()+'\n'+$('#MedicalHistory').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val().trim()+'\n'+$('#ongoingConcerns').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val().trim()+'\n'+$('#SocialHistory').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val().trim()+'\n'+$('#OtherMeds').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val().trim()+'\n'+$('#Reminders').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val().trim()+'\n'+$('#fetchRiskFactors').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val().trim()+'\n'+$('#fetchMedications').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val().trim()+'\n'+$('#fetchLongTermMedications').text().trim()+'\n');
+    $('#hiddentextarea').val(  $('#hiddentextarea').val().trim()+'\n'+$('#fetchAllergies').text().trim()+'\n');
+
+    $('#hiddentextarea').val( $('#hiddentextarea').val().trim());
     $('#messengerForm').submit();
 
 }
