@@ -90,7 +90,7 @@
 
     <link rel="stylesheet" type="text/css" href="/oscar/share/yui/css/fonts-min.css">
     <link rel="stylesheet" type="text/css" href="/oscar/share/yui/css/autocomplete.css">
-    <title>CDX Composer v0.1</title>
+    <title>CDX Composer</title>
     <style>
         #success_message{ display: none;}
 
@@ -332,7 +332,7 @@ ul#primary li, ul#secondary li{
                 if(items[i].type=='checkbox' && items[i].checked==true)
                     selectedItems+=items[i].value+", ";
             }
-            var allclinics= selectedItems.substring(0, selectedItems.length - 1);
+            var allclinics= selectedItems.substring(0, selectedItems.length - 2);
 
             $('#secondary').append("<li> <a href='javascript:void(0);' class='removes'><b>&times;</b></a><input type='hidden' name='srecipients' value='"+allclinics+"'>"+ allclinics+"</li>");
             //select.options[select.options.length] = new Option(allclinics, allclinics);
@@ -612,7 +612,7 @@ ul#primary li, ul#secondary li{
             <!-- Form Name -->
 
 
-                <div>  <legend><center><h2> <b>CDX Composer v0.1</b>
+                <div>  <legend><center><h2> <b>CDX Composer</b>
                     <span>
                         <a href="../cdx/cdxMessengerHistory.jsp" target="_blank" class="btn ovalbutton" role="button">History</a>
                         <a href="../cdx/showDrafts.jsp" target="_blank" class="btn ovalbutton" role="button">Drafts</a>
