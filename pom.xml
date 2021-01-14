@@ -706,7 +706,7 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>3.6</version>
+			<version>3.17</version>
 		</dependency>
 
 		<!-- ostermillerutils_1_04_03_for_java_1_4.jar we need to stop using this and replace it with apache commons -->
