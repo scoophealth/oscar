@@ -29,8 +29,7 @@ import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
 import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import ca.uvic.leadlab.obibconnector.facades.send.ISubmitDoc;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -40,6 +39,7 @@ import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
 
 import javax.xml.bind.DatatypeConverter;
+import java.io.IOException;
 import java.util.Date;
 
 public class SubmitDocTest extends FacadesBaseTest {
@@ -259,7 +259,7 @@ public class SubmitDocTest extends FacadesBaseTest {
             String docStr = mapper.writeValueAsString(doc);
             MiscUtils.getLogger().info(docStr);
             result = true;
-        } catch (JsonProcessingException e) {
+        } catch (IOException e) {
             MiscUtils.getLogger().error(e.getMessage());
         }
         return result;

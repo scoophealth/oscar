@@ -8,8 +8,6 @@ import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
 import ca.uvic.leadlab.obibconnector.facades.send.IRecipient;
 import ca.uvic.leadlab.obibconnector.facades.send.ISubmitDoc;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lowagie.text.*;
 import com.lowagie.text.Document;
 import com.lowagie.text.pdf.PdfContentByte;
@@ -26,6 +24,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -438,7 +437,7 @@ public class CDXMessengerAction extends DispatchAction {
             String docStr = mapper.writeValueAsString(doc);
             MiscUtils.getLogger().info(docStr);
             result = true;
-        } catch (JsonProcessingException e) {
+        } catch (IOException e) {
             MiscUtils.getLogger().error(e.getMessage());
         }
         return result;
