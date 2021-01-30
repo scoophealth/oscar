@@ -27,3 +27,5 @@ create table cdx_messengerAttachments
     attach_date date    null,
     demo_no     int(10) null
 );
+
+alter table consultationRequests add isAdviceRequest char null;
