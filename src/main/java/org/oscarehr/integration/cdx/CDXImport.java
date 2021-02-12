@@ -190,14 +190,9 @@ public class CDXImport {
         List<CdxProvenance> versions = provDao.findReceivedVersions(doc.getSetId(), doc.getInFulFillmentOfId());
 
         prov.populate(doc);
+        inboxDoc = createInboxData(doc);
 
-        if (versions.isEmpty()) // brand new document
-            inboxDoc = createInboxData(doc);
-        else { // another version of existing document
-            CdxProvenance newestExistingVersion = versions.get(0);
-            if (newestExistingVersion.getEffectiveTime().before(doc.getEffectiveTime())) {
-                inboxDoc = reviseInboxData(doc, newestExistingVersion.getDocumentNo());
-            }
+        if (!versions.isEmpty()) { // another version of existing document
             if (doc.getVersion()==0) {
                 prov.setVersion(versions.size());
             } else {
