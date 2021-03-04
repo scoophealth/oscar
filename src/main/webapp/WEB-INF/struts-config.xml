@@ -2702,7 +2702,7 @@
 		</action>
 		<action path="/hospitalReportManager/HRMDownloadFile" type="org.oscarehr.hospitalReportManager.HRMDownloadFileAction" />
 
-		<action path="/cdx/CDXAdmin" type="org.oscarehr.integration.cdx.CDXAdminAction" scope="request" validate="false">
+		<action path="/cdx/CDXAdmin" type="org.oscarehr.integration.cdx.CDXAdminAction" scope="request" validate="false" parameter="method">
 			<forward name="success" path="/cdx/cdxAdmin.jsp" />
 		</action>
 

@@ -31,6 +31,8 @@
 <%@ page import="org.oscarehr.integration.cdx.CDXConfiguration" %>
 <%@ page import="org.oscarehr.util.MiscUtils" %>
 <%@ page import="org.oscarehr.util.SpringUtils" %>
+<%@ page import="java.util.Calendar" %>
+<%@ page import="java.util.Date" %>
 <%@ page import="java.util.List" %>
 <%@ page import="ca.uvic.leadlab.obibconnector.impl.receive.SearchDoc" %>
 <%@ page import="ca.uvic.leadlab.obibconnector.impl.receive.ReceiveDoc" %>
@@ -40,7 +42,9 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="org.oscarehr.integration.cdx.dao.CdxPendingDocsDao" %>
 <%@ page import="java.text.SimpleDateFormat" %>
+<%@page import="org.apache.commons.lang.time.DateFormatUtils" %>
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
     String roleName$ = session.getAttribute("userrole") + "," + session.getAttribute("user");
@@ -75,6 +79,19 @@
     //String privateKey = "";
     //String decryptionKey = "";
 
+    Date startDate;
+    Date endDate;
+
+    if (request.getAttribute("cdx_search_date_start") != null && request.getAttribute("cdx_search_date_end") != null) {
+        startDate = (Date) request.getAttribute("cdx_search_date_start");
+        endDate = (Date) request.getAttribute("cdx_search_date_end");
+    } else { // initial page loading
+        endDate = new Date();
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTime(endDate);
+        startCal.add(Calendar.DATE, -30); // set startDate 30 days before
+        startDate = startCal.getTime();
+    }
 
     CDXConfiguration cdxConfiguration = new CDXConfiguration();
     if (cdxConfiguration.isPollingEnabled()) {
@@ -128,6 +145,10 @@
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
 
+    <link rel="stylesheet" type="text/css" media="all" href="<%= request.getContextPath() %>/share/calendar/calendar.css" title="win2k-cold-1" />
+    <script type="text/javascript" src="<%= request.getContextPath() %>/share/calendar/calendar.js"></script>
+    <script type="text/javascript" src="<%= request.getContextPath() %>/share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+    <script type="text/javascript" src="<%= request.getContextPath() %>/share/calendar/calendar-setup.js"></script>
 
     <script>
 
@@ -152,6 +173,9 @@
 
         }
 
+        function blockFutureDates(date, y, m, d) {
+            return date >= new Date();
+        }
 
         $(document).ready(function () {
             var table = $('#doctable').DataTable(
@@ -190,6 +214,26 @@
                     $this.button('reset');
                 }, 8000);
             });
+            $('#searchBtn').on('click', function () {
+                var $this = $(this);
+                $this.button('loading');
+                setTimeout(function () {
+                    $this.button('reset');
+                }, 8000);
+            });
+
+            Calendar.setup({
+                inputField : "cdx_search_date_start",
+                ifFormat : "%Y-%m-%d",
+                button : "date_start_cal",
+                step : 1,
+                dateStatusFunc: blockFutureDates });
+            Calendar.setup({
+                inputField : "cdx_search_date_end",
+                ifFormat : "%Y-%m-%d",
+                button : "date_end_cal",
+                step : 1,
+                dateStatusFunc: blockFutureDates });
         });
 
 
@@ -213,6 +257,7 @@
 </div>
 <div class="panel-body">
     <form action="<%=request.getContextPath()%>/cdx/CDXAdmin.do" method="post">
+        <input type="hidden" name="method" value="saveConfig"/>
 
         <div class="form-group row">
 
@@ -327,14 +372,41 @@
             (after import)
         </div>
 
-
         <%
             }
+        %>
 
+        <form action="<%=request.getContextPath()%>/cdx/CDXAdmin.do" method="post">
+            <input type="hidden" name="method" value="searchDocs"/>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label for="cdx_search_date_start">Start Date</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon3"><img src="<%=request.getContextPath()%>/images/cal.gif" id="date_start_cal"></span>
+                        <input type="string" class="form-control" id="cdx_search_date_start" name="cdx_search_date_start"
+                               value="<%=DateFormatUtils.ISO_DATE_FORMAT.format(startDate)%>" aria-describedby="basic-addon3">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label for="cdx_search_date_end">End Date</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon4"><img src="<%=request.getContextPath()%>/images/cal.gif" id="date_end_cal"></span>
+                        <input type="string" class="form-control" id="cdx_search_date_end" name="cdx_search_date_end"
+                               value="<%=DateFormatUtils.ISO_DATE_FORMAT.format(endDate)%>" aria-describedby="basic-addon4">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" id="searchBtn" class="btn btn-default" style="margin-top: 25px;"
+                            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Searching"> Search Documents
+                    </button>
+                </div>
+            </div>
+        </form>
 
+        <%
             List<IDocument> availableDocs = null;
             try {
-                availableDocs = docSearcher.searchDocuments();
+                availableDocs = docSearcher.searchDocumentsByPeriod(startDate, endDate);
             } catch (Exception e) {
                 MiscUtils.getLogger().info("OBIB searchDocumentsByClinic failed", e);
             }
