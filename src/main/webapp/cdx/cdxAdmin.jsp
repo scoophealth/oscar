@@ -425,8 +425,8 @@
 
         %>
 
-        <p>There is a total of <%=notImportedDocs.size()%> documents retrievable from the CDX system for this clinic,
-            which are not in the EMR database.</p>
+        <p>In the time frame between <%=DateFormatUtils.ISO_DATE_FORMAT.format(startDate)%> and <%=DateFormatUtils.ISO_DATE_FORMAT.format(endDate)%>,
+            there are <%=notImportedDocs.size()%> documents retrievable from the CDX system for this clinic, which is not in the EMR database.</p>
 
         <%
             if (!notImportedDocs.isEmpty()) {
