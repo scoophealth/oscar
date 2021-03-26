@@ -433,10 +433,15 @@ public class CDXImport {
                 return "note";
             case "ereferral note" :
                 return "e-referral note";
+            case "information request" :
+                return "information request";
             case "hospital admission notification note" :
                 return "general purpose notification";
             case "labour and delivery summary":
+            case "patient summary" :
                 return "patient summary";
+            case "advice request" :
+                return "advice request";
             default :
                 return "others";
         }

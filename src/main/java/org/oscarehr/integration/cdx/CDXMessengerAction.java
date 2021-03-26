@@ -201,10 +201,20 @@ public class CDXMessengerAction extends DispatchAction {
         doc = submitDoc.newDoc();
         if (cdxMessenger.getDocumentType().equalsIgnoreCase("Information Request")) {
             doc.documentType(DocumentType.INFO_REQUEST);
-        } else if (cdxMessenger.getDocumentType().equalsIgnoreCase("Patient Summary")) {
-            doc.documentType(DocumentType.PATIENT_SUMMARY);
         } else if (cdxMessenger.getDocumentType().equalsIgnoreCase("Progress Note")) {
             doc.documentType(DocumentType.PROGRESS_NOTE);
+        }   else if (cdxMessenger.getDocumentType().equalsIgnoreCase("Consult Note")) {
+            doc.documentType(DocumentType.CONSULT_NOTE);
+        } else if (cdxMessenger.getDocumentType().equalsIgnoreCase("Referral Note")) {
+            doc.documentType(DocumentType.REFERRAL_NOTE);
+        } else if (cdxMessenger.getDocumentType().equalsIgnoreCase("Patient Summary")) {
+            doc.documentType(DocumentType.PATIENT_SUMMARY);
+        } else if (cdxMessenger.getDocumentType().equalsIgnoreCase("Discharge Summary")) {
+            doc.documentType(DocumentType.DISCHARGE_SUMMARY);
+        } else if (cdxMessenger.getDocumentType().equalsIgnoreCase("Care Plan")) {
+            doc.documentType(DocumentType.CARE_PLAN);
+        } else if (cdxMessenger.getDocumentType().equalsIgnoreCase("General Purpose Note")) {
+            doc.documentType(DocumentType.NOTE);
         }
         // doc.documentType(DocumentType.ADVICE_REQUEST);
 

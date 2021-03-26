@@ -682,7 +682,12 @@ ul#primary li, ul#secondary li{
                             <option value="">Select document type</option>
                             <option>Information Request</option>
                             <option>Patient Summary</option>
+                            <option>Discharge Summary</option>
                             <option>Progress Note</option>
+                            <option>Consult Note</option>
+                            <option>Referral Note</option>
+                            <option>General Purpose Note</option>
+                            <option>Care Plan</option>
 
                         </select>
                     </div>
