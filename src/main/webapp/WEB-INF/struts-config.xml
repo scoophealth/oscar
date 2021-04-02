@@ -2706,7 +2706,7 @@
 			<forward name="success" path="/cdx/cdxAdmin.jsp" />
 		</action>
 
-		<action path="/cdx/CDXMessenger" type="org.oscarehr.integration.cdx.CDXMessengerAction" scope="request" validate="false">
+		<action path="/cdx/CDXMessenger" type="org.oscarehr.integration.cdx.CDXMessengerAction" scope="request" validate="false" parameter="method">
 			<forward name="success" path="/cdx/cdxMessengerSuccess.jsp" />
 		</action>
 		<action name="cdxAttachDoc" path="/cdx/CDXMessengerAttachDocument" type="org.oscarehr.integration.cdx.CDXMessengerAttachDocumentAction" scope="request" validate="false">

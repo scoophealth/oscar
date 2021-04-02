@@ -5,7 +5,6 @@ import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
 import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
 import ca.uvic.leadlab.obibconnector.facades.registry.IClinic;
 import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
-import ca.uvic.leadlab.obibconnector.facades.send.IRecipient;
 import ca.uvic.leadlab.obibconnector.facades.send.ISubmitDoc;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
 import com.lowagie.text.*;
@@ -19,6 +18,9 @@ import com.sun.xml.messaging.saaj.util.ByteInputStream;
 import com.sun.xml.messaging.saaj.util.ByteOutputStream;
 import io.woo.htmltopdf.HtmlToPdf;
 import io.woo.htmltopdf.HtmlToPdfObject;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -27,6 +29,7 @@ import org.apache.struts.actions.DispatchAction;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementNoteLink;
+import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.common.dao.*;
 import org.oscarehr.common.model.*;
@@ -42,19 +45,18 @@ import org.oscarehr.managers.DemographicManager;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
-import org.oscarehr.util.WebUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import oscar.MyDateFormat;
 import oscar.OscarProperties;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
+import oscar.oscarDemographic.data.EctInformation;
 import oscar.oscarEncounter.data.EctProgram;
 import oscar.oscarLab.ca.all.pageUtil.LabPDFCreator;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
 import oscar.util.ConcatPDF;
-import oscar.util.ParameterActionForward;
+import oscar.util.StringUtils;
 import oscar.util.UtilDateUtilities;
 
 import javax.servlet.http.HttpServletRequest;
@@ -76,41 +78,40 @@ public class CDXMessengerAction extends DispatchAction {
     private static final Logger logger = MiscUtils.getLogger();
     private String contentRoute;
 
-    @Override
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward submitDocument(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // TODO security check
+        HttpSession session = request.getSession();
+        if (session.getAttribute("userrole") == null) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return null;
+        }
 
         LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
         contentRoute = request.getSession().getServletContext().getRealPath("/");
         HashMap<String, String[]> specialistAndClinicsPrimary = new HashMap<>();
         HashMap<String, String[]> specialistAndClinicsSecondary = new HashMap<>();
-        String pRecipients[] = request.getParameterValues("precipients");
-        String sRecipients[] = request.getParameterValues("srecipients");
+        String[] pRecipients = request.getParameterValues("precipients");
+        String[] sRecipients = request.getParameterValues("srecipients");
+
         String specialistsToStore = "";
         if (pRecipients != null && pRecipients.length > 0) {
-
             for (String rec : pRecipients) {
-                String splittedSpecialistsAndClinics[] = rec.split("@");
+                String[] splittedSpecialistsAndClinics = rec.split("@");
                 specialistsToStore = specialistsToStore + splittedSpecialistsAndClinics[0] + ", ";
                 specialistAndClinicsPrimary.put(splittedSpecialistsAndClinics[0], splittedSpecialistsAndClinics[1].split(","));
-
             }
             specialistsToStore = specialistsToStore.substring(0, specialistsToStore.length() - 2);
         }
 
         if (sRecipients != null && sRecipients.length > 0) {
-
             for (String rec : sRecipients) {
-                String splittedSpecialistsAndClinics[] = rec.split("@");
+                String[] splittedSpecialistsAndClinics = rec.split("@");
                 specialistsToStore = specialistsToStore + ", " + splittedSpecialistsAndClinics[0];
                 specialistAndClinicsSecondary.put(splittedSpecialistsAndClinics[0], splittedSpecialistsAndClinics[1].split(","));
-
             }
-
         }
 
-
         CdxMessenger cdxMessenger = setCdxMessage(request, specialistsToStore);
-
 
         try {
             doCdxSend(loggedInInfo, request, cdxMessenger, specialistAndClinicsPrimary, specialistAndClinicsSecondary);
@@ -129,16 +130,368 @@ public class CDXMessengerAction extends DispatchAction {
         return mapping.findForward("success");
     }
 
+    public ActionForward saveDraft(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // TODO security check
+        HttpSession session = request.getSession();
+        if (session.getAttribute("userrole") == null) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return null;
+        }
+
+        String patient = request.getParameter("patient");
+        //String primaryrecipient = request.getParameter("precipients");
+        String[] precipients = request.getParameterValues("precipients[]");
+        String[] srecipients = request.getParameterValues("srecipients[]");
+        String msgType = request.getParameter("msgtype");
+        String documentType = request.getParameter("documenttype");
+        String content = request.getParameter("content");
+
+        String recipientsToStore = "";
+        String pSpecialists = "";
+        String sSpecialists = "";
+        if (precipients != null && precipients.length > 0) {
+            for (String rec : precipients) {
+                String[] splittedSpecialistsAndClinics = rec.split("@");
+                recipientsToStore = recipientsToStore + splittedSpecialistsAndClinics[0] + ", ";
+                pSpecialists = pSpecialists + rec + '#';
+            }
+            pSpecialists = pSpecialists.substring(0, pSpecialists.length() - 1);
+            recipientsToStore = recipientsToStore.substring(0, recipientsToStore.length() - 2);
+        }
+        if (srecipients != null && srecipients.length > 0) {
+            for (String rec : srecipients) {
+                String[] splittedSpecialistsAndClinics = rec.split("@");
+                recipientsToStore = recipientsToStore + ", " + splittedSpecialistsAndClinics[0];
+                sSpecialists = sSpecialists + rec + '#';
+            }
+            sSpecialists = sSpecialists.substring(0, sSpecialists.length() - 1);
+        }
+
+        CdxMessengerDao cdxMessengerDao = SpringUtils.getBean(CdxMessengerDao.class);
+
+        if (!StringUtils.isNullOrEmpty(patient)) {
+            CdxMessenger cdxMessenger = new CdxMessenger();
+            cdxMessenger.setPatient(patient);
+            cdxMessenger.setRecipients(recipientsToStore);
+            cdxMessenger.setPrimaryRecipient(pSpecialists);
+            cdxMessenger.setSecondaryRecipient(sSpecialists);
+            cdxMessenger.setCategory(msgType);
+            cdxMessenger.setContent(content);
+            cdxMessenger.setDocumentType(documentType);
+            cdxMessenger.setAuthor(session.getAttribute("userfirstname") + "," + session.getAttribute("userlastname"));
+            cdxMessenger.setTimeStamp(new Timestamp(new Date().getTime()));
+            cdxMessenger.setDeliveryStatus("Not Sent");
+            cdxMessenger.setDraft("Y");
+            try {
+                cdxMessengerDao.persist(cdxMessenger);
+                response.setStatus(HttpServletResponse.SC_OK); // return OK response
+            } catch (Exception ex) {
+                logger.error("Got exception saving messenger Information " + ex.getMessage());
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, request.getRequestURI());
+            }
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST); // invalid request info
+        }
+        return null;
+    }
+
+    public ActionForward searchPatient(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // TODO security check
+        HttpSession session = request.getSession();
+        if (session.getAttribute("userrole") == null) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return null;
+        }
+
+        String patient = request.getParameter("patient");
+        if (StringUtils.isNullOrEmpty(patient)) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST); // invalid request info
+            return null;
+        }
+
+        JSONArray patientsJSONArray = new JSONArray(); // to return the data
+
+        DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
+        List<Demographic> demographicList = demographicDao.searchDemographicByFullName(patient);
+        for (Demographic demographic : demographicList) {
+            JSONObject patientJSONObject = new JSONObject();
+            patientJSONObject.put("id", demographic.getId());
+            patientJSONObject.put("fullName", demographic.getFullName());
+            patientsJSONArray.add(patientJSONObject);
+        }
+
+        // Return a json array with the patients info
+        response.setContentType("application/json");
+        response.getWriter().write(patientsJSONArray.toString());
+        response.setStatus(HttpServletResponse.SC_OK);
+        return null;
+    }
+
+    public ActionForward fetchPatientInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // TODO security check
+        HttpSession session = request.getSession();
+        if (session.getAttribute("userrole") == null) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return null;
+        }
+
+        String demographyId = request.getParameter("demographyId");
+        String type = request.getParameter("type");
+        if (StringUtils.isNullOrEmpty(demographyId) || StringUtils.isNullOrEmpty(type)) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST); // invalid request info
+            return null;
+        }
+
+        String providerNo = (String) session.getAttribute("user");
+        ArrayList<String> users = (ArrayList<String>) session.getServletContext().getAttribute("CaseMgmtUsers");
+        boolean useNewCmgmt = false;
+        WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(session.getServletContext());
+        CaseManagementManager cmgmtMgr = null;
+        if (users != null && users.size() > 0 && (users.get(0).equalsIgnoreCase("all") || Collections.binarySearch(users, providerNo) >= 0)) {
+            useNewCmgmt = true;
+            cmgmtMgr = (CaseManagementManager) ctx.getBean("caseManagementManager");
+        }
+
+        UserPropertyDAO userPropertyDAO = (UserPropertyDAO) ctx.getBean("UserPropertyDAO");
+        UserProperty fmtProperty = userPropertyDAO.getProp(providerNo, UserProperty.CONSULTATION_REQ_PASTE_FMT);
+        String pasteFmt = fmtProperty != null ? fmtProperty.getValue() : null;
+
+        // to get allergies, family history at cdxmessenger.
+        String value = "";
+        String cleanString = "";
+        PatientOtherInfo otherInfo = PatientOtherInfo.valueOf(type);
+        switch (otherInfo) {
+            case FamilyHistory:
+                if (OscarProperties.getInstance().getBooleanProperty("caisi", "on")) {
+                    EctInformation EctInfo = new EctInformation(LoggedInInfo.getLoggedInInfoFromSession(request), demographyId);
+                    value = EctInfo.getFamilyHistory();
+                } else {
+                    if (useNewCmgmt) {
+                        value = listNotes(cmgmtMgr, "FamHistory", providerNo, demographyId);
+                    } else {
+                        EctInformation EctInfo = new EctInformation(LoggedInInfo.getLoggedInInfoFromSession(request), demographyId);
+                        value = EctInfo.getFamilyHistory();
+                    }
+                }
+                if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single")) {
+                    value = StringUtils.lineBreaks(value);
+                }
+                value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
+
+                cleanString = StringEscapeUtils.unescapeJava(value);
+                break;
+            case MedicalHistory:
+                if (useNewCmgmt) {
+                    value = listNotes(cmgmtMgr, "MedHistory", providerNo, demographyId);
+                } else {
+                    EctInformation EctInfo = new EctInformation(LoggedInInfo.getLoggedInInfoFromSession(request), demographyId);
+                    value = EctInfo.getMedicalHistory();
+                }
+                if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single")) {
+                    value = StringUtils.lineBreaks(value);
+                }
+                value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
+
+                cleanString = StringEscapeUtils.unescapeJava(value);
+                break;
+            case ongoingConcerns:
+                if (useNewCmgmt) {
+                    value = listNotes(cmgmtMgr, "Concerns", providerNo, demographyId);
+                } else {
+                    EctInformation EctInfo = new EctInformation(LoggedInInfo.getLoggedInInfoFromSession(request), demographyId);
+                    value = EctInfo.getOngoingConcerns();
+                }
+                if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single")) {
+                    value = StringUtils.lineBreaks(value);
+                }
+                value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
+
+                cleanString = StringEscapeUtils.unescapeJava(value);
+                break;
+            case SocialHistory:
+                if (useNewCmgmt) {
+                    value = listNotes(cmgmtMgr, "SocHistory", providerNo, demographyId);
+                } else {
+                    EctInformation EctInfo = new EctInformation(LoggedInInfo.getLoggedInInfoFromSession(request), demographyId);
+                    value = EctInfo.getSocialHistory();
+                }
+                if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single")) {
+                    value = StringUtils.lineBreaks(value);
+                }
+                value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
+
+                cleanString = StringEscapeUtils.unescapeJava(value);
+                break;
+            case OtherMeds:
+                if (OscarProperties.getInstance().getBooleanProperty("caisi", "on")) {
+                    value = "";
+                } else {
+                    if (useNewCmgmt) {
+                        value = listNotes(cmgmtMgr, "OMeds", providerNo, demographyId);
+                    } else {
+                        //family history was used as bucket for Other Meds in old encounter
+                        EctInformation EctInfo = new EctInformation(LoggedInInfo.getLoggedInInfoFromSession(request), demographyId);
+                        value = EctInfo.getFamilyHistory();
+                    }
+                }
+                if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single")) {
+                    value = StringUtils.lineBreaks(value);
+                }
+                value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
+
+                cleanString = StringEscapeUtils.unescapeJava(value);
+                break;
+            case Reminders:
+                if (useNewCmgmt) {
+                    value = listNotes(cmgmtMgr, "Reminders", providerNo, demographyId);
+                } else {
+                    EctInformation EctInfo = new EctInformation(LoggedInInfo.getLoggedInInfoFromSession(request), demographyId);
+                    value = EctInfo.getReminders();
+                }
+                if (pasteFmt == null || pasteFmt.equalsIgnoreCase("single")) {
+                    value = StringUtils.lineBreaks(value);
+                }
+                value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
+
+                cleanString = StringEscapeUtils.unescapeJava(value);
+                break;
+        }
+
+        // return the data as plain text
+        response.setContentType("text/plain");
+        response.getWriter().write(cleanString);
+        response.setStatus(HttpServletResponse.SC_OK);
+        return null;
+    }
+
+    private String listNotes(CaseManagementManager cmgmtMgr, String code, String providerNo, String demoNo) {
+        // filter the notes by the checked issues
+        List<Issue> issues = cmgmtMgr.getIssueInfoByCode(providerNo, code);
+
+        String[] issueIds = new String[issues.size()];
+        int idx = 0;
+        for (Issue issue : issues) {
+            issueIds[idx] = String.valueOf(issue.getId());
+        }
+
+        // need to apply issue filter
+        List<CaseManagementNote> notes = cmgmtMgr.getNotes(demoNo, issueIds);
+        StringBuilder noteStr = new StringBuilder();
+        for (CaseManagementNote n : notes) {
+            if (!n.isLocked() && !n.isArchived()) {
+                noteStr.append(n.getNote()).append("\n");
+            }
+        }
+        return noteStr.toString();
+    }
+
+    public ActionForward searchRecipient(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // TODO security check
+        HttpSession session = request.getSession();
+        if (session.getAttribute("userrole") == null) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return null;
+        }
+
+        OscarProperties props = OscarProperties.getInstance();
+        boolean showCdx = "bc".equalsIgnoreCase(props.getProperty("billregion"));
+        if (!showCdx) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN); // TODO ?
+            return null;
+        }
+
+        String searchString = request.getParameter("recipient");
+        if (StringUtils.isNullOrEmpty(searchString)) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST); // invalid request info
+            return null;
+        }
+
+        JSONArray providersJSONArray = new JSONArray(); // to return the data
+
+        CDXSpecialist cdxSpecialist = new CDXSpecialist();
+        List<IProvider> providers = cdxSpecialist.findCdxSpecialistByName(searchString);
+        if (providers != null && !providers.isEmpty()) {
+            for (IProvider provider : providers) {
+                JSONObject providerJSONObject = new JSONObject();
+                providerJSONObject.put("id", provider.getID());
+                providerJSONObject.put("fullName", provider.getLastName() + " " + provider.getFirstName());
+
+                JSONArray clinicsJSONArray = new JSONArray();
+
+                List<IClinic> clinics = provider.getClinics();
+                if (clinics != null && !clinics.isEmpty()) {
+                    for (IClinic clinic : clinics) {
+                        JSONObject clinicJSONObject = new JSONObject();
+                        clinicJSONObject.put("id", clinic.getID());
+                        clinicJSONObject.put("name", clinic.getName());
+                        clinicJSONObject.put("address", clinic.getStreetAddress() + " " + clinic.getCity() + " " + clinic.getProvince());
+                        clinicsJSONArray.add(clinicJSONObject);
+                    }
+                    providerJSONObject.put("clinics", clinicsJSONArray);
+                }
+
+
+                providersJSONArray.add(providerJSONObject);
+            }
+        }
+
+        // Return a json array with the providers info
+        response.setContentType("application/json");
+        response.getWriter().write(providersJSONArray.toString());
+        response.setStatus(HttpServletResponse.SC_OK);
+        return null;
+    }
+
+    public ActionForward fetchAttachments(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // TODO security check
+        HttpSession session = request.getSession();
+        if (session.getAttribute("userrole") == null) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return null;
+        }
+
+        LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
+        String demoNo = request.getParameter("demoNo");
+        String requestId = request.getParameter("requestId");
+
+        if (StringUtils.isNullOrEmpty(demoNo)) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST); // invalid request info
+            return null;
+        }
+
+        // Store Docs' descriptions in a JSON array
+        JSONArray docs = new JSONArray();
+        List<EDoc> attachedDocs = EDocUtil.listDocsForCdxMessenger(loggedInInfo, demoNo, requestId, EDocUtil.ATTACHED);
+        for (EDoc eDoc : attachedDocs) {
+            docs.add(StringUtils.maxLenString(eDoc.getDescription(), 19, 16, "..."));
+        }
+
+        // Store Labs' descriptions in a JSON array
+        JSONArray labs = new JSONArray();
+        CommonLabResultData resultData = new CommonLabResultData();
+        ArrayList<LabResultData> labResults = resultData.populateLabResultsDataCdxMessenger(loggedInInfo, demoNo, requestId, CommonLabResultData.ATTACHED);
+        for (LabResultData labResult : labResults) {
+            labs.add(labResult.getDiscipline() + " " + labResult.getDateTime());
+        }
+
+        JSONObject attachments = new JSONObject();
+        attachments.put("docs", docs);
+        attachments.put("labs", labs);
+
+        // return a json object with the attachments info
+        response.setContentType("application/json");
+        response.getWriter().write(attachments.toString());
+        response.setStatus(HttpServletResponse.SC_OK);
+        return null;
+    }
 
     private CdxMessenger setCdxMessage(HttpServletRequest request, String specialists) {
-
-
         CdxMessenger cdxMessenger = new CdxMessenger();
         String patient = request.getParameter("patientsearch");
         String messagetype = request.getParameter("messagetype");
         String documenttype = request.getParameter("documenttype");
         String contentmessage = request.getParameter("contentmessage");
-        if (patient != null || patient.length() != 0) {
+        if (patient != null && patient.length() != 0) {
             cdxMessenger.setPatient(patient);
             cdxMessenger.setRecipients(specialists);
             cdxMessenger.setCategory(messagetype);
@@ -147,15 +500,13 @@ public class CDXMessengerAction extends DispatchAction {
             cdxMessenger.setAuthor(request.getSession().getAttribute("userfirstname") + "," + request.getSession().getAttribute("userlastname"));
             cdxMessenger.setTimeStamp(new Timestamp(new Date().getTime()));
             cdxMessenger.setDeliveryStatus("Unknown");
-
-
         }
         return cdxMessenger;
-
     }
 
-
-    private void doCdxSend(LoggedInInfo loggedInInfo, HttpServletRequest request, CdxMessenger cdxMessenger, HashMap<String, String[]> specialistAndClinicsPrimary, HashMap<String, String[]> specialistAndClinicsSecondary) throws OBIBException {
+    private void doCdxSend(LoggedInInfo loggedInInfo, HttpServletRequest request, CdxMessenger cdxMessenger,
+                           HashMap<String, String[]> specialistAndClinicsPrimary,
+                           HashMap<String, String[]> specialistAndClinicsSecondary) throws OBIBException {
 
         DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
         CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
@@ -178,9 +529,6 @@ public class CDXMessengerAction extends DispatchAction {
         ClinicDAO clinicDAO = (ClinicDAO) SpringUtils.getBean("clinicDAO");
         Clinic clinic = clinicDAO.getClinic();
 
-        ProfessionalSpecialistDao professionalSpecialistDao = (ProfessionalSpecialistDao) SpringUtils.getBean("professionalSpecialistDao");
-
-
         // Add pdf attachments (scanned images, lab reports and PDF files)
         String filename = null;
         byte[] newBytes = null;
@@ -190,7 +538,6 @@ public class CDXMessengerAction extends DispatchAction {
             filename = "ConsultationRequestAttachedPDF-" + demographic.getLastName() + "," + demographic.getFirstName() + "-" + UtilDateUtilities.getToday("yyyy-MM-dd_HHmmss") + ".pdf";
             MiscUtils.getLogger().debug("File: " + filename + ", Size: " + newBytes.length);
         }
-
 
         IDocument response;
         CDXConfiguration cdxConfig = new CDXConfiguration();
@@ -203,7 +550,7 @@ public class CDXMessengerAction extends DispatchAction {
             doc.documentType(DocumentType.INFO_REQUEST);
         } else if (cdxMessenger.getDocumentType().equalsIgnoreCase("Progress Note")) {
             doc.documentType(DocumentType.PROGRESS_NOTE);
-        }   else if (cdxMessenger.getDocumentType().equalsIgnoreCase("Consult Note")) {
+        } else if (cdxMessenger.getDocumentType().equalsIgnoreCase("Consult Note")) {
             doc.documentType(DocumentType.CONSULT_NOTE);
         } else if (cdxMessenger.getDocumentType().equalsIgnoreCase("Referral Note")) {
             doc.documentType(DocumentType.REFERRAL_NOTE);
@@ -226,7 +573,6 @@ public class CDXMessengerAction extends DispatchAction {
         }
 
         ISubmitDoc iDoc = doc.content(content)
-
                 .patient()
                 .id(patientId)
                 .name(NameType.LEGAL, demographic.getFirstName(), demographic.getLastName())
@@ -267,7 +613,9 @@ public class CDXMessengerAction extends DispatchAction {
         response = doc.submit();
 
         boolean debug = false;
-        if (debug) logResponse(response);
+        if (debug) {
+            logResponse(response);
+        }
         MiscUtils.getLogger().debug("Attempting to save document using logSentAction");
         CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
         cdxProvenanceDao.logSentAction(response);
@@ -283,7 +631,6 @@ public class CDXMessengerAction extends DispatchAction {
                 if (draft != null) {
                     cdxMessengerDao.deleteDraftById(draft.getId());
                 }
-
             } catch (Exception ex) {
                 MiscUtils.getLogger().error("Got exception while deleting draft " + ex.getMessage());
             }
@@ -293,151 +640,142 @@ public class CDXMessengerAction extends DispatchAction {
             cdxMessenger.setDocumentId(response.getDocumentID());
             cdxMessenger.setDraft("N");
             cdxMessengerDao.persist(cdxMessenger);
-
-
         } catch (Exception ex) {
             MiscUtils.getLogger().error("Got exception saving messenger Information " + ex.getMessage());
         }
 
         //Now we have request id for the cdx messenger, we update the request id for the attachments.
         CommonLabResultData consultLabs = new CommonLabResultData();
-        ArrayList<EDoc> attachmentlists = EDocUtil.listDocsForCdxMessenger(loggedInInfo, "" + demographic.getDemographicNo(), "" + null, EDocUtil.ATTACHED);
+        ArrayList<EDoc> attachmentList = EDocUtil.listDocsForCdxMessenger(loggedInInfo, "" + demographic.getDemographicNo(), "" + null, EDocUtil.ATTACHED);
         ArrayList<LabResultData> labs = consultLabs.populateLabResultsDataCdxMessenger(loggedInInfo, "" + demographic.getDemographicNo(), null, CommonLabResultData.ATTACHED);
-        for (int i = 0; i < attachmentlists.size(); ++i) {
-            EDocUtil.updateAttachCdxDoc((attachmentlists.get(i)).getDocId(), "" + cdxMessenger.getId(), "" + demographic.getDemographicNo());
-            EDocUtil.detachCdxDoc((attachmentlists.get(i)).getDocId(), "" + cdxMessenger.getId(), "" + demographic.getDemographicNo());
+        for (EDoc attachment : attachmentList) {
+            EDocUtil.updateAttachCdxDoc(attachment.getDocId(), "" + cdxMessenger.getId(), "" + demographic.getDemographicNo());
+            EDocUtil.detachCdxDoc(attachment.getDocId(), "" + cdxMessenger.getId(), "" + demographic.getDemographicNo());
         }
 
-        for (int i = 0; i < labs.size(); ++i) {
-            EDocUtil.updateAttachCdxDoc((labs.get(i)).labPatientId, "" + cdxMessenger.getId(), "" + demographic.getDemographicNo());
-            EDocUtil.detachCdxDoc((labs.get(i)).labPatientId, "" + cdxMessenger.getId(), "" + demographic.getDemographicNo());
+        for (LabResultData lab : labs) {
+            EDocUtil.updateAttachCdxDoc(lab.labPatientId, "" + cdxMessenger.getId(), "" + demographic.getDemographicNo());
+            EDocUtil.detachCdxDoc(lab.labPatientId, "" + cdxMessenger.getId(), "" + demographic.getDemographicNo());
         }
 
         // Try to update the document distribution status
         CDXDistribution cdxDistribution = new CDXDistribution();
         cdxDistribution.updateDistributionStatus(response.getDocumentID());
 
+        // Code to add sent "Information request" and "Progress note" in toilet roll(notes) patient e-chart.
+        if (cdxMessenger.getDocumentType().equalsIgnoreCase("Information Request")
+                || cdxMessenger.getDocumentType().equalsIgnoreCase("Progress Note")) {
+            IProvider auth = response.getAuthor();
+            try {
+                // add to document table
+                DocumentDao docDao = getBean(DocumentDao.class);
 
-        //Code to add sent "Information request" and "Progress note" in toilet roll(notes) patient e-chart.
+                org.oscarehr.common.model.Document docEntity = new org.oscarehr.common.model.Document();
+                IProvider p;
+                // CDXImport cdximport=new CDXImport();
+                docEntity.setDoctype(response.getLoincCodeDisplayName());
+                docEntity.setDocdesc(response.getLoincCodeDisplayName());
+                docEntity.setDocfilename("N/A");
+                docEntity.setDoccreator(response.getCustodianName());
+                docEntity.setNumberofpages(0);
 
-        if (cdxMessenger.getDocumentType().equalsIgnoreCase("Information Request") || cdxMessenger.getDocumentType().equalsIgnoreCase("Progress Note")) {
+                p = response.getOrderingProvider();
 
-        IProvider auth = response.getAuthor();
+                if (p != null) {
+                    docEntity.setResponsible(p.getFirstName() + " " + p.getLastName());
+                } else {
+                    docEntity.setResponsible("");
+                }
 
-        try {
-            // add to document table
-            DocumentDao docDao = getBean(DocumentDao.class);
+                docEntity.setAbnormal(0);
 
-            org.oscarehr.common.model.Document docEntity = new org.oscarehr.common.model.Document();
-            IProvider p;
-            // CDXImport cdximport=new CDXImport();
-            docEntity.setDoctype(response.getLoincCodeDisplayName());
-            docEntity.setDocdesc(response.getLoincCodeDisplayName());
-            docEntity.setDocfilename("N/A");
-            docEntity.setDoccreator(response.getCustodianName());
-            docEntity.setNumberofpages(0);
+                docEntity.setDocClass(response.getLoincCodeDisplayName());
+                docEntity.setDocxml("stored in CDX provenance table");
+                docEntity.setDocfilename("CDX");
+                docEntity.setContenttype("CDX");
+                docEntity.setRestrictToProgram(false); // need to confirm semantics
 
-            p = response.getOrderingProvider();
+                docEntity.setSource(auth != null ? auth.getLastName() : "");
+                docEntity.setUpdatedatetime(response.getAuthoringTime());
+                docEntity.setStatus(org.oscarehr.common.model.Document.STATUS_ACTIVE);
+                docEntity.setReportStatus(response.getStatusCode().code);
 
-            if (p != null)
-                docEntity.setResponsible(p.getFirstName() + " " + p.getLastName());
-            else docEntity.setResponsible("");
+                if (response.getObservationDate() != null) {
+                    docEntity.setObservationdate(response.getObservationDate());
+                } else if (response.getAuthoringTime() != null) {
+                    docEntity.setObservationdate(response.getAuthoringTime());
+                } else if (response.getEffectiveTime() != null) {
+                    docEntity.setObservationdate(response.getEffectiveTime());
+                } else {
+                    docEntity.setObservationdate(new Date());
+                }
 
-            docEntity.setAbnormal(0);
+                if (response.getCustodianName() != null) {
+                    docEntity.setSourceFacility(response.getCustodianName());
+                }
 
+                docEntity.setContentdatetime(response.getAuthoringTime());
+                docDao.persist(docEntity);
 
-            docEntity.setDocClass(response.getLoincCodeDisplayName());
-            docEntity.setDocxml("stored in CDX provenance table");
-            docEntity.setDocfilename("CDX");
-            docEntity.setContenttype("CDX");
-            docEntity.setRestrictToProgram(false); // need to confirm semantics
-
-            docEntity.setSource(auth != null ? auth.getLastName() : "");
-            docEntity.setUpdatedatetime(response.getAuthoringTime());
-            docEntity.setStatus(org.oscarehr.common.model.Document.STATUS_ACTIVE);
-            docEntity.setReportStatus(response.getStatusCode().code);
-
-            if (response.getObservationDate() != null) {
-                docEntity.setObservationdate(response.getObservationDate());
-            } else if (response.getAuthoringTime() != null) {
-                docEntity.setObservationdate(response.getAuthoringTime());
-            } else if (response.getEffectiveTime() != null) {
-                docEntity.setObservationdate(response.getEffectiveTime());
-            } else {
-                docEntity.setObservationdate(new Date());
-
+                //Add document number in the CDX provence table for Sent documents.
+                CdxProvenance cdxProvenance = cdxProvenanceDao.findByDocumentIdAndAction(response.getDocumentID(), "SEND");
+                if (cdxProvenance != null) {
+                    cdxProvenance.setDocumentNo(docEntity.getDocumentNo());
+                    cdxProvenanceDao.merge(cdxProvenance);
+                }
+            } catch (Exception ex) {
+                MiscUtils.getLogger().error("Got exception while Saving document " + ex.getMessage());
             }
 
-            if (response.getCustodianName() != null)
-                docEntity.setSourceFacility(response.getCustodianName());
+            try {
+                //Code to add Information in NOTE Section in patient chart.
+                Date now = EDocUtil.getDmsDateTimeAsDate();
 
-            docEntity.setContentdatetime(response.getAuthoringTime());
-            docDao.persist(docEntity);
+                String docDesc = EDocUtil.getLastDocumentDesc();
 
-            //Add document number in the CDX provence table for Sent documents.
-            CdxProvenance cdxProvenance = cdxProvenanceDao.findByDocumentIdAndAction(response.getDocumentID(), "SEND");
-            if (cdxProvenance != null) {
-                cdxProvenance.setDocumentNo(docEntity.getDocumentNo());
-                cdxProvenanceDao.merge(cdxProvenance);
+                CaseManagementNote cmn = new CaseManagementNote();
+                cmn.setUpdate_date(now);
+
+                //java.sql.Date od1 = MyDateFormat.getSysDate(newDoc.getObservationDate());
+
+                cmn.setObservation_date(now);
+                cmn.setDemographic_no(demographic.getDemographicNo().toString());
+                HttpSession se = request.getSession();
+                String user_no = (String) se.getAttribute("user");
+                String prog_no = new EctProgram(se).getProgram(user_no);
+                WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
+                CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
+                cmn.setProviderNo("-1");// set the provider no to be -1 so the editor appear as 'System'.
+
+                String strNote = "Document" + " " + docDesc + " " + "created at " + now + " by " + auth.getFirstName() + " " + auth.getLastName() + ".";
+
+                cmn.setNote(strNote);
+                cmn.setSigned(true);
+                cmn.setSigning_provider_no("-1");
+                cmn.setProgram_no(prog_no);
+
+                SecRoleDao secRoleDao = (SecRoleDao) SpringUtils.getBean("secRoleDao");
+                SecRole doctorRole = secRoleDao.findByName("doctor");
+                cmn.setReporter_caisi_role(doctorRole.getId().toString());
+
+                cmn.setReporter_program_team("0");
+                cmn.setPassword("NULL");
+                cmn.setLocked(false);
+                cmn.setHistory(strNote);
+                cmn.setPosition(0);
+
+                Long note_id = cmm.saveNoteSimpleReturnID(cmn);
+
+                // Add a noteLink to casemgmt_note_link
+                CaseManagementNoteLink cmnl = new CaseManagementNoteLink();
+                cmnl.setTableName(CaseManagementNoteLink.DOCUMENT);
+                cmnl.setTableId(Long.parseLong(EDocUtil.getLastDocumentNo()));
+                cmnl.setNoteId(note_id);
+                EDocUtil.addCaseMgmtNoteLink(cmnl);
+            } catch (Exception ex) {
+                MiscUtils.getLogger().error("Got exception  while Saving Note in casemgmt_note" + ex.getMessage());
             }
-
-        } catch (Exception ex) {
-            MiscUtils.getLogger().error("Got exception while Saving document " + ex.getMessage());
         }
-        try {
-
-            //Code to add Information in NOTE Section in patient chart.
-            Date now = EDocUtil.getDmsDateTimeAsDate();
-
-            String docDesc = EDocUtil.getLastDocumentDesc();
-
-            CaseManagementNote cmn = new CaseManagementNote();
-            cmn.setUpdate_date(now);
-
-            //java.sql.Date od1 = MyDateFormat.getSysDate(newDoc.getObservationDate());
-
-            cmn.setObservation_date(now);
-            cmn.setDemographic_no(demographic.getDemographicNo().toString());
-            HttpSession se = request.getSession();
-            String user_no = (String) se.getAttribute("user");
-            String prog_no = new EctProgram(se).getProgram(user_no);
-            WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(se.getServletContext());
-            CaseManagementManager cmm = (CaseManagementManager) ctx.getBean("caseManagementManager");
-            cmn.setProviderNo("-1");// set the provider no to be -1 so the editor appear as 'System'.
-
-
-            String strNote = "Document" + " " + docDesc + " " + "created at " + now + " by " + auth.getFirstName() + " " + auth.getLastName() + ".";
-
-            cmn.setNote(strNote);
-            cmn.setSigned(true);
-            cmn.setSigning_provider_no("-1");
-            cmn.setProgram_no(prog_no);
-
-            SecRoleDao secRoleDao = (SecRoleDao) SpringUtils.getBean("secRoleDao");
-            SecRole doctorRole = secRoleDao.findByName("doctor");
-            cmn.setReporter_caisi_role(doctorRole.getId().toString());
-
-            cmn.setReporter_program_team("0");
-            cmn.setPassword("NULL");
-            cmn.setLocked(false);
-            cmn.setHistory(strNote);
-            cmn.setPosition(0);
-
-            Long note_id = cmm.saveNoteSimpleReturnID(cmn);
-
-            // Add a noteLink to casemgmt_note_link
-            CaseManagementNoteLink cmnl = new CaseManagementNoteLink();
-            cmnl.setTableName(CaseManagementNoteLink.DOCUMENT);
-            cmnl.setTableId(Long.parseLong(EDocUtil.getLastDocumentNo()));
-            cmnl.setNoteId(note_id);
-            EDocUtil.addCaseMgmtNoteLink(cmnl);
-        } catch (Exception ex) {
-            MiscUtils.getLogger().error("Got exception  while Saving Note in casemgmt_note" + ex.getMessage());
-        }
-
-    }
-
-
     }
 
     private boolean logResponse(IDocument doc) {
@@ -453,20 +791,22 @@ public class CDXMessengerAction extends DispatchAction {
         return result;
     }
 
-    public ISubmitDoc addRecipient(ISubmitDoc iDoc, HashMap<String, String[]> specialistAndClinics, HashSet<String> allUniqueClinics, String typeofRecipient) {
+    public ISubmitDoc addRecipient(ISubmitDoc iDoc, HashMap<String, String[]> specialistAndClinics,
+                                   HashSet<String> allUniqueClinics, String typeofRecipient) {
         List<IProvider> providers = null;
         CDXSpecialist cdxSpecialist = new CDXSpecialist();
         //HashMap<String,String> clinicInfo=(HashMap<String,String>)request.getSession().getAttribute("clinicInfo");
 
         //Getting all the selected primary recipients.
         for (String s : specialistAndClinics.keySet()) {
-            String lastAndFirstName[] = s.split(" ", 2);
+            String[] lastAndFirstName = s.split(" ", 2);
             providers = cdxSpecialist.findCdxSpecialistByName(lastAndFirstName[0].trim());
 
             for (IProvider provider : providers) {
-                if (provider.getID() != null && !provider.getID().isEmpty() && provider.getFirstName() != null && !provider.getFirstName().isEmpty()) {
-                    if (provider.getLastName().equalsIgnoreCase(lastAndFirstName[0].trim()) && provider.getFirstName().equalsIgnoreCase(lastAndFirstName[1].trim())) {
-
+                if (provider.getID() != null && !provider.getID().isEmpty()
+                        && provider.getFirstName() != null && !provider.getFirstName().isEmpty()) {
+                    if (provider.getLastName().equalsIgnoreCase(lastAndFirstName[0].trim())
+                            && provider.getFirstName().equalsIgnoreCase(lastAndFirstName[1].trim())) {
                         //Adding Multiple Recipients to the document.
                         if (typeofRecipient.equalsIgnoreCase("primary")) {
                             iDoc = iDoc.recipient().primary()
@@ -484,27 +824,19 @@ public class CDXMessengerAction extends DispatchAction {
                                     .and();
                         }
 
-
-                        String clinics[] = specialistAndClinics.get(s);
-
+                        String[] clinics = specialistAndClinics.get(s);
                         for (String c : clinics) {
                             if (c != null && !c.isEmpty()) {
                                 //Adding all the clinics associated with all the primary recipients.
                                 allUniqueClinics.add(c.trim());
                             }
-
                         }
-
                     }
                 }
             }
         }
-
-
         return iDoc;
-
     }
-
 
     private ByteOutputStream createPdfForAttachments(LoggedInInfo loggedInInfo, String demoNo, String reqId) throws OBIBException {
         ArrayList<EDoc> docs = EDocUtil.listDocsForCdxMessenger(loggedInInfo, demoNo, reqId, EDocUtil.ATTACHED);
@@ -521,8 +853,7 @@ public class CDXMessengerAction extends DispatchAction {
         Exception exception = null;
         try {
             boolean success = false;
-            for (int i = 0; i < docs.size(); i++) {
-                EDoc doc = docs.get(i);
+            for (EDoc doc : docs) {
                 if (doc.isPrintable()) {
                     if (doc.isImage()) {
                         success = false;
@@ -544,27 +875,25 @@ public class CDXMessengerAction extends DispatchAction {
                         }
                     } else if (doc.isPDF()) {
                         alist.add(path + doc.getFileName());
-                    }  else if (doc.isCDX()) {
+                    } else if (doc.isCDX()) {
                         success = false;
                         bos = new ByteOutputStream();
                         try {
-                            cdxToPdf(doc,bos);
+                            cdxToPdf(doc, bos);
                             success = true;
                         } catch (OBIBException e) {
                             MiscUtils.getLogger().error(e.getMessage());
                             throw e;
-
-                        }if (success) {
+                        }
+                        if (success) {
                             buffer = bos.getBytes();
                             bis = new ByteInputStream(buffer, bos.getCount());
                             bos.close();
                             streams.add(bis);
                             alist.add(bis);
                         }
-                    }
-                    else {
-                        logger.error("CDXMessengerAction " + doc.getType() +
-                                " is marked as printable but no means have been established to print it.");
+                    } else {
+                        logger.error("CDXMessengerAction " + doc.getType() + " is marked as printable but no means have been established to print it.");
                     }
                 }
             }
@@ -617,15 +946,12 @@ public class CDXMessengerAction extends DispatchAction {
      * @throws IOException       when an error with the output stream occurs
      * @throws DocumentException when an error in document construction occurs
      */
-
     private void cdxToPdf(EDoc doc, ByteOutputStream os) throws OBIBException {
-
         CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
         CdxProvenance provDoc = provenanceDao.findByDocumentNo(Integer.parseInt(doc.getDocId()));
         CdxAttachmentDao attachmentDao = SpringUtils.getBean(CdxAttachmentDao.class);
 
         ArrayList<Object> streamList = new ArrayList<>();
-
 
         // transform main document from XML to HTML
         try {
@@ -640,8 +966,7 @@ public class CDXMessengerAction extends DispatchAction {
 
             // transform main document from HTML to PDF
 
-            HtmlToPdf htmlToPdf = HtmlToPdf.create()
-                    .object(HtmlToPdfObject.forHtml(html));
+            HtmlToPdf htmlToPdf = HtmlToPdf.create().object(HtmlToPdfObject.forHtml(html));
 
             InputStream mainDoc = htmlToPdf.convert();
             streamList.add(mainDoc);
@@ -672,8 +997,8 @@ public class CDXMessengerAction extends DispatchAction {
                     aos.close();
                     byte[] buffer = aos.getBytes();
                     attDoc = new ByteArrayInputStream(buffer);
-                } else throw new OBIBException("Unknown attachment type of CDX document ("
-                        + att.getAttachmentType() + ")");
+                } else
+                    throw new OBIBException("Unknown attachment type of CDX document (" + att.getAttachmentType() + ")");
                 streamList.add(attDoc);
             }
             ConcatPDF.concat(streamList, os);
@@ -690,7 +1015,6 @@ public class CDXMessengerAction extends DispatchAction {
      * @throws DocumentException when an error in document construction occurs
      */
     private void imageToPdf(String imagePath, String imageTitle, OutputStream os) throws IOException, DocumentException {
-
         Image image;
         try {
             image = Image.getInstance(imagePath);
@@ -703,7 +1027,6 @@ public class CDXMessengerAction extends DispatchAction {
         Document document = new Document();
         // PdfWriter writer = PdfWriter.getInstance(document, os);
         PdfWriter writer = PdfWriterFactory.newInstance(document, os, FontSettings.HELVETICA_6PT);
-
 
         document.setPageSize(PageSize.LETTER);
         document.addCreator("OSCAR");
@@ -733,7 +1056,6 @@ public class CDXMessengerAction extends DispatchAction {
                         document.add(new Paragraph(imageTitle + " - page " + (c + 1)));
                     }
                     cb.addImage(img);
-
                 }
             }
             ra.close();
@@ -763,7 +1085,6 @@ public class CDXMessengerAction extends DispatchAction {
         // PdfWriter writer = PdfWriter.getInstance(document, os);
         PdfWriter writer = PdfWriterFactory.newInstance(document, os, FontSettings.HELVETICA_6PT);
 
-
         document.setPageSize(PageSize.LETTER);
         document.addCreator("OSCAR");
         document.open();
@@ -777,5 +1098,3 @@ public class CDXMessengerAction extends DispatchAction {
         document.close();
     }
 }
-
-
