@@ -3,8 +3,10 @@ package org.oscarehr.integration.cdx;
 import ca.uvic.leadlab.obibconnector.facades.datatypes.*;
 import ca.uvic.leadlab.obibconnector.facades.exceptions.OBIBException;
 import ca.uvic.leadlab.obibconnector.facades.receive.IDocument;
+import ca.uvic.leadlab.obibconnector.facades.receive.ITelco;
 import ca.uvic.leadlab.obibconnector.facades.registry.IClinic;
 import ca.uvic.leadlab.obibconnector.facades.registry.IProvider;
+import ca.uvic.leadlab.obibconnector.facades.send.IRecipient;
 import ca.uvic.leadlab.obibconnector.facades.send.ISubmitDoc;
 import ca.uvic.leadlab.obibconnector.impl.send.SubmitDoc;
 import com.lowagie.text.*;
@@ -88,33 +90,39 @@ public class CDXMessengerAction extends DispatchAction {
 
         LoggedInInfo loggedInInfo = LoggedInInfo.getLoggedInInfoFromSession(request);
         contentRoute = request.getSession().getServletContext().getRealPath("/");
-        HashMap<String, String[]> specialistAndClinicsPrimary = new HashMap<>();
-        HashMap<String, String[]> specialistAndClinicsSecondary = new HashMap<>();
-        String[] pRecipients = request.getParameterValues("precipients");
-        String[] sRecipients = request.getParameterValues("srecipients");
 
-        String specialistsToStore = "";
-        if (pRecipients != null && pRecipients.length > 0) {
-            for (String rec : pRecipients) {
-                String[] splittedSpecialistsAndClinics = rec.split("@");
-                specialistsToStore = specialistsToStore + splittedSpecialistsAndClinics[0] + ", ";
-                specialistAndClinicsPrimary.put(splittedSpecialistsAndClinics[0], splittedSpecialistsAndClinics[1].split(","));
+        HashMap<String, List<String>> primaryRecipientsMap = new HashMap<>();
+        HashMap<String, List<String>> secondaryRecipientsMap = new HashMap<>();
+        Set<String> receiverClinics = new HashSet<>();
+
+        String[] primaryRecipients = request.getParameterValues("primaryRecipients");
+        String[] secondaryRecipients = request.getParameterValues("secondaryRecipients");
+
+        String recipients = ""; // providers to save on cdx_messager
+        if (primaryRecipients != null && primaryRecipients.length > 0) {
+            for (String rec : primaryRecipients) {
+                String[] splittedSpecialistsAndClinics = rec.split("@"); // split provider and clinics
+                recipients += splittedSpecialistsAndClinics[0] + ", "; // append provider name
+                List<String> clinics = Arrays.asList(splittedSpecialistsAndClinics[1].split(","));
+                primaryRecipientsMap.put(splittedSpecialistsAndClinics[0], clinics);
+                receiverClinics.addAll(clinics);
             }
-            specialistsToStore = specialistsToStore.substring(0, specialistsToStore.length() - 2);
+            recipients = recipients.substring(0, recipients.length() - 2); // remove tail comma
+        }
+        if (secondaryRecipients != null && secondaryRecipients.length > 0) {
+            for (String rec : secondaryRecipients) {
+                String[] splittedSpecialistsAndClinics = rec.split("@"); // split provider and clinics
+                recipients += ", " + splittedSpecialistsAndClinics[0]; // append provider name
+                List<String> clinics = Arrays.asList(splittedSpecialistsAndClinics[1].split(","));
+                secondaryRecipientsMap.put(splittedSpecialistsAndClinics[0], clinics);
+                receiverClinics.addAll(clinics);
+            }
         }
 
-        if (sRecipients != null && sRecipients.length > 0) {
-            for (String rec : sRecipients) {
-                String[] splittedSpecialistsAndClinics = rec.split("@");
-                specialistsToStore = specialistsToStore + ", " + splittedSpecialistsAndClinics[0];
-                specialistAndClinicsSecondary.put(splittedSpecialistsAndClinics[0], splittedSpecialistsAndClinics[1].split(","));
-            }
-        }
-
-        CdxMessenger cdxMessenger = setCdxMessage(request, specialistsToStore);
+        CdxMessenger cdxMessenger = buildCdxMessage(request, recipients);
 
         try {
-            doCdxSend(loggedInInfo, request, cdxMessenger, specialistAndClinicsPrimary, specialistAndClinicsSecondary);
+            doCdxSend(loggedInInfo, request, cdxMessenger, primaryRecipientsMap, secondaryRecipientsMap, receiverClinics);
             request.setAttribute("success", true);
         } catch (OBIBException e) {
             request.setAttribute("success", false);
@@ -139,9 +147,8 @@ public class CDXMessengerAction extends DispatchAction {
         }
 
         String patient = request.getParameter("patient");
-        //String primaryrecipient = request.getParameter("precipients");
-        String[] precipients = request.getParameterValues("precipients[]");
-        String[] srecipients = request.getParameterValues("srecipients[]");
+        String[] primaryRecipients = request.getParameterValues("primaryRecipients");
+        String[] secondaryRecipients = request.getParameterValues("secondaryRecipients");
         String msgType = request.getParameter("msgtype");
         String documentType = request.getParameter("documenttype");
         String content = request.getParameter("content");
@@ -149,8 +156,8 @@ public class CDXMessengerAction extends DispatchAction {
         String recipientsToStore = "";
         String pSpecialists = "";
         String sSpecialists = "";
-        if (precipients != null && precipients.length > 0) {
-            for (String rec : precipients) {
+        if (primaryRecipients != null && primaryRecipients.length > 0) {
+            for (String rec : primaryRecipients) {
                 String[] splittedSpecialistsAndClinics = rec.split("@");
                 recipientsToStore = recipientsToStore + splittedSpecialistsAndClinics[0] + ", ";
                 pSpecialists = pSpecialists + rec + '#';
@@ -158,8 +165,8 @@ public class CDXMessengerAction extends DispatchAction {
             pSpecialists = pSpecialists.substring(0, pSpecialists.length() - 1);
             recipientsToStore = recipientsToStore.substring(0, recipientsToStore.length() - 2);
         }
-        if (srecipients != null && srecipients.length > 0) {
-            for (String rec : srecipients) {
+        if (secondaryRecipients != null && secondaryRecipients.length > 0) {
+            for (String rec : secondaryRecipients) {
                 String[] splittedSpecialistsAndClinics = rec.split("@");
                 recipientsToStore = recipientsToStore + ", " + splittedSpecialistsAndClinics[0];
                 sSpecialists = sSpecialists + rec + '#';
@@ -485,15 +492,15 @@ public class CDXMessengerAction extends DispatchAction {
         return null;
     }
 
-    private CdxMessenger setCdxMessage(HttpServletRequest request, String specialists) {
+    private CdxMessenger buildCdxMessage(HttpServletRequest request, String recipients) {
         CdxMessenger cdxMessenger = new CdxMessenger();
-        String patient = request.getParameter("patientsearch");
+        String patient = request.getParameter("patientName");
         String messagetype = request.getParameter("messagetype");
         String documenttype = request.getParameter("documenttype");
         String contentmessage = request.getParameter("contentmessage");
         if (patient != null && patient.length() != 0) {
             cdxMessenger.setPatient(patient);
-            cdxMessenger.setRecipients(specialists);
+            cdxMessenger.setRecipients(recipients);
             cdxMessenger.setCategory(messagetype);
             cdxMessenger.setContent(contentmessage);
             cdxMessenger.setDocumentType(documenttype);
@@ -505,47 +512,36 @@ public class CDXMessengerAction extends DispatchAction {
     }
 
     private void doCdxSend(LoggedInInfo loggedInInfo, HttpServletRequest request, CdxMessenger cdxMessenger,
-                           HashMap<String, String[]> specialistAndClinicsPrimary,
-                           HashMap<String, String[]> specialistAndClinicsSecondary) throws OBIBException {
-
+                           HashMap<String, List<String>> primaryRecipientsMap, HashMap<String, List<String>> secondaryRecipientsMap,
+                           Set<String> receiverClinics) throws OBIBException {
+        // Load patient
+        String patient = cdxMessenger.getPatient();
         DemographicDao demographicDao = (DemographicDao) SpringUtils.getBean("demographicDao");
-        CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
-        List<Demographic> demoList = null;
-        String patient = request.getParameter("patientsearch");
-        demoList = demographicDao.searchDemographic(patient);
-
-        Provider sendingProvider = loggedInInfo.getLoggedInProvider();
+        List<Demographic> demographicList = demographicDao.searchDemographic(patient);
         DemographicManager demographicManager = SpringUtils.getBean(DemographicManager.class);
-        Demographic demographic = demographicManager.getDemographic(loggedInInfo, demoList.get(0).getDemographicNo());
+        Demographic demographic = demographicManager.getDemographic(loggedInInfo, demographicList.get(0).getDemographicNo());
         String patientId = demographic.getHin();
         if (patientId == null || patientId.isEmpty()) {
             patientId = demographic.getDemographicNo().toString();
         }
-        String authorId = sendingProvider.getOhipNo();
+
+        // Load author
+        Provider author = loggedInInfo.getLoggedInProvider();
+        String authorId = author.getOhipNo();
         if (authorId == null || authorId.isEmpty()) {
-            authorId = sendingProvider.getProviderNo();
+            authorId = author.getProviderNo();
         }
 
+        // Load clinic
         ClinicDAO clinicDAO = (ClinicDAO) SpringUtils.getBean("clinicDAO");
         Clinic clinic = clinicDAO.getClinic();
 
-        // Add pdf attachments (scanned images, lab reports and PDF files)
-        String filename = null;
-        byte[] newBytes = null;
-        ByteOutputStream bos = createPdfForAttachments(loggedInInfo, "" + demographic.getDemographicNo(), "" + null);
-        if (bos != null) {
-            newBytes = bos.toByteArray();
-            filename = "ConsultationRequestAttachedPDF-" + demographic.getLastName() + "," + demographic.getFirstName() + "-" + UtilDateUtilities.getToday("yyyy-MM-dd_HHmmss") + ".pdf";
-            MiscUtils.getLogger().debug("File: " + filename + ", Size: " + newBytes.length);
-        }
-
-        IDocument response;
+        // Create CDX Document
         CDXConfiguration cdxConfig = new CDXConfiguration();
         SubmitDoc submitDoc = new SubmitDoc(cdxConfig);
+        ISubmitDoc doc = submitDoc.newDoc();
 
-        ISubmitDoc doc;
-
-        doc = submitDoc.newDoc();
+        // Add document type
         if (cdxMessenger.getDocumentType().equalsIgnoreCase("Information Request")) {
             doc.documentType(DocumentType.INFO_REQUEST);
         } else if (cdxMessenger.getDocumentType().equalsIgnoreCase("Progress Note")) {
@@ -565,44 +561,50 @@ public class CDXMessengerAction extends DispatchAction {
         }
         // doc.documentType(DocumentType.ADVICE_REQUEST);
 
+        // Build document content
         String otherInfo = request.getParameter("otherinfo");
         String content = cdxMessenger.getContent();
-
         if (otherInfo != null && !otherInfo.isEmpty()) {
             content = content + System.lineSeparator() + otherInfo;
         }
 
-        ISubmitDoc iDoc = doc.content(content)
+        // Add content, patient and author
+        doc.content(content)
                 .patient()
-                .id(patientId)
-                .name(NameType.LEGAL, demographic.getFirstName(), demographic.getLastName())
-                .address(AddressType.HOME, demographic.getAddress(), demographic.getCity(), demographic.getProvince(), demographic.getPostal(), "CA")
-                .phone(TelcoType.HOME, demographic.getPhone())
-                .birthday(demographic.getYearOfBirth(), demographic.getMonthOfBirth(), demographic.getDateOfBirth())
-                .gender("M".equalsIgnoreCase(demographic.getSex()) ? Gender.MALE : Gender.FEMALE)
+                    .id(patientId)
+                    .name(NameType.LEGAL, demographic.getFirstName(), demographic.getLastName())
+                    .address(AddressType.HOME, demographic.getAddress(), demographic.getCity(), demographic.getProvince(), demographic.getPostal(), "CA")
+                    .phone(TelcoType.HOME, demographic.getPhone())
+                    .birthday(demographic.getYearOfBirth(), demographic.getMonthOfBirth(), demographic.getDateOfBirth())
+                    .gender("M".equalsIgnoreCase(demographic.getSex()) ? Gender.MALE : Gender.FEMALE)
                 .and().author()
-                .id(authorId)
-                .time(new Date())
-                .name(NameType.LEGAL, sendingProvider.getFirstName(), sendingProvider.getLastName())
-                .address(AddressType.WORK, clinic.getAddress(), clinic.getCity(), clinic.getProvince(), clinic.getPostal(), "CA")
-                .phone(TelcoType.WORK, clinic.getPhone())
-                .and();
+                    .id(authorId)
+                    .time(new Date())
+                    .name(NameType.LEGAL, author.getFirstName(), author.getLastName())
+                    .address(AddressType.WORK, clinic.getAddress(), clinic.getCity(), clinic.getProvince(), clinic.getPostal(), "CA")
+                    .phone(TelcoType.WORK, clinic.getPhone());
 
-        HashSet<String> allUniqueClinics = new HashSet<String>();
-        ISubmitDoc iDocReturnedPrimary = addRecipient(iDoc, specialistAndClinicsPrimary, allUniqueClinics, "primary");
-
-        if (specialistAndClinicsSecondary != null) {
-            addRecipient(iDocReturnedPrimary, specialistAndClinicsSecondary, allUniqueClinics, "secondary");
+        // Add recipients
+        addRecipient(doc, primaryRecipientsMap, true);
+        if (secondaryRecipientsMap != null) {
+            addRecipient(doc, secondaryRecipientsMap, false);
         }
 
-        for (String cl : allUniqueClinics) {
-            //adding all clinics to the document as a receiver.
-            iDoc.receiverId(cl);
+        // Add pdf attachments (scanned images, lab reports and PDF files)
+        String filename = null;
+        byte[] newBytes = null;
+        ByteOutputStream bos = createPdfForAttachments(loggedInInfo, "" + demographic.getDemographicNo(), "" + null);
+        if (bos != null) {
+            newBytes = bos.toByteArray();
+            filename = "ConsultationRequestAttachedPDF-" + demographic.getLastName() + "," + demographic.getFirstName() + "-" + UtilDateUtilities.getToday("yyyy-MM-dd_HHmmss") + ".pdf";
+            MiscUtils.getLogger().debug("File: " + filename + ", Size: " + newBytes.length);
         }
         if (newBytes != null) {
             doc = doc.attach(AttachmentType.PDF, filename, newBytes);
         }
 
+        // Add "linked" documents
+        CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
         if (cdxMessenger.getCategory() != null && !cdxMessenger.getCategory().equalsIgnoreCase("New")) {
             CdxProvenance infulfilmentOfDoc = provenanceDao.getCdxProvenance(Integer.parseInt(cdxMessenger.getCategory().split(":")[1]));
             doc.inFulfillmentOf()
@@ -610,21 +612,23 @@ public class CDXMessengerAction extends DispatchAction {
                     .statusCode(OrderStatus.ACTIVE).and();
         }
 
-        response = doc.submit();
-
-        boolean debug = false;
-        if (debug) {
-            logResponse(response);
+        // Add (all) receiver clinics
+        for (String clinicId : receiverClinics) {
+            doc.receiverId(clinicId);
         }
+
+        // Submit CDX Document
+        IDocument response = doc.submit();
+        // logResponse(response);
+
+        // Store CDX response (cdx_provenance)
         MiscUtils.getLogger().debug("Attempting to save document using logSentAction");
         CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
         cdxProvenanceDao.logSentAction(response);
+
+        // Remove draft (if necessary) and store a new cdx_messenger
         CdxMessengerDao cdxMessengerDao = SpringUtils.getBean(CdxMessengerDao.class);
-
-        //remove draft
-
         String draftId = request.getParameter("draftId");
-
         if (!draftId.equalsIgnoreCase("null") && !draftId.isEmpty()) {
             CdxMessenger draft = cdxMessengerDao.getCdxMessenger(Integer.parseInt(draftId));
             try {
@@ -635,7 +639,6 @@ public class CDXMessengerAction extends DispatchAction {
                 MiscUtils.getLogger().error("Got exception while deleting draft " + ex.getMessage());
             }
         }
-
         try {
             cdxMessenger.setDocumentId(response.getDocumentID());
             cdxMessenger.setDraft("N");
@@ -791,44 +794,46 @@ public class CDXMessengerAction extends DispatchAction {
         return result;
     }
 
-    public ISubmitDoc addRecipient(ISubmitDoc iDoc, HashMap<String, String[]> specialistAndClinics,
-                                   HashSet<String> allUniqueClinics, String typeofRecipient) {
-        List<IProvider> providers = null;
+    private ISubmitDoc addRecipient(ISubmitDoc iDoc, HashMap<String, List<String>> recipientsMap, Boolean isPrimary) {
         CDXSpecialist cdxSpecialist = new CDXSpecialist();
-        //HashMap<String,String> clinicInfo=(HashMap<String,String>)request.getSession().getAttribute("clinicInfo");
 
-        //Getting all the selected primary recipients.
-        for (String s : specialistAndClinics.keySet()) {
-            String[] lastAndFirstName = s.split(" ", 2);
-            providers = cdxSpecialist.findCdxSpecialistByName(lastAndFirstName[0].trim());
+        //Getting all the selected recipients.
+        for (String providerName : recipientsMap.keySet()) {
+            String[] lastAndFirstName = providerName.split(" ", 2);
+            List<IProvider> providers = cdxSpecialist.findCdxSpecialistByName(lastAndFirstName[0].trim());
 
             for (IProvider provider : providers) {
                 if (provider.getID() != null && !provider.getID().isEmpty()
                         && provider.getFirstName() != null && !provider.getFirstName().isEmpty()) {
                     if (provider.getLastName().equalsIgnoreCase(lastAndFirstName[0].trim())
                             && provider.getFirstName().equalsIgnoreCase(lastAndFirstName[1].trim())) {
-                        //Adding Multiple Recipients to the document.
-                        if (typeofRecipient.equalsIgnoreCase("primary")) {
-                            iDoc = iDoc.recipient().primary()
-                                    .id(provider.getID())
-                                    .name(NameType.LEGAL, provider.getFirstName(), provider.getLastName())
-                                    .address(AddressType.WORK, provider.getStreetAddress(), provider.getCity(), provider.getProvince(), provider.getPostalCode(), "CA")
-                                    .phone(TelcoType.WORK, String.valueOf(provider.getPhones()))
-                                    .and();
-                        } else if (typeofRecipient.equalsIgnoreCase("secondary")) {
-                            iDoc = iDoc.recipient()
-                                    .id(provider.getID())
-                                    .name(NameType.LEGAL, provider.getFirstName(), provider.getLastName())
-                                    .address(AddressType.WORK, provider.getStreetAddress(), provider.getCity(), provider.getProvince(), provider.getPostalCode(), "CA")
-                                    .phone(TelcoType.WORK, String.valueOf(provider.getPhones()))
-                                    .and();
+                        // Add recipient
+                        IRecipient recipient = iDoc.recipient()
+                                .id(provider.getID())
+                                .name(NameType.LEGAL, provider.getFirstName(), provider.getLastName())
+                                .address(AddressType.WORK, provider.getStreetAddress(), provider.getCity(), provider.getProvince(), provider.getPostalCode(), "CA");
+                        // Add recipient phone
+                        for (ITelco phone : provider.getPhones()) {
+                            if (TelcoType.WORK.equals(phone.getTelcoType())) {
+                                recipient.phone(TelcoType.WORK, phone.getAddress());
+                                break;
+                            }
                         }
-
-                        String[] clinics = specialistAndClinics.get(s);
-                        for (String c : clinics) {
-                            if (c != null && !c.isEmpty()) {
-                                //Adding all the clinics associated with all the primary recipients.
-                                allUniqueClinics.add(c.trim());
+                        // Flag the primary one
+                        if (isPrimary) {
+                            recipient.primary();
+                        }
+                        // Add recipient organization associated to the provider
+                        List<String> clinics = recipientsMap.get(providerName);
+                        ORG_ADDED: // Add only one valid clinic
+                        for (String clinicId : clinics) {
+                            if (clinicId != null && !clinicId.isEmpty()) {
+                                for (IClinic clinic : provider.getClinics()) {
+                                    if (clinicId.equalsIgnoreCase(clinic.getID())) {
+                                        recipient.recipientOrganization(clinic.getID(), clinic.getName());
+                                        break ORG_ADDED; // Add only one valid clinic
+                                    }
+                                }
                             }
                         }
                     }

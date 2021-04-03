@@ -173,8 +173,8 @@
             $('#fetchAllergies').hide();
 
             // search patient info
-            $('#patient').keyup(function () {
-                var search = $('#patient').val();
+            $('#patientName').keyup(function () {
+                var search = $('#patientName').val();
                 if (search !== '' && search !== null) {
                     $.ajax({
                         type: 'GET',
@@ -207,11 +207,11 @@
                 if (!patientId) { // abort if there is no result to select
                     $('#showList').html('');
                     $('#patientId').val('')
-                    $('#patient').val('');
+                    $('#patientName').val('');
                     return;
                 }
                 $('#patientId').val(patientId);
-                $('#patient').val($(this).text());
+                $('#patientName').val($(this).text());
             });
 
             var recipients = []; // Used to store the providers/clinics
@@ -272,7 +272,7 @@
                                 '    <tbody>\n';
                             for (var j = 0; j < clinics.length; j++) {
                                 recipientTable += '        <tr>\n' +
-                                    '            <td><input type=checkbox name="seletectedclinics" value="' + clinics[j].id + '"></td>\n' +
+                                    '            <td><input type=checkbox name="checkClinic" value="' + clinics[j].id + '"></td>\n' +
                                     '            <td>' + clinics[j].id + '</td>\n' +
                                     '            <td>' + clinics[j].name + '</td>\n' +
                                     '            <td>' + clinics[j].address + '</td>\n' +
@@ -309,76 +309,48 @@
             })
         });
 
+        function addRecipient(isPrimary) {
+            var recipient = $('#recipient').val();
+            var clinics = document.getElementsByName('checkClinic');
+            var checked = $("input[type=checkbox]:checked").length;
+            if (!checked) {
+                alert("You must select at least one clinic.");
+                return false;
+            }
+
+            var selectedItems = recipient + "@";
+            for (var i = 0; i < clinics.length; i++) {
+                if (clinics[i].type === 'checkbox' && clinics[i].checked === true) {
+                    selectedItems += clinics[i].value + ", ";
+                }
+            }
+            selectedItems = selectedItems.substring(0, selectedItems.length - 2);
+            if (isPrimary) {
+                $('#primary').append("<li> <a href='javascript:void(0);' class='remove'><b>&times;</b></a><input type='hidden' name='primaryRecipients' value='" + selectedItems + "'>" + selectedItems + "</li>");
+                $('#primary').show();
+            } else {
+                $('#secondary').append("<li> <a href='javascript:void(0);' class='remove'><b>&times;</b></a><input type='hidden' name='secondaryRecipients' value='" + selectedItems + "'>" + selectedItems + "</li>");
+                $('#secondary').show();
+            }
+
+            $('#addClient_Modal').modal('hide');
+            $('#clinics').html('');
+            $('#recipient').val('');
+            $('#hiddenPrimary').hide();
+            $('#butns').hide();
+        }
+
         $(document).on("click", "a.remove", function () {
             $(this).parent().remove();
             if ($('#primary').children().length < 1) {
                 $('#primary').hide();
-                $('#hiddeninput').show();
+                $('#hiddenPrimary').show();
             }
-        });
-
-        function addprimary() {
-            var recipient = $('#recipient').val();
-            var items = document.getElementsByName('seletectedclinics');
-            checked = $("input[type=checkbox]:checked").length;
-            if (!checked) {
-                alert("You must select at least one clinic.");
-                return false;
-            }
-
-            var selectedItems = recipient + "@";
-            for (var i = 0; i < items.length; i++) {
-                if (items[i].type === 'checkbox' && items[i].checked === true) {
-                    selectedItems += items[i].value + ", ";
-                }
-            }
-            var allclinics = selectedItems.substring(0, selectedItems.length - 2);
-
-            $('#primary').append("<li> <a href='javascript:void(0);' class='remove'><b>&times;</b></a><input type='hidden' name='precipients' value='" + allclinics + "'>" + allclinics + "</li>");
-
-            $('#addClient_Modal').modal('hide');
-            $('#clinics').html('');
-            $('#recipient').val('');
-            $('#hiddeninput').hide();
-            $('#primary').show();
-            $('#butns').hide();
-        }
-
-        $(document).on("click", "a.removes", function () {
-            $(this).parent().remove();
             if ($('#secondary').children().length < 1) {
                 $('#secondary').hide();
-                $('#hiddensecondary').show();
+                $('#hiddenSecondary').show();
             }
         });
-
-        function addsecondary() {
-            var recipient = $('#recipient').val();
-            var items = document.getElementsByName('seletectedclinics');
-            checked = $("input[type=checkbox]:checked").length;
-            if (!checked) {
-                alert("You must select at least one clinic.");
-                return false;
-            }
-
-            var selectedItems = recipient + "@";
-            for (var i = 0; i < items.length; i++) {
-                if (items[i].type === 'checkbox' && items[i].checked === true) {
-                    selectedItems += items[i].value + ", ";
-                }
-            }
-            var allclinics = selectedItems.substring(0, selectedItems.length - 2);
-
-            $('#secondary').append("<li> <a href='javascript:void(0);' class='removes'><b>&times;</b></a><input type='hidden' name='srecipients' value='" + allclinics + "'>" + allclinics + "</li>");
-            //select.options[select.options.length] = new Option(allclinics, allclinics);
-
-            $('#addClient_Modal').modal('hide');
-            $('#clinics').html('');
-            $('#recipient').val('');
-            $('#hiddensecondary').hide();
-            $('#secondary').show();
-            $('#butns').hide();
-        }
 
         function updateAttached() {
             var demographicId = $("#patientId").val();
@@ -411,7 +383,7 @@
         }
 
         function reloadDemographic() {
-            var fullName = $('#patient').val(); // last, first
+            var fullName = $('#patientName').val(); // last, first
             var search = fullName.split(","); // search by last name
             $.ajax({
                 type: 'GET',
@@ -449,7 +421,7 @@
             var d = '<%=demoName%>';
             var draft = '<%=draftId%>';
             if (d !== 'null' && d !== '' && '<%=docId%>' !== 'null' && '<%=docId%>' !== '') {
-                $('#patient').val('<%=demoName%>');
+                $('#patientName').val('<%=demoName%>');
                 reloadDemographic();
                 $("a#mtype").attr('href', '../dms/showCdxDocumentArchive.jsp?ID=<%=docId%>');
                 $('#msgtype').val('In response to:' + '<%=docId%>');
@@ -458,7 +430,7 @@
             }
 
             if (draft !== 'null' && draft !== '' && '<%=patient%>' !== 'null' && '<%=patient%>' !== '') {
-                $('#patient').val('<%=patient%>');
+                $('#patientName').val('<%=patient%>');
                 reloadDemographic();
                 var preci = '<%=primary%>';
                 var sreci = '<%=secondary%>';
@@ -467,24 +439,24 @@
 
                 if (preci !== '' && primarysplit.length >= 1) {
                     for (var i = 0; i < primarysplit.length; i++) {
-                        $('#primary').append("<li> <a href='javascript:void(0);' class='remove'><b>&times;</b></a><input type='hidden' name='precipients' value='" + primarysplit[i] + "'>" + primarysplit[i] + "</li>");
+                        $('#primary').append("<li> <a href='javascript:void(0);' class='remove'><b>&times;</b></a><input type='hidden' name='primaryRecipients' value='" + primarysplit[i] + "'>" + primarysplit[i] + "</li>");
                     }
-                    $('#hiddeninput').hide();
+                    $('#hiddenPrimary').hide();
                     $('#primary').show();
                 } else {
                     $('#primary').hide();
-                    $('#hiddeninput').show();
+                    $('#hiddenPrimary').show();
                 }
 
                 if (sreci !== '' && secondarysplit.length >= 1) {
                     for (var i = 0; i < secondarysplit.length; i++) {
-                        $('#secondary').append("<li> <a href='javascript:void(0);' class='removes'><b>&times;</b></a><input type='hidden' name='srecipients' value='" + secondarysplit[i] + "'>" + secondarysplit[i] + "</li>");
+                        $('#secondary').append("<li> <a href='javascript:void(0);' class='remove'><b>&times;</b></a><input type='hidden' name='secondaryRecipients' value='" + secondarysplit[i] + "'>" + secondarysplit[i] + "</li>");
                     }
-                    $('#hiddensecondary').hide();
+                    $('#hiddenSecondary').hide();
                     $('#secondary').show();
                 } else {
                     $('#secondary').hide();
-                    $('#hiddensecondary').show();
+                    $('#hiddenSecondary').show();
                 }
 
                 $("#msgtype").val('<%=msgType%>');
@@ -501,17 +473,17 @@
         }
 
         function saveDraft() {
-            var patient = $('#patient').val();
-            var precipients = [];
-            var srecipients = [];
+            var patient = $('#patientName').val();
+            var primaryRecipients = [];
+            var secondaryRecipients = [];
 
-            var primary = document.getElementsByName('precipients');
-            var secondary = document.getElementsByName('srecipients');
+            var primary = document.getElementsByName('primaryRecipients');
+            var secondary = document.getElementsByName('secondaryRecipients');
             for (var i = 0; i < primary.length; i++) {
-                precipients[i] = primary[i].value;
+                primaryRecipients[i] = primary[i].value;
             }
             for (var i = 0; i < secondary.length; i++) {
-                srecipients[i] = secondary[i].value;
+                secondaryRecipients[i] = secondary[i].value;
             }
 
             var msgtype = $('#msgtype').val();
@@ -524,8 +496,8 @@
                 data: {
                     method: "saveDraft",
                     patient: patient,
-                    "precipients[]": precipients,
-                    "srecipients[]": srecipients,
+                    primaryRecipients: primaryRecipients,
+                    secondaryRecipients: secondaryRecipients,
                     msgtype: msgtype,
                     documenttype: documenttype,
                     content: content
@@ -642,7 +614,7 @@
                 <div class="col-xs-4 inputGroupContainer">
                     <div class="">
                         <input name="patientId" id="patientId" type="hidden">
-                        <input name="patientsearch" id="patient" placeholder="Search" class="form-control" type="text" required>
+                        <input name="patientName" id="patientName" placeholder="Search" class="form-control" type="text" required>
                         <div id="showList">
                             <ul class="list-group"></ul>
                         </div>
@@ -656,8 +628,7 @@
                 <label class="col-xs-4 control-label">Primary Recipient(s)</label>
                 <div class="col-xs-4 inputGroupContainer">
                     <div class="">
-                        <input id="hiddeninput" name="" placeholder="Add primary recipients" class="form-control"
-                               type="text" readonly>
+                        <input id="hiddenPrimary" name="" placeholder="Add primary recipients" class="form-control" type="text" readonly>
                         <ul class="list-group" id="primary" name="primaryrecipient"></ul>
                     </div>
                 </div>
@@ -672,8 +643,7 @@
                 <label class="col-xs-4 control-label">Secondary Recipient(s)</label>
                 <div class="col-xs-4 inputGroupContainer">
                     <div class="">
-                        <input id="hiddensecondary" name="" placeholder="Add secondary recipients" class="form-control"
-                               type="text" readonly>
+                        <input id="hiddenSecondary" name="" placeholder="Add secondary recipients" class="form-control" type="text" readonly>
                         <ul class="list-group" id="secondary" name="secondaryrecipient"></ul>
                     </div>
                 </div>
@@ -683,8 +653,7 @@
                 <label class="col-xs-4 control-label">Message Type</label>
                 <div class="col-xs-4 inputGroupContainer">
                     <div class="">
-                        <input name="messagetype" id="msgtype" value="New" class="form-control" type="hidden" readonly
-                               style="color:gray;">
+                        <input name="messagetype" id="msgtype" value="New" class="form-control" type="hidden" readonly style="color:gray;">
                         <span id="ptype">New</span> <a href="#" id="mtype" target="_blank"></a>
                     </div>
                 </div>
@@ -715,8 +684,7 @@
                 <label class="col-xs-4 control-label">Content</label>
                 <div class="col-xs-4 inputGroupContainer">
                     <div class="">
-                        <textarea name="contentmessage" id="content1" placeholder="Content" class="form-control"
-                                  type="text"></textarea>
+                        <textarea name="contentmessage" id="content1" placeholder="Content" class="form-control" type="text"></textarea>
                     </div>
                 </div>
             </div>
@@ -838,8 +806,8 @@
                                 <div class="" id="clinics"></div>
 
                                 <div style="text-align: center; display: none;" id="butns">
-                                    <input type="button" class="btn btn-success" value="Add as primary" onclick='addprimary()'>
-                                    <input type="button" class="btn btn-warning" value="Add as secondary" onclick='addsecondary()'>
+                                    <input type="button" class="btn btn-success" value="Add as primary" onclick='addRecipient(true)'>
+                                    <input type="button" class="btn btn-warning" value="Add as secondary" onclick='addRecipient(false)'>
                                     <input type="button" class="btn btn-info" value="Select all" id="selectAll">
                                 </div>
                             </form>
