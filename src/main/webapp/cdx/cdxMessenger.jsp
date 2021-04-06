@@ -3,6 +3,7 @@
 <%@ page import="org.oscarehr.integration.cdx.model.CdxMessenger" %>
 <%@ page import="org.oscarehr.integration.cdx.dao.CdxMessengerDao" %>
 <%@ page import="org.oscarehr.integration.cdx.dao.CdxProvenanceDao" %>
+<%@ page import="org.oscarehr.integration.cdx.CDXSpecialist" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -32,21 +33,27 @@
 <%
     CdxMessengerDao cdxMessengerDao = SpringUtils.getBean(CdxMessengerDao.class);
     CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
-    int docId = 0;
+    Integer docId = null;
     String docKind = "";
-    String demoName = request.getParameter("demoName");
-    CdxProvenance doc = (CdxProvenance) session.getAttribute("document");
-    if (doc != null) {
-        docId = doc.getId();
-        docKind = doc.getKind();
-    }
     String draftId = request.getParameter("Id");
-    String patient = "";
-    String primary = "";
+    String patient = request.getParameter("demoName");
+    String patientId = request.getParameter("demoId");
+    String primary = request.getParameter("replyTo");
     String secondary = "";
     String msgType = "";
     String documentType = "";
     String content = "";
+
+    // Init reply variables
+    CdxProvenance doc = (CdxProvenance) session.getAttribute("document");
+    if (doc != null) {
+        docId = doc.getId();
+        docKind = doc.getKind();
+        primary = CDXSpecialist.extractAuthorAtClinic(doc.getPayload());
+        session.removeAttribute("document"); // clear session attribute to avoid issues when
+    }
+
+    // Init draft variables
     if (draftId != null && !draftId.equalsIgnoreCase("")) {
         CdxMessenger cdxMessenger = cdxMessengerDao.getCdxMessenger(Integer.parseInt(draftId));
         patient = cdxMessenger.getPatient();
@@ -57,8 +64,8 @@
         //Get document details to show in category when populating from draft
         if (!cdxMessenger.getCategory().equalsIgnoreCase("New")) {
             CdxProvenance cdxProvenance = provenanceDao.getCdxProvenance(Integer.parseInt(cdxMessenger.getCategory().split(":")[1]));
-            docKind = cdxProvenance.getKind();
             docId = cdxProvenance.getId();
+            docKind = cdxProvenance.getKind();
         }
 
         documentType = cdxMessenger.getDocumentType();
@@ -418,24 +425,14 @@
         }
 
         function init() {
-            var d = '<%=demoName%>';
-            var draft = '<%=draftId%>';
-            if (d !== 'null' && d !== '' && '<%=docId%>' !== 'null' && '<%=docId%>' !== '') {
-                $('#patientName').val('<%=demoName%>');
-                reloadDemographic();
-                $("a#mtype").attr('href', '../dms/showCdxDocumentArchive.jsp?ID=<%=docId%>');
-                $('#msgtype').val('In response to:' + '<%=docId%>');
-                $("span#ptype").text('In response to ');
-                $("#mtype").text('<%=docKind%>');
-            }
-
-            if (draft !== 'null' && draft !== '' && '<%=patient%>' !== 'null' && '<%=patient%>' !== '') {
+            <% if (patient != null && !patient.isEmpty()) { %>
                 $('#patientName').val('<%=patient%>');
                 reloadDemographic();
+            <% } %>
+
+            <% if (primary != null && !primary.isEmpty()) { %>
                 var preci = '<%=primary%>';
-                var sreci = '<%=secondary%>';
                 var primarysplit = preci.split("#");
-                var secondarysplit = sreci.split("#");
 
                 if (preci !== '' && primarysplit.length >= 1) {
                     for (var i = 0; i < primarysplit.length; i++) {
@@ -447,6 +444,11 @@
                     $('#primary').hide();
                     $('#hiddenPrimary').show();
                 }
+            <% } %>
+
+            <% if (secondary != null && !secondary.isEmpty()) { %>
+                var sreci = '<%=secondary%>';
+                var secondarysplit = sreci.split("#");
 
                 if (sreci !== '' && secondarysplit.length >= 1) {
                     for (var i = 0; i < secondarysplit.length; i++) {
@@ -458,18 +460,20 @@
                     $('#secondary').hide();
                     $('#hiddenSecondary').show();
                 }
+            <% } %>
 
+            <% if (docId != null && !docId.equals(0)) { %>
+                $("a#mtype").attr('href', '<%=request.getContextPath()%>/dms/showCdxDocumentArchive.jsp?ID=<%=docId%>');
+                $('#msgtype').val('In response to:' + '<%=docId%>');
+                $("span#ptype").text('In response to ');
+                $("#mtype").text('<%=docKind%>');
+            <% } %>
+
+            <% if (msgType != null && !msgType.isEmpty()) { %>
                 $("#msgtype").val('<%=msgType%>');
-
-                if ('<%=msgType%>' !== 'New') {
-                    $("a#mtype").attr('href', '../dms/showCdxDocumentArchive.jsp?ID=<%=docId%>');
-                    $("span#ptype").text('In response to ');
-                    $("#mtype").text('<%=docKind%>');
-                }
-
                 $('#documenttype').val('<%=documentType%>');
                 $('#content1').val('<%=content%>');
-            }
+            <% } %>
         }
 
         function saveDraft() {
@@ -601,8 +605,8 @@
                 <legend><h2>
                     <b>CDX Composer</b>
                     <span>
-                        <a href="../cdx/cdxMessengerHistory.jsp" target="_blank" class="btn ovalbutton" role="button">History</a>
-                        <a href="../cdx/showDrafts.jsp" target="_blank" class="btn ovalbutton" role="button">Drafts</a>
+                        <a href="<%=request.getContextPath()%>/cdx/cdxMessengerHistory.jsp" target="_blank" class="btn ovalbutton" role="button">History</a>
+                        <a href="<%=request.getContextPath()%>/cdx/showDrafts.jsp" target="_blank" class="btn ovalbutton" role="button">Drafts</a>
                     </span>
                 </h2></legend>
                 <br>

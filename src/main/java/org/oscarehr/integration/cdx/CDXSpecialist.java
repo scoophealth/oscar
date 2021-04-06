@@ -37,7 +37,14 @@ import org.oscarehr.integration.cdx.dao.CdxClinicsDao;
 import org.oscarehr.integration.cdx.model.CdxClinics;
 import org.oscarehr.util.MiscUtils;
 import org.oscarehr.util.SpringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import oscar.util.UtilXML;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.util.*;
 
 public class CDXSpecialist {
@@ -444,6 +451,32 @@ public class CDXSpecialist {
                 email + nl +
                 "Clinic Ids: " + clinicsIds+ nl +
                 "Clinic Names: " + clinicsNames + nl;
+    }
+
+    public static String extractAuthorAtClinic(String documentStr) {
+        try {
+            Document xmlDocument = UtilXML.parseXML(documentStr);
+            XPath xPath = XPathFactory.newInstance().newXPath();
+
+            StringBuilder authorAtClinic = new StringBuilder();
+
+            String authorFamilyNameExp = "//ClinicalDocument/author/assignedAuthor/assignedPerson/name/family";
+            String authorFamilyName = (String) xPath.compile(authorFamilyNameExp).evaluate(xmlDocument, XPathConstants.STRING);
+            authorAtClinic.append(authorFamilyName);
+
+            String authorGivenNameExp = "//ClinicalDocument/author/assignedAuthor/assignedPerson/name/given";
+            String authorGivenName = (String) xPath.compile(authorGivenNameExp).evaluate(xmlDocument, XPathConstants.STRING);
+            authorAtClinic.append(" ").append(authorGivenName);
+
+            String custodianIdExp = "//ClinicalDocument/custodian/assignedCustodian/representedCustodianOrganization/id/@extension";
+            Node custodianIdNode = (Node) xPath.compile(custodianIdExp).evaluate(xmlDocument, XPathConstants.NODE);
+            authorAtClinic.append("@").append(custodianIdNode.getNodeValue());
+
+            return authorAtClinic.toString();
+        } catch (XPathExpressionException e) {
+            MiscUtils.getLogger().error("Got exception extracting author and clinic from xml document: " + e.getMessage());
+        }
+        return "";
     }
 
     private final Comparator<IProvider> IProviderComparator = new Comparator<IProvider>() {
