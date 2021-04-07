@@ -221,13 +221,25 @@
                 $('#patientName').val($(this).text());
             });
 
+            // Helper function for delay the call of a function
+            function delay(callback, ms) {
+                var timer = 0;
+                return function() {
+                    var context = this, args = arguments;
+                    clearTimeout(timer);
+                    timer = setTimeout(function () {
+                        callback.apply(context, args);
+                    }, ms || 0);
+                };
+            }
+
             var searchType; // Type of the search (searchProvider or searchClinic)
             var recipients = []; // Store the providers/clinics
 
             // Search cdx enabled recipient (provider or clinic)
-            $('#recipient').keyup(function () {
+            $('#recipient').keyup(delay(function () {
                 var searchRecipient = $('#recipient').val();
-                if (searchRecipient !== '' && searchRecipient !== null && searchRecipient.length >= 4) { // TODO add timeout to the keyup
+                if (searchRecipient !== '' && searchRecipient !== null && searchRecipient.length >= 4) {
                     $.ajax({
                         type: 'GET',
                         url: '${ pageContext.request.contextPath }/cdx/CDXMessenger.do',
@@ -256,7 +268,7 @@
                     $('#showrecipient').html('');
                     recipients = [];
                 }
-            });
+            }, 1000));
 
             // Select specialist and list clinics info for the specialist
             $(document).on('click', '#showrecipient li', function () {
