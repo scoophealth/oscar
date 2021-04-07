@@ -392,7 +392,7 @@ public class CDXMessengerAction extends DispatchAction {
         return noteStr.toString();
     }
 
-    public ActionForward searchRecipient(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward searchProvider(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
         // TODO security check
         HttpSession session = request.getSession();
         if (session.getAttribute("userrole") == null) {
@@ -428,15 +428,10 @@ public class CDXMessengerAction extends DispatchAction {
                 List<IClinic> clinics = provider.getClinics();
                 if (clinics != null && !clinics.isEmpty()) {
                     for (IClinic clinic : clinics) {
-                        JSONObject clinicJSONObject = new JSONObject();
-                        clinicJSONObject.put("id", clinic.getID());
-                        clinicJSONObject.put("name", clinic.getName());
-                        clinicJSONObject.put("address", clinic.getStreetAddress() + " " + clinic.getCity() + " " + clinic.getProvince());
-                        clinicsJSONArray.add(clinicJSONObject);
+                        clinicsJSONArray.add(clinicToJson(clinic));
                     }
                     providerJSONObject.put("clinics", clinicsJSONArray);
                 }
-
 
                 providersJSONArray.add(providerJSONObject);
             }
@@ -447,6 +442,50 @@ public class CDXMessengerAction extends DispatchAction {
         response.getWriter().write(providersJSONArray.toString());
         response.setStatus(HttpServletResponse.SC_OK);
         return null;
+    }
+
+    public ActionForward searchClinic(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        // TODO security check
+        HttpSession session = request.getSession();
+        if (session.getAttribute("userrole") == null) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return null;
+        }
+
+        OscarProperties props = OscarProperties.getInstance();
+        boolean showCdx = "bc".equalsIgnoreCase(props.getProperty("billregion"));
+        if (!showCdx) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN); // TODO ?
+            return null;
+        }
+
+        String searchString = request.getParameter("recipient");
+        if (StringUtils.isNullOrEmpty(searchString)) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST); // invalid request info
+            return null;
+        }
+
+        JSONArray clinicsJSONObject = new JSONArray(); // to return the data
+
+        CDXLocation cdxLocation = new CDXLocation();
+        List<IClinic> clinics = cdxLocation.findLocationByName(searchString);
+        for (IClinic clinic : clinics) {
+            clinicsJSONObject.add(clinicToJson(clinic));
+        }
+
+        // Return a json array with the clinics info
+        response.setContentType("application/json");
+        response.getWriter().write(clinicsJSONObject.toString());
+        response.setStatus(HttpServletResponse.SC_OK);
+        return null;
+    }
+
+    private JSONObject clinicToJson(IClinic clinic) {
+        JSONObject clinicJSONObject = new JSONObject();
+        clinicJSONObject.put("id", clinic.getID());
+        clinicJSONObject.put("name", clinic.getName());
+        clinicJSONObject.put("address", clinic.getStreetAddress() + " " + clinic.getCity() + " " + clinic.getProvince());
+        return clinicJSONObject;
     }
 
     public ActionForward fetchAttachments(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -609,7 +648,7 @@ public class CDXMessengerAction extends DispatchAction {
             CdxProvenance infulfilmentOfDoc = provenanceDao.getCdxProvenance(Integer.parseInt(cdxMessenger.getCategory().split(":")[1]));
             doc.inFulfillmentOf()
                     .id(infulfilmentOfDoc.getDocumentId())
-                    .statusCode(OrderStatus.ACTIVE).and();
+                    .statusCode(OrderStatus.ACTIVE);
         }
 
         // Add (all) receiver clinics
@@ -800,8 +839,13 @@ public class CDXMessengerAction extends DispatchAction {
         //Getting all the selected recipients.
         for (String providerName : recipientsMap.keySet()) {
             String[] lastAndFirstName = providerName.split(" ", 2);
-            List<IProvider> providers = cdxSpecialist.findCdxSpecialistByName(lastAndFirstName[0].trim());
 
+            if ("anyone".equalsIgnoreCase(lastAndFirstName[0])) { // it is a clinic-only recipient
+                addClinicOnlyRecipient(iDoc, recipientsMap.get(providerName), isPrimary);
+                continue;
+            }
+
+            List<IProvider> providers = cdxSpecialist.findCdxSpecialistByName(lastAndFirstName[0].trim());
             for (IProvider provider : providers) {
                 if (provider.getID() != null && !provider.getID().isEmpty()
                         && provider.getFirstName() != null && !provider.getFirstName().isEmpty()) {
@@ -840,6 +884,27 @@ public class CDXMessengerAction extends DispatchAction {
                 }
             }
         }
+        return iDoc;
+    }
+
+    private ISubmitDoc addClinicOnlyRecipient(ISubmitDoc iDoc, List<String> recipientsList, Boolean isPrimary) {
+        CDXLocation cdxLocation = new CDXLocation();
+
+        for (String clinicId : recipientsList) {
+            List<IClinic> clinics = cdxLocation.findLocationById(clinicId);
+            for (IClinic clinic : clinics) {
+                if (clinicId.equalsIgnoreCase(clinic.getID())) {
+                    // Add recipient
+                    IRecipient recipient = iDoc.recipient()
+                            .recipientOrganization(clinic.getID(), clinic.getName());
+                    // Flag the primary one
+                    if (isPrimary) {
+                        recipient.primary();
+                    }
+                }
+            }
+        }
+
         return iDoc;
     }
 

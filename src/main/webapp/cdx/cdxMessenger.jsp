@@ -221,24 +221,28 @@
                 $('#patientName').val($(this).text());
             });
 
-            var recipients = []; // Used to store the providers/clinics
+            var searchType; // Type of the search (searchProvider or searchClinic)
+            var recipients = []; // Store the providers/clinics
 
-            // Search cdx enabled specialist
+            // Search cdx enabled recipient (provider or clinic)
             $('#recipient').keyup(function () {
                 var searchRecipient = $('#recipient').val();
-                if (searchRecipient !== '' && searchRecipient !== null && searchRecipient.length >= 4) {
+                if (searchRecipient !== '' && searchRecipient !== null && searchRecipient.length >= 4) { // TODO add timeout to the keyup
                     $.ajax({
                         type: 'GET',
                         url: '${ pageContext.request.contextPath }/cdx/CDXMessenger.do',
-                        data: 'method=searchRecipient&recipient=' + searchRecipient,
+                        data: 'method=' + searchType + '&recipient=' + searchRecipient,
                         success: function (data) { // JSON response
                             console.log(data);
+                            var isProfileSearch = searchType === 'searchProvider';
                             $('#clinics').html('');
                             $('#butns').hide();
                             var recipientList = '<ul class="list-group" id="searchrecipients">\n';
                             recipients = data; // store in a global variable
                             for (var i = 0; i < recipients.length; i++) {
-                                recipientList += '<li class="list-group-item" data-id="' + recipients[i].id + '">' + recipients[i].fullName + '</li>\n';
+                                var id = recipients[i].id;
+                                var value = isProfileSearch ? recipients[i].fullName :recipients[i].name;
+                                recipientList += '<li class="list-group-item" data-id="' + id + '">' + value + '</li>\n';
                             }
                             if (recipients.length === 0) { // Nothing found?
                                 recipientList += '<li class="list-group-item">No result found !</li>\n';
@@ -257,6 +261,7 @@
             // Select specialist and list clinics info for the specialist
             $(document).on('click', '#showrecipient li', function () {
                 $('#showrecipient').hide();
+                var isProfileSearch = searchType === 'searchProvider';
                 var recipientId = $(this).data('id');
                 if (!recipientId) { // abort if there is no result to select
                     $('#recipient').val('');
@@ -266,11 +271,13 @@
                 $('#recipient').val($(this).text());
                 for (var i = 0; i < recipients.length; i++) { // get recipients from global variable
                     if (recipients[i].id == recipientId) { // using abstract equality due possibility of differences in types
-                        var clinics = recipients[i].clinics;
+                        var clinics = isProfileSearch ? recipients[i].clinics : [recipients[i]];
                         if (clinics.length > 0) {
-                            var recipientTable = '<table class="table table-bordered table-striped">\n' +
-                                '    <h5>Clinics information for <u><b>' + recipients[i].fullName + '</b></u></h5>\n' +
-                                '    <thead><tr>\n' +
+                            var recipientTable = '<table class="table table-bordered table-striped">\n';
+                            if (isProfileSearch) {
+                                recipientTable += '    <h5>Clinics information for <u><b>' + recipients[i].fullName + '</b></u></h5>\n';
+                            }
+                            recipientTable += '    <thead><tr>\n' +
                                 '        <th>Check to Add</th>\n' +
                                 '        <th>Clinic Id</th>\n' +
                                 '        <th>Clinic Name</th>\n' +
@@ -306,7 +313,7 @@
                 $(this).toggleClass('allChecked');
             })
 
-            // Clear recipients modal on hide
+            // Clear recipients on modal hide
             $('#addClient_Modal').on('hide.bs.modal', function (e) {
                 $('#clinics').html('');
                 $('#recipient').val('');
@@ -314,38 +321,52 @@
                 $('#showrecipient').hide();
                 $('#butns').hide();
             })
-        });
 
-        function addRecipient(isPrimary) {
-            var recipient = $('#recipient').val();
-            var clinics = document.getElementsByName('checkClinic');
-            var checked = $("input[type=checkbox]:checked").length;
-            if (!checked) {
-                alert("You must select at least one clinic.");
-                return false;
-            }
-
-            var selectedItems = recipient + "@";
-            for (var i = 0; i < clinics.length; i++) {
-                if (clinics[i].type === 'checkbox' && clinics[i].checked === true) {
-                    selectedItems += clinics[i].value + ", ";
+            // Set search type on modal show
+            $('#addClient_Modal').on('show.bs.modal', function(e) {
+                // store the type of the search (provider/clinic)
+                searchType = e.relatedTarget.dataset.searchtype;
+                if (searchType === 'searchProvider') {
+                    $('#searchFieldLabel').html("Provider Name");
+                } else {
+                    $('#searchFieldLabel').html("Clinic Name");
                 }
-            }
-            selectedItems = selectedItems.substring(0, selectedItems.length - 2);
-            if (isPrimary) {
-                $('#primary').append("<li> <a href='javascript:void(0);' class='remove'><b>&times;</b></a><input type='hidden' name='primaryRecipients' value='" + selectedItems + "'>" + selectedItems + "</li>");
-                $('#primary').show();
-            } else {
-                $('#secondary').append("<li> <a href='javascript:void(0);' class='remove'><b>&times;</b></a><input type='hidden' name='secondaryRecipients' value='" + selectedItems + "'>" + selectedItems + "</li>");
-                $('#secondary').show();
-            }
+            });
 
-            $('#addClient_Modal').modal('hide');
-            $('#clinics').html('');
-            $('#recipient').val('');
-            $('#hiddenPrimary').hide();
-            $('#butns').hide();
-        }
+            // Add selected recipients
+            $('body').on('click', '.addRecipient', function () {
+                var isPrimary = $(this).data("type") === 'primary';
+                var isProfileSearch = searchType === 'searchProvider';
+                var recipient = $('#recipient').val();
+                var clinics = document.getElementsByName('checkClinic');
+                var checked = $("input[type=checkbox]:checked").length;
+                if (!checked) {
+                    alert("You must select at least one clinic.");
+                    return false;
+                }
+
+                var selectedItems = isProfileSearch ? recipient + "@" : "anyone@";
+                for (var i = 0; i < clinics.length; i++) {
+                    if (clinics[i].type === 'checkbox' && clinics[i].checked === true) {
+                        selectedItems += clinics[i].value + ", ";
+                    }
+                }
+                selectedItems = selectedItems.substring(0, selectedItems.length - 2);
+                if (isPrimary) {
+                    $('#primary').append("<li> <a href='javascript:void(0);' class='remove'><b>&times;</b></a><input type='hidden' name='primaryRecipients' value='" + selectedItems + "'>" + selectedItems + "</li>");
+                    $('#primary').show();
+                } else {
+                    $('#secondary').append("<li> <a href='javascript:void(0);' class='remove'><b>&times;</b></a><input type='hidden' name='secondaryRecipients' value='" + selectedItems + "'>" + selectedItems + "</li>");
+                    $('#secondary').show();
+                }
+
+                $('#addClient_Modal').modal('hide');
+                $('#clinics').html('');
+                $('#recipient').val('');
+                $('#hiddenPrimary').hide();
+                $('#butns').hide();
+            });
+        });
 
         $(document).on("click", "a.remove", function () {
             $(this).parent().remove();
@@ -637,8 +658,11 @@
                     </div>
                 </div>
                 <div class="add-button col-xs-4">
-                    <button type="button" data-toggle="modal" data-target="#addClient_Modal" class="btn btn-primary">
-                        Add
+                    <button type="button" data-toggle="modal" data-target="#addClient_Modal" data-searchtype="searchProvider" class="btn btn-primary">
+                        Add Provider
+                    </button>
+                    <button type="button" data-toggle="modal" data-target="#addClient_Modal" data-searchtype="searchClinic" class="btn btn-primary">
+                        Add Clinic
                     </button>
                 </div>
             </div>
@@ -795,7 +819,7 @@
                         <div class="modal-body">
                             <form class="well form-horizontal" action=" " method="post" id="myform">
                                 <div class="form-group">
-                                    <label class="col-xs-4 control-label">Recipient</label>
+                                    <label class="col-xs-4 control-label" id="searchFieldLabel">Recipient</label>
                                     <div class="col-xs-4 inputGroupContainer">
                                         <div class="">
                                             <input name="recipients" id="recipient" placeholder="Search"
@@ -810,8 +834,8 @@
                                 <div class="" id="clinics"></div>
 
                                 <div style="text-align: center; display: none;" id="butns">
-                                    <input type="button" class="btn btn-success" value="Add as primary" onclick='addRecipient(true)'>
-                                    <input type="button" class="btn btn-warning" value="Add as secondary" onclick='addRecipient(false)'>
+                                    <input type="button" class="btn btn-success addRecipient" data-type="primary" value="Add as primary">
+                                    <input type="button" class="btn btn-warning addRecipient" data-type="secondary" value="Add as secondary">
                                     <input type="button" class="btn btn-info" value="Select all" id="selectAll">
                                 </div>
                             </form>
