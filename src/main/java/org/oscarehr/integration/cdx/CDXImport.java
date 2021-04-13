@@ -399,7 +399,7 @@ public class CDXImport {
      * @param loincCodeDisplayName loinc code to be translated
      * @return oscar document category
      */
-    private String translateCdxCodeToDocType(String loincCodeDisplayName) {
+    static String translateCdxCodeToDocType(String loincCodeDisplayName) {
         switch (loincCodeDisplayName.toLowerCase()) {
             case "consult note" :
             case "mental health consult note" :
