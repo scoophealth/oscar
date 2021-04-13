@@ -35,18 +35,19 @@
     CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
     Integer docId = null;
     String docKind = "";
-    String draftId = request.getParameter("Id");
+
     String patient = request.getParameter("demoName");
-    String patientId = request.getParameter("demoId");
-    String primary = request.getParameter("replyTo");
+    //String patientId = request.getParameter("demoNo");
+    String primary = "";
     String secondary = "";
     String msgType = "";
     String documentType = "";
     String content = "";
 
     // Init reply variables
-    CdxProvenance doc = (CdxProvenance) session.getAttribute("document");
-    if (doc != null) {
+    String replyTo = request.getParameter("replyTo");
+    if (replyTo != null && !replyTo.equalsIgnoreCase("")) {
+        CdxProvenance doc = provenanceDao.findByDocumentNo(Integer.parseInt(replyTo));
         docId = doc.getId();
         docKind = doc.getKind();
         primary = CDXSpecialist.extractAuthorAtClinic(doc.getPayload());
@@ -54,6 +55,7 @@
     }
 
     // Init draft variables
+    String draftId = request.getParameter("draftId");
     if (draftId != null && !draftId.equalsIgnoreCase("")) {
         CdxMessenger cdxMessenger = cdxMessengerDao.getCdxMessenger(Integer.parseInt(draftId));
         patient = cdxMessenger.getPatient();

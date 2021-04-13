@@ -159,7 +159,7 @@
         <tr>
             <td>
 
-                <a href="../cdx/cdxMessenger.jsp?Id=<%=n.getId()%>" target="_blank" class="btn btn-primary" role="button" title="Edit Draft">
+                <a href="../cdx/cdxMessenger.jsp?draftId=<%=n.getId()%>" target="_blank" class="btn btn-primary" role="button" title="Edit Draft">
                     Edit</a>
             </td>
             <td ><%=n.getAuthor()%>

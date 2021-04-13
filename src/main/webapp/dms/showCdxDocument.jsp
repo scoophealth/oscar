@@ -98,7 +98,6 @@ It must have been deleted. Please refresh your Inbox window.
     String demoNo = demoNoInt.toString();
     Document curdoc = docDao.findActiveByDocumentNo(documentNoInt).get(0);
     CdxProvenance provenanceDoc = provenanceDao.findByDocumentNo(documentNoInt);
-    session.setAttribute("document",provenanceDoc);
 
     String providerNo = request.getParameter("providerNo");
     UserProperty uProp = userPropertyDAO.getProp(providerNo, UserProperty.LAB_ACK_COMMENT);
@@ -389,7 +388,7 @@ It must have been deleted. Please refresh your Inbox window.
                                     <input type="button" class="btn btn-default" id="mainMaster_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnMaster"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=','master','<%=documentNo%>')" >
                                     <input type="button" class="btn btn-default" id="mainApptHistory_<%=documentNo%>" value=" <bean:message key="oscarMDS.segmentDisplay.btnApptHist"/>" onClick="popupPatient(710,1024,'<%= request.getContextPath() %>/demographic/demographiccontrol.jsp?orderby=appttime&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25&demographic_no=','ApptHist','<%=documentNo%>')" >
 
-                                    <a href="<%= request.getContextPath() %>/cdx/cdxMessenger.jsp?demoName=<%=demoName%>&demoNo=<%=demoNo%>&replyTo=<%=curdoc.getResponsible()%>" target="_blank" class="btn btn-default" role="button">Reply</a>
+                                    <a href="<%= request.getContextPath() %>/cdx/cdxMessenger.jsp?demoName=<%=demoName%>&demoNo=<%=demoNo%>&replyTo=<%=documentNo%>" target="_blank" class="btn btn-default" role="button">Reply</a>
                                 </div>
 
 
