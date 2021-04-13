@@ -51,7 +51,6 @@
         docId = doc.getId();
         docKind = doc.getKind();
         primary = CDXSpecialist.extractAuthorAtClinic(doc.getPayload());
-        session.removeAttribute("document"); // clear session attribute to avoid issues when
     }
 
     // Init draft variables
