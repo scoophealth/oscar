@@ -81,7 +81,7 @@ public class CDXMessengerAction extends DispatchAction {
     private String contentRoute;
 
     public ActionForward submitDocument(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        // TODO security check
+        // security check
         HttpSession session = request.getSession();
         if (session.getAttribute("userrole") == null) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -139,7 +139,7 @@ public class CDXMessengerAction extends DispatchAction {
     }
 
     public ActionForward saveDraft(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        // TODO security check
+        // security check
         HttpSession session = request.getSession();
         if (session.getAttribute("userrole") == null) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -203,7 +203,7 @@ public class CDXMessengerAction extends DispatchAction {
     }
 
     public ActionForward searchPatient(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        // TODO security check
+        // security check
         HttpSession session = request.getSession();
         if (session.getAttribute("userrole") == null) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -235,7 +235,7 @@ public class CDXMessengerAction extends DispatchAction {
     }
 
     public ActionForward fetchPatientInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        // TODO security check
+        // security check
         HttpSession session = request.getSession();
         if (session.getAttribute("userrole") == null) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -393,7 +393,7 @@ public class CDXMessengerAction extends DispatchAction {
     }
 
     public ActionForward searchProvider(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        // TODO security check
+        // security check
         HttpSession session = request.getSession();
         if (session.getAttribute("userrole") == null) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -403,7 +403,7 @@ public class CDXMessengerAction extends DispatchAction {
         OscarProperties props = OscarProperties.getInstance();
         boolean showCdx = "bc".equalsIgnoreCase(props.getProperty("billregion"));
         if (!showCdx) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN); // TODO ?
+            response.sendError(HttpServletResponse.SC_FORBIDDEN); // invalid region
             return null;
         }
 
@@ -445,7 +445,7 @@ public class CDXMessengerAction extends DispatchAction {
     }
 
     public ActionForward searchClinic(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        // TODO security check
+        // security check
         HttpSession session = request.getSession();
         if (session.getAttribute("userrole") == null) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -455,7 +455,7 @@ public class CDXMessengerAction extends DispatchAction {
         OscarProperties props = OscarProperties.getInstance();
         boolean showCdx = "bc".equalsIgnoreCase(props.getProperty("billregion"));
         if (!showCdx) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN); // TODO ?
+            response.sendError(HttpServletResponse.SC_FORBIDDEN); // invalid region
             return null;
         }
 
@@ -489,7 +489,7 @@ public class CDXMessengerAction extends DispatchAction {
     }
 
     public ActionForward fetchAttachments(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        // TODO security check
+        // security check
         HttpSession session = request.getSession();
         if (session.getAttribute("userrole") == null) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
