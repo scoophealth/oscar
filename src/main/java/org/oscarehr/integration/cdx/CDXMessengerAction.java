@@ -147,8 +147,8 @@ public class CDXMessengerAction extends DispatchAction {
         }
 
         String patient = request.getParameter("patient");
-        String[] primaryRecipients = request.getParameterValues("primaryRecipients");
-        String[] secondaryRecipients = request.getParameterValues("secondaryRecipients");
+        String[] primaryRecipients = request.getParameterValues("primaryRecipients[]");
+        String[] secondaryRecipients = request.getParameterValues("secondaryRecipients[]");
         String msgType = request.getParameter("msgtype");
         String documentType = request.getParameter("documenttype");
         String content = request.getParameter("content");
