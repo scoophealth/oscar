@@ -212,14 +212,15 @@
             $(document).on('click', '#showList li', function () {
                 $('#showList').hide();
                 var patientId = $(this).data("id");
-                if (!patientId) { // abort if there is no result to select
+                if (!patientId) {
                     $('#showList').html('');
                     $('#patientId').val('')
                     $('#patientName').val('');
-                    return;
+                } else {
+                    $('#patientId').val(patientId);
+                    $('#patientName').val($(this).text());
                 }
-                $('#patientId').val(patientId);
-                $('#patientName').val($(this).text());
+                verifyRequiredFields();
             });
 
             // Helper function for delay the call of a function
@@ -368,16 +369,19 @@
                 if (isPrimary) {
                     $('#primary').append("<li> <a href='javascript:void(0);' class='remove'><b>&times;</b></a><input type='hidden' name='primaryRecipients' value='" + selectedItems + "'>" + selectedItems + "</li>");
                     $('#primary').show();
+                    $('#hiddenPrimary').hide();
                 } else {
                     $('#secondary').append("<li> <a href='javascript:void(0);' class='remove'><b>&times;</b></a><input type='hidden' name='secondaryRecipients' value='" + selectedItems + "'>" + selectedItems + "</li>");
                     $('#secondary').show();
+                    $('#hiddenSecondary').hide();
                 }
 
                 $('#addClient_Modal').modal('hide');
                 $('#clinics').html('');
                 $('#recipient').val('');
-                $('#hiddenPrimary').hide();
                 $('#butns').hide();
+
+                verifyRequiredFields();
             });
         });
 
@@ -391,6 +395,8 @@
                 $('#secondary').hide();
                 $('#hiddenSecondary').show();
             }
+
+            verifyRequiredFields();
         });
 
         function updateAttached() {
@@ -508,6 +514,8 @@
                 $('#documenttype').val('<%=documentType%>');
                 $('#content1').val('<%=content%>');
             <% } %>
+
+            verifyRequiredFields();
         }
 
         function saveDraft() {
@@ -609,6 +617,14 @@
             });
         }
 
+        function verifyRequiredFields() {
+            if (!$('#patientName').val() || !$('#documenttype').val() || $('input[name="primaryRecipients"]').length === 0) {
+                $('#submitbutton').attr("disabled", true);
+            } else {
+                $('#submitbutton').removeAttr("disabled");
+            }
+        }
+
         function populateAndSubmit() {
             $('#hiddentextarea').val($('#FamilyHistory').text().trim() + '\n');
             $('#hiddentextarea').val($('#hiddentextarea').val().trim() + '\n' + $('#MedicalHistory').text().trim() + '\n');
@@ -648,7 +664,7 @@
 
             <!-- Text input-->
             <div class="form-group">
-                <label class="col-xs-4 control-label">Patient</label>
+                <label class="col-xs-4 control-label">Patient *</label>
                 <div class="col-xs-4 inputGroupContainer">
                     <div class="">
                         <input name="patientId" id="patientId" type="hidden">
@@ -663,10 +679,10 @@
             <!-- Text input-->
 
             <div class="form-group">
-                <label class="col-xs-4 control-label">Primary Recipient(s)</label>
+                <label class="col-xs-4 control-label">Primary Recipient(s) *</label>
                 <div class="col-xs-4 inputGroupContainer">
                     <div class="">
-                        <input id="hiddenPrimary" name="" placeholder="Add primary recipients" class="form-control" type="text" readonly>
+                        <input id="hiddenPrimary" name="" placeholder="Add primary recipients" class="form-control" type="text" readonly required>
                         <ul class="list-group" id="primary" name="primaryrecipient"></ul>
                     </div>
                 </div>
@@ -701,10 +717,10 @@
             </div>
 
             <div class="form-group">
-                <label class="col-xs-4 control-label">Document type</label>
+                <label class="col-xs-4 control-label">Document type *</label>
                 <div class="col-xs-4 selectContainer">
                     <div class="">
-                        <select name="documenttype" id="documenttype" class="form-control selectpicker" required>
+                        <select name="documenttype" id="documenttype" class="form-control selectpicker" required onchange="verifyRequiredFields()">
                             <option value="">Select document type</option>
                             <option>Information Request</option>
                             <option>Patient Summary</option>
@@ -803,7 +819,8 @@
             <!-- Button -->
             <div class=" button-group">
                 <div class="col-xs-4">
-                    <button type="button" class="btn btn-success" onclick="populateAndSubmit()">Send</button>
+                    <button type="button" class="btn btn-success" id="submitbutton" onclick="populateAndSubmit()">Send</button>
+                    <br>
                 </div>
                 <div class="col-xs-4 ">
                     <input name="draftId" value=<%=draftId%> class="form-control" type="hidden">
