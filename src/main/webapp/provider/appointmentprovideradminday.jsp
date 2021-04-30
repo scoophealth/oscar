@@ -1158,8 +1158,9 @@ public boolean isBirthday(String schedDate,String demBday){
 			<td>
 
 				<ul >
+					<li>
 					<a href="../cdx/cdxMessenger.jsp" target="_blank" title="Click to see details"> CDX Composer</a>
-
+					</li>
 				</ul>
 
 			</td>

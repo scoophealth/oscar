@@ -152,7 +152,7 @@
         <div class="panel panel-default">
             <%}%>
             <div class="panel-heading"> <strong>
-                Status: <%=provenanceDoc.getStatus()%><%= provenanceDoc.getReceivedTime() != null ? ", Received at: " + provenanceDoc.getReceivedTime() : "" %>
+                Status: <%=provenanceDoc.getStatus()%><%= provenanceDoc.getReceivedTime() != null ? ", Recorded at: " + provenanceDoc.getReceivedTime() : "" %>
             </strong></div>
 
             <div class="panel-body">

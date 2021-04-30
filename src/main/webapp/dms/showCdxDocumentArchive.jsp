@@ -68,6 +68,8 @@
         provenanceDoc = provenanceDao.findByDocumentNo(Integer.parseInt(eDocId));
     }
 
+    int documentNo = provenanceDoc.getDocumentNo();
+
 %>
 <html>
 <head>
@@ -123,7 +125,9 @@
       </div> <hr>
         <div class="col-md-12">
 
-
+            <div class="row">
+            <a href="<%= request.getContextPath() %>/cdx/cdxMessenger.jsp?replyTo=<%=documentNo%>" target="_blank" class="btn btn-default" role="button">Reply</a>
+            </div>
 
             <div class="row">
 

@@ -237,23 +237,27 @@ public class CDXImport {
                 String dAddress = (d.getAddress() == null ? "" : d.getAddress());
                 String pAddress = (p.getStreetAddress() == null ? "" : p.getStreetAddress());
 
-                if (!dAddress.toUpperCase().equals(pAddress.toUpperCase())) warnings = "<p>The <strong>street address</strong> in the patient's master file does not agree with the one in this document.</p>";
+                if (!dAddress.equalsIgnoreCase(pAddress)
+                    && !pAddress.isEmpty()) warnings = "<p>The <strong>street address</strong> in the patient's master file does not agree with the one in this document.</p>";
 
                 String dPostal = (d.getPostal() == null ? "" : d.getPostal());
                 String pPostal = (p.getPostalCode() == null ? "" : p.getPostalCode());
 
-                if (!dPostal.toUpperCase().equals(pPostal.toUpperCase())) warnings += "<p>The <strong>postal code</strong> in the patient's master file does not agree with the one in this document.</p>";
+                if (!dPostal.equalsIgnoreCase(pPostal)
+                    && !pPostal.isEmpty()) warnings += "<p>The <strong>postal code</strong> in the patient's master file does not agree with the one in this document.</p>";
 
                 String dCity = (d.getCity() == null ? "" : d.getCity());
                 String pCity = (p.getCity() == null ? "" : p.getCity());
 
-                if (!dCity.toUpperCase().equals(pCity.toUpperCase())) warnings += "<p>The <strong>city</strong> in " +
+                if (!dCity.equalsIgnoreCase(pCity)
+                        && !pCity.isEmpty()) warnings += "<p>The <strong>city</strong> in " +
                         "the patient's master file does not agree with the one in this document.</p>";
 
                 String dFirstName = (d.getFirstName() == null ? "" : d.getFirstName());
                 String pFirstName = (p.getFirstName() == null ? "" : p.getFirstName());
 
-                if (!dFirstName.toUpperCase().equals(pFirstName.toUpperCase())) warnings += "<p>The <strong>first " +
+                if (!dFirstName.equalsIgnoreCase(pFirstName)
+                        && !pFirstName.isEmpty()) warnings += "<p>The <strong>first " +
                         "name</strong> in the patient's master file does not agree with the one in this document.</p>";
 
                 boolean newTelco = false;
@@ -429,6 +433,7 @@ public class CDXImport {
             case "telephone encounter note":
             case "outpatient note":
             case "orthopedics note":
+            case "note":
             case "respiratory therapy note":
                 return "note";
             case "ereferral note" :

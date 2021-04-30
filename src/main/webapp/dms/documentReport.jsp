@@ -340,6 +340,9 @@ function popup1(height, width, url, windowName){
 				<td><bean:message key="dms.documentReport.msgDocuments"/> &nbsp;
 				<% if(module.equals("demographic")) { %>
 					<oscar:nameage demographicNo="<%=moduleid%>"/> &nbsp; <oscar:phrverification demographicNo="<%=moduleid%>"><bean:message key="phr.verification.link"/></oscar:phrverification>
+
+                    <a href="../cdx/cdxMessenger.jsp?demoNo=<%=moduleid%>" target="_self" title="Click to see details"> <button type="button">Compose CDX Document</button></a>
+
 				<%} %>
 				</td>
 				<td>&nbsp;</td>
