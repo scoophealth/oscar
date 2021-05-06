@@ -3,7 +3,6 @@
 <html>
 <head>
 
-    <meta http-equiv="Refresh" content="15;url=../cdx/cdxMessenger.jsp">
     <script type="text/javascript" src="/oscar/js/jquery-1.9.1.js"></script>
     <script type="text/javascript" src="/oscar/js/jquery-ui-1.10.2.custom.min.js"></script>
     <script type="text/javascript" src="/oscar/share/javascript/Oscar.js"></script>
