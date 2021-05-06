@@ -194,4 +194,12 @@ public class CDXConfiguration implements Config {
         return cdxOid;
     }
 
+    public String getLocationId() {
+        String cdxOid = OBIBConnectorHelper.getProperty("cdx.clinic.location.id");
+        if (cdxOid.equals("")) {
+            MiscUtils.getLogger().error("Error: CDX_Clinic_Location_ID not set in properties file");
+        }
+        return cdxOid;
+    }
+
 }

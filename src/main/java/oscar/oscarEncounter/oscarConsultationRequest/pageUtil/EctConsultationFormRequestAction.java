@@ -644,7 +644,7 @@ public class EctConsultationFormRequestAction extends Action {
 			//old implementation
 			//sentDocs = cdxProvenanceDao.findByKindAndInFulFillment(DocumentType.REFERRAL_NOTE, requestId);
 
-			sentDocs = cdxProvenanceDao.findByInFulFillmentDesc(requestId);
+			sentDocs = cdxProvenanceDao.findByInFulFillmentDesc(cdxConfig.getLocationId()+"."+requestId);
 
 			String originalDocId = sentDocs.get(sentDocs.size() - 1).getDocumentId();
 			Integer latestDocVersion = sentDocs.get(0).getVersion();
