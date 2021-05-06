@@ -656,57 +656,67 @@ public class CDXMessengerAction extends DispatchAction {
             doc.receiverId(clinicId);
         }
 
-        // Submit CDX Document
-        IDocument response = doc.submit();
-        // logResponse(response);
-
-        // Store CDX response (cdx_provenance)
-        MiscUtils.getLogger().debug("Attempting to save document using logSentAction");
-        CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
-        cdxProvenanceDao.logSentAction(response);
-
-        // Remove draft (if necessary) and store a new cdx_messenger
-        CdxMessengerDao cdxMessengerDao = SpringUtils.getBean(CdxMessengerDao.class);
-        String draftId = request.getParameter("draftId");
-        if (!draftId.equalsIgnoreCase("null") && !draftId.isEmpty()) {
-            CdxMessenger draft = cdxMessengerDao.getCdxMessenger(Integer.parseInt(draftId));
-            try {
-                if (draft != null) {
-                    cdxMessengerDao.deleteDraftById(draft.getId());
-                }
-            } catch (Exception ex) {
-                MiscUtils.getLogger().error("Got exception while deleting draft " + ex.getMessage());
-            }
-        }
+        String requestId = "";
         try {
-            cdxMessenger.setDocumentId(response.getDocumentID());
-            cdxMessenger.setDraft("N");
-            cdxMessengerDao.persist(cdxMessenger);
-        } catch (Exception ex) {
-            MiscUtils.getLogger().error("Got exception saving messenger Information " + ex.getMessage());
-        }
+            // Submit CDX Document
+            IDocument response = doc.submit();
+            // logResponse(response);
 
-        //Now we have request id for the cdx messenger, we update the request id for the attachments.
+            // Store CDX response (cdx_provenance)
+            MiscUtils.getLogger().debug("Attempting to save document using logSentAction");
+            CdxProvenanceDao cdxProvenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
+            cdxProvenanceDao.logSentAction(response);
+
+            // Remove draft (if necessary) and store a new cdx_messenger
+            CdxMessengerDao cdxMessengerDao = SpringUtils.getBean(CdxMessengerDao.class);
+            String draftId = request.getParameter("draftId");
+            if (!draftId.equalsIgnoreCase("null") && !draftId.isEmpty()) {
+                CdxMessenger draft = cdxMessengerDao.getCdxMessenger(Integer.parseInt(draftId));
+                try {
+                    if (draft != null) {
+                        cdxMessengerDao.deleteDraftById(draft.getId());
+                    }
+                } catch (Exception ex) {
+                    MiscUtils.getLogger().error("Got exception while deleting draft " + ex.getMessage());
+                }
+            }
+            try {
+                cdxMessenger.setDocumentId(response.getDocumentID());
+                cdxMessenger.setDraft("N");
+                cdxMessengerDao.persist(cdxMessenger);
+            } catch (Exception ex) {
+                MiscUtils.getLogger().error("Got exception saving messenger Information " + ex.getMessage());
+            }
+
+            // Now we have request id for the cdx messenger, we use it to update the request id for the attachments.
+            requestId = "" + cdxMessenger.getId();
+
+            // Try to update the document distribution status
+            CDXDistribution cdxDistribution = new CDXDistribution();
+            cdxDistribution.updateDistributionStatus(response.getDocumentID());
+
+            // Code to add sent documents in toilet roll(notes) patient e-chart.
+            CDXDocumentStore docStore = new CDXDocumentStore(request.getSession());
+            docStore.storeDocument(response, demographic);
+        } finally {
+            // Ensure the attachments are updated, even in case of an error in the submission
+            updateAttachments(loggedInInfo, requestId, "" + demographic.getDemographicNo());
+        }
+    }
+
+    private void updateAttachments(LoggedInInfo loggedInInfo, String requestId, String demographicNo) {
+        // Now we have request id for the cdx messenger, we update the request id for the attachments.
         CommonLabResultData consultLabs = new CommonLabResultData();
-        ArrayList<EDoc> attachmentList = EDocUtil.listDocsForCdxMessenger(loggedInInfo, "" + demographic.getDemographicNo(), "" + null, EDocUtil.ATTACHED);
-        ArrayList<LabResultData> labs = consultLabs.populateLabResultsDataCdxMessenger(loggedInInfo, "" + demographic.getDemographicNo(), null, CommonLabResultData.ATTACHED);
+        ArrayList<EDoc> attachmentList = EDocUtil.listDocsForCdxMessenger(loggedInInfo, demographicNo, "" + null, EDocUtil.ATTACHED);
+        ArrayList<LabResultData> labs = consultLabs.populateLabResultsDataCdxMessenger(loggedInInfo, demographicNo, null, CommonLabResultData.ATTACHED);
         for (EDoc attachment : attachmentList) {
-            EDocUtil.updateAttachCdxDoc(attachment.getDocId(), "" + cdxMessenger.getId(), "" + demographic.getDemographicNo());
-            EDocUtil.detachCdxDoc(attachment.getDocId(), "" + cdxMessenger.getId(), "" + demographic.getDemographicNo());
+            EDocUtil.updateAttachCdxDoc(attachment.getDocId(), requestId, demographicNo);
+            EDocUtil.detachCdxDoc(attachment.getDocId(), requestId, demographicNo);
         }
-
         for (LabResultData lab : labs) {
-            EDocUtil.updateAttachCdxDoc(lab.labPatientId, "" + cdxMessenger.getId(), "" + demographic.getDemographicNo());
-            EDocUtil.detachCdxDoc(lab.labPatientId, "" + cdxMessenger.getId(), "" + demographic.getDemographicNo());
+            EDocUtil.updateAttachCdxDoc(lab.labPatientId, requestId, demographicNo);
+            EDocUtil.detachCdxDoc(lab.labPatientId, requestId, demographicNo);
         }
-
-        // Try to update the document distribution status
-        CDXDistribution cdxDistribution = new CDXDistribution();
-        cdxDistribution.updateDistributionStatus(response.getDocumentID());
-
-        // Code to add sent documents in toilet roll(notes) patient e-chart.
-        CDXDocumentStore docStore = new CDXDocumentStore(request.getSession());
-        docStore.storeDocument(response, demographic);
     }
 
     private boolean logResponse(IDocument doc) {
