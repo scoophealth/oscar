@@ -473,7 +473,7 @@ public class CDXSpecialist {
             authorAtClinic.append("@").append(custodianIdNode.getNodeValue());
 
             return authorAtClinic.toString();
-        } catch (XPathExpressionException e) {
+        } catch (Exception e) {
             MiscUtils.getLogger().error("Got exception extracting author and clinic from xml document: " + e.getMessage());
         }
         return "";
