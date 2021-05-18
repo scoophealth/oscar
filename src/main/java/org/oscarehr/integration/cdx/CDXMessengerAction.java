@@ -595,8 +595,10 @@ public class CDXMessengerAction extends DispatchAction {
             doc.documentType(DocumentType.DISCHARGE_SUMMARY);
         } else if (cdxMessenger.getDocumentType().equalsIgnoreCase("Care Plan")) {
             doc.documentType(DocumentType.CARE_PLAN);
-        } else if (cdxMessenger.getDocumentType().equalsIgnoreCase("General Purpose Note")) {
+        } else if (cdxMessenger.getDocumentType().equalsIgnoreCase("Note")) {
             doc.documentType(DocumentType.NOTE);
+        } else if (cdxMessenger.getDocumentType().equalsIgnoreCase("General Purpose Notification")) {
+            doc.documentType(DocumentType.NOTIFICATION);
         }
         // doc.documentType(DocumentType.ADVICE_REQUEST);
 

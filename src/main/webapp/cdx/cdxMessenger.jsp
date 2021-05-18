@@ -728,7 +728,8 @@
                             <option>Progress Note</option>
                             <option>Consult Note</option>
                             <option>Referral Note</option>
-                            <option>General Purpose Note</option>
+                            <option>Note</option>
+                            <option>General Purpose Notification</option>
                             <option>Care Plan</option>
                         </select>
                     </div>
