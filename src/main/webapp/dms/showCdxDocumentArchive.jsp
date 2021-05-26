@@ -52,6 +52,8 @@
 <%@ page import="org.oscarehr.integration.cdx.dao.*" %>
 <%@ page import="org.oscarehr.integration.cdx.model.CdxProvenance" %>
 <%@ page import="ca.uvic.leadlab.obibconnector.facades.datatypes.DocumentType" %>
+<%@ page import="org.oscarehr.common.dao.CtlDocumentDao" %>
+<%@ page import="org.oscarehr.common.model.CtlDocument" %>
 <%
 
     CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
@@ -126,9 +128,12 @@
         <div class="col-md-12">
             <%
                 if (!(documentNo == null)) {
+                    CtlDocumentDao ctlDocDao = SpringUtils.getBean(CtlDocumentDao.class);
+                    CtlDocument ctlDoc = ctlDocDao.getCtrlDocument(documentNo);
+                    Integer demoNo = ctlDoc.getId().getModuleId();
             %>
             <div class="row">
-            <a href="<%= request.getContextPath() %>/cdx/cdxMessenger.jsp?replyTo=<%=documentNo%>" target="_blank" class="btn btn-default" role="button">Reply</a>
+            <a href="<%= request.getContextPath() %>/cdx/cdxMessenger.jsp?demoNo=<%=demoNo%>&replyTo=<%=documentNo%>" target="_blank" class="btn btn-default" role="button">Reply</a>
             </div>
 
             <% } %>

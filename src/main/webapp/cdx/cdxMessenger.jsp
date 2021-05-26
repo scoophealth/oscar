@@ -4,6 +4,9 @@
 <%@ page import="org.oscarehr.integration.cdx.dao.CdxMessengerDao" %>
 <%@ page import="org.oscarehr.integration.cdx.dao.CdxProvenanceDao" %>
 <%@ page import="org.oscarehr.integration.cdx.CDXSpecialist" %>
+<%@ page import="org.oscarehr.common.dao.DemographicDao" %>
+<%@ page import="org.oscarehr.common.model.Demographic" %>
+<%@ page import="java.util.List" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -33,16 +36,22 @@
 <%
     CdxMessengerDao cdxMessengerDao = SpringUtils.getBean(CdxMessengerDao.class);
     CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
+    DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
     Integer docId = null;
     String docKind = "";
 
     String patient = request.getParameter("demoName");
-    //String patientId = request.getParameter("demoNo");
+    String patientId = request.getParameter("demoNo");
     String primary = "";
     String secondary = "";
     String msgType = "";
     String documentType = "";
     String content = "";
+
+    if (patientId != null && !patientId.equalsIgnoreCase("") && !patientId.equalsIgnoreCase("null") && !patientId.equalsIgnoreCase("-1")) {
+        Demographic demographic = demographicDao.getDemographicById(Integer.parseInt(patientId));
+        patient = demographic.getFullName();
+    }
 
     // Init reply variables
     String replyTo = request.getParameter("replyTo");
