@@ -150,6 +150,7 @@
     <script type="text/javascript" src="<%= request.getContextPath() %>/share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/share/calendar/calendar-setup.js"></script>
 
+    <script type="text/javascript" language="JavaScript" src="../share/javascript/Oscar.js"></script>
     <script>
 
         function runFetch() {
@@ -359,8 +360,8 @@
             if (noOfErrDocs > 0) {
         %>
 
-        <div class="alert alert-danger" role="alert">There are <%=noOfErrDocs%> messages that could not be imported due
-            to an internal error.
+        <div class="alert alert-danger" role="alert">There are <a href="#" onclick="popup(600, 1200, '<%=request.getContextPath()%>/cdx/cdxPendingDocs.jsp?reason=ERR', 'cdxPendingDocs');"><%=noOfErrDocs%> messages</a>
+            that could not be imported due to an internal error.
         </div>
         <%
             }
@@ -368,8 +369,8 @@
             if (noOfDelDocs > 0) {
         %>
 
-        <div class="alert alert-warning" role="alert">There are <%=noOfDelDocs%> documents that were deleted by a user
-            (after import)
+        <div class="alert alert-warning" role="alert">There are <a href="#" onclick="popup(600, 1200, '<%=request.getContextPath()%>/cdx/cdxPendingDocs.jsp?reason=DEL', 'cdxPendingDocs');"><%=noOfDelDocs%> documents</a>
+            that were deleted by a user (after import)
         </div>
 
         <%
