@@ -114,6 +114,9 @@
         .list-group-item {
             cursor: pointer;
         }
+        .list-group-item span {
+            font-size: 11px;
+        }
 
         #showList {
             max-height: 200px;
@@ -202,7 +205,11 @@
                             var patients = data;
                             var patientList = '<ul class="list-group">\n';
                             for (var i = 0; i < patients.length; i++) {
-                                patientList += '    <li class="list-group-item" data-id="' + patients[i].id + '">' + patients[i].fullName + '</li>\n'
+                                patientList += '  <li class="list-group-item" data-id="' + patients[i].id + '" data-value="' + patients[i].fullName + '">';
+                                patientList += patients[i].fullName + '<br/>';
+                                patientList += '    <span>DOB: ' + patients[i].dateOfBirth + '</span>';
+                                patientList += '    <span>Sex: ' + patients[i].sex + '</span>';
+                                patientList += '  </li>\n';
                             }
                             if (patients.length === 0) { // Nothing found?
                                 patientList += '<li class="list-group-item">No result found !</li>\n';
@@ -227,7 +234,7 @@
                     $('#patientName').val('');
                 } else {
                     $('#patientId').val(patientId);
-                    $('#patientName').val($(this).text());
+                    $('#patientName').val($(this).data("value"));
                 }
                 verifyRequiredFields();
             });

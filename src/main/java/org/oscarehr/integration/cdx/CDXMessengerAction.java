@@ -224,6 +224,8 @@ public class CDXMessengerAction extends DispatchAction {
             JSONObject patientJSONObject = new JSONObject();
             patientJSONObject.put("id", demographic.getId());
             patientJSONObject.put("fullName", demographic.getFullName());
+            patientJSONObject.put("dateOfBirth", demographic.getBirthDayAsString());
+            patientJSONObject.put("sex", demographic.getSex());
             patientsJSONArray.add(patientJSONObject);
         }
 
