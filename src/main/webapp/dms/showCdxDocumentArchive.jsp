@@ -72,6 +72,8 @@
 
     Integer documentNo = provenanceDoc.getDocumentNo();
 
+    CdxMessengerDao messengerDao = SpringUtils.getBean(CdxMessengerDao.class);
+    boolean isMessenger = messengerDao.findByDocumentID(provenanceDoc.getDocumentId()) != null; // is it a messenger doc?
 %>
 <html>
 <head>
@@ -84,7 +86,7 @@
 
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.9.1.js"></script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-ui-1.10.2.custom.min.js"></script>
-    <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js" ></script>
+    <script type="text/javascript" src="<%= request.getContextPath() %>/share/javascript/Oscar.js"></script>
 
     <link rel="stylesheet" href="<%= request.getContextPath() %>/share/css/bootstrap.min.css">
 
@@ -126,17 +128,21 @@
           %>
       </div> <hr>
         <div class="col-md-12">
-            <%
-                if (!(documentNo == null)) {
-                    CtlDocumentDao ctlDocDao = SpringUtils.getBean(CtlDocumentDao.class);
-                    CtlDocument ctlDoc = ctlDocDao.getCtrlDocument(documentNo);
-                    Integer demoNo = ctlDoc.getId().getModuleId();
-            %>
             <div class="row">
-            <a href="<%= request.getContextPath() %>/cdx/cdxMessenger.jsp?demoNo=<%=demoNo%>&replyTo=<%=documentNo%>" target="_blank" class="btn btn-default" role="button">Reply</a>
+                <%
+                    if (!(documentNo == null)) {
+                        CtlDocumentDao ctlDocDao = SpringUtils.getBean(CtlDocumentDao.class);
+                        CtlDocument ctlDoc = ctlDocDao.getCtrlDocument(documentNo);
+                        Integer demoNo = ctlDoc.getId().getModuleId();
+                %>
+                <a href="<%= request.getContextPath() %>/cdx/cdxMessenger.jsp?demoNo=<%=demoNo%>&replyTo=<%=documentNo%>"
+                   target="_blank" class="btn btn-default" role="button" title="Reply">Reply</a>
+                <%  } %>
+                <%  if (provenanceDoc.getAction().equals("SEND") && isMessenger) { %>
+                <a href="<%= request.getContextPath() %>/cdx/cdxMessenger.jsp?updateTo=<%=provenanceDoc.getId()%>"
+                   target="_blank" class="btn btn-default" role="button" title="Update or Cancel">Update or Cancel</a>
+                <%  } %>
             </div>
-
-            <% } %>
 
             <div class="row">
 

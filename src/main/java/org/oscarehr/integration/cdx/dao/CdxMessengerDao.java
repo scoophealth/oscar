@@ -1,9 +1,6 @@
 package org.oscarehr.integration.cdx.dao;
 import org.oscarehr.common.dao.AbstractDao;
-import org.oscarehr.integration.cdx.model.CdxClinics;
 import org.oscarehr.integration.cdx.model.CdxMessenger;
-import org.oscarehr.integration.cdx.model.CdxProvenance;
-import org.oscarehr.integration.cdx.model.Notification;
 import org.springframework.stereotype.Repository;
 import javax.persistence.Query;
 import java.util.List;
@@ -39,6 +36,15 @@ public class CdxMessengerDao extends AbstractDao<CdxMessenger>{
         else return results;
     }
 
+    public CdxMessenger findByDocumentID(String documentId) {
+        String sql = "SELECT c FROM CdxMessenger c where c.documentId = :documentId ORDER BY c.timeStamp desc";
+        Query query = entityManager.createQuery(sql);
+        query.setParameter("documentId", documentId);
+        List<CdxMessenger> results = query.getResultList();
+        if (results.isEmpty())
+            return null;
+        else return results.get(0);
+    }
 
 
     public void deleteDraftById(int id) {

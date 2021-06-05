@@ -171,17 +171,13 @@
             </td>
             <td> <%=n.getDocumentType()%>
             </td>
-            <td>  <% if(n.getCategory()!=null && !n.getCategory().equalsIgnoreCase("") && !n.getCategory().equalsIgnoreCase("New")){ %>
-                <span>In response to </span>
+            <td><% if (n.getCategory() != null && !n.getCategory().equalsIgnoreCase("New")) { %>
+                <span><%=n.getCategory().split(":")[0]%> </span>
                 <a href="../dms/showCdxDocumentArchive.jsp?ID=<%=n.getCategory().split(":")[1]%>" target="_blank" title="Document Details">
                     <%=dkind.getKind()%></a>
-                <% }
-                else{
-                %>
+                <% } else { %>
                 <%=n.getCategory()%>
-                <%
-                    }
-                %>
+                <% } %>
             </td>
             <td> <%=n.getContent()%>
             </td>

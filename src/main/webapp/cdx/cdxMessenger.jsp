@@ -6,7 +6,7 @@
 <%@ page import="org.oscarehr.integration.cdx.CDXSpecialist" %>
 <%@ page import="org.oscarehr.common.dao.DemographicDao" %>
 <%@ page import="org.oscarehr.common.model.Demographic" %>
-<%@ page import="java.util.List" %>
+<%@ page import="org.oscarehr.integration.cdx.CDXMessengerType" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -37,43 +37,75 @@
     CdxMessengerDao cdxMessengerDao = SpringUtils.getBean(CdxMessengerDao.class);
     CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
     DemographicDao demographicDao = SpringUtils.getBean(DemographicDao.class);
-    Integer docId = null;
-    String docKind = "";
 
+    // Load Patient, if provided
     String patient = request.getParameter("demoName");
     String patientId = request.getParameter("demoNo");
-    String primary = "";
-    String secondary = "";
-    String msgType = "";
-    String documentType = "";
-    String content = "";
-
     if (patientId != null && !patientId.equalsIgnoreCase("") && !patientId.equalsIgnoreCase("null") && !patientId.equalsIgnoreCase("-1")) {
         Demographic demographic = demographicDao.getDemographicById(Integer.parseInt(patientId));
         patient = demographic.getFullName();
     }
 
-    // Init reply variables
+    // Recipients
+    String primary = "";
+    String secondary = "";
+
+    // Message Type
+    CDXMessengerType msgType = CDXMessengerType.NEW;
+    String msgTypeTxt = "New"; // In response to... // Update to...
+    Integer docId = null;
+    String docKind = "";
+
+    // Document type, Content
+    String documentType = "";
+    String content = "";
+
+    // Replying to a received document ("replyTo" is the document_no)
     String replyTo = request.getParameter("replyTo");
     if (replyTo != null && !replyTo.equalsIgnoreCase("")) {
+        msgType = CDXMessengerType.REPLY;
+        msgTypeTxt = "In response to";
         CdxProvenance doc = provenanceDao.findByDocumentNo(Integer.parseInt(replyTo));
         docId = doc.getId();
         docKind = doc.getKind();
         primary = CDXSpecialist.extractAuthorAtClinic(doc.getPayload());
     }
 
-    // Init draft variables
+    // Updating a sent document ("updateTo" is the cdx_provenance id)
+    boolean isUpdate = false;
+    String updateTo = request.getParameter("updateTo");
+    if (updateTo != null && !updateTo.equalsIgnoreCase("")) {
+        isUpdate = true;
+        // msgType = CDXMessengerType.UPDATE or CDXMessengerType.CANCEL is set by the respective buttons
+        msgTypeTxt = "Update to";
+        CdxProvenance doc = provenanceDao.getCdxProvenance(Integer.parseInt(updateTo));
+        docId = doc.getId();
+        docKind = doc.getKind();
+
+        // Load document info from cdx_messenger
+        CdxMessenger cdxMessenger = cdxMessengerDao.findByDocumentID(doc.getDocumentId());
+        patient = cdxMessenger.getPatient();
+        primary = cdxMessenger.getPrimaryRecipient();
+        secondary = cdxMessenger.getSecondaryRecipient();
+
+        documentType = cdxMessenger.getDocumentType();
+        content = cdxMessenger.getContent();
+    }
+
+    // Load document from draft
     String draftId = request.getParameter("draftId");
     if (draftId != null && !draftId.equalsIgnoreCase("")) {
         CdxMessenger cdxMessenger = cdxMessengerDao.getCdxMessenger(Integer.parseInt(draftId));
         patient = cdxMessenger.getPatient();
         primary = cdxMessenger.getPrimaryRecipient();
         secondary = cdxMessenger.getSecondaryRecipient();
-        msgType = cdxMessenger.getCategory();
 
         //Get document details to show in category when populating from draft
         if (!cdxMessenger.getCategory().equalsIgnoreCase("New")) {
-            CdxProvenance cdxProvenance = provenanceDao.getCdxProvenance(Integer.parseInt(cdxMessenger.getCategory().split(":")[1]));
+            msgType = CDXMessengerType.REPLY;
+            String[] categoryParts = cdxMessenger.getCategory().split(":");
+            msgTypeTxt = categoryParts[0];
+            CdxProvenance cdxProvenance = provenanceDao.getCdxProvenance(Integer.parseInt(categoryParts[1]));
             docId = cdxProvenance.getId();
             docKind = cdxProvenance.getKind();
         }
@@ -519,14 +551,13 @@
             <% } %>
 
             <% if (docId != null && !docId.equals(0)) { %>
+                $('#messagetype').val('<%=msgTypeTxt%>' + ':' + '<%=docId%>');
+                $("span#ptype").text('<%=msgTypeTxt%>' + ' ');
                 $("a#mtype").attr('href', '<%=request.getContextPath()%>/dms/showCdxDocumentArchive.jsp?ID=<%=docId%>');
-                $('#msgtype').val('In response to:' + '<%=docId%>');
-                $("span#ptype").text('In response to ');
                 $("#mtype").text('<%=docKind%>');
             <% } %>
 
-            <% if (msgType != null && !msgType.isEmpty()) { %>
-                $("#msgtype").val('<%=msgType%>');
+            <% if (documentType != null && !documentType.isEmpty()) { %>
                 $('#documenttype').val('<%=documentType%>');
                 $('#content1').val('<%=content%>');
             <% } %>
@@ -535,6 +566,7 @@
         }
 
         function saveDraft() {
+            var draftId = $('#draftId').val();
             var patient = $('#patientName').val();
             var primaryRecipients = [];
             var secondaryRecipients = [];
@@ -548,7 +580,7 @@
                 secondaryRecipients[i] = secondary[i].value;
             }
 
-            var msgtype = $('#msgtype').val();
+            var messagetype = $('#messagetype').val();
             var documenttype = $('#documenttype').val();
             var content = $('#content1').val();
 
@@ -557,12 +589,13 @@
                 url : "${ pageContext.request.contextPath }/cdx/CDXMessenger.do",
                 data: {
                     method: "saveDraft",
-                    patient: patient,
+                    draftId: draftId,
+                    patientName: patient,
                     primaryRecipients: primaryRecipients,
                     secondaryRecipients: secondaryRecipients,
-                    msgtype: msgtype,
+                    messagetype: messagetype,
                     documenttype: documenttype,
-                    content: content
+                    contentmessage: content
                 },
                 success: function (data) {
                     console.log(data);
@@ -636,12 +669,19 @@
         function verifyRequiredFields() {
             if (!$('#patientName').val() || !$('#documenttype').val() || $('input[name="primaryRecipients"]').length === 0) {
                 $('#submitbutton').attr("disabled", true);
+                if ($('#cancelbutton')) {
+                    $('#cancelbutton').attr("disabled", true);
+                }
             } else {
                 $('#submitbutton').removeAttr("disabled");
+                if ($('#cancelbutton')) {
+                    $('#cancelbutton').removeAttr("disabled");
+                }
             }
         }
 
-        function populateAndSubmit() {
+        function populateAndSubmit(msgType) {
+            $('#msgType').val(msgType); // for update and cancel
             $('#hiddentextarea').val($('#FamilyHistory').text().trim() + '\n');
             $('#hiddentextarea').val($('#hiddentextarea').val().trim() + '\n' + $('#MedicalHistory').text().trim() + '\n');
             $('#hiddentextarea').val($('#hiddentextarea').val().trim() + '\n' + $('#ongoingConcerns').text().trim() + '\n');
@@ -665,6 +705,8 @@
     <form class="well form-horizontal" action="<%=request.getContextPath()%>/cdx/CDXMessenger.do" method="post" id="messengerForm">
         <fieldset>
             <input type="hidden" name="method" value="submitDocument" />
+            <input type="hidden" name="msgType" id="msgType" value="" />
+            <input type="hidden" name="docId" id="docId" value="<%=docId%>" />
 
             <!-- Form Name -->
             <div class="text-center">
@@ -726,7 +768,7 @@
                 <label class="col-xs-4 control-label">Message Type</label>
                 <div class="col-xs-4 inputGroupContainer">
                     <div class="">
-                        <input name="messagetype" id="msgtype" value="New" class="form-control" type="hidden" readonly style="color:gray;">
+                        <input name="messagetype" id="messagetype" value="New" class="form-control" type="hidden" readonly style="color:gray;">
                         <span id="ptype">New</span> <a href="#" id="mtype" target="_blank"></a>
                     </div>
                 </div>
@@ -836,12 +878,20 @@
             <!-- Button -->
             <div class=" button-group">
                 <div class="col-xs-4">
-                    <button type="button" class="btn btn-success" id="submitbutton" onclick="populateAndSubmit()">Send</button>
+                <% if (isUpdate) { /* enable button update */ %>
+                    <button type="button" class="btn btn-success" id="submitbutton" onclick="populateAndSubmit('<%=CDXMessengerType.UPDATE.name()%>')">Send Update</button>
+                <% } else { /* enable button send */ %>
+                    <button type="button" class="btn btn-success" id="submitbutton" onclick="populateAndSubmit('<%=msgType.name()%>')">Send</button>
+                <% } %>
                     <br>
                 </div>
                 <div class="col-xs-4 ">
-                    <input name="draftId" value=<%=draftId%> class="form-control" type="hidden">
-                    <button type="button" class="btn btn-warning" onclick="saveDraft()">Save Draft</button>
+                    <% if (isUpdate) { /* enable button cancel */ %>
+                        <button type="button" class="btn btn-danger" id="cancelbutton" onclick="populateAndSubmit('<%=CDXMessengerType.CANCEL.name()%>')">Send Cancellation</button>
+                    <% } else { /* enable button draft */ %>
+                        <input name="draftId" id="draftId" value=<%=draftId%> class="form-control" type="hidden">
+                        <button type="button" class="btn btn-warning" onclick="saveDraft()">Save Draft</button>
+                    <% } %>
                 </div>
                 <div class="col-xs-4">
                     <button type="button" class="btn btn-default" onclick="window.open('', '_self', ''); window.close();">
