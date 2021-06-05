@@ -102,14 +102,36 @@
                     "order": [[0, "desc"]]
                 }
             );
+
+            $('body').on('click', '#selectAll', function () {
+                if ($(this).hasClass('allChecked')) {
+                    $('input[type="checkbox"]', '#drafts').prop('checked', false);
+                } else {
+                    $('input[type="checkbox"]', '#draftsForm').prop('checked', true);
+                }
+                $(this).toggleClass('allChecked');
+            });
+
         });
 
     </script>
 
         <%
-          CdxMessengerDao cdxMessengerDao= SpringUtils.getBean(CdxMessengerDao.class);
+            CdxMessengerDao cdxMessengerDao= SpringUtils.getBean(CdxMessengerDao.class);
             CdxProvenanceDao provenanceDao = SpringUtils.getBean(CdxProvenanceDao.class);
-          List<CdxMessenger> cdxMessengers= cdxMessengerDao.findDraft();
+
+            String[] selected = request.getParameterValues("Selected");
+            if (selected != null && selected.length > 0 ) {
+                for (String id : selected) {
+                    try {
+                        cdxMessengerDao.deleteDraftById(Integer.parseInt(id));
+                    } catch (Exception ex) {
+                        MiscUtils.getLogger().error("Got exception deleting draft messenger " + ex.getMessage());
+                    }
+                }
+            }
+
+            List<CdxMessenger> cdxMessengers= cdxMessengerDao.findDraft();
         %>
 
 
@@ -123,14 +145,14 @@
         </style>
     </head>
 <body>
+<form action="showDrafts.jsp" method="post" id="draftsForm">
 <div class="container">
-
-
     <center><h4> <a href="../cdx/showDrafts.jsp" class="btn ovalbutton" style="text-align: center;" role="button">Drafts</a></h4>
     </center>
     <table id="doctable" class="display" style="width:100%">
         <thead>
         <tr>
+            <th>Select</th>
             <th>Edit</th>
             <th>Author</th>
             <th>Patient</th>
@@ -158,7 +180,9 @@
         %>
         <tr>
             <td>
-
+                <input type=checkbox name="Selected" value=<%=n.getId()%>>
+            </td>
+            <td>
                 <a href="../cdx/cdxMessenger.jsp?draftId=<%=n.getId()%>" target="_blank" class="btn btn-primary" role="button" title="Edit Draft">
                     Edit</a>
             </td>
@@ -191,6 +215,11 @@
         %>
         </tbody>
     </table>
+    <div class="container" style="text-align: center" >
+        <input type="submit" class="btn btn-danger" value="Delete Selected" >
+        <input type="button" class="btn btn-info" value="Select all" id="selectAll" >
+    </div>
 </div>
+</form>
 </body>
 </html>
