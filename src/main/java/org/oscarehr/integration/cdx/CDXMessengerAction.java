@@ -715,9 +715,9 @@ public class CDXMessengerAction extends DispatchAction {
             CDXDistribution cdxDistribution = new CDXDistribution();
             cdxDistribution.updateDistributionStatus(response.getDocumentID());
 
-            // TODO Code to add sent documents in toilet roll(notes) patient e-chart.
-//            CDXDocumentStore docStore = new CDXDocumentStore(session);
-//            docStore.storeDocument(response, demographic);
+            // Code to add sent documents in patient e-chart.
+            CDXDocumentStore docStore = new CDXDocumentStore(session);
+            docStore.storeDocument(response, demographic);
         } finally {
             // Ensure the attachments are updated, even in case of an error in the submission
             updateAttachments(loggedInInfo, String.valueOf(cdxMessenger.getId()), "" + demographic.getDemographicNo());

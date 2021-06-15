@@ -130,7 +130,7 @@
         <div class="col-md-12">
             <div class="row">
                 <%
-                    if (!(documentNo == null)) {
+                    if (documentNo != null && !provenanceDoc.isSend()) {
                         CtlDocumentDao ctlDocDao = SpringUtils.getBean(CtlDocumentDao.class);
                         CtlDocument ctlDoc = ctlDocDao.getCtrlDocument(documentNo);
                         Integer demoNo = ctlDoc.getId().getModuleId();
@@ -138,7 +138,7 @@
                 <a href="<%= request.getContextPath() %>/cdx/cdxMessenger.jsp?demoNo=<%=demoNo%>&replyTo=<%=documentNo%>"
                    target="_blank" class="btn btn-default" role="button" title="Reply">Reply</a>
                 <%  } %>
-                <%  if (provenanceDoc.getAction().equals("SEND") && isMessenger) { %>
+                <%  if (provenanceDoc.isSend() && isMessenger) { %>
                 <a href="<%= request.getContextPath() %>/cdx/cdxMessenger.jsp?updateTo=<%=provenanceDoc.getId()%>"
                    target="_blank" class="btn btn-default" role="button" title="Update or Cancel">Update or Cancel</a>
                 <%  } %>

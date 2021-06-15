@@ -220,6 +220,10 @@ public class CdxProvenance extends AbstractModel<Integer> implements Serializabl
         this.action = action;
     }
 
+    public boolean isSend() {
+        return "SEND".equalsIgnoreCase(action);
+    }
+
     public long getLog() {
         return log;
     }
