@@ -253,7 +253,7 @@ public class EctConsultationFormRequestPrintAction2 extends Action {
 		CdxProvenance provDoc = provenanceDao.findByDocumentNo(Integer.parseInt(doc.getDocId()));
 		CdxAttachmentDao attachmentDao = SpringUtils.getBean(CdxAttachmentDao.class);
 
-		ArrayList<Object> streamList = new ArrayList<>();
+		ArrayList<Object> streamList = new ArrayList<Object>();
 
 
 		// transform main document from XML to HTML

@@ -18,7 +18,7 @@ public class CDXLocation {
     }
 
     public List<IClinic> findLocationByName(String name) {
-        List<IClinic> clinics = new ArrayList<>();
+        List<IClinic> clinics = new ArrayList<IClinic>();
         try {
             ISearchClinic searchClinic = new SearchClinic(config);
             clinics = searchClinic.findByName(name);
@@ -29,7 +29,7 @@ public class CDXLocation {
     }
 
     public List<IClinic> findLocationById(String id) {
-        List<IClinic> clinics = new ArrayList<>();
+        List<IClinic> clinics = new ArrayList<IClinic>();
         try {
             ISearchClinic searchClinic = new SearchClinic(config);
             clinics = searchClinic.findByID(id);

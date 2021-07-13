@@ -1,5 +1,5 @@
 package org.oscarehr.integration.cdx.model;
-import org.apache.commons.lang.StringUtils;
+
 import org.oscarehr.common.model.AbstractModel;
 import javax.persistence.*;
 import java.io.Serializable;

@@ -52,11 +52,6 @@ public class ReceiveDocTest extends FacadesBaseTest {
             public String getUrl() {
                 return obibUrl;
             }
-
-            @Override
-            public String getClinicId() {
-                return "__Wrong_ID";
-            }
         });
 
         List<String> documentsIds = receiveDoc.pollNewDocIDs();

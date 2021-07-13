@@ -1,7 +1,6 @@
 package org.oscarehr.integration.cdx.dao;
 
 import org.oscarehr.common.dao.AbstractDao;
-import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.integration.cdx.model.CdxMessengerAttachments;
 
 import javax.persistence.Query;

@@ -37,22 +37,12 @@ public class FacadesBaseTest {
         public String getUrl() {
             return obibUrl;
         }
-
-        @Override
-        public String getClinicId() {
-            return clinicIdA;
-        }
     };
 
     protected Config configClinicC = new Config() {
         @Override
         public String getUrl() {
             return obibUrl;
-        }
-
-        @Override
-        public String getClinicId() {
-            return clinicIdC;
         }
     };
 }

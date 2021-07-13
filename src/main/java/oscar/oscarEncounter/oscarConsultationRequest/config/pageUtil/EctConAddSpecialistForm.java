@@ -32,8 +32,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 
-import java.util.List;
-
 public final class EctConAddSpecialistForm extends ActionForm {
 	String fName;
 	String lName;

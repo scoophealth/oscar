@@ -41,7 +41,7 @@ public class CDXDistribution {
      */
     public List<IDocument> getDocumentDistributionStatus(String docId) {
 
-        List<IDocument> documents = new ArrayList<>();
+        List<IDocument> documents = new ArrayList<IDocument>();
         try {
             documents.addAll(docSearcher.distributionStatus(docId));
         } catch (Exception e) {

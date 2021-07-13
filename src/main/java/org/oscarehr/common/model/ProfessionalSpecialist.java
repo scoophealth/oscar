@@ -73,7 +73,7 @@ public class ProfessionalSpecialist extends AbstractModel<Integer> implements Se
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinTable( name="cdx_ClinicAndProfessionalIds", joinColumns=@JoinColumn(name="professionalId"), inverseJoinColumns = @JoinColumn(name="clinicId") )
-	private Set<CdxClinics> clinics=new HashSet<>();
+	private Set<CdxClinics> clinics=new HashSet<CdxClinics>();
 
 	private String eDataUrl;
 	private String eDataOscarKey;

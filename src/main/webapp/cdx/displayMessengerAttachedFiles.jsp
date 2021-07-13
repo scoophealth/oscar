@@ -54,23 +54,22 @@
 <ul id="attachedList"
     style="background-color: white; padding-left: 20px; list-style-position: outside; list-style-type: lower-roman;">
     <%
-        ArrayList privatedocs = new ArrayList();
-        privatedocs = EDocUtil.listDocsForCdxMessenger(loggedInInfo, demo, requestId, EDocUtil.ATTACHED);
+        ArrayList<EDoc> privatedocs = EDocUtil.listDocsForCdxMessenger(loggedInInfo, demo, requestId, EDocUtil.ATTACHED);
         EDoc curDoc;
         for(int idx = 0; idx < privatedocs.size(); ++idx)
         {
-            curDoc = (EDoc)privatedocs.get(idx);
+            curDoc = privatedocs.get(idx);
     %>
     <li class="doc"><%=StringUtils.maxLenString(curDoc.getDescription(),19,16,"...")%></li>
     <%
         }
 
         CommonLabResultData labData = new CommonLabResultData();
-        ArrayList labs = labData.populateLabResultsDataCdxMessenger(loggedInInfo, demo, requestId, CommonLabResultData.ATTACHED);
+        ArrayList<LabResultData> labs = labData.populateLabResultsDataCdxMessenger(loggedInInfo, demo, requestId, CommonLabResultData.ATTACHED);
         LabResultData resData;
         for(int idx = 0; idx < labs.size(); ++idx)
         {
-            resData = (LabResultData)labs.get(idx);
+            resData = labs.get(idx);
     %>
     <li class="lab"><%=resData.getDiscipline()+" "+resData.getDateTime()%></li>
     <%

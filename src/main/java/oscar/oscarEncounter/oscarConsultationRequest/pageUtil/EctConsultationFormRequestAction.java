@@ -65,7 +65,6 @@ import org.oscarehr.common.printing.FontSettings;
 import org.oscarehr.common.printing.PdfWriterFactory;
 import org.oscarehr.integration.cdx.CDXConfiguration;
 import org.oscarehr.integration.cdx.CDXDistribution;
-import org.oscarehr.integration.cdx.CDXImport;
 import org.oscarehr.integration.cdx.CDXSpecialist;
 import org.oscarehr.integration.cdx.dao.CdxClinicsDao;
 import org.oscarehr.integration.cdx.dao.CdxAttachmentDao;
@@ -890,7 +889,7 @@ public class EctConsultationFormRequestAction extends Action {
 		CdxProvenance provDoc = provenanceDao.findByDocumentNo(Integer.parseInt(doc.getDocId()));
         CdxAttachmentDao attachmentDao = SpringUtils.getBean(CdxAttachmentDao.class);
 
-        ArrayList<Object> streamList = new ArrayList<>();
+        ArrayList<Object> streamList = new ArrayList<Object>();
 
 
         // transform main document from XML to HTML

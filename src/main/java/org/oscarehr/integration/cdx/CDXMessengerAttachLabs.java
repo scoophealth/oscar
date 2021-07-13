@@ -2,13 +2,8 @@ package org.oscarehr.integration.cdx;
 
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
-import org.oscarehr.common.dao.ConsultDocsDao;
-import org.oscarehr.common.model.ConsultDocs;
 import org.oscarehr.integration.cdx.dao.CdxMessengerAttachmentsDao;
-import org.oscarehr.integration.cdx.model.CdxMessengerAttachments;
 import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
@@ -16,7 +11,6 @@ import oscar.OscarProperties;
 import oscar.dms.EDocUtil;
 import oscar.oscarLab.ca.on.CommonLabResultData;
 import oscar.oscarLab.ca.on.LabResultData;
-import oscar.util.ConversionUtils;
 
 /**
  *

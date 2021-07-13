@@ -43,7 +43,6 @@ import oscar.util.UtilXML;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.util.*;
 
@@ -184,7 +183,7 @@ public class CDXSpecialist {
 
 
     public Set<CdxClinics> saveCdxClinics( IProvider p) {
-        Set<CdxClinics> cdxClinics = new HashSet<>();
+        Set<CdxClinics> cdxClinics = new HashSet<CdxClinics>();
         String address = "";
         CdxClinicsDao cdxClinicsDao = SpringUtils.getBean(CdxClinicsDao.class);
 

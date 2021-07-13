@@ -18,8 +18,6 @@ import org.oscarehr.util.LoggedInInfo;
 import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
-import oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationAttachDocs;
-import oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationAttachLabs;
 
 public class CDXMessengerAttachDocumentAction
         extends Action {

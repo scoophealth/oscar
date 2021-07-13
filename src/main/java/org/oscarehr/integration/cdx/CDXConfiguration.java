@@ -30,7 +30,6 @@ import ca.uvic.leadlab.obibconnector.facades.support.IStatus;
 import ca.uvic.leadlab.obibconnector.facades.support.ISupport;
 import ca.uvic.leadlab.obibconnector.impl.support.Support;
 import ca.uvic.leadlab.obibconnector.utils.OBIBConnectorHelper;
-import ihe.iti.svs._2008.CD;
 import org.apache.commons.lang.StringUtils;
 import org.oscarehr.common.dao.OscarJobDao;
 import org.oscarehr.common.dao.OscarJobTypeDao;

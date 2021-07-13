@@ -497,7 +497,7 @@ public class CDXMessengerAction extends DispatchAction {
     }
 
     private HashMap<String, List<String>> getRecipientsMap(String[] recipients) {
-        HashMap<String, List<String>> recipientsMap = new HashMap<>();
+        HashMap<String, List<String>> recipientsMap = new HashMap<String, List<String>>();
         if (recipients != null && recipients.length > 0) {
             for (String rec : recipients) {
                 String[] specialistsAndClinics = rec.split("@"); // split provider and clinics
@@ -509,7 +509,7 @@ public class CDXMessengerAction extends DispatchAction {
     }
 
     private Set<String> getClinicsSet(String[] recipients) {
-        Set<String> receiverClinics = new HashSet<>();
+        Set<String> receiverClinics = new HashSet<String>();
         if (recipients != null && recipients.length > 0) {
             for (String rec : recipients) {
                 String[] specialistsAndClinics = rec.split("@"); // split provider and clinics
@@ -939,7 +939,7 @@ public class CDXMessengerAction extends DispatchAction {
         CdxProvenance provDoc = provenanceDao.findByDocumentNo(Integer.parseInt(doc.getDocId()));
         CdxAttachmentDao attachmentDao = SpringUtils.getBean(CdxAttachmentDao.class);
 
-        ArrayList<Object> streamList = new ArrayList<>();
+        ArrayList<Object> streamList = new ArrayList<Object>();
 
         // transform main document from XML to HTML
         try {
