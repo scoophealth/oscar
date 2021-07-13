@@ -29,3 +29,7 @@ create table cdx_messengerAttachments
 );
 
 alter table consultationRequests add isAdviceRequest char null;
+
+UPDATE professionalSpecialists SET cdxCapable = 0 WHERE cdxCapable IS NULL;
+
+ALTER TABLE clinic ADD COLUMN cdx_oid VARCHAR(55) AFTER `clinic_name`;
