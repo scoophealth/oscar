@@ -50,24 +50,24 @@
 		<repository>
 			<id>hapi-sf</id>
 			<name>HAPI Sourceforge Repository</name>
-			<url>http://hl7api.sourceforge.net/m2</url>
+			<url>https://hl7api.sourceforge.net/m2</url>
 		</repository>
 
 		<repository>
 			<id>oscar_repo</id>
-			<url>http://oscarmcmaster.sourceforge.net/m2</url>
+			<url>https://oscarmcmaster.sourceforge.net/m2</url>
 		</repository>
 
 		<repository>
 			<id>new_oscar_repo</id>
-			<url>http://mvn.oscar-emr.com/repository</url>
+			<url>https://mvn.oscar-emr.com/repository</url>
 		</repository>
 		
 		<!-- MARC-HI (Everest & SHIC) -->
 		<repository>
 			<id>marc-te-main</id>
 			<name>MARC-HI Technology Exchange Private Maven Repository</name>
-			<url>http://te.marc-hi.ca/mvn</url>
+			<url>https://te.marc-hi.ca/mvn</url>
 		</repository>
 	</repositories>
 
@@ -79,7 +79,7 @@
 
 		<pluginRepository>
 			<id>oscar_repo</id>
-			<url>http://oscarmcmaster.sourceforge.net/m2</url>
+			<url>https://oscarmcmaster.sourceforge.net/m2</url>
 		</pluginRepository>
 	</pluginRepositories>
 
